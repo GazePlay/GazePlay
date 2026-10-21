@@ -54,6 +54,17 @@ jobs:
       - name: Install virtual X server and ffmpeg
         run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
 
+      # The runners have no sound card: JavaFX media (GStreamer, ALSA output) cannot create a player without one.
+      # A PulseAudio null sink, reached by ALSA through the pulse plugin, gives it a virtual audio output
+      - name: Start a virtual audio output
+        run: |
+          sudo apt-get install -y pulseaudio libasound2-plugins
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=virtual_output
+          pactl set-default-sink virtual_output
+          echo 'pcm.!default { type pulse }' | sudo tee /etc/asound.conf
+          echo 'ctl.!default { type pulse }' | sudo tee -a /etc/asound.conf
+
       # Tests are hermetic: Gradle points user.home and the edition file to build/test-home (see build.gradle)
       - name: Run tests
         run: |
@@ -86,6 +97,17 @@ jobs:
       - name: Install virtual X server and ffmpeg
         run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
 
+      # The runners have no sound card: JavaFX media (GStreamer, ALSA output) cannot create a player without one.
+      # A PulseAudio null sink, reached by ALSA through the pulse plugin, gives it a virtual audio output
+      - name: Start a virtual audio output
+        run: |
+          sudo apt-get install -y pulseaudio libasound2-plugins
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=virtual_output
+          pactl set-default-sink virtual_output
+          echo 'pcm.!default { type pulse }' | sudo tee /etc/asound.conf
+          echo 'ctl.!default { type pulse }' | sudo tee -a /etc/asound.conf
+
       - name: Build the Linux distribution
         run: |
           chmod +x ./gradlew
@@ -100,9 +122,9 @@ jobs:
           cd /tmp
           # Started from another folder than bin/, without terminal, with a fresh home: it must still be running after 40 s.
           # Java takes user.home from the account database, not from $HOME: it is given through JAVA_TOOL_OPTIONS, read
-          # by the JVM whatever the launcher script
+          # by the JVM whatever the launcher script ($HOME is kept: the audio output needs the PulseAudio of the user)
           set +e
-          HOME=/tmp/gazeplay-home JAVA_TOOL_OPTIONS=-Duser.home=/tmp/gazeplay-home timeout 40 xvfb-run --auto-servernum \
+          JAVA_TOOL_OPTIONS=-Duser.home=/tmp/gazeplay-home timeout 40 xvfb-run --auto-servernum \
             sh /tmp/gazeplay-dist/gazeplay-linux-x64-*/bin/gazeplay-linux.sh --default-user < /dev/null > /tmp/gazeplay.log 2>&1
           status=$?
           set -e

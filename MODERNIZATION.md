@@ -672,6 +672,10 @@ Branche poussée sur `origin/addClaudeCode` à la demande du mainteneur. Seul `c
 - **package-linux** : la distribution a été construite et lancée.
   - **Erreur de ma part** : la vérification isolait le dossier utilisateur avec `HOME=...`, or Java sous Linux prend `user.home` dans la base des comptes, pas dans `$HOME`. GazePlay a donc écrit son journal dans `/home/runner/GazePlay`, le `tail` du journal attendu a échoué et `set -e` a arrêté le script. Le réglage du mode souris n'avait pas été lu non plus.
   - **Correctif** : `JAVA_TOOL_OPTIONS=-Duser.home=/tmp/gazeplay-home`, `ffmpeg` installé (le runtime livré, avec JavaFX 23, gère ffmpeg 6), et `tail` tolérant pour que le diagnostic s'affiche toujours.
+- **Deuxième run (39588142673)** : `package-linux` lit désormais le bon dossier utilisateur (journal dans `/tmp/gazeplay-home`). L'application démarre, charge le catalogue et tourne 40 s, mais la musique échoue encore, comme dans `smokeTest`, alors que ffmpeg est installé. **L'hypothèse ffmpeg seule était donc incomplète.** Hypothèse retenue : la machine GitHub n'a **aucune sortie audio**, et le moteur multimédia de JavaFX sous Linux (GStreamer, sortie ALSA) ne peut pas créer de lecteur sans carte son.
+  - **Correctif proposé** : sortie audio virtuelle. PulseAudio démarre avec un périphérique de sortie « null » et ALSA est routé vers PulseAudio (`libasound2-plugins`, `/etc/asound.conf`).
+  - `HOME=` est retiré du lancement de la distribution (`user.home` passe par `JAVA_TOOL_OPTIONS`), afin que le client PulseAudio retrouve sa configuration.
+  - Les tests restent stricts. **À confirmer par le run suivant.**
 - **Constat pour les utilisateurs** : sous Linux, la musique et les sons de GazePlay demandent les bibliothèques ffmpeg du système. La distribution Linux (JavaFX 23) gère ffmpeg 4 à 7 environ (`libavplugin-ffmpeg-56` à `62`). La version sans JRE, avec le JavaFX 17 de Maven, ne gère que ffmpeg 4 et 5 : sons muets sur Ubuntu 24.04 (comportement préexistant). **Recommandation** : l'indiquer dans la documentation d'installation Linux (`sudo apt install ffmpeg`).
 
 ---
