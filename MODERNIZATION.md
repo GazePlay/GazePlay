@@ -664,7 +664,7 @@ Décisions données le 20/10/2026 :
 ## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)
 
 ### 9.1 État exact au moment de la pause
-- Branche **`addClaudeCode`**, **aucun commit** depuis `4a035dd4f`, rien de poussé. Les 4 stashes n'ont pas été touchés. Tout le travail des étapes 1 à 9 est **non commité** dans l'arbre de travail (`git status` : modifications, suppressions et fichiers nouveaux non suivis, dont `gazeplay-results/`, `ARCHITECTURE.md`, `GazePlay-1.12.0.md`, `ReplayDataFormat*.java`). Ne rien réinitialiser.
+- Branche **`addClaudeCode`**. Le 21/10/2026, à la demande du mainteneur, le travail des étapes 1 à 12 a été **commité en local** en 6 commits au-dessus de `4a035dd4f` : nettoyage (`2c98db4b5`), build/code/tests (`f92bafdf9`), scripts (`631c2e0b8`), CI (`796873891`), documentation (`f05680599`), configurations IntelliJ (`1c7ae3f30`). Chaque état a été vérifié avant le commit sur une copie de l'index : compilation pour le 1er, et pour le 2e la suite complète (403 tests, 0 échec), `smokeTest` et SpotBugs. **Rien n'a été poussé** : la branche n'a pas de branche distante associée. Les 4 stashes n'ont pas été touchés.
 - Aucune branche autre que `addClaudeCode` n'a été modifiée (`GazePlayLearning` non touchée).
 - Démon Gradle arrêté à la pause (`./gradlew --stop`).
 
