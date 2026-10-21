@@ -23,7 +23,7 @@ jobs:
         run: echo "Version selected is -> ${{ github.event.inputs.bump }}"
 
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
+        uses: jlumbroso/free-disk-space@36e9a5af4eddb91fc11aec4c6f6f79b3cc0cb523 # main as of 2026-10-20, pinned
         with:
           tool-cache: false
           android: true
@@ -62,25 +62,16 @@ jobs:
         run: |
           ./gradlew --stacktrace --info release
           
-      # add this for installer 32bits afsr and bera (don't forget to uncomment the lines at the very bottom of the build.gradle file at the root
-      # mv gazeplay-afsr-windows-x32*installer.exe gazeplay-afsr-windows-x32-installer.exe
-      # mv gazeplay-bera-windows-x32*installer.exe gazeplay-bera-windows-x32-installer.exe
       - name: Rename Releases
         run: |
           cd ./build/distributions/
           mv gazeplay-linux-x64*.tar.gz gazeplay-linux-x64.tar.gz
-          mv gazeplay-macos*.tar.gz gazeplay-macos.tar.gz
+          # aarch64 first: "gazeplay-macos*" would also match it
+          mv gazeplay-macos-aarch64-*.tar.gz gazeplay-macos-aarch64.tar.gz
+          mv gazeplay-macos-[0-9]*.tar.gz gazeplay-macos.tar.gz
           mv gazeplay-arm*.tar.gz gazeplay-arm.tar.gz
           mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
           mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
-          mv gazeplay-windows-x32*.zip gazeplay-windows-x32.zip
-          mv gazeplay-windows-x32*installer.exe gazeplay-windows-x32-installer.exe
-          mv gazeplay-afsr-windows-x64*.zip gazeplay-afsr-windows-x64.zip
-          mv gazeplay-afsr-windows-x64*installer.exe gazeplay-afsr-windows-x64-installer.exe
-          mv gazeplay-afsr-windows-x32*.zip gazeplay-afsr-windows-x32.zip
-          mv gazeplay-bera-windows-x64*.zip gazeplay-bera-windows-x64.zip
-          mv gazeplay-bera-windows-x64*installer.exe gazeplay-bera-windows-x64-installer.exe
-          mv gazeplay-bera-windows-x32*.zip gazeplay-bera-windows-x32.zip
           mv gazeplay-no-jre*.zip gazeplay-no-jre.zip          
           
       - name: Get Env
@@ -140,10 +131,6 @@ jobs:
           git commit -m "Setup next release for gradle"
           git push
           
-      # add this to add afsr installer 32bits to the release
-      # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe   
-      # add this to add bera installer 32bits to the release
-      # ./build/distributions/gazeplay-bera-windows-x32-installer.exe
       - name: Create GitHub Release
         id: create_release
         uses: ncipollo/release-action@v1
@@ -154,4 +141,4 @@ jobs:
           commit: "master"
           prerelease: true
           draft: false
-          artifacts: "./build/distributions/gazeplay-linux-x64.tar.gz,./build/distributions/gazeplay-macos.tar.gz,./build/distributions/gazeplay-arm.tar.gz,./build/distributions/gazeplay-windows-x64.zip,./build/distributions/gazeplay-windows-x64-installer.exe,./build/distributions/gazeplay-windows-x32.zip,./build/distributions/gazeplay-windows-x32-installer.exe,./build/distributions/gazeplay-afsr-windows-x64.zip,./build/distributions/gazeplay-afsr-windows-x64-installer.exe,./build/distributions/gazeplay-afsr-windows-x32.zip,./build/distributions/gazeplay-bera-windows-x64.zip,./build/distributions/gazeplay-bera-windows-x64-installer.exe,./build/distributions/gazeplay-bera-windows-x32.zip,./build/distributions/gazeplay-no-jre.zip"
+          artifacts: "./build/distributions/gazeplay-linux-x64.tar.gz,./build/distributions/gazeplay-macos.tar.gz,./build/distributions/gazeplay-macos-aarch64.tar.gz,./build/distributions/gazeplay-arm.tar.gz,./build/distributions/gazeplay-windows-x64.zip,./build/distributions/gazeplay-windows-x64-installer.exe,./build/distributions/gazeplay-no-jre.zip"

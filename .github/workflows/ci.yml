@@ -27,3 +27,84 @@ jobs:
         with:
           name: Spotbugs Reports
           path: '**/build/spotbugs/'
+
+  test:
+    runs-on: ubuntu-latest
+
+    # 17: bundled runtime and bytecode target; 21: next LTS, to know when the runtime can move (see MODERNIZATION.md)
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '17', '21' ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }} (Azul Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: ${{ matrix.java }}
+
+      # JavaFX tests (TestFX ApplicationExtension) need a display
+      - name: Install virtual X server
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      # Tests are hermetic: Gradle points user.home and the edition file to build/test-home (see build.gradle)
+      - name: Run tests
+        run: |
+          chmod +x ./gradlew
+          xvfb-run --auto-servernum ./gradlew --stacktrace --continue :gazeplay-results:test :gazeplay-gaze:test :gazeplay-commons:test :gazeplay-games-commons:test :gazeplay-core:test :gazeplay-games:test :gazeplay-core:smokeTest
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Test Reports (JDK ${{ matrix.java }})
+          path: '**/build/reports/tests/'
+
+  # Builds the real Linux distribution (bundled JRE and Tobii drivers, downloads checked against their SHA-256) and
+  # starts GazePlay with its launcher script, as a user would
+  package-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Azul Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install virtual X server
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      - name: Build the Linux distribution
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --stacktrace linuxDistTar
+
+      - name: Launch GazePlay from the distribution
+        run: |
+          mkdir -p /tmp/gazeplay-dist /tmp/gazeplay-home/GazePlay
+          # Mouse mode: this job checks the distribution and its launcher, not the eye trackers (no device in the CI)
+          echo "EYE_TRACKER=mouse_control" > /tmp/gazeplay-home/GazePlay/GazePlay.properties
+          tar -xzf build/distributions/gazeplay-linux-x64-*.tar.gz -C /tmp/gazeplay-dist
+          cd /tmp
+          # Started from another folder than bin/, without terminal, with a fresh home: it must still be running after 40 s
+          set +e
+          HOME=/tmp/gazeplay-home timeout 40 xvfb-run --auto-servernum \
+            sh /tmp/gazeplay-dist/gazeplay-linux-x64-*/bin/gazeplay-linux.sh --default-user < /dev/null > /tmp/gazeplay.log 2>&1
+          status=$?
+          set -e
+          # The launcher turns the console log off: the log of GazePlay is in its folder
+          LOG=/tmp/gazeplay-home/GazePlay/gazeplay.log
+          tail -50 /tmp/gazeplay.log; tail -50 "$LOG"
+          if [ "$status" != "124" ]; then echo "GazePlay stopped (exit code $status)"; exit 1; fi
+          grep -q "Games found : " "$LOG" || { echo "The game catalog was not loaded"; exit 1; }
+          if cat /tmp/gazeplay.log "$LOG" | grep -E "Exception| ERROR " | grep -vE "Failure while loading Properties file|NoSuchFileException|UnixException|at java.base/|ConfigurationSource"; then
+            echo "Unexpected errors"; exit 1
+          fi

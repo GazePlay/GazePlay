@@ -11,11 +11,12 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17 (Azul Zulu)
+        uses: actions/setup-java@v4
         with:
-          java-version: 17
+          distribution: 'zulu'
+          java-version: '17'
       - name: Package with Gradle (no test)
         run: |
           ./gradlew --stacktrace --info packageApp -x test
@@ -25,7 +26,7 @@ jobs:
           chmod -R 777 build/jre
           ./gradlew --stacktrace --info generateWindowsInstallerInDocker
       - name: Save Package Job Artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: package-artifacts
           path: build/distributions/
@@ -35,17 +36,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Package Job Artifacts
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: package-artifacts
+          path: package-artifacts
+      # AWS CLI of the runner instead of jakejarvis/s3-sync-action (archived, was used unpinned with the secrets)
       - name: Upload to S3
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read
+        run: aws s3 sync package-artifacts "s3://${AWS_S3_BUCKET}/snapshots" --acl public-read
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'eu-west-3'                  # optional: defaults to us-east-1
-          SOURCE_DIR: 'package-artifacts'          # optional: defaults to entire repository
-          DEST_DIR: 'snapshots'
+          AWS_DEFAULT_REGION: 'eu-west-3'
