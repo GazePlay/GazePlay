@@ -1126,7 +1126,10 @@ Le mainteneur a vu les notes « uses unchecked or unsafe operations » en lança
 - **Correction** (`ci.yml`) : durée maximale par job (`timeout-minutes` : 20 pour `build`, 30 pour les autres, contre 6 h par défaut ; les jobs durent de 2 à 13 min) ; 10 min au plus et 3 nouvelles tentatives pour les étapes `apt-get`. Deux commentaires périmés corrigés : le runtime livré est Zulu 25 avec JavaFX 25.
 
 ### Vérifié (Windows 11, JDK 25)
-Suite complète **409 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; `ci.yml` relu par un analyseur YAML. Le comportement de `timeout-minutes` ne se verra qu'en CI.
+Suite complète **409 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; `ci.yml` relu par un analyseur YAML. CI du push (run 39800266936) : 6 jobs verts.
+
+### `CLAUDE.md` mis à jour (22/10/2026)
+Il décrivait encore l'état de l'audit d'origine : Java 17, Spring, PMD, Eye Tracker 4C, journaux dans le dossier courant, `PetHouse` et `GazePlayArgs` non corrigés, `jakejarvis/s3-sync-action`, références `fichier:ligne` d'un ancien commit. Il décrit maintenant l'état actuel, avec l'état de chaque anomalie R1–R13 et les questions encore ouvertes. Chaque fait a été revérifié dans le code avant d'être écrit.
 
 ---
 
