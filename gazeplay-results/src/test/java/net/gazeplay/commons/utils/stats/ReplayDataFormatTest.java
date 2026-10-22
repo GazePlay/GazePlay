@@ -39,6 +39,18 @@ class ReplayDataFormatTest {
         assertEquals(10, point.getY());
     }
 
+    /**
+     * Versions 2 and 3 have the same structure: "x" holds X and "y" holds Y in both.
+     */
+    @Test
+    void shouldReadTheCoordinatesOfVersions2And3TheSameWay() {
+        List<LinkedList<FixationPoint>> inFile = new Gson().fromJson(
+            "[[],[{\"timeGaze\":1100,\"gazeDuration\":300,\"x\":10,\"y\":40}]]", SEQUENCES);
+
+        assertEquals(ReplayDataFormat.fromFile(2, inFile), ReplayDataFormat.fromFile(3, inFile));
+        assertEquals(40, ReplayDataFormat.fromFile(3, inFile).get(1).get(0).getX());
+    }
+
     @Test
     void shouldReadBackWhatIsWritten() {
         LinkedList<FixationPoint> gaze = new LinkedList<>(List.of(new FixationPoint(1100, 300, 40, 10)));

@@ -117,6 +117,47 @@ class StatsRecordingCharacterizationTest {
         assertEquals("gaze", samples.get(0).get("event").getAsString());
     }
 
+    private void gazeAcquiredAt(long sampleTime, double x, double y) {
+        onFxThread(() -> Event.fireEvent(root, new GazeEvent(GazeEvent.GAZE_MOVED, now.get(), x, y, sampleTime)));
+    }
+
+    /**
+     * Version 3: a gaze sample is recorded at its acquisition time. Samples queued while the JavaFX thread was busy,
+     * handled in the same millisecond, used to get that same time (in the Tobii results: 74 samples out of 1636 with
+     * the time of the previous one, and gaps of up to 250 ms).
+     */
+    @Test
+    void shouldRecordTheGazeSamplesAtTheirAcquisitionTime() {
+        onFxThread(stats::start);
+        long start = now.get();
+        now.addAndGet(300);
+
+        // Handled together, at start + 300 ms: acquired at start + 260 and start + 270
+        gazeAcquiredAt(start + 260, 200, 150);
+        gazeAcquiredAt(start + 270, 210, 150);
+
+        List<Long> times = samples().stream().map(sample -> sample.get("time").getAsLong()).collect(Collectors.toList());
+        assertEquals(List.of(260L, 270L), times);
+        // The gaze fixation sequence uses the same times
+        FixationPoint first = stats.getFixationSequence().get(1).getFirst();
+        assertEquals(start + 260, first.getTimeGaze());
+    }
+
+    /**
+     * A sample acquired before the start of the round, still queued at its start, belongs to the previous round.
+     */
+    @Test
+    void shouldIgnoreTheGazeSamplesAcquiredBeforeTheRound() {
+        onFxThread(stats::start);
+        long start = now.get();
+
+        gazeAcquiredAt(start - 5, 200, 150);
+        gazeAcquiredAt(start + 5, 200, 150);
+
+        List<Long> times = samples().stream().map(sample -> sample.get("time").getAsLong()).collect(Collectors.toList());
+        assertEquals(List.of(5L), times);
+    }
+
     /**
      * R1, version 2: heatmap.csv and metricsMouseAndGaze.png keep both sources together (as in version 1), and each
      * source has its own matrix (heatmapGaze.csv, heatmapMouse.csv, metricsGaze.png, metricsMouse.png). Version 1

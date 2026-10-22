@@ -436,12 +436,16 @@ public class Stats implements GazeMotionListener {
 
             recordGazeMovements = e -> {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
-                    final long timeToFixation = clock.getAsLong() - startTime;
+                    // Format version 3: time of the acquisition of the sample, not of its handling on the JavaFX
+                    // thread (samples queued while it was busy got the same time, and the time of the next ones)
+                    final long sampleTime = e.getSampleTime() > 0 ? e.getSampleTime() : clock.getAsLong();
+                    final long timeToFixation = sampleTime - startTime;
                     final long timeInterval = (timeToFixation - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                     final int getX = (int) toSceneCoordinate.getX();
                     final int getY = (int) toSceneCoordinate.getY();
-                    if (getX > 0 && getY > 0) {
+                    // Samples acquired before the start of the round (still queued) belong to the previous one
+                    if (getX > 0 && getY > 0 && timeToFixation >= 0) {
 
                         setJSONCoordinates(timeToFixation, getX, getY, "gaze");
 
@@ -449,7 +453,7 @@ public class Stats implements GazeMotionListener {
                             incrementHeatMap(getX, getY, true);
                         }
                         if (!config.isFixationSequenceDisabled()) {
-                            incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
+                            incrementFixationSequence(getX, getY, sampleTime, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
 
                         if (config.isAreaOfInterestDisabled()) {
@@ -828,7 +832,11 @@ public class Stats implements GazeMotionListener {
     }
 
     void incrementFixationSequence(final int x, final int y, LinkedList<FixationPoint> fixationSequence) {
-        FixationSequenceRecorder.add(fixationSequence, clock.getAsLong(), x, y);
+        incrementFixationSequence(x, y, clock.getAsLong(), fixationSequence);
+    }
+
+    private void incrementFixationSequence(final int x, final int y, final long time, LinkedList<FixationPoint> fixationSequence) {
+        FixationSequenceRecorder.add(fixationSequence, time, x, y);
     }
 
     void incrementHeatMap(final int x, final int y, final boolean gaze) {

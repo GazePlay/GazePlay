@@ -15,12 +15,17 @@ import java.util.List;
  * <li>"fixationSequence": "x" is the horizontal and "y" the vertical coordinate (version 1: swapped, R11), and the
  * durations are those of the fixations (R2).</li>
  * </ul>
+ * Difference of version 3: the "time" of the gaze samples of "coordinatesAndTimeStamp", and the "timeGaze" (hence the
+ * durations) of the gaze fixation sequence, are the times the samples were acquired, no longer the times they were
+ * handled on the JavaFX thread. Samples queued while this thread was busy used to get the same time (several samples
+ * with the same "time"), and a later one. Each source ("gaze", "mouse") stays in increasing time order, but a mouse
+ * sample can now precede a gaze sample of a slightly earlier time in the array. The mouse samples are unchanged.
  * In memory, {@link FixationPoint} keeps the convention of version 1 (Y in "x", X in "y"), which the drawing code
  * relies on: the conversion happens when the file is written and read.
  */
 public final class ReplayDataFormat {
 
-    public static final int CURRENT_VERSION = 2;
+    public static final int CURRENT_VERSION = 3;
 
     /**
      * Version of the files written without "formatVersion".

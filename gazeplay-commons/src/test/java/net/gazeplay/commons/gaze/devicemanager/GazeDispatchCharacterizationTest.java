@@ -122,6 +122,22 @@ class GazeDispatchCharacterizationTest {
         assertEquals(140, events.get(1).getX(), 0.5);
     }
 
+    /**
+     * The events also carry the acquisition time of their sample, recorded by the statistics (format version 3); the
+     * entry time used by the games is unchanged.
+     */
+    @Test
+    void shouldGiveTheAcquisitionTimeOfTheSampleToTheEvents() throws InterruptedException {
+        startRecording();
+
+        onFxThread(() -> manager.onGazeSample(new GazeSample(1234, onScreen(110, 110), GazeSample.Source.GAZE)));
+        onFxThread(() -> manager.onGazeSample(new GazeSample(1250, onScreen(140, 140), GazeSample.Source.GAZE)));
+
+        assertEquals(List.of("GAZE_ENTERED", "GAZE_MOVED"), eventTypes());
+        assertEquals(List.of(1234L, 1250L), events.stream().map(GazeEvent::getSampleTime).collect(Collectors.toList()));
+        assertEquals(events.get(0).getTime(), events.get(1).getTime());
+    }
+
     @Test
     void shouldTrackTheMouseAndTheGazeSeparately() throws InterruptedException {
         startRecording();

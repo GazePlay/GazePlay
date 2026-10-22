@@ -207,10 +207,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         final String event = sample.source().eventName();
         for (GazeInfos gi : nodes) {
             if (gi.getNode() != root.getNode()) {
-                eventFire(positionX, positionY, gi, event);
+                eventFire(positionX, positionY, gi, event, sample.time());
             }
         }
-        eventFire(positionX, positionY, root, event);
+        eventFire(positionX, positionY, root, event, sample.time());
     }
 
     public boolean contains(Node node, double positionX, double positionY) {
@@ -232,6 +232,13 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
      * @return true if the position is on the node
      */
     public boolean eventFire(double positionX, double positionY, GazeInfos gi, String event) {
+        return eventFire(positionX, positionY, gi, event, 0);
+    }
+
+    /**
+     * @param sampleTime acquisition time of the sample, given to the events ({@link GazeEvent#getSampleTime()})
+     */
+    boolean eventFire(double positionX, double positionY, GazeInfos gi, String event, long sampleTime) {
         final Node node = gi.getNode();
         if (node.isDisable()) {
             return false;
@@ -250,7 +257,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 gi.setTime(System.currentTimeMillis());
             }
             fire(node, new GazeEvent(wasOn ? GazeEvent.GAZE_MOVED : GazeEvent.GAZE_ENTERED, gi.getTime(),
-                localPosition.getX(), localPosition.getY()));
+                localPosition.getX(), localPosition.getY(), sampleTime));
             return true;
         }
 
@@ -262,7 +269,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             }
             gi.setTime(-1);
             if (localPosition != null) {
-                fire(node, new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()));
+                fire(node, new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY(),
+                    sampleTime));
             }
         }
         return false;

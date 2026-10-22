@@ -24,6 +24,10 @@ public class GazeEvent extends InputEvent {
 
     public static final EventType<GazeEvent> GAZE_EXITED = new EventType<>(GazeEvent.GAZE_EXITED_TARGET, "GAZE_EXITED");
 
+    /**
+     * Time the position entered the node (GAZE_ENTERED, GAZE_MOVED), -1 when it left it (GAZE_EXITED): used by the
+     * games for the fixation length.
+     */
     @Getter
     private final long time;
 
@@ -32,6 +36,13 @@ public class GazeEvent extends InputEvent {
 
     @Getter
     private final double y;
+
+    /**
+     * Acquisition time of the sample ({@link GazeSample#time()}, System.currentTimeMillis()), 0 when unknown. It can
+     * precede the handling of the event by a few milliseconds, or more when the JavaFX thread is busy.
+     */
+    @Getter
+    private final long sampleTime;
 
     /**
      * Creates a new {@code LightningEvent} with an event type of {@code PLASMA_STRIKE}. The source and Target of the
@@ -50,10 +61,15 @@ public class GazeEvent extends InputEvent {
     }
 
     public GazeEvent(final EventType<GazeEvent> et, final long time, final double x, final double y) {
+        this(et, time, x, y, 0);
+    }
+
+    public GazeEvent(final EventType<GazeEvent> et, final long time, final double x, final double y, final long sampleTime) {
         super(et);
         this.time = time;
         this.x = x;
         this.y = y;
+        this.sampleTime = sampleTime;
     }
 
     /**
@@ -69,6 +85,7 @@ public class GazeEvent extends InputEvent {
         this.time = 0;
         this.x = 0;
         this.y = 0;
+        this.sampleTime = 0;
     }
 
     @Override

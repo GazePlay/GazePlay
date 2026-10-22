@@ -6,7 +6,8 @@ import javafx.geometry.Point2D;
  * A position given by a gaze source, in screen coordinates.
  *
  * @param time           acquisition time (System.currentTimeMillis()), taken when GazePlay receives the position: the
- *                       Tobii wrapper gives no timestamp of the eye tracker (see CLAUDE.md, "Flux du regard")
+ *                       Tobii wrapper gives no timestamp of the eye tracker (see CLAUDE.md, "Flux du regard"). It is
+ *                       the "time" of the gaze samples of replayData.json since format version 3
  * @param screenPosition position on the screen
  * @param source         gaze, or mouse used as a gaze (replay of the recorded mouse samples)
  */

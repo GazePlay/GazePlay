@@ -26,16 +26,16 @@ class ReplayDataWriterTest {
     }
 
     /**
-     * Exact text of replayData.json, key order included: persistent format, version 2. Compared to version 1, only
+     * Exact text of replayData.json, key order included: persistent format, version 3. Compared to version 1, only
      * "formatVersion" is added in front and "x"/"y" of the fixation points are no longer swapped (the point in memory
-     * holds Y in "x": 40 is the Y coordinate).
+     * holds Y in "x": 40 is the Y coordinate). Version 3 changes the meaning of the gaze times, not the structure.
      */
     @Test
     void shouldWriteTheReplayDataFormat() {
         List<LinkedList<FixationPoint>> fixationSequence = new ArrayList<>(List.of(
             new LinkedList<>(), new LinkedList<>(List.of(new FixationPoint(1100, 300, 40, 10)))));
 
-        assertEquals("{\"formatVersion\":2,\"gameSeed\":3.5,\"gameName\":\"Divisor\",\"gameVariant\":\"IntGameVariant:2\","
+        assertEquals("{\"formatVersion\":3,\"gameSeed\":3.5,\"gameName\":\"Divisor\",\"gameVariant\":\"IntGameVariant:2\","
                 + "\"gameStartedTime\":1000,\"screenAspectRatio\":\"16:9\",\"sceneAspectRatio\":1.6,"
                 + "\"statsNbGoalsReached\":2,\"statsNbGoalsToReach\":5,\"statsNbUnCountedGoalsReached\":1,"
                 + "\"statsNbMistakes\":0,\"lifeCycle\":{\"startTime\":1000,\"stopTime\":null},"
