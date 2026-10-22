@@ -1185,16 +1185,54 @@ Suite complète **410 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; deux jeu
 
 ## 9. Reprise à la prochaine session
 
-### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10
+### 9.0 Pause du 22/10/2026 au soir (après l'étape 26) : à lire en premier
 
-- Branche `addClaudeCode`, poussée régulièrement avec l'accord du mainteneur ; CI verte à chaque push depuis l'étape 15. Pas de pull request (décision du mainteneur). Code Eval laissé de côté. Gradle reste en 9.8.2.
-- Fait depuis l'étape 10 : sections 2l à 2x (Java 25, singletons arrêtés à l'étape 5, Eye Tracker 5 vérifié, format v3, avertissements de Java 25, menu sur le thread JavaFX, distributions sans seconde copie de JavaFX).
-- Reste ouvert, par ordre de valeur estimée :
-  1. ~~dépréciations Gradle~~ : identifiées, toutes dans des plugins tiers, sans effet en Gradle 9.8.2 (2y) ;
-  2. ~~alertes Dependabot~~ : toutes dans `docs/Gemfile.lock`, retiré sur `addClaudeCode` (2y) ;
-  3. ~~PMD~~ : retiré (2y). Reste `sysout-over-slf4j` (2013) ;
-  4. décisions métier : R13 (zones d'intérêt de la souris), retraitement des fichiers historiques v1, numéro et publication de la version (9.7) ;
-  5. matériel et plateformes non testés : Linux avec Tobii, ARM Linux, macOS Intel.
+Les sous-sections 9.1 à 9.7, plus bas, datent de l'étape 10 et ne sont gardées que pour l'historique.
+
+#### État exact à la pause
+- Branche **`addClaudeCode`**, dernier commit poussé **`4391eb3bb`** ; arbre de travail propre ; les 4 stashes intacts. Aucune autre branche touchée.
+- **CI de `4391eb3bb`** (run 39808266506) : **6 jobs verts**, dont les trois lancements réels sous Windows, Linux et macOS : le menu, puis une vraie partie de « Où est la forme ? », grâce à `--variant`. Le job « test (25) » a d'abord échoué sans lancer un seul test : `apt-get update` était bloqué sur un miroir d'Azure, coupé par la limite de 10 min. Relancé seul, il est vert.
+- Suite locale (Windows 11, JDK 25) : **410 tests, 0 échec**, `smokeTest` 2/2, SpotBugs vert, `./gradlew build` réussi, installeur Windows construit.
+- Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (IntelliJ : Gradle JVM et SDK `zulu-25`). Le terminal a un `java` 17 dans le PATH : préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`. Inno Setup 6 est installé ; Docker ne l'est pas.
+
+#### Fait le 22/10/2026 (étapes 19 à 26 ; détail dans les sections 2u à 2ac)
+- **Poste de développement** : JDK 25 installé et vérifié (somme SHA-256), guide `INTELLIJ.md`.
+- **Eye Tracker 5** : deux vraies parties contrôlées (Tarte à la crème). **Format de résultats v3** : points de regard datés à leur lecture ; vérifié sur données réelles, plus aucun point au même instant (2v).
+- **Avertissements au lancement** : Java 25 (`--enable-native-access`, `Unsafe`), Guava 19 caché dans le jar EyeTribe (2u) ; avertissements CSS du menu (interface modifiée hors du thread JavaFX), confirmés disparus par le mainteneur (2w).
+- **Distributions** : plus de seconde copie de JavaFX, soit 10 Mo de moins (2x) ; plus de rapport interne de Gradle livré (2y).
+- **Build** : `./gradlew build` réparé ; installeur Windows réparé (cassé depuis Gradle 9) ; runtime macOS reconstructible ; PMD retiré ; source des 35 alertes Dependabot retirée (`docs/Gemfile.lock`) (2y).
+- **Code** : boutons « voir le dossier » et « voir le fichier » réparés hors Windows ; API dépréciées 43 → 3 ; `Observable` mort retiré (2z) ; conversions non vérifiées 14 → 3 (2aa) ; enregistrement vidéo sans enregistreur ; code mort retiré ; avertissements `Unknown module` des tests supprimés (2ab).
+- **Revue des exclusions SpotBugs** : Whac-a-Mole et Shoot the Robots / Biboules modifiaient la scène depuis un minuteur, corrigé et vérifié en jeu (2ac).
+- **CI** : durée maximale par job (un job était resté bloqué 2 h sur `apt-get`) (2aa) ; les lancements « jeu » font maintenant jouer le jeu, au lieu de s'arrêter sur la fenêtre de variante (2ac).
+- **Documentation** : `CLAUDE.md` réécrit pour l'état actuel ; décisions du mainteneur notées.
+
+#### Décisions du mainteneur prises le 22/10/2026
+- Fusion de `GazePlayLearning`, numéro et publication de la version : **après la fin de la modernisation**.
+- **Pas de retraitement** des fichiers de résultats historiques v1.
+- **Une JVM par jeu : gardée.** **Licence Tobii : réglée** (usage analytique couvert).
+- Gradle reste en 9.8.2 ; pas de pull request ; code Eval laissé de côté ; PMD retiré (SpotBugs suffit).
+
+#### À faire demain, par ordre proposé
+1. ~~Contrôler la CI de `4391eb3bb`~~ : **verte** (voir l'état ci-dessus).
+2. **Essais du mainteneur dans l'application**, que je ne peux pas faire :
+   - Réglages → « Voir le dossier », et à l'écran des statistiques le bouton qui montre le fichier : la bonne fenêtre de l'explorateur doit s'ouvrir ;
+   - une partie de Whac-a-Mole et une de Shoot the Robots : les taupes et la boîte doivent se comporter comme avant.
+3. **Audit des threads, suite logique de l'étape 26** : chercher dans tout le code (jeux, `core`, `commons`) les autres endroits qui modifient la scène hors du thread JavaFX (`Timer`, `Thread`, exécuteurs, rappels de bibliothèques).
+4. **Lancement automatique de tous les jeux** (proposition) : un test, ou un job de CI, qui ouvre chacun des 75 jeux avec une variante pendant quelques secondes et vérifie l'absence d'erreur. Aujourd'hui, la plupart des jeux n'ont aucun test, et un jeu cassé au démarrage passerait inaperçu.
+5. **CI : fiabiliser l'installation des paquets Ubuntu.** `apt-get update` a bloqué deux fois le 22/10/2026 (miroir d'Azure injoignable). La seconde fois, la limite de 10 minutes de l'étape 24 a coupé court, puis le job a été relancé à la main. Piste : relancer automatiquement l'étape en cas d'échec, ou utiliser un autre miroir.
+6. Optionnel : rendre robuste la cadence de tir de Survive Against Robots (`compteur == 60 * fréquence`, correct aujourd'hui mais fragile).
+7. Restes liés à Eval (3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs) : **à traiter à la fusion de `GazePlayLearning`**, pas avant.
+8. **Fin de la modernisation**, puis, selon les décisions du mainteneur : fusion de `GazePlayLearning`, test de l'installation réelle par l'installeur Windows, numéro (1.12.0 proposé) et publication.
+
+#### Toujours ouvert, sans action prévue
+- R13 (zones d'intérêt de la souris) : seulement si le laboratoire s'en sert.
+- Maintien d'EyeTribe (appareil plus fabriqué).
+- Non testés faute de matériel : Tobii sous Linux, ARM Linux, macOS Intel.
+
+#### Précautions apprises aujourd'hui
+- Ne jamais enchaîner `git add ; git commit ; git push` dans une seule commande PowerShell : un `git add` en échec a laissé partir un commit incomplet (`ac61079e8`, réparé par `dcd7f3277`).
+- GitHub peut afficher un run « terminé » alors que des jobs tournent encore : suivre les jobs (`gh api .../runs/<id>/jobs`). `gh run list --commit` attend l'identifiant complet du commit.
+- Pour lancer un jeu à variantes en ligne de commande, il faut `--variant` ; sinon GazePlay attend sur la fenêtre de choix.
 
 ## 9-bis. Reprise (mise à jour le 21/10/2026, étape 10)
 
