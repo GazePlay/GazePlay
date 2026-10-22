@@ -54,8 +54,9 @@ round, in `~/GazePlay/statistics/<game>/<date>/` (or the profile folder): `repla
 `coordinatesAndTimeStamp`, fixation sequence), `heatmap.csv` (mouse and gaze), `heatmapGaze.csv`, `heatmapMouse.csv`,
 `metrics*.png`, screenshot and `info-game.csv`.
 These are persistent formats used by researchers. `replayData.json` holds its version in `formatVersion` (absent in
-the files of version 1); the files are never rewritten, and `ReplayDataFormat` documents the differences between the
-versions and converts the fixation sequence when the replay reads a file. The behaviour is pinned by
+the files of version 1, 3 since October 2026); the files are never rewritten, and `ReplayDataFormat` documents the
+differences between the versions and converts the fixation sequence when the replay reads a file. The gaze samples
+are dated when they are read from the eye tracker (`GazeSample.time`, carried by `GazeEvent.getSampleTime()`). The behaviour is pinned by
 `StatsRecordingCharacterizationTest` and `ReplayDataWriterTest`; the history is in MODERNIZATION.md.
 
 GazePlay Eval writes its exports (CSV in UTF-16, Excel) through `EvalReport`, tested by `EvalReportTest`.

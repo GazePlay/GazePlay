@@ -19,12 +19,17 @@ it is chosen by the maintainers at release time. Details, verifications and rema
 - Remaining versions: Windows x64, Linux x64, Linux ARM 64 bits, macOS (Intel and Apple
   Silicon), and the version without Java runtime.
 
-### Results files: format version 2
+### Results files: format version 3
 The results written by the games change on some points, to fix errors found in the recorded data. **The files
 already recorded are not modified**, and the replay of the games still reads them.
 
-- `replayData.json` now starts with `"formatVersion": 2`. The files without this key are version 1 (all the files
-  written by the previous versions).
+- `replayData.json` now starts with `"formatVersion": 3`. The files without this key are version 1 (all the files
+  written by the previous versions); version 2 was only written by development builds of this version.
+- The `time` of the gaze samples, and the times and durations of the gaze fixations, are the times the eye tracker
+  positions were read, no longer the times they were handled by the user interface: samples handled together while
+  it was busy used to get the same, later, time. Each source stays in time order, but a mouse sample can now come
+  just before a gaze sample of a slightly earlier time: sort or split the samples by `event` before computing
+  intervals. The mouse samples are unchanged.
 - `coordinatesAndTimeStamp` only holds the samples of its round. It used to also hold the samples of all the previous
   rounds of the same session.
 - The mouse samples are the mouse movements only. Mouse clicks used to be recorded as additional samples.
@@ -81,6 +86,7 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
   Java 25 and 26, with a real launch of the Windows, macOS and Linux distributions.
 
 ## Not verified
-- Eye trackers (Tobii, EyeTribe): no hardware test was done.
+- Eye trackers: the Tobii Eye Tracker 5 was tested on Windows x64 (gaze followed in a game, results checked); no
+  other eye tracker (Tobii 4C, EyeTribe) and no Linux test with hardware.
 - Linux, macOS and ARM distributions: built, not launched on a real machine (the Linux one is launched by the
   continuous integration).

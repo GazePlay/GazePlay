@@ -894,7 +894,7 @@ Le laboratoire utilise désormais l'**Eye Tracker 5** (et plus le 4C). Essai sou
 
 État Git à la pause : dernier commit poussé `52983f0ee` (CI verte, 6 jobs). **Ce paragraphe n'est pas commité.**
 
-**22/10/2026** : le mainteneur a joué une partie avec l'Eye Tracker 5 depuis IntelliJ : le regard est suivi sans souci (point 1 en partie fait ; les résultats enregistrés n'ont pas encore été contrôlés).
+**22/10/2026** : le mainteneur a joué une partie avec l'Eye Tracker 5 depuis IntelliJ, et le regard est suivi sans souci. Les résultats ont été contrôlés (section 2v). Le point 2 est sans objet, car `Stats` n'enregistre jamais les `-1`. Le point 3 est fait dans `CLAUDE.md` et les notes de version.
 
 ## 2u. Étape 19 — JDK 25 côté développeur et avertissements de Java 25 au lancement (22/10/2026)
 
@@ -928,6 +928,62 @@ Le laboratoire utilise désormais l'**Eye Tracker 5** (et plus le 4C). Essai sou
 **Non vérifié** : Linux, macOS et ARM, en dehors de ce que fera la CI ; un jeu lancé depuis le menu de la distribution par un clic réel.
 
 **Constat annexe (non corrigé)** : les distributions livrent aussi les jars JavaFX 21 (`lib/javafx-*-21.0.13-win.jar`). Ils sont inutilisés, puisque les modules JavaFX 25 du runtime ont la priorité. À retirer après vérification sur les 5 plateformes.
+
+## 2v. Étape 20 — Contrôle d'une partie avec l'Eye Tracker 5, puis format de résultats v3 : instant de lecture du regard (22/10/2026)
+
+### Contrôle des résultats d'une vraie partie
+
+Partie *Creampie* jouée par le mainteneur avec l'Eye Tracker 5, depuis IntelliJ, le 22/10/2026 à 10 h 52. Les fichiers de `~/GazePlay/statistics/creampie/2026-10-22/` ont été lus sans être modifiés, avec un script hors dépôt.
+
+| Contrôle | Résultat (**fait**) |
+|---|---|
+| Fichiers | Format v2 complet : `replayData.json`, `heatmap.csv`, `heatmapGaze.csv`, `heatmapMouse.csv`, 3 `metrics*.png`, capture d'écran, `info-game.csv` |
+| Points de regard | 1 636 points en 17,1 s, soit 95,6 par seconde (interrogation toutes les 10 ms) ; 140 points de souris |
+| Positions | Toutes dans l'écran (X 0,07–0,92, Y 0,08–0,90) ; aucune à (0,5 ; 0,5), donc pas de regard fantôme (R9) |
+| Temps | Jamais décroissant : R5 est bien corrigé |
+| Heatmaps | Regard (498 980) + souris (42 700) = mixte (541 680) : R1 est bien corrigé |
+| Fixations | 16 pour la souris, 113 pour le regard ; `x` et `y` dans le bon ordre (R11) |
+| `metricsGaze.png` | Regard concentré sur la cible (hibou), puis parcours vers la main et la roue des réglages : cohérent avec la capture d'écran |
+| `info-game.csv` | Heure 10:52:46 (R3 corrigé) ; durée totale 17 694 ms = `stopTime` − `startTime` ; les 3 tirs (2 205 + 3 625 + 2 169) font 7 999 ms |
+
+- **Fait (lecture du code)** : les positions `-1` de l'Eye Tracker 5 (regard perdu) ne sont jamais enregistrées. Le filtre de `Stats` ignore tout point de regard dont une coordonnée n'est pas strictement positive (`getX > 0 && getY > 0`). Le filtrage proposé en 2t est donc inutile pour les résultats.
+- **Fait** : 1 146 points sur 1 636 répètent la position précédente, soit environ 490 positions différentes, à peu près 29 par seconde. **Hypothèse** : l'Eye Tracker 5 fournit environ 30 positions par seconde, que l'interrogation à 100 Hz répète (R6, déjà connu). La heatmap pèse donc le temps passé à chaque endroit, pas le nombre de mesures de l'appareil.
+- **Fait** : « Nb Goals » vaut 4 alors que 3 cibles sont atteintes. Pour les jeux de tir, la colonne donne le nombre de cibles à atteindre (`ShootGamesStats`). Ce comportement est ancien, sans lien avec le Tobii, et n'est pas modifié, car ce serait un changement de format de `info-game.csv`.
+- **Fait, corrigé ci-dessous** : 74 points de regard ont le même `time` que le précédent, dont 59 avec la même position, et le plus grand écart atteint 250 ms.
+
+### Cause et correction : format v3
+
+**Cause (fait, lecture du code)** :
+- L'instant de lecture de chaque point est pris sur le thread d'interrogation (`GazeSample.time`), mais il ne parvenait pas à `Stats`.
+- `Stats` datait chaque point au moment de son traitement sur le thread JavaFX (`clock`).
+- Quand ce thread était occupé, les points en attente étaient traités ensemble : même `time`, et un `time` plus tardif que leur vraie lecture.
+
+**Correction** (décision du mainteneur : « fais-le si tu penses que c'est mieux, et si besoin modifie le format ») :
+- `GazeEvent` reçoit un nouveau champ `sampleTime`, l'instant de lecture du point, transmis par `AbstractGazeDeviceManager`. Le champ `time`, instant d'entrée sur un nœud utilisé par les jeux pour la durée de fixation, **ne change pas**.
+- `Stats` date les points de regard à `sampleTime`, aussi bien dans `coordinatesAndTimeStamp` que dans le `timeGaze` de la séquence de fixations du regard, donc dans ses durées. Sans `sampleTime`, par exemple pour un événement créé par un test, l'ancienne horloge sert toujours.
+- Un point lu avant le début de la manche, et encore en attente à ce moment, n'est pas enregistré dans la nouvelle manche.
+- Les points de souris ne changent pas : JavaFX ne donne pas l'instant des mouvements de souris.
+- `ReplayDataFormat.CURRENT_VERSION = 3`, et la différence est documentée dans la classe.
+
+**Impact sur les données** :
+- Les fichiers v1 et v2 déjà produits ne sont **ni réécrits ni modifiés**, et ils se relisent comme avant. La structure du JSON est identique en v3 ; seul le sens du temps des points de regard change.
+- Pour une même source, `time` reste croissant. En revanche, dans le tableau, un point souris peut précéder de quelques millisecondes un point de regard un peu plus ancien. **Les scripts d'analyse doivent trier ou séparer par `event`** avant de calculer des écarts de temps. Le rejeu calcule déjà ses délais séparément pour chaque source.
+- Les fichiers v2 ne permettent pas de retrouver l'instant de lecture, puisqu'il n'y était pas enregistré. Leurs points de même `time` restent interprétables comme des lectures successives espacées d'environ 10 ms.
+- Les heatmaps, le nombre de points et les positions ne changent pas.
+
+**Tests ajoutés** :
+- `StatsRecordingCharacterizationTest.shouldRecordTheGazeSamplesAtTheirAcquisitionTime` ;
+- `StatsRecordingCharacterizationTest.shouldIgnoreTheGazeSamplesAcquiredBeforeTheRound` ;
+- `GazeDispatchCharacterizationTest.shouldGiveTheAcquisitionTimeOfTheSampleToTheEvents` ;
+- `ReplayDataFormatTest.shouldReadTheCoordinatesOfVersions2And3TheSameWay` ;
+- `ReplayDataWriterTest` et `StatsTest` attendent maintenant `formatVersion` 3.
+
+**Vérifié** (Windows 11, JDK 25 ; tests lancés avec `JAVA_HOME` sur le JDK 25, car le `java` du PATH du terminal est un Zulu 17) :
+- suite complète : **407 tests, 0 échec, 0 erreur, 0 test ignoré** ;
+- `smokeTest` 2/2 ;
+- SpotBugs vert. Les classes manquantes EyeTribe et monte étaient déjà signalées avant.
+
+**Non vérifié** : une nouvelle partie avec l'Eye Tracker 5, pour constater sur des données réelles la disparition des points au même instant.
 
 ---
 
@@ -1068,6 +1124,7 @@ Exécutées le 20/10/2026, Gradle 9.8.2, JDK 17 local, Windows 11 :
 - **`GazePlay.properties`** : contenu identique, seul le mode d'écriture change. **Risque résiduel** : si le fichier est un lien symbolique, il est remplacé par un fichier ordinaire (cas non identifié dans les distributions).
 - **Aucun autre format** (JSON de rejeu, heatmap, exports Eval) n'est modifié dans cette étape.
 - **Format de résultats v2** (étape 9) : voir la section 2i, « Format de résultats v2 ». `formatVersion: 2` dans `replayData.json`, nouveaux fichiers `heatmapGaze.csv` et `heatmapMouse.csv` ; fichiers v1 jamais réécrits et toujours lus.
+- **Format de résultats v3** (étape 20) : voir la section 2v. `formatVersion: 3`, même structure ; seul change le sens du temps des points de regard (instant de lecture). Fichiers v1 et v2 jamais réécrits et toujours lus.
 
 ---
 

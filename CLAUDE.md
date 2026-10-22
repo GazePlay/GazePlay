@@ -33,6 +33,8 @@ Contexte de travail pour Claude Code. Synthèse de l'audit technique et de l'ét
 - Wrapper `TobiiStreamEngineForJava:5.0` (GPL-3.0) : **JNI x64 seulement** (Windows et Linux). Rien pour x86, macOS ni ARM. L'API se limite à `float[] gazePosition()` : pas d'horodatage, pas de validité. Le code natif lit la validité sans la tester, utilise un tableau partagé sans verrou et ne se reconnecte pas.
 - **En cas d'erreur, le wrapper renvoie (0,5 ; 0,5)**, soit un regard fantôme au centre de l'écran. La valeur par défaut de la configuration est `tobii`.
 - En mode `mouse_control`, aucun `GazeEvent` n'est émis.
+- **Appareil du laboratoire : Tobii Eye Tracker 5** (vérifié le 21-22/10/2026 sous Windows x64 avec le wrapper actuel ; Stream Engine 2.0.2 embarqué, ne pas le remplacer par celui de Tobii Experience, incompatible). Il faut un calibrage dans Tobii Experience, sinon l'initialisation réussit mais aucune position n'arrive. L'appareil fournit environ 30 positions par seconde (hypothèse), répétées par l'interrogation à 100 Hz. Il renvoie aussi `-1` quand le regard est perdu : ces points ne sont jamais enregistrés (`Stats` exige des coordonnées strictement positives).
+- **Format v3 (étape 20)** : `GazeEvent.getSampleTime()` porte l'instant de lecture du point (`GazeSample.time`), et `Stats` date les points de regard (JSON, fixations) à cet instant, et non plus au traitement sur le thread JavaFX. `GazeEvent.getTime()` reste l'instant d'entrée sur le nœud, utilisé par les jeux.
 - `PetHouse.java:186` appelle `Tobii` directement, en contournant l'abstraction.
 
 ## Anomalies de résultats (confirmées par lecture du code, non encore testées)
@@ -46,7 +48,7 @@ Le JSON brut `coordinatesAndTimeStamp` de `replayData.json` est la seule source 
 | R3 | **Corrigé (étape 1)** : `timeNow()` utilisait `HH:MM:ss` (MM = mois) dans la colonne `Time` des `info-game.csv` (24 classes Stats) | `DateUtils.java` | Minutes à reprendre dans le nom de fichier |
 | R4 | **Corrigé (étape 3)** : Les filtres sont ajoutés à `scene.getRoot()` mais retirés de `scene` (sans effet) ; `reset()` en rajoute. Chaque échantillon est enregistré k fois. Simon et GazeRace dès la manche 1 (`reset()` dans `launch()`) ; 16 jeux via « Continuer » de `showRoundStats` ; tous les jeux via Rejouer | `Stats.java:598-639`, `GameContext.java:335,494` | Dédoublonnage (entrées identiques) |
 | R5 | **Corrigé en format v2 (étape 9)** : `coordinateData` n'était jamais vidé : le JSON de la manche N contient les manches 1 à N, et `time` redescend | `Stats.java` | Découpage aux ruptures de `time` |
-| R6 | Les échantillons « gaze » sont des cycles d'interrogation à environ 100 Hz, pas les échantillons de l'appareil ; le dernier point est répété quand le regard est perdu | `PositionPollerRunnable` | Partielle |
+| R6 | Les échantillons « gaze » sont des cycles d'interrogation à environ 100 Hz, pas les échantillons de l'appareil ; le dernier point est répété quand le regard est perdu. Avec l'Eye Tracker 5 : 1 146 répétitions sur 1 636 points. Depuis le format v3, chaque point porte son instant de lecture (avant : instant de traitement, avec des points au même `time`) | `PositionPollerRunnable`, `Stats` | Partielle |
 | R7 | Résolution de heatmap largeur/200 ou /400 selon `maxMemory`, donc selon la RAM et le mode de lancement (hypothèse) | `Stats.computeHeatMapPixelSize` | Normaliser |
 | R8 | **Corrigé (étape 3)** : Durée Eval `timeGame / 100.` affichée comme « secondes » (en réalité des ms) | `GazeplayEval.java:598,655`, `StatsContext` | ÷10 |
 | R9 | **Corrigé (étape 8, constaté sans appareil sous Windows x64)** : Regard fantôme au centre si la bibliothèque native est absente ou échoue | wrapper Tobii | Détectable |
@@ -72,7 +74,7 @@ Autres points :
 
 ## Plateformes et dépendances
 
-- Tobii fonctionne uniquement sur Windows x64 et Linux x64 (pilotes Tobii 4C). Les distributions ARM (aarch64 depuis l'étape 9) et macOS (x64, et aarch64 depuis l'étape 10) fonctionnent en souris seulement. Runtime livré : Zulu 21.0.12.1 FX (étape 10). **Plus de distribution 32 bits** (décision du mainteneur, 20/10/2026).
+- Tobii fonctionne uniquement sur Windows x64 et Linux x64. Le laboratoire utilise l'Eye Tracker 5 (Tobii Experience), et non plus le 4C ; Linux n'a pas été testé avec l'appareil. Les distributions ARM (aarch64 depuis l'étape 9) et macOS (x64, et aarch64 depuis l'étape 10) fonctionnent en souris seulement. Runtime livré : Zulu 21.0.12.1 FX (étape 10). **Plus de distribution 32 bits** (décision du mainteneur, 20/10/2026).
 - `gazeplay-linux.sh` : `set -e` combiné à `$(dpkg -s … | grep …)` fait probablement sortir le script si les paquets Tobii sont absents. Le script exécute aussi `chmod -R 777` à chaque lancement.
 - Les JRE, SDK et pilotes sont téléchargés **sans somme de contrôle**, dans `~/.m2/repository`.
 - Dépendances mortes à retirer après vérification :
