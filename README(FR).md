@@ -7,8 +7,9 @@ Vous pouvez construire le projet à partir du code source en clonant ce dépôt 
 ## Contribuer
 Veuillez vous référer au [Guide de contribution](CONTRIBUER.MD).
 ## Update
-Dernière mise à jour fait le 20/02/2025
-Jre -> Java 17 (Azul Zulu), support jusqu'en 2029
-JavaFx -> 21, support jusqu'en (au moins) 2028
-Gradle -> 8
+Dernière mise à jour faite le 22/10/2026
+JDK et JRE livrée -> Java 25 (Azul Zulu 25.0.4.1), support jusqu'en 2033
+JavaFx -> 25 dans le runtime livré, API 21 à la compilation
+Gradle -> 9.8.2
+Configurer le projet dans IntelliJ IDEA : [INTELLIJ.md](INTELLIJ.md)
 

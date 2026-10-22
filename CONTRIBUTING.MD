@@ -84,9 +84,10 @@ All required components will be installed from the internet, so make sure you're
 
 ## Java
 
-GazePlay is compiled with Java 11 built with OpenJDK 11. If you need a distribution, [AdoptOpenJDK](https://adoptopenjdk.net/) 
-offer a simple package to install on any Windows or Unix computer. Gradle will tell you if you're not running a 
-compatible version of Java and prevent builds on anything lower than Java 11.
+GazePlay is compiled for Java 25 and needs a JDK 25 or newer. We recommend [Azul Zulu 25](https://www.azul.com/downloads/?version=java-25-lts&package=jdk),
+the runtime bundled with GazePlay; JavaFX is provided by Gradle, so a JDK without JavaFX is enough. Gradle stops the
+build with an explicit message on anything lower than Java 25. See [BUILD.MD](BUILD.MD), and [INTELLIJ.md](INTELLIJ.md)
+(in French) to set up IntelliJ IDEA.
 
 ## Testing
 

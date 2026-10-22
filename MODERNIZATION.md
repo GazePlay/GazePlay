@@ -874,6 +874,61 @@ Recommandation validée par le mainteneur : avancer par petites étapes. Étapes
 
 **Vérifié** (JDK 25) : compilation ; suite complète **398 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs vert.
 
+## 2t. Vérification matérielle : Tobii Eye Tracker 5 (21/10/2026)
+
+Le laboratoire utilise désormais l'**Eye Tracker 5** (et plus le 4C). Essai sous Windows 11 x64, avec Tobii Experience 4.153.0.22216 installé. Le programme de test est hors dépôt (`%TEMP%\gptobii\probe\TobiiProbe.java` et `TobiiRange.java`). Il appelle `Tobii.gazePosition()` toutes les 10 ms sous JDK 25, avec le wrapper livré `TobiiStreamEngineForJava:5.0` (Stream Engine 2.0.2 embarqué).
+
+- **Fait** : Windows détecte l'appareil (USB VID_2104 & PID_0313).
+- **Fait** : avant le calibrage dans Tobii Experience, l'initialisation réussit (code 0) mais aucune position n'est reçue.
+- **Fait** : une fois l'appareil calibré (la bulle de Tobii Experience suit les yeux), **2 789 positions réelles sur 2 791 appels en 30 s**.
+- **Fait** : un second essai de 15 s donne 1 359 positions dans l'écran, 18 valeurs à `-1` et 2 au centre (0,5 ; 0,5).
+- **Fait** : remplacer la DLL par le Stream Engine 4.25 de Tobii fait échouer l'initialisation (code -2, interface binaire incompatible). **Il faut garder la DLL embarquée.**
+- **Hypothèse** : les valeurs `-1` (environ 1,3 % des appels) sont des positions invalides (clignement, regard perdu), transmises sans test de validité par le JNI.
+- **Risque** : ces points `-1` hors écran peuvent entrer dans les statistiques (heatmap, fixations). C'est à vérifier.
+- **Non testé** : une partie complète de GazePlay en mode Tobii, les résultats enregistrés avec l'Eye Tracker 5, et Linux.
+
+**À reprendre** (proposé au mainteneur, aucune décision prise) :
+1. Lancer GazePlay en mode Tobii avec un `user.home` isolé. Le mainteneur joue une partie et confirme le suivi, puis on contrôle les résultats.
+2. Tracer le chemin des `-1` jusqu'à `Stats` et proposer de les filtrer, avec un test et l'impact sur le format.
+3. Remplacer « 4C » par « Eye Tracker 5 » dans `CLAUDE.md` et les guides d'installation.
+
+État Git à la pause : dernier commit poussé `52983f0ee` (CI verte, 6 jobs). **Ce paragraphe n'est pas commité.**
+
+**22/10/2026** : le mainteneur a joué une partie avec l'Eye Tracker 5 depuis IntelliJ : le regard est suivi sans souci (point 1 en partie fait ; les résultats enregistrés n'ont pas encore été contrôlés).
+
+## 2u. Étape 19 — JDK 25 côté développeur et avertissements de Java 25 au lancement (22/10/2026)
+
+**JDK 25 de développement.** Zulu 25.0.4.1, installé dans `~/.jdks/azul-25.0.4` après vérification de sa somme SHA-256. Le mainteneur a réglé Gradle JVM, le SDK et le niveau de langage 25. Compilation complète et suite au vert. `INTELLIJ.md` décrit maintenant l'installation du JDK (depuis IntelliJ, ou manuellement avec la somme de contrôle), la différence entre Gradle JVM et SDK, le piège de `JAVA_HOME` en ligne de commande, et les vérifications à faire. `README`, `README(FR)`, `CONTRIBUTING` et `CONTRIBUER` annonçaient Java 17, Java 11 et Gradle 8 : ils sont corrigés.
+
+**Avertissements au lancement depuis IntelliJ (signalés par le mainteneur), et leurs causes :**
+
+| Message | Cause | Correction |
+|---|---|---|
+| `A restricted method in java.lang.System has been called` (`NativeLibLoader`) | Java 25 signale le chargement de bibliothèques natives (JavaFX, Tobii) sans autorisation, et le refusera dans une version future | Option `--enable-native-access`, voir ci-dessous |
+| `sun.misc.Unsafe::objectFieldOffset … AbstractFuture` (`lib/EyeTribeJavaFx.jar`) | **Fait** : ce jar est le « fat jar » de la démo EyeTribe. Il embarque **Guava 19.0 (2015) non relocalisé**, ControlsFX et des annotations. Ce Guava masquait sur le classpath le Guava 33.7.2 de GazePlay (55 imports) : un risque d'erreurs `NoSuchMethodError`, pas seulement un avertissement | Seul le SDK client (`com/theeyetribe/clientsdk`, 3 imports dans GazePlay, sans Guava, avec Gson) est extrait au build (`gazeplay-gaze/build.gradle`, tâche `eyeTribeClientSdkJar`). Le jar d'origine n'est pas modifié |
+| `sun.misc.Unsafe::allocateMemory … com.sun.marlin.OffHeapArray` | Apparu une fois Guava 19 retiré, car Java ne signale que le premier appel. Il vient du moteur de rendu de **JavaFX 21**, utilisé depuis les sources ; les distributions livrent JavaFX 25, qui ne s'en sert plus | `--sun-misc-unsafe-memory-access=allow` |
+| `Unsupported JavaFX configuration: classes were loaded from 'unnamed module'` | JavaFX est chargé depuis le classpath : cela n'arrive qu'en développement | Aucune : sans conséquence, documenté dans `INTELLIJ.md` |
+
+**Constat associé, corrigé** : la JVM de chaque jeu (`GameMenuController.createBuilder`) ne recevait **aucune** des options des scripts, y compris `--add-exports=javafx.base/com.sun.javafx.collections`. Cette option ne servait qu'à `PropertiesStringSetProperty` (jeux favoris, catégories masquées), qui utilisait la classe interne `ObservableSetWrapper`. Elle utilise maintenant l'API publique équivalente, `FXCollections.observableSet`. L'option `--add-exports` est donc retirée partout.
+
+**Options de la JVM, au même endroit** : `GazePlayLauncher.jvmOptions()`, données à la JVM de chaque jeu. Le module JavaFX n'est nommé que s'il fait partie du runtime : nommer un module absent provoque lui-même un avertissement (`Unknown module`).
+- Scripts des 4 distributions : `--enable-native-access=javafx.graphics,javafx.media,ALL-UNNAMED --sun-misc-unsafe-memory-access=allow`.
+- Configurations IntelliJ (`.run/`), `./gradlew run`, tests et `smokeTest` : `--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow`.
+- **Risque** : la distribution sans JRE, lancée avec un Java sans JavaFX intégré, affichera `Unknown module: javafx.graphics` (sans conséquence).
+
+**Formats** : aucun changement. Le test `ApplicationConfigBackedStringSetPropertyTest` caractérise le format persistant des favoris et des catégories masquées : éléments séparés par des virgules, dans l'ordre d'ajout.
+
+**Vérifié** (Windows 11, JDK 25) :
+- suite complète : **403 tests, 0 échec**, dont 5 nouveaux ;
+- `smokeTest` 2/2, sans aucun avertissement de la JVM dans ses journaux, sauf « Unsupported JavaFX configuration » ;
+- SpotBugs vert. Le message « missing IGazeListener » existait déjà avec l'ancien jar (vérifié) ;
+- **vraie distribution Windows** (`windowsDistZip`, runtime Zulu 25 FX, `user.home` isolé), menu et jeu direct : **aucun avertissement**, 75 jeux trouvés, Tobii initialisé (code 0, Eye Tracker 5 branché) ;
+- `jvmOptions()` donne les modules JavaFX dans le runtime de la distribution, et `ALL-UNNAMED` seul dans le JDK sans JavaFX.
+
+**Non vérifié** : Linux, macOS et ARM, en dehors de ce que fera la CI ; un jeu lancé depuis le menu de la distribution par un clic réel.
+
+**Constat annexe (non corrigé)** : les distributions livrent aussi les jars JavaFX 21 (`lib/javafx-*-21.0.13-win.jar`). Ils sont inutilisés, puisque les modules JavaFX 25 du runtime ont la priorité. À retirer après vérification sur les 5 plateformes.
+
 ---
 
 ## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)

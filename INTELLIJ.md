@@ -21,9 +21,31 @@ une autre option retirée, échouent avec `Unknown option` et l'application s'ar
 ## 1. Prérequis
 
 - IntelliJ IDEA, édition Community ou Ultimate.
-- Un **JDK 25** ou plus récent, par exemple Azul Zulu 25 (*File > Project Structure > SDKs > + > Download JDK*,
-  fournisseur Azul Zulu, version 25).
+- Un **JDK 25** ou plus récent. On recommande **Azul Zulu 25.0.4.1**, la version du runtime livré avec GazePlay
+  (`gradle/jre.gradle`). La section 1 bis explique comment l'installer.
 - Le plugin Lombok, intégré à IntelliJ et actif par défaut.
+
+## 1 bis. Installer le JDK 25
+
+Un JDK **sans** JavaFX suffit : Gradle fournit JavaFX. Choisissez l'une des deux méthodes.
+
+**Méthode A, depuis IntelliJ (la plus simple)**
+1. *File > Project Structure > SDKs*, puis **+** et **Download JDK…**
+2. **Version** : 25. **Vendor** : *Azul Zulu*.
+3. **Location** : laissez la valeur proposée (`C:\Users\<vous>\.jdks\azul-25…`), puis cliquez sur **Download**.
+
+**Méthode B, téléchargement manuel avec vérification de la somme de contrôle**
+1. Téléchargez le fichier zip *Zulu 25 JDK* pour votre système sur <https://www.azul.com/downloads/?version=java-25-lts&package=jdk>.
+   Sous Windows x64 : `zulu25.36.205-ca-jdk25.0.4.1-win_x64.zip`.
+2. Vérifiez la somme SHA-256 publiée sur la page de téléchargement. Dans PowerShell :
+   `Get-FileHash .\zulu25.36.205-ca-jdk25.0.4.1-win_x64.zip -Algorithm SHA256`. Pour ce fichier, la somme est
+   `5e91bc55aaa08750370d60b7030bb79193901ce1e93aba31becbf78c3ade5826`.
+3. Décompressez le dossier dans `C:\Users\<vous>\.jdks\`, et renommez-le par exemple `azul-25.0.4`.
+4. Vérifiez la version installée : `C:\Users\<vous>\.jdks\azul-25.0.4\bin\java -version` doit afficher `25.0.4.1`.
+5. Dans IntelliJ : *File > Project Structure > SDKs*, puis **+** et **Add JDK from disk…** Choisissez le dossier
+   `azul-25.0.4`.
+
+Les anciens JDK 17 et 21 peuvent rester installés : ils ne servent simplement plus pour GazePlay.
 
 ## 2. Recharger le projet Gradle
 
@@ -56,6 +78,29 @@ Le premier chargement télécharge Gradle 9.8.2 et les dépendances : comptez qu
 | SDK | Zulu **25** |
 | Language level | 25 |
 
+Les deux réglages sont nécessaires :
+- **Gradle JVM** fait tourner Gradle, qui compile et lance l'application.
+- **SDK** sert à l'éditeur : coloration des erreurs et complétion.
+
+Avec seulement l'un des deux en 25, on obtient soit une erreur de build, soit du code souligné en rouge à tort.
+
+Après avoir changé ces réglages, cliquez sur **Reload All Gradle Projects** dans la fenêtre Gradle.
+
+**En ligne de commande** (terminal d'IntelliJ ou autre) : `gradlew` utilise le JDK indiqué par `JAVA_HOME`, et non celui
+d'IntelliJ. Si `JAVA_HOME` pointe encore vers un JDK 17 ou 21, le build s'arrête avec « GazePlay needs a JDK 25 or
+newer ». Dans PowerShell, pour la session en cours : `$env:JAVA_HOME = "$HOME\.jdks\azul-25.0.4"`.
+
+### Vérifier que tout est en place
+
+1. Dans la fenêtre Gradle : *GazePlay > Tasks > build > **classes***, double-clic. Le résultat attendu est
+   `BUILD SUCCESSFUL`. Une compilation complète prend environ 40 s.
+2. Lancez la configuration **GazePlay** (section 4) : la page de choix du profil s'ouvre.
+3. Facultatif : la configuration **Tests (tous les modules)** doit se terminer sans échec (environ 400 tests, 4 à 5 minutes).
+
+Des messages `Note: … uses unchecked or unsafe operations` ou `deprecated API` pendant la compilation sont normaux :
+ce sont des avertissements, pas des erreurs. Deux avertissements Gradle (« deprecated… Gradle 10 ») viennent de plugins
+tiers, pas du code de GazePlay.
+
 ## 4. Lancer l'application
 
 ### Avec les configurations fournies (recommandé)
@@ -80,7 +125,9 @@ normalement en Debug.
 3. **Module / Use classpath of module** : `gazeplay.gazeplay-core.main`. Son classpath d'exécution inclut les jeux.
 4. **Main class** : `net.gazeplay.GazePlayLauncher`.
 5. **Program arguments** : vide pour GazePlay normal, ou l'une des options ci-dessous.
-6. **VM options** : rien n'est nécessaire.
+6. **VM options** : `--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow`. Les configurations
+   de `.run/` les contiennent déjà. Sans ces options, l'application fonctionne, mais Java 25 affiche des avertissements
+   au démarrage (voir la section 7).
 
 ### Options de la ligne de commande
 
@@ -125,5 +172,9 @@ vrai dossier `~/GazePlay`.
 | Classes introuvables (`GazeEvent`, `HeatMapGrid`…) ou modules en rouge | Le projet n'a pas été rechargé depuis l'ajout de `gazeplay-results` et `gazeplay-gaze` : **Reload All Gradle Projects** |
 | Erreurs Lombok (`getX()` introuvable, `log` inconnu) | Vérifiez « Build and run using : Gradle ». Si vous compilez avec IntelliJ, activez *Settings > Build > Compiler > Annotation Processors > Enable annotation processing* |
 | `JavaFX runtime components are missing` | La classe principale n'est pas la bonne : utilisez `net.gazeplay.GazePlayLauncher`, pas `GazePlayFxApp` |
-| `IllegalAccess…com.sun.javafx.collections` avec un JDK qui **inclut** JavaFX (Zulu « FX ») | Ajoutez dans *VM options* : `--add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED`. Inutile avec un JDK sans JavaFX |
+| Au démarrage : `WARNING: A restricted method in java.lang.System has been called` ou `sun.misc.Unsafe … has been called` | La configuration de lancement n'a pas les *VM options* de la section 4 : reprenez celles de `.run/` ou ajoutez-les. Les jeux lancés depuis le menu les reçoivent automatiquement |
+| Au démarrage : `AVERTISSEMENT: Unsupported JavaFX configuration: classes were loaded from 'unnamed module…'` | Normal depuis IntelliJ et sans conséquence : JavaFX est chargé depuis le classpath, et non comme module. Les distributions, dont JavaFX fait partie du runtime livré, n'affichent pas ce message |
+| `GazePlay needs a JDK 25 or newer` ou `invalid target release: 25` | Gradle JVM (section 3) ou `JAVA_HOME` (en ligne de commande) pointe encore vers un JDK 17 ou 21 |
+| Code souligné en rouge alors que le build Gradle passe | Le **SDK** du projet ou le **Language level** n'est pas en 25 (section 3) |
 | Pas de regard, seulement la souris | Normal sans eye tracker. Avec un Tobii, l'eye tracker se choisit dans les réglages de GazePlay (Windows x64 et Linux x64 uniquement) |
+| Tobii Eye Tracker 5 branché, mais aucun regard | Installez **Tobii Experience** et calibrez l'appareil : la bulle de Tobii Experience doit suivre vos yeux. Sans calibrage, la connexion réussit, mais aucune position n'arrive. Ne remplacez pas la DLL `tobii_stream_engine.dll` fournie par GazePlay par celle de Tobii : elle est incompatible |
