@@ -78,7 +78,8 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
 ## Technical changes
 - Java runtime bundled with the distributions updated from Java 17.0.2 (January 2022) to **Java 25.0.4.1** (Azul
   Zulu, LTS supported until 2033) with JavaFX 25.0.4, checked by SHA-256 after download. **The version without Java
-  runtime now needs Java 25 and JavaFX 21 or later** (Java 17 is no longer enough).
+  runtime now needs Java 25 and JavaFX 21 or later** (Java 17 is no longer enough). The distributions with a runtime
+  no longer ship a second, unused copy of JavaFX (10 MB).
 - Spring Boot removed (it was only used to wire the application); start-up is plain Java.
 - Gradle 9, dependencies updated (POI, Gson, Guava, org.json with security fixes, logging), versions gathered in
   `gradle/libs.versions.toml`.

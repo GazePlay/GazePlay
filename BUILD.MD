@@ -75,7 +75,9 @@ aarch64, macOS x64 and Apple Silicon; the 32 bits builds were dropped in October
   version it supports, so that it also runs with the JavaFX of the system (no-JRE distribution: Java 25 and JavaFX 21
   or newer). There is no Monocle 25 for the window-less tests, hence JavaFX 21 and not 25. The bundled Zulu
   runtimes ship a newer JavaFX (25.0.4 in Zulu 25.0.4.1, see `lib/javafx.properties` of the runtime), with their own
-  media plugins: launch a distribution with its runtime after a runtime update.
+  media plugins: launch a distribution with its runtime after a runtime update. The distributions with a runtime
+  therefore leave out the JavaFX 21 jars (`compileTimeJavaFxJars` in `build.gradle`); only the no-JRE distribution
+  ships them.
 - Build one distribution, e.g. `./gradlew windowsDistZip`, `./gradlew linuxDistTar`, `./gradlew noJREDistZip`, or all
   of them with `./gradlew packageApp`. They are written to `build/distributions`.
 - Each distribution only ships the ffmpeg binary (JAVE, used for the AOI videos) of its own platform.

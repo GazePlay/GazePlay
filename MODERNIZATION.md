@@ -927,7 +927,7 @@ Le laboratoire utilise désormais l'**Eye Tracker 5** (et plus le 4C). Essai sou
 
 **Non vérifié** : Linux, macOS et ARM, en dehors de ce que fera la CI ; un jeu lancé depuis le menu de la distribution par un clic réel.
 
-**Constat annexe (non corrigé)** : les distributions livrent aussi les jars JavaFX 21 (`lib/javafx-*-21.0.13-win.jar`). Ils sont inutilisés, puisque les modules JavaFX 25 du runtime ont la priorité. À retirer après vérification sur les 5 plateformes.
+**Constat annexe** : les distributions livrent aussi les jars JavaFX 21 (`lib/javafx-*-21.0.13-win.jar`). Ils sont inutilisés, puisque les modules JavaFX 25 du runtime ont la priorité. **Retirés à l'étape 21 (section 2x).**
 
 ## 2v. Étape 20 — Contrôle d'une partie avec l'Eye Tracker 5, puis format de résultats v3 : instant de lecture du regard (22/10/2026)
 
@@ -1011,11 +1011,42 @@ Les deux venaient de la feuille `modena` de JavaFX.
 
 **Vérifié** :
 - tests de `gazeplay-core` verts (JDK 25) ;
-- **non vérifié** : la disparition des avertissements dans l'application réelle. Une condition de concurrence ne se reproduit pas à chaque lancement : il faudra relancer quelques parties depuis le menu.
+- dans l'application réelle (22/10/2026, Windows 11, lancée depuis IntelliJ, par le mainteneur) : Tarte à la crème relancée depuis le menu, **plus aucun avertissement CSS**. Une condition de concurrence ne se manifeste pas à chaque lancement : ce constat porte sur un seul essai.
 
 ---
 
-## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)
+## 2x. Étape 21 — Distributions : plus de seconde copie de JavaFX (22/10/2026)
+
+**Constat (fait)** : les 5 distributions avec runtime livraient, en plus des modules JavaFX 25.0.4 du runtime Zulu FX, les 5 jars JavaFX 21.0.13 de la compilation (`base`, `controls`, `graphics`, `media`, `swing`), soit 10,4 Mo dans la distribution Windows. Les modules du runtime ont la priorité sur le classpath : ces jars ne servaient jamais.
+
+**Fait** :
+- `build.gradle` : les distributions Windows, Linux, ARM, macOS et macOS Apple Silicon excluent `**/javafx-*-<version de compilation>-*.jar` (`compileTimeJavaFxJars`). Le motif porte la version, pour garder le `lib/jre/lib/javafx-swt.jar` du runtime.
+- **La distribution sans JRE garde ses jars JavaFX**, puisqu'elle peut tourner sur un Java sans JavaFX.
+- Les scripts de lancement ne changent pas : ils mettent `lib/*` sur le classpath, sans nommer les jars. Les `Class-Path` des manifestes citent encore ces jars ; la JVM ignore les entrées absentes. L'installeur Windows part de la distribution filtrée.
+- `BUILD.MD` et les notes de version (`GazePlay-1.12.0.md`) le mentionnent.
+
+**Vérifié** (Windows 11, JDK 25) :
+- contenu de `windowsDistZip` : plus aucun `lib/javafx-*.jar`, runtime intact (`lib/jre/lib/modules`, `javafx-swt.jar`, `javafx.properties`) ; `noJREDistZip` contient toujours les 5 jars ;
+- **vraie distribution Windows** lancée avec le script de la CI (`launch-distribution.ps1`, `user.home` isolé, mode souris) : menu (`--default-user`) puis jeu direct (`--game WhereIsTheShape`), **sans erreur après 40 s**, 75 jeux trouvés. Sans jar JavaFX sur le classpath, les classes JavaFX ne peuvent venir que du runtime, donc de JavaFX 25.0.4.
+
+**Non vérifié en local** : Linux, ARM et macOS. La CI lance les distributions Linux x64 et macOS Apple Silicon ; ARM Linux et macOS Intel ne sont lancés nulle part.
+
+---
+
+## 9. Reprise à la prochaine session
+
+### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10
+
+- Branche `addClaudeCode`, poussée régulièrement avec l'accord du mainteneur ; CI verte à chaque push depuis l'étape 15. Pas de pull request (décision du mainteneur). Code Eval laissé de côté. Gradle reste en 9.8.2.
+- Fait depuis l'étape 10 : sections 2l à 2x (Java 25, singletons arrêtés à l'étape 5, Eye Tracker 5 vérifié, format v3, avertissements de Java 25, menu sur le thread JavaFX, distributions sans seconde copie de JavaFX).
+- Reste ouvert, par ordre de valeur estimée :
+  1. dépréciations Gradle signalées à chaque build (« incompatible with Gradle 10 ») : à identifier avec `--warning-mode all`, même sans passer à Gradle 10 ;
+  2. alertes Dependabot de GitHub (35, sur la branche par défaut `developMain`) : vérifier lesquelles concernent encore `addClaudeCode` ;
+  3. PMD (échoue déjà à la référence, hors CI) et `sysout-over-slf4j` (2013) ;
+  4. décisions métier : R13 (zones d'intérêt de la souris), retraitement des fichiers historiques v1, numéro et publication de la version (9.7) ;
+  5. matériel et plateformes non testés : Linux avec Tobii, ARM Linux, macOS Intel.
+
+## 9-bis. Reprise (mise à jour le 21/10/2026, étape 10)
 
 ### 9.1 État exact au moment de la pause
 - Branche **`addClaudeCode`**. Le 21/10/2026, à la demande du mainteneur, le travail des étapes 1 à 12 a été **commité en local** en 6 commits au-dessus de `4a035dd4f` : nettoyage (`2c98db4b5`), build/code/tests (`f92bafdf9`), scripts (`631c2e0b8`), CI (`796873891`), documentation (`f05680599`), configurations IntelliJ (`1c7ae3f30`). Chaque état a été vérifié avant le commit sur une copie de l'index : compilation pour le 1er, et pour le 2e la suite complète (403 tests, 0 échec), `smokeTest` et SpotBugs. **Rien n'a été poussé** : la branche n'a pas de branche distante associée. Les 4 stashes n'ont pas été touchés.
