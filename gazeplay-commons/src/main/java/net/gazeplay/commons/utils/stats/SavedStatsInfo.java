@@ -1,14 +1,16 @@
 package net.gazeplay.commons.utils.stats;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.File;
-import java.util.Observable;
 
+/**
+ * Files of the results of a round. It used to extend java.util.Observable (deprecated) to notify the statistics screen
+ * when the files were written, but it never notified anything (no setChanged()), and the files are written before the
+ * statistics screen is shown.
+ */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class SavedStatsInfo extends Observable {
+public class SavedStatsInfo {
     private final File heatMapCsvFile;
     private final File gazeMetricsFileMouse;
     private final File gazeMetricsFileGaze;
@@ -16,9 +18,4 @@ public class SavedStatsInfo extends Observable {
     private final File screenshotFile;
     private final File colorBandsFile;
     private final File replayDataFile;
-
-    public void notifyFilesReady() {
-        this.notifyObservers();
-    }
-
 }

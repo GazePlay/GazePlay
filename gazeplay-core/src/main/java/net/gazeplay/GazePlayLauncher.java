@@ -13,8 +13,6 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,6 @@ public class GazePlayLauncher {
 
             SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
             printStartupInfo();
-            //fixDefaultCharset();
 
             initGazePlayDirectory();
 
@@ -108,17 +105,6 @@ public class GazePlayLauncher {
 
         File workingDirectory = new File(".").getAbsoluteFile();
         log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
-    }
-
-    private static void fixDefaultCharset() {
-        try {
-            System.setProperty("file.encoding", "UTF-8");
-            Field charset = Charset.class.getDeclaredField("defaultCharset");
-            charset.setAccessible(true);
-            charset.set(null, null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            log.error("Exception while fixing default Charset", e);
-        }
     }
 
     private static void saveArgs(String args){

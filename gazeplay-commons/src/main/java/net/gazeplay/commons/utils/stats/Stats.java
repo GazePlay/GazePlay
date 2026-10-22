@@ -703,8 +703,6 @@ public class Stats implements GazeMotionListener {
         saveImageAsPng(bImageMouse, gazeMetricsFileMouse);
         saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
         saveImageAsPng(bImageMouseAndGaze, gazeMetricsFileMouseAndGaze);
-
-        savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;
     }
 

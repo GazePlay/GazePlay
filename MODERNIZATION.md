@@ -1073,6 +1073,39 @@ Liste complète, obtenue avec `--warning-mode all` en exécutant réellement les
 
 ---
 
+## 2z. Étape 23 — Boutons « voir le dossier » réparés, API dépréciées (22/10/2026)
+
+### Boutons qui ouvrent les résultats (bugs, corrigés)
+- **Fait** : le bouton « Voir le dossier » des réglages et le bouton qui montre le fichier de résultats, sur l'écran des statistiques, exécutaient `cmd xdg-open,<chemin>` hors de Windows. Cette commande n'existe pas : **les deux boutons ne faisaient rien sous Linux et macOS**.
+- **Fait** : sous Windows, le bouton des réglages ouvrait `C:\Users\<user.name>\GazePlay\statistics`, codé en dur. C'est faux quand `user.home` est ailleurs, par exemple pour un profil Windows renommé.
+- **Correction** : nouvelle classe `SystemFileManager` (`gazeplay-core`), testée par `SystemFileManagerTest`.
+  - Elle ouvre le dossier où `Stats` écrit réellement (`GazePlayDirectories.getUserStatsFolder(profil)`), créé s'il n'existe pas encore.
+  - Commandes : `explorer.exe` (avec `/select,` pour montrer un fichier, comme avant) ; `open` et `open -R` sous macOS ; `xdg-open` sous Linux, sur le dossier du fichier, car `xdg-open` ne sait pas sélectionner un fichier.
+  - `ProcessBuilder` remplace `Runtime.exec(String)`, déprécié, qui découpait le chemin aux espaces.
+- **Non vérifié** : un clic réel sur ces boutons, sous Windows comme sous Linux et macOS.
+
+### API dépréciées : 43 → 6 usages dans le code de production
+Liste obtenue en compilant avec `-Xlint:deprecation,removal`, par un script d'initialisation Gradle hors dépôt.
+- `new Locale(...)` (30) → `Locale.of(...)` (Java 19+, même résultat).
+- `CacheBuilder.expireAfterWrite(long, TimeUnit)` → surcharge `java.time.Duration` de Guava (équivalente).
+- **`SavedStatsInfo extends java.util.Observable` : mécanisme mort, retiré.** `notifyFilesReady()` appelait `notifyObservers()` sans `setChanged()`, et `Observable` ne notifie rien dans ce cas : l'observateur de `StatDisplayUtils.buildGazeMetrics`, qui rechargeait l'image, ne s'est donc jamais déclenché. Il était de toute façon inutile, puisque les résultats sont enregistrés avant l'affichage de l'écran des statistiques (étape 18). Comportement inchangé.
+- **Code mort retiré** : `GazePlayLauncher.fixDefaultCharset()`, jamais appelée. Elle modifiait par réflexion un champ privé de `Charset`, ce qui lèverait sous Java 25 une exception non rattrapée.
+- **Restent, volontairement** :
+  - `new URL(String)` dans `BackgroundMusicManager` : son remplaçant, `URI.create(...).toURL()`, refuse les espaces non encodés que `new URL` acceptait, un risque pour les musiques de l'utilisateur sans bénéfice ;
+  - `new JsonParser()` et `parse(Reader)` : code Eval, laissé de côté (décision du mainteneur) ;
+  - `getDurationRatio()` : dépréciation interne à GazePlay, encore utilisée par 3 jeux.
+
+### Gardé, avec sa raison
+`sysout-over-slf4j` (2013) : il redirige `System.out` et `System.err`, y compris ceux des bibliothèques tierces, vers le journal. Il évite la boucle infinie que créerait une redirection naïve, puisque la console de logback écrit elle-même dans `System.out`. Un remplacement maison devrait refaire ce travail délicat, sans gain.
+
+### Constats de l'audit vérifiés, déjà réglés
+`CLAUDE.md` les cite encore comme ouverts, mais le code actuel les règle : journaux tournants écrits dans `~/GazePlay` (`logback.xml`), `PetHouse` qui lit la position dans l'événement de regard au lieu d'appeler Tobii, fichier d'édition de `GazePlayArgs` dans `~/GazePlay`.
+
+### Vérifié (Windows 11, JDK 25)
+Suite complète **409 tests, 0 échec** (2 nouveaux) ; `smokeTest` ; SpotBugs vert.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10

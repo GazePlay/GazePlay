@@ -34,6 +34,7 @@ import mslinks.ShellLink;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.GazePlayArgs;
+import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.commons.configuration.*;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gaze.EyeTracker;
@@ -958,26 +959,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final I18NButton selectButton = new I18NButton(translator, "SeeFolder");
 
         selectButton.setOnAction(e -> {
-            String os = System.getProperty("os.name").toLowerCase();
-            String userName = System.getProperty("user.name");
-            String playerName = configuration.getUserName();
-            String path = "";
-
-            if (Objects.equals(playerName, "")) {
-                path = "C:\\Users\\" + userName + "\\GazePlay\\statistics\\";
-            } else {
-                path = "C:\\Users\\" + userName + "\\GazePlay\\profiles\\" + playerName + "\\statistics\\";
+            // The folder where Stats writes the results of the current profile (it used to be a hard-coded
+            // C:\Users\<user.name> path, wrong when user.home is elsewhere)
+            final File folder = GazePlayDirectories.getUserStatsFolder(configuration.getUserName());
+            if (!folder.isDirectory() && !folder.mkdirs()) {
+                log.warn("Cannot create the folder {}", folder);
             }
-
-            try {
-                if (os.contains("win")) {
-                    Runtime.getRuntime().exec("explorer.exe /open," + path);
-                } else {
-                    Runtime.getRuntime().exec("cmd xdg-open," + path);
-                }
-            } catch (Exception e1) {
-                log.warn("Cannot open the folder {}", path, e1);
-            }
+            SystemFileManager.openFolder(folder);
         });
 
         return selectButton;
@@ -1222,7 +1210,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         String currentCodeLanguage = configuration.getLanguage();
         String currentCodeCountry = configuration.getCountry();
-        Locale currentLocale = new Locale(currentCodeLanguage, currentCodeCountry);
+        Locale currentLocale = Locale.of(currentCodeLanguage, currentCodeCountry);
         LanguageDetails currentLanguageDetails = Languages.getLocale(currentLocale);
 
         Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));

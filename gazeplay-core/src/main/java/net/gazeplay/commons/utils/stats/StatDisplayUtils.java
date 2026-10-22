@@ -301,10 +301,8 @@ public class StatDisplayUtils {
         ImageView gazeMetrics = new ImageView();
         gazeMetrics.setPreserveRatio(true);
 
+        // Written before the statistics screen is shown (GameContext saves the results first)
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-        savedStatsInfo.addObserver((o, arg) -> Platform.runLater(
-            () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()))));
-
         gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
 
         EventHandler<Event> openGazeMetricsEvent = createZoomInGazeMetricsEventHandler(gazeMetrics, root);

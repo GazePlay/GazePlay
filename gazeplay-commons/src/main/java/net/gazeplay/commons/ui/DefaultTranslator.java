@@ -50,7 +50,7 @@ public class DefaultTranslator implements Translator {
 
     @Override
     public Locale currentLocale() {
-        return new Locale(config.getLanguage(), config.getCountry());
+        return Locale.of(config.getLanguage(), config.getCountry());
     }
 
     private void notifyAllListeners() {

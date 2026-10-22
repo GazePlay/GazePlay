@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.GazePlayArgs;
+import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
@@ -645,15 +646,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     public void seeFile(String pathFile){
-        String os = System.getProperty("os.name").toLowerCase();
-        try {
-            if (os.contains("win")){
-                Runtime.getRuntime().exec("explorer.exe /select," + pathFile);
-            }else {
-                Runtime.getRuntime().exec("cmd xdg-open," + pathFile);
-            }
-        } catch (Exception e) {
-            log.warn("Cannot open the folder", e);
-        }
+        SystemFileManager.showFile(new File(pathFile));
     }
 }

@@ -3,6 +3,7 @@ package net.gazeplay.commons.utils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -23,7 +24,7 @@ public class CachingSupplier<T> implements Supplier<T> {
         cache = CacheBuilder.newBuilder()
             .initialCapacity(1)
             .maximumSize(1)
-            .expireAfterWrite(expiryDuration, expiryDurationUnit)
+            .expireAfterWrite(Duration.of(expiryDuration, expiryDurationUnit.toChronoUnit()))
             .build();
     }
 
