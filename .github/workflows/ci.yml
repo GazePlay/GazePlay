@@ -125,7 +125,8 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --stacktrace linuxDistTar
 
-      # The distribution with its bundled runtime (Zulu 25, JavaFX 25): what the users get. The menu, then a game
+      # The distribution with its bundled runtime (Zulu 25, JavaFX 25): what the users get. The menu, then a game.
+      # The game needs its variant: with --game alone, GazePlay waits on the variant dialog and the game never runs
       - name: Launch GazePlay from the distribution (menu, then a game)
         run: |
           mkdir -p /tmp/gazeplay-dist
@@ -133,7 +134,7 @@ jobs:
           launcher=$(ls /tmp/gazeplay-dist/gazeplay-linux-x64-*/bin/gazeplay-linux.sh)
           xvfb-run --auto-servernum bash .github/scripts/launch-distribution.sh "$launcher" /tmp/gazeplay-home --default-user
           xvfb-run --auto-servernum bash .github/scripts/launch-distribution.sh "$launcher" /tmp/gazeplay-home-game \
-            --default-user --game WhereIsTheShape
+            --default-user --game WhereIsTheShape --variant DimensionDifficultyGameVariant:2:2:Easy
 
   # Same check for Windows x64, the main platform of GazePlay
   package-windows:
@@ -163,7 +164,7 @@ jobs:
           $launcher = (Get-ChildItem "$dist/*/bin/gazeplay-windows.bat" | Select-Object -First 1).FullName
           ./.github/scripts/launch-distribution.ps1 -Launcher $launcher -GazeHome (Join-Path $env:RUNNER_TEMP "gazeplay-home") -Arguments "--default-user"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          ./.github/scripts/launch-distribution.ps1 -Launcher $launcher -GazeHome (Join-Path $env:RUNNER_TEMP "gazeplay-home-game") -Arguments "--default-user --game WhereIsTheShape"
+          ./.github/scripts/launch-distribution.ps1 -Launcher $launcher -GazeHome (Join-Path $env:RUNNER_TEMP "gazeplay-home-game") -Arguments "--default-user --game WhereIsTheShape --variant DimensionDifficultyGameVariant:2:2:Easy"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
   # Same check for macOS: the GitHub runners are Apple Silicon machines, hence the aarch64 distribution
@@ -192,4 +193,4 @@ jobs:
           tar -xzf build/distributions/gazeplay-macos-aarch64-*.tar.gz -C /tmp/gazeplay-dist
           launcher=$(ls /tmp/gazeplay-dist/gazeplay-macos-aarch64-*/bin/gazeplay-macos.sh)
           bash .github/scripts/launch-distribution.sh "$launcher" /tmp/gazeplay-home --default-user
-          bash .github/scripts/launch-distribution.sh "$launcher" /tmp/gazeplay-home-game --default-user --game WhereIsTheShape
+          bash .github/scripts/launch-distribution.sh "$launcher" /tmp/gazeplay-home-game --default-user --game WhereIsTheShape --variant DimensionDifficultyGameVariant:2:2:Easy

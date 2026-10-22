@@ -1,6 +1,7 @@
 package net.gazeplay.games.shooter;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -148,9 +149,12 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
-                if (moveBox(isOnLeftSide)) {
-                    isOnLeftSide = !isOnLeftSide;
-                }
+                // The box and its animations belong to the scene: changed on the JavaFX thread, not the timer's
+                Platform.runLater(() -> {
+                    if (moveBox(isOnLeftSide)) {
+                        isOnLeftSide = !isOnLeftSide;
+                    }
+                });
             }
         };
 

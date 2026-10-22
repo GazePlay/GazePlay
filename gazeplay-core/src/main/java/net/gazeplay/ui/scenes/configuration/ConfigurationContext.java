@@ -1419,15 +1419,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String resourcePath = "data/home/sounds/" + defaultSong;
 
-        try {
-            InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
-            if (gazePlayMusicFolder.exists()) {
+        // The stream is closed (it used to leak) and a missing resource is checked instead of a NullPointerException
+        try (InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath)) {
+            if (defaultMusicTrack == null) {
+                log.debug("Could not find {}", resourcePath);
+            } else if (gazePlayMusicFolder.exists()) {
                 Files.copy(defaultMusicTrack,
                     Paths.get(new File(gazePlayMusicFolder, defaultSong).getAbsolutePath()),
                     StandardCopyOption.REPLACE_EXISTING);
             }
-        } catch (NullPointerException ne) {
-            log.debug(String.format("Could not find %s: %s", resourcePath, ne.toString()));
         } catch (IOException ie) {
             log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
         }

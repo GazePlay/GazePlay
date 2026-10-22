@@ -1,5 +1,6 @@
 package net.gazeplay.games.moles;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -180,23 +181,25 @@ public class Moles extends Parent implements GameLifeCycle {
         minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
-
-                int n = randomGenerator.nextInt(6);
-                if (nbMolesOut.get() <= 3) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 4) && (n == 0)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 5) && (n == 1)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 6) && (n == 2)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 7) && (n == 3)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 8) && (n == 4)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 9) && (n == 5)) {
-                    chooseMoleToOut();
-                }
+                // A mole going out changes the scene (opacity, animation) and the statistics: on the JavaFX thread
+                Platform.runLater(() -> {
+                    int n = randomGenerator.nextInt(6);
+                    if (nbMolesOut.get() <= 3) {
+                        chooseMoleToOut();
+                    } else if ((nbMolesOut.get() <= 4) && (n == 0)) {
+                        chooseMoleToOut();
+                    } else if ((nbMolesOut.get() <= 5) && (n == 1)) {
+                        chooseMoleToOut();
+                    } else if ((nbMolesOut.get() <= 6) && (n == 2)) {
+                        chooseMoleToOut();
+                    } else if ((nbMolesOut.get() <= 7) && (n == 3)) {
+                        chooseMoleToOut();
+                    } else if ((nbMolesOut.get() <= 8) && (n == 4)) {
+                        chooseMoleToOut();
+                    } else if ((nbMolesOut.get() <= 9) && (n == 5)) {
+                        chooseMoleToOut();
+                    }
+                });
             }
         };
 

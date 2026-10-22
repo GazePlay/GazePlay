@@ -1156,6 +1156,33 @@ Suite complète, entièrement relancée : **410 tests, 0 échec** (1 nouveau), p
 
 ---
 
+## 2ac. Étape 26 — Revue des exclusions SpotBugs, deux jeux modifiaient la scène hors du thread JavaFX (22/10/2026)
+
+### Ce que cachaient les exclusions SpotBugs
+Chaque module exclut des familles entières d'alertes (`RV`, `NP` dans les jeux, `FE`, `FS`, `CT`, `AT`, `SS`…). SpotBugs a été relancé une fois sans ces exclusions, par un script d'initialisation hors dépôt (seules les alertes d'exposition de références et de clauses `throws` restaient exclues).
+- **95 alertes**, surtout de style : constructeurs qui peuvent lever une exception (25), champs publics (19), écritures non synchronisées vues par SpotBugs (24), constantes non statiques (16). Les familles redoutées (valeur de retour ignorée, déréférencement de `null`) ne révèlent presque rien.
+- Alertes de correction examinées une par une :
+  - `NP_UNWRITTEN_FIELD` (2) : code Eval, laissé de côté ;
+  - `FL_FLOATS_AS_LOOP_COUNTERS` (`ConfigurationContext`, choix de l'opacité) : valeurs entières exactes, **pas de bug** ;
+  - `FE_FLOATING_POINT_EQUALITY` (`Robot`, `Player` de Survive Against Robots) : `compteur == 60 * fréquence`. Vérifié avec `jshell` : pour les fréquences utilisées (1,2 ; 0,25 ; 0,5), le produit est un entier exact, donc **pas de bug aujourd'hui**. Le code est fragile : une fréquence comme 1,3 arrêterait les tirs. Non modifié ;
+  - `AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE` (`Moles.nbMolesWhacked`) : modifié seulement sur le thread JavaFX, **faux positif**. En le vérifiant, le vrai problème ci-dessous est apparu ;
+  - `DCN_NULLPOINTER_EXCEPTION` (rattraper une `NullPointerException`) : corrigé dans `ConfigurationContext` (voir plus bas). `SourceSet` est laissé : son flux est bien fermé.
+- **Les fichiers d'exclusion ne changent pas** : sans ces règles larges, la CI échouerait sur 95 alertes de style. Une revue de ce type peut être refaite avec le même script.
+
+### Bug corrigé : Whac-a-Mole et Shooter modifiaient la scène depuis un minuteur
+- **Fait** (lecture du code) : dans **Whac-a-Mole** (`Moles`), un `java.util.Timer` fait sortir une taupe toutes les 500 ms. Son thread modifiait directement la scène (opacité, `TranslateTransition` lancée), la liste des cibles et les statistiques. Dans **Shoot the Robots / Shoot the Biboules** (`ShooterGame`), le minuteur arrêtait et créait toutes les 8 s les animations de la boîte depuis son thread. JavaFX exige que la scène affichée ne soit modifiée que sur son thread : c'est le même défaut que celui du menu (2w). `TrainSwitches` faisait déjà correctement.
+- **Correction** : le corps des deux minuteurs passe par `Platform.runLater`. Le rythme est inchangé, puisque le minuteur continue de battre la mesure.
+- **Vérifié** sur la vraie distribution Windows (script de la CI, mode souris, 40 s, sans erreur), avec le jeu lancé directement et sa variante (`--variant EnumGameVariant:net.gazeplay.games.moles.MolesGameVariant:BIBOULE`) pour qu'il joue réellement. Le journal montre 42 sorties de taupes en 40 s, toutes sur `JavaFX Application Thread`. Shoot the Robots : idem, sans erreur.
+- Piège trouvé et corrigé : `--game` seul, pour un jeu à variantes, s'arrête sur la fenêtre de choix de variante, et le jeu ne tourne pas. **C'était le cas des trois lancements « jeu » de la CI** (`--game WhereIsTheShape`), qui ne vérifiaient donc que l'affichage de cette fenêtre. `ci.yml` passe maintenant la variante, comme le `smokeTest` (`--variant DimensionDifficultyGameVariant:2:2:Easy`). Vérifié en local sur la distribution Windows : une manche de « Où est la forme ? » se crée (4 images), sans fenêtre de variante ni erreur.
+
+### Petit défaut corrigé
+`ConfigurationContext` (copie de la musique par défaut) rattrapait une `NullPointerException` au lieu de vérifier la ressource, et ne fermait jamais le flux ouvert. Il utilise maintenant un `try` avec ressource et vérifie que la ressource existe.
+
+### Vérifié (Windows 11, JDK 25)
+Suite complète **410 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; deux jeux lancés réellement depuis la distribution.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10
