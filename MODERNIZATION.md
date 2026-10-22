@@ -983,7 +983,35 @@ Partie *Creampie* jouée par le mainteneur avec l'Eye Tracker 5, depuis IntelliJ
 - `smokeTest` 2/2 ;
 - SpotBugs vert. Les classes manquantes EyeTribe et monte étaient déjà signalées avant.
 
-**Non vérifié** : une nouvelle partie avec l'Eye Tracker 5, pour constater sur des données réelles la disparition des points au même instant.
+**Vérifié ensuite sur une vraie partie (22/10/2026, 14 h 23, Tarte à la crème, Eye Tracker 5, lancée depuis IntelliJ)** :
+- `formatVersion` 3 ;
+- 1 462 points de regard sur 16,1 s, soit 90,8 Hz ; **aucun point au même `time` que le précédent** (74 sur la partie précédente en v2) ; écarts de 10 à 12 ms pour 1 453 des 1 461 intervalles, au plus 137 ms ;
+- `time` jamais décroissant, ni pour le regard ni pour la souris (136 points) ; aucun point hors de l'écran ni au centre ;
+- séquences de fixations : 91 pour le regard (de 8 à 16 092 ms, exactement l'étendue des points de regard) et 15 pour la souris, sans chevauchement ni retour en arrière ;
+- heatmaps : `heatmap.csv` = `heatmapGaze.csv` + `heatmapMouse.csv`, avec le même poids par point pour les deux sources ; `metricsGaze.png` cohérent ;
+- 1 030 points de regard répètent la position précédente : c'est R6, qui reste attendu.
+
+---
+
+## 2w. Avertissements CSS au retour au menu : interface modifiée hors du thread JavaFX (22/10/2026)
+
+**Constat (fait)** : pendant la partie ci-dessus, la console a affiché deux avertissements de JavaFX :
+- `ClassCastException: String cannot be cast to Color` pour `-fx-background-color` de `.menu-bar` ;
+- `Could not resolve '-fx-text-base-color'` pour `.menu-button`.
+
+Les deux venaient de la feuille `modena` de JavaFX.
+
+**Cause (fait, lecture du code ; heure concordante)** :
+- `GameMenuController.runProcessDisplayLoadAndWaitForNewJVMDisplayed` attend 6 s dans un thread ordinaire après le lancement du jeu.
+- Ce thread arrête ensuite l'animation de chargement, change le curseur et appelle `onReturnToMenu()`, qui reconstruit le menu (barre de menu, boutons de menu) et le place dans la scène. Tout cela se fait **hors du thread JavaFX**, en concurrence avec le calcul du CSS par JavaFX.
+- L'avertissement est daté de 14:23:22, pendant la partie (commencée à 14:23:18 d'après `gameStartedTime`). C'est environ 6 s après le clic sur le jeu, compte tenu des quelques secondes de démarrage de sa JVM : cela correspond à ce retour au menu (hypothèse forte : l'heure exacte du clic n'est pas enregistrée).
+- Le défaut est ancien (l'audit le notait : « le menu attend 6 s dans un thread hors FX ») et ne touche ni le jeu ni ses résultats, puisque le jeu tourne dans sa propre JVM.
+
+**Correction** : ces trois appels passent par `Platform.runLater`. Le délai de 6 s et le reste du comportement ne changent pas.
+
+**Vérifié** :
+- tests de `gazeplay-core` verts (JDK 25) ;
+- **non vérifié** : la disparition des avertissements dans l'application réelle. Une condition de concurrence ne se reproduit pas à chaque lancement : il faudra relancer quelques parties depuis le menu.
 
 ---
 

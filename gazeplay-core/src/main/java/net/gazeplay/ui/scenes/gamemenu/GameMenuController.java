@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -110,9 +111,12 @@ public class GameMenuController {
                 log.warn("Interrupted while waiting for the game to start", e);
             }
 
-            ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-            gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-            gazePlay.onReturnToMenu();
+            // The menu is rebuilt on the JavaFX thread: from this thread, its CSS raced with the pulse
+            Platform.runLater(() -> {
+                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                gazePlay.onReturnToMenu();
+            });
         });
 
         displayLoadingContextThread.start();
