@@ -20,8 +20,11 @@ public class GameSpecSourceInstantiator {
             .stream()
             .map(gameClass -> {
                 try {
-                    Constructor<GameSpecSource> defaultConstructor = gameClass.getConstructor();
-                    return defaultConstructor.newInstance();
+                    // asSubclass: a class that is not a GameSpecSource fails here (ClassCastException, caught below)
+                    final Class<?> typedClass = gameClass;
+                    Constructor<? extends GameSpecSource> defaultConstructor =
+                        typedClass.asSubclass(GameSpecSource.class).getConstructor();
+                    return (GameSpecSource) defaultConstructor.newInstance();
                 } catch (
                     NoSuchMethodException |
                         IllegalAccessException |

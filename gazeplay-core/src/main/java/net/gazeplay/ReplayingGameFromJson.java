@@ -240,7 +240,10 @@ public class ReplayingGameFromJson {
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
+        // The variant and the Stats come from the same GameSpec as the launcher: their types match at run time
+        @SuppressWarnings("unchecked")
         final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        @SuppressWarnings("unchecked")
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
         gameContext.createControlPanel(gazePlay, statsSaved, currentGame, true);
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);

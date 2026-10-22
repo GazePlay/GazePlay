@@ -174,6 +174,8 @@ public class GameMenuController {
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
+        // The variant and the Stats come from the same GameSpec as the launcher: their types match at run time
+        @SuppressWarnings("unchecked")
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame, false);

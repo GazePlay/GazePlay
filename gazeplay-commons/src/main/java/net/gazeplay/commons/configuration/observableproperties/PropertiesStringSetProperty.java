@@ -51,6 +51,8 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
     @Override
     public ObservableSet<String> get() {
         final SetChangeListener<String> observer = new SetChangeListener<>() {
+            // Safe: the observed set is the ObservableSet<String> this listener is added to
+            @SuppressWarnings("unchecked")
             @Override
             public void onChanged(final Change<? extends String> change) {
                 PropertiesStringSetProperty.this.set((ObservableSet<String>) change.getSet());

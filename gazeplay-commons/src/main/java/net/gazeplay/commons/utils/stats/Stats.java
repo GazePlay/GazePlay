@@ -194,7 +194,7 @@ public class Stats implements GazeMotionListener {
     private final List<AreaOfInterestProps> allAOIList = new ArrayList<>();
     private final AreaOfInterestGrouper aoiGrouper = new AreaOfInterestGrouper();
     @Getter
-    private final List<List> allAOIListTemp = new ArrayList<>();
+    private final List<List<CoordinatesTracker>> allAOIListTemp = new ArrayList<>();
     @Getter
     private final List<int[]> startAndEndIdx = new ArrayList<>();
     @Getter

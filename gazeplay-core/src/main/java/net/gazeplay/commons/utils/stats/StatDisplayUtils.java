@@ -146,12 +146,13 @@ public class StatDisplayUtils {
             Series<Number, Number> yEyeCoordinates = new Series<>();
             yEyeCoordinates.setName("Y coordinate");
 
+            // The fixation points hold Y in "x" and X in "y" (see FixationSequenceRecorder)
             for (FixationPoint p : points) {
                 xEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getY()));
                 yEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getX()));
             }
 
-            colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
+            colorBands.getData().addAll(List.of(xEyeCoordinates, yEyeCoordinates));
 
             EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 
@@ -289,10 +290,10 @@ public class StatDisplayUtils {
             alpha05.setMinWidth(150);
             alpha05.setCellValueFactory(new PropertyValueFactory<>("alpha05"));
 
-            decisionCol.getColumns().addAll(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05);
+            decisionCol.getColumns().addAll(List.of(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05));
 
             table.setItems(data);
-            table.getColumns().addAll(indexCol, levelCol, decisionCol);
+            table.getColumns().addAll(List.of(indexCol, levelCol, decisionCol));
         }
         return table;
     }

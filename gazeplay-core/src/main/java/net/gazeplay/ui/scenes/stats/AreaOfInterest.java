@@ -51,7 +51,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private final List<AreaOfInterestProps> allAOIList;
     private List<CoordinatesTracker> areaOfInterestList;
 
-    private final List<List> allAOIListTemp;
+    private final List<List<CoordinatesTracker>> allAOIListTemp;
     private final List<int[]> startAndEndIdx;
     private final List<Polygon> allAOIListPolygon;
     private final List<Double[]> allAOIListPolygonPt;

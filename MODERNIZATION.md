@@ -1106,6 +1106,30 @@ Suite complète **409 tests, 0 échec** (2 nouveaux) ; `smokeTest` ; SpotBugs ve
 
 ---
 
+## 2aa. Étape 24 — Conversions de types non vérifiées, durée maximale des jobs de la CI (22/10/2026)
+
+### Avertissements « unchecked » du compilateur : 14 → 3
+Le mainteneur a vu les notes « uses unchecked or unsafe operations » en lançant GazePlay depuis IntelliJ. Ce ne sont ni des erreurs ni des bugs, mais elles masquaient les avertissements nouveaux. Liste obtenue avec `-Xlint:unchecked`, par un script d'initialisation hors dépôt.
+- **Corrigés par un typage exact** :
+  - `Stats.allAOIListTemp` et `AreaOfInterest` : `List<List>` devient `List<List<CoordinatesTracker>>`, le seul contenu possible ;
+  - `StatDisplayUtils` (3) : `addAll(List.of(...))` remplace les tableaux génériques créés par les paramètres variables ;
+  - `GameSpecSourceInstantiator` : `asSubclass(GameSpecSource.class)` remplace l'appel sur une `Class` brute. Une classe qui n'est pas un `GameSpecSource` échoue comme avant, par une `ClassCastException` rattrapée.
+- **Annotés `@SuppressWarnings("unchecked")`, avec la raison en commentaire** :
+  - `GazeEvent.getEventType` : les constructeurs n'acceptent que des types d'événement de regard ;
+  - `PropertiesStringSetProperty` : l'ensemble observé est celui auquel l'écouteur est ajouté ;
+  - `GameMenuController` et `ReplayingGameFromJson` : le lanceur, la variante et les `Stats` viennent du même `GameSpec`. Typer ces appels demanderait de modifier le contrat des 73 jeux.
+- **Restent, volontairement** : 3 avertissements dans `IGameVariant.toGameVariant`, qui concerne les variantes Eval (code laissé de côté).
+- **Vérifié** : l'inversion apparente dans `StatDisplayUtils.buildAreaChart` (série X ← `getY()`) est **correcte**. En mémoire, les points de fixation gardent Y dans `x` et X dans `y` (`FixationSequenceRecorder`) ; un commentaire le rappelle désormais.
+
+### CI : un job bloqué deux heures
+- **Fait** : le job « test (25) » du run 39782794382 (commit `39cc99fd7`) est resté bloqué de 12 h 59 à 14 h 49 (UTC) sur `apt-get update`, un miroir Ubuntu d'Azure ne répondant plus. Les tests de GazePlay n'ont jamais démarré. Il a été annulé ; l'état testé était déjà couvert par la CI suivante, verte.
+- **Correction** (`ci.yml`) : durée maximale par job (`timeout-minutes` : 20 pour `build`, 30 pour les autres, contre 6 h par défaut ; les jobs durent de 2 à 13 min) ; 10 min au plus et 3 nouvelles tentatives pour les étapes `apt-get`. Deux commentaires périmés corrigés : le runtime livré est Zulu 25 avec JavaFX 25.
+
+### Vérifié (Windows 11, JDK 25)
+Suite complète **409 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; `ci.yml` relu par un analyseur YAML. Le comportement de `timeout-minutes` ne se verra qu'en CI.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10

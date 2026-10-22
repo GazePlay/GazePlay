@@ -2,9 +2,12 @@ name: Continuous Integration
 
 on: [push, pull_request]
 
+# Each job has a time limit (default: 6 hours): on 2026-10-22 a job hung for 2 hours on "apt-get update" (unreachable
+# Ubuntu mirror). The jobs usually take 2 to 13 minutes
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -32,6 +35,7 @@ jobs:
     # The JavaFX media of the tests (21.0.13) plays audio with the ffmpeg of the system, up to ffmpeg 6 (Ubuntu 24.04 has
     # 6.1). Pinned like package-linux: ubuntu-latest moves to Ubuntu 26
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
 
     # 25: bytecode target and Java of the bundled runtimes; 26: latest Java, to see the next changes coming
     strategy:
@@ -52,7 +56,10 @@ jobs:
       # JavaFX tests (TestFX ApplicationExtension) need a display; JavaFX media needs the ffmpeg libraries of the system
       # (without them the background music fails to load and the launch test reports the error)
       - name: Install virtual X server and ffmpeg
-        run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
+        timeout-minutes: 10
+        run: |
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 update
+          sudo apt-get -o Acquire::Retries=3 install -y xvfb ffmpeg
 
       # The runners have no sound card: JavaFX media (GStreamer, ALSA output) cannot create a player without one.
       # A PulseAudio null sink, reached by ALSA through the pulse plugin, gives it a virtual audio output
@@ -83,6 +90,7 @@ jobs:
   package-linux:
     # Pinned: the virtual audio output (PulseAudio, ffmpeg) was checked on Ubuntu 24.04; ubuntu-latest moves to Ubuntu 26
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -94,9 +102,12 @@ jobs:
           distribution: 'zulu'
           java-version: '25'
 
-      # The bundled runtime (Zulu 21 with JavaFX 23) plays audio with the ffmpeg of the system (ffmpeg 6 supported)
+      # The bundled runtime (Zulu 25 with JavaFX 25) plays audio with the ffmpeg of the system
       - name: Install virtual X server and ffmpeg
-        run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
+        timeout-minutes: 10
+        run: |
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 update
+          sudo apt-get -o Acquire::Retries=3 install -y xvfb ffmpeg
 
       # The runners have no sound card: JavaFX media (GStreamer, ALSA output) cannot create a player without one.
       # A PulseAudio null sink, reached by ALSA through the pulse plugin, gives it a virtual audio output
@@ -114,7 +125,7 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --stacktrace linuxDistTar
 
-      # The distribution with its bundled runtime (Zulu 21, JavaFX 23): what the users get. The menu, then a game
+      # The distribution with its bundled runtime (Zulu 25, JavaFX 25): what the users get. The menu, then a game
       - name: Launch GazePlay from the distribution (menu, then a game)
         run: |
           mkdir -p /tmp/gazeplay-dist
@@ -127,6 +138,7 @@ jobs:
   # Same check for Windows x64, the main platform of GazePlay
   package-windows:
     runs-on: windows-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -157,6 +169,7 @@ jobs:
   # Same check for macOS: the GitHub runners are Apple Silicon machines, hence the aarch64 distribution
   package-macos:
     runs-on: macos-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code

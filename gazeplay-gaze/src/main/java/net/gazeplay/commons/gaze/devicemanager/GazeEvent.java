@@ -93,6 +93,8 @@ public class GazeEvent extends InputEvent {
         return (GazeEvent) super.copyFor(newSource, newTarget);
     }
 
+    // Safe: a GazeEvent is only created with the GazeEvent event types (constructors)
+    @SuppressWarnings("unchecked")
     @Override
     public EventType<? extends GazeEvent> getEventType() {
         return (EventType<? extends GazeEvent>) super.getEventType();
