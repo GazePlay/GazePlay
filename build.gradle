@@ -149,12 +149,16 @@ subprojects {
             systemProperty 'monocle.platform', 'Headless'
             systemProperty 'prism.order', 'sw'
             systemProperty 'prism.text', 't2k'
-            // Monocle extends internal classes of JavaFX: needed when JavaFX is loaded as named modules (e.g. JDK 21)
-            jvmArgs '--add-exports', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
-                '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
-                '--add-exports', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
-                '--add-exports', 'javafx.graphics/com.sun.javafx.util=ALL-UNNAMED',
-                '--add-exports', 'javafx.base/com.sun.javafx.logging=ALL-UNNAMED'
+            // Monocle extends internal classes of JavaFX: only needed when the JDK running the tests (the one of
+            // Gradle, no toolchain) holds JavaFX as named modules (an "FX" JDK). With JavaFX on the classpath, as with
+            // the plain JDKs of the CI, they were ignored with a "WARNING: Unknown module" for each test JVM
+            if (ModuleLayer.boot().findModule('javafx.graphics').isPresent()) {
+                jvmArgs '--add-exports', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
+                    '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
+                    '--add-exports', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
+                    '--add-exports', 'javafx.graphics/com.sun.javafx.util=ALL-UNNAMED',
+                    '--add-exports', 'javafx.base/com.sun.javafx.logging=ALL-UNNAMED'
+            }
         }
         doFirst {
             testHome.deleteDir()

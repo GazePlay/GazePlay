@@ -5,9 +5,10 @@ import javafx.beans.property.DoubleProperty;
 public interface AnimationSpeedRatioSource {
 
     /**
-     * use getSpeedRatioProperty() instead to bind to animation rate
+     * Current ratio of the durations (inverse of the speed ratio), read by the games that compute their movements in
+     * their own loop (e.g. Biboule Jump, Space Game). To make a JavaFX animation follow the speed, bind its rate to
+     * {@link #getSpeedRatioProperty()} instead.
      */
-    @Deprecated
     double getDurationRatio();
 
     DoubleProperty getSpeedRatioProperty();

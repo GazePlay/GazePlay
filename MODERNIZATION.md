@@ -1133,6 +1133,29 @@ Il décrivait encore l'état de l'audit d'origine : Java 17, Spring, PMD, Eye Tr
 
 ---
 
+## 2ab. Étape 25 — Enregistrement vidéo sans enregistreur, code déprécié interne, options des tests (22/10/2026)
+
+### Bug corrigé : enregistrement vidéo quand l'enregistreur ne peut pas être créé
+- **Fait** (lecture du code) : dans `Stats.startVideoRecording`, `screenRecorder.setAudioMixer(null)` était appelé après le `try` qui crée l'enregistreur. Si sa création échouait (`IOException` ou `AWTException`, déjà journalisées), la ligne levait une `NullPointerException`. Ensuite, `endVideoRecording` appelait `stop()` sur un enregistreur nul, dans un thread à part.
+- **Correction** : ces deux appels vérifient que l'enregistreur existe ; sans enregistreur, la fin d'enregistrement se termine aussitôt. Quand l'enregistreur existe, l'ordre des appels ne change pas.
+- **Test** : `StatsTest.shouldEndAVideoRecordingThatNeverStarted`. Le cas « création impossible » n'est pas reproduit par un test : il faudrait faire échouer AWT.
+- Concerne seulement l'enregistrement vidéo des parties, une option. Aucun fichier de résultats n'est touché.
+
+### Code déprécié interne
+- Retirées, inutilisées (ni code ni test, vérifié) : `Stats.getDirectoryOfVideo()`, avec son champ `nameOfVideo`, qui n'était qu'écrit ; `ImageUtils.loadAllImages()`.
+- `AnimationSpeedRatioSource.getDurationRatio()` **n'est plus marquée dépréciée**. La dépréciation conseillait de lier les animations à la propriété de vitesse, ce qui ne s'applique pas aux jeux qui calculent leurs mouvements dans leur propre boucle (Biboule Jump, Space Game) : ils doivent lire la valeur courante. La Javadoc l'explique maintenant.
+- `Configuration.saveConfigIgnoringExceptions()` reste dépréciée : seule `Configuration` l'utilise.
+- Usages d'API dépréciées restants : 3 (URL de musique, code Eval).
+
+### Options JavaFX des tests
+- **Fait** : les tests passaient `--add-exports` et `--add-opens` sur `javafx.graphics` et `javafx.base`, et chaque JVM de test affichait `WARNING: Unknown module` (5 lignes), car JavaFX y est chargé depuis le classpath et non comme module.
+- **Correction** (`build.gradle`) : ces options ne sont passées que si le JDK qui exécute Gradle, et donc les tests (pas de toolchain), contient JavaFX comme module, comme un JDK « FX ». C'est la même logique que `GazePlayLauncher.jvmOptions()`.
+
+### Vérifié (Windows 11, JDK 25)
+Suite complète, entièrement relancée : **410 tests, 0 échec** (1 nouveau), plus aucun avertissement `Unknown module` ; `smokeTest` ; SpotBugs vert.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10

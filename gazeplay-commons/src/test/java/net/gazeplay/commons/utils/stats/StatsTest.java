@@ -132,6 +132,14 @@ class StatsTest {
     }
 
     @Test
+    void shouldEndAVideoRecordingThatNeverStarted() {
+        // No recorder (not started, or it could not be created): it used to call stop() on null in a background thread
+        stats.endVideoRecording();
+
+        assertTrue(stats.awaitVideoRecordingEnd(1, java.util.concurrent.TimeUnit.SECONDS));
+    }
+
+    @Test
     void shouldCreateVideoRecordingWhenStartsAndStops() {
         Stats statsSpy = spy(stats);
 

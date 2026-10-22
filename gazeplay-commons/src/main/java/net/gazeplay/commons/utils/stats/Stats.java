@@ -43,7 +43,6 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -140,8 +139,6 @@ public class Stats implements GazeMotionListener {
     private final boolean inReplayMode;
 
     private String directoryOfVideo;
-
-    private String nameOfVideo;
 
     /**
      * Completed when the screen recorder, stopped asynchronously by {@link #endVideoRecording()}, has finished writing
@@ -335,18 +332,24 @@ public class Stats implements GazeMotionListener {
         );
 
         try {
-            final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss");
-            nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
             this.screenRecorder = new ScreenRecorder(cfg, areaRect, fileFormat, screenFormat, null, null, this.movieFolder);
             this.screenRecorder.start();
         } catch (IOException | AWTException e) {
             log.error("Cannot start the video recording of the game", e);
         }
-        this.screenRecorder.setAudioMixer(null);
+        // Null when the recorder could not be created: this line used to throw a NullPointerException
+        if (this.screenRecorder != null) {
+            this.screenRecorder.setAudioMixer(null);
+        }
     }
 
     public void endVideoRecording() {
         final ScreenRecorder recorder = this.screenRecorder;
+        if (recorder == null) {
+            // No recording (not started, or the recorder could not be created): nothing to wait for
+            videoRecordingEnded.complete(null);
+            return;
+        }
         (new Worker<>() {
             @Override
             protected Object construct() throws Exception {
@@ -792,14 +795,6 @@ public class Stats implements GazeMotionListener {
 
     public List<Long> getOriginalDurationsBetweenGoals() {
         return this.roundsDurationReport.getOriginalDurationsBetweenGoals();
-    }
-
-    /**
-     * @deprecated the name does not match the file written by the screen recorder, use {@link #getVideoFile()}
-     */
-    @Deprecated
-    public String getDirectoryOfVideo() {
-        return nameOfVideo;
     }
 
     protected File createInfoStatsFile() {

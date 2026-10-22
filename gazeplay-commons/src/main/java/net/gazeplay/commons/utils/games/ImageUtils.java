@@ -65,13 +65,6 @@ public class ImageUtils {
         return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary, randomGenerator);
     }
 
-    @Deprecated
-    public static List<Image> loadAllImages(final File directoryFile) {
-        final List<File> files = listImageFiles(directoryFile);
-
-        return loadAllAsImages(files);
-    }
-
     public static List<File> listImageFiles(final File directoryFile) {
         log.debug("Listing images in directory {}", directoryFile.getAbsolutePath());
         File[] files = directoryFile.listFiles(ImageUtils::isImage);
