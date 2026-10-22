@@ -121,7 +121,6 @@ public class GazePlayLauncher {
         }
     }
 
-    @SuppressWarnings("PMD")
     private static void saveArgs(String args){
 
         FileWriter myWritter = null;

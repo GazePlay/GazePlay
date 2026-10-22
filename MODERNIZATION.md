@@ -1033,6 +1033,46 @@ Les deux venaient de la feuille `modena` de JavaFX.
 
 ---
 
+## 2y. Étape 22 — Build : dépréciations, installeur Windows, PMD et alertes Dependabot (22/10/2026)
+
+### Dépréciations Gradle (point 1 de 9.0)
+Liste complète, obtenue avec `--warning-mode all` en exécutant réellement les tâches (`--rerun-tasks`) : **deux, toutes deux dans des plugins tiers**, aucune dans les scripts de GazePlay.
+- `StartParameter.newInstance()` (supprimée dans Gradle 10) : plugin `net.researchgate.release` 3.2.0, utilisé par `release.yml` (`./gradlew release`).
+- `Configuration.setVisible(boolean)` (supprimée dans Gradle 11) : plugin `org.openjfx.javafxplugin` 0.1.0.
+- Les deux plugins sont à leur dernière version (vérifié le 21/10/2026). **Sans effet en Gradle 9.8.2**, qui reste la version du projet (décision du mainteneur). À revoir seulement avant un passage à Gradle 10.
+
+### Défauts réels trouvés en exécutant toutes les tâches, corrigés
+- **Les distributions copiaient tout `build/reports`** (`from("build/reports")`) au lieu du seul rapport de licences :
+  - elles livraient le rapport interne de Gradle `problems/problems-report.html` (130 Ko) ;
+  - construites dans la même commande que les tests, Gradle 9 les refusait (dépendance implicite sur les rapports de tests).
+  - Correction (`build.gradle`, `licenseReportContents`) : seule la sortie de `generateLicenseReport` est copiée, dans `dependency-license/` comme avant (81 fichiers, vérifié).
+- **`./gradlew build` (la tâche par défaut) échouait** : `unzipDistribution` décompressait la distribution Windows directement dans `build/`, dont tout le contenu devenait sa sortie. Correction : décompression dans `build/innosetup-input/` ; le chemin donné à Inno Setup suit (`gradle/installer.gradle`).
+- **L'installeur Windows ne se construisait plus du tout**, pour deux raisons :
+  - `generateWindowsInstaller` et `generateWindowsInstallerInDocker` appelaient `exec {}` dans une action de tâche, ce qui n'existe plus depuis Gradle 9 (étape 6) : ce sont maintenant des tâches `Exec` ;
+  - `setup.iss.skel` copiait un dossier `license` qu'aucune distribution actuelle ne contient : il copie `dependency-license`, installé au même endroit (`{app}\license`).
+- **Relancer la préparation d'un runtime macOS échouait** (`No Java runtime ... found`) : le script déplace le runtime extrait puis supprime le dossier d'origine, et Gradle, jugeant l'extraction à jour, ne la refaisait pas. L'étape reconnaît désormais un runtime déjà en place (`gradle/jre/macos.gradle`).
+
+### PMD retiré (décision du mainteneur : « on enlève PMD, vu que l'on a déjà SpotBugs »)
+- Retirés : le plugin, `gradle/pmd.gradle` (avec la tâche `checkPMDReport`), `pmd-ruleset.xml`, la version du catalogue, la tâche par défaut `checkPMDReport` et les 3 `@SuppressWarnings("PMD...")` du code. `BUILD.MD` est mis à jour.
+- Effet : `./gradlew build` n'exécute plus PMD, qui échouait déjà à la référence sur d'anciennes violations. SpotBugs reste dans la CI et dans `build`.
+
+### Alertes Dependabot (point 2 de 9.0)
+- **Fait** : les 35 alertes ouvertes (1 critique, 7 hautes, 14 moyennes, 13 basses) portent **toutes sur `docs/Gemfile.lock`**, les gems Ruby du site Jekyll (nokogiri, activesupport, commonmarker, rubyzip…, verrouillées en 2019 avec github-pages 203). **Aucune ne concerne le code Java de GazePlay.**
+- **Fait** : le site public (gazeplay.github.io) est publié depuis la branche **`gh-pages`** (dernière modification le 17/06/2025), pas depuis `docs/`. Ce dossier est une ancienne copie, peu modifiée depuis 2022 ; son fichier de verrouillage ne sert à aucune publication.
+- **Fait sur `addClaudeCode` seulement** (décision du mainteneur) : `docs/Gemfile.lock` est retiré et ignoré (`docs/.gitignore`). Le contenu du site n'est pas touché, ni `gh-pages`.
+- **Limite** : Dependabot n'analyse que la branche par défaut (`developMain`). Les alertes ne se fermeront qu'à la fusion de ce changement.
+- **Non vérifié** : les dépendances Java ne sont pas analysées par Dependabot (pas de graphe de dépendances Gradle soumis). Leurs versions ont été mises à jour à l'étape 14.
+
+### Vérifié (Windows 11, JDK 25)
+- `./gradlew build smokeTest` : **réussi**, 407 tests, 0 échec, SpotBugs vert ;
+- tests et distributions construits ensemble, avec `--rerun-tasks` : réussi ;
+- **installeur Windows construit avec Inno Setup 6.2.1** (`generateWindowsInstaller`) : `gazeplay-windows-x64-1.11.10-installer.exe`, 442 Mo ;
+- toutes les distributions (Windows, Linux, ARM, macOS x64 et Apple Silicon, sans JRE) construites, et relancées une seconde fois sans erreur.
+
+**Non vérifié** : l'installation réelle par cet installeur ; `generateWindowsInstallerInDocker` (pas de Docker ici) ; `./gradlew release`.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 État au 22/10/2026 (étape 21) : à lire en premier, les sous-sections 9.1 à 9.7 datent de l'étape 10
@@ -1040,9 +1080,9 @@ Les deux venaient de la feuille `modena` de JavaFX.
 - Branche `addClaudeCode`, poussée régulièrement avec l'accord du mainteneur ; CI verte à chaque push depuis l'étape 15. Pas de pull request (décision du mainteneur). Code Eval laissé de côté. Gradle reste en 9.8.2.
 - Fait depuis l'étape 10 : sections 2l à 2x (Java 25, singletons arrêtés à l'étape 5, Eye Tracker 5 vérifié, format v3, avertissements de Java 25, menu sur le thread JavaFX, distributions sans seconde copie de JavaFX).
 - Reste ouvert, par ordre de valeur estimée :
-  1. dépréciations Gradle signalées à chaque build (« incompatible with Gradle 10 ») : à identifier avec `--warning-mode all`, même sans passer à Gradle 10 ;
-  2. alertes Dependabot de GitHub (35, sur la branche par défaut `developMain`) : vérifier lesquelles concernent encore `addClaudeCode` ;
-  3. PMD (échoue déjà à la référence, hors CI) et `sysout-over-slf4j` (2013) ;
+  1. ~~dépréciations Gradle~~ : identifiées, toutes dans des plugins tiers, sans effet en Gradle 9.8.2 (2y) ;
+  2. ~~alertes Dependabot~~ : toutes dans `docs/Gemfile.lock`, retiré sur `addClaudeCode` (2y) ;
+  3. ~~PMD~~ : retiré (2y). Reste `sysout-over-slf4j` (2013) ;
   4. décisions métier : R13 (zones d'intérêt de la souris), retraitement des fichiers historiques v1, numéro et publication de la version (9.7) ;
   5. matériel et plateformes non testés : Linux avec Tobii, ARM Linux, macOS Intel.
 

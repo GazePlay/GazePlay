@@ -162,7 +162,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    @SuppressWarnings("PMD")
     private void loadMusic(final boolean b) throws IOException {
         if (b) {
             final String fileName = jukebox.getS();

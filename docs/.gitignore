@@ -3,3 +3,6 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+# The live site is built by GitHub Pages from the gh-pages branch; a lock file here only pinned 2019 gems (35 security
+# alerts) and served no build
+Gemfile.lock

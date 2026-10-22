@@ -11,8 +11,6 @@ logback = "1.6.5"
 lombok = "1.18.48"
 jacoco = "0.8.15"
 spotbugs = "4.10.5"
-# Pinned: Gradle uses an older PMD by default (7.24.0 with Gradle 9.8.2)
-pmd = "7.28.0"
 junit = "6.1.3"
 testfx = "4.0.18"
 # Same major version as javafx (internal JavaFX API); requires Java 21

@@ -35,6 +35,10 @@ def registerMacosRuntime = { String taskSuffix, String zuluArch, String folderNa
             def home = ["${jreFolder}/${folderName}/${filename}/zulu-${jre}.jre/Contents/Home",
                         "${jreFolder}/${folderName}/${filename}/Contents/Home"]
                 .collect { file(it) }.find { new File(it, 'bin/java').isFile() }
+            // Already moved by a previous build, the extraction being up to date (it only checks its own files)
+            if (home == null && file("${jreFolder}/${folderName}/bin/java").isFile()) {
+                return
+            }
             if (home == null) {
                 throw new GradleException("No Java runtime (Contents/Home/bin/java) found in ${filename}")
             }

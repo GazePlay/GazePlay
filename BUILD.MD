@@ -44,8 +44,8 @@ Coverage report (JaCoCo): `./gradlew :gazeplay-commons:jacocoTestReport`, then o
 ```
 
 SpotBugs runs on every module and fails the build on any finding; intended exceptions are listed, with their reason, in
-the `spotbugs-exclude.xml` file of each module. PMD (`./gradlew pmdMain`) is configured but fails on many existing
-violations: it is not part of the CI.
+the `spotbugs-exclude.xml` file of each module. PMD was removed in October 2026: it failed on many old violations, was
+not part of the CI and overlapped with SpotBugs.
 
 ## Run GazePlay from the sources
 

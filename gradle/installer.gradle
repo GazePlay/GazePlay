@@ -1,28 +1,20 @@
 // -----------------------------------  Windows 64 bits  ---------------------------------------------------------- //
 
-task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
-    doLast {
+// The Windows distribution is unzipped in its own folder of build/ for Inno Setup: unzipped into build/ itself, the
+// whole build folder was the output of unzipDistribution and overlapped the outputs of the other tasks (rejected by
+// Gradle 9, e.g. by ./gradlew build)
+def installerInputDir = "innosetup-input"
 
-        def innoSetupDir = new File("${buildDir}/innosetup")
-
-        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
-        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
-
-        exec {
-            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setup.iss"
-        }
-
-    }
+// Exec tasks: the exec {} method of the scripts no longer exists in task actions since Gradle 9
+task generateWindowsInstaller(type: Exec, dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+    // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+    // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+    commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${buildDir}\\innosetup\\setup.iss"
 }
 
-task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
-    doLast {
-        exec {
-            workingDir rootDir
-            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
-        }
-
-    }
+task generateWindowsInstallerInDocker(type: Exec, dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+    workingDir rootDir
+    commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
 }
 
 task prepareInnoSetupFiles(group: 'distribution') {
@@ -36,7 +28,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
             rename("setup.iss.skel", "setup.iss")
             expand([
                     applicationVersion: "${version}",
-                    unpackedDirectory : "${project.name}-windows-x64-${version}"
+                    unpackedDirectory : "${installerInputDir}\\\\${project.name}-windows-x64-${version}"
             ])
             into(innoSetupDir)
         }
@@ -64,7 +56,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
 
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
-    into buildDir
+    into "${buildDir}/${installerInputDir}"
     filePermissions { unix(0777) }
     dirPermissions { unix(0777) }
 }
