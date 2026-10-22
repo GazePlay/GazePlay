@@ -16,10 +16,39 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
 public class GazePlayLauncher {
+
+    /**
+     * Modules of JavaFX loading native libraries, when JavaFX is part of the Java runtime (bundled Zulu FX runtimes).
+     */
+    private static final List<String> NATIVE_JAVAFX_MODULES = List.of("javafx.graphics", "javafx.media");
+
+    /**
+     * JVM options of GazePlay, given to the JVM of each game. The launch scripts of the distributions and the IntelliJ
+     * configurations give the same ones.
+     * <ul>
+     * <li>JavaFX and Tobii load native libraries: without this option, Java 25 warns at each launch, and a future Java
+     * will refuse to load them. JavaFX is a module of the bundled runtimes, and on the classpath (unnamed module) when
+     * GazePlay runs from the sources: naming a module absent from the runtime would be warned about too;</li>
+     * <li>JavaFX 21 (used when GazePlay runs from the sources: the distributions bundle JavaFX 25) calls the memory
+     * methods of sun.misc.Unsafe in its renderer, which Java 25 reports and a future Java will deny.</li>
+     * </ul>
+     */
+    public static List<String> jvmOptions() {
+        List<String> nativeAccess = new ArrayList<>();
+        NATIVE_JAVAFX_MODULES.stream()
+            .filter(module -> ModuleLayer.boot().findModule(module).isPresent())
+            .forEach(nativeAccess::add);
+        nativeAccess.add("ALL-UNNAMED");
+        return List.of(
+            "--enable-native-access=" + String.join(",", nativeAccess),
+            "--sun-misc-unsafe-memory-access=allow");
+    }
 
     public static void main(String[] args) {
 

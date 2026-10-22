@@ -57,7 +57,7 @@ class LaunchSmokeTest {
             "-Duser.home=" + home.getAbsolutePath(),
             "-D" + GazePlayArgs.ARGS_FILE_PROPERTY + "=" + argsFile.getAbsolutePath(),
             "-Dglass.platform=Monocle", "-Dmonocle.platform=Headless", "-Dprism.order=sw", "-Dprism.text=t2k",
-            "--add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED",
+            "--enable-native-access=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow",
             GazePlayLauncher.class.getName()));
         command.addAll(Arrays.asList(arguments.split(" ")));
         // A fixed size avoids the full screen mode, which Monocle does not support before the window is shown

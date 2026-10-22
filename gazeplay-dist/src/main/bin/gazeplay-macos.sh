@@ -22,6 +22,6 @@ CLASSPATH=$(find "${LIB_DIR}" -name "*.jar" | sort | tr '\n' ':')
 
 # The classpath is passed as one argument (it used to keep literal quotes, losing its first jar)
 exec "${JAVA_CMD}" -Xms256m -Xmx1g \
-  --add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED \
+  --enable-native-access=javafx.graphics,javafx.media,ALL-UNNAMED --sun-misc-unsafe-memory-access=allow \
   -Dlogging.appender.console.level=OFF \
   -cp "${CLASSPATH}" net.gazeplay.GazePlayLauncher "$@"

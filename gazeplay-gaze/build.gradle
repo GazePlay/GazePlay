@@ -2,7 +2,20 @@
 // GazeSource (Tobii, EyeTribe), with their native libraries. The dispatch of the samples to the nodes of a game stays in
 // gazeplay-commons (AbstractGazeDeviceManager), since it records the statistics of the game. The packages are those of
 // gazeplay-commons, where these classes were before.
+
+// lib/EyeTribeJavaFx.jar is a fat jar of the EyeTribe demo: besides the client SDK, it bundles unrelocated copies of
+// Guava 19.0 (2015), ControlsFX and annotation libraries. Its Guava shadowed the Guava of GazePlay on the classpath and
+// called sun.misc.Unsafe (warning on Java 25). Only the client SDK is used (it needs Gson, a dependency of GazePlay):
+// it is extracted at build time, the original jar is left untouched.
+def eyeTribeClientSdk = tasks.register('eyeTribeClientSdkJar', Jar) {
+    archiveBaseName = 'eyetribe-clientsdk'
+    destinationDirectory = layout.buildDirectory.dir('eyetribe')
+    from(zipTree("${rootDir}/lib/EyeTribeJavaFx.jar")) {
+        include 'com/theeyetribe/clientsdk/**'
+    }
+}
+
 dependencies {
-    implementation files("${rootDir}/lib/EyeTribeJavaFx.jar")
+    implementation files(eyeTribeClientSdk)
     implementation libs.tobii.stream.engine
 }

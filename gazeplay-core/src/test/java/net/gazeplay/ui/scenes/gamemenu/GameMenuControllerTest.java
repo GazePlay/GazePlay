@@ -2,6 +2,7 @@ package net.gazeplay.ui.scenes.gamemenu;
 
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSummary;
+import net.gazeplay.GazePlayLauncher;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.ingame.GameContext;
@@ -14,6 +15,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,6 +70,22 @@ class GameMenuControllerTest {
         gameMenuController.playBackgroundMusic(mockGameContext, mockGameSpec, mockMusicManager);
 
         assertTrue(BackgroundMusicManager.getInstance().getBackupPlaylist().isEmpty());
+    }
+
+    /**
+     * The JVM of a game gets the same JVM options as GazePlay (it used to get none, hence the warnings of Java 25).
+     */
+    @Test
+    void shouldGiveTheJvmOptionsToTheGameProcess() {
+        List<String> command = gameMenuController.createBuilder("WhereIsTheShape", null, 0, 0).command();
+
+        // The tests load JavaFX from the classpath: no JavaFX module to name
+        List<String> options = List.of("--enable-native-access=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow");
+        assertEquals(options, GazePlayLauncher.jvmOptions());
+        assertTrue(command.containsAll(options), command.toString());
+        int launcher = command.indexOf(GazePlayLauncher.class.getName());
+        options.forEach(option -> assertTrue(command.indexOf(option) < launcher, option));
+        assertEquals(List.of("--game", "WhereIsTheShape"), command.subList(command.size() - 2, command.size()));
     }
 
 }

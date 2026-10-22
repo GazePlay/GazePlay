@@ -2,6 +2,7 @@
   <configuration default="false" name="GazePlay - jeu direct" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="net.gazeplay.GazePlayLauncher" />
     <module name="gazeplay.gazeplay-core.main" />
+    <option name="VM_PARAMETERS" value="--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow" />
     <option name="PROGRAM_PARAMETERS" value="--default-user --game WhereIsTheShape" />
     <method v="2">
       <option name="Make" enabled="true" />

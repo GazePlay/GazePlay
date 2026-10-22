@@ -1,7 +1,7 @@
 package net.gazeplay.commons.configuration.observableproperties;
 
-import com.sun.javafx.collections.ObservableSetWrapper;
 import javafx.beans.property.SetPropertyBase;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +59,12 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
         //
         final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
-            final ObservableSetWrapper<String> result = new ObservableSetWrapper<>(new LinkedHashSet<>(defaultValue));
+            final ObservableSet<String> result = FXCollections.observableSet(new LinkedHashSet<>(defaultValue));
             result.addListener(observer);
             return result;
         }
         final Set<String> unmarshalledValue = Arrays.stream(propertyValue.split(delimiter)).filter(itemUnmarshallingFilter).map(itemUnmarshallingMapper).collect(Collectors.toCollection(LinkedHashSet::new));
-        final ObservableSetWrapper<String> result = new ObservableSetWrapper<>(unmarshalledValue);
+        final ObservableSet<String> result = FXCollections.observableSet(unmarshalledValue);
         result.addListener(observer);
         return result;
     }

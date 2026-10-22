@@ -135,6 +135,8 @@ subprojects {
     tasks.withType(Test).configureEach {
         usesService(javaFxTestsLimiter)
         maxHeapSize = "3g"
+        // Same JVM options as GazePlay (see GazePlayLauncher.jvmOptions)
+        jvmArgs '--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow'
 
         // Hermetic tests: never read or write the real ~/GazePlay folder, nor depend on the edition file
         // (argsGazeplay.txt) of the machine running the build. A fresh home is created for each run.
@@ -373,6 +375,8 @@ release {
 
 application {
     mainClass = 'net.gazeplay.GazePlayLauncher'
+    // See GazePlayLauncher.jvmOptions
+    applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow']
 }
 
 defaultTasks 'clean', 'build', 'checkPMDReport'
