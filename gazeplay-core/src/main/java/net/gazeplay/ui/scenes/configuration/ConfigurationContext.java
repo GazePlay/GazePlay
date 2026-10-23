@@ -624,6 +624,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
         // Stats settings
+        {
+            // Opens the folder of the results (it was only on the settings page of the BERA edition, removed)
+            I18NText label = new I18NText(translator, "ResultDir", COLON);
+
+            Node input = buildResultFolder(config, configurationContext, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "HeatMapSettings", COLON));
         // HeatMap settings
         {

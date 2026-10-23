@@ -2,19 +2,28 @@ package net.gazeplay.commons.utils.games;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * Moves the GazePlay folder from its former location, ~/GazePlay, to Documents/GazePlay_Learning, where the users
  * look for their results (decision of the maintainer, October 2026).
  * <ul>
  * <li>no former folder: the folder in Documents is used (created if needed);</li>
- * <li>a former folder and none in Documents: it is moved (renamed, all its content at once);</li>
+ * <li>a former folder and none in Documents: it is moved (renamed, all its content at once). When Windows refuses
+ * (a folder inside is held open by another program, e.g. an Explorer window), it is copied instead: the former folder
+ * is left as it is, with a {@link #COPIED_MARKER} file saying where its data went, and is no longer used;</li>
  * <li>both (e.g. the folder in Documents created by hand): the content of the former folder is moved into the one of
  * Documents. Only an edition file or log files can be in both: the ones already in Documents are
  * kept aside, renamed with {@link #SET_ASIDE_SUFFIX}. If a folder of data (profiles, statistics...) is in both, nothing
@@ -36,6 +45,24 @@ final class GazePlayFolderMigration {
     private static final String LOG_FILE = "gazeplay.log";
 
     /**
+     * Left in the former folder once copied to Documents: the former folder is then ignored.
+     */
+    static final String COPIED_MARKER = "DONNEES-COPIEES-DANS-DOCUMENTS.txt";
+
+    /**
+     * Name of the copy being made, next to the folder in Documents, renamed once complete.
+     */
+    private static final String COPY_SUFFIX = ".copying";
+
+    /**
+     * Moves a folder at once (renaming it): {@link Files#move}, replaced in the tests to make it fail.
+     */
+    @FunctionalInterface
+    interface FolderMover {
+        void move(Path source, Path target) throws IOException;
+    }
+
+    /**
      * @param folder   the GazePlay folder to use
      * @param messages what was done, to be logged
      */
@@ -50,6 +77,10 @@ final class GazePlayFolderMigration {
      * @param target the new location (in Documents), or null if there is no Documents folder
      */
     static Result resolve(final File legacy, final File target) {
+        return resolve(legacy, target, (source, destination) -> Files.move(source, destination));
+    }
+
+    static Result resolve(final File legacy, final File target, final FolderMover folderMover) {
         final List<String> messages = new ArrayList<>();
         if (target == null) {
             messages.add("No Documents folder: the GazePlay folder stays in " + legacy);
@@ -58,8 +89,8 @@ final class GazePlayFolderMigration {
         if (isSameLocation(legacy, target)) {
             return new Result(target, messages);
         }
-        if (!legacy.isDirectory()) {
-            // New installation, or folder already moved
+        if (!legacy.isDirectory() || new File(legacy, COPIED_MARKER).isFile()) {
+            // New installation, or folder already moved (or copied)
             if (!target.isDirectory() && !target.mkdirs()) {
                 messages.add("Cannot create " + target + ": the GazePlay folder stays in " + legacy);
                 return new Result(legacy, messages);
@@ -73,13 +104,12 @@ final class GazePlayFolderMigration {
                 return new Result(legacy, messages);
             }
             try {
-                Files.move(legacy.toPath(), target.toPath());
+                folderMover.move(legacy.toPath(), target.toPath());
                 messages.add("GazePlay folder moved from " + legacy + " to " + target);
                 return new Result(target, messages);
             } catch (IOException | RuntimeException e) {
-                messages.add("Cannot move " + legacy + " to " + target + " (" + e + "): the GazePlay folder stays in "
-                    + legacy + ", the move will be tried again at the next start");
-                return new Result(legacy, messages);
+                messages.add("Cannot move " + legacy + " to " + target + " (" + e + "), it is copied instead");
+                return copy(legacy, target, messages);
             }
         }
         if (!target.isDirectory()) {
@@ -87,6 +117,67 @@ final class GazePlayFolderMigration {
             return new Result(legacy, messages);
         }
         return merge(legacy, target, messages);
+    }
+
+    /**
+     * Copies the former folder to the one of Documents, which does not exist yet. The copy is made under another name
+     * and renamed once complete, so that an interrupted copy is never used. Nothing of the former folder is changed,
+     * except the {@link #COPIED_MARKER} file added to it.
+     */
+    private static Result copy(final File legacy, final File target, final List<String> messages) {
+        final Path copy = target.toPath().resolveSibling(target.getName() + COPY_SUFFIX);
+        final Path marker = new File(legacy, COPIED_MARKER).toPath();
+        try {
+            // Left by an interrupted copy: a partial copy, the data are still in the former folder
+            deleteTree(copy);
+            copyTree(legacy.toPath(), copy);
+            Files.writeString(marker, "Le dossier de GazePlay a été copié dans " + target + ", qui est maintenant "
+                + "utilisé.\r\nCe dossier-ci n'est plus utilisé par GazePlay : il a été gardé tel quel (Windows a "
+                + "refusé de le déplacer) et peut être supprimé après vérification de la copie.\r\n",
+                StandardCharsets.UTF_8);
+            Files.move(copy, target.toPath());
+        } catch (IOException | RuntimeException e) {
+            messages.add("Cannot copy " + legacy + " to " + target + " (" + e + "): the GazePlay folder stays in "
+                + legacy + ", the move will be tried again at the next start");
+            try {
+                Files.deleteIfExists(marker);
+                deleteTree(copy);
+            } catch (IOException | RuntimeException cleanupError) {
+                messages.add("Cannot remove " + marker + " or " + copy + " (" + cleanupError + ")");
+            }
+            return new Result(legacy, messages);
+        }
+        messages.add("GazePlay folder copied from " + legacy + " to " + target + ": the former folder is kept as it "
+            + "was, no longer used (see " + COPIED_MARKER + " in it)");
+        return new Result(target, messages);
+    }
+
+    private static void copyTree(final Path source, final Path destination) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+                Files.createDirectories(destination.resolve(source.relativize(dir).toString()));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+                Files.copy(file, destination.resolve(source.relativize(file).toString()),
+                    StandardCopyOption.COPY_ATTRIBUTES);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private static void deleteTree(final Path root) throws IOException {
+        if (!Files.exists(root)) {
+            return;
+        }
+        try (Stream<Path> paths = Files.walk(root)) {
+            for (final Path path : paths.sorted(Comparator.reverseOrder()).toList()) {
+                Files.delete(path);
+            }
+        }
     }
 
     private static Result merge(final File legacy, final File target, final List<String> messages) {

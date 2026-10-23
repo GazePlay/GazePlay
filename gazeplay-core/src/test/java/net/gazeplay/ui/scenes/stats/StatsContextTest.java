@@ -256,15 +256,39 @@ class StatsContextTest {
 
         Configuration mockConfig = mock(Configuration.class);
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
-        File gameFolder = new File("statistics", "WhereIsTheShape");
-        when(mockStats.getGameStatsOfTheDayDirectory()).thenReturn(new File(gameFolder, "2026-10-23"));
+        // The files of the game were saved before midnight, the statistics screen is shown after
+        File savedFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
+        when(mockStats.getSavedStatsInfo()).thenReturn(new SavedStatsInfo(
+            new File(savedFolder, "heatmap.csv"), null, null, null, null, null, null));
+        when(mockStats.getGameStatsOfTheDayDirectory())
+            .thenReturn(new File(new File("statistics", "WhereIsTheShape"), "2026-10-24"));
         HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, new RadioButton(), null, null, false);
 
         CustomButton seeFolderButton = (CustomButton) result.getChildren().get(0);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
             seeFolderButton.fireEvent(TestingUtils.clickOnTarget(seeFolderButton));
 
-            systemFileManager.verify(() -> SystemFileManager.openFolder(gameFolder));
+            systemFileManager.verify(() -> SystemFileManager.openFolder(savedFolder));
+        }
+    }
+
+    @Test
+    void shouldOpenTheFolderOfTheDayWhenNoFileWasSaved() {
+        BorderPane root = new BorderPane();
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+
+        Configuration mockConfig = mock(Configuration.class);
+        when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
+        File todayFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
+        when(mockStats.getSavedStatsInfo()).thenReturn(null);
+        when(mockStats.getGameStatsOfTheDayDirectory()).thenReturn(todayFolder);
+        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, new RadioButton(), null, null, false);
+
+        CustomButton seeFolderButton = (CustomButton) result.getChildren().get(0);
+        try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
+            seeFolderButton.fireEvent(TestingUtils.clickOnTarget(seeFolderButton));
+
+            systemFileManager.verify(() -> SystemFileManager.openFolder(todayFolder));
         }
     }
 

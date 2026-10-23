@@ -1,6 +1,6 @@
 # CLAUDE.md — GazePlay
 
-Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 28 de
+Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 29 de
 `MODERNIZATION.md`). L'audit d'origine (20/10/2026, commit `4a035dd4f`) a été corrigé ici partout où le code a changé ;
 le détail de chaque changement, ses vérifications et ses décisions sont dans `MODERNIZATION.md`, la carte du code dans
 `ARCHITECTURE.md`.
@@ -11,7 +11,7 @@ le détail de chaque changement, ses vérifications et ses décisions sont dans 
 - **Restent interdits sans accord explicite** : commit, push, changement de branche, reset, réécriture d'historique, migration irréversible de données, publication ou déploiement. Le mainteneur autorise commits et pushs demande par demande.
 - **Branche : `addClaudeCode` uniquement.** Ne rien reporter sur `GazePlayLearning`, ne rien fusionner, pas de pull request pour l'instant (décision du mainteneur).
 - Les tests sont rendus hermétiques par `build.gradle` (`user.home`, `gazeplay.folder` et `gazeplay.argsFile` pointent vers `build/test-home`). Toujours les lancer via Gradle. Hors Gradle (IDE, exécution manuelle), ils liraient et écriraient le vrai dossier GazePlay, et pourraient le déplacer.
-- **Dossier GazePlay : `Documents\GazePlay_Learning`** (décision du mainteneur, 23/10/2026 ; « Mes documents » trouvé par `FileSystemView` sous Windows, `~/Documents` ailleurs). Au premier lancement, l'ancien `~/GazePlay` y est déplacé (`GazePlayFolderMigration`, rien n'est supprimé ni écrasé ; en cas d'échec, l'ancien dossier reste utilisé). Les chemins des réglages qui pointaient dans l'ancien dossier sont réécrits à la lecture. Toute JVM lancée par GazePlay reçoit `-Dgazeplay.folder`. Le dossier `Documents\Gazeplay` des anciennes versions n'est pas touché.
+- **Dossier GazePlay : `Documents\GazePlay_Learning`** (décision du mainteneur, 23/10/2026 ; « Mes documents » trouvé par `FileSystemView` sous Windows, `~/Documents` ailleurs). Au premier lancement, l'ancien `~/GazePlay` y est déplacé (`GazePlayFolderMigration`, rien n'est supprimé ni écrasé). Si Windows refuse le déplacement (un sous-dossier tenu ouvert), il est copié, et l'ancien dossier est gardé avec la note `DONNEES-COPIEES-DANS-DOCUMENTS.txt` puis ignoré. Si la copie échoue aussi, l'ancien dossier reste utilisé. Les chemins des réglages qui pointaient dans l'ancien dossier sont réécrits à la lecture. Toute JVM lancée par GazePlay reçoit `-Dgazeplay.folder`. Le dossier `Documents\Gazeplay` des anciennes versions n'est pas touché.
 - **JDK 25 requis** pour compiler. Dans le terminal du mainteneur, le `java` du PATH est un Zulu 17 : préfixer les commandes Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';` (chemin entre apostrophes, sans `$HOME`).
 - Ne jamais toucher aux 4 stashes existants, ni supprimer ou réinitialiser des modifications existantes.
 - Ne jamais fabriquer de chiffres de performance : tout reste à mesurer.
@@ -82,7 +82,7 @@ Autres points :
 - Tobii fonctionne uniquement sur Windows x64 et Linux x64 ; Linux n'a pas été testé avec l'appareil. ARM et macOS fonctionnent en souris seulement.
 - **CI** (`ci.yml`) : SpotBugs ; tests sous JDK 25 et 26 (`xvfb`, sortie audio virtuelle, paquets installés par `.github/scripts/install-apt-packages.sh`) ; lancement des 75 jeux (`all-games`) ; construction **et lancement réel** des distributions Windows, Linux x64 et macOS Apple Silicon (menu puis un jeu). Chaque job a une durée maximale (20 ou 30 min). ARM Linux et macOS Intel ne sont lancés nulle part.
 - `./gradlew build` réussit ; l'installeur Windows se construit avec Inno Setup 6 (`generateWindowsInstaller`) ou dans Docker. L'installation réelle n'a pas été testée.
-- Tests : **420 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
+- Tests : **424 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
 - La scène JavaFX ne doit être modifiée que sur son thread : un audit complet a été fait le 23/10/2026 (`MODERNIZATION.md` 2ad). Pour un délai, utiliser `PauseTransition` plutôt qu'un `java.util.Timer`.
 - Dépréciations Gradle restantes : uniquement dans les plugins `release` et `javafxplugin`, déjà à leur dernière version, sans effet en Gradle 9.8.2.
 - Le site public est publié depuis la branche **`gh-pages`** ; le dossier `docs/` en est une ancienne copie.

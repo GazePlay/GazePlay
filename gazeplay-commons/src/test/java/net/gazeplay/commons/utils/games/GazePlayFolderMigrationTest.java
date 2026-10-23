@@ -6,6 +6,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.util.Properties;
 
@@ -89,6 +90,56 @@ class GazePlayFolderMigrationTest {
         assertEquals("new", read(new File(target(), "statistics/b.csv")));
         assertFalse(new File(target(), "music").exists());
         assertTrue(result.messages().get(0).contains("[statistics]"), result.messages().toString());
+    }
+
+    /**
+     * Windows refuses to move a folder when a folder inside is held open by another program (seen on the machine of
+     * the maintainer, 23/10/2026: AccessDeniedException).
+     */
+    private static final GazePlayFolderMigration.FolderMover REFUSED_MOVE = (source, target) -> {
+        throw new AccessDeniedException(source + " -> " + target);
+    };
+
+    @Test
+    void shouldCopyTheFormerFolderWhenItCannotBeMoved() throws IOException {
+        write(new File(legacy(), "GazePlay.properties"), "LANGUAGE=fra");
+        write(new File(legacy(), "statistics/mole/2026-10-23/heatmap.csv"), "results");
+        assertTrue(new File(legacy(), "files/evals").mkdirs());
+
+        GazePlayFolderMigration.Result result = GazePlayFolderMigration.resolve(legacy(), target(), REFUSED_MOVE);
+
+        assertEquals(target(), result.folder());
+        assertEquals("LANGUAGE=fra", read(new File(target(), "GazePlay.properties")));
+        assertEquals("results", read(new File(target(), "statistics/mole/2026-10-23/heatmap.csv")));
+        assertTrue(new File(target(), "files/evals").isDirectory());
+        assertFalse(new File(target(), GazePlayFolderMigration.COPIED_MARKER).exists());
+        // The former folder is left as it was, with the marker added
+        assertEquals("results", read(new File(legacy(), "statistics/mole/2026-10-23/heatmap.csv")));
+        assertTrue(read(new File(legacy(), GazePlayFolderMigration.COPIED_MARKER)).contains(target().toString()));
+        assertFalse(new File(target().getParentFile(), target().getName() + ".copying").exists());
+    }
+
+    @Test
+    void shouldUseTheFolderInDocumentsOnceCopied() throws IOException {
+        write(new File(legacy(), "GazePlay.properties"), "LANGUAGE=fra");
+        GazePlayFolderMigration.resolve(legacy(), target(), REFUSED_MOVE);
+
+        GazePlayFolderMigration.Result result = GazePlayFolderMigration.resolve(legacy(), target(), REFUSED_MOVE);
+
+        assertEquals(target(), result.folder());
+        assertTrue(result.messages().isEmpty());
+    }
+
+    @Test
+    void shouldReplaceTheCopyLeftByAnInterruptedStart() throws IOException {
+        write(new File(legacy(), "GazePlay.properties"), "LANGUAGE=fra");
+        write(new File(target().getParentFile(), target().getName() + ".copying/partial.txt"), "partial");
+
+        GazePlayFolderMigration.Result result = GazePlayFolderMigration.resolve(legacy(), target(), REFUSED_MOVE);
+
+        assertEquals(target(), result.folder());
+        assertEquals("LANGUAGE=fra", read(new File(target(), "GazePlay.properties")));
+        assertFalse(new File(target(), "partial.txt").exists());
     }
 
     @Test

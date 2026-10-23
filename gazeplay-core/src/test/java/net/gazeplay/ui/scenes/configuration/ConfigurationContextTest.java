@@ -120,7 +120,7 @@ class ConfigurationContextTest {
             }
 
             // Layout of the "gazeplay" edition (the "bera" edition builds another grid)
-            assertEquals(72 - notDisplayedElts, children.size());
+            assertEquals(74 - notDisplayedElts, children.size());
             // Language settings
             assertTrue(children.get(3) instanceof MenuButton);
             // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
@@ -145,14 +145,16 @@ class ConfigurationContextTest {
             assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(49 - notDisplayedElts) instanceof HBox);
-            // Stats settings: heatmap (disabled, opacity, colors), AOI (enabled, convex hull), sequence, video
-            assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
+            // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled, convex hull),
+            // sequence, video
+            assertTrue(children.get(53 - notDisplayedElts) instanceof Button);
+            assertTrue(children.get(57 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(59 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(61 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(65 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(71 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(73 - notDisplayedElts) instanceof CheckBox);
         });
         TestingUtils.waitForRunLater();
 

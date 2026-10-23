@@ -35,6 +35,7 @@ import net.gazeplay.stats.SelectionGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -407,7 +408,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
         scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
 
-        // Opens the folder of the results of the game played, with one folder per day inside
+        // Opens the folder of the files of this game (heatmaps, metrics...)
         CustomButton seeFolderButton = new CustomButton("data/common/images/seeFolder.png", screenDimension);
         seeFolderButton.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> seeGameFolder(stats));
         I18NTooltip.install(seeFolderButton, new I18NTooltip(gazePlay.getTranslator(), "SeeFolder"));
@@ -441,9 +442,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Opens the folder where the results of the game played are saved (statistics/&lt;game&gt;, or under the profile).
+     * Opens the folder where the files of this game (heatmaps, metrics, replay data...) were saved:
+     * statistics/&lt;game&gt;/&lt;day&gt;, or under the profile.
      */
     void seeGameFolder(Stats stats) {
-        SystemFileManager.openFolder(stats.getGameStatsOfTheDayDirectory().getParentFile());
+        // The folder of the saved files, not the one of today: they differ for a game ended after midnight
+        final SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        final File folder = savedStatsInfo != null && savedStatsInfo.getHeatMapCsvFile() != null
+            ? savedStatsInfo.getHeatMapCsvFile().getParentFile()
+            : stats.getGameStatsOfTheDayDirectory();
+        SystemFileManager.openFolder(folder);
     }
 }

@@ -1252,6 +1252,33 @@ Décision du mainteneur : le dossier de données ne doit plus être cherché dan
 
 ---
 
+## 2af. Étape 29 — Retours du mainteneur sur l'étape 28 (23/10/2026)
+
+Essais du mainteneur : Whac-a-Mole et Shoot the Robots sans problème ; bouton de l'écran des statistiques fonctionnel. Trois défauts signalés.
+
+### Le dossier n'a pas été déplacé dans Documents
+- **Fait** (journal `C:\Users\arrig\GazePlay\gazeplay.log`, lancement de 11:55) : `Cannot move C:\Users\arrig\GazePlay to C:\Users\arrig\Documents\GazePlay_Learning (java.nio.file.AccessDeniedException …)`. GazePlay a gardé l'ancien dossier, comme prévu en cas d'échec.
+- **Fait** : un déplacement de dossier vers Documents fonctionne sur ce poste (essai sur des dossiers jetables). C'est le dossier `files\evals` lui-même qui est tenu ouvert par un autre programme. Tous ses sous-dossiers, et `statistics`, `profiles`, `music` et `cache`, peuvent être renommés. Le verrou persistait à 13 h, sans aucun `java` en cours.
+- **Hypothèse** : une fenêtre de l'Explorateur, l'indexation de Windows, un antivirus, IntelliJ ou l'application Claude de bureau. Windows ne donne pas le programme qui tient un dossier : le gestionnaire de redémarrage ne répond que pour les fichiers.
+- **Correction** : si Windows refuse le déplacement d'un bloc, `GazePlayFolderMigration` **copie** le dossier. La copie est faite sous le nom `GazePlay_Learning.copying`, puis renommée une fois complète, pour qu'une copie interrompue ne soit jamais utilisée. Une copie partielle laissée par un lancement interrompu est refaite. L'ancien dossier est laissé tel quel, avec un fichier `DONNEES-COPIEES-DANS-DOCUMENTS.txt` qui dit où sont les données ; GazePlay l'ignore ensuite. En cas d'échec de la copie, la note et la copie partielle sont retirées, l'ancien dossier reste utilisé et le déplacement est retenté au lancement suivant.
+- **Impact** : les données existent en double (133 Mo sur le poste du mainteneur) jusqu'à ce que l'ancien dossier soit supprimé à la main. Rien n'est supprimé automatiquement.
+- Tests : `GazePlayFolderMigrationTest` (3 cas de plus, déplacement refusé simulé).
+
+### Bouton « voir dossier » absent des réglages
+- **Fait** : la rubrique « Voir résultat » n'existait que dans la page de réglages de l'édition BERA (`beraConfigGridPane`), retirée le 21/10/2026 : l'étape 23 avait réparé un bouton inaccessible.
+- **Correction** : ligne « Dossier des résultats » (même bouton) en tête de la rubrique « Statistiques » de la page normale ; faute de frappe corrigée (« Dossier des résultat »). `ConfigurationContextTest.shouldBuildConfigGridPane` mis à jour.
+
+### Bouton de l'écran des statistiques : dossier de la partie
+- Demande : ouvrir le dossier qui contient les heatmaps, pas `statistics/<jeu>`.
+- **Correction** : le bouton ouvre le dossier où ont été écrits les fichiers de la partie (`statistics/<jeu>/<jour>`, lu dans `SavedStatsInfo`, ce qui reste juste pour une partie finie après minuit) ; le dossier du jour sinon. Tests : `StatsContextTest` (2 cas).
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest` réussi : **424 tests, 0 échec** ; `smokeTest` 3/3 ; SpotBugs vert.
+
+**Vérifié par le mainteneur** (23/10/2026, 14:07) : au lancement suivant, le verrou avait disparu et `C:\Users\arrig\GazePlay` a été **déplacé** d'un bloc dans `Documents\GazePlay_Learning` (journal : `GazePlay folder moved from …`). L'ancien dossier n'existe plus, rien n'est en double. La copie de secours n'a donc pas servi sur ce poste : elle n'est vérifiée que par les tests. Les deux boutons « voir dossier » (réglages, écran des statistiques) ouvrent le bon dossier.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 Pause du 22/10/2026 au soir (après l'étape 26) : à lire en premier
