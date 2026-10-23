@@ -1363,11 +1363,38 @@ Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gaz
 
 ---
 
-## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 32)
+## 2aj. Étape 33 — R6 et R7 (points répétés, résolution des heatmaps : format v4) et ménage (23/10/2026, décisions du mainteneur)
+
+### R7 : heatmaps toujours en 400 colonnes, format v4
+- **Fait** : la taille des cellules était largeur ÷ 200 si la JVM avait moins de 1 Gio de mémoire, largeur ÷ 400 sinon (`Stats.computeHeatMapPixelSize`). Les scripts de lancement donnent `-Xmx1g` au menu, mais une partie lancée depuis le menu est une autre JVM, sans `-Xmx` : elle reçoit la valeur par défaut de Java, un quart de la mémoire physique. Sur le poste du mainteneur : 4 Go, 400 colonnes (vérifié dans les fichiers du jour : 400 colonnes, 225 lignes).
+- **Hypothèse (non mesurée)** : sur un poste de moins de 4 Go de mémoire, les heatmaps avaient 200 colonnes ; leur résolution dépendait donc de la machine.
+- **Correction** : toujours 400 colonnes (`Stats.HEAT_MAP_COLUMNS`). Mémoire utilisée : 3 grilles de 400 × 225 nombres, environ 2 Mo pour un écran 1920 × 1080.
+- **Format v4** (`ReplayDataFormat.CURRENT_VERSION`) : `replayData.json` ne change pas de structure ; la version indique que les heatmaps de la partie ont la résolution fixe. Les fichiers v1 à v3 ne sont pas réécrits ; une heatmap de 200 colonnes se reconnaît à son nombre de colonnes.
+- Test : `StatsRecordingCharacterizationTest.shouldAlwaysDivideTheHeatMapIntoFourHundredColumns` ; versions attendues passées à 4 dans `StatsTest` et `ReplayDataWriterTest`.
+
+### R6 : les positions répétées ne sont plus transmises (format v4)
+- **Fait** : le wrapper Tobii renvoie la dernière position reçue, sans son instant ni l'indication qu'elle est nouvelle. Interrogé toutes les 10 ms, il répétait chaque position de l'appareil : environ 70 % des points enregistrés avec l'Eye Tracker 5 (contrôle d'une vraie partie, 2v).
+- **Hypothèse** : 70 % de répétitions à 100 interrogations par seconde donnent environ 30 mesures nouvelles par seconde, cohérent avec la fréquence annoncée de l'Eye Tracker 5 (environ 33 Hz). Non mesuré.
+- **Correction** (choix du mainteneur, dans la v4 qui n'était pas encore poussée) : `PositionPollerRunnable` ne transmet plus une position strictement identique à la précédente. Une vraie mesure n'est pratiquement jamais identique à la précédente, même pour un œil immobile. Les valeurs sont copiées avant comparaison, le wrapper remplissant un tableau partagé. Le code natif n'est pas modifié.
+- **Effets** : environ 3 fois moins de points de regard dans `replayData.json` et dans les heatmaps du regard (valeurs plus basses dans la même proportion, même répartition) ; durées de fixation inchangées (calculées sur les instants des points) ; les jeux reçoivent le regard à chaque vraie mesure (en mode souris, ils ne reçoivent déjà rien quand la souris ne bouge pas). EyeTribe n'est pas concerné.
+- Test : `PositionPollerRunnableTest.shouldDropTheRepeatedPositions`.
+- **À vérifier par le mainteneur avec l'Eye Tracker 5** : une partie, puis contrôle des fichiers (part de points répétés proche de 0, environ 30 points de regard par seconde, jeu normal).
+
+### Ménage
+- **Traductions en double** : `Farm` et `Savanna` fusionnés (la ligne qui s'appliquait n'avait pas 15 des langues de l'autre : elles sont maintenant traduites) ; `Score` : la ligne appliquée, déjà la plus complète, est gardée ; `SprintFinish` et `SprintFinishMouse` : la première ligne, qui ne s'appliquait pas et avait l'anglais et le français inversés, est retirée. Plus aucune clé en double.
+- **Fichiers morts retirés** : `logos/gazeplayClassicLogo.png` (inutilisé ; les tests ont leurs propres copies), `updates-popup/offline-page-*.html` (référencés nulle part). L'ancien logo `gazeplay-top-logo.png`, source du nouveau, est déplacé dans `gradle/logo/` : il n'est plus livré. Le générateur reproduit à l'identique les images livrées (vérifié octet par octet).
+- **Dossier `files/evals`** : il n'est plus créé à chaque lancement (évaluations de l'édition BERA, retirée). Un dossier existant n'est pas touché.
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest` : **416 tests, 0 échec** ; `smokeTest` 3/3 ; SpotBugs vert. Mode sombre vérifié par le mainteneur (logo et écrans).
+
+---
+
+## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 33)
 
 ### État
-- Branche **`addClaudeCode`**. Dernier commit poussé : `14cf103b2` (étapes 30 à 32), vérifié par le mainteneur dans l'application. La mise à jour de la documentation qui suit n'est pas commitée.
-- Suite locale : 414 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
+- Branche **`addClaudeCode`**. Dernier commit poussé : `14cf103b2` (étapes 30 à 32), vérifié par le mainteneur. Commités sans être poussés : `3088d9100` (documentation) et l'étape 33.
+- Suite locale : 416 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
 - Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
 - Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07).
 
@@ -1375,10 +1402,10 @@ Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gaz
 1. **Fin de la modernisation**, puis, dans cet ordre (décision du mainteneur du 23/10/2026) : fusion de `GazePlayLearning` (avec les restes d'Eval : 3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs), test de l'installation réelle par l'installeur Windows, numéro de version (1.12.0 proposé) et publication.
 
 ### Décisions du mainteneur en vigueur
-64 bits seulement ; formats de résultats versionnés (v3) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.
+64 bits seulement ; formats de résultats versionnés (v4) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.
 
 ### Toujours ouvert, sans action prévue
-R6 et R7 (documentés), R12 (dépend de la fusion), maintien d'EyeTribe, plateformes non testées faute de matériel (Tobii sous Linux, Linux ARM, macOS Intel).
+R12 (dépend de la fusion), maintien d'EyeTribe, plateformes non testées faute de matériel (Tobii sous Linux, Linux ARM, macOS Intel).
 
 ### Précautions
 - Ne jamais enchaîner `git add ; git commit ; git push` dans une seule commande PowerShell.
@@ -1404,7 +1431,7 @@ Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `"
 
 - **R3 (`Time` dans `*-info-game.csv`)** : valeur corrigée pour les nouvelles parties, format inchangé. Les fichiers historiques gardent le mois à la place des minutes ; les minutes se retrouvent dans le nom du fichier.
 - **`GazePlay.properties`** : contenu identique, écriture atomique. Anciennes clés d'avant 1.11.1 migrées à la lecture (étape 3). Risque résiduel : un lien symbolique serait remplacé par un fichier ordinaire.
-- **Format de résultats v2** (2i) puis **v3** (2v) : `formatVersion` dans `replayData.json` ; les fichiers v1 et v2 ne sont jamais réécrits et restent lus par le rejeu.
+- **Format de résultats v2** (2i), **v3** (2v) puis **v4** (2aj, heatmaps en 400 colonnes) : `formatVersion` dans `replayData.json` ; les fichiers des versions précédentes ne sont jamais réécrits et restent lus par le rejeu.
 - **Dossier de données** (2ae, 2af) : `Documents\GazePlay_Learning`, ancien dossier déplacé (ou copié si Windows refuse) ; fichiers inchangés.
 - **`argsGazeplay.txt`** (2ag) : plus lu ni écrit.
 - **Nom visible** (2ah) : aucun fichier de données ne change de nom.
@@ -1413,5 +1440,5 @@ Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `"
 
 ## Annexe C — Constats annexes encore ouverts
 
-- **`multilinguism.csv`** : les clés `Farm`, `Savanna`, `Score`, `SprintFinish` et `SprintFinishMouse` sont en double (la dernière occurrence l'emporte). « Petit Ours Brun » n'a pas de traduction anglaise (exception documentée dans `TranslationFilesTest`).
-- Réglés depuis l'étape 1, pour mémoire : anciennes clés de configuration (migrées, étape 3), affichage des scores BERA (retiré avec BERA), emplacement Windows de `GazePlayArgs` (classe retirée, 2ag), tests JavaFX sans fenêtre (Monocle, étape 2), « Dossier des vidéos » et `DATA_COLLECT_AUTHORIZED` (retirés, 2ai).
+- **`multilinguism.csv`** : « Petit Ours Brun » n'a pas de traduction anglaise (exception documentée dans `TranslationFilesTest`).
+- Réglés depuis l'étape 1, pour mémoire : anciennes clés de configuration (migrées, étape 3), affichage des scores BERA (retiré avec BERA), emplacement Windows de `GazePlayArgs` (classe retirée, 2ag), tests JavaFX sans fenêtre (Monocle, étape 2), « Dossier des vidéos » et `DATA_COLLECT_AUTHORIZED` (retirés, 2ai), clés de traduction en double (2aj).

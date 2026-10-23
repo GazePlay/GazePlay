@@ -20,12 +20,24 @@ import java.util.List;
  * handled on the JavaFX thread. Samples queued while this thread was busy used to get the same time (several samples
  * with the same "time"), and a later one. Each source ("gaze", "mouse") stays in increasing time order, but a mouse
  * sample can now precede a gaze sample of a slightly earlier time in the array. The mouse samples are unchanged.
+ * <p>
+ * Differences of version 4:
+ * <ul>
+ * <li>the gaze samples of a Tobii eye tracker are the new measures only. The position was read every 10 ms and
+ * repeated when the eye tracker had sent nothing new (about 70 % of the samples with an Eye Tracker 5, R6): about 3
+ * times fewer gaze samples in "coordinatesAndTimeStamp" and in the gaze heatmaps, whose values are lower in
+ * proportion. The durations of the fixations are computed from the times of the samples: unchanged;</li>
+ * <li>in the other files of the round, the heatmaps (heatmap*.csv, metrics*.png) always have 400 columns (cells of
+ * width / 400 pixels of the scene). Before, the cells were width / 200 pixels when the JVM had less than 1 GiB of
+ * memory (R7), so the resolution depended on the machine.</li>
+ * </ul>
+ * <p>
  * In memory, {@link FixationPoint} keeps the convention of version 1 (Y in "x", X in "y"), which the drawing code
  * relies on: the conversion happens when the file is written and read.
  */
 public final class ReplayDataFormat {
 
-    public static final int CURRENT_VERSION = 3;
+    public static final int CURRENT_VERSION = 4;
 
     /**
      * Version of the files written without "formatVersion".

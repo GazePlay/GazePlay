@@ -116,9 +116,7 @@ TinySizeCategory,,,,,,,Tiny,,Minuscules,,,,,,,,,,,,
 InfinityCategory,,,,,,,Infinity,,À l'infini,,,,,,,,,,,,
 Hide,Kundërshtari i fshehur,الخصم الخفي,Схаваны праціўнік,隐藏的对手,Versteckter Gegner,Κρυφός αντίπαλος,Hidden opponent,Piilotettu vastustaja,Adversaire caché,छिपे हुए प्रतिद्वंद्वी,Skriveni protivnik,Lawan tersembunyi,Avversario nascosto,隠れた相手,Verborgen tegenstander,Ukryty przeciwnik,Adversário oculto,Скрытый противник,Oponente oculto,Đối thủ ẩn,Lawan tersembunyi
 Visible,Kundërshtar i dukshëm,خصم مرئي,Бачны праціўнік,可见的对手,Sichtbarer Gegner,Ορατός αντίπαλος,Visible opponent,Näkyvä vastustaja,Adversaire visible,दृश्यमान प्रतिद्वंद्वी,Vidljiv protivnik,Lawan yang terlihat,Avversario visibile,目に見える相手,Zichtbare tegenstander,Widoczny przeciwnik,Adversário visível,Видимый противник,Oponente visible,Đối thủ có thể nhìn thấy,Kelihatan lawan
-Farm,Fermë,مزرعة,Ферма,农场,Bauernhof,Αγρόκτημα,Farm,Maatila,Ferme,खेत,Farma,Tanah pertanian,Azienda agricola,農場,Boerderij,Gospodarstwo rolne,Fazenda,Ферма,Granja,Nông trại,Ladang
 Forest,Pyll,غابة,Лес,森林,Wald,Δάσος,Forest,Metsä,Forêt,जंगल,Šuma,Hutan,foresta,森,Woud,Las,Floresta,Лес,Bosque,Rừng,Hutan
-Savanna,Savana,السافانا,Саванна,稀树草原,Savanne,Σαβάνα,Savanna,Savanni,Savane,लंबा-चौड़ा चरागाह,Savana,sabana,Savana,サバンナ,Savanne,Sawanna,Savana,Саванна,Sabana,Savanna,Savana
 Birds,Zogjtë,طيور,Птушкі,鸟类,Vögel,Πουλιά,Birds,Linnut,Oiseaux,पक्षियों,Ptice,Burung-burung,Uccelli,鳥,Vogels,Ptaki,Aves,Птицы,Aves,Chim,burung
 Maritime,Detare,البحرية,Марскі,海上,Maritim,Θαλάσσιος,Maritime,Merenkulku,Marins,समुद्री,pomorski,Maritim,Marittimo,海事,Maritiem,Morski,Marítimo,морской,Marítimo,Hàng hải,Maritim
 AllAnimals,Të gjitha,الجميع,Усе,全部,Alle,Ολα,All animals,Kaikki,Tous,सभी,svi,Semua,Tutto,全て,Allemaal,Wszystko,Tudo,Все,Todos,Tất cả các,Semua
@@ -216,9 +214,9 @@ BO9,Më i miri nga nëntë,أفضل تسعة,У 5 пераможных тура�
 Numbers,Numra,,Цыфры,数字,,,Numbers,,Nombres,,,,Numeri,,Cijfers,,,Цифры,,,
 Mona Lisa,Mona Liza,,Мона Ліза,蒙娜丽莎,,,Mona Lisa,,Mona Lisa,,,,Mona Lisa,,Mona Lisa,,,Мона Лиза,,,
 Fish,Peshk,,Рыба,鱼,,,Fish,,Poisson,,,,Pesce,,Vis,,,Рыба,,,
-Farm,,,Ферма,农场,,,Farm,,Ferme,,,,,,Boerderij,,,Ферма,,,
+Farm,Fermë,مزرعة,Ферма,农场,Bauernhof,Αγρόκτημα,Farm,Maatila,Ferme,खेत,Farma,Tanah pertanian,Azienda agricola,農場,Boerderij,Gospodarstwo rolne,Fazenda,Ферма,Granja,Nông trại,Ladang
 Jungle,,,Джунглі,丛林,,,Jungle,,Jungle,,,,,,Jungle,,,Джунгли,,,
-Savanna,,,Саванна,稀树草原,,,Savanna,,Savane,,,,,,Savanne,,,Саванна,,,
+Savanna,Savana,السافانا,Саванна,稀树草原,Savanne,Σαβάνα,Savanna,Savanni,Savane,लंबा-चौड़ा चरागाह,Savana,sabana,Savana,サバンナ,Savanne,Sawanna,Savana,Саванна,Sabana,Savanna,Savana
 Sea,,,Мора,,,,Sea,,Mer,,,,,,,,,Море,,,
 Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
@@ -297,7 +295,6 @@ EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (اح�
 Limiter Time,,,Абмежавальнік часу,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,
 Limiter Score,,,Абмежавальнік выніку,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,
 PianoTileColors,,,,,,,Panio tile color,,Couleur tuile piano,,,,,,,,,,,,
-Score,,,вынік,分数,,,Score,,Score,,,,,,,,,счёт,,,
 Time,,,Час (у секундах),时间 (秒),,,Time (seconds),,Temps (secondes),,,,,,,,,Время (в секундах),,,
 
 # EYE-TRACKER SETTINGS
@@ -491,8 +488,6 @@ Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
 Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 
 # Sprint to the finish name
-SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
-SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,
 SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,
 SprintFinishMouse,,,,,,, Sprint to the finish (Gaze) ,, Sprint jusqu'à l'arrivée (Regard) ,,,,,,,,,,,,
 

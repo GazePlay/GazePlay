@@ -1,11 +1,12 @@
 """Builds the GazePlay Learning logos: the drawn GAZE PLAY letters, with "Learning" below in Fredoka (OFL 1.1).
 
-Usage: python make_logo.py <font.ttf> <images dir> <output dir>
+Usage: python make_logo.py <font.ttf> <output dir>
 
 <font.ttf>: Fredoka, variable version (https://github.com/google/fonts/tree/main/ofl/fredoka, file
 "Fredoka[wdth,wght].ttf", SIL Open Font License 1.1: see Fredoka-OFL.txt). The font itself is not shipped: only the
-images it draws (data/common/images/logos/gazeplay-learning-top-logo.png, GazePlayLetters/learning.png).
-<images dir>: gazeplay-core/src/main/resources/data/common/images. Needs Pillow.
+images it draws: copy them to gazeplay-core/src/main/resources/data/common/images (logos/gazeplay-learning-top-logo.png,
+GazePlayLetters/learning.png). The source logo, gazeplay-top-logo.png (drawn GAZE PLAY letters and mascot), is next to
+this script. Needs Pillow.
 """
 import os
 import sys
@@ -82,10 +83,10 @@ def stack(top, bottom, overlap):
 
 
 def main():
-    font_path, images, output = sys.argv[1:4]
+    font_path, output = sys.argv[1:3]
     os.makedirs(output, exist_ok=True)
     # Static logo of the menu: the drawn GAZE PLAY letters and the mascot, "Learning" below
-    logo = Image.open(os.path.join(images, "logos", "gazeplay-top-logo.png")).convert("RGBA")
+    logo = Image.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "gazeplay-top-logo.png")).convert("RGBA")
     logo = logo.crop(logo.getbbox())
     word = word_image(font_path, "Learning", int(logo.height * 0.30))
     result = stack(logo, word, int(logo.height * 0.08))

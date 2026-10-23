@@ -31,6 +31,12 @@ public class PositionPollerRunnable implements Runnable {
 
     private boolean noGazeDataReported = false;
 
+    /**
+     * Ratios of the last position given, to drop the repetitions (R6). Copies: the wrapper fills a shared array.
+     */
+    private float lastXRatio = Float.NaN;
+    private float lastYRatio = Float.NaN;
+
     @Setter
     private transient boolean stopRequested = false;
 
@@ -70,7 +76,7 @@ public class PositionPollerRunnable implements Runnable {
     }
 
     /**
-     * @return the position of the gaze on the screen, or empty when the eye tracker gives no gaze data
+     * @return the position of the gaze on the screen, or empty when the eye tracker gives no gaze data, or no new one
      */
     Optional<Point2D> nextGazePoint() {
         final float[] pointAsFloatArray = gazePositionSource.get();
@@ -85,6 +91,16 @@ public class PositionPollerRunnable implements Runnable {
             }
             return Optional.empty();
         }
+
+        // The wrapper returns the last position it received, without its time nor whether it is new: polled every
+        // 10 ms, it repeated each position of the eye tracker (about 70 % of the samples with an Eye Tracker 5, R6). A
+        // new measure is practically never exactly equal to the previous one, even for a still eye: a repeated pair is
+        // no new measure, and is dropped (results format version 4)
+        if (xRatio == lastXRatio && yRatio == lastYRatio) {
+            return Optional.empty();
+        }
+        lastXRatio = xRatio;
+        lastYRatio = yRatio;
 
         final Dimension2D screenDimension = screenDimensionSupplier.get();
         final double positionX = xRatio * screenDimension.getWidth();

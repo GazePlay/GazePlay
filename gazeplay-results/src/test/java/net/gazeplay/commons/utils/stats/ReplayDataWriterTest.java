@@ -35,7 +35,7 @@ class ReplayDataWriterTest {
         List<LinkedList<FixationPoint>> fixationSequence = new ArrayList<>(List.of(
             new LinkedList<>(), new LinkedList<>(List.of(new FixationPoint(1100, 300, 40, 10)))));
 
-        assertEquals("{\"formatVersion\":3,\"gameSeed\":3.5,\"gameName\":\"Divisor\",\"gameVariant\":\"IntGameVariant:2\","
+        assertEquals("{\"formatVersion\":4,\"gameSeed\":3.5,\"gameName\":\"Divisor\",\"gameVariant\":\"IntGameVariant:2\","
                 + "\"gameStartedTime\":1000,\"screenAspectRatio\":\"16:9\",\"sceneAspectRatio\":1.6,"
                 + "\"statsNbGoalsReached\":2,\"statsNbGoalsToReach\":5,\"statsNbUnCountedGoalsReached\":1,"
                 + "\"statsNbMistakes\":0,\"lifeCycle\":{\"startTime\":1000,\"stopTime\":null},"

@@ -282,6 +282,18 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
+     * R7, format version 4: the heatmaps always have 400 columns, whatever the memory of the JVM (before, 200 columns
+     * below 1 GiB).
+     */
+    @Test
+    void shouldAlwaysDivideTheHeatMapIntoFourHundredColumns() {
+        onFxThread(stats::start);
+
+        assertEquals(400, stats.getHeatMapData()[0].length);
+        assertEquals((int) (HEIGHT / (WIDTH / 400)), stats.getHeatMapData().length);
+    }
+
+    /**
      * R13, fixed in October 2026. With the areas of interest enabled (AREA_OF_INTEREST_DISABLED=true means enabled),
      * each source keeps every change of position, in its own list. Before, the mouse kept a vertical move only one
      * event in three (condition {@code x != previousX || y != previousY && counter == 2}: here 3 of the 5 mouse

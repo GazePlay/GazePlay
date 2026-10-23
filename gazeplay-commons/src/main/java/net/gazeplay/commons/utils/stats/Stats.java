@@ -780,19 +780,17 @@ public class Stats implements GazeMotionListener {
     }
 
     /**
-     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
-     * than 1Gb, only 200
+     * Number of columns of the heatmaps (heatmap*.csv, metrics*.png), whatever the machine (format version 4).
+     */
+    static final int HEAT_MAP_COLUMNS = 400;
+
+    /**
+     * @return the size of a cell of the heatmaps: the width of the scene divided into {@link #HEAT_MAP_COLUMNS}. Before
+     * format version 4 it depended on the memory of the JVM (R7): 400 columns from 1 GiB, 200 below (a game started
+     * from the menu gets a quarter of the memory of the machine, so 200 columns on a machine with less than 4 GB)
      */
     double computeHeatMapPixelSize(final Scene gameContextScene) {
-        final long maxMemory = Runtime.getRuntime().maxMemory();
-        final double width = gameContextScene.getWidth();
-        final double result;
-        if (maxMemory < 1024 * 1024 * 1024) {
-            // size is less than 1Gb (2^30)
-            result = width / 200;
-        } else {
-            result = width / 400;
-        }
+        final double result = gameContextScene.getWidth() / HEAT_MAP_COLUMNS;
         log.info("computeHeatMapPixelSize() : result = {}", result);
         return result;
     }

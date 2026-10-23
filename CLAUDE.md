@@ -1,6 +1,6 @@
 # CLAUDE.md — GazePlay Learning (anciennement GazePlay)
 
-Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 32 de
+Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 33 de
 `MODERNIZATION.md`). L'audit d'origine (20/10/2026, commit `4a035dd4f`) a été corrigé ici partout où le code a changé ;
 le détail de chaque changement, ses vérifications et ses décisions sont dans `MODERNIZATION.md`, la carte du code dans
 `ARCHITECTURE.md`.
@@ -36,7 +36,7 @@ le détail de chaque changement, ses vérifications et ses décisions sont dans 
 
 `TobiiGazeSource` / `EyeTribeGazeSource` (interface `GazeSource`, module `gazeplay-gaze`) → `GazeSample(time, x, y, source)` → `GazeSourceDeviceManager` → `AbstractGazeDeviceManager.onGazeSample`, avec un seul `runLater` → `fireEvent` direct sur une copie des nœuds → filtres `Stats`. Comportement figé par `GazeDispatchCharacterizationTest`.
 
-- `PositionPollerRunnable` interroge le wrapper Tobii toutes les 10 ms et ignore la valeur (0,5 ; 0,5) renvoyée sans donnée (R9).
+- `PositionPollerRunnable` interroge le wrapper Tobii toutes les 10 ms, ignore la valeur (0,5 ; 0,5) renvoyée sans donnée (R9) et une position identique à la précédente, qui n'est pas une nouvelle mesure (R6, format v4).
 - Wrapper `TobiiStreamEngineForJava:5.0` (GPL-3.0) : **JNI x64 seulement** (Windows et Linux). L'API se limite à `float[] gazePosition()` : pas d'horodatage de l'appareil, pas de validité. Le code natif lit la validité sans la tester, utilise un tableau partagé sans verrou et ne se reconnecte pas.
 - **Appareil du laboratoire : Tobii Eye Tracker 5** (vérifié le 21-22/10/2026 sous Windows x64, Stream Engine 2.0.2 embarqué ; ne pas le remplacer par celui de Tobii Experience, incompatible). Il faut un calibrage dans Tobii Experience, sinon l'initialisation réussit mais aucune position n'arrive. Les valeurs `-1` (regard perdu) ne sont jamais enregistrées : `Stats` exige des coordonnées strictement positives.
 - **Format v3** : `GazeEvent.getSampleTime()` porte l'instant de lecture du point (`GazeSample.time`), et `Stats` date les points de regard à cet instant. `GazeEvent.getTime()` reste l'instant d'entrée sur le nœud, utilisé par les jeux. Vérifié sur une vraie partie : plus aucun point au même instant.
@@ -45,7 +45,7 @@ le détail de chaque changement, ses vérifications et ses décisions sont dans 
 
 ## Anomalies de résultats
 
-Le JSON brut `coordinatesAndTimeStamp` de `replayData.json` est la seule source récupérable : toutes les corrections peuvent s'appliquer **hors ligne** aux données historiques. Les fichiers déjà produits ne sont jamais réécrits ; `ReplayDataFormat` documente les versions 1, 2 et 3 et les lit toutes.
+Le JSON brut `coordinatesAndTimeStamp` de `replayData.json` est la seule source récupérable : toutes les corrections peuvent s'appliquer **hors ligne** aux données historiques. Les fichiers déjà produits ne sont jamais réécrits ; `ReplayDataFormat` documente les versions 1 à 4 et les lit toutes (la v4 ne change que la résolution des heatmaps).
 
 | # | Anomalie | État | Récupération historique |
 |---|---|---|---|
@@ -54,8 +54,8 @@ Le JSON brut `coordinatesAndTimeStamp` de `replayData.json` est la seule source 
 | R3 | `HH:MM:ss` (MM = mois) dans la colonne `Time` des `info-game.csv` | **Corrigé (étape 1)** | Minutes à reprendre dans le nom de fichier |
 | R4 | Filtres de `Stats` ajoutés plusieurs fois : chaque point enregistré k fois | **Corrigé (étape 3)** | Dédoublonnage (entrées identiques) |
 | R5 | `coordinateData` jamais vidé : la manche N contient les manches 1 à N | **Corrigé en v2** | Découpage aux ruptures de `time` |
-| R6 | Points de regard = cycles d'interrogation à environ 100 Hz, le dernier point répété quand l'appareil n'envoie rien de neuf (Eye Tracker 5 : environ 70 % de répétitions) | **Ouvert, documenté.** Depuis la v3, chaque point porte son instant de lecture | Partielle |
-| R7 | Résolution de heatmap largeur/200 ou /400 selon `maxMemory` (hypothèse : selon la RAM et le mode de lancement) | **Ouvert, documenté** | Normaliser |
+| R6 | Points de regard = cycles d'interrogation à environ 100 Hz, le dernier point répété quand l'appareil n'envoie rien de neuf (Eye Tracker 5 : environ 70 % de répétitions) | **Corrigé en v4 (étape 33)** : une position identique à la précédente n'est plus transmise (filtre dans `PositionPollerRunnable`) ; **à vérifier avec l'Eye Tracker 5** | Partielle (dédoublonner les points consécutifs identiques) |
+| R7 | Résolution de heatmap largeur/200 ou /400 selon `maxMemory` (une partie lancée du menu reçoit un quart de la mémoire : 200 colonnes sous 4 Go de mémoire, hypothèse non mesurée) | **Corrigé en v4 (étape 33)** : toujours 400 colonnes | Normaliser (les fichiers v1 à v3 de 200 colonnes se reconnaissent à leur nombre de colonnes) |
 | R8 | Durée Eval `timeGame / 100.` affichée en « secondes » (en réalité des ms) | **Corrigé (étape 3)** | ÷10 |
 | R9 | Regard fantôme au centre si la bibliothèque native est absente ou échoue | **Corrigé (étape 8)**, vérifié sans appareil sous Windows x64 | Détectable |
 | R10 | Export XLSX Eval : `ArrayIndexOutOfBounds` si `Anonymous=false` | **Corrigé (étape 3)** | XLSX manquants |
@@ -83,7 +83,7 @@ Autres points :
 - Tobii fonctionne uniquement sur Windows x64 et Linux x64 ; Linux n'a pas été testé avec l'appareil. ARM et macOS fonctionnent en souris seulement.
 - **CI** (`ci.yml`) : SpotBugs ; tests sous JDK 25 et 26 (`xvfb`, sortie audio virtuelle, paquets installés par `.github/scripts/install-apt-packages.sh`) ; lancement des 75 jeux (`all-games`) ; construction **et lancement réel** des distributions Windows, Linux x64 et macOS Apple Silicon (menu puis un jeu). Chaque job a une durée maximale (20 ou 30 min). ARM Linux et macOS Intel ne sont lancés nulle part.
 - `./gradlew build` réussit ; l'installeur Windows se construit avec Inno Setup 6 (`generateWindowsInstaller`) ou dans Docker. L'installation réelle n'a pas été testée.
-- Tests : **414 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
+- Tests : **416 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
 - La scène JavaFX ne doit être modifiée que sur son thread : un audit complet a été fait le 23/10/2026 (`MODERNIZATION.md` 2ad). Pour un délai, utiliser `PauseTransition` plutôt qu'un `java.util.Timer`.
 - Dépréciations Gradle restantes : uniquement dans les plugins `release` et `javafxplugin`, déjà à leur dernière version, sans effet en Gradle 9.8.2.
 - Le site public est publié depuis la branche **`gh-pages`** ; le dossier `docs/` en est une ancienne copie.
@@ -99,7 +99,7 @@ Autres points :
 
 ## Questions ouvertes pour le mainteneur et le laboratoire
 
-Réglées : branche de travail (`addClaudeCode`), format v2 puis v3, plateformes (64 bits seulement, ARM et macOS gardés), melordi et picto-pick (retirés), comportement sans appareil (R9, testé).
+Réglées : branche de travail (`addClaudeCode`), format v2 puis v3 puis v4, plateformes (64 bits seulement, ARM et macOS gardés), melordi et picto-pick (retirés), comportement sans appareil (R9, testé).
 
 Décisions du mainteneur du 22/10/2026 :
 - **Fusion de `GazePlayLearning`** (R12, Eval) et passage par `developMain` : **après la fin de la modernisation**.

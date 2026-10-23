@@ -53,6 +53,24 @@ class PositionPollerRunnableTest {
     }
 
     /**
+     * R6: the wrapper returns its last position at each poll, also when the eye tracker sent nothing new. A repeated
+     * position is no new measure: it is dropped, also when the array is reused by the wrapper. A position seen again
+     * later (another measure in between) is kept.
+     */
+    @Test
+    void shouldDropTheRepeatedPositions() {
+        float[] shared = {0.25f, 0.75f};
+        PositionPollerRunnable poller = pollerReturning(shared, shared, new float[]{0.25f, 0.75f},
+            new float[]{0.25f, 0.76f}, new float[]{0.25f, 0.75f});
+
+        assertEquals(Optional.of(new Point2D(1920 + 480, 810)), poller.nextGazePoint());
+        assertEquals(Optional.empty(), poller.nextGazePoint());
+        assertEquals(Optional.empty(), poller.nextGazePoint());
+        assertTrue(poller.nextGazePoint().isPresent());
+        assertEquals(Optional.of(new Point2D(1920 + 480, 810)), poller.nextGazePoint());
+    }
+
+    /**
      * Regression test for R9: without eye tracker, the Tobii wrapper returns (0.5, 0.5) at each call, which used to be
      * sent to the games (and recorded in the results) as a gaze fixed at the center of the screen.
      */

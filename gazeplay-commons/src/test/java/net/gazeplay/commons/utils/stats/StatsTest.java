@@ -262,7 +262,7 @@ class StatsTest {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        assertEquals(3, replayData.get("formatVersion").getAsInt());
+        assertEquals(4, replayData.get("formatVersion").getAsInt());
         assertEquals(Set.of("formatVersion", "gameSeed", "gameName", "gameVariant", "gameStartedTime", "screenAspectRatio",
             "sceneAspectRatio", "statsNbGoalsReached", "statsNbGoalsToReach", "statsNbUnCountedGoalsReached",
             "statsNbMistakes", "lifeCycle", "roundsDurationReport", "fixationSequence", "coordinatesAndTimeStamp"),

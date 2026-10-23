@@ -78,12 +78,7 @@ public class Utils {
         }else {
             log.info(subdirectoryName + " already created !");
         }
-
-        if (new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/evals/").mkdirs()){
-            log.info("Folder evals created !");
-        }else {
-            log.info("Folder evals already created !");
-        }
+        // files/evals, for the evaluations of the removed BERA edition, is no longer created
     }
 
     public static String convertWindowsPath(String path) {

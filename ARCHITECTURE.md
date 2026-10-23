@@ -54,9 +54,9 @@ carries the time the gaze entered the node. The behaviour is pinned by `GazeDisp
 `Stats` records the gaze and mouse samples with event filters on the root of the game scene, and writes, for each
 round, in `Documents/GazePlay_Learning/statistics/<game>/<date>/` (or the profile folder): `replayData.json` (raw samples
 `coordinatesAndTimeStamp`, fixation sequence), `heatmap.csv` (mouse and gaze), `heatmapGaze.csv`, `heatmapMouse.csv`,
-`metrics*.png`, screenshot and `info-game.csv`.
+`metrics*.png`, screenshot and `info-game.csv`. The heatmaps always have 400 columns (`Stats.HEAT_MAP_COLUMNS`).
 These are persistent formats used by researchers. `replayData.json` holds its version in `formatVersion` (absent in
-the files of version 1, 3 since October 2026); the files are never rewritten, and `ReplayDataFormat` documents the
+the files of version 1, 4 since October 2026); the files are never rewritten, and `ReplayDataFormat` documents the
 differences between the versions and converts the fixation sequence when the replay reads a file. The gaze samples
 are dated when they are read from the eye tracker (`GazeSample.time`, carried by `GazeEvent.getSampleTime()`). The behaviour is pinned by
 `StatsRecordingCharacterizationTest` and `ReplayDataWriterTest`; the history is in MODERNIZATION.md.

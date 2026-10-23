@@ -42,12 +42,18 @@ it is chosen by the maintainers at release time. Details, verifications and rema
 - Scripts or habits that read the results in `C:\Users\<name>\GazePlay\statistics` must look in
   `Documents\GazePlay_Learning\statistics`.
 
-### Results files: format version 3
+### Results files: format version 4
 The results written by the games change on some points, to fix errors found in the recorded data. **The files
 already recorded are not modified**, and the replay of the games still reads them.
 
-- `replayData.json` now starts with `"formatVersion": 3`. The files without this key are version 1 (all the files
-  written by the previous versions); version 2 was only written by development builds of this version.
+- `replayData.json` now starts with `"formatVersion": 4`. The files without this key are version 1 (all the files
+  written by the previous versions); versions 2 and 3 were only written by development builds of this version.
+- Only the new measures of a Tobii eye tracker are recorded: the position was read every 10 ms and repeated when
+  the eye tracker had sent nothing new (about 70 % of the gaze samples with an Eye Tracker 5). About 3 times fewer
+  gaze samples, and gaze heatmap values lower in proportion; the durations of the fixations do not change.
+- The heatmaps (`heatmap*.csv`, `metrics*.png`) always have 400 columns. They used to have 200 columns when the game
+  had less than 1 GB of memory, for example on a computer with less than 4 GB (R7): the files of 200 columns are
+  recognized by their number of columns.
 - The `time` of the gaze samples, and the times and durations of the gaze fixations, are the times the eye tracker
   positions were read, no longer the times they were handled by the user interface: samples handled together while
   it was busy used to get the same, later, time. Each source stays in time order, but a mouse sample can now come
