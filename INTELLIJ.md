@@ -146,10 +146,11 @@ normalement en Debug.
 ## 5. Ce que l'application lit et écrit
 
 Lancée depuis IntelliJ, l'application utilise **vos vraies données**, comme la version installée : le dossier
-`~/GazePlay` (sous Windows `C:\Users\<vous>\GazePlay`), avec les profils, les réglages (`GazePlay.properties`), les
-résultats (`statistics/`) et les journaux (`gazeplay.log`).
+`Documents\GazePlay_Learning` (« Mes documents » de Windows ; `~/Documents/GazePlay_Learning` sous Linux et macOS),
+avec les profils, les réglages (`GazePlay.properties`), les résultats (`statistics/`) et les journaux (`gazeplay.log`).
+Jusqu'en octobre 2026, ce dossier était `C:\Users\<vous>\GazePlay` : au premier lancement, GazePlay l'y déplace.
 
-**Édition** : seul GazePlay normal existe désormais. Le fichier `~/GazePlay/argsGazeplay.txt` contient `gazeplay`. Une
+**Édition** : seul GazePlay normal existe désormais. Le fichier `argsGazeplay.txt` du dossier contient `gazeplay`. Une
 ancienne valeur `bera` ou `afsrGazeplay`, laissée par une version précédente, est lue comme `gazeplay`.
 
 ## 6. Lancer les tests
@@ -157,9 +158,9 @@ ancienne valeur `bera` ou `afsrGazeplay`, laissée par une version précédente,
 **Toujours par Gradle**, avec la configuration **Tests (tous les modules)**, le menu Gradle ou le bouton ▶ d'un test,
 à condition d'avoir réglé « Run tests using : Gradle » (section 3).
 
-Pourquoi : `build.gradle` isole les tests. Il redirige `user.home` vers `build/test-home` et lance JavaFX sans fenêtre
-(Monocle). Lancés directement par IntelliJ (« Run tests using : IntelliJ IDEA »), les tests liraient et écriraient votre
-vrai dossier `~/GazePlay`.
+Pourquoi : `build.gradle` isole les tests. Il redirige `user.home` et le dossier GazePlay (`gazeplay.folder`) vers
+`build/test-home` et lance JavaFX sans fenêtre (Monocle). Lancés directement par IntelliJ (« Run tests using : IntelliJ
+IDEA »), les tests liraient et écriraient votre vrai dossier GazePlay, et pourraient même le déplacer.
 
 - Pour voir les fenêtres pendant un test, ajoutez `-Pgui` aux arguments Gradle de la configuration.
 - Les tests JavaFX des différents modules tournent l'un après l'autre : la suite complète prend 4 à 5 minutes.

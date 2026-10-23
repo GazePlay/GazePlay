@@ -1,6 +1,8 @@
 package net.gazeplay;
 
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -8,12 +10,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,13 +30,6 @@ class LaunchSmokeTest {
 
     private static final long RUNNING_DELAY_SECONDS = 25;
 
-    /**
-     * Messages expected on a fresh user.home without eye tracker.
-     */
-    private static final List<String> EXPECTED_ERRORS = List.of(
-        "Failure while loading Properties file", "NoSuchFileException", "WindowsException", "UnixException",
-        "at java.base/", "at net.gazeplay.commons.configuration.ConfigurationSource");
-
     @ParameterizedTest
     @ValueSource(strings = {
         "--default-user",
@@ -47,40 +40,43 @@ class LaunchSmokeTest {
         // on Windows, which JUnit's @TempDir does not tolerate
         File home = new File(System.getProperty("smoke.home"), Integer.toHexString(arguments.hashCode()));
         assertTrue(home.mkdirs(), "Cannot create " + home);
-        File argsFile = new File(home, "argsGazeplay.txt");
-        Files.writeString(argsFile.toPath(), "gazeplay", StandardCharsets.UTF_8);
-        File output = new File(home, "output.log");
 
-        List<String> command = new ArrayList<>(List.of(
-            new File(System.getProperty("java.home"), "bin/java").getPath(),
-            "-cp", System.getProperty("java.class.path"),
-            "-Duser.home=" + home.getAbsolutePath(),
-            "-D" + GazePlayArgs.ARGS_FILE_PROPERTY + "=" + argsFile.getAbsolutePath(),
-            "-Dglass.platform=Monocle", "-Dmonocle.platform=Headless", "-Dprism.order=sw", "-Dprism.text=t2k",
-            "--enable-native-access=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow",
-            GazePlayLauncher.class.getName()));
-        command.addAll(Arrays.asList(arguments.split(" ")));
-        // A fixed size avoids the full screen mode, which Monocle does not support before the window is shown
-        command.addAll(List.of("--width", "1280", "--height", "800"));
+        GazePlayProcess.Result result = GazePlayProcess.run(home, Arrays.asList(arguments.split(" ")),
+            RUNNING_DELAY_SECONDS, false);
 
-        Process process = new ProcessBuilder(command)
-            .directory(home)
-            .redirectErrorStream(true)
-            .redirectOutput(output)
-            .start();
-        boolean exited = process.waitFor(RUNNING_DELAY_SECONDS, TimeUnit.SECONDS);
-        if (!exited) {
-            process.destroyForcibly().waitFor(10, TimeUnit.SECONDS);
-        }
+        assertFalse(result.exited(), "GazePlay stopped with exit code " + result.exitValue() + ":\n" + result.log());
+        assertTrue(result.log().contains("Games found : "), "The game catalog was not loaded:\n" + result.log());
+        List<String> unexpected = result.unexpectedErrors();
+        assertTrue(unexpected.isEmpty(), "Unexpected errors:\n" + String.join("\n", unexpected));
+    }
 
-        List<String> lines = Files.readAllLines(output.toPath(), StandardCharsets.UTF_8);
-        String log = String.join("\n", lines);
-        assertFalse(exited, "GazePlay stopped with exit code " + (exited ? process.exitValue() : "") + ":\n" + log);
-        assertTrue(log.contains("Games found : "), "The game catalog was not loaded:\n" + log);
-        List<String> unexpected = lines.stream()
-            .filter(line -> line.contains("Exception") || line.contains(" ERROR "))
-            .filter(line -> EXPECTED_ERRORS.stream().noneMatch(line::contains))
-            .collect(Collectors.toList());
+    /**
+     * The GazePlay folder of a former version (~/GazePlay) is moved to Documents/GazePlay_Learning at the start, before
+     * anything is logged: the log is written in the new folder only, and the former folder is gone. The Documents
+     * folder is a test one (gazeplay.documents): the one of Windows does not depend on user.home.
+     */
+    @Test
+    void shouldMoveTheFormerGazePlayFolderToDocuments() throws IOException, InterruptedException {
+        File home = new File(System.getProperty("smoke.home"), "folder-move");
+        File legacy = new File(home, "GazePlay");
+        File results = new File(legacy, "statistics/WhereIsTheShape/2026-10-22");
+        assertTrue(results.mkdirs(), "Cannot create " + results);
+        Files.writeString(new File(results, "info-game.csv").toPath(), "results", StandardCharsets.UTF_8);
+        File documents = new File(home, "Documents");
+        assertTrue(documents.mkdirs(), "Cannot create " + documents);
+
+        GazePlayProcess.Result result = GazePlayProcess.run(home, List.of("--default-user"), RUNNING_DELAY_SECONDS,
+            true, List.of("-D" + GazePlayDirectories.DOCUMENTS_FOLDER_PROPERTY + "=" + documents.getAbsolutePath()));
+
+        File target = new File(documents, GazePlayDirectories.DOCUMENTS_FOLDER_NAME);
+        assertFalse(result.exited(), "GazePlay stopped with exit code " + result.exitValue() + ":\n" + result.log());
+        assertTrue(result.log().contains("GazePlay folder moved from"), "No move:\n" + result.log());
+        assertFalse(legacy.exists(), "The former folder is still there:\n" + result.log());
+        assertEquals("results", Files.readString(
+            new File(target, "statistics/WhereIsTheShape/2026-10-22/info-game.csv").toPath(), StandardCharsets.UTF_8));
+        assertTrue(new File(target, "GazePlay.properties").isFile(), "Settings not moved");
+        assertTrue(new File(target, "gazeplay.log").isFile(), "No log in the new folder");
+        List<String> unexpected = result.unexpectedErrors();
         assertTrue(unexpected.isEmpty(), "Unexpected errors:\n" + String.join("\n", unexpected));
     }
 }

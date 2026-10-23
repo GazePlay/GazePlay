@@ -39,6 +39,8 @@ public class ConfigurationSource {
             log.info("Loading Properties from : {}", propertiesFile);
             properties = loadProperties(propertiesFile);
             LegacyConfigurationKeys.migrate(properties);
+            // Paths saved when the GazePlay folder was still in the home directory (moved to Documents in 2026)
+            GazePlayDirectories.relocateMovedPaths(properties);
             log.info("Properties loaded : {}", properties);
         } catch (final IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);

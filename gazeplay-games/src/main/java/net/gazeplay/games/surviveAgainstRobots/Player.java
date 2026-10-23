@@ -84,7 +84,9 @@ public class Player extends Parent {
                             playerMoveMouse();
                         }
 
-                        if (nbframe == 60*freqShoot){
+                        // A whole number of frames: compared to the double 60*freqShoot, a frequency such as 1.3 would
+                        // never match (the shots then only came every 60 frames)
+                        if (nbframe == Math.round(60*freqShoot)){
                             nbframe = 0;
                         }else if (nbframe == 60){
                             nbframe = 0;

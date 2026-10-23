@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
-import net.gazeplay.GazePlayArgs;
 import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -36,14 +35,16 @@ import net.gazeplay.stats.SelectionGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
-import java.awt.*;
-import java.io.File;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //import javax.swing.text.TableView;
 
+/**
+ * The statistics screen shown after a game. The screen of the BERA edition (GazePlay Eval scores, buttons to show and
+ * open the Eval result file), unreachable since the edition was removed in October 2026, was removed too.
+ */
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
 
@@ -63,246 +64,193 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        String gazeplayType = GazePlayArgs.returnArgs();
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.TOP_CENTER);
+        grid.setHgap(100);
+        grid.setVgap(50);
+        grid.setPadding(new Insets(0, 50, 0, 50));
 
-        if (gazeplayType.equals("bera")){
-            GridPane grid = new GridPane();
-            grid.setAlignment(Pos.TOP_CENTER);
-            grid.setHgap(50);
-            grid.setVgap(25);
+        addAllToGrid(stats, translator, grid, alignLeft);
 
-            addAllToGrid(stats, translator, grid, alignLeft);
+        VBox centerPane = new VBox();
+        centerPane.setAlignment(Pos.CENTER);
 
-            HBox controlButtonPane;
+        ImageView displayedMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
+        root.widthProperty().addListener(
+            (observable, oldValue, newValue) -> displayedMetrics.setFitWidth(newValue.doubleValue() * RATIO));
+        root.heightProperty().addListener(
+            (observable, oldValue, newValue) -> displayedMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
-            RadioButton colorBands = new RadioButton("Color Bands");
+        displayedMetrics.setFitWidth(root.getWidth() * RATIO);
+        displayedMetrics.setFitHeight(root.getHeight() * RATIO);
 
+        centerPane.getChildren().add(displayedMetrics);
+
+        I18NButton displayMouseButton = createDisplayButton("Mouse", stats, displayedMetrics);
+        I18NButton displayGazeButton = createDisplayButton("Gaze", stats, displayedMetrics);
+        I18NButton displayMouseAndGazeButton = createDisplayButton("MouseAndGaze", stats, displayedMetrics);
+
+
+        HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
+        buttonSwitchMetrics.setAlignment(Pos.CENTER);
+        centerPane.getChildren().add(buttonSwitchMetrics);
+
+        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
+        centerPane.getChildren().add(lineChart);
+        RadioButton colorBands = new RadioButton("Color Bands");
+        RadioButton levelsInfo = new RadioButton("Levels Info");
+        RadioButton chi2Info = new RadioButton("Chi2 Info");
+
+        if (!config.isFixationSequenceDisabled()) {
+            LinkedList<FixationPoint> tempSequenceList = new LinkedList<>();
+            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
+            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
+            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
+            LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
+            TableView chi2Chart = StatDisplayUtils.buildTable(stats);
+
+            if(config.isDarkThemeEnabled())
+            {
+                colorBands.setTextFill(Color.WHITE);
+            }
+            else {
+                colorBands.setTextFill(Color.BLACK);
+            }
+            colorBands.getStylesheets().add("data/common/radio.css");
+
+            colorBands.setOnAction(event -> {
+                if (colorBands.isSelected()) {
+                    if (levelsInfo.isSelected()) {
+                        centerPane.getChildren().remove(levelChart);
+                        levelsInfo.setSelected(false);
+                    }
+                    else if (chi2Info.isSelected()) {
+                        centerPane.getChildren().remove(chi2Chart);
+                        chi2Info.setSelected(false);
+                    }
+                    else
+                        centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(areaChart);
+                    centerPane.getStylesheets().add("data/common/chart.css");
+                } else {
+                    centerPane.getChildren().remove(areaChart);
+                    centerPane.getChildren().add(lineChart);
+                }
+            });
+
+            if(config.isDarkThemeEnabled())
+            {
+                levelsInfo.setTextFill(Color.WHITE);
+            }
+            else {
+                levelsInfo.setTextFill(Color.BLACK);
+            }
+            levelsInfo.getStylesheets().add("data/common/radio.css");
+
+            levelsInfo.setOnAction(event -> {
+                if (levelsInfo.isSelected()) {
+                    if (colorBands.isSelected()) {
+                        centerPane.getChildren().remove(areaChart);
+                        colorBands.setSelected(false);
+                    }
+                    else if (chi2Info.isSelected()) {
+                        centerPane.getChildren().remove(chi2Chart);
+                        chi2Info.setSelected(false);
+                    }
+                    else
+                        centerPane.getChildren().remove(lineChart);
+                    //centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(levelChart);
+                    centerPane.getStylesheets().add("data/common/chart.css");
+                } else {
+                    centerPane.getChildren().remove(levelChart);
+                    centerPane.getChildren().add(lineChart);
+                }
+            });
+
+            if(config.isDarkThemeEnabled())
+            {
+                chi2Info.setTextFill(Color.WHITE);
+            }
+            else {
+                chi2Info.setTextFill(Color.BLACK);
+            }
+
+            chi2Info.getStylesheets().add("data/common/radio.css");
+
+            chi2Info.setOnAction(event -> {
+                if (chi2Info.isSelected()) {
+                    if (colorBands.isSelected()) {
+                        centerPane.getChildren().remove(areaChart);
+                        colorBands.setSelected(false);
+                    }
+                    if (levelsInfo.isSelected()) {
+                        centerPane.getChildren().remove(levelChart);
+                        levelsInfo.setSelected(false);
+                    }
+                    else
+                        centerPane.getChildren().remove(lineChart);
+                    //centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(chi2Chart);
+                    centerPane.getStylesheets().add("data/common/table.css");
+                } else {
+                    centerPane.getChildren().remove(chi2Chart);
+                    centerPane.getChildren().add(lineChart);
+                }
+            });
+        }
+
+        HBox controlButtonPane;
+
+        if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
+
+        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
+
+        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
+
+        else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
+            (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
+
+        else
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
 
-            StackPane centerStackPane = new StackPane();
+        StackPane centerStackPane = new StackPane();
+        centerStackPane.getChildren().add(centerPane);
 
-            I18NText screenTitleText = new I18NText(translator, "StatsTitle");
-            screenTitleText.setId("title");
+        I18NText screenTitleText = new I18NText(translator, "StatsTitle");
+        screenTitleText.setId("title");
 
-            StackPane topPane = new StackPane();
-            topPane.getChildren().add(screenTitleText);
+        StackPane topPane = new StackPane();
+        topPane.getChildren().add(screenTitleText);
 
-            root.setTop(topPane);
+        root.setTop(topPane);
 
-            BorderPane sidePane = new BorderPane();
+        BorderPane sidePane = new BorderPane();
 
-            if (alignLeft) {
-                sidePane.setTop(centerStackPane);
-                root.setCenter(sidePane);
-                root.setLeft(grid);
-            } else { // Arabic alignment
-                sidePane.setTop(grid);
-                root.setCenter(centerStackPane);
-                root.setRight(sidePane);
-            }
-            sidePane.setBottom(controlButtonPane);
+        if (alignLeft) {
+            sidePane.setTop(centerStackPane);
+            root.setCenter(sidePane);
+            root.setLeft(grid);
+        } else { // Arabic alignment
+            sidePane.setTop(grid);
+            root.setCenter(centerStackPane);
+            root.setRight(sidePane);
+        }
+        sidePane.setBottom(controlButtonPane);
 
-            if (config.isDarkThemeEnabled()) {
-                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-            }
-            else {
-                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
-            }
-
-        }else {
-            GridPane grid = new GridPane();
-            grid.setAlignment(Pos.TOP_CENTER);
-            grid.setHgap(100);
-            grid.setVgap(50);
-            grid.setPadding(new Insets(0, 50, 0, 50));
-
-            addAllToGrid(stats, translator, grid, alignLeft);
-
-            VBox centerPane = new VBox();
-            centerPane.setAlignment(Pos.CENTER);
-
-            ImageView displayedMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
-            root.widthProperty().addListener(
-                (observable, oldValue, newValue) -> displayedMetrics.setFitWidth(newValue.doubleValue() * RATIO));
-            root.heightProperty().addListener(
-                (observable, oldValue, newValue) -> displayedMetrics.setFitHeight(newValue.doubleValue() * RATIO));
-
-            displayedMetrics.setFitWidth(root.getWidth() * RATIO);
-            displayedMetrics.setFitHeight(root.getHeight() * RATIO);
-
-            centerPane.getChildren().add(displayedMetrics);
-
-            I18NButton displayMouseButton = createDisplayButton("Mouse", stats, displayedMetrics);
-            I18NButton displayGazeButton = createDisplayButton("Gaze", stats, displayedMetrics);
-            I18NButton displayMouseAndGazeButton = createDisplayButton("MouseAndGaze", stats, displayedMetrics);
-
-
-            HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
-            buttonSwitchMetrics.setAlignment(Pos.CENTER);
-            centerPane.getChildren().add(buttonSwitchMetrics);
-
-            LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
-            centerPane.getChildren().add(lineChart);
-            RadioButton colorBands = new RadioButton("Color Bands");
-            RadioButton levelsInfo = new RadioButton("Levels Info");
-            RadioButton chi2Info = new RadioButton("Chi2 Info");
-
-            if (!config.isFixationSequenceDisabled()) {
-                LinkedList<FixationPoint> tempSequenceList = new LinkedList<>();
-                tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
-                tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
-                AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
-                LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
-                TableView chi2Chart = StatDisplayUtils.buildTable(stats);
-
-                if(config.isDarkThemeEnabled())
-                {
-                    colorBands.setTextFill(Color.WHITE);
-                }
-                else {
-                    colorBands.setTextFill(Color.BLACK);
-                }
-                colorBands.getStylesheets().add("data/common/radio.css");
-
-                colorBands.setOnAction(event -> {
-                    if (colorBands.isSelected()) {
-                        if (levelsInfo.isSelected()) {
-                            centerPane.getChildren().remove(levelChart);
-                            levelsInfo.setSelected(false);
-                        }
-                        else if (chi2Info.isSelected()) {
-                            centerPane.getChildren().remove(chi2Chart);
-                            chi2Info.setSelected(false);
-                        }
-                        else
-                            centerPane.getChildren().remove(lineChart);
-                        centerPane.getChildren().add(areaChart);
-                        centerPane.getStylesheets().add("data/common/chart.css");
-                    } else {
-                        centerPane.getChildren().remove(areaChart);
-                        centerPane.getChildren().add(lineChart);
-                    }
-                });
-
-                if(config.isDarkThemeEnabled())
-                {
-                    levelsInfo.setTextFill(Color.WHITE);
-                }
-                else {
-                    levelsInfo.setTextFill(Color.BLACK);
-                }
-                levelsInfo.getStylesheets().add("data/common/radio.css");
-
-                levelsInfo.setOnAction(event -> {
-                    if (levelsInfo.isSelected()) {
-                        if (colorBands.isSelected()) {
-                            centerPane.getChildren().remove(areaChart);
-                            colorBands.setSelected(false);
-                        }
-                        else if (chi2Info.isSelected()) {
-                            centerPane.getChildren().remove(chi2Chart);
-                            chi2Info.setSelected(false);
-                        }
-                        else
-                            centerPane.getChildren().remove(lineChart);
-                        //centerPane.getChildren().remove(lineChart);
-                        centerPane.getChildren().add(levelChart);
-                        centerPane.getStylesheets().add("data/common/chart.css");
-                    } else {
-                        centerPane.getChildren().remove(levelChart);
-                        centerPane.getChildren().add(lineChart);
-                    }
-                });
-
-                if(config.isDarkThemeEnabled())
-                {
-                    chi2Info.setTextFill(Color.WHITE);
-                }
-                else {
-                    chi2Info.setTextFill(Color.BLACK);
-                }
-
-                chi2Info.getStylesheets().add("data/common/radio.css");
-
-                chi2Info.setOnAction(event -> {
-                    if (chi2Info.isSelected()) {
-                        if (colorBands.isSelected()) {
-                            centerPane.getChildren().remove(areaChart);
-                            colorBands.setSelected(false);
-                        }
-                        if (levelsInfo.isSelected()) {
-                            centerPane.getChildren().remove(levelChart);
-                            levelsInfo.setSelected(false);
-                        }
-                        else
-                            centerPane.getChildren().remove(lineChart);
-                        //centerPane.getChildren().remove(lineChart);
-                        centerPane.getChildren().add(chi2Chart);
-                        centerPane.getStylesheets().add("data/common/table.css");
-                    } else {
-                        centerPane.getChildren().remove(chi2Chart);
-                        centerPane.getChildren().add(lineChart);
-                    }
-                });
-            }
-
-            HBox controlButtonPane;
-
-            if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-
-            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-
-            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
-
-            else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
-                (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
-
-            else
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
-
-            StackPane centerStackPane = new StackPane();
-            centerStackPane.getChildren().add(centerPane);
-
-            I18NText screenTitleText = new I18NText(translator, "StatsTitle");
-            screenTitleText.setId("title");
-
-            StackPane topPane = new StackPane();
-            topPane.getChildren().add(screenTitleText);
-
-            root.setTop(topPane);
-
-            BorderPane sidePane = new BorderPane();
-
-            if (alignLeft) {
-                sidePane.setTop(centerStackPane);
-                root.setCenter(sidePane);
-                root.setLeft(grid);
-            } else { // Arabic alignment
-                sidePane.setTop(grid);
-                root.setCenter(centerStackPane);
-                root.setRight(sidePane);
-            }
-            sidePane.setBottom(controlButtonPane);
-
-            if (config.isDarkThemeEnabled()) {
-                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-            }
-            else {
-                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
-            }
-
+        if (config.isDarkThemeEnabled()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
+        }
+        else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
         }
 
     }
@@ -327,170 +275,69 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
+        AtomicInteger currentFormRow = new AtomicInteger(1);
 
-        String gazeplayType = GazePlayArgs.returnArgs();
+        Text value;
+        String labelValue;
 
-        if (gazeplayType.equals("bera")){
-            AtomicInteger currentFormRow = new AtomicInteger(0);
-            // stats.timeGame is in milliseconds; it used to be divided by 100 and displayed as seconds (anomaly R8)
+        value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
+        addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
 
-            if ("SentenceComprehension".equals(stats.variantType)){
-
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 1000.) + "s"));
-
-                addToGridCenter(grid, currentFormRow, translator, "Morphosyntax", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(String.valueOf(stats.totalMorphosyntax) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsMorphosyntax) + "/5"));
-
-                addToGridCenter(grid, currentFormRow, translator, "SentenceComprehension", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
-            }else if ("WordComprehension".equals(stats.variantType)){
-
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 1000.) + "s"));
-
-                addToGridCenter(grid, currentFormRow, translator, "Phonology", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalPhonology", new Text(String.valueOf(stats.totalPhonology) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsPhonology) + "/5"));
-
-                addToGridCenter(grid, currentFormRow, translator, "Semantic", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalSemantic", new Text(String.valueOf(stats.totalSemantic) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "FrequentScoreItem", new Text(String.valueOf(stats.frequentScoreItemSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "InfrequentScoreItem", new Text(String.valueOf(stats.infrequentScoreItemSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsSemantic) + "/5"));
-
-                addToGridCenter(grid, currentFormRow, translator, "WordComprehension", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalWordComprehension", new Text(String.valueOf(stats.totalWordComprehension) + "/20"));
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/20"));
-                addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
-
-            }else {
-                if (stats.nameScores != null){
-                    addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
-                    for (int i=0; i<stats.nameScores.length; i++){
-                        addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores[i] + " : "), new Text(stats.scores[i] + " / " + stats.maxScores[i]));
-                    }
-                }
-            }
-        }else {
-            AtomicInteger currentFormRow = new AtomicInteger(1);
-
-            Text value;
-            String labelValue;
-
-            value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
-            addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-
-                if (stats instanceof ShootGamesStats) {
-                    labelValue = "Shots";
-                } else if (stats instanceof HiddenItemsGamesStats) {
-                    labelValue = "HiddenItemsShot";
-                } else {
-                    labelValue = "Score";
-                }
-
-                value = new Text(String.valueOf(stats.getNbGoalsReached()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
-
-            if(stats instanceof SelectionGamesStats && stats.getNbMistakes() > -1){
-                labelValue = "Mistakes";
-                value = new Text(String.valueOf(stats.getNbMistakes()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
+        if (!(stats instanceof ExplorationGamesStats)) {
 
             if (stats instanceof ShootGamesStats) {
-                labelValue = "HitRate";
-                value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+                labelValue = "Shots";
+            } else if (stats instanceof HiddenItemsGamesStats) {
+                labelValue = "HiddenItemsShot";
+            } else {
+                labelValue = "Score";
             }
 
-            if (!(stats instanceof ExplorationGamesStats)) {
-                labelValue = "Length";
-                value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-                labelValue = stats instanceof ShootGamesStats ? "ShotaverageLength" : "AverageLength";
-                value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-                labelValue = stats instanceof ShootGamesStats ? "ShotmedianLength" : "MedianLength";
-                value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-                labelValue = "StandDev";
-                value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
-
-            if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
-                labelValue = "UncountedShot";
-                value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
-                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-            }
+            value = new Text(String.valueOf(stats.getNbGoalsReached()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
-    }
 
-    private void addToGridCenter(
-        GridPane grid,
-        AtomicInteger currentFormRow,
-        Translator translator,
-        String labelText,
-        Text value
-    ){
-        final int columnIndexLabel = 16;
-        final int columnIndexInput = 17;
+        if(stats instanceof SelectionGamesStats && stats.getNbMistakes() > -1){
+            labelValue = "Mistakes";
+            value = new Text(String.valueOf(stats.getNbMistakes()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
 
-        final int currentRowIndex = currentFormRow.incrementAndGet();
+        if (stats instanceof ShootGamesStats) {
+            labelValue = "HitRate";
+            value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
 
-        I18NText label = new I18NText(translator, labelText, COLON);
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = "Length";
+            value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
 
-        label.setId("item");
-        value.setId("item");
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = stats instanceof ShootGamesStats ? "ShotaverageLength" : "AverageLength";
+            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
 
-        grid.add(label, columnIndexLabel, currentRowIndex);
-        grid.add(value, columnIndexInput, currentRowIndex);
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = stats instanceof ShootGamesStats ? "ShotmedianLength" : "MedianLength";
+            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
 
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setHalignment(value, HPos.LEFT);
-    }
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = "StandDev";
+            value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
 
-    private void addToGridCenterNoTranslator(
-        GridPane grid,
-        AtomicInteger currentFormRow,
-        Text label,
-        Text value
-    ){
-        final int columnIndexLabel = 16;
-        final int columnIndexInput = 17;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        label.setId("item");
-        value.setId("item");
-
-        grid.add(label, columnIndexLabel, currentRowIndex);
-        grid.add(value, columnIndexInput, currentRowIndex);
-
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setHalignment(value, HPos.LEFT);
+        if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
+            labelValue = "UncountedShot";
+            value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
     }
 
     private void addToGrid(
@@ -540,92 +387,49 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HBox controlButtonPane = new HBox();
 
-        String gazeplayType = GazePlayArgs.returnArgs();
+        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
-        if (gazeplayType.equals("bera")){
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
+        I18NTooltip.install(homeButton, tooltipBackToMenu);
 
-            I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
-            I18NTooltip.install(homeButton, tooltipBackToMenu);
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-            Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+        aoiButton.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            e -> gazePlay.onDisplayAOI(stats));
 
-            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-            aoiButton.addEventHandler(
-                MouseEvent.MOUSE_CLICKED,
-                e -> gazePlay.onDisplayAOI(stats));
+        EventHandler<Event> viewScanPath = s -> {
+            ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
+            gazePlay.onDisplayScanpath(scanPath);
+        };
 
-            EventHandler<Event> viewScanPath = s -> {
-                ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
-                gazePlay.onDisplayScanpath(scanPath);
-            };
+        CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
+        scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
 
-            EventHandler<Event> openFile = s -> {
-                this.openFile(stats);
-            };
+        // Opens the folder of the results of the game played, with one folder per day inside
+        CustomButton seeFolderButton = new CustomButton("data/common/images/seeFolder.png", screenDimension);
+        seeFolderButton.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> seeGameFolder(stats));
+        I18NTooltip.install(seeFolderButton, new I18NTooltip(gazePlay.getTranslator(), "SeeFolder"));
 
-            EventHandler<Event> seeFile = s -> {
-                this.seeFile(stats.actualFile);
-            };
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
+        controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-            CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
-            scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+        if (config.isAreaOfInterestDisabled())
+            controlButtonPane.getChildren().add(aoiButton);
 
-            CustomButton openExcelButton = new CustomButton("data/common/images/excelButton.png", screenDimension);
-            openExcelButton.addEventFilter(MouseEvent.MOUSE_CLICKED, openFile);
+        if (!config.isFixationSequenceDisabled()) {
+            controlButtonPane.getChildren().add(colorBands);
+            if(additionButton)
+                controlButtonPane.getChildren().add(addInfo);
+            controlButtonPane.getChildren().add(scanPathButton);
+        }
 
-            CustomButton seeFileButton = new CustomButton("data/common/images/seeFolder.png", screenDimension);
-            seeFileButton.addEventFilter(MouseEvent.MOUSE_CLICKED, seeFile);
+        controlButtonPane.getChildren().add(seeFolderButton);
+        controlButtonPane.getChildren().add(homeButton);
 
-            ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
-            controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-
-            controlButtonPane.getChildren().add(seeFileButton);
-            controlButtonPane.getChildren().add(openExcelButton);
-            controlButtonPane.getChildren().add(homeButton);
-
-            if (continueButton != null) {
-                controlButtonPane.getChildren().add(continueButton);
-            }
-        }else {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
-
-            I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
-            I18NTooltip.install(homeButton, tooltipBackToMenu);
-
-            Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-            aoiButton.addEventHandler(
-                MouseEvent.MOUSE_CLICKED,
-                e -> gazePlay.onDisplayAOI(stats));
-
-            EventHandler<Event> viewScanPath = s -> {
-                ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
-                gazePlay.onDisplayScanpath(scanPath);
-            };
-
-            CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
-            scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
-
-            ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
-            controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-
-            if (config.isAreaOfInterestDisabled())
-                controlButtonPane.getChildren().add(aoiButton);
-
-            if (!config.isFixationSequenceDisabled()) {
-                controlButtonPane.getChildren().add(colorBands);
-                if(additionButton)
-                    controlButtonPane.getChildren().add(addInfo);
-                controlButtonPane.getChildren().add(scanPathButton);
-            }
-
-            controlButtonPane.getChildren().add(homeButton);
-
-            if (continueButton != null) {
-                controlButtonPane.getChildren().add(continueButton);
-            }
+        if (continueButton != null) {
+            controlButtonPane.getChildren().add(continueButton);
         }
 
         return controlButtonPane;
@@ -636,16 +440,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    public void openFile(Stats stats){
-        Desktop desktop = Desktop.getDesktop();
-        try {
-            desktop.open(new File(stats.actualFile));
-        } catch (Exception e) {
-            log.warn("Cannot open the file {}", stats.actualFile, e);
-        }
-    }
-
-    public void seeFile(String pathFile){
-        SystemFileManager.showFile(new File(pathFile));
+    /**
+     * Opens the folder where the results of the game played are saved (statistics/&lt;game&gt;, or under the profile).
+     */
+    void seeGameFolder(Stats stats) {
+        SystemFileManager.openFolder(stats.getGameStatsOfTheDayDirectory().getParentFile());
     }
 }

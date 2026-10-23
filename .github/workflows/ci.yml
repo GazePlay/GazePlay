@@ -3,7 +3,7 @@ name: Continuous Integration
 on: [push, pull_request]
 
 # Each job has a time limit (default: 6 hours): on 2026-10-22 a job hung for 2 hours on "apt-get update" (unreachable
-# Ubuntu mirror). The jobs usually take 2 to 13 minutes
+# Ubuntu mirror, see .github/scripts/install-apt-packages.sh). The jobs usually take 2 to 13 minutes
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,18 +54,16 @@ jobs:
           java-version: ${{ matrix.java }}
 
       # JavaFX tests (TestFX ApplicationExtension) need a display; JavaFX media needs the ffmpeg libraries of the system
-      # (without them the background music fails to load and the launch test reports the error)
-      - name: Install virtual X server and ffmpeg
-        timeout-minutes: 10
-        run: |
-          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 update
-          sudo apt-get -o Acquire::Retries=3 install -y xvfb ffmpeg
+      # (without them the background music fails to load and the launch test reports the error), and an audio output
+      # (PulseAudio, below). The script limits each attempt in time and changes of mirror if one hangs
+      - name: Install virtual X server, ffmpeg and PulseAudio
+        timeout-minutes: 15
+        run: bash .github/scripts/install-apt-packages.sh xvfb ffmpeg pulseaudio libasound2-plugins
 
       # The runners have no sound card: JavaFX media (GStreamer, ALSA output) cannot create a player without one.
       # A PulseAudio null sink, reached by ALSA through the pulse plugin, gives it a virtual audio output
       - name: Start a virtual audio output
         run: |
-          sudo apt-get install -y pulseaudio libasound2-plugins
           pulseaudio --start --exit-idle-time=-1
           pactl load-module module-null-sink sink_name=virtual_output
           pactl set-default-sink virtual_output
@@ -85,6 +83,48 @@ jobs:
           name: Test Reports (JDK ${{ matrix.java }})
           path: '**/build/reports/tests/'
 
+  # Launches each game of the catalog with its first variant, as the menu does, and checks that it starts without error
+  # (AllGamesLaunchTest, about 7 minutes): most games have no other test
+  all-games:
+    # Same system as the test job (audio through the ffmpeg of Ubuntu 24.04)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 25 (Azul Zulu)
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'zulu'
+          java-version: '25'
+
+      - name: Install virtual X server, ffmpeg and PulseAudio
+        timeout-minutes: 15
+        run: bash .github/scripts/install-apt-packages.sh xvfb ffmpeg pulseaudio libasound2-plugins
+
+      # See the test job
+      - name: Start a virtual audio output
+        run: |
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=virtual_output
+          pactl set-default-sink virtual_output
+          echo 'pcm.!default { type pulse }' | sudo tee /etc/asound.conf
+          echo 'ctl.!default { type pulse }' | sudo tee -a /etc/asound.conf
+
+      - name: Launch every game
+        run: |
+          chmod +x ./gradlew
+          xvfb-run --auto-servernum ./gradlew --stacktrace :gazeplay-core:allGamesTest
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: All games launch reports
+          path: '**/build/reports/tests/allGamesTest/'
+
   # Builds the real Linux distribution (bundled JRE and Tobii drivers, downloads checked against their SHA-256) and
   # starts GazePlay with its launcher script, as a user would
   package-linux:
@@ -102,18 +142,16 @@ jobs:
           distribution: 'zulu'
           java-version: '25'
 
-      # The bundled runtime (Zulu 25 with JavaFX 25) plays audio with the ffmpeg of the system
-      - name: Install virtual X server and ffmpeg
-        timeout-minutes: 10
-        run: |
-          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 update
-          sudo apt-get -o Acquire::Retries=3 install -y xvfb ffmpeg
+      # The bundled runtime (Zulu 25 with JavaFX 25) plays audio with the ffmpeg of the system, through PulseAudio
+      # (below). The script limits each attempt in time and changes of mirror if one hangs
+      - name: Install virtual X server, ffmpeg and PulseAudio
+        timeout-minutes: 15
+        run: bash .github/scripts/install-apt-packages.sh xvfb ffmpeg pulseaudio libasound2-plugins
 
       # The runners have no sound card: JavaFX media (GStreamer, ALSA output) cannot create a player without one.
       # A PulseAudio null sink, reached by ALSA through the pulse plugin, gives it a virtual audio output
       - name: Start a virtual audio output
         run: |
-          sudo apt-get install -y pulseaudio libasound2-plugins
           pulseaudio --start --exit-idle-time=-1
           pactl load-module module-null-sink sink_name=virtual_output
           pactl set-default-sink virtual_output

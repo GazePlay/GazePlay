@@ -135,10 +135,13 @@ subprojects {
         // Same JVM options as GazePlay (see GazePlayLauncher.jvmOptions)
         jvmArgs '--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow'
 
-        // Hermetic tests: never read or write the real ~/GazePlay folder, nor depend on the edition file
-        // (argsGazeplay.txt) of the machine running the build. A fresh home is created for each run.
+        // Hermetic tests: never read, write or move the real GazePlay folder (Documents/GazePlay_Learning, formerly
+        // ~/GazePlay), nor depend on the edition file (argsGazeplay.txt) of the machine running the build. A fresh
+        // home is created for each run. The GazePlay folder is given (gazeplay.folder): the Documents folder found by
+        // Windows does not depend on user.home
         def testHome = layout.buildDirectory.dir("test-home/${name}").get().asFile
         systemProperty 'user.home', testHome.absolutePath
+        systemProperty 'gazeplay.folder', new File(testHome, 'GazePlay').absolutePath
         systemProperty 'gazeplay.argsFile', new File(testHome, 'argsGazeplay.txt').absolutePath
         // JavaFX runs without any window (Monocle) unless -Pgui is given, e.g. to watch a test while debugging.
         // AWT (screen recording, robot) is not affected and still needs a display (xvfb in the CI).

@@ -16,9 +16,9 @@ Commands are given for the Unix shell (`./gradlew`); on Windows use `gradlew` in
 ./gradlew :gazeplay-results:test :gazeplay-gaze:test :gazeplay-commons:test :gazeplay-games-commons:test :gazeplay-core:test :gazeplay-games:test
 ```
 
-- The tests are **hermetic**: Gradle points `user.home` and the edition file (`-Dgazeplay.argsFile`) to
-  `build/test-home`, recreated at each run. Do not run them from an IDE with your real home folder: they would read
-  and write `~/GazePlay`.
+- The tests are **hermetic**: Gradle points `user.home`, the GazePlay folder (`-Dgazeplay.folder`) and the edition
+  file (`-Dgazeplay.argsFile`) to `build/test-home`, recreated at each run. Do not run them from an IDE without these
+  properties: they would read and write your real GazePlay folder (`Documents/GazePlay_Learning`), and could move it.
 - JavaFX runs **without any window** (Monocle). Add `-Pgui` to see the windows while debugging.
 - The test JVMs of the modules run one at a time (concurrent JavaFX test JVMs made the toolkit crash now and then).
 - The video recording tests use `java.awt.Robot` and need a display: on a Linux machine without screen, use
@@ -56,7 +56,8 @@ not part of the CI and overlapped with SpotBugs.
 ```
 
 or run `net.gazeplay.GazePlayLauncher` from the IDE (IntelliJ: see [INTELLIJ.md](INTELLIJ.md), with ready-made run configurations in `.run/`) (the runtime classpath of `gazeplay-core` includes the games).
-This uses your real `~/GazePlay` folder (profiles, settings, results). Options: `--default-user`, `--user <name>`,
+This uses your real GazePlay folder, `Documents/GazePlay_Learning` (profiles, settings, results); a former
+`~/GazePlay` folder is moved there at the first start. Options: `--default-user`, `--user <name>`,
 `--game <nameCode>`, `--variant <variant>`, `--width <w> --height <h>`, `--random-game`, `--replayJsonFile <file>` (the AFSR and BERA editions were removed in October 2026).
 
 ## Distributions

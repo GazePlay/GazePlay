@@ -2,6 +2,7 @@ package net.gazeplay.components;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -19,10 +20,6 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 public class GazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
@@ -80,9 +77,7 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
     @Override
     public void stop() {
 
-        if (onFinishHandler.getTimer() != null) {
-            onFinishHandler.getTimer().cancel();
-        }
+        onFinishHandler.cancelHide();
 
         animation.stop();
         this.setVisible(false);
@@ -97,15 +92,13 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
 
     private class OnFinishIndicatorEvent implements EventHandler<ActionEvent> {
 
-        private final GazeIndicator thisIndicator;
-        private final Lock lock;
-        private Timer timer;
+        // Hides the indicator on the JavaFX thread: a java.util.Timer used to do it from its own thread
+        private final PauseTransition hideDelay;
 
         public OnFinishIndicatorEvent(final GazeIndicator thisIndicator) {
 
-            this.thisIndicator = thisIndicator;
-
-            this.lock = new ReentrantLock();
+            hideDelay = new PauseTransition(Duration.millis(TIME_DISPLAYED_AFTER_FINISHED_MS));
+            hideDelay.setOnFinished(actionEvent -> thisIndicator.stop());
         }
 
         @Override
@@ -115,38 +108,11 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
                 finishHandler.handle(event);
             }
 
-            if (timer != null) {
-                timer.cancel();
-            }
-
-            lock.lock();
-            try {
-                final TimerTask timerTask = new TimerTask() {
-                    @Override
-                    public void run() {
-                        thisIndicator.stop();
-                    }
-                };
-                timer = new Timer();
-                timer.schedule(timerTask, TIME_DISPLAYED_AFTER_FINISHED_MS);
-            } finally {
-                lock.unlock();
-            }
-
+            hideDelay.playFromStart();
         }
 
-        private Timer getTimer() {
-
-            Timer res;
-
-            lock.lock();
-            try {
-                res = timer;
-            } finally {
-                lock.unlock();
-            }
-
-            return res;
+        private void cancelHide() {
+            hideDelay.stop();
         }
 
     }

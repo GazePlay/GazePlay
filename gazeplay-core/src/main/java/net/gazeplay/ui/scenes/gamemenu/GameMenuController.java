@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -137,6 +136,9 @@ public class GameMenuController {
 
         LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-Djdk.gtk.version=2"));
         commands.addAll(GazePlayLauncher.jvmOptions());
+        // The same GazePlay folder as the menu: the game does not look for it, nor move it, again
+        commands.add("-D" + GazePlayDirectories.GAZEPLAY_FOLDER_PROPERTY + "="
+            + GazePlayDirectories.getGazePlayFolder().getAbsolutePath());
         commands.addAll(Arrays.asList("-cp", classpath, GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
@@ -201,6 +203,7 @@ public class GameMenuController {
         stats.setGameVariant(gameVariantLabel, gameNameCode);
 
         currentGame.launch();
+        log.info("Game launched : {}, variant {}", gameNameCode, gameVariantLabel);
     }
 
     void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {

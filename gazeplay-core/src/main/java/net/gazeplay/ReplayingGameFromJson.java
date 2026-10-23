@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.ReplayDataFormat;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -294,7 +295,10 @@ public class ReplayingGameFromJson {
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
-        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin,
+            // The same GazePlay folder as the menu: the game does not look for it, nor move it, again
+            "-D" + GazePlayDirectories.GAZEPLAY_FOLDER_PROPERTY + "=" + GazePlayDirectories.getGazePlayFolder().getAbsolutePath(),
+            "-cp", classpath, GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
         if (user != null && !user.equals("")) {

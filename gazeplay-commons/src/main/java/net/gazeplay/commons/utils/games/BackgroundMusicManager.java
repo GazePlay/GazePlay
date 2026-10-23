@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.games;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
@@ -313,53 +314,61 @@ public class BackgroundMusicManager {
      * @param resourceUrlAsString The resource to the music
      */
     public void playMusicAlone(String resourceUrlAsString) {
+        // If there is already the music in playlist, just play it
+        final MediaPlayer mediaPlayerInPlaylist = getMediaPlayerFromSource(resourceUrlAsString);
+        if (mediaPlayerInPlaylist != null) {
+            playAlone(mediaPlayerInPlaylist);
+            return;
+        }
+
+        // Only the download runs in the background: the playlist and the properties shown by the music controls
+        // change on the JavaFX thread
         Runnable asyncTask = () -> {
 
-            MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
-            // If there is already the music in playlist, just play it
-            if (localMediaPlayer == null) {
+            // parse the URL early
+            // in order to fail early if the URL is invalid
+            URL resourceURL;
+            try {
+                resourceURL = new URL(resourceUrlAsString);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
+            }
 
-                // parse the URL early
-                // in order to fail early if the URL is invalid
-                URL resourceURL;
-                try {
-                    resourceURL = new URL(resourceUrlAsString);
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
-                }
+            final String resourceUrlExternalForm = resourceURL.toExternalForm();
+            final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
 
-                final String resourceUrlExternalForm = resourceURL.toExternalForm();
-                final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
+            final String localResourceName = mediaFile.toURI().toString();
 
-                final String localResourceName = mediaFile.toURI().toString();
-
-                try {
-                    localMediaPlayer = createMediaPlayer(resourceUrlAsString);
-                } catch (RuntimeException e) {
-                    log.error("Exception while playing media file {} ", localResourceName, e);
-                }
-
+            MediaPlayer localMediaPlayer = null;
+            try {
+                localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+            } catch (RuntimeException e) {
+                log.error("Exception while playing media file {} ", localResourceName, e);
             }
 
             if (localMediaPlayer != null) {
-
-                log.info("Playing sound {}", localMediaPlayer.getMedia().getSource());
-                if (isPlaying()) {
-                    pause();
-                }
-                playlist.add(localMediaPlayer);
-                changeMusic(playlist.size() - 1);
-                // If Music hasn't changed (for exemple if previous index is the same),
-                // then do the change manually
-                if (currentMusic != localMediaPlayer) {
-                    changeCurrentMusic();
-                }
-
-                play();
+                final MediaPlayer createdMediaPlayer = localMediaPlayer;
+                Platform.runLater(() -> playAlone(createdMediaPlayer));
             }
         };
 
         executorService.execute(asyncTask);
+    }
+
+    private void playAlone(final MediaPlayer localMediaPlayer) {
+        log.info("Playing sound {}", localMediaPlayer.getMedia().getSource());
+        if (isPlaying()) {
+            pause();
+        }
+        playlist.add(localMediaPlayer);
+        changeMusic(playlist.size() - 1);
+        // If Music hasn't changed (for exemple if previous index is the same),
+        // then do the change manually
+        if (currentMusic != localMediaPlayer) {
+            changeCurrentMusic();
+        }
+
+        play();
     }
 
     File downloadAndGetFromCache(URL resourceURL, String resourceUrlExternalForm) {

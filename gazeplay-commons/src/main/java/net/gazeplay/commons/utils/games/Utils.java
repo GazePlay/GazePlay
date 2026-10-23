@@ -32,7 +32,7 @@ public class Utils {
     }
 
     /**
-     * Provides the default GazePlay file directory. By default this will be {user.home}/GazePlay/files,
+     * Provides the default GazePlay file directory. By default this will be the files folder of the GazePlay folder (see GazePlayDirectories),
      * but can be overridden by the user in the app or in the GazePlay.properties file.
      * @return GazePlay files directory
      */

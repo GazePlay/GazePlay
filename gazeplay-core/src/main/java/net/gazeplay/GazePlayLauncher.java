@@ -1,12 +1,13 @@
 package net.gazeplay;
 
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
 import net.gazeplay.commons.threads.CustomThreadFactory;
 import net.gazeplay.commons.threads.GroupingThreadFactory;
 import net.gazeplay.commons.threads.LoggingUncaughtExceptionHandler;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
@@ -18,8 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
-@Slf4j
 public class GazePlayLauncher {
+
+    /**
+     * Created at the first log, not when the class is loaded: the log file is in the GazePlay folder, which has to be
+     * found (and possibly moved) first, see {@link GazePlayDirectories#initGazePlayFolder()}.
+     */
+    private static final class LazyLog {
+        private static final Logger log = LoggerFactory.getLogger(GazePlayLauncher.class);
+    }
+
+    private static Logger log() {
+        return LazyLog.log;
+    }
 
     /**
      * Modules of JavaFX loading native libraries, when JavaFX is part of the Java runtime (bundled Zulu FX runtimes).
@@ -50,9 +62,12 @@ public class GazePlayLauncher {
 
     public static void main(String[] args) {
 
+        // Before anything is logged (GazePlayArgs logs too)
+        final List<String> gazePlayFolderMessages = GazePlayDirectories.initGazePlayFolder();
+
         final String edition = GazePlayArgs.editionToSave(args);
         if (edition != null) {
-            log.info("Edition: {}", edition);
+            log().info("Edition: {}", edition);
             saveArgs(edition);
         }
 
@@ -64,7 +79,7 @@ public class GazePlayLauncher {
             SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
             printStartupInfo();
 
-            initGazePlayDirectory();
+            initGazePlayDirectory(gazePlayFolderMessages);
 
             System.exit(run(args));
         };
@@ -85,26 +100,28 @@ public class GazePlayLauncher {
         return new CommandLine(new MainCommand(compositionRoot)).execute(args);
     }
 
-    private static void initGazePlayDirectory() {
+    private static void initGazePlayDirectory(List<String> gazePlayFolderMessages) {
+        // What was done when the folder was found (moved from its former location in the home directory...)
+        gazePlayFolderMessages.forEach(message -> log().info(message));
         // creation of GazePlay default folder if it does not exist.
         File gazePlayDirectory = GazePlayDirectories.getGazePlayFolder();
-        log.info("FOLDER PATH " + gazePlayDirectory);
+        log().info("FOLDER PATH " + gazePlayDirectory);
         if (!gazePlayDirectory.exists()) {
-            boolean gazePlayDirectoryCreated = gazePlayDirectory.mkdir();
-            log.debug("gazePlayDirectoryCreated = " + gazePlayDirectoryCreated);
+            boolean gazePlayDirectoryCreated = gazePlayDirectory.mkdirs();
+            log().debug("gazePlayDirectoryCreated = " + gazePlayDirectoryCreated);
         }
     }
 
     private static void printStartupInfo() {
         final String versionInfo = VersionInfo.findVersionInfo();
 
-        log.info("GazePlay");
-        log.info("Version : " + versionInfo);
+        log().info("GazePlay");
+        log().info("Version : " + versionInfo);
         Utils.logSystemProperties();
-        log.info("Max Memory: " + Runtime.getRuntime().maxMemory());
+        log().info("Max Memory: " + Runtime.getRuntime().maxMemory());
 
         File workingDirectory = new File(".").getAbsoluteFile();
-        log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
+        log().info("workingDirectory = {}", workingDirectory.getAbsolutePath());
     }
 
     private static void saveArgs(String args){
@@ -117,21 +134,21 @@ public class GazePlayLauncher {
                 File myFolder = myFile.getParentFile();
                 if (myFolder != null) {
                     boolean createFolder = myFolder.mkdirs();
-                    log.info("Folder created, path = " + createFolder);
+                    log().info("Folder created, path = " + createFolder);
                 }
-                log.info("Fil args is : " + myFile);
+                log().info("Fil args is : " + myFile);
                 myWritter = new FileWriter(myFile, StandardCharsets.UTF_8);
                 myWritter.write(args);
             }
         } catch (IOException e){
-            log.info(String.valueOf(e));
+            log().info(String.valueOf(e));
         } finally {
             try {
                 if (myWritter != null){
                     myWritter.close();
                 }
             } catch (IOException e) {
-                log.warn("Cannot close the edition file", e);
+                log().warn("Cannot close the edition file", e);
             }
         }
     }

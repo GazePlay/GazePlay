@@ -19,6 +19,16 @@ it is chosen by the maintainers at release time. Details, verifications and rema
 - Remaining versions: Windows x64, Linux x64, Linux ARM 64 bits, macOS (Intel and Apple
   Silicon), and the version without Java runtime.
 
+### The GazePlay folder moves to Documents
+- The data of GazePlay (profiles, settings, results, music, logs) are now in **`Documents\GazePlay_Learning`**
+  (`~/Documents/GazePlay_Learning` on Linux and macOS), instead of `C:\Users\<name>\GazePlay` (`~/GazePlay`).
+- **At the first start, the former folder is moved there automatically**, with all its content; the paths saved in the
+  settings (files and videos folders...) follow. Nothing is deleted or overwritten. If the move is not possible (a file
+  in use, no Documents folder...), GazePlay keeps using the former folder and tries again at the next start.
+- The `Gazeplay` folder of Documents, where old versions wrote their edition file, is left as it is.
+- Scripts or habits that read the results in `C:\Users\<name>\GazePlay\statistics` must look in
+  `Documents\GazePlay_Learning\statistics`.
+
 ### Results files: format version 3
 The results written by the games change on some points, to fix errors found in the recorded data. **The files
 already recorded are not modified**, and the replay of the games still reads them.
@@ -68,7 +78,9 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
   element of the game.
 - Linux, macOS and ARM launch scripts: they work from any folder and with spaces in the path, the ARM version had no
   launch script at all, and they no longer make the whole installation writable by every user at each launch.
-- The log files are written in `~/GazePlay` instead of the current folder.
+- The log files are written in the GazePlay folder instead of the current folder.
+- Statistics screen: a new button opens the folder of the results of the game played. The "see folder" button of the
+  settings opened a wrong folder when the Windows profile had been renamed, and did nothing on Linux and macOS.
 
 ## Removed
 - *Melordi* and *Picto Pick*: shipped but not reachable from the menu.
@@ -83,7 +95,7 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
 - Spring Boot removed (it was only used to wire the application); start-up is plain Java.
 - Gradle 9, dependencies updated (POI, Gson, Guava, org.json with security fixes, logging), versions gathered in
   `gradle/libs.versions.toml`.
-- Tests: they no longer touch the real `~/GazePlay` folder, run without window, and run in the continuous integration on
+- Tests: they no longer touch the real GazePlay folder, run without window, and run in the continuous integration on
   Java 25 and 26, with a real launch of the Windows, macOS and Linux distributions.
 
 ## Not verified

@@ -18,11 +18,12 @@ echo "EYE_TRACKER=mouse_control" > "$home/GazePlay/GazePlay.properties"
 console="$home/console.log"
 log="$home/GazePlay/gazeplay.log"
 
-# Java takes user.home from the account database, not from $HOME: it is given through JAVA_TOOL_OPTIONS, read by the
+# Java takes user.home from the account database, not from $HOME: it is given through JAVA_TOOL_OPTIONS, with the
+# GazePlay folder (otherwise in ~/Documents, which the macOS runners have), read by the
 # JVM whatever the launch script ($HOME itself is kept, the audio output may need the configuration of the user).
 # Started from another folder than bin/, without terminal.
 cd "$(mktemp -d)"
-JAVA_TOOL_OPTIONS="-Duser.home=$home" sh "$launcher" "$@" < /dev/null > "$console" 2>&1 &
+JAVA_TOOL_OPTIONS="-Duser.home=$home -Dgazeplay.folder=$home/GazePlay" sh "$launcher" "$@" < /dev/null > "$console" 2>&1 &
 pid=$!
 sleep "$delay"
 

@@ -1,10 +1,13 @@
 package net.gazeplay.commons.app;
 
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,15 +19,8 @@ public class LogoFactory {
 
     final static String staticLogoImagePath = "data/common/images/logos/gazeplay-top-logo.png";
 
-    private Thread logoAnimatedThread;
+    private PauseTransition logoAnimationDelay;
     private SequentialTransition logoAnimatedAnimationTransition;
-
-    static class LogoCreationException extends RuntimeException {
-        LogoCreationException(Throwable cause) {
-            super(cause);
-        }
-
-    }
 
     public Node createLogoAnimated(Stage stage) {
         final double preferredHeight = stage.getHeight() * 0.1d;
@@ -32,24 +28,23 @@ public class LogoFactory {
 
         GazePlayAnimatedLogo gazePlayAnimatedLogo = GazePlayAnimatedLogo.newInstance((int) preferredHeight);
 
-        logoAnimatedThread = new Thread(() -> {
-            try {
-                Thread.sleep(2 * 1000);
-            } catch (InterruptedException e) {
-                throw new LogoCreationException(e);
-            }
+        // The animation starts on the JavaFX thread: it used to be created and played from a thread of its own
+        logoAnimationDelay = new PauseTransition(Duration.seconds(2));
+        logoAnimationDelay.setOnFinished(event -> {
             logoAnimatedAnimationTransition = gazePlayAnimatedLogo.createAnimation();
-            logoAnimatedAnimationTransition.setCycleCount(-1);
+            logoAnimatedAnimationTransition.setCycleCount(Animation.INDEFINITE);
             logoAnimatedAnimationTransition.play();
         });
-        logoAnimatedThread.start();
+        logoAnimationDelay.play();
         return gazePlayAnimatedLogo.getLetters();
     }
 
     public void stopAnimation(){
-        logoAnimatedAnimationTransition.stop();
-        if(logoAnimatedThread !=null && logoAnimatedThread.isAlive()){
-            logoAnimatedThread.interrupt();
+        if (logoAnimationDelay != null) {
+            logoAnimationDelay.stop();
+        }
+        if (logoAnimatedAnimationTransition != null) {
+            logoAnimatedAnimationTransition.stop();
         }
     }
 

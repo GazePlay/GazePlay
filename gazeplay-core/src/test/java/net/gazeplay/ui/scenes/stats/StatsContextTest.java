@@ -21,6 +21,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
+import net.gazeplay.ui.SystemFileManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -217,7 +218,7 @@ class StatsContextTest {
         CustomButton button = new CustomButton("bear.jpg", 300);
         HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, button, false);
 
-        assertEquals(5, result.getChildren().size());
+        assertEquals(6, result.getChildren().size());
 
         CustomButton aoiButton = (CustomButton) result.getChildren().get(0);
         CustomButton scanPathButton = (CustomButton) result.getChildren().get(2);
@@ -244,7 +245,27 @@ class StatsContextTest {
         RadioButton radioButton = new RadioButton();
         HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, null, false);
 
-        assertEquals(1, result.getChildren().size());
+        // The button of the results folder, then the home button
+        assertEquals(2, result.getChildren().size());
+    }
+
+    @Test
+    void shouldOpenTheResultsFolderOfTheGamePlayed() {
+        BorderPane root = new BorderPane();
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+
+        Configuration mockConfig = mock(Configuration.class);
+        when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
+        File gameFolder = new File("statistics", "WhereIsTheShape");
+        when(mockStats.getGameStatsOfTheDayDirectory()).thenReturn(new File(gameFolder, "2026-10-23"));
+        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, new RadioButton(), null, null, false);
+
+        CustomButton seeFolderButton = (CustomButton) result.getChildren().get(0);
+        try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
+            seeFolderButton.fireEvent(TestingUtils.clickOnTarget(seeFolderButton));
+
+            systemFileManager.verify(() -> SystemFileManager.openFolder(gameFolder));
+        }
     }
 
     @Test

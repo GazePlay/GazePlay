@@ -22,7 +22,7 @@ Versions of all libraries and plugins: `gradle/libs.versions.toml`.
 
 ## Startup
 
-1. `GazePlayLauncher.main` writes the edition (only "gazeplay" since the removal of the AFSR and BERA editions; the dormant Eval code is no longer reachable) to `~/GazePlay/argsGazeplay.txt`
+1. `GazePlayLauncher.main` writes the edition (only "gazeplay" since the removal of the AFSR and BERA editions; the dormant Eval code is no longer reachable) to `argsGazeplay.txt` in the GazePlay folder (`Documents/GazePlay_Learning`, formerly `~/GazePlay`: found, and moved if needed, by `GazePlayDirectories.initGazePlayFolder` before anything is logged)
    (`GazePlayArgs`), then parses the command line with picocli (`MainCommand`).
 2. `CompositionRoot` builds and wires the components (no dependency injection framework): translator, game locator,
    `GazePlay` (navigation between screens), gaze device and sound factories, game menu.
@@ -50,7 +50,7 @@ carries the time the gaze entered the node. The behaviour is pinned by `GazeDisp
 ## Results
 
 `Stats` records the gaze and mouse samples with event filters on the root of the game scene, and writes, for each
-round, in `~/GazePlay/statistics/<game>/<date>/` (or the profile folder): `replayData.json` (raw samples
+round, in `Documents/GazePlay_Learning/statistics/<game>/<date>/` (or the profile folder): `replayData.json` (raw samples
 `coordinatesAndTimeStamp`, fixation sequence), `heatmap.csv` (mouse and gaze), `heatmapGaze.csv`, `heatmapMouse.csv`,
 `metrics*.png`, screenshot and `info-game.csv`.
 These are persistent formats used by researchers. `replayData.json` holds its version in `formatVersion` (absent in
@@ -63,7 +63,7 @@ GazePlay Eval writes its exports (CSV in UTF-16, Excel) through `EvalReport`, te
 
 ## Configuration
 
-`GazePlay.properties` (default profile in `~/GazePlay`, one file per profile in `~/GazePlay/profiles/<name>`) is read
+`GazePlay.properties` (default profile in the GazePlay folder, one file per profile in its `profiles/<name>`) is read
 by `ConfigurationSource` (old keys renamed in 1.11.1 are migrated by `LegacyConfigurationKeys`), held by
 `ApplicationConfig` and saved by `Configuration` after each change, atomically. The keys are a persistent format.
 

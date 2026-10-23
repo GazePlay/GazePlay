@@ -1,6 +1,6 @@
 # CLAUDE.md — GazePlay
 
-Contexte de travail pour Claude Code. Mis à jour le 22/10/2026 (branche `addClaudeCode`, après l'étape 24 de
+Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 28 de
 `MODERNIZATION.md`). L'audit d'origine (20/10/2026, commit `4a035dd4f`) a été corrigé ici partout où le code a changé ;
 le détail de chaque changement, ses vérifications et ses décisions sont dans `MODERNIZATION.md`, la carte du code dans
 `ARCHITECTURE.md`.
@@ -10,7 +10,8 @@ le détail de chaque changement, ses vérifications et ses décisions sont dans 
 - **Phase actuelle (depuis le 20/10/2026) : modernisation progressive autorisée.** Modifications du code, des tests, du build, des dépendances et de la documentation permises, par étapes vérifiées. Le suivi se fait dans `MODERNIZATION.md` (une section par étape, et la section 9.0 pour reprendre).
 - **Restent interdits sans accord explicite** : commit, push, changement de branche, reset, réécriture d'historique, migration irréversible de données, publication ou déploiement. Le mainteneur autorise commits et pushs demande par demande.
 - **Branche : `addClaudeCode` uniquement.** Ne rien reporter sur `GazePlayLearning`, ne rien fusionner, pas de pull request pour l'instant (décision du mainteneur).
-- Les tests sont rendus hermétiques par `build.gradle` (`user.home` et `gazeplay.argsFile` pointent vers `build/test-home`). Toujours les lancer via Gradle, jamais avec le vrai `user.home`. Hors Gradle (IDE, exécution manuelle), ils liraient et écriraient le vrai `~/GazePlay`.
+- Les tests sont rendus hermétiques par `build.gradle` (`user.home`, `gazeplay.folder` et `gazeplay.argsFile` pointent vers `build/test-home`). Toujours les lancer via Gradle. Hors Gradle (IDE, exécution manuelle), ils liraient et écriraient le vrai dossier GazePlay, et pourraient le déplacer.
+- **Dossier GazePlay : `Documents\GazePlay_Learning`** (décision du mainteneur, 23/10/2026 ; « Mes documents » trouvé par `FileSystemView` sous Windows, `~/Documents` ailleurs). Au premier lancement, l'ancien `~/GazePlay` y est déplacé (`GazePlayFolderMigration`, rien n'est supprimé ni écrasé ; en cas d'échec, l'ancien dossier reste utilisé). Les chemins des réglages qui pointaient dans l'ancien dossier sont réécrits à la lecture. Toute JVM lancée par GazePlay reçoit `-Dgazeplay.folder`. Le dossier `Documents\Gazeplay` des anciennes versions n'est pas touché.
 - **JDK 25 requis** pour compiler. Dans le terminal du mainteneur, le `java` du PATH est un Zulu 17 : préfixer les commandes Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';` (chemin entre apostrophes, sans `$HOME`).
 - Ne jamais toucher aux 4 stashes existants, ni supprimer ou réinitialiser des modifications existantes.
 - Ne jamais fabriquer de chiffres de performance : tout reste à mesurer.
@@ -25,9 +26,9 @@ le détail de chaque changement, ses vérifications et ses décisions sont dans 
 - Modules : `gazeplay-results` (calculs et fichiers de résultats, sans JavaFX), `gazeplay-gaze` (acquisition du regard), `commons` (configuration, diffusion du regard, `Stats`), `games-commons` (contrat des jeux), `core` (application), `games` (75 jeux au catalogue), `dist` (scripts de lancement). Retirés : `melordi`, `picto-pick`, `side-projects`, `gazeplay-api`, `old-website`.
 - **Une JVM par partie** : `GameMenuController.createBuilder` lance `java -cp … GazePlayLauncher --game …` avec les options de `GazePlayLauncher.jvmOptions()` (`--enable-native-access`, `--sun-misc-unsafe-memory-access=allow`). Le menu attend 6 s, puis se réaffiche sur le thread JavaFX. L'enfant termine par `System.exit`.
 - Jeux découverts via `games-catalog.txt` / `evals-catalog.txt`, générés au build (`gazeplay-core/build.gradle`) d'après les noms de fichiers `*SpecSource`.
-- **Édition du produit** : seule `gazeplay` reste. Les éditions AFSR et BERA (Eval) ont été retirées le 21/10/2026 ; le code Eval est conservé mais inaccessible. Le fichier d'édition `argsGazeplay.txt` est dans `~/GazePlay` (l'ancien emplacement est encore lu).
+- **Édition du produit** : seule `gazeplay` reste. Les éditions AFSR et BERA (Eval) ont été retirées le 21/10/2026 ; le code Eval est conservé mais inaccessible. Le fichier d'édition `argsGazeplay.txt` est dans le dossier GazePlay (l'ancien emplacement est encore lu).
 - Configuration : singleton `ActiveConfigurationContext` (conservé, décision du mainteneur ; les jeux passent par `IGameContext.getConfiguration()`), fichier `GazePlay.properties` **écrit de façon atomique**. Les anciennes clés d'avant 1.11.1 sont migrées à la lecture (`LegacyConfigurationKeys`). Les clés sont un format persistant : garder `AREA_OF_INTEREST_DISABLED`, dont la valeur `true` signifie « AOI activées », même si le nom est trompeur.
-- Journaux : `~/GazePlay/gazeplay.log` et ses fichiers tournants (`logback.xml`). `sysout-over-slf4j` redirige `System.out`/`System.err` vers le journal (gardé exprès, voir `MODERNIZATION.md` 2z).
+- Journaux : `gazeplay.log` du dossier GazePlay et ses fichiers tournants (`logback.xml`, propriété `gazeplay.folder` donnée par le lanceur avant tout journal ; le logger de `GazePlayLauncher` est créé tard exprès). `sysout-over-slf4j` redirige `System.out`/`System.err` vers le journal (gardé exprès, voir `MODERNIZATION.md` 2z).
 - Analyse statique : **SpotBugs** seulement (dans `build` et en CI). PMD a été retiré.
 
 ## Flux du regard
@@ -79,9 +80,10 @@ Autres points :
 
 - Distributions 64 bits seulement : Windows x64 (+ installeur Inno Setup), Linux x64, Linux ARM aarch64, macOS x64 et Apple Silicon, et une version sans JRE (Java 25 et JavaFX 21+ requis). **Plus de 32 bits** (décision du mainteneur, 20/10/2026). Les distributions avec runtime ne livrent pas de seconde copie de JavaFX.
 - Tobii fonctionne uniquement sur Windows x64 et Linux x64 ; Linux n'a pas été testé avec l'appareil. ARM et macOS fonctionnent en souris seulement.
-- **CI** (`ci.yml`) : SpotBugs ; tests sous JDK 25 et 26 (`xvfb`, sortie audio virtuelle) ; construction **et lancement réel** des distributions Windows, Linux x64 et macOS Apple Silicon (menu puis un jeu). Chaque job a une durée maximale (20 ou 30 min). ARM Linux et macOS Intel ne sont lancés nulle part.
+- **CI** (`ci.yml`) : SpotBugs ; tests sous JDK 25 et 26 (`xvfb`, sortie audio virtuelle, paquets installés par `.github/scripts/install-apt-packages.sh`) ; lancement des 75 jeux (`all-games`) ; construction **et lancement réel** des distributions Windows, Linux x64 et macOS Apple Silicon (menu puis un jeu). Chaque job a une durée maximale (20 ou 30 min). ARM Linux et macOS Intel ne sont lancés nulle part.
 - `./gradlew build` réussit ; l'installeur Windows se construit avec Inno Setup 6 (`generateWindowsInstaller`) ou dans Docker. L'installation réelle n'a pas été testée.
-- Tests : **409 tests, 0 échec** (22/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement.
+- Tests : **420 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
+- La scène JavaFX ne doit être modifiée que sur son thread : un audit complet a été fait le 23/10/2026 (`MODERNIZATION.md` 2ad). Pour un délai, utiliser `PauseTransition` plutôt qu'un `java.util.Timer`.
 - Dépréciations Gradle restantes : uniquement dans les plugins `release` et `javafxplugin`, déjà à leur dernière version, sans effet en Gradle 9.8.2.
 - Le site public est publié depuis la branche **`gh-pages`** ; le dossier `docs/` en est une ancienne copie.
 - `cd.yml` (déploiement sur S3, branche `master` seulement) utilise l'AWS CLI du runner, à la place de `jakejarvis/s3-sync-action` (archivée, autrefois non épinglée avec les secrets AWS). Les actions tierces sont épinglées par SHA.

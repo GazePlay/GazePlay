@@ -18,7 +18,7 @@ gazeplay.log.*
 build
 out
 
-# Files written by GazePlay when launched from the repository (they live in ~/GazePlay)
+# Files written by GazePlay when launched from the repository (they live in Documents/GazePlay_Learning)
 /argsGazeplay.txt
 /GazePlay.properties
 gazeplay.log

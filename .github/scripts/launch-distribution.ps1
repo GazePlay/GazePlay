@@ -21,8 +21,9 @@ $noInput = Join-Path $GazeHome "no-input.txt"
 New-Item -ItemType File -Force $noInput | Out-Null
 $log = Join-Path $GazeHome "GazePlay\gazeplay.log"
 
-# The JVM reads JAVA_TOOL_OPTIONS whatever the launch script: the home folder of the test, not the one of the runner
-$env:JAVA_TOOL_OPTIONS = "-Duser.home=$GazeHome"
+# The JVM reads JAVA_TOOL_OPTIONS whatever the launch script: the home folder of the test, not the one of the runner,
+# and its GazePlay folder (otherwise in the Documents folder of the runner, which does not depend on user.home)
+$env:JAVA_TOOL_OPTIONS = "-Duser.home=$GazeHome -Dgazeplay.folder=$(Join-Path $GazeHome 'GazePlay')"
 # Started from another folder than bin/; the script ends with "pause", which an empty input ends at once
 $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "`"$Launcher`" $Arguments" `
     -WorkingDirectory $env:RUNNER_TEMP -RedirectStandardInput $noInput `

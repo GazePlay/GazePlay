@@ -1183,6 +1183,75 @@ Suite complète **410 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; deux jeu
 
 ---
 
+## 2ad. Étape 27 — Audit des threads, lancement automatique de tous les jeux, installation des paquets de la CI (23/10/2026)
+
+### Audit des threads (point 3 de 9.0)
+Recherche dans tout le code de production (`gazeplay-*/src/main`) de tout ce qui tourne hors du thread JavaFX : `java.util.Timer`, `Thread`, exécuteurs, `CompletableFuture`, `Thread.sleep`. Chaque endroit a été lu.
+- **Défauts réels, corrigés** :
+  - **`GazeIndicator`** (indicateur de progression de la fixation, utilisé par de nombreux jeux) : 1 s après la fin d'une fixation, un `java.util.Timer` le cachait depuis son propre thread (`setVisible`, `setProgress`, arrêt de l'animation sur la scène affichée). Remplacé par une `PauseTransition`, qui s'exécute sur le thread JavaFX ; même délai, même annulation par `stop()`. Le verrou, devenu inutile, est retiré. Test de non-régression : `GazeIndicatorTest` (il échoue avec l'ancien code).
+  - **Logo animé** (`LogoFactory`, écrans de profil et de chargement) : un thread attendait 2 s puis créait et lançait l'animation hors du thread JavaFX. Remplacé par une `PauseTransition`. `stopAnimation()` ne lève plus de `NullPointerException` si elle est appelée avant le début de l'animation.
+  - **Musique de fond des jeux** (`BackgroundMusicManager.playMusicAlone`, Shoot the Robots et Shoot the Biboules) : tout le traitement tournait dans un exécuteur, y compris la liste de lecture et les propriétés observées par les contrôles de musique (`MusicControl` : boutons lecture/pause, titre), donc des changements de la scène hors du thread JavaFX à chaque lancement de ces jeux. Seul le téléchargement reste en arrière-plan ; la suite passe par `Platform.runLater`.
+- **Vérifiés, corrects** : `Moles`, `ShooterGame` (corrigés à l'étape 26), `TrainSwitches`, `Bravo`, `GameMenuController` (2w), `ReplayingGameFromJson`, `SoundPlayerRunnable`, `PositionPollerRunnable` (regard → un seul `runLater`), capture d'écran de `Stats` (prise sur le thread JavaFX, seule l'écriture du fichier est dans un thread).
+- **Constats, non modifiés** :
+  - `AreaOfInterest` (rejeu des zones d'intérêt) crée un `java.util.Timer`, donc un thread, pour chaque point rejoué ; les changements de scène passent bien par `runLater`. Correct mais coûteux ; sans objet tant que R13 reste ouvert.
+  - `playMusicAlone` télécharge la musique dans le cache, puis la lit depuis l'adresse Internet et non depuis le fichier téléchargé (`localResourceName` n'est utilisé que dans un message). Le fichier en cache n'a pas d'extension : le lire demanderait de vérifier que JavaFX Media l'accepte. Non modifié.
+- Retiré : un `import` inutilisé dans `GameMenuController`.
+
+### Lancement automatique de tous les jeux (point 4 de 9.0)
+- **Nouveau test `AllGamesLaunchTest`**, tâche Gradle **`allGamesTest`** (module `gazeplay-core`, exclue de `test` et de `smokeTest`). Pour chaque jeu de `games-catalog.txt`, il lance GazePlay dans une JVM à part, comme le menu (`--game` et `--variant`, première variante par ordre alphabétique), sans fenêtre (Monocle), en mode souris, avec un `user.home` à lui. Il vérifie : que la variante se relit à l'identique depuis son texte (c'est ainsi que le menu la transmet à la JVM du jeu), que le jeu est lancé, qu'il tourne encore après 20 s, et qu'il n'a journalisé aucune erreur inattendue. Quatre jeux tournent en même temps.
+- Pour savoir que le jeu a bien démarré (et non attendu sur la fenêtre de variante), `GameMenuController` journalise désormais `Game launched : <jeu>, variant <variante>`.
+- Le code commun avec `LaunchSmokeTest` (commande, lecture de la sortie, erreurs attendues) est réuni dans `GazePlayProcess` ; `LaunchSmokeTest` vérifie exactement la même chose qu'avant (sans réglage, donc avec le pilote Tobii sans appareil).
+- **Constat fait en le mettant au point** : le premier essai, sans réglage, a échoué pour la plupart des jeux sur `AccessDeniedException` : au démarrage, le wrapper Tobii copie `tobii_stream_engine.dll` dans `%LOCALAPPDATA%\.tobiiStreamEngineForJava`, un dossier partagé par tous les processus et **hors de `user.home`**, et plusieurs JVM lancées au même moment s'y gênent. Sans effet pour un utilisateur, qui ne lance qu'une partie à la fois ; à noter : les tests de lancement ne sont donc pas entièrement hermétiques avec Tobii. Le test des jeux configure le mode souris, comme le script de lancement de la CI.
+- **Second constat** : un premier essai interrompu avait laissé 4 processus GazePlay tourner (l'attente interrompue ne tuait pas le processus). Tant qu'ils tenaient la DLL Tobii chargée, le `smokeTest`, lancé seul, échouait sur la même `AccessDeniedException`. Corrigé dans `GazePlayProcess` : le processus est tué dans tous les cas. **Hypothèse à vérifier (risque)** : tout GazePlay qui a chargé la DLL Tobii empêcherait un autre GazePlay de démarrer Tobii sur le même compte Windows. Les parties réelles avec l'Eye Tracker 5 fonctionnent depuis le menu, ce qui laisse penser que la JVM du menu ne charge pas la DLL ; non vérifié dans le code du wrapper.
+- **Résultat** (Windows 11, JDK 25) : **75 jeux sur 75 lancés sans erreur**, en 6 min 22 s.
+- **CI** : nouveau job `all-games` (Ubuntu 24.04, mêmes sortie audio virtuelle et paquets que le job `test`, limite de 30 min), rapport des tests publié.
+
+### CI : installation des paquets Ubuntu (point 5 de 9.0)
+- **Fait** : le 22/10/2026, `apt-get update` a bloqué deux fois sur le miroir d'Azure. Les options `Acquire::Retries` réessaient sur le même miroir, et la seconde installation (`pulseaudio`) n'avait ni limite ni nouvelle tentative.
+- **Correction** : script `.github/scripts/install-apt-packages.sh`, utilisé par les jobs `test` et `package-linux`. Une seule installation pour tous les paquets ; chaque essai est limité (3 min pour `update`, 5 min pour `install`) ; en cas d'échec, les essais suivants (3 au plus) passent par le miroir principal d'Ubuntu (`archive.ubuntu.com`). Durée maximale de l'étape : 15 min.
+
+### Survive Against Robots : cadence de tir (point 6 de 9.0)
+`Robot` et `Player` comparent maintenant le compteur d'images à `Math.round(60 * fréquence)`, un entier, au lieu du `double` `60 * fréquence`. Pour les fréquences utilisées (1,2 ; 0,25 ; 0,5), le résultat est identique (72, 15, 30 images) ; une fréquence comme 1,3 ne bloquerait plus les tirs.
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest :gazeplay-core:allGamesTest` réussi : suite complète **411 tests, 0 échec** (1 nouveau : `GazeIndicatorTest`) ; `smokeTest` 2/2 ; SpotBugs vert ; **75 jeux sur 75** lancés sans erreur ; aucun processus GazePlay restant après les tests. Syntaxe du script d'installation vérifiée (`bash -n`). **Non vérifié** : la CI elle-même (nouveau job `all-games`, script `apt-get`), qui ne tournera qu'au prochain push ; les essais du mainteneur dans l'application (point 2 de 9.0) restent à faire.
+
+---
+
+## 2ae. Étape 28 — Écran des statistiques et dossier GazePlay dans Documents (23/10/2026, demandes du mainteneur)
+
+### Écran des statistiques
+- **Fait** : le bouton qui montrait le fichier de résultats et celui qui ouvrait le fichier Excel n'existaient que dans l'édition BERA (`StatsContext`, trois branches `if bera`), retirée le 21/10/2026 : ils étaient inaccessibles. La vérification demandée au point 2 de 9.0 était donc sans objet pour ce bouton.
+- **Retiré** (décision du mainteneur) : les trois branches BERA de `StatsContext` (écran des scores Eval, grille des scores, boutons), et les méthodes devenues inutiles (`openFile`, `seeFile`, `addToGridCenter*`). L'écran normal est inchangé (vérifié par un `diff` sans les espaces).
+- **Ajouté** : sur l'écran des statistiques normal, un bouton (icône `seeFolder.png`, info-bulle « voir dossier ») qui ouvre l'explorateur dans le dossier des résultats du jeu joué (`statistics/<jeu>`, un sous-dossier par jour), par `SystemFileManager`. Placé avant le bouton de retour au menu. Test : `StatsContextTest.shouldOpenTheResultsFolderOfTheGamePlayed`.
+- **Gardé** : le bouton « voir dossier » des réglages (rubrique « Voir résultat »).
+- `SystemFileManager.showFile` n'est plus appelé (gardé, testé, pour un usage d'Eval à la fusion).
+
+### Dossier GazePlay dans `Documents\GazePlay_Learning`
+Décision du mainteneur : le dossier de données ne doit plus être cherché dans `C:\Users\<nom>\GazePlay`, mais dans « Mes documents », sous le nom **`GazePlay_Learning`** ; l'ancien dossier est déplacé s'il existe.
+- **Emplacement** : `GazePlayDirectories.getGazePlayFolder()`, seul point du code qui donne le dossier. Sous Windows, « Mes documents » est celui que connaît Windows (`FileSystemView`, vérifié : `C:\Users\arrig\Documents` sur le poste du mainteneur ; suit une redirection par OneDrive). Ailleurs : `~/Documents`. Sans dossier Documents : l'ancien emplacement reste utilisé.
+- **Déplacement** (`GazePlayFolderMigration`, au premier appel) :
+  - pas d'ancien dossier : `Documents\GazePlay_Learning` est créé ;
+  - ancien dossier seul : il est déplacé d'un bloc (renommage) ;
+  - les deux existent : le contenu de l'ancien est déplacé dans le nouveau. Seuls un fichier d'édition ou des journaux peuvent exister des deux côtés : ceux du nouveau sont mis de côté (`.before-move`). Si un dossier de données (profils, statistiques…) existe des deux côtés, **rien n'est déplacé** et l'ancien dossier reste utilisé (fusion à faire à la main) ;
+  - rien n'est supprimé, sauf l'ancien dossier une fois vide ; rien n'est écrasé ; en cas d'échec en cours de route, ce qui a été déplacé est remis en place, l'ancien dossier est utilisé et le déplacement est retenté au lancement suivant.
+- **Avant tout journal** : le journal est dans ce dossier. `GazePlayLauncher.main` trouve le dossier en premier (`initGazePlayFolder`), puis le donne à logback par la propriété `gazeplay.folder` (`logback.xml`). Le logger de `GazePlayLauncher` est créé tard exprès : créé au chargement de la classe, il aurait ouvert `gazeplay.log` dans l'ancien dossier avant le déplacement. Les messages du déplacement sont journalisés ensuite.
+- **JVM des jeux** : le menu et le rejeu leur passent `-Dgazeplay.folder` : elles utilisent le même dossier, sans le rechercher ni le déplacer.
+- **Réglages** : les chemins enregistrés dans les `GazePlay.properties` qui pointaient dans l'ancien dossier (dossiers des fichiers, des vidéos, des raccourcis, de la musique…) sont réécrits à la lecture vers le nouveau (`relocateMovedPaths`), puis enregistrés tels quels à la sauvegarde suivante.
+- **Choix du nom** : `Documents\Gazeplay` existe déjà sur le poste du mainteneur (anciennes versions : fichier d'édition, dossier `Emmanuel`). Windows ne distingue pas `Gazeplay` de `GazePlay` : avec le nom `GazePlay_Learning`, ce dossier n'est pas touché.
+- **Tests et CI** : `build.gradle`, `GazePlayProcess` et les scripts de lancement de la CI donnent `gazeplay.folder` : sous Windows, « Mes documents » ne dépend pas de `user.home`, et les tests auraient sinon écrit dans le vrai dossier. `gazeplay.documents` remplace le dossier Documents dans les tests du déplacement seulement. Tests : `GazePlayFolderMigrationTest` (8 cas), `LaunchSmokeTest.shouldMoveTheFormerGazePlayFolderToDocuments` (vraie application : dossier déplacé, résultats et réglages présents, journal écrit dans le nouveau dossier seulement).
+- **Impact sur les données** : aucun format de fichier ne change ; les fichiers sont déplacés tels quels. **Les scripts ou habitudes du laboratoire qui lisent `C:\Users\<nom>\GazePlay\statistics` doivent lire `Documents\GazePlay_Learning\statistics`.**
+- **Risques** :
+  - si « Documents » est synchronisé par OneDrive, résultats, vidéos et journaux le seront aussi (place, fichiers verrouillés pendant la synchronisation) ;
+  - sous macOS, l'accès à `~/Documents` peut déclencher une demande d'autorisation du système ; refusée, GazePlay ne peut pas créer le dossier et garde l'ancien ;
+  - un fichier ouvert par un autre programme dans l'ancien dossier empêche le déplacement (retenté à chaque lancement).
+- **Non vérifié** : le déplacement des vraies données du poste du mainteneur (il aura lieu au premier lancement de cette version) ; Linux et macOS.
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest :gazeplay-core:allGamesTest` réussi : **420 tests, 0 échec** ; `smokeTest` 3/3 (dont le déplacement du dossier) ; SpotBugs vert ; 75 jeux sur 75. Après les tests, le vrai `Documents\GazePlay_Learning` n'existe pas : les tests n'ont pas touché aux dossiers de l'utilisateur.
+
+---
+
 ## 9. Reprise à la prochaine session
 
 ### 9.0 Pause du 22/10/2026 au soir (après l'étape 26) : à lire en premier
@@ -1215,12 +1284,13 @@ Les sous-sections 9.1 à 9.7, plus bas, datent de l'étape 10 et ne sont gardée
 #### À faire demain, par ordre proposé
 1. ~~Contrôler la CI de `4391eb3bb`~~ : **verte** (voir l'état ci-dessus).
 2. **Essais du mainteneur dans l'application**, que je ne peux pas faire :
-   - Réglages → « Voir le dossier », et à l'écran des statistiques le bouton qui montre le fichier : la bonne fenêtre de l'explorateur doit s'ouvrir ;
+   - Réglages → rubrique « Voir résultat » → « voir dossier », et à l'écran des statistiques le nouveau bouton du dossier du jeu (2ae ; l'ancien bouton n'existait que dans l'édition BERA) : la bonne fenêtre de l'explorateur doit s'ouvrir ;
+   - premier lancement de cette version : `C:\Users\<nom>\GazePlay` doit être déplacé dans `Documents\GazePlay_Learning`, avec profils, réglages et résultats (2ae) ;
    - une partie de Whac-a-Mole et une de Shoot the Robots : les taupes et la boîte doivent se comporter comme avant.
-3. **Audit des threads, suite logique de l'étape 26** : chercher dans tout le code (jeux, `core`, `commons`) les autres endroits qui modifient la scène hors du thread JavaFX (`Timer`, `Thread`, exécuteurs, rappels de bibliothèques).
-4. **Lancement automatique de tous les jeux** (proposition) : un test, ou un job de CI, qui ouvre chacun des 75 jeux avec une variante pendant quelques secondes et vérifie l'absence d'erreur. Aujourd'hui, la plupart des jeux n'ont aucun test, et un jeu cassé au démarrage passerait inaperçu.
-5. **CI : fiabiliser l'installation des paquets Ubuntu.** `apt-get update` a bloqué deux fois le 22/10/2026 (miroir d'Azure injoignable). La seconde fois, la limite de 10 minutes de l'étape 24 a coupé court, puis le job a été relancé à la main. Piste : relancer automatiquement l'étape en cas d'échec, ou utiliser un autre miroir.
-6. Optionnel : rendre robuste la cadence de tir de Survive Against Robots (`compteur == 60 * fréquence`, correct aujourd'hui mais fragile).
+3. ~~Audit des threads~~ : **fait le 23/10/2026** (2ad), 3 défauts corrigés.
+4. ~~Lancement automatique de tous les jeux~~ : **fait le 23/10/2026** (2ad), `allGamesTest` et job de CI `all-games`.
+5. ~~CI : fiabiliser l'installation des paquets Ubuntu~~ : **fait le 23/10/2026** (2ad), script avec changement de miroir.
+6. ~~Cadence de tir de Survive Against Robots~~ : **fait le 23/10/2026** (2ad).
 7. Restes liés à Eval (3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs) : **à traiter à la fusion de `GazePlayLearning`**, pas avant.
 8. **Fin de la modernisation**, puis, selon les décisions du mainteneur : fusion de `GazePlayLearning`, test de l'installation réelle par l'installeur Windows, numéro (1.12.0 proposé) et publication.
 

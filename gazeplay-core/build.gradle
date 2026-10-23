@@ -109,10 +109,10 @@ registerCatalogTask('generateEvalsCatalog', 'evals-catalog.txt', true)
 
 sourceSets.main.output.dir(generatedResources, builtBy: ['generateGamesCatalog', 'generateEvalsCatalog'])
 
-// The launch smoke test starts the real application in a child JVM: slower, run separately (also in the CI)
+// The launch tests start the real application in child JVMs: slower, run separately (also in the CI)
 tasks.named('test') {
     useJUnitPlatform {
-        excludeTags 'smoke'
+        excludeTags 'smoke', 'all-games'
     }
 }
 
@@ -129,5 +129,21 @@ tasks.register('smokeTest', Test) {
     doFirst {
         smokeHome.deleteDir()
         smokeHome.mkdirs()
+    }
+}
+
+tasks.register('allGamesTest', Test) {
+    description = 'Launches each game of the catalog without window, with its first variant, and checks that it starts without error.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'all-games'
+    }
+    def allGamesHome = layout.buildDirectory.dir('all-games-home').get().asFile
+    systemProperty 'smoke.home', allGamesHome.absolutePath
+    doFirst {
+        allGamesHome.deleteDir()
+        allGamesHome.mkdirs()
     }
 }

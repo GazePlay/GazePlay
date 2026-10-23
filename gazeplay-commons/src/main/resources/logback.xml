@@ -10,10 +10,12 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/GazePlay/gazeplay.log</file>
+        <!-- In the GazePlay folder, given by the launcher (GazePlayDirectories.initGazePlayFolder) before anything is
+             logged. Without it (e.g. a test run outside of Gradle), its former location in the home directory -->
+        <file>${gazeplay.folder:-${user.home}/GazePlay}/gazeplay.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <!-- Next to gazeplay.log: a relative pattern wrote the rotated files into the working directory -->
-            <fileNamePattern>${user.home}/GazePlay/gazeplay.log.%i</fileNamePattern>
+            <fileNamePattern>${gazeplay.folder:-${user.home}/GazePlay}/gazeplay.log.%i</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>5</maxIndex>
         </rollingPolicy>

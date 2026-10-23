@@ -80,7 +80,8 @@ class StatsContextFactoryTest {
         HBox box = (HBox) pane.getChildren().get(1);
 
         assertEquals(3, result.getRoot().getChildren().size());
-        assertEquals(4, box.getChildren().size());
+        // Including the button of the results folder
+        assertEquals(5, box.getChildren().size());
     }
 
     @Test
@@ -93,7 +94,8 @@ class StatsContextFactoryTest {
         HBox box = (HBox) pane.getChildren().get(1);
 
         assertEquals(3, result.getRoot().getChildren().size());
-        assertEquals(5, box.getChildren().size());
-        assertEquals(button, box.getChildren().get(4));
+        // Including the button of the results folder
+        assertEquals(6, box.getChildren().size());
+        assertEquals(button, box.getChildren().get(5));
     }
 }

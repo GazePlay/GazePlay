@@ -77,7 +77,9 @@ public class Robot extends Rectangle {
                 nbframeShoot++;
                 if (!isDestroyed){
                     if (canShoot){
-                        if (nbframeShoot == 60*freqShoot){
+                        // A whole number of frames: compared to the double 60*freqShoot, a frequency such as 1.3 would
+                        // never match, and the robot would stop shooting
+                        if (nbframeShoot == Math.round(60*freqShoot)){
                             nbframeShoot = 0;
                         }
                         if (nbframeShoot == 0){
