@@ -17,6 +17,14 @@ it is chosen by the maintainers at release time. Details, verifications and rema
 - Logo: the GAZE PLAY letters and the mascot are kept, with "Learning" below (written with the Fredoka font, SIL Open
   Font License 1.1).
 
+### Mouse, eye tracker, or both
+- The eye tracker setting has three choices: **mouse only**, **Tobii only (gaze)** and **Tobii and mouse**. With
+  "Tobii only", the mouse no longer acts in the games (it used to fill the progress indicators too); it still works in
+  the menus and in the configuration panel of the games. "Tobii and mouse" is the former behaviour, and the default.
+- A computer already set to "Tobii" is now in "Tobii only": choose "Tobii and mouse" to play with both.
+- The statistics screen only offers the images of the inputs of this setting: the mouse, the gaze, or both (mouse,
+  gaze, mouse and gaze). The three images are still saved in the results folder.
+
 ### Supported platforms: 64 bits only
 - **The 32 bits versions are no longer provided**: Windows x86 (`gazeplay-windows-x32`, `gazeplay-afsr-windows-x32`,
   `gazeplay-bera-windows-x32` and their installers) and Linux ARM 32 bits.
@@ -95,9 +103,8 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
   GazePlay search the whole current folder for music.
 - *Biboule Jump* and *Space Game*: the high score was not saved until statistics had been saved once for the game.
 - *Pet House*: the hand followed the eye tracker directly instead of the gaze events.
-- EyeTribe eye trackers: the gaze positions were handled outside of the user interface thread, which could cause
-  random errors. Gaze positions are now handed to the games in a single step per position, instead of one step per
-  element of the game.
+- Gaze positions are now handed to the games in a single step per position, instead of one step per element of the
+  game.
 - Linux, macOS and ARM launch scripts: they work from any folder and with spaces in the path, the ARM version had no
   launch script at all, and they no longer make the whole installation writable by every user at each launch.
 - The log files are written in the GazePlay folder instead of the current folder.
@@ -106,6 +113,8 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
   macOS, and was only shown by the BERA edition: it is now in the statistics settings.
 
 ## Removed
+- **EyeTribe eye trackers** (no longer made) and the **Tobii 4C drivers for Linux**: only the Tobii Eye Tracker 5 on
+  Windows is supported. A computer set to EyeTribe starts with the mouse.
 - *Melordi* and *Picto Pick*: shipped but not reachable from the menu.
 - The "videos folder" setting, unused since the video games were removed in 2022, and the hidden "multiple
   screenshots" option of the BERA edition.
@@ -125,6 +134,6 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
 
 ## Not verified
 - Eye trackers: the Tobii Eye Tracker 5 was tested on Windows x64 (gaze followed in a game, results checked); no
-  other eye tracker (Tobii 4C, EyeTribe) and no Linux test with hardware.
+  Linux test with hardware.
 - Linux, macOS and ARM distributions: built, not launched on a real machine (the Linux one is launched by the
   continuous integration).

@@ -21,6 +21,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.I18NTooltip;
@@ -37,6 +38,7 @@ import net.gazeplay.ui.GraphicalContext;
 
 import java.io.File;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -87,12 +89,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         centerPane.getChildren().add(displayedMetrics);
 
-        I18NButton displayMouseButton = createDisplayButton("Mouse", stats, displayedMetrics);
-        I18NButton displayGazeButton = createDisplayButton("Gaze", stats, displayedMetrics);
-        I18NButton displayMouseAndGazeButton = createDisplayButton("MouseAndGaze", stats, displayedMetrics);
-
-
-        HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
+        // Only the inputs that played the game: a single image without choice for the mouse or the gaze alone
+        final List<String> metricsShown = metricsShown(EyeTracker.fromConfigValue(config.getEyeTracker()));
+        HBox buttonSwitchMetrics = new HBox();
+        for (String metricsName : metricsShown) {
+            buttonSwitchMetrics.getChildren().add(createDisplayButton(metricsName, stats, displayedMetrics));
+        }
+        if (metricsShown.size() == 1) {
+            showMetrics(metricsShown.get(0), stats, displayedMetrics);
+        }
         buttonSwitchMetrics.setAlignment(Pos.CENTER);
         centerPane.getChildren().add(buttonSwitchMetrics);
 
@@ -256,23 +261,42 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     }
 
+    /**
+     * @return the images of the results that can be shown, for the inputs of the game (EYE_TRACKER): the mouse alone,
+     * the gaze alone, or both with the mouse and gaze image too (decision of the maintainer, October 2026)
+     */
+    static List<String> metricsShown(EyeTracker inputs) {
+        if (!inputs.usesGaze()) {
+            return List.of("Mouse");
+        }
+        if (!inputs.acceptsMouse()) {
+            return List.of("Gaze");
+        }
+        return List.of("Mouse", "Gaze", "MouseAndGaze");
+    }
+
     I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
         I18NButton displayButton = new I18NButton(getGazePlay().getTranslator(), buttonName);
-        displayButton.setOnMouseClicked((e) -> {
-            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            switch (buttonName) {
-                case "Mouse":
-                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
-                    break;
-                case "Gaze":
-                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
-                    break;
-                default: // "MouseAndGaze"
-                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
-                    break;
-            }
-        });
+        displayButton.setOnMouseClicked((e) -> showMetrics(buttonName, stats, metrics));
         return displayButton;
+    }
+
+    private static void showMetrics(String metricsName, Stats stats, ImageView metrics) {
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        if (savedStatsInfo == null) {
+            return;
+        }
+        switch (metricsName) {
+            case "Mouse":
+                metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
+                break;
+            case "Gaze":
+                metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
+                break;
+            default: // "MouseAndGaze"
+                metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
+                break;
+        }
     }
 
     void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {

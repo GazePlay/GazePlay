@@ -46,22 +46,14 @@ public class GazeDeviceManagerFactory {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final String eyetrackerConfigValue = config.getEyeTracker();
-        final EyeTracker eyeTracker = EyeTracker.valueOf(eyetrackerConfigValue);
+        final EyeTracker eyeTracker = EyeTracker.fromConfigValue(eyetrackerConfigValue);
         log.info("Eye-tracker = " + eyeTracker);
 
-        final GazeDeviceManager gazeDeviceManager;
-
-        switch (eyeTracker) {
-            case tobii:
-                gazeDeviceManager = new GazeSourceDeviceManager(new TobiiGazeSource());
-                break;
-            case eyetribe:
-                gazeDeviceManager = new GazeSourceDeviceManager(new EyeTribeGazeSource());
-                break;
-            default:
-                // mouse_control: no gaze sample (the games use the mouse events directly)
-                gazeDeviceManager = new GazeSourceDeviceManager(GazeSource.NONE);
-        }
+        // mouse_control: no gaze sample (the games use the mouse events directly). Whether the mouse also acts in the
+        // games is decided by the game screen (GameContextFactory)
+        final GazeDeviceManager gazeDeviceManager = eyeTracker.usesGaze()
+            ? new GazeSourceDeviceManager(new TobiiGazeSource())
+            : new GazeSourceDeviceManager(GazeSource.NONE);
 
         gazeDeviceManager.init(currentScreenDimensionSupplier, currentScreenPositionSupplier);
         return gazeDeviceManager;

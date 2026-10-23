@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 public class Player extends Rectangle {
@@ -54,7 +55,11 @@ public class Player extends Rectangle {
 
         this.enterEvent = buildEvent();
         gameContext.getPrimaryScene().addEventFilter(GazeEvent.ANY, enterEvent);
-        gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
+        // Listened on the whole scene, so not stopped by the game screen: the mouse is ignored when only the eye
+        // tracker plays (EYE_TRACKER=tobii)
+        if (EyeTracker.fromConfigValue(gameContext.getConfiguration().getEyeTracker()).acceptsMouse()) {
+            gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
+        }
 
         playerAnimationMovement = new AnimationTimer() {
             int nbframe = 0;

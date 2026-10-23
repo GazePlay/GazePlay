@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -111,7 +112,11 @@ public class CasseBrique implements GameLifeCycle {
             };
 
             gameContextScene.getRoot().addEventFilter(GazeEvent.GAZE_MOVED, recordGazeMovements);
-            gameContextScene.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
+            // Listened on the whole scene, so not stopped by the game screen: the mouse is ignored when only the eye
+            // tracker plays (EYE_TRACKER=tobii)
+            if (EyeTracker.fromConfigValue(gameContext.getConfiguration().getEyeTracker()).acceptsMouse()) {
+                gameContextScene.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
+            }
         }
 
         stats.notifyNewRoundReady();

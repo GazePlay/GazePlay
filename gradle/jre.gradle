@@ -23,7 +23,6 @@ ext.downloadChecksums = [
     'zulu25.36.205-ca-fx-jre25.0.4.1-macosx_x64.tar.gz'    : 'a2c03421cfaf12d4125c1990581d8c75aa136899c37c8fae1de0c571d748dc13',
     'zulu25.36.205-ca-fx-jre25.0.4.1-macosx_aarch64.tar.gz': 'dc9ff518dc170f2f7c3a9cc452555845f2d73e176f9c5ec8bc7793072ed2ca7b',
     'zulu25.36.205-ca-fx-jre25.0.4.1-linux_aarch64.tar.gz' : '9a1b93b5218d426b5c14392518eb2cc3158b67d764fd96f51036d1aa8bfee231',
-    'TobiiDriversForLinux.tar.gz'                          : 'c88b5db34ddef3bed7f7af3b465017136d0f667ebdf69ebcc9e8de7437dc5269',
 ]
 
 ext.verifyChecksum = { File file ->

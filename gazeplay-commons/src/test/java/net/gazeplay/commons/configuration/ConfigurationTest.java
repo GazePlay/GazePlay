@@ -162,6 +162,20 @@ class ConfigurationTest {
         assertEquals(Locale.CHINA.getCountry(), configuration.getCountry());
     }
 
+    /**
+     * EyeTribe was removed (October 2026): a setting still saying "eyetribe" gives the mouse, instead of an error at
+     * the creation of the eye tracker.
+     */
+    @Test
+    void shouldReadTheRemovedEyeTribeAsTheMouse() {
+        Properties withEyeTribe = new Properties();
+        withEyeTribe.setProperty("EYE_TRACKER", "eyetribe");
+
+        Configuration result = new Configuration(testProperties, new ApplicationConfig(withEyeTribe));
+
+        assertEquals("mouse_control", result.getEyeTracker());
+    }
+
     @Test
     void shouldGetEyeTracker() {
         assertEquals(properties.get("EYE_TRACKER"), configuration.getEyeTracker());

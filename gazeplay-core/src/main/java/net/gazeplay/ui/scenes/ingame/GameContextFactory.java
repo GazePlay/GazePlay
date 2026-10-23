@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
 import net.gazeplay.commons.ui.Translator;
@@ -93,6 +94,18 @@ public class GameContextFactory implements Supplier<GameContext> {
         this.soundsManagerFactory = soundsManagerFactory;
     }
 
+    /**
+     * Gaze only (EYE_TRACKER=tobii): the mouse no longer reaches the game, e.g. its progress indicators. The
+     * configuration panel, next to the game area, still works with the mouse, and the statistics, recorded on the root
+     * of the scene, still record the mouse movements. Three games listen to the mouse on the whole scene and check the
+     * setting themselves (CasseBrique, Follow, gazeRace.Player).
+     */
+    static void applyInputMode(final Pane gamingRoot, final EyeTracker eyeTracker) {
+        if (!eyeTracker.acceptsMouse()) {
+            gamingRoot.addEventFilter(MouseEvent.ANY, MouseEvent::consume);
+        }
+    }
+
     @Override
     public GameContext get() {
         final Stage primaryStage = Objects.requireNonNull(gazePlay.getPrimaryStage(), "primaryStage is required");
@@ -113,6 +126,9 @@ public class GameContextFactory implements Supplier<GameContext> {
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
         Configuration config = ActiveConfigurationContext.getInstance();
+
+        applyInputMode(gamingRoot, EyeTracker.fromConfigValue(config.getEyeTracker()));
+
         //TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
         /*Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
             @Override

@@ -151,8 +151,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     /**
      * Single entry point of the positions given by the gaze sources: the dispatch to the nodes runs on the JavaFX
      * thread, reached once per sample. It used to be reached once per node and per sample (one Platform.runLater for
-     * each event), and the EyeTribe positions were dispatched on the thread of its SDK, which read the JavaFX nodes
-     * outside of the JavaFX thread.
+     * each event), and the positions of the former EyeTribe eye trackers were dispatched on the thread of their SDK,
+     * which read the JavaFX nodes outside of the JavaFX thread.
      */
     public void onGazeSample(final GazeSample sample) {
         if (Platform.isFxApplicationThread()) {

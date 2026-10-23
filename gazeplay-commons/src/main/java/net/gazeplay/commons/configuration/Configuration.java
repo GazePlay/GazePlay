@@ -110,7 +110,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
     /* Eye-tracking settings */
-    private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii.toString();
+    private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii_and_mouse.toString();
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
     /* Graphics settings */
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
@@ -343,6 +343,10 @@ public class Configuration {
 
         if (eyeTrackerProperty.getValue().equals("tobii_eyeX_4C")) {
             eyeTrackerProperty.setValue("tobii");
+        }
+        // EyeTribe was removed (October 2026): the mouse, as without eye tracker
+        if (eyeTrackerProperty.getValue().equals("eyetribe")) {
+            eyeTrackerProperty.setValue("mouse_control");
         }
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));

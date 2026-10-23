@@ -460,13 +460,18 @@ class ConfigurationContextTest {
         when(mockConfig.getEyeTrackerProperty()).thenReturn(eyeTrackerProperty);
         writeInto(eyeTrackerProperty).when(mockConfig).setEyeTracker(anyString());
 
-        ChoiceBox<EyeTracker> result = ConfigurationContext.buildEyeTrackerConfigChooser(mockConfig);
+        when(mockTranslator.translate("InputTobiiAndMouse")).thenReturn("Tobii and mouse");
 
+        ChoiceBox<EyeTracker> result = ConfigurationContext.buildEyeTrackerConfigChooser(mockConfig, mockTranslator);
+
+        // Mouse only, Tobii only, both (EyeTribe was removed)
         assertEquals(3, result.getItems().size());
+        assertEquals(EyeTracker.mouse_control, result.getValue());
 
-        result.setValue(EyeTracker.eyetribe);
+        result.setValue(EyeTracker.tobii_and_mouse);
 
-        assertEquals("eyetribe", eyeTrackerProperty.getValue());
+        assertEquals("tobii_and_mouse", eyeTrackerProperty.getValue());
+        assertEquals("Tobii and mouse", result.getConverter().toString(EyeTracker.tobii_and_mouse));
     }
 
     @Test

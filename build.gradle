@@ -44,7 +44,6 @@ ext.distributionName = 'gazeplay-learning'
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
 apply from: "${rootDir}/gradle/jre.gradle"
-apply from: "${rootDir}/gradle/drivers.gradle"
 
 allprojects {
     group = 'com.github.gazeplay'
@@ -254,9 +253,6 @@ distributions {
             from("build/jre/linux-x64") {
                 into 'lib/jre'
             }
-            from("build/tobiiDrivers") {
-                into 'tobiiDrivers'
-            }
         }
     }
 
@@ -310,7 +306,7 @@ distributions {
     }
 }
 
-task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
+task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin')
 task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwithLibavPlugin')
 
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
@@ -345,7 +341,6 @@ tasks.named('linuxDistZip') {
     dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
     dependsOn tasks.named('extractLinuxJRE')
-    dependsOn tasks.named('extractTobiiDriversForLinux')
     dependsOn tasks.named('unzipDistribution')
 }
 

@@ -276,7 +276,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "EyeTracker", COLON);
 
-            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config);
+            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -947,10 +947,29 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return languageBox;
     }
 
-    static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration) {
+    static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration, Translator translator) {
         ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
 
         choiceBox.getItems().addAll(EyeTracker.values());
+        // Readable names instead of the values of the setting: mouse only, gaze only, or both
+        choiceBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(EyeTracker eyeTracker) {
+                if (eyeTracker == null) {
+                    return "";
+                }
+                return switch (eyeTracker) {
+                    case mouse_control -> translator.translate("InputMouseOnly");
+                    case tobii -> translator.translate("InputTobiiOnly");
+                    case tobii_and_mouse -> translator.translate("InputTobiiAndMouse");
+                };
+            }
+
+            @Override
+            public EyeTracker fromString(String string) {
+                return null;
+            }
+        });
 
         EyeTracker selectedEyeTracker = findSelectedEyeTracker(configuration);
         choiceBox.getSelectionModel().select(selectedEyeTracker);

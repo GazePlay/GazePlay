@@ -177,8 +177,8 @@ class GazeDispatchCharacterizationTest {
     }
 
     /**
-     * The gaze sources call onGazeSample from their own thread (Tobii polling thread, EyeTribe SDK thread): the nodes
-     * are read and the events fired on the JavaFX thread. EyeTribe used to dispatch on its own thread.
+     * The gaze sources call onGazeSample from their own thread (Tobii polling thread): the nodes are read and the
+     * events fired on the JavaFX thread. The former EyeTribe source used to dispatch on its own thread.
      */
     @Test
     void shouldDispatchOnTheJavaFxThreadASampleGivenByAnotherThread() throws Exception {

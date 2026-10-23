@@ -20,26 +20,6 @@ fi
 # Recursive: also finds jars placed in sub-folders of lib
 CLASSPATH=$(find "${LIB_DIR}" -name "*.jar" | sort | tr '\n' ':')
 
-# Tobii 4C drivers (Linux x64): optional, GazePlay also works with the mouse. The check must not stop the script
-# when dpkg or the packages are missing, and the question is only asked from a terminal.
-if command -v dpkg >/dev/null 2>&1 && [ -t 0 ]; then
-  if ! dpkg -s tobiiusbservice 2>/dev/null | grep -q "install ok installed" \
-    || ! dpkg -s tobii-engine-linux-ben 2>/dev/null | grep -q "install ok installed"; then
-    echo "Tobii 4C drivers not installed."
-    while true; do
-      printf "Do you wish to install Tobii 4C drivers? [y/n] "
-      read -r yn || break
-      case $yn in
-        [Yy]*)
-          (cd "${SCRIPT_DIR}/../tobiiDrivers/drivers" && sh ./install_drivers.sh)
-          break ;;
-        [Nn]*) break ;;
-        *) echo "Please answer yes or no." ;;
-      esac
-    done
-  fi
-fi
-
 # The classpath is passed as one argument (it used to keep literal quotes, losing its first jar)
 exec "${JAVA_CMD}" -Xms256m -Xmx1g \
   --enable-native-access=javafx.graphics,javafx.media,ALL-UNNAMED --sun-misc-unsafe-memory-access=allow \

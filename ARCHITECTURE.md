@@ -8,7 +8,7 @@ Short map of the code, for developers. The history of the changes and the open d
 | Module | Content |
 |---|---|
 | `gazeplay-results` | Computations and files of the results, **without JavaFX** (the JavaFX plugin is not applied: an import of `javafx.*` does not compile): `HeatMapGrid` (heatmap and its CSV files), `FixationSequenceRecorder`, `ReplayDataWriter` (`replayData.json`), `ReplayDataFormat` (versions of the format), `AreaOfInterestGrouper` (areas of interest computed during a game) and `CoordinatesTracker`, `FixationPoint`. Same packages as before (`net.gazeplay.commons.utils...`), so no import changed. |
-| `gazeplay-gaze` | Acquisition of the gaze: `GazeSample`, `GazeEvent`, `GazeMotionListener`, `EyeTracker`, the eye trackers as `GazeSource` (`TobiiGazeSource` and its `PositionPollerRunnable`, `EyeTribeGazeSource`) and their native libraries. Same packages as before (`net.gazeplay.commons.gaze...`). |
+| `gazeplay-gaze` | Acquisition of the gaze: `GazeSample`, `GazeEvent`, `GazeMotionListener`, `EyeTracker`, the eye trackers as `GazeSource` (`TobiiGazeSource` and its `PositionPollerRunnable`; EyeTribe was removed in October 2026) and its native libraries. Same packages as before (`net.gazeplay.commons.gaze...`). |
 | `gazeplay-commons` | Configuration (`Configuration`, `ActiveConfigurationContext`), dispatch of the gaze samples to the nodes of the games (`gaze/devicemanager`: `AbstractGazeDeviceManager`, `GazeSourceDeviceManager`), recording of the results during a game (`utils/stats/Stats`, which delegates the computations to `gazeplay-results`) and their rendering (heatmap and scanpath images), translations, shared utilities. Test fixtures (`src/testFixtures`) shared by the other modules. |
 | `gazeplay-games-commons` | Contract of the games: `GameSpec`, `GameSummary`, `IGameLauncher`, `GameLifeCycle`, variants, specialized `Stats`. |
 | `gazeplay-core` | The application: launcher, composition root, menus, configuration screen, statistics screens, game catalog. |
@@ -41,7 +41,7 @@ The `*SpecSource` classes of `gazeplay-games` are listed at build time in `games
 
 ## Gaze
 
-An eye tracker is a `GazeSource` (`TobiiGazeSource`, `EyeTribeGazeSource`, `GazeSource.NONE` for the mouse) that
+An eye tracker is a `GazeSource` (`TobiiGazeSource`, `GazeSource.NONE` for the mouse) that
 gives `GazeSample`s (acquisition time, screen position, source) from any thread. `TobiiGazeSource` polls the Tobii
 wrapper every 10 ms (`PositionPollerRunnable`, which ignores the value (0.5, 0.5) returned without gaze data).
 `GazeSourceDeviceManager` hands the samples to `AbstractGazeDeviceManager.onGazeSample`, which reaches the JavaFX

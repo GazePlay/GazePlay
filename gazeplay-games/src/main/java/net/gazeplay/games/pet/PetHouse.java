@@ -184,8 +184,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
             hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                 - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
         } else if (e.getEventType() == GazeEvent.GAZE_MOVED && e.getSource() instanceof Node && hand.getParent() != null) {
-            // Position carried by the event (any eye tracker): it used to be read again from the Tobii wrapper, so
-            // the hand stayed at the center of the screen with an EyeTribe, or without eye tracker
+            // Position carried by the event: it used to be read again from the Tobii wrapper, so the hand stayed at
+            // the center of the screen with another eye tracker, or without eye tracker
             final GazeEvent gazeEvent = (GazeEvent) e;
             final Point2D scenePosition = ((Node) e.getSource()).localToScene(gazeEvent.getX(), gazeEvent.getY());
             final Point2D handPosition = hand.getParent().sceneToLocal(scenePosition);

@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 
 /**
  * Gaze device manager of a {@link GazeSource}: the samples of the source are dispatched to the nodes of the games.
- * Replaces the former TobiiGazeDeviceManager and EyeTribeGazeDeviceManager, which each mixed the acquisition of the
- * positions with their dispatch.
+ * Replaces the former TobiiGazeDeviceManager and EyeTribeGazeDeviceManager (EyeTribe removed in October 2026), which
+ * each mixed the acquisition of the positions with their dispatch.
  */
 public final class GazeSourceDeviceManager extends AbstractGazeDeviceManager {
 

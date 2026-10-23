@@ -9,6 +9,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -290,6 +291,16 @@ class StatsContextTest {
 
             systemFileManager.verify(() -> SystemFileManager.openFolder(todayFolder));
         }
+    }
+
+    /**
+     * Only the images of the inputs that played the game (decision of the maintainer, October 2026).
+     */
+    @Test
+    void shouldOfferOnlyTheImagesOfTheInputsUsed() {
+        assertEquals(List.of("Mouse"), StatsContext.metricsShown(EyeTracker.mouse_control));
+        assertEquals(List.of("Gaze"), StatsContext.metricsShown(EyeTracker.tobii));
+        assertEquals(List.of("Mouse", "Gaze", "MouseAndGaze"), StatsContext.metricsShown(EyeTracker.tobii_and_mouse));
     }
 
     @Test

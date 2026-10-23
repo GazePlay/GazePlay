@@ -1378,7 +1378,7 @@ Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gaz
 - **Correction** (choix du mainteneur, dans la v4 qui n'était pas encore poussée) : `PositionPollerRunnable` ne transmet plus une position strictement identique à la précédente. Une vraie mesure n'est pratiquement jamais identique à la précédente, même pour un œil immobile. Les valeurs sont copiées avant comparaison, le wrapper remplissant un tableau partagé. Le code natif n'est pas modifié.
 - **Effets** : environ 3 fois moins de points de regard dans `replayData.json` et dans les heatmaps du regard (valeurs plus basses dans la même proportion, même répartition) ; durées de fixation inchangées (calculées sur les instants des points) ; les jeux reçoivent le regard à chaque vraie mesure (en mode souris, ils ne reçoivent déjà rien quand la souris ne bouge pas). EyeTribe n'est pas concerné.
 - Test : `PositionPollerRunnableTest.shouldDropTheRepeatedPositions`.
-- **À vérifier par le mainteneur avec l'Eye Tracker 5** : une partie, puis contrôle des fichiers (part de points répétés proche de 0, environ 30 points de regard par seconde, jeu normal).
+- **Vérifié sur une vraie partie** (mainteneur, Tarte à la crème, Eye Tracker 5, 23/10/2026, fichier `2026-10-23-16-49-06`, `formatVersion` 4) : **32,3 points de regard par seconde**, intervalle médian 32 ms (environ 70 % de répétitions à environ 10 ms d'écart avant la correction). Il reste 14 % de points consécutifs identiques, mais espacés d'au moins 21 ms (médiane 32 ms) : ce sont de vraies mesures successives tombées sur le même pixel pendant une fixation (le fichier garde le pixel entier), pas des répétitions.
 
 ### Ménage
 - **Traductions en double** : `Farm` et `Savanna` fusionnés (la ligne qui s'appliquait n'avait pas 15 des langues de l'autre : elles sont maintenant traduites) ; `Score` : la ligne appliquée, déjà la plus complète, est gardée ; `SprintFinish` et `SprintFinishMouse` : la première ligne, qui ne s'appliquait pas et avait l'anglais et le français inversés, est retirée. Plus aucune clé en double.
@@ -1390,11 +1390,52 @@ Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gaz
 
 ---
 
-## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 33)
+## 2ak. Étape 34 — Retrait d'EyeTribe et des pilotes Linux du Tobii 4C (23/10/2026, décision du mainteneur)
+
+Décision du mainteneur : « seul le Tobii 5 est utilisé ».
+
+### Retiré
+- **EyeTribe** : `EyeTribeGazeSource`, la valeur `eyetribe` de `EyeTracker` (le choix disparaît des réglages), `lib/EyeTribeJavaFx.jar` (fat jar de 2015 avec Guava 19) et l'extraction de son SDK au build.
+- **Pilotes Linux du Tobii 4C** : leur téléchargement et leur somme de contrôle (`gradle/drivers.gradle`, `jre.gradle`), le dossier `tobiiDrivers` de la distribution Linux et la question « installer les pilotes Tobii 4C ? » du script de lancement Linux.
+
+### Gardé exprès
+- Le wrapper Tobii `TobiiStreamEngineForJava` (il sert à l'Eye Tracker 5), y compris sa bibliothèque Linux x64, incluse dans le même jar.
+- La conversion de l'ancienne valeur `tobii_eyeX_4C` en `tobii` (fichiers de réglages anciens).
+- `--sun-misc-unsafe-memory-access=allow` : également nécessaire au moteur de rendu de JavaFX (2u).
+
+### Données et réglages
+Aucun format de résultats ne change. Un réglage `EYE_TRACKER=eyetribe` est lu comme la souris (`Configuration`), au lieu d'une erreur à la création de l'appareil ; test `ConfigurationTest.shouldReadTheRemovedEyeTribeAsTheMouse`.
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest linuxDistTar` : **417 tests, 0 échec** ; `smokeTest` 3/3 ; SpotBugs vert ; l'archive Linux ne contient plus `tobiiDrivers` ni EyeTribe, et contient toujours le wrapper Tobii.
+
+---
+
+## 2al. Étape 35 — Souris seule, Tobii seul, ou les deux (23/10/2026, demande du mainteneur)
+
+Constat du mainteneur : en mode `tobii`, la souris remplissait encore les indicateurs de progression. Demande : `mouse_control` = la souris seule, `tobii` = le Tobii seul, et une troisième option pour les deux.
+
+### Fait
+- **`EyeTracker`** : `mouse_control`, `tobii`, `tobii_and_mouse`, avec `usesGaze()`, `acceptsMouse()` et `fromConfigValue()` (une valeur inconnue, par exemple `eyetribe`, donne la souris).
+- **Écran de jeu** : en mode `tobii`, un filtre posé sur la zone du jeu (`gamingRoot`) arrête tous les événements de la souris (`GameContextFactory.applyInputMode`). Les jeux écoutent la souris dans environ 70 fichiers, presque toujours sur leurs propres éléments, tous placés dans cette zone : un seul filtre suffit pour eux. Le bouton et le panneau de configuration, à côté de la zone du jeu, restent utilisables à la souris, comme les menus hors jeu.
+- **Trois jeux** écoutent la souris sur toute la scène, avant ce filtre : Casse-briques, Follow et Gaze Race. Ils ne branchent plus leur écoute de la souris en mode `tobii`.
+- **Réglages** : les trois choix s'affichent traduits (« Souris seule », « Tobii seul (regard) », « Tobii et souris »), au lieu des noms internes.
+- **Valeur par défaut** : `tobii_and_mouse`, qui garde le comportement d'une nouvelle installation (l'ancien `tobii` acceptait les deux). Un réglage `tobii` déjà enregistré signifie maintenant « Tobii seul » : c'est la demande du mainteneur.
+- **Statistiques** : elles écoutent la racine de la scène, au-dessus de la zone du jeu, et enregistrent donc toujours la souris, même en mode `tobii`. Aucun format ne change.
+- **Écran des statistiques** (retour du mainteneur, après essai des trois modes : « tout marche ») : il ne propose que les images des entrées qui ont joué. Souris seule : l'image de la souris ; Tobii seul : celle du regard, affichées d'emblée ; Tobii et souris : les trois boutons (souris, regard, souris et regard), comme avant (`StatsContext.metricsShown`). Les trois images restent écrites dans le dossier des résultats.
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest` : **422 tests, 0 échec** ; `smokeTest` 3/3 ; SpotBugs vert. Tests : `EyeTrackerTest`, `GameContextFactoryInputModeTest` (souris arrêtée en mode `tobii`, transmise sinon), `ConfigurationContextTest.shouldBuildEyeTrackerChooser`, `StatsContextTest.shouldOfferOnlyTheImagesOfTheInputsUsed`.
+
+**Vérifié par le mainteneur** avec l'Eye Tracker 5 : les trois modes et l'écran des statistiques selon le mode fonctionnent.
+
+---
+
+## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 35)
 
 ### État
-- Branche **`addClaudeCode`**. Dernier commit poussé : `14cf103b2` (étapes 30 à 32), vérifié par le mainteneur. Commités sans être poussés : `3088d9100` (documentation) et l'étape 33.
-- Suite locale : 416 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
+- Branche **`addClaudeCode`**. Dernier commit poussé : `14cf103b2` (étapes 30 à 32), vérifié par le mainteneur. CI de `14cf103b2` verte sur les 7 jobs (après relance des 4 jobs Linux, bloqués par les miroirs Ubuntu). Ensuite commités et poussés : `3088d9100` (documentation), `16cd901bd` (étape 33), puis les étapes 34 et 35, vérifiées par le mainteneur.
+- Suite locale : 422 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
 - Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
 - Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07).
 
@@ -1405,7 +1446,7 @@ Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gaz
 64 bits seulement ; formats de résultats versionnés (v4) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.
 
 ### Toujours ouvert, sans action prévue
-R12 (dépend de la fusion), maintien d'EyeTribe, plateformes non testées faute de matériel (Tobii sous Linux, Linux ARM, macOS Intel).
+R12 (dépend de la fusion), plateformes non testées faute de matériel (Linux ARM, macOS Intel).
 
 ### Précautions
 - Ne jamais enchaîner `git add ; git commit ; git push` dans une seule commande PowerShell.
