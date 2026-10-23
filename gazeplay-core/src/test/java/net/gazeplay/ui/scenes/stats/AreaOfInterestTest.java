@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -33,6 +37,12 @@ class AreaOfInterestTest {
 
     @Mock
     private Stats mocksStats;
+
+    @Mock
+    private AreaOfInterestRecording gazeAreas;
+
+    @Mock
+    private AreaOfInterestRecording mouseAreas;
 
     SavedStatsInfo statsInfo = new SavedStatsInfo(
         new File("file1.csv"),
@@ -50,7 +60,35 @@ class AreaOfInterestTest {
     void setup() {
         MockitoAnnotations.initMocks(this);
         when(mocksStats.getSavedStatsInfo()).thenReturn(statsInfo);
+        when(mocksStats.getGazeAreasOfInterest()).thenReturn(gazeAreas);
+        when(mocksStats.getMouseAreasOfInterest()).thenReturn(mouseAreas);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(supplier);
+        when(mockGazePlay.getTranslator()).thenReturn(mock(Translator.class));
+    }
+
+    /**
+     * R13: the areas of each source are shown separately. A source without any sample (the mouse in a game played
+     * with an eye tracker) used to make the screen fail on its first sample.
+     */
+    @Test
+    void shouldShowASourceWithoutSamples() {
+        when(gazeAreas.getMovementHistory()).thenReturn(List.of(new CoordinatesTracker(100, 200, 1234, 3456)));
+
+        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.MOUSE);
+
+        HBox sources = areaOfInterest.createSourceBox();
+        assertEquals(2, sources.getChildren().size());
+        assertTrue(sources.getChildren().get(1).isDisabled());
+        verify(mouseAreas).getMovementHistory();
+    }
+
+    @Test
+    void shouldShowTheGazeFirstWhenThereIsGaze() {
+        when(gazeAreas.getMovementHistory()).thenReturn(List.of(new CoordinatesTracker(100, 200, 1234, 3456)));
+        assertEquals(AreaOfInterest.Source.GAZE, AreaOfInterest.defaultSource(mocksStats));
+
+        when(gazeAreas.getMovementHistory()).thenReturn(List.of());
+        assertEquals(AreaOfInterest.Source.MOUSE, AreaOfInterest.defaultSource(mocksStats));
     }
 
     @Test
@@ -59,9 +97,9 @@ class AreaOfInterestTest {
             new CoordinatesTracker(100, 200, 1234, 3456),
             new CoordinatesTracker(200, 200, 4321, 4567)
         );
-        when(mocksStats.getMovementHistoryWithTime()).thenReturn(coordinatesTrackers);
+        when(gazeAreas.getMovementHistory()).thenReturn(coordinatesTrackers);
 
-        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats);
+        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.GAZE);
 
         HBox result = areaOfInterest.createButtonBox();
 
@@ -74,9 +112,9 @@ class AreaOfInterestTest {
             new CoordinatesTracker(100, 200, 1234, 3456),
             new CoordinatesTracker(200, 200, 4321, 4567)
         );
-        when(mocksStats.getMovementHistoryWithTime()).thenReturn(coordinatesTrackers);
+        when(gazeAreas.getMovementHistory()).thenReturn(coordinatesTrackers);
 
-        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats);
+        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.GAZE);
 
         Polygon currentArea = new Polygon();
         currentArea.getPoints().addAll(1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d);

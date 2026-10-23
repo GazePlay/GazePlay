@@ -249,7 +249,7 @@ Image,Imazh,صورة,Малюнак,图像,Bild,Εικόνα,Image,kuva,Image,,S
 ChooseImage,Zgjidh një imazh,اختر صورة,Выберыце малюнак,选择图像,Wählen Sie ein Bild,Επιλέξτε μια εικόνα,Choose an image,valitse kuva,Choisissez une image,,Izaberi sliku,Pilih imej,Scegli un'immagine,,Kies een afbeelding,Wybierz obraz,*Escolha uma imagem,Выберите изображение,Elige una imagen,Chọn một hình,Pilih imej
 
 # MAIN MENU CONTEXT
-closeWindowToContinueToGazePlay,Mbyllni këtë dritare për të vazhduar te GazePlay,أغلق هذه النافذة للمتابعة إلى GazePlay,Зачыніце гэта акно каб працягнуць у GazePlay,关闭此窗口以继续 GazePlay,Schließen Sie dieses Fenster um mit GazePlay fortzufahren,Κλείστε αυτό το παράθυρο για να συνεχίσετε στο GazePlay,Close this window to continue to GazePlay,Sulje tämä ikkuna jatkaaksesi GazePlayhin,Fermez cette fenêtre pour continuer vers GazePlay,GazePlay जारी रखने के लिए इस विंडो को बंद करें,Zatvorite ovaj prozor za nastavak na GazePlay,Tutup jendela ini untuk melanjutkan ke GazePlay,Chiudi questa finestra per continuare su GazePlay,GazePlay に進むには、このウィンドウを閉じます,Sluit dit venster om door te gaan naar GazePlay,Zamknij to okno aby przejść do GazePlay,Feche esta janela para continuar no GazePlay,Закройте это окно чтобы продолжить просмотр GazePlay чтобы продолжить в GazePlay,Cierra esta ventana para continuar con GazePlay,Đóng cửa sổ này để tiếp tục GazePlay,Tutup tetingkap ini untuk meneruskan ke GazePlay
+closeWindowToContinueToGazePlay Learning,Mbyllni këtë dritare për të vazhduar te GazePlay Learning,أغلق هذه النافذة للمتابعة إلى GazePlay Learning,Зачыніце гэта акно каб працягнуць у GazePlay Learning,关闭此窗口以继续 GazePlay Learning,Schließen Sie dieses Fenster um mit GazePlay Learning fortzufahren,Κλείστε αυτό το παράθυρο για να συνεχίσετε στο GazePlay Learning,Close this window to continue to GazePlay Learning,Sulje tämä ikkuna jatkaaksesi GazePlay Learning -sovellukseen,Fermez cette fenêtre pour continuer vers GazePlay Learning,GazePlay Learning जारी रखने के लिए इस विंडो को बंद करें,Zatvorite ovaj prozor za nastavak na GazePlay Learning,Tutup jendela ini untuk melanjutkan ke GazePlay Learning,Chiudi questa finestra per continuare su GazePlay Learning,GazePlay Learning に進むには、このウィンドウを閉じます,Sluit dit venster om door te gaan naar GazePlay Learning,Zamknij to okno aby przejść do GazePlay Learning,Feche esta janela para continuar no GazePlay Learning,Закройте это окно чтобы продолжить просмотр GazePlay Learning чтобы продолжить в GazePlay Learning,Cierra esta ventana para continuar con GazePlay Learning,Đóng cửa sổ này để tiếp tục GazePlay Learning,Tutup tetingkap ini untuk meneruskan ke GazePlay Learning
 games count,Numri i lojërave,عدد الألعاب,Колькасць гульняў,游戏数,Anzahl von Spielen,Αριθμός παιχνιδιών,Number of games,Pelien määrä,Nombre de jeux,खेलों की संख्या,Broj igara,Jumlah permainan,Numero di giochi,ゲーム数,Aantal spellen,Liczba gier,Número de jogos,Количество игр,Numero de juegos,Số lượng trò chơi,Bilangan permainan
 games variants count,Numri i varianteve të lojës,عدد متغيرات اللعبة,Колькасць гульнявых варыянтаў,游戏变体数量,Anzahl Spielvarianten,Αριθμός παραλλαγών παιχνιδιού,Number of game variants,Peliversioiden määrä,Nombre de variantes de jeux,गेम वेरिएंट की संख्या,Broj varijanti igre,Jumlah varian permainan,Numero di varianti di gioco,ゲームバリアントの数,Aantal spelvarianten,Liczba wariantów gry,Número de variantes do jogo,Количество вариантов игры,Número de variantes del juego,Số lượng biến thể trò chơi,Bilangan varian permainan
 Options,Cilësimet,إعدادات,Налады,设置,Einstellungen,Ρυθμίσεις,Options,asetukset,Réglages,समायोजन,postavke,Pengaturan,Impostazioni,設定,Instellingen,Ustawienia,Definições,Настройки,Ajustes,Cài đặt,tetapan
@@ -261,7 +261,6 @@ Loading...,,,Загрузка,,,,Loading...,,Chargement...,,,,,,,,,Загруз�
 
 # SETTING SECTIONS
 LanguageSettings,,,Налады мовы,,,,Language Settings,,Paramètres de Langage,,,,,,,,,Настройки языка,,,
-BeraSettings,,,,,,,Settings for Bera games,,Paramètres pour les jeux Bera,,,,,,,,,,,,
 GamesSettings,,,Наладкі гульні,游戏设置,,,Games Settings,,Paramètres de Jeux,,,,,,,,,Настройки игры,,,
 EyeTrackerSettings,,,Наладкі Айтрэкеру,眼动追踪设置,,,Eye-Tracker Settings,,Paramètres de l'Oculomètre,,,,,,,,,Настройки АйТрекера,,,
 GraphicsSettings,,,Графічныя налады,图像设置,,,Graphics Settings,,Paramètres Graphiques,,,,,,,,,Графические настройки,,,
@@ -283,18 +282,10 @@ SelectGame,,,,,,,Select a Game,,Sélectionner un Jeu,,,,,,,,,,,,
 SelectVariant,,,,,,,Select a Variant,,Sélectionner une Variante,,,,,,,,,,,,
 Generate,,,,,,,Generate Shortcut,,Générer le raccourcis,,,,,,,,,,,,
 
-# BERA SETTINGS
-TransitionTime,,,,,,,Transition time,,Temps de transition,,,,,,,,,,,,
-DelayBeforeSelection,,,,,,,Delay before selection,,Délai avant sélection,,,,,,,,,,,,
-ActivateAutomaticModeQuestion,,,,,,,Activate automatic mode for questions,,Activer le mode automatique pour les questions,,,,,,,,,,,,
-QuestionTime,,,,,,,Time for ask the question,,Temps pour énoncer la question,,,,,,,,,,,,
-HorizontalImages,,,,,,,Columnar images,,Images en colonnes,,,,,,,,,,,,
-ActivateSound,,,,,,,Activate sound,,Activer le son,,,,,,,,,,,,
-Feedback,,,,,,,Feedback,,Retour utilisateur,,,,,,,,,,,,
+# FEEDBACK (GAZEPLAY EVAL) AND RESULTS FOLDER
 nothing,,,,,,,Nothing,,Rien,,,,,,,,,,,,
 standard,,,,,,,Standard,,Standard,,,,,,,,,,,,
 framed,,,,,,,Framed,,Encadrement,,,,,,,,,,,,
-SeeResult,,,,,,,See result,,Voir résultat,,,,,,,,,,,,
 ResultDir,,,,,,,Result folder,,Dossier des résultats,,,,,,,,,,,,
 SeeFolder,,,,,,,See folder,,voir dossier,,,,,,,,,,,,
 
@@ -328,7 +319,6 @@ Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 FileDir,Direktoria,دليل الملف,Каталог файлаў,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory,tallennuspaikka,Répertoire des fichiers,,Datoteka,Direktori Fail,Cartella,,Bestands locatie,Katalog plików,Diretório de Arquivos,Каталог файлов,Directorio,Thư mục,Direktori Fail
 ImportEval,,,,,,,Import eval,,Importer une eval,,,,,,,,,,,,
 MusicFolder,Direktoria e muzikës,ملف الموسيقى,Тэчка Музыка,音乐目录,Musikmappe,φάκελος μουσικής,music folder,musiikkikansio,Dossier musiques,,Datoteka Muzika,folder muzik,Cartella musica,,Muziek folder,folder muzyczny,*pasta de musica,Папка Музыка,Carpeta de música,Thư mục âm nhạc,Folder muzik
-VideoFolder,,,Тэчка з відэа,视频文件夹,,,Video folder,,Répertoire des vidéos,,,,,,Video map,,,Папка с видео,,,
 WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,Дзе гэта? папка гульні,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,« Waar is het » Spel bestandslocatie,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,Где это? папка игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game,« Di mana? » Arahan permainan
 
 # STATS SETTINGS
@@ -339,7 +329,6 @@ EnableAreaOfInterest,Aktivizo Zonën e Interesit,Enable The Area Of Interest, П
 EnableConvexHull,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,对关键注视区应用多边形,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Utiliser les enveloppes convexes pour les zones d'intérêt,,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Gebogen lijnen bij registratie blikrichting,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI
 DisableSequence,Çaktivizo Sequencën e Fiksimit,,Адключыць паслядоўнасць фіксацый,关闭时序标记,,,Disable the Fixation Sequence,,Désactiver la Séquence de fixation,,,,Disattive la sequenza di fissazione,,Deactiveer de Fixatievolgorde,,Desactivar la secuencia de fijación,Отключить последовательность фиксаций,,,
 EnableVideoRecording,Aktivizo Video Regjistrimin për Lojën,Enable Game Video Recording,Дазволіць відэазапіс гульняў,开启游戏视频录制,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Activer l'enregistrement vidéo des jeux,,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Activeer video-opname van spelletjes,Enable Game Video Recording,Enable Game Video Recording,Разрешить видеозапись игр,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
-EnableMultipleScreenshots,,,,,,,Enable Multiple Screenshots,,Activer les Multiples Captures d'Ecran,,,,,,,,,,,,
 
 # IN-GAME SETTINGS
 Volume,Volumi,صوت,Гучнасць,体积,Volumen,Ενταση Ήχου,Volume,Äänenvoimakkuus,Volume,मात्रा,Glasnoća,Jumlah dagangan,Volume,音量,Volume,Tom,Volume,Громкость,Volumen,Âm lượng,Jumlah dagangan
@@ -386,27 +375,6 @@ Mouse,,,Мышка,,,,Mouse,,Souris,,,,,,,,,Мышка,,,
 Gaze,,,Погляд,,,,Gaze,,Regard,,,,,,,,,Взгляд,,,
 MouseAndGaze,,,Мышка і погляд,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,Мышка и взгляд,,,
 Mistakes,,,,,,,Mistakes,,Erreurs
-
-# BERA STATS CONTEXT
-TimeGame,,,,,,,Time game,,Temps de jeu,,,,,,,,,,,,
-Phonology,,,,,,,PHONOLOGY,,PHONOLOGIE,,,,,,,,,,,,
-Morphosyntax,,,,,,,MORPHOSYNTAX,,MORPHOSYNTAXE,,,,,,,,,,,,
-Semantic,,,,,,,SEMANTIC,,SEMANTIQUE,,,,,,,,,,,,
-WordComprehension,,,,,,,WORD COMPREHENSION,,COMPREHENSION DE MOTS,,,,,,,,,,,,
-SentenceComprehension,,,,,,,SENTENCE COMPREHENSION,,COMPREHENSION DE PHRASES,,,,,,,,,,,,
-TotalPhonology,,,,,,, - Total Phonology ,, - Total Phonologie ,,,,,,,,,,,,
-TotalMorphosyntax,,,,,,, - Total morphosyntax ,, - Total morphosyntaxe ,,,,,,,,,,,,
-TotalSemantic,,,,,,, - Total Semantic ,, - Total Sémantique ,,,,,,,,,,,,
-TotalWordComprehension,,,,,,, - Total word comprehension ,, - Total compréhension de mots ,,,,,,,,,,,,
-TotalSentenceComprehension,,,,,,, - Total sentence comprehension ,, - Total compréhension de phrases ,,,,,,,,,,,,
-SimpleScoreItems,,,,,,, - Simple score items ,, - Score items simples ,,,,,,,,,,,,
-ComplexScoreItems,,,,,,, - Complex score items ,, - Score items complexes ,,,,,,,,,,,,
-ScoreLeftTargetItems,,,,,,, - Score left target items ,, - Score items cibles gauche ,,,,,,,,,,,,
-ScoreRightTargetItems,,,,,,, - Score right target items ,, - Score items cibles droite ,,,,,,,,,,,,
-FrequentScoreItem,,,,,,, - Frequent score item (F+) ,, - Score items fréquents (F+) ,,,,,,,,,,,,
-InfrequentScoreItem,,,,,,, - Infrequent score item (F-) ,, - Score items peu fréquents (F-) ,,,,,,,,,,,,
-TotalItemsAddManually,,,,,,, - Total items add manually ,, - Total items ajoutés manuellement ,,,,,,,,,,,,
-Total,,,,,,, - Total ,, - Total ,,,,,,,,,,,,
 
 # COLORING GAME
 LoadImg,Ngarko Imazhin,تحميل الصورة,Загрузіць малюнак,载入图片,Bild laden,Φόρτωση εικόνας,Load image,lataa,Charger image,,Učitavanje slike ,Muatkan imej,Carica immagine,,Laad foto,Załaduj obraz,*Carregar imagem,Загрузить изображение,Cargar imagen,Load ảnh,Muatkan imej

@@ -22,8 +22,10 @@ Versions of all libraries and plugins: `gradle/libs.versions.toml`.
 
 ## Startup
 
-1. `GazePlayLauncher.main` writes the edition (only "gazeplay" since the removal of the AFSR and BERA editions; the dormant Eval code is no longer reachable) to `argsGazeplay.txt` in the GazePlay folder (`Documents/GazePlay_Learning`, formerly `~/GazePlay`: found, and moved if needed, by `GazePlayDirectories.initGazePlayFolder` before anything is logged)
-   (`GazePlayArgs`), then parses the command line with picocli (`MainCommand`).
+1. `GazePlayLauncher.main` finds the GazePlay folder (`Documents/GazePlay_Learning`, formerly `~/GazePlay`: found, and
+   moved if needed, by `GazePlayDirectories.initGazePlayFolder` before anything is logged), then parses the command
+   line with picocli (`MainCommand`). There are no product editions any more (AFSR and BERA removed; the dormant Eval
+   code is not reachable).
 2. `CompositionRoot` builds and wires the components (no dependency injection framework): translator, game locator,
    `GazePlay` (navigation between screens), gaze device and sound factories, game menu.
 3. `GazePlayFxApp` (JavaFX `Application`) shows the profile selection, the menu, or directly a game (`--game`).

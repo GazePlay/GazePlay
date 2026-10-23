@@ -1,6 +1,6 @@
 # Modernisation de GazePlay — suivi
 
-Document de suivi vivant : à mettre à jour à chaque étape. Le diagnostic complet (architecture, anomalies R1–R12, stratégie cible) est dans `CLAUDE.md`. Ce document ne le répète pas : il trace ce qui a été **fait**, **vérifié** et **reste à décider**.
+Document de suivi vivant : à mettre à jour à chaque étape. Le diagnostic complet (architecture, anomalies R1–R13) est dans `CLAUDE.md`. Ce document ne le répète pas : il trace ce qui a été **fait**, **vérifié** et **reste à décider**.
 
 Convention : **Fait** (constaté dans le code ou par exécution) / **Hypothèse** / **Risque** / **Décision** / **Question**.
 
@@ -415,7 +415,7 @@ Les arguments supplémentaires sont transmis (`"$@"`, comme `%*` sous Windows). 
 
 ---
 
-## 2i. Étape 9 — Décisions du mainteneur appliquées (20/10/2026, état exact en section 9)
+## 2i. Étape 9 — Décisions du mainteneur appliquées (20/10/2026)
 
 Décisions données le 20/10/2026 :
 1. **Pas de versions 32 bits** (Windows x86, ARM 32 bits).
@@ -1035,7 +1035,7 @@ Les deux venaient de la feuille `modena` de JavaFX.
 
 ## 2y. Étape 22 — Build : dépréciations, installeur Windows, PMD et alertes Dependabot (22/10/2026)
 
-### Dépréciations Gradle (point 1 de 9.0)
+### Dépréciations Gradle (point 1 de la liste de reprise du 22/10/2026)
 Liste complète, obtenue avec `--warning-mode all` en exécutant réellement les tâches (`--rerun-tasks`) : **deux, toutes deux dans des plugins tiers**, aucune dans les scripts de GazePlay.
 - `StartParameter.newInstance()` (supprimée dans Gradle 10) : plugin `net.researchgate.release` 3.2.0, utilisé par `release.yml` (`./gradlew release`).
 - `Configuration.setVisible(boolean)` (supprimée dans Gradle 11) : plugin `org.openjfx.javafxplugin` 0.1.0.
@@ -1056,7 +1056,7 @@ Liste complète, obtenue avec `--warning-mode all` en exécutant réellement les
 - Retirés : le plugin, `gradle/pmd.gradle` (avec la tâche `checkPMDReport`), `pmd-ruleset.xml`, la version du catalogue, la tâche par défaut `checkPMDReport` et les 3 `@SuppressWarnings("PMD...")` du code. `BUILD.MD` est mis à jour.
 - Effet : `./gradlew build` n'exécute plus PMD, qui échouait déjà à la référence sur d'anciennes violations. SpotBugs reste dans la CI et dans `build`.
 
-### Alertes Dependabot (point 2 de 9.0)
+### Alertes Dependabot (point 2 de la liste de reprise du 22/10/2026)
 - **Fait** : les 35 alertes ouvertes (1 critique, 7 hautes, 14 moyennes, 13 basses) portent **toutes sur `docs/Gemfile.lock`**, les gems Ruby du site Jekyll (nokogiri, activesupport, commonmarker, rubyzip…, verrouillées en 2019 avec github-pages 203). **Aucune ne concerne le code Java de GazePlay.**
 - **Fait** : le site public (gazeplay.github.io) est publié depuis la branche **`gh-pages`** (dernière modification le 17/06/2025), pas depuis `docs/`. Ce dossier est une ancienne copie, peu modifiée depuis 2022 ; son fichier de verrouillage ne sert à aucune publication.
 - **Fait sur `addClaudeCode` seulement** (décision du mainteneur) : `docs/Gemfile.lock` est retiré et ignoré (`docs/.gitignore`). Le contenu du site n'est pas touché, ni `gh-pages`.
@@ -1185,7 +1185,7 @@ Suite complète **410 tests, 0 échec** ; `smokeTest` ; SpotBugs vert ; deux jeu
 
 ## 2ad. Étape 27 — Audit des threads, lancement automatique de tous les jeux, installation des paquets de la CI (23/10/2026)
 
-### Audit des threads (point 3 de 9.0)
+### Audit des threads (point 3 de la liste de reprise du 22/10/2026)
 Recherche dans tout le code de production (`gazeplay-*/src/main`) de tout ce qui tourne hors du thread JavaFX : `java.util.Timer`, `Thread`, exécuteurs, `CompletableFuture`, `Thread.sleep`. Chaque endroit a été lu.
 - **Défauts réels, corrigés** :
   - **`GazeIndicator`** (indicateur de progression de la fixation, utilisé par de nombreux jeux) : 1 s après la fin d'une fixation, un `java.util.Timer` le cachait depuis son propre thread (`setVisible`, `setProgress`, arrêt de l'animation sur la scène affichée). Remplacé par une `PauseTransition`, qui s'exécute sur le thread JavaFX ; même délai, même annulation par `stop()`. Le verrou, devenu inutile, est retiré. Test de non-régression : `GazeIndicatorTest` (il échoue avec l'ancien code).
@@ -1197,7 +1197,7 @@ Recherche dans tout le code de production (`gazeplay-*/src/main`) de tout ce qui
   - `playMusicAlone` télécharge la musique dans le cache, puis la lit depuis l'adresse Internet et non depuis le fichier téléchargé (`localResourceName` n'est utilisé que dans un message). Le fichier en cache n'a pas d'extension : le lire demanderait de vérifier que JavaFX Media l'accepte. Non modifié.
 - Retiré : un `import` inutilisé dans `GameMenuController`.
 
-### Lancement automatique de tous les jeux (point 4 de 9.0)
+### Lancement automatique de tous les jeux (point 4 de la liste de reprise du 22/10/2026)
 - **Nouveau test `AllGamesLaunchTest`**, tâche Gradle **`allGamesTest`** (module `gazeplay-core`, exclue de `test` et de `smokeTest`). Pour chaque jeu de `games-catalog.txt`, il lance GazePlay dans une JVM à part, comme le menu (`--game` et `--variant`, première variante par ordre alphabétique), sans fenêtre (Monocle), en mode souris, avec un `user.home` à lui. Il vérifie : que la variante se relit à l'identique depuis son texte (c'est ainsi que le menu la transmet à la JVM du jeu), que le jeu est lancé, qu'il tourne encore après 20 s, et qu'il n'a journalisé aucune erreur inattendue. Quatre jeux tournent en même temps.
 - Pour savoir que le jeu a bien démarré (et non attendu sur la fenêtre de variante), `GameMenuController` journalise désormais `Game launched : <jeu>, variant <variante>`.
 - Le code commun avec `LaunchSmokeTest` (commande, lecture de la sortie, erreurs attendues) est réuni dans `GazePlayProcess` ; `LaunchSmokeTest` vérifie exactement la même chose qu'avant (sans réglage, donc avec le pilote Tobii sans appareil).
@@ -1206,22 +1206,22 @@ Recherche dans tout le code de production (`gazeplay-*/src/main`) de tout ce qui
 - **Résultat** (Windows 11, JDK 25) : **75 jeux sur 75 lancés sans erreur**, en 6 min 22 s.
 - **CI** : nouveau job `all-games` (Ubuntu 24.04, mêmes sortie audio virtuelle et paquets que le job `test`, limite de 30 min), rapport des tests publié.
 
-### CI : installation des paquets Ubuntu (point 5 de 9.0)
+### CI : installation des paquets Ubuntu (point 5 de la liste de reprise du 22/10/2026)
 - **Fait** : le 22/10/2026, `apt-get update` a bloqué deux fois sur le miroir d'Azure. Les options `Acquire::Retries` réessaient sur le même miroir, et la seconde installation (`pulseaudio`) n'avait ni limite ni nouvelle tentative.
 - **Correction** : script `.github/scripts/install-apt-packages.sh`, utilisé par les jobs `test` et `package-linux`. Une seule installation pour tous les paquets ; chaque essai est limité (3 min pour `update`, 5 min pour `install`) ; en cas d'échec, les essais suivants (3 au plus) passent par le miroir principal d'Ubuntu (`archive.ubuntu.com`). Durée maximale de l'étape : 15 min.
 
-### Survive Against Robots : cadence de tir (point 6 de 9.0)
+### Survive Against Robots : cadence de tir (point 6 de la liste de reprise du 22/10/2026)
 `Robot` et `Player` comparent maintenant le compteur d'images à `Math.round(60 * fréquence)`, un entier, au lieu du `double` `60 * fréquence`. Pour les fréquences utilisées (1,2 ; 0,25 ; 0,5), le résultat est identique (72, 15, 30 images) ; une fréquence comme 1,3 ne bloquerait plus les tirs.
 
 ### Vérifié (Windows 11, JDK 25)
-`./gradlew build smokeTest :gazeplay-core:allGamesTest` réussi : suite complète **411 tests, 0 échec** (1 nouveau : `GazeIndicatorTest`) ; `smokeTest` 2/2 ; SpotBugs vert ; **75 jeux sur 75** lancés sans erreur ; aucun processus GazePlay restant après les tests. Syntaxe du script d'installation vérifiée (`bash -n`). **Non vérifié** : la CI elle-même (nouveau job `all-games`, script `apt-get`), qui ne tournera qu'au prochain push ; les essais du mainteneur dans l'application (point 2 de 9.0) restent à faire.
+`./gradlew build smokeTest :gazeplay-core:allGamesTest` réussi : suite complète **411 tests, 0 échec** (1 nouveau : `GazeIndicatorTest`) ; `smokeTest` 2/2 ; SpotBugs vert ; **75 jeux sur 75** lancés sans erreur ; aucun processus GazePlay restant après les tests. Syntaxe du script d'installation vérifiée (`bash -n`). **Non vérifié** : la CI elle-même (nouveau job `all-games`, script `apt-get`), qui ne tournera qu'au prochain push ; les essais du mainteneur dans l'application (point 2 de la liste de reprise du 22/10/2026) restent à faire.
 
 ---
 
 ## 2ae. Étape 28 — Écran des statistiques et dossier GazePlay dans Documents (23/10/2026, demandes du mainteneur)
 
 ### Écran des statistiques
-- **Fait** : le bouton qui montrait le fichier de résultats et celui qui ouvrait le fichier Excel n'existaient que dans l'édition BERA (`StatsContext`, trois branches `if bera`), retirée le 21/10/2026 : ils étaient inaccessibles. La vérification demandée au point 2 de 9.0 était donc sans objet pour ce bouton.
+- **Fait** : le bouton qui montrait le fichier de résultats et celui qui ouvrait le fichier Excel n'existaient que dans l'édition BERA (`StatsContext`, trois branches `if bera`), retirée le 21/10/2026 : ils étaient inaccessibles. La vérification demandée au point 2 de la liste de reprise du 22/10/2026 était donc sans objet pour ce bouton.
 - **Retiré** (décision du mainteneur) : les trois branches BERA de `StatsContext` (écran des scores Eval, grille des scores, boutons), et les méthodes devenues inutiles (`openFile`, `seeFile`, `addToGridCenter*`). L'écran normal est inchangé (vérifié par un `diff` sans les espaces).
 - **Ajouté** : sur l'écran des statistiques normal, un bouton (icône `seeFolder.png`, info-bulle « voir dossier ») qui ouvre l'explorateur dans le dossier des résultats du jeu joué (`statistics/<jeu>`, un sous-dossier par jour), par `SystemFileManager`. Placé avant le bouton de retour au menu. Test : `StatsContextTest.shouldOpenTheResultsFolderOfTheGamePlayed`.
 - **Gardé** : le bouton « voir dossier » des réglages (rubrique « Voir résultat »).
@@ -1279,243 +1279,139 @@ Essais du mainteneur : Whac-a-Mole et Shoot the Robots sans problème ; bouton d
 
 ---
 
-## 9. Reprise à la prochaine session
+## 2ag. Étape 30 — Derniers restes des éditions AFSR et BERA (23/10/2026, demande du mainteneur)
 
-### 9.0 Pause du 22/10/2026 au soir (après l'étape 26) : à lire en premier
+Demande : « enlever ce qu'il reste d'AFSR et BERA sans que ça fasse bugger GazePlay classique ». Le code Eval des jeux (`gazeplayEval`, `gazeplayEvalTest`) reste en place, comme décidé : la version active d'Eval est sur `GazePlayLearning`.
 
-Les sous-sections 9.1 à 9.7, plus bas, datent de l'étape 10 et ne sont gardées que pour l'historique.
+### Retiré
+- **Le mécanisme d'édition entier** : `GazePlayArgs`, l'écriture de `argsGazeplay.txt` au lancement (`GazePlayLauncher.saveArgs`), la propriété `gazeplay.argsFile` des tests. Depuis le 21/10/2026, la seule édition lue était `gazeplay` : ce fichier ne servait plus qu'à mener aux branches BERA mortes.
+- **Les trois branches BERA** encore présentes : page de réglages BERA (`beraConfigGridPane`, avec le bouton d'import des évaluations et le choix du retour visuel), choix du catalogue des évaluations (`CatalogBasedGamesLocator` lit toujours `games-catalog.txt`), message « aucune évaluation » du menu (`GameMenuController`).
+- **Classes devenues inutilisées** : `ImportGame` (import d'un zip d'évaluation, joignable seulement depuis la page BERA) et `ErrorVariantDialog`.
+- **Traductions sans usage** : `BeraSettings`, les 7 réglages BERA, `SeeResult`, et les 20 libellés de l'ancien écran des scores BERA. Gardées : `nothing`, `standard`, `framed` (retour visuel, lues par le code Eval).
+- Commentaires `Bera settings` de `Configuration` renommés (réglages des évaluations).
+- **Option cachée « captures d'écran multiples »** (`MULTIPLE_SCREENSHOTS_ENABLED`) : elle ne se réglait que dans la page BERA, mais `Stats` la lisait encore. Activée, elle enregistrait une capture d'écran toutes les 500 ms de jeu dans le dossier des résultats. Retirée de `Configuration` et de `Stats`, avec sa traduction. Une valeur présente dans un `GazePlay.properties` n'a plus d'effet (aucun profil du mainteneur ne l'avait). L'ancienne clé `SCREENSHOT` reste dans `LegacyConfigurationKeys` (format persistant, sans effet).
+- Vérifié : la page de réglages normale ne contient plus aucune option propre à AFSR ou BERA. Chaque réglage affiché est lu par au moins un jeu ou par l'écran des statistiques, sauf « Dossier des vidéos », retiré ensuite (2ai).
 
-#### État exact à la pause
-- Branche **`addClaudeCode`**, dernier commit poussé **`4391eb3bb`** ; arbre de travail propre ; les 4 stashes intacts. Aucune autre branche touchée.
-- **CI de `4391eb3bb`** (run 39808266506) : **6 jobs verts**, dont les trois lancements réels sous Windows, Linux et macOS : le menu, puis une vraie partie de « Où est la forme ? », grâce à `--variant`. Le job « test (25) » a d'abord échoué sans lancer un seul test : `apt-get update` était bloqué sur un miroir d'Azure, coupé par la limite de 10 min. Relancé seul, il est vert.
-- Suite locale (Windows 11, JDK 25) : **410 tests, 0 échec**, `smokeTest` 2/2, SpotBugs vert, `./gradlew build` réussi, installeur Windows construit.
-- Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (IntelliJ : Gradle JVM et SDK `zulu-25`). Le terminal a un `java` 17 dans le PATH : préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`. Inno Setup 6 est installé ; Docker ne l'est pas.
+### Gardé exprès
+- Les **clés de configuration** des évaluations (`TRANSITION_TIME`, `QUESTION_TIME`, `FEEDBACK`, `SOUND_ENABLED`…) : format persistant, lues par le code Eval. `SOUND_ENABLED` est aussi lue par Simon ; elle n'est plus modifiable dans l'interface (elle ne l'était que dans la page BERA) et vaut `true` par défaut, comme avant pour l'édition normale.
+- Le nom `argsGazeplay.txt` dans `GazePlayFolderMigration` : ce fichier existe dans les dossiers des anciennes versions.
+- La génération de `evals-catalog.txt` au build : elle va avec le code Eval.
 
-#### Fait le 22/10/2026 (étapes 19 à 26 ; détail dans les sections 2u à 2ac)
-- **Poste de développement** : JDK 25 installé et vérifié (somme SHA-256), guide `INTELLIJ.md`.
-- **Eye Tracker 5** : deux vraies parties contrôlées (Tarte à la crème). **Format de résultats v3** : points de regard datés à leur lecture ; vérifié sur données réelles, plus aucun point au même instant (2v).
-- **Avertissements au lancement** : Java 25 (`--enable-native-access`, `Unsafe`), Guava 19 caché dans le jar EyeTribe (2u) ; avertissements CSS du menu (interface modifiée hors du thread JavaFX), confirmés disparus par le mainteneur (2w).
-- **Distributions** : plus de seconde copie de JavaFX, soit 10 Mo de moins (2x) ; plus de rapport interne de Gradle livré (2y).
-- **Build** : `./gradlew build` réparé ; installeur Windows réparé (cassé depuis Gradle 9) ; runtime macOS reconstructible ; PMD retiré ; source des 35 alertes Dependabot retirée (`docs/Gemfile.lock`) (2y).
-- **Code** : boutons « voir le dossier » et « voir le fichier » réparés hors Windows ; API dépréciées 43 → 3 ; `Observable` mort retiré (2z) ; conversions non vérifiées 14 → 3 (2aa) ; enregistrement vidéo sans enregistreur ; code mort retiré ; avertissements `Unknown module` des tests supprimés (2ab).
-- **Revue des exclusions SpotBugs** : Whac-a-Mole et Shoot the Robots / Biboules modifiaient la scène depuis un minuteur, corrigé et vérifié en jeu (2ac).
-- **CI** : durée maximale par job (un job était resté bloqué 2 h sur `apt-get`) (2aa) ; les lancements « jeu » font maintenant jouer le jeu, au lieu de s'arrêter sur la fenêtre de variante (2ac).
-- **Documentation** : `CLAUDE.md` réécrit pour l'état actuel ; décisions du mainteneur notées.
+### Impact sur les données
+`argsGazeplay.txt` n'est plus lu ni écrit ; un fichier existant est laissé tel quel, sans effet. Aucun autre fichier ne change.
 
-#### Décisions du mainteneur prises le 22/10/2026
-- Fusion de `GazePlayLearning`, numéro et publication de la version : **après la fin de la modernisation**.
-- **Pas de retraitement** des fichiers de résultats historiques v1.
-- **Une JVM par jeu : gardée.** **Licence Tobii : réglée** (usage analytique couvert).
-- Gradle reste en 9.8.2 ; pas de pull request ; code Eval laissé de côté ; PMD retiré (SpotBugs suffit).
-
-#### À faire demain, par ordre proposé
-1. ~~Contrôler la CI de `4391eb3bb`~~ : **verte** (voir l'état ci-dessus).
-2. **Essais du mainteneur dans l'application**, que je ne peux pas faire :
-   - Réglages → rubrique « Voir résultat » → « voir dossier », et à l'écran des statistiques le nouveau bouton du dossier du jeu (2ae ; l'ancien bouton n'existait que dans l'édition BERA) : la bonne fenêtre de l'explorateur doit s'ouvrir ;
-   - premier lancement de cette version : `C:\Users\<nom>\GazePlay` doit être déplacé dans `Documents\GazePlay_Learning`, avec profils, réglages et résultats (2ae) ;
-   - une partie de Whac-a-Mole et une de Shoot the Robots : les taupes et la boîte doivent se comporter comme avant.
-3. ~~Audit des threads~~ : **fait le 23/10/2026** (2ad), 3 défauts corrigés.
-4. ~~Lancement automatique de tous les jeux~~ : **fait le 23/10/2026** (2ad), `allGamesTest` et job de CI `all-games`.
-5. ~~CI : fiabiliser l'installation des paquets Ubuntu~~ : **fait le 23/10/2026** (2ad), script avec changement de miroir.
-6. ~~Cadence de tir de Survive Against Robots~~ : **fait le 23/10/2026** (2ad).
-7. Restes liés à Eval (3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs) : **à traiter à la fusion de `GazePlayLearning`**, pas avant.
-8. **Fin de la modernisation**, puis, selon les décisions du mainteneur : fusion de `GazePlayLearning`, test de l'installation réelle par l'installeur Windows, numéro (1.12.0 proposé) et publication.
-
-#### Toujours ouvert, sans action prévue
-- R13 (zones d'intérêt de la souris) : seulement si le laboratoire s'en sert.
-- Maintien d'EyeTribe (appareil plus fabriqué).
-- Non testés faute de matériel : Tobii sous Linux, ARM Linux, macOS Intel.
-
-#### Précautions apprises aujourd'hui
-- Ne jamais enchaîner `git add ; git commit ; git push` dans une seule commande PowerShell : un `git add` en échec a laissé partir un commit incomplet (`ac61079e8`, réparé par `dcd7f3277`).
-- GitHub peut afficher un run « terminé » alors que des jobs tournent encore : suivre les jobs (`gh api .../runs/<id>/jobs`). `gh run list --commit` attend l'identifiant complet du commit.
-- Pour lancer un jeu à variantes en ligne de commande, il faut `--variant` ; sinon GazePlay attend sur la fenêtre de choix.
-
-## 9-bis. Reprise (mise à jour le 21/10/2026, étape 10)
-
-### 9.1 État exact au moment de la pause
-- Branche **`addClaudeCode`**. Le 21/10/2026, à la demande du mainteneur, le travail des étapes 1 à 12 a été **commité en local** en 6 commits au-dessus de `4a035dd4f` : nettoyage (`2c98db4b5`), build/code/tests (`f92bafdf9`), scripts (`631c2e0b8`), CI (`796873891`), documentation (`f05680599`), configurations IntelliJ (`1c7ae3f30`). Chaque état a été vérifié avant le commit sur une copie de l'index : compilation pour le 1er, et pour le 2e la suite complète (403 tests, 0 échec), `smokeTest` et SpotBugs. **Rien n'a été poussé** : la branche n'a pas de branche distante associée. Les 4 stashes n'ont pas été touchés.
-- Aucune branche autre que `addClaudeCode` n'a été modifiée (`GazePlayLearning` non touchée).
-- Démon Gradle arrêté à la pause (`./gradlew --stop`).
-
-### 9.2 Étape 9 : ce qui a été fait (décisions du mainteneur du 20/10/2026)
-**Terminé et vérifié**
-1. melordi et picto-pick retirés (détails en 2i).
-2. Plus de versions 32 bits ; ARM passe en aarch64 (détails en 2i). Fichiers :
-   - `build.gradle`, `gradle/package.gradle`, `gradle/installer.gradle`, `gradle/jre.gradle`, `gradle/jre/arm.gradle` ;
-   - suppression de `gradle/jre/windows-32.gradle` et des 3 fichiers `gradle/innosetup/setup*x32.iss.skel` ;
-   - `gradle/libs.versions.toml` (`jave-nativebin-win32` retiré, `linux-arm32` remplacé par `linux-arm64`) ;
-   - `gazeplay-core/build.gradle`, `.github/workflows/release.yml`, commentaires des scripts `gazeplay-dist/src/main/bin/*.sh`, `BUILD.MD`.
-   - Vérifié : `--dry-run` du packaging et des installeurs ; téléchargement réel et somme du runtime aarch64 ; résolution de JAVE `linux-arm64` ; **suite complète au vert après ces deux changements : 376 tests, 0 échec, `smokeTest` et `spotbugsMain` OK**.
-
-**Terminé, vérification finale décrite en 9.4**
-3. **Format de résultats v2** (détails en 2i). Fichiers :
-   - `gazeplay-results/.../ReplayDataFormat.java` (nouveau), `ReplayDataWriter.java`, `FixationSequenceRecorder.java` ;
-   - `gazeplay-commons/.../Stats.java`, `FixationSequence.java` (`vertexReduction`) ;
-   - `gazeplay-core/.../ReplayingGameFromJson.java` ;
-   - tests : `ReplayDataFormatTest` (nouveau), `ReplayDataWriterTest`, `StatsRecordingCharacterizationTest`, `StatsTest`, `FixationSequenceTest`.
-4. **Notes de version** rédigées : `GazePlay-1.12.0.md`, en anglais comme les précédentes. Le numéro est une proposition. **Non publiées** : la publication demande commit, push et release, donc l'accord explicite du mainteneur.
-5. **Runtime JavaFX, constat et correction** (détails en 2g, « Correction (étape 9) ») :
-   - Zulu 17.0.20.1 FX embarque JavaFX 22.0.10, pas 17.0.20 ; la documentation est corrigée (`BUILD.MD`, `gradle/jre.gradle`) ;
-   - la distribution Linux x64 n'écrase plus les greffons multimédia du runtime par ceux d'OpenJFX 17.0.20 (`gradle/jre/linux.gradle` simplifié, avec les mêmes noms de tâches ; `build.gradle` ; somme OpenJFX retirée) ;
-   - **non testé sous Linux**.
-6. Documentation : `MODERNIZATION.md` (2g, 2i, 4, 9), `ARCHITECTURE.md`, `CLAUDE.md` (R1, R2, R5 et R11 marquées corrigées en v2 ; plateformes ; melordi).
-
-**Non commencé (volontairement, pause demandée)** : passage des runtimes à Zulu 21. Informations déjà réunies, à ne pas refaire :
-- Zulu **21.52.203 / 21.0.12.1** FX ; sommes SHA-256 publiées par Azul :
-  - `win_x64.zip` : `2cb4e16da18812247cb151971fcede513a6d427a40083a497e099142fc1ed77b` (vérifiée sur l'archive téléchargée) ;
-  - `linux_x64.tar.gz` : `9488605a66a6192529c22896d2e7d268f25e2230d2fe7e560ec8acacd279ae5e` ;
-  - `linux_aarch64.tar.gz` : `d797de573936bd98e547dd5fdd61455924f9fffee5a430956a521b3224c72ad5` ;
-  - `macosx_x64.tar.gz` : `00e1f0462850c610c89e875372d8e22eb2501af9dae7096048ad30c7f121aeb6` ;
-  - `macosx_aarch64.tar.gz` : `8ee02b3f4c79ea571a30fb975551dfaa8a3b0e4e94e7a9f151dd3d5c5fcd865f`.
-- Il embarque **JavaFX 23.0.8** (lu dans `lib/javafx.properties` de l'archive Windows).
-- Monocle 21.0.2 exige Java 21 pour s'exécuter : garder Monocle 17.0.10 tant que les tests tournent sur JDK 17.
-
-### 9.2 bis Étape 10 (21/10/2026), voir la section 2j
-- **Terminé et vérifié** :
-  - runtimes Zulu 21.0.12.1 FX (JavaFX 23.0.8), avec correction de l'extraction macOS ;
-  - nouvelle distribution macOS Apple Silicon ;
-  - correction de l'édition au lancement (`GazePlayArgs.editionToSave`) ;
-  - JAVE 4.2.0 ;
-  - message de premier lancement (`ConfigurationSource`) ;
-  - extraction du calcul des zones d'intérêt (`AreaOfInterestGrouper`), précédée de sa caractérisation ;
-  - API Gson à jour dans 5 jeux, avec `JsonResourcesTest` ;
-  - manifestes compatibles avec le cache de configuration.
-- **Vérification finale de l'étape 10** (21/10/2026, JDK 17 local) : **393 tests, 0 échec** (results 14, commons 171, games-commons 18, core 115, games 74 + 1) ; `smokeTest` 2/2 ; `spotbugsMain` OK. Aussi :
-  - `smokeTest` 2/2 sous JDK 21.0.7 ;
-  - `windowsDistZip` lancée avec sa JRE 21 ;
-  - `macosDistTar` et `macosAarch64DistTar` construites et inspectées.
-- Ressources mortes (44 Mo) supprimées avec votre accord (section 2j).
-
-### 9.3 Où reprendre : prochaines actions, dans l'ordre
-1. ~~Ressources mortes~~ : **supprimées** (2j).
-2. ~~Distribution macOS aarch64~~ : **faite** (section 2j). Reste à la tester sur un Mac.
-3. **Architecture** :
-   - ~~extraction du calcul des zones d'intérêt~~ : **faite** (2j). Reste éventuellement l'échantillonnage des zones (R13, décision métier) et `AreaOfInterest` (écran, 700 lignes) ;
-   - ~~abstraction `GazeSource`~~ et ~~module `gazeplay-gaze`~~ : **faits** (2j). Reste éventuellement la validité ou l'horodatage de l'appareil, impossibles sans réécrire le JNI Tobii (C++) ;
-   - tester un vrai appareil Tobii après la refonte (matériel requis).
-4. **Code mort et qualité** :
-   - avertissements : 102 → 25 (2j) ; les restants sont structurels ou laissés volontairement (Eval, contrat des jeux) ;
-   - PMD sur le code modifié ;
-   - `sysout-over-slf4j` (2013) : le remplacer par une redirection minimale si elle est utile.
-5. **Gradle** :
-   - ~~cache de configuration~~ : **compatible** pour compilation et tests, à la demande (2j). Activation par défaut bloquée par le plugin de licences ;
-   - plugin `release` (dépréciation pour Gradle 10, voir 2j).
-6. **Tests** :
-   - CI à observer au premier push (jobs `test` sous Linux et `package-linux`, jamais exécutés) ;
-   - un job qui teste avec le JavaFX livré (23.x) ;
-   - fixtures Eval sur `GazePlayLearning` quand la branche sera fusionnée.
-7. **Packaging** : construire et lancer réellement les distributions Linux, macOS et ARM (seulement possible en CI ou sur machine dédiée) ; installeurs Inno Setup (Docker).
-
-### 9.4 Commandes de vérification
-```
-./gradlew :gazeplay-results:test :gazeplay-gaze:test :gazeplay-commons:test :gazeplay-games-commons:test :gazeplay-core:test :gazeplay-games:test :gazeplay-core:smokeTest spotbugsMain --continue
-./gradlew --dry-run packageApp generateWindowsInstallerInDocker downloadAndExtractJREs linuxDistTar armDistTar
-./gradlew downloadAndExtractJREs        # télécharge et vérifie les sommes (~400 Mo)
-```
-Résultat de la dernière exécution de la suite complète (après le format v2) : voir 9.6.
-
-### 9.5 Problèmes connus, hypothèses, précautions
-- **Ne jamais lancer les tests hors Gradle** (IDE, `java` direct) : seul `build.gradle` isole `user.home` et le fichier d'édition.
-- **Format v2** : un ancien GazePlay qui rejoue un fichier v2 inverse les x/y des fixations ; c'est un effet d'affichage seulement. Les scripts d'analyse du laboratoire doivent lire `formatVersion`. C'est indiqué dans les notes de version.
-- **Non testé** :
-  - matériel Tobii et EyeTribe ;
-  - distributions Linux, macOS et ARM sur machine réelle ;
-  - greffons multimédia du runtime Linux après la correction ;
-  - JavaFX 22.0.10 (version livrée) par les tests automatiques.
-- Les dossiers `build/jre/macos` et `build/jre/windows-x32` sont d'anciennes extractions (runtime 17.0.2) : un `./gradlew clean` les supprime. Les anciennes archives non versionnées de `~/.m2/repository/jre` (`arm.tar.gz`, `windows-x32.zip`…) sont des données locales de l'utilisateur : ne les supprimer qu'avec son accord.
-- Les tests JavaFX restent sérialisés (`JavaFxTestsLimiter`) : ne pas réactiver le parallélisme.
-- Le wrapper Tobii extrait ses DLL dans `%LocalAppData%\.tobiiStreamEngineForJava` à chaque lancement (comportement préexistant).
-
-### 9.6 Résultat des vérifications finales de l'étape 9
-Exécutées le 20/10/2026, Gradle 9.8.2, JDK 17 local, Windows 11 :
-- Après le retrait de melordi, picto-pick et du 32 bits : suite complète **376 tests, 0 échec** ; `smokeTest` et `spotbugsMain` OK.
-- Après le format v2 : suite complète **383 tests, 0 échec** (results 9, commons 170, games-commons 18, core 112, games 74) ; `smokeTest` 2/2 OK ; `spotbugsMain` OK (BUILD SUCCESSFUL, avec `--continue`).
-- Après la modification de `gradle/jre/linux.gradle` (faite pendant la dernière exécution des tests, qu'elle n'influence pas) : `--dry-run` de `packageApp`, `generateWindowsInstallerInDocker`, `downloadAndExtractJREs`, `linuxDistTar` et `armDistTar` OK.
-- **Non exécuté** :
-  - construction réelle de `linuxDistTar` et `armDistTar` (archives) et lancement de ces distributions ;
-  - JDK 21 pour cette étape (vérifié à l'étape 7 seulement) ;
-  - matériel Tobii.
-
-### 9.7 Décisions qui demandent encore l'avis du mainteneur ou du laboratoire
-1. Numéro de la prochaine version (1.12.0 proposé) et publication des notes de version (commit, push, release).
-2. Commits : quand et comment découper le travail non commité (proposition : un commit par étape de ce document).
-3. Retraitement des fichiers historiques v1 : outil hors ligne souhaité ? Faut-il considérer `heatmap.csv` (sources mélangées) comme obsolète au profit des fichiers par source ?
-4. R13 (échantillonnage souris des zones d'intérêt) : la correction change les zones calculées.
-5. Distribution macOS : x64 seulement, ou aussi Apple Silicon ?
-6. Java 25 (Zulu 25 FX, JavaFX 25) : il imposerait `release` ≥ 23 à la compilation, donc Java 25 aussi pour la distribution sans JRE. Recommandation : Zulu 21 d'abord.
-7. Fusion de `GazePlayLearning` (R12, Eval) ; questions Eval de CLAUDE.md (règle d'arrêt à 5 erreurs, RGPD, format officiel des exports).
-8. Licence Tobii pour l'enregistrement de données brutes ; maintien d'EyeTribe.
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest` : **414 tests, 0 échec** (les tests de `GazePlayArgsTest` sont retirés avec la classe ; `CatalogBasedGamesLocatorTest` réécrit : le catalogue des jeux, sans évaluation) ; `smokeTest` 3/3 ; SpotBugs vert.
 
 ---
 
-## 3. Bugs produit trouvés et corrigés
+## 2ah. Étape 31 — Nouveau nom visible : GazePlay Learning (23/10/2026, décision du mainteneur)
+
+Décisions du mainteneur : renommer le **nom visible** seulement ; l'installeur installe GazePlay Learning **à côté** d'un ancien GazePlay.
+
+### Renommé
+- Titre de la fenêtre, et première ligne du journal : « GazePlay Learning ».
+- Archives livrées : `gazeplay-learning-<plateforme>-<version>` (propriété `distributionName` de `build.gradle`).
+- Scripts de lancement : `gazeplay-learning-windows.bat` (avec le titre de la console), `gazeplay-learning-linux.sh`, `gazeplay-learning-macos.sh`, `gazeplay-learning-arm.sh`. Les raccourcis créés depuis les réglages visent le nouveau script Windows.
+- Installeur Windows : `AppId=GazePlayLearning`, dossier `C:\Program Files\GazePlay Learning`, menu Démarrer, bureau, désinstallation et message de mise à jour au nouveau nom. Un GazePlay déjà installé (`AppId=GazePlay`) n'est ni détecté ni désinstallé.
+- CI (`ci.yml`, script de lancement Windows) et publication (`release.yml` : noms des fichiers publiés).
+- Texte traduit `closeWindowToContinueToGazePlay` (toutes les langues ; finnois accordé), titres de `README.md` et `README(FR).md`, notes de version (`GazePlay-1.12.0.md`, nouvelle section).
+
+### Inchangé exprès
+Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gazeplay.log`, propriété `gazeplay.folder`, dépôt GitHub, site `gazeplay.net`.
+
+### Non fait, à décider
+- **Le logo du menu** est fait d'images des lettres G-A-Z-E-P-L-A-Y (`data/common/images/GazePlayLetters`, `logos/gazeplay-top-logo.png`) : il faut de nouveaux visuels.
+- `updates-popup/offline-page-*.html` cite GazePlay, mais n'est utilisé nulle part (code mort, laissé tel quel).
+
+### Défaut corrigé en chemin
+`scriptsForRelease` copiait les scripts dans `build/bin` sans retirer les anciens : l'archive sans JRE livrait les scripts de GazePlay à côté de ceux de GazePlay Learning. La tâche synchronise maintenant le dossier. Sans effet sur la CI, qui part d'un dossier vide.
+
+### Vérifié (Windows 11, JDK 25)
+- `./gradlew build smokeTest packageAllDists generateWindowsInstaller` réussi ; 414 tests, 0 échec ; `smokeTest` 3/3.
+- Les archives et l'installeur portent le nouveau nom ; chaque archive ne contient que ses scripts `gazeplay-learning-*` ; le `setup.iss` généré contient les nouvelles valeurs.
+- **Lancement réel de la distribution Windows** par le script de la CI : menu, puis une partie de « Où est la forme ? », sans erreur.
+- **Non vérifié** : l'installation réelle par l'installeur (prévue à la fin, décision du mainteneur), les distributions Linux et macOS (la CI les lance), `allGamesTest` en local (job `all-games` de la CI).
+
+---
+
+## 2ai. Étape 32 — R13 corrigé, réglages morts retirés, logo GazePlay Learning (23/10/2026, décisions du mainteneur)
+
+### R13 : zones d'intérêt séparées par source (option 3 choisie par le mainteneur)
+- **Avant** (fait, figé par test) : la souris gardait un déplacement vertical une fois sur trois (`x != previousX || y != previousY && counter == 2`), et le regard et la souris alimentaient une seule liste, avec un seul compteur de temps : les zones mélangeaient les deux sources.
+- **Correction** : nouvelle classe `AreaOfInterestRecording` (`gazeplay-commons`), une instance par source dans `Stats` (`getGazeAreasOfInterest()`, `getMouseAreasOfInterest()`). Chaque source garde chaque changement de position, avec son propre temps écoulé, et forme ses propres zones (`AreaOfInterestGrouper`, inchangé).
+- **Écran des zones** : il montre une source à la fois, le regard s'il y a des points de regard, sinon la souris ; deux boutons « Regard » et « Souris » passent de l'une à l'autre. Une source sans aucun point (la souris en jouant avec l'Eye Tracker) faisait échouer l'écran sur son premier point : elle s'affiche maintenant vide.
+- **Impact sur les données** : aucun ; les zones ne sont écrites dans aucun fichier.
+- Tests : `StatsRecordingCharacterizationTest` (comportement corrigé : 5 positions de souris sur 5, regard séparé), `AreaOfInterestTest` (source vide, source par défaut).
+
+### Réglages morts retirés
+- « Dossier des vidéos » (`VIDEO_DIR`) : plus rien ne le lisait depuis le retrait des jeux vidéo (`9781fe90e`, 2022). Retiré de la page, de `Configuration` et du sélecteur de dossiers, avec sa traduction.
+- `DATA_COLLECT_AUTHORIZED` : jamais lu ni affiché ; retiré de `Configuration`.
+- Une valeur présente dans un `GazePlay.properties` reste dans le fichier, sans effet. L'ancienne clé `VIDEO_FOLDER` reste dans `LegacyConfigurationKeys` (format persistant).
+
+### Logo
+- Les lettres GAZE PLAY sont dessinées à la main : une police ne permet pas d'écrire LEARNING dans le même style. Décision : garder les lettres et la mascotte, et écrire « Learning » dessous, avec la police **Fredoka** (Google Fonts, **SIL Open Font License 1.1**, vérifiée), en gras, aux couleurs des lettres, avec contour blanc et ombre.
+- Seules des **images** sont livrées (`logos/gazeplay-learning-top-logo.png` pour le menu, `GazePlayLetters/learning.png` sous les lettres animées des écrans des profils et de chargement) : la police elle-même n'est pas dans le projet. Le générateur et la licence de la police sont dans `gradle/logo/` (`make_logo.py`, `Fredoka-OFL.txt`).
+- **Défaut corrigé en chemin** : l'image d'espacement entre GAZE et PLAY gardait sa hauteur d'origine (262 px), ce qui rendait la rangée des lettres animées bien plus haute que les lettres. Elle prend maintenant la hauteur des lettres, à largeur inchangée ; une marge haute remplace l'espace qu'elle laissait.
+- Bandeau du menu : « GazePlay Learning <version> » (oublié à l'étape 31).
+
+### Vérifié (Windows 11, JDK 25)
+- `./gradlew build smokeTest` : **414 tests, 0 échec** ; `smokeTest` 3/3 ; SpotBugs vert.
+- **Captures d'écran de la vraie application** (distribution Windows reconstruite, dossier jetable) : écran des profils (lettres animées et « Learning » dessous) et menu (nouveau logo, bandeau « GazePlay Learning »).
+- **Non vérifié** : l'écran des zones d'intérêt dans l'application (il faut activer les zones et jouer une partie) ; le thème sombre.
+
+---
+
+## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 32)
+
+### État
+- Branche **`addClaudeCode`**. Dernier commit poussé : `0c970566f` (étape 29), CI verte sur les 7 jobs. Les étapes 30 à 32 et ce ménage ne sont pas commités.
+- Suite locale : 414 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
+- Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
+- Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07).
+
+### Reste à faire, dans l'ordre
+1. Essais du mainteneur : titre et logo « GazePlay Learning », réglages (page normale, sans « Dossier des vidéos »), choix d'un jeu au menu, création d'un raccourci de jeu, et l'écran des zones d'intérêt (activer les zones, jouer, puis bouton des zones : boutons « Regard » / « Souris »).
+2. **Fin de la modernisation**, puis, dans cet ordre (décision du mainteneur du 23/10/2026) : fusion de `GazePlayLearning` (avec les restes d'Eval : 3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs), test de l'installation réelle par l'installeur Windows, numéro de version (1.12.0 proposé) et publication.
+
+### Décisions du mainteneur en vigueur
+64 bits seulement ; formats de résultats versionnés (v3) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.
+
+### Toujours ouvert, sans action prévue
+R6 et R7 (documentés), R12 (dépend de la fusion), maintien d'EyeTribe, plateformes non testées faute de matériel (Tobii sous Linux, Linux ARM, macOS Intel).
+
+### Précautions
+- Ne jamais enchaîner `git add ; git commit ; git push` dans une seule commande PowerShell.
+- Suivre les jobs de la CI, pas seulement le run (`gh api .../runs/<id>/jobs`). Un échec de `apt-get` (miroirs Ubuntu) n'est pas un échec des tests : relancer le job (`gh run rerun <id> --failed`).
+- Lancer un jeu à variantes en ligne de commande demande `--variant` ; les lancements de test passent `-Dgazeplay.folder` et arrêtent les JVM des jeux.
+- Un programme qui tient un sous-dossier ouvert empêche Windows de déplacer un dossier (`AccessDeniedException`, étape 29).
+
+---
+
+## Annexe A — Bugs produit de l'étape 1
 
 ### B1 — « Où est la forme ? » plante dans toutes les langues (corrigé)
 - **Fait.** Le commit `a86cf7fe7` (26/04/2024, « changed a few translations ») a été édité avec un tableur qui a pris le point d'interrogation grec `;` pour un séparateur. Résultat dans `whereIsTheShape.csv` : une colonne vide après `ell` sur les 20 lignes, toutes les langues suivantes décalées d'une colonne, et une 23ᵉ colonne qui provoquait un `ArrayIndexOutOfBoundsException` dans `I18N`, donc l'échec du chargement du jeu.
-- **Correction.** `,,` → `;,` à cet endroit. L'en-tête est de nouveau identique à la version précédant la régression, avec 22 colonnes partout. Les seules différences restantes sont les deux retouches anglaises voulues de ce commit (`moon`, `circle`).
+- **Correction.** `,,` → `;,` à cet endroit. Les seules différences restantes avec la version précédant la régression sont les deux retouches anglaises voulues de ce commit (`moon`, `circle`).
 - **Fait.** Les versions publiées 1.11.8 à 1.11.11 ne sont **pas** touchées. `developMain` l'est. `GazePlayLearning` ne contient pas ce commit.
 
 ### B2 — `NullPointerException` dans `StatsContext` si `variantType` est nul (corrigé)
-- **Fait.** Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `""`). Correction défensive, sans effet en production.
+Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `""`). Correction défensive, sans effet en production.
 
 ---
 
-## 4. Impact sur les données et les formats
+## Annexe B — Impact sur les données et les formats (bilan)
 
-- **R3 (`Time` dans `*-info-game.csv`)** : la **valeur** est corrigée pour les nouvelles parties ; le format (`HH:mm:ss`, texte) ne change pas. Les fichiers historiques gardent le mois à la place des minutes. On retrouve les minutes dans le préfixe `yyyy-MM-dd-HH-mm-ss` du nom du fichier, qui a toujours été correct, à quelques secondes près puisque les deux horodatages sont pris au même moment. Pas de `formatVersion` ajouté : rien ne lit cette colonne dans le code.
-  - **Question** : faut-il signaler ce changement aux utilisateurs des CSV (laboratoire) dans les notes de version ?
-- **`GazePlay.properties`** : contenu identique, seul le mode d'écriture change. **Risque résiduel** : si le fichier est un lien symbolique, il est remplacé par un fichier ordinaire (cas non identifié dans les distributions).
-- **Aucun autre format** (JSON de rejeu, heatmap, exports Eval) n'est modifié dans cette étape.
-- **Format de résultats v2** (étape 9) : voir la section 2i, « Format de résultats v2 ». `formatVersion: 2` dans `replayData.json`, nouveaux fichiers `heatmapGaze.csv` et `heatmapMouse.csv` ; fichiers v1 jamais réécrits et toujours lus.
-- **Format de résultats v3** (étape 20) : voir la section 2v. `formatVersion: 3`, même structure ; seul change le sens du temps des points de regard (instant de lecture). Fichiers v1 et v2 jamais réécrits et toujours lus.
-
----
-
-## 5. Vérifications exécutées
-
-| Vérification | Résultat |
-|---|---|
-| `compileJava compileTestJava` (tous les modules) | OK |
-| Tests des 4 modules sur le code final, 3 exécutions `--rerun` | **3 × 331 tests, 0 échec, résultats identiques** (commons 139, games-commons 18, core 105, games 69) |
-| `spotbugsMain --continue` (tous les modules, = étape CI existante) | OK. Un premier passage a signalé un déréférencement nul possible dans le nouveau `saveConfig` ; c'est corrigé |
-| `pmdMain` commons et core | **Échoue déjà à la référence** (107 et 255 violations ; PMD n'est pas dans la CI). Aucune violation sur les lignes nouvelles de `Configuration` ; celles des autres fichiers modifiés portent sur du code qui existait déjà. Pas de comparaison chiffrée formelle avec la référence |
-| Écritures dans le vrai `~/GazePlay` ou `Documents\Gazeplay` | aucune (`find -newer` après chaque série) |
-| Job CI `test` sous Linux | **non exécuté** (pas de Linux ici) : à surveiller au premier push. Des écarts propres à Linux sont possibles (bibliothèques natives, `xvfb`) |
-| Tests matériels (Tobii) et autres plateformes | **non exécutés** |
-| Lancement manuel de l'application | **non effectué** |
-| Étape 9 (20/10/2026) : suite complète après le format v2 | **383 tests, 0 échec**, `smokeTest` et SpotBugs OK (détails en 9.6) |
+- **R3 (`Time` dans `*-info-game.csv`)** : valeur corrigée pour les nouvelles parties, format inchangé. Les fichiers historiques gardent le mois à la place des minutes ; les minutes se retrouvent dans le nom du fichier.
+- **`GazePlay.properties`** : contenu identique, écriture atomique. Anciennes clés d'avant 1.11.1 migrées à la lecture (étape 3). Risque résiduel : un lien symbolique serait remplacé par un fichier ordinaire.
+- **Format de résultats v2** (2i) puis **v3** (2v) : `formatVersion` dans `replayData.json` ; les fichiers v1 et v2 ne sont jamais réécrits et restent lus par le rejeu.
+- **Dossier de données** (2ae, 2af) : `Documents\GazePlay_Learning`, ancien dossier déplacé (ou copié si Windows refuse) ; fichiers inchangés.
+- **`argsGazeplay.txt`** (2ag) : plus lu ni écrit.
+- **Nom visible** (2ah) : aucun fichier de données ne change de nom.
 
 ---
 
-## 6. Constats annexes (non corrigés dans cette étape)
+## Annexe C — Constats annexes encore ouverts
 
-- **Fait — clés de configuration renommées sans migration.** Le commit `bddc3f1e8` (25/08/2022, première version concernée : 1.11.1) a renommé `EYETRACKER`, `FILEDIR`, `FIXATIONLENGTH`, `CSSFILE`, `WHEREISITDIR`, `MUSIC_FOLDER`… Aucun code ne relit les anciennes clés : un utilisateur qui passe d'une version ≤ 1.11.0 à une version plus récente perd ses réglages sans le savoir. **Question** : faut-il une migration en lecture (ancienne clé → nouvelle) ? Elle est simple à faire, mais les mises à jour depuis 1.11.0 sont-elles encore réalistes ?
-- **Fait — affichage BERA.** Dans `StatsContext.addAllToGrid`, la ligne « ScoreRightTargetItems » affiche le score **gauche** pour Morphosyntaxe (l. 344) et Phonologie (l. 358) ; Sémantique est correct. Ce n'est pas corrigé ici, car toute évolution d'Eval/BERA doit partir de `GazePlayLearning` : il faut vérifier sur cette branche.
-- **Fait — `multilinguism.csv`** : les clés `Farm`, `Savanna`, `Score`, `SprintFinish` et `SprintFinishMouse` sont en double (la dernière occurrence l'emporte). « Petit Ours Brun » n'a pas de traduction anglaise (exception documentée dans `TranslationFilesTest`).
-- **Risque — `GazePlayArgs` sous Windows** utilise `C:\Users\<user.name>\Documents`. C'est faux si le dossier Documents est redirigé (OneDrive, autre lecteur) ou si le nom du profil diffère de `user.name`.
-- **Fait — tests JavaFX** : en local, ils ouvrent de vraies fenêtres. Le mode sans affichage (Monocle) n'est pas configuré ; la dépendance `openjfx-monocle:jdk-11+26` est probablement incompatible avec JavaFX 21 (hypothèse non testée).
-- **Fait — certains tests écrivent dans le répertoire du module** (`music_test`, journaux). Ils nettoient derrière eux ; rien n'apparaît dans `git status`.
-
----
-
-## 7. Décisions en attente (mainteneur, laboratoire)
-
-Elles reprennent les questions de `CLAUDE.md`, plus celles nées de cette étape :
-1. Branche de référence : ces changements partent de `developMain`. Faut-il les reporter sur `GazePlayLearning` (version active d'Eval) ? Ils s'y appliquent a priori sans conflit, sauf `whereIsTheShape.csv`, qui n'y est pas cassé.
-2. Commits : rien n'est commité. Découpage proposé : (a) tests hermétiques + CI, (b) tests périmés, (c) B1 + `I18N`, (d) R3, (e) sauvegarde atomique.
-3. Migration des anciennes clés de configuration (§6).
-4. Communication de la correction R3 aux utilisateurs des CSV.
-
----
-
-## 8. Prochaine étape recommandée
-
-**Étape 2 — Caractérisation du pipeline de résultats (R1, R2, R4, R5, R11), sans correction.**
-- Prérequis : réponse à la question 1, pour savoir sur quelle branche travailler. `Stats` diffère entre les branches (R12).
-- Contenu :
-  - un `SyntheticGazeDeviceManager` qui injecte des `GazeEvent` et `MouseEvent` déterministes dans une scène JavaFX ;
-  - des tests qui figent le comportement **actuel** (doublons des filtres, cumul de `coordinateData`, durée ×2, inversion x/y), chacun marqué comme anomalie confirmée ;
-  - des fichiers de référence `replayData.json` et `heatmap.csv`.
-- Ensuite, R10 et R8 (Eval, sur `GazePlayLearning`), puis R4 et R5, avec une décision scientifique et un `formatVersion`.
-- En parallèle, à faible risque : nettoyage des dépendances mortes listées dans `CLAUDE.md` (une par changement, vérifiée par la suite de tests), et mise à jour de JaCoCo (0.8.3 → ≥ 0.8.8, nécessaire pour Java 17). Attention : le commentaire du build lie cette version à JMockit, il faut donc la vérifier avec la suite.
+- **`multilinguism.csv`** : les clés `Farm`, `Savanna`, `Score`, `SprintFinish` et `SprintFinishMouse` sont en double (la dernière occurrence l'emporte). « Petit Ours Brun » n'a pas de traduction anglaise (exception documentée dans `TranslationFilesTest`).
+- Réglés depuis l'étape 1, pour mémoire : anciennes clés de configuration (migrées, étape 3), affichage des scores BERA (retiré avec BERA), emplacement Windows de `GazePlayArgs` (classe retirée, 2ag), tests JavaFX sans fenêtre (Monocle, étape 2), « Dossier des vidéos » et `DATA_COLLECT_AUTHORIZED` (retirés, 2ai).

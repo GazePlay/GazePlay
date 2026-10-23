@@ -1,5 +1,7 @@
 @echo on
 
+TITLE GazePlay Learning
+
 REM Paths are resolved from the location of this script, whatever the working directory
 SET JAVA_HOME=%~dp0..\lib\jre
 SET PATH=%JAVA_HOME%\bin;%PATH%;%LocalAppData%\TobiiStreamEngineForJava\lib\tobii\x64

@@ -16,7 +16,9 @@ task packageApp(dependsOn: ['packageAllDists',
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
 }
 
-task scriptsForRelease(type: Copy, group: 'distribution') {
+// Sync, not Copy: scripts renamed or removed must not stay in build/bin, which the distributions ship (the scripts of
+// GazePlay were shipped next to those of GazePlay Learning in the version without runtime)
+task scriptsForRelease(type: Sync, group: 'distribution') {
     from "${rootDir}/gazeplay-dist/src/main/bin"
     into "${rootDir}/build/bin"
     filter(

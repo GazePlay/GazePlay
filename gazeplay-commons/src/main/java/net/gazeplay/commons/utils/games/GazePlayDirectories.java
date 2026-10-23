@@ -108,10 +108,6 @@ public class GazePlayDirectories {
         return new File(getGazePlayFolder(), "files");
     }
 
-    public static File getVideosFilesDirectory() {
-        return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "videos");
-    }
-
     public static File getShortcutDirectory() {
         return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "shortcut");
     }

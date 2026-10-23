@@ -1,7 +1,7 @@
 # Starts GazePlay from the Windows distribution with its launch script, as a user would, and checks that after
 # $Delay seconds it is still running, has loaded its game catalog and has logged no unexpected error.
 #
-# Usage: launch-distribution.ps1 -Launcher <path of gazeplay-windows.bat> -GazeHome <folder> [-Arguments "..."]
+# Usage: launch-distribution.ps1 -Launcher <path of gazeplay-learning-windows.bat> -GazeHome <folder> [-Arguments "..."]
 param(
     [Parameter(Mandatory = $true)] [string] $Launcher,
     [Parameter(Mandatory = $true)] [string] $GazeHome,

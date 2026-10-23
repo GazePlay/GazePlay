@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.GraphicalContext;
@@ -43,6 +44,23 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
+
+    /**
+     * The areas of interest of each source are computed separately (R13): the screen shows one source at a time.
+     */
+    public enum Source {
+        GAZE, MOUSE
+    }
+
+    /**
+     * @return the gaze if it has samples (game played with an eye tracker), else the mouse
+     */
+    public static Source defaultSource(final Stats stats) {
+        return stats.getGazeAreasOfInterest().getMovementHistory().isEmpty() ? Source.MOUSE : Source.GAZE;
+    }
+
+    private final Stats stats;
+    private final Source source;
 
     private final List<CoordinatesTracker> movementHistory;
     private final Label timeLabel;
@@ -83,18 +101,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private double highestFixationTime = 0;
     private int intereatorAOI = 0;
 
-    public AreaOfInterest(final GazePlay gazePlay, final Stats stats) {
+    public AreaOfInterest(final GazePlay gazePlay, final Stats stats, final Source shownSource) {
         super(gazePlay, new BorderPane());
 
+        this.stats = stats;
+        this.source = shownSource;
         config = ActiveConfigurationContext.getInstance();
         allAOIList = new ArrayList<>();
         areaOfInterestList = new ArrayList<>();
         graphicsPane = new Pane();
-        movementHistory = stats.getMovementHistoryWithTime();
-        allAOIListTemp = stats.getAllAOIListTemp();
-        startAndEndIdx = stats.getStartAndEndIdx();
-        allAOIListPolygon = stats.getAllAOIListPolygon();
-        allAOIListPolygonPt = stats.getAllAOIListPolygonPt();
+        final AreaOfInterestRecording recording =
+            shownSource == Source.GAZE ? stats.getGazeAreasOfInterest() : stats.getMouseAreasOfInterest();
+        movementHistory = recording.getMovementHistory();
+        allAOIListTemp = recording.getAllAOIListTemp();
+        startAndEndIdx = recording.getStartAndEndIdx();
+        allAOIListPolygon = recording.getAllAOIListPolygon();
+        allAOIListPolygonPt = recording.getAllAOIListPolygonPt();
 
         this.dataTreatment();
         calculateAreaOfInterest(0, stats.getStartTime());
@@ -202,10 +224,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         centerPane.setAlignment(Pos.CENTER);
 
         final HBox buttonBox = createButtonBox();
+        final HBox sourceBox = createSourceBox();
         if (stats.getTargetAOIList() != null) {
-            topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
+            topPane = new HBox(scoreLabel, timeLabel, region2, sourceBox, buttonBox);
         } else {
-            topPane = new HBox(timeLabel, region2, buttonBox);
+            topPane = new HBox(timeLabel, region2, sourceBox, buttonBox);
         }
 
         topPane.setPadding(new Insets(15, 15, 0, 15));
@@ -288,6 +311,34 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return buttonBox;
     }
 
+    /**
+     * Buttons showing the areas of the gaze or of the mouse: the one shown is disabled.
+     */
+    HBox createSourceBox() {
+        final I18NButton gazeButton = new I18NButton(getGazePlay().getTranslator(), "Gaze");
+        final I18NButton mouseButton = new I18NButton(getGazePlay().getTranslator(), "Mouse");
+        gazeButton.setPrefSize(100, 20);
+        mouseButton.setPrefSize(100, 20);
+        gazeButton.setDisable(source == Source.GAZE);
+        mouseButton.setDisable(source == Source.MOUSE);
+        gazeButton.setOnAction(e -> showSource(Source.GAZE));
+        mouseButton.setOnAction(e -> showSource(Source.MOUSE));
+
+        final HBox sourceBox = new HBox(gazeButton, mouseButton);
+        sourceBox.setSpacing(10);
+        sourceBox.setPadding(new Insets(10, 10, 10, 10));
+        return sourceBox;
+    }
+
+    private void showSource(final Source shown) {
+        playing = false;
+        if (player != null) {
+            player.stop();
+        }
+        this.clear();
+        getGazePlay().onDisplayAOI(stats, shown);
+    }
+
     @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
@@ -295,6 +346,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     private void dataTreatment() {
         // treating the data, post processing to take performance constraint of during the data collection
+        if (movementHistory.isEmpty()) {
+            // No sample for this source (e.g. the mouse, in a game played with an eye tracker)
+            return;
+        }
         movementHistory.get(0).setDistance(0);
         for (int i = 1; i < movementHistory.size(); i++) {
             final double x = Math.pow(movementHistory.get(i).getXValue() - movementHistory.get(i - 1).getXValue(), 2);
@@ -305,7 +360,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void playButtonPressed(final double progressRate) {
-        if (!playing) {
+        if (!playing && !movementHistory.isEmpty()) {
             playing = true;
             for (final InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
                 graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());

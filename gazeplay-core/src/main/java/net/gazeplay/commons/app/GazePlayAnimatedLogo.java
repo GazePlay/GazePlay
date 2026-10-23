@@ -81,7 +81,7 @@ public class GazePlayAnimatedLogo {
             //
             letters.getChildren().add(letter);
         }
-        letters.getChildren().add(createSpacingView());
+        letters.getChildren().add(createSpacingView(preferredHeight));
         for (int i = 4; i <= 7; i++) {
             StackPane letter = createLetterView(i, imageType, preferredHeight);
             //
@@ -101,10 +101,13 @@ public class GazePlayAnimatedLogo {
         return new GazePlayAnimatedLogo(letters);
     }
 
-    private static StackPane createSpacingView() {
+    private static StackPane createSpacingView(int preferredHeight) {
         ImageView imageView = new ImageView(new Image(IMAGES_PATH + "spacing.png"));
-        //
-        imageView.setPreserveRatio(true);
+        // Same width as before, but the height of the letters: at its own height (262 px) the transparent image made
+        // the row of letters much higher than the letters, which pushed away what is below the logo
+        imageView.setPreserveRatio(false);
+        imageView.setFitWidth(imageView.getImage().getWidth());
+        imageView.setFitHeight(preferredHeight);
         //
         StackPane letter = new StackPane();
         letter.getChildren().addAll(imageView);

@@ -195,7 +195,6 @@ class StatsTest {
         when(config.isFixationSequenceDisabled()).thenReturn(true);
         when(config.isVideoRecordingEnabled()).thenReturn(false);
         when(config.isAreaOfInterestDisabled()).thenReturn(false);
-        when(config.isMultipleScreenshotsEnabled()).thenReturn(false);
         when(config.getHeatMapOpacity()).thenReturn(0.7);
         when(config.getHeatMapColors()).thenReturn(List.of(javafx.scene.paint.Color.BLUE, javafx.scene.paint.Color.RED));
         ActiveConfigurationContext.setInstance(config);

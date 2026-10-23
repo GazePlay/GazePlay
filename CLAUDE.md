@@ -1,13 +1,13 @@
-# CLAUDE.md — GazePlay
+# CLAUDE.md — GazePlay Learning (anciennement GazePlay)
 
-Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 29 de
+Contexte de travail pour Claude Code. Mis à jour le 23/10/2026 (branche `addClaudeCode`, après l'étape 32 de
 `MODERNIZATION.md`). L'audit d'origine (20/10/2026, commit `4a035dd4f`) a été corrigé ici partout où le code a changé ;
 le détail de chaque changement, ses vérifications et ses décisions sont dans `MODERNIZATION.md`, la carte du code dans
 `ARCHITECTURE.md`.
 
 ## Règles de travail en vigueur
 
-- **Phase actuelle (depuis le 20/10/2026) : modernisation progressive autorisée.** Modifications du code, des tests, du build, des dépendances et de la documentation permises, par étapes vérifiées. Le suivi se fait dans `MODERNIZATION.md` (une section par étape, et la section 9.0 pour reprendre).
+- **Phase actuelle (depuis le 20/10/2026) : modernisation progressive autorisée.** Modifications du code, des tests, du build, des dépendances et de la documentation permises, par étapes vérifiées. Le suivi se fait dans `MODERNIZATION.md` (une section par étape, et la section 9 pour reprendre).
 - **Restent interdits sans accord explicite** : commit, push, changement de branche, reset, réécriture d'historique, migration irréversible de données, publication ou déploiement. Le mainteneur autorise commits et pushs demande par demande.
 - **Branche : `addClaudeCode` uniquement.** Ne rien reporter sur `GazePlayLearning`, ne rien fusionner, pas de pull request pour l'instant (décision du mainteneur).
 - Les tests sont rendus hermétiques par `build.gradle` (`user.home`, `gazeplay.folder` et `gazeplay.argsFile` pointent vers `build/test-home`). Toujours les lancer via Gradle. Hors Gradle (IDE, exécution manuelle), ils liraient et écriraient le vrai dossier GazePlay, et pourraient le déplacer.
@@ -25,8 +25,9 @@ le détail de chaque changement, ses vérifications et ses décisions sont dans 
 - **Spring Boot a été retiré** (étape 5) : `CompositionRoot` construit et relie les composants.
 - Modules : `gazeplay-results` (calculs et fichiers de résultats, sans JavaFX), `gazeplay-gaze` (acquisition du regard), `commons` (configuration, diffusion du regard, `Stats`), `games-commons` (contrat des jeux), `core` (application), `games` (75 jeux au catalogue), `dist` (scripts de lancement). Retirés : `melordi`, `picto-pick`, `side-projects`, `gazeplay-api`, `old-website`.
 - **Une JVM par partie** : `GameMenuController.createBuilder` lance `java -cp … GazePlayLauncher --game …` avec les options de `GazePlayLauncher.jvmOptions()` (`--enable-native-access`, `--sun-misc-unsafe-memory-access=allow`). Le menu attend 6 s, puis se réaffiche sur le thread JavaFX. L'enfant termine par `System.exit`.
-- Jeux découverts via `games-catalog.txt` / `evals-catalog.txt`, générés au build (`gazeplay-core/build.gradle`) d'après les noms de fichiers `*SpecSource`.
-- **Édition du produit** : seule `gazeplay` reste. Les éditions AFSR et BERA (Eval) ont été retirées le 21/10/2026 ; le code Eval est conservé mais inaccessible. Le fichier d'édition `argsGazeplay.txt` est dans le dossier GazePlay (l'ancien emplacement est encore lu).
+- Jeux découverts via `games-catalog.txt` (`evals-catalog.txt`, celui des évaluations, est encore généré mais n'est plus lu), générés au build (`gazeplay-core/build.gradle`) d'après les noms de fichiers `*SpecSource`.
+- **Nom du produit : GazePlay Learning** (décision du mainteneur, 23/10/2026), pour le nom visible seulement : titre de la fenêtre, archives et scripts `gazeplay-learning-*`, installeur Windows (`AppId=GazePlayLearning`, installé à côté d'un ancien GazePlay). Les paquets `net.gazeplay`, les modules Gradle et les fichiers du dossier de données gardent leur nom. Logo : les lettres dessinées GAZE PLAY sont gardées, avec « Learning » dessous, écrit avec la police Fredoka (OFL 1.1, seules les images sont livrées ; générateur `gradle/logo/make_logo.py`).
+- **Plus d'éditions** : AFSR et BERA (Eval) retirées le 21/10/2026, puis tout le mécanisme d'édition le 23/10/2026 (`GazePlayArgs`, page de réglages BERA, `ImportGame`) : `argsGazeplay.txt` n'est plus lu ni écrit. Le code Eval des jeux est conservé mais inaccessible.
 - Configuration : singleton `ActiveConfigurationContext` (conservé, décision du mainteneur ; les jeux passent par `IGameContext.getConfiguration()`), fichier `GazePlay.properties` **écrit de façon atomique**. Les anciennes clés d'avant 1.11.1 sont migrées à la lecture (`LegacyConfigurationKeys`). Les clés sont un format persistant : garder `AREA_OF_INTEREST_DISABLED`, dont la valeur `true` signifie « AOI activées », même si le nom est trompeur.
 - Journaux : `gazeplay.log` du dossier GazePlay et ses fichiers tournants (`logback.xml`, propriété `gazeplay.folder` donnée par le lanceur avant tout journal ; le logger de `GazePlayLauncher` est créé tard exprès). `sysout-over-slf4j` redirige `System.out`/`System.err` vers le journal (gardé exprès, voir `MODERNIZATION.md` 2z).
 - Analyse statique : **SpotBugs** seulement (dans `build` et en CI). PMD a été retiré.
@@ -60,7 +61,7 @@ Le JSON brut `coordinatesAndTimeStamp` de `replayData.json` est la seule source 
 | R10 | Export XLSX Eval : `ArrayIndexOutOfBounds` si `Anonymous=false` | **Corrigé (étape 3)** | XLSX manquants |
 | R11 | `fixationSequence` du JSON : `x` contient Y et `y` contient X | **Corrigé en v2** dans le fichier. En mémoire, les points gardent Y dans `x` et X dans `y` (convention de `FixationSequenceRecorder`) | Inverser |
 | R12 | La branche `GazePlayLearning` n'écrit plus `heatmap.csv` ni `metrics*.png` : rupture de format non versionnée | **Ouvert** (branche non fusionnée) | — |
-| R13 | Zones d'intérêt : la souris garde un déplacement vertical sur trois ; variables « Gaze »/« Mouse » inversées | **Ouvert**, caractérisé par test. Rien n'est écrit sur disque | Non applicable |
+| R13 | Zones d'intérêt : la souris gardait un déplacement vertical sur trois ; regard et souris mélangés dans une même liste | **Corrigé (étape 32)** : chaque source garde chaque changement de position, dans ses propres zones (`AreaOfInterestRecording`) ; l'écran des zones montre le regard ou la souris. Rien n'est écrit sur disque | Non applicable |
 
 Autres points :
 - La variance est une variance de population (÷n) : à documenter, pas un bug.
@@ -82,7 +83,7 @@ Autres points :
 - Tobii fonctionne uniquement sur Windows x64 et Linux x64 ; Linux n'a pas été testé avec l'appareil. ARM et macOS fonctionnent en souris seulement.
 - **CI** (`ci.yml`) : SpotBugs ; tests sous JDK 25 et 26 (`xvfb`, sortie audio virtuelle, paquets installés par `.github/scripts/install-apt-packages.sh`) ; lancement des 75 jeux (`all-games`) ; construction **et lancement réel** des distributions Windows, Linux x64 et macOS Apple Silicon (menu puis un jeu). Chaque job a une durée maximale (20 ou 30 min). ARM Linux et macOS Intel ne sont lancés nulle part.
 - `./gradlew build` réussit ; l'installeur Windows se construit avec Inno Setup 6 (`generateWindowsInstaller`) ou dans Docker. L'installation réelle n'a pas été testée.
-- Tests : **424 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
+- Tests : **414 tests, 0 échec** (23/10/2026), hermétiques, sans fenêtre (Monocle), séquentiels (ne pas réactiver le parallélisme), plus un `smokeTest` de lancement et `allGamesTest`, qui lance chacun des 75 jeux avec une variante (environ 7 min, 4 JVM à la fois, en mode souris ; job de CI `all-games`).
 - La scène JavaFX ne doit être modifiée que sur son thread : un audit complet a été fait le 23/10/2026 (`MODERNIZATION.md` 2ad). Pour un délai, utiliser `PauseTransition` plutôt qu'un `java.util.Timer`.
 - Dépréciations Gradle restantes : uniquement dans les plugins `release` et `javafxplugin`, déjà à leur dernière version, sans effet en Gradle 9.8.2.
 - Le site public est publié depuis la branche **`gh-pages`** ; le dossier `docs/` en est une ancienne copie.
@@ -106,9 +107,8 @@ Décisions du mainteneur du 22/10/2026 :
 - **Numéro et publication de la version : après la fin de la modernisation.** Tester alors l'installation réelle par l'installeur Windows.
 
 Encore ouvertes :
-1. R13 (échantillonnage souris des zones d'intérêt) : à corriger seulement si le laboratoire utilise ces zones.
-2. Eval : format officiel des exports, règle d'arrêt à 5 erreurs, données personnelles et RGPD.
-3. Maintien d'EyeTribe (appareil plus fabriqué).
+1. Eval : format officiel des exports, règle d'arrêt à 5 erreurs, données personnelles et RGPD.
+2. Maintien d'EyeTribe (appareil plus fabriqué).
 
 Également tranchées le 22/10/2026 :
 - **Une JVM par jeu : on la garde** (isolation et remise à zéro de l'état à chaque partie, au prix du temps de démarrage).

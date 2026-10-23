@@ -1,7 +1,6 @@
 package net.gazeplay.gameslocator;
 
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GazePlayArgs;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -18,9 +17,7 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
     @Override
     protected List<Class> findGameSpecSourceClasses() {
 
-        // Chosen at each call: it used to be a static field switched to the BERA catalog and never switched back
-        final String catalogResourceLocation =
-            GazePlayArgs.returnArgs().contains("bera") ? "evals-catalog.txt" : "games-catalog.txt";
+        final String catalogResourceLocation = "games-catalog.txt";
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {
 

@@ -22,7 +22,7 @@ public class MenuUtils {
 
         MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
 
-        Menu versionMenu = new Menu(versionNumber.map(value -> "GazePlay " + value).orElse("GazePlay unreleased version"));
+        Menu versionMenu = new Menu(versionNumber.map(value -> "GazePlay Learning " + value).orElse("GazePlay Learning unreleased version"));
         versionMenu.getItems().add(licenseMenuItem);
 
         String username = ActiveConfigurationContext.getInstance().getUserName();

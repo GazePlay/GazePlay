@@ -1,4 +1,5 @@
-# GazePlay [![build status](https://secure.travis-ci.org/GazePlay/GazePlay.png)](http://travis-ci.org/GazePlay/GazePlay)<!-- [![codecov](https://codecov.io/gh/schwabdidier/GazePlay/branch/master/graph/badge.svg)](https://codecov.io/gh/schwabdidier/GazePlay)-->
+# GazePlay Learning [![build status](https://secure.travis-ci.org/GazePlay/GazePlay.png)](http://travis-ci.org/GazePlay/GazePlay)<!-- [![codecov](https://codecov.io/gh/schwabdidier/GazePlay/branch/master/graph/badge.svg)](https://codecov.io/gh/schwabdidier/GazePlay)-->
+GazePlay Learning is the new name of GazePlay (October 2026): same software, games and data, with a modernized code base.
 All information about GazePlay can be found at [gazeplay.net](http://gazeplay.net). Download the latest version of the
 game in the [releases](https://github.com/GazePlay/GazePlay/releases) tab.
 

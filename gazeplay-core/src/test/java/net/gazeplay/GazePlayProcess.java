@@ -71,8 +71,6 @@ final class GazePlayProcess {
             Files.writeString(new File(gazePlayFolder, "GazePlay.properties").toPath(), "EYE_TRACKER=mouse_control\n",
                 StandardCharsets.UTF_8);
         }
-        File argsFile = new File(home, "argsGazeplay.txt");
-        Files.writeString(argsFile.toPath(), "gazeplay", StandardCharsets.UTF_8);
         File output = new File(home, "output.log");
 
         List<String> command = new ArrayList<>(List.of(
@@ -81,7 +79,6 @@ final class GazePlayProcess {
             "-Duser.home=" + home.getAbsolutePath()));
         command.addAll(jvmOptions);
         command.addAll(List.of(
-            "-D" + GazePlayArgs.ARGS_FILE_PROPERTY + "=" + argsFile.getAbsolutePath(),
             "-Dglass.platform=Monocle", "-Dmonocle.platform=Headless", "-Dprism.order=sw", "-Dprism.text=t2k",
             "--enable-native-access=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow",
             GazePlayLauncher.class.getName()));

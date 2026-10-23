@@ -26,6 +26,7 @@ import java.util.stream.StreamSupport;
 
 import static javafx.application.Platform.runLater;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -281,14 +282,13 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * With the areas of interest enabled (AREA_OF_INTEREST_DISABLED=true means enabled), the samples kept for the
-     * computation of the areas differ by source. Gaze: every change of position. Mouse: the condition is
-     * {@code x != previousX || y != previousY && counter == 2} (&& binds tighter than ||), so a horizontal move is
-     * always kept but a vertical one only one event in three. The mouse also uses the variables named "Gaze" and the
-     * gaze the ones named "Mouse". Not fixed: it changes the areas of interest computed (see MODERNIZATION.md).
+     * R13, fixed in October 2026. With the areas of interest enabled (AREA_OF_INTEREST_DISABLED=true means enabled),
+     * each source keeps every change of position, in its own list. Before, the mouse kept a vertical move only one
+     * event in three (condition {@code x != previousX || y != previousY && counter == 2}: here 3 of the 5 mouse
+     * positions), and the gaze and mouse samples were mixed in a single list.
      */
     @Test
-    void shouldKeepTheMouseAndGazeSamplesOfTheAreasOfInterestDifferently() {
+    void shouldKeepEveryChangeOfPositionOfEachSourceSeparately() {
         Configuration aoiEnabled = mock(Configuration.class);
         when(aoiEnabled.isAreaOfInterestDisabled()).thenReturn(true);
         when(aoiEnabled.getUserName()).thenReturn("");
@@ -301,16 +301,19 @@ class StatsRecordingCharacterizationTest {
             mouse(MouseEvent.MOUSE_MOVED, 20, 20);
             mouse(MouseEvent.MOUSE_MOVED, 20, 30);
             mouse(MouseEvent.MOUSE_MOVED, 20, 40);
-            List<String> mouseKept = stats.getMovementHistoryWithTime().stream()
-                .map(p -> p.getXValue() + "," + p.getYValue()).collect(Collectors.toList());
+            // Same position: not kept
+            mouse(MouseEvent.MOUSE_MOVED, 20, 40);
 
             gaze(100, 100);
             gaze(100, 110);
+            gaze(100, 110);
             gaze(100, 120);
 
-            assertEquals(List.of("10,10", "20,10", "20,30"), mouseKept);
-            assertEquals(List.of("10,10", "20,10", "20,30", "100,100", "100,110", "100,120"),
-                stats.getMovementHistoryWithTime().stream()
+            assertEquals(List.of("10,10", "20,10", "20,20", "20,30", "20,40"),
+                stats.getMouseAreasOfInterest().getMovementHistory().stream()
+                    .map(p -> p.getXValue() + "," + p.getYValue()).collect(Collectors.toList()));
+            assertEquals(List.of("100,100", "100,110", "100,120"),
+                stats.getGazeAreasOfInterest().getMovementHistory().stream()
                     .map(p -> p.getXValue() + "," + p.getYValue()).collect(Collectors.toList()));
         } finally {
             ActiveConfigurationContext.switchToDefaultUser();
@@ -343,16 +346,19 @@ class StatsRecordingCharacterizationTest {
             now.addAndGet(20);
             gaze(100, 500);
 
-            assertEquals(2, stats.getAllAOIListTemp().size());
-            assertEquals(4, stats.getAllAOIListTemp().get(0).size());
-            assertEquals(2, stats.getAllAOIListTemp().get(1).size());
-            assertEquals(List.of("0-4", "4-6"), stats.getStartAndEndIdx().stream()
+            AreaOfInterestRecording areas = stats.getGazeAreasOfInterest();
+            assertEquals(2, areas.getAllAOIListTemp().size());
+            assertEquals(4, areas.getAllAOIListTemp().get(0).size());
+            assertEquals(2, areas.getAllAOIListTemp().get(1).size());
+            assertEquals(List.of("0-4", "4-6"), areas.getStartAndEndIdx().stream()
                 .map(startEnd -> startEnd[0] + "-" + startEnd[1]).collect(Collectors.toList()));
             assertEquals(List.of(
                     List.of(85.0, 115.0, 145.0, 115.0, 145.0, 85.0, 85.0, 85.0),
                     List.of(880.0, 130.0, 940.0, 130.0, 940.0, 70.0, 880.0, 70.0)),
-                stats.getAllAOIListPolygonPt().stream().map(List::of).collect(Collectors.toList()));
-            assertEquals(2, stats.getAllAOIListPolygon().size());
+                areas.getAllAOIListPolygonPt().stream().map(List::of).collect(Collectors.toList()));
+            assertEquals(2, areas.getAllAOIListPolygon().size());
+            // No mouse sample: no mouse area
+            assertTrue(stats.getMouseAreasOfInterest().getAllAOIListTemp().isEmpty());
         } finally {
             ActiveConfigurationContext.switchToDefaultUser();
         }

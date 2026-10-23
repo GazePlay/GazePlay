@@ -46,7 +46,11 @@ class LogoFactoryTest {
         LogoFactory logoFactory = LogoFactory.getInstance();
         Pane result = (Pane) logoFactory.createLogoAnimated(stage);
 
-        assertEquals(9, result.getChildren().size());
+        // The 8 letters and the space, then "Learning"
+        assertEquals(2, result.getChildren().size());
+        assertEquals(9, ((Pane) result.getChildren().get(0)).getChildren().size());
+        assertTrue(((ImageView) result.getChildren().get(1)).getImage().getUrl()
+            .contains(LogoFactory.learningWordImagePath));
     }
 
     @Test

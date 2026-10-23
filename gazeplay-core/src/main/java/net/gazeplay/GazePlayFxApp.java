@@ -242,7 +242,7 @@ public class GazePlayFxApp extends Application {
     }
 
     private void configurePrimaryStage(final Stage primaryStage) {
-        primaryStage.setTitle("GazePlay");
+        primaryStage.setTitle("GazePlay Learning");
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
         final String iconImagePath = "data/common/images/gazeplayicon.png";

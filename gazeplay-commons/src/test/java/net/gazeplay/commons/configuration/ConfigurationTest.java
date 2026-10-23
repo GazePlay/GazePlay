@@ -256,11 +256,6 @@ class ConfigurationTest {
     }
 
     @Test
-    void shouldGetVideoFolder() {
-        assertEquals(properties.get("VIDEO_DIR"), configuration.getVideoDir());
-    }
-
-    @Test
     void shouldGetBackgroundStyle() {
         assertEquals(properties.get("BACKGROUND_STYLE"), configuration.getBackgroundStyle().toString());
     }

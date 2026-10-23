@@ -120,7 +120,7 @@ class ConfigurationContextTest {
             }
 
             // Layout of the "gazeplay" edition (the "bera" edition builds another grid)
-            assertEquals(74 - notDisplayedElts, children.size());
+            assertEquals(72 - notDisplayedElts, children.size());
             // Language settings
             assertTrue(children.get(3) instanceof MenuButton);
             // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
@@ -140,21 +140,20 @@ class ConfigurationContextTest {
             assertTrue(children.get(35 - notDisplayedElts) instanceof ChoiceBox);
             assertTrue(children.get(37 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(39 - notDisplayedElts) instanceof HBox);
-            // Folders settings: files, music, video, where is it
+            // Folders settings: files, music, where is it
             assertTrue(children.get(43 - notDisplayedElts) instanceof Button);
             assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(49 - notDisplayedElts) instanceof HBox);
             // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled, convex hull),
             // sequence, video
-            assertTrue(children.get(53 - notDisplayedElts) instanceof Button);
-            assertTrue(children.get(57 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(59 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(61 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(51 - notDisplayedElts) instanceof Button);
+            assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(65 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(71 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(73 - notDisplayedElts) instanceof CheckBox);
         });
         TestingUtils.waitForRunLater();
 
@@ -389,19 +388,15 @@ class ConfigurationContextTest {
         Map<ConfigurationContext.DirectoryType, String> answers = Map.of(
             ConfigurationContext.DirectoryType.FILE, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(),
             ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR,
-            ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath(),
-            ConfigurationContext.DirectoryType.VIDEO, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()
+            ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath()
         );
 
-        when(mockConfig.getVideoDir()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getVideoDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getFileDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getMusicDir()).thenAnswer(invocation -> fileDirProperty.getValue());
         when(mockConfig.getMusicDirProperty()).thenReturn(fileDirProperty);
-        writeInto(fileDirProperty).when(mockConfig).setVideoDir(anyString());
         writeInto(fileDirProperty).when(mockConfig).setWhereIsItDir(anyString());
         writeInto(fileDirProperty).when(mockConfig).setFileDir(anyString());
         writeInto(fileDirProperty).when(mockConfig).setMusicDir(anyString());

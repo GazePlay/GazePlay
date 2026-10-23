@@ -12,9 +12,6 @@ import picocli.CommandLine;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
@@ -62,14 +59,8 @@ public class GazePlayLauncher {
 
     public static void main(String[] args) {
 
-        // Before anything is logged (GazePlayArgs logs too)
+        // Before anything is logged
         final List<String> gazePlayFolderMessages = GazePlayDirectories.initGazePlayFolder();
-
-        final String edition = GazePlayArgs.editionToSave(args);
-        if (edition != null) {
-            log().info("Edition: {}", edition);
-            saveArgs(edition);
-        }
 
         Thread.currentThread().setName(GazePlayLauncher.class.getSimpleName() + "-main");
         Thread.currentThread().setUncaughtExceptionHandler(new LoggingUncaughtExceptionHandler());
@@ -115,42 +106,13 @@ public class GazePlayLauncher {
     private static void printStartupInfo() {
         final String versionInfo = VersionInfo.findVersionInfo();
 
-        log().info("GazePlay");
+        log().info("GazePlay Learning");
         log().info("Version : " + versionInfo);
         Utils.logSystemProperties();
         log().info("Max Memory: " + Runtime.getRuntime().maxMemory());
 
         File workingDirectory = new File(".").getAbsoluteFile();
         log().info("workingDirectory = {}", workingDirectory.getAbsolutePath());
-    }
-
-    private static void saveArgs(String args){
-
-        FileWriter myWritter = null;
-
-        try {
-            File myFile = GazePlayArgs.getArgsFile();
-            if (myFile != null) {
-                File myFolder = myFile.getParentFile();
-                if (myFolder != null) {
-                    boolean createFolder = myFolder.mkdirs();
-                    log().info("Folder created, path = " + createFolder);
-                }
-                log().info("Fil args is : " + myFile);
-                myWritter = new FileWriter(myFile, StandardCharsets.UTF_8);
-                myWritter.write(args);
-            }
-        } catch (IOException e){
-            log().info(String.valueOf(e));
-        } finally {
-            try {
-                if (myWritter != null){
-                    myWritter.close();
-                }
-            } catch (IOException e) {
-                log().warn("Cannot close the edition file", e);
-            }
-        }
     }
 
 }

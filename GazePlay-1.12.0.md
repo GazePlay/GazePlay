@@ -5,6 +5,18 @@ it is chosen by the maintainers at release time. Details, verifications and rema
 
 ## Important changes
 
+### New name: GazePlay Learning
+- GazePlay is now called **GazePlay Learning**: title of the window, Windows installer and shortcuts, names of the
+  downloads (`gazeplay-learning-windows-x64.zip`, `gazeplay-learning-linux-x64.tar.gz`...) and of the launch scripts
+  (`gazeplay-learning-windows.bat`, `gazeplay-learning-linux.sh`...).
+- **The Windows installer installs GazePlay Learning next to a former GazePlay** (folder
+  `C:\Program Files\GazePlay Learning`, its own shortcuts and uninstaller): a GazePlay already installed is left as it
+  is, and can be uninstalled from the Windows settings. The data are shared (see below).
+- Shortcuts to a game created by a former version start the former GazePlay (or no longer work once it is
+  uninstalled): create them again from the settings.
+- Logo: the GAZE PLAY letters and the mascot are kept, with "Learning" below (written with the Fredoka font, SIL Open
+  Font License 1.1).
+
 ### Supported platforms: 64 bits only
 - **The 32 bits versions are no longer provided**: Windows x86 (`gazeplay-windows-x32`, `gazeplay-afsr-windows-x32`,
   `gazeplay-bera-windows-x32` and their installers) and Linux ARM 32 bits.
@@ -15,7 +27,8 @@ it is chosen by the maintainers at release time. Details, verifications and rema
 - **Only GazePlay remains: the AFSR and BERA (GazePlay Eval) editions are no longer provided** (their Windows
   versions and installers, the `--afsrgazeplay` and `--bera` options, their launch scripts on every platform, and
   the "AFSR-Green" and "AFSR-Purple" colour themes: a computer set to one of these themes uses the default theme).
-  Starting GazePlay after a BERA or AFSR session opens GazePlay normally.
+  Starting GazePlay after a BERA or AFSR session opens GazePlay normally. The edition file `argsGazeplay.txt` is no
+  longer read nor written.
 - Remaining versions: Windows x64, Linux x64, Linux ARM 64 bits, macOS (Intel and Apple
   Silicon), and the version without Java runtime.
 
@@ -68,7 +81,10 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
 - The settings saved before version 1.11.1 (eye tracker, folders, fixation length, music, theme...) are read again
   instead of being reset silently.
 - The settings file is written atomically: a crash during the save no longer leaves an empty file.
-- Areas of interest: the video of the game was never shown.
+- Areas of interest: the video of the game was never shown. The areas of the gaze and of the mouse are now computed
+  separately (they were mixed), and the mouse no longer loses two vertical moves out of three; the screen of the areas
+  shows the gaze or the mouse, with a button for each. It no longer fails when one of them has no position. The areas
+  are not saved in any file: no recorded data changes.
 - Profiles screen: with Java 25, it failed on Windows for a profile without picture; an empty music folder setting made
   GazePlay search the whole current folder for music.
 - *Biboule Jump* and *Space Game*: the high score was not saved until statistics had been saved once for the game.
@@ -79,11 +95,14 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
 - Linux, macOS and ARM launch scripts: they work from any folder and with spaces in the path, the ARM version had no
   launch script at all, and they no longer make the whole installation writable by every user at each launch.
 - The log files are written in the GazePlay folder instead of the current folder.
-- Statistics screen: a new button opens the folder of the results of the game played. The "see folder" button of the
-  settings opened a wrong folder when the Windows profile had been renamed, and did nothing on Linux and macOS.
+- Statistics screen: a new button opens the folder of the files of the game played (heatmaps...). The "see folder"
+  button of the settings opened a wrong folder when the Windows profile had been renamed, did nothing on Linux and
+  macOS, and was only shown by the BERA edition: it is now in the statistics settings.
 
 ## Removed
 - *Melordi* and *Picto Pick*: shipped but not reachable from the menu.
+- The "videos folder" setting, unused since the video games were removed in 2022, and the hidden "multiple
+  screenshots" option of the BERA edition.
 - Unused images (44 MB in each download) and unused libraries (including Kafka, brought by an unused dependency) and dead code. The old Log4j 1.2 API used by
   the screen recorder is now redirected to the GazePlay logs.
 

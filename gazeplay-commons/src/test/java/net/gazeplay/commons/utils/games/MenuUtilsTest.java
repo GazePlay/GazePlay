@@ -26,8 +26,8 @@ class MenuUtilsTest {
     void givenProfileIsDefaultShouldBuildMenuBar() {
         // The version comes from the jar manifest, which is present or not depending on how the tests are launched
         String expectedVersion = VersionInfo.findVersionInfo(VersionInfo.artifactId)
-            .map(version -> "GazePlay " + version)
-            .orElse("GazePlay unreleased version");
+            .map(version -> "GazePlay Learning " + version)
+            .orElse("GazePlay Learning unreleased version");
 
         MenuBar menuBar = MenuUtils.buildMenuBar();
         assertEquals(expectedVersion, menuBar.getMenus().get(0).getText());

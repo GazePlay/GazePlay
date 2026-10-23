@@ -1,5 +1,5 @@
 #!/bin/sh
-# GazePlay launcher (ARM)
+# GazePlay Learning launcher (ARM)
 set -e
 
 # Paths are resolved from the location of this script, whatever the working directory

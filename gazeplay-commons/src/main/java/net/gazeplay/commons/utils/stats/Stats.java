@@ -76,15 +76,13 @@ public class Stats implements GazeMotionListener {
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     private LevelsReport levelsReport = new LevelsReport();
     private ChiReport chiReport = new ChiReport();
-    private int counter = 0;
-    private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
-
-    private long previousTime = 0;
-
-    private int previousXMouse = 0;
-    private int previousYMouse = 0;
-    private int previousXGaze = 0;
-    private int previousYGaze = 0;
+    /**
+     * Areas of interest, computed for each source separately (R13: until October 2026 the two were mixed).
+     */
+    @Getter
+    private final AreaOfInterestRecording gazeAreasOfInterest = new AreaOfInterestRecording();
+    @Getter
+    private final AreaOfInterestRecording mouseAreasOfInterest = new AreaOfInterestRecording();
 
     private File movieFolder;
     private final boolean convexHULL = true;
@@ -98,7 +96,6 @@ public class Stats implements GazeMotionListener {
     private HeatMapGrid gazeHeatMapGrid;
     private HeatMapGrid mouseHeatMapGrid;
 
-    private long currentTimeMillisScreenshot = System.currentTimeMillis();
 
     @Getter
     public int nbGoalsReached = 0;
@@ -186,31 +183,7 @@ public class Stats implements GazeMotionListener {
     public int[] scores;
     public int[] maxScores;
 
-    //parameters for AOI
-    private int movementHistoryidx = 0;
-    private final List<AreaOfInterestProps> allAOIList = new ArrayList<>();
-    private final AreaOfInterestGrouper aoiGrouper = new AreaOfInterestGrouper();
-    @Getter
-    private final List<List<CoordinatesTracker>> allAOIListTemp = new ArrayList<>();
-    @Getter
-    private final List<int[]> startAndEndIdx = new ArrayList<>();
-    @Getter
-    private final List<Polygon> allAOIListPolygon = new ArrayList<>();
-    @Getter
-    private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
-    private final double highestFixationTime = 0;
     private final Configuration config = ActiveConfigurationContext.getInstance();
-    private int colorIterator;
-    private final javafx.scene.paint.Color[] colors = new javafx.scene.paint.Color[]{
-        javafx.scene.paint.Color.PURPLE,
-        javafx.scene.paint.Color.WHITE,
-        javafx.scene.paint.Color.PINK,
-        javafx.scene.paint.Color.ORANGE,
-        javafx.scene.paint.Color.BLUE,
-        javafx.scene.paint.Color.RED,
-        javafx.scene.paint.Color.CHOCOLATE
-    };
-
     // Static on purpose: the configuration menu belongs to the game screen, built before the games create their
     // Stats. One game per JVM: it is the state of the game screen of this process
     private static boolean configMenuOpen = false;
@@ -400,20 +373,6 @@ public class Stats implements GazeMotionListener {
         return files.isEmpty() ? Optional.empty() : Optional.of(files.get(files.size() - 1));
     }
 
-    private void generateAOIList(final int index) {
-        aoiGrouper.add(movementHistory, index).ifPresent(area -> {
-            allAOIListTemp.add(area.samples());
-            startAndEndIdx.add(new int[]{area.start(), area.end()});
-            allAOIListPolygonPt.add(area.rectangle());
-
-            final Polygon areaOfInterest = new Polygon();
-            areaOfInterest.getPoints().addAll(area.rectangle());
-            colorIterator = index % 7;
-            areaOfInterest.setStroke(colors[colorIterator]);
-            allAOIListPolygon.add(areaOfInterest);
-        });
-    }
-
     public void start() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
@@ -443,7 +402,6 @@ public class Stats implements GazeMotionListener {
                     // thread (samples queued while it was busy got the same time, and the time of the next ones)
                     final long sampleTime = e.getSampleTime() > 0 ? e.getSampleTime() : clock.getAsLong();
                     final long timeToFixation = sampleTime - startTime;
-                    final long timeInterval = (timeToFixation - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                     final int getX = (int) toSceneCoordinate.getX();
                     final int getY = (int) toSceneCoordinate.getY();
@@ -459,23 +417,11 @@ public class Stats implements GazeMotionListener {
                             incrementFixationSequence(getX, getY, sampleTime, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
 
+                        // AREA_OF_INTEREST_DISABLED=true means enabled (misleading name of a persistent key)
                         if (config.isAreaOfInterestDisabled()) {
-                            if (getX != previousXMouse || getY != previousYMouse) {
-                                previousXMouse = getX;
-                                previousYMouse = getY;
-                                movementHistory
-                                    .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                                movementHistoryidx++;
-                                if (movementHistoryidx > 1) {
-                                    generateAOIList(movementHistoryidx - 1);
-                                }
-                                previousTime = timeToFixation;
-                            }
+                            gazeAreasOfInterest.add(getX, getY, timeToFixation);
                         }
                     }
-                }
-                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
-                    takeScreenshotWithThread();
                 }
             };
 
@@ -484,7 +430,6 @@ public class Stats implements GazeMotionListener {
                 // R1)
                 if (!configMenuOpen && isMouseMovement(e)) {
                     final long timeElapsedMillis = clock.getAsLong() - startTime;
-                    final long timeInterval = (timeElapsedMillis - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                     final int getX = (int) toSceneCoordinate.getX();
                     final int getY = (int) toSceneCoordinate.getY();
@@ -500,24 +445,9 @@ public class Stats implements GazeMotionListener {
                         }
 
                         if (config.isAreaOfInterestDisabled()) {
-                            if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
-                                previousXGaze = getX;
-                                previousYGaze = getY;
-                                movementHistory
-                                    .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                                movementHistoryidx++;
-                                if (movementHistoryidx > 1) {
-                                    generateAOIList(movementHistoryidx - 1);
-                                }
-                                previousTime = timeElapsedMillis;
-                                counter = 0;
-                            }
-                            counter++;
+                            mouseAreasOfInterest.add(getX, getY, timeElapsedMillis);
                         }
                     }
-                }
-                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
-                    takeScreenshotWithThread();
                 }
             };
 
@@ -540,10 +470,6 @@ public class Stats implements GazeMotionListener {
         coordinates.addProperty("time", timeElapsedMillis);
         coordinates.addProperty("event", event);
         saveCoordinates(coordinates);
-    }
-
-    public List<CoordinatesTracker> getMovementHistoryWithTime() {
-        return this.movementHistory;
     }
 
     public void reset() {
@@ -942,22 +868,5 @@ public class Stats implements GazeMotionListener {
 
     public static void setConfigMenuOpen(boolean configMenuStatus) {
         configMenuOpen = configMenuStatus;
-    }
-
-    public void takeScreenshotWithThread(){
-        if (System.currentTimeMillis() - currentTimeMillisScreenshot > 500){
-            takeScreenShot();
-            currentTimeMillisScreenshot = System.currentTimeMillis();
-            Thread threadScreenshot = new Thread(() -> {
-               final File todayDirectory = getGameStatsOfTheDayDirectory();
-               final String now = DateUtils.dateTimeNow();
-               final String nowMillis = Long.toString(currentTimeMillisScreenshot).substring(10);
-               final String screenShotFilePrefix = now + nowMillis + "-screenshot";
-               final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-               final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
-               saveImageAsPng(screenshotImage, screenShotFile);
-            });
-            threadScreenshot.start();
-        }
     }
 }

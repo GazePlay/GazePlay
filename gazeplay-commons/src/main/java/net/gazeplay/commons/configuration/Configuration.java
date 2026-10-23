@@ -42,7 +42,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
     private static final String PROPERTY_NAME_LIMITER_SCORE_ENABLED = "LIMITER_SCORE_ENABLED";
     private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
-    /* Bera settings */
+    /* Settings of the evaluations (GazePlay Eval) */
     private static final String PROPERTY_NAME_TRANSITION_TIME = "TRANSITION_TIME";
     private static final String PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME = "DELAY_BEFORE_SELECTION_TIME";
     private static final String PROPERTY_NAME_QUESTION_TIME_ENABLED = "QUESTION_TIME_ENABLED";
@@ -63,7 +63,6 @@ public class Configuration {
     /* Directories settings */
     private static final String PROPERTY_NAME_FILE_DIR = "FILE_DIR";
     private static final String PROPERTY_NAME_MUSIC_DIR = "MUSIC_DIR";
-    private static final String PROPERTY_NAME_VIDEO_DIR = "VIDEO_DIR";
     private static final String PROPERTY_NAME_WHERE_IS_IT_DIR = "WHERE_IS_IT_DIR";
     /* Stats settings */
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
@@ -74,8 +73,6 @@ public class Configuration {
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
     private static final String PROPERTY_NAME_FIXATION_SEQUENCE_DISABLED = "FIXATION_SEQUENCE_DISABLED";
-    private static final String PROPERTY_NAME_DATA_COLLECT_AUTHORIZED = "DATA_COLLECT_AUTHORIZED";
-    private static final String PROPERTY_NAME_MULTIPLE_SCREENSHOTS_ENABLED = "MULTIPLE_SCREENSHOTS_ENABLED";
     /* In game settings */
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
@@ -104,7 +101,7 @@ public class Configuration {
     private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
     private static final boolean DEFAULT_VALUE_LIMITER_SCORE_ENABLED = false;
     private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
-    /* Bera settings */
+    /* Settings of the evaluations (GazePlay Eval) */
     private static final int DEFAULT_VALUE_TRANSITION_TIME = 2000;
     private static final int DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME = 1000;
     private static final boolean DEFAULT_VALUE_QUESTION_TIME_ENABLED = false;
@@ -134,8 +131,6 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
     private static final boolean DEFAULT_VALUE_FIXATION_SEQUENCE_DISABLED = false;
-    private static final boolean DEFAULT_VALUE_DATA_COLLECT_AUTHORIZED = true;
-    private static final boolean DEFAULT_VALUE_MULTIPLE_SCREENSHOTS_ENABLED = false;
     /* In game settings */
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
@@ -174,7 +169,7 @@ public class Configuration {
     private final BooleanProperty limiterScoreEnabledProperty;
     @Getter
     private final IntegerProperty limiterScoreProperty;
-    /* Bera settings */
+    /* Settings of the evaluations (GazePlay Eval) */
     @Getter
     private final IntegerProperty transitionTimeProperty;
     @Getter
@@ -213,8 +208,6 @@ public class Configuration {
     @Getter
     private final StringProperty musicDirProperty;
     @Getter
-    private final StringProperty videoDirProperty;
-    @Getter
     private final StringProperty whereIsItDirProperty;
     /* Stats settings */
     @Getter
@@ -233,10 +226,6 @@ public class Configuration {
     private final BooleanProperty fixationSequenceDisabledProperty;
     @Getter
     private final BooleanProperty videoRecordingEnabledProperty;
-    @Getter
-    private final BooleanProperty dataCollectAuthorizedProperty;
-    @Getter
-    private final BooleanProperty multipleScreenshotsEnabledProperty;
     /* In game settings */
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -297,7 +286,7 @@ public class Configuration {
         limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
         tileColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_TILE_COLORS, DEFAULT_VALUE_TILE_COLORS, propertyChangeListener);
 
-        /* Bera settings */
+        /* Settings of the evaluations (GazePlay Eval) */
         transitionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_TRANSITION_TIME, DEFAULT_VALUE_TRANSITION_TIME, propertyChangeListener);
         delayBeforeSelectionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME, DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME, propertyChangeListener);
         questionTimeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_TIME_ENABLED, DEFAULT_VALUE_QUESTION_TIME_ENABLED, propertyChangeListener);
@@ -322,7 +311,6 @@ public class Configuration {
         /* Directories settings */
         fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILE_DIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
         musicDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_DIR, DEFAULT_VALUE_MUSIC_DIR, propertyChangeListener);
-        videoDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_DIR, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
         whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHERE_IS_IT_DIR, DEFAULT_VALUE_WHERE_IS_IT_DIR, propertyChangeListener);
 
         /* Stats settings */
@@ -333,8 +321,6 @@ public class Configuration {
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATION_SEQUENCE_DISABLED, DEFAULT_VALUE_FIXATION_SEQUENCE_DISABLED, propertyChangeListener);
         videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
-        dataCollectAuthorizedProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DATA_COLLECT_AUTHORIZED, DEFAULT_VALUE_DATA_COLLECT_AUTHORIZED, propertyChangeListener);
-        multipleScreenshotsEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_MULTIPLE_SCREENSHOTS_ENABLED, DEFAULT_VALUE_MULTIPLE_SCREENSHOTS_ENABLED, propertyChangeListener);
 
         /* In game settings */
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
@@ -459,7 +445,7 @@ public class Configuration {
         return limiterScoreProperty.getValue();
     }
 
-    /* Bera settings */
+    /* Settings of the evaluations (GazePlay Eval) */
 
     public Integer getTransitionTime() {
         return transitionTimeProperty.getValue();
@@ -531,10 +517,6 @@ public class Configuration {
         return musicDirProperty.getValue();
     }
 
-    public String getVideoDir() {
-        return videoDirProperty.getValue();
-    }
-
     public String getWhereIsItDir() {
         return whereIsItDirProperty.getValue();
     }
@@ -576,14 +558,6 @@ public class Configuration {
 
     public Boolean isVideoRecordingEnabled() {
         return videoRecordingEnabledProperty.getValue();
-    }
-
-    public Boolean isDataCollectAuthorized() {
-        return dataCollectAuthorizedProperty.getValue();
-    }
-
-    public Boolean isMultipleScreenshotsEnabled() {
-        return multipleScreenshotsEnabledProperty.getValue();
     }
 
     /* In game settings */
@@ -680,7 +654,7 @@ public class Configuration {
         limiterTimeProperty.setValue(limiterTime);
     }
 
-    /* Bera settings */
+    /* Settings of the evaluations (GazePlay Eval) */
 
     public void setFeedback(final String feedback) {
         feedbackProperty.setValue(feedback);
@@ -723,10 +697,6 @@ public class Configuration {
 
     public void setMusicDir(final String musicDir) {
         musicDirProperty.setValue(musicDir);
-    }
-
-    public void setVideoDir(final String videoDir) {
-        videoDirProperty.setValue(videoDir);
     }
 
     public void setWhereIsItDir(final String whereIsItDir) {

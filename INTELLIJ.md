@@ -150,8 +150,8 @@ Lancée depuis IntelliJ, l'application utilise **vos vraies données**, comme la
 avec les profils, les réglages (`GazePlay.properties`), les résultats (`statistics/`) et les journaux (`gazeplay.log`).
 Jusqu'en octobre 2026, ce dossier était `C:\Users\<vous>\GazePlay` : au premier lancement, GazePlay l'y déplace.
 
-**Édition** : seul GazePlay normal existe désormais. Le fichier `argsGazeplay.txt` du dossier contient `gazeplay`. Une
-ancienne valeur `bera` ou `afsrGazeplay`, laissée par une version précédente, est lue comme `gazeplay`.
+**Édition** : il n'y en a plus (les éditions AFSR et BERA ont été retirées). Un fichier `argsGazeplay.txt` laissé par
+une version précédente n'est plus lu.
 
 ## 6. Lancer les tests
 

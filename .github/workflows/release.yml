@@ -60,14 +60,14 @@ jobs:
       - name: Rename Releases
         run: |
           cd ./build/distributions/
-          mv gazeplay-linux-x64*.tar.gz gazeplay-linux-x64.tar.gz
-          # aarch64 first: "gazeplay-macos*" would also match it
-          mv gazeplay-macos-aarch64-*.tar.gz gazeplay-macos-aarch64.tar.gz
-          mv gazeplay-macos-[0-9]*.tar.gz gazeplay-macos.tar.gz
-          mv gazeplay-arm*.tar.gz gazeplay-arm.tar.gz
-          mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
-          mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
-          mv gazeplay-no-jre*.zip gazeplay-no-jre.zip          
+          mv gazeplay-learning-linux-x64*.tar.gz gazeplay-learning-linux-x64.tar.gz
+          # aarch64 first: "gazeplay-learning-macos*" would also match it
+          mv gazeplay-learning-macos-aarch64-*.tar.gz gazeplay-learning-macos-aarch64.tar.gz
+          mv gazeplay-learning-macos-[0-9]*.tar.gz gazeplay-learning-macos.tar.gz
+          mv gazeplay-learning-arm*.tar.gz gazeplay-learning-arm.tar.gz
+          mv gazeplay-learning-windows-x64*.zip gazeplay-learning-windows-x64.zip
+          mv gazeplay-learning-windows-x64*installer.exe gazeplay-learning-windows-x64-installer.exe
+          mv gazeplay-learning-no-jre*.zip gazeplay-learning-no-jre.zip          
           
       - name: Get Env
         run: |
@@ -136,4 +136,4 @@ jobs:
           commit: "master"
           prerelease: true
           draft: false
-          artifacts: "./build/distributions/gazeplay-linux-x64.tar.gz,./build/distributions/gazeplay-macos.tar.gz,./build/distributions/gazeplay-macos-aarch64.tar.gz,./build/distributions/gazeplay-arm.tar.gz,./build/distributions/gazeplay-windows-x64.zip,./build/distributions/gazeplay-windows-x64-installer.exe,./build/distributions/gazeplay-no-jre.zip"
+          artifacts: "./build/distributions/gazeplay-learning-linux-x64.tar.gz,./build/distributions/gazeplay-learning-macos.tar.gz,./build/distributions/gazeplay-learning-macos-aarch64.tar.gz,./build/distributions/gazeplay-learning-arm.tar.gz,./build/distributions/gazeplay-learning-windows-x64.zip,./build/distributions/gazeplay-learning-windows-x64-installer.exe,./build/distributions/gazeplay-learning-no-jre.zip"

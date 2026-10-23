@@ -88,7 +88,11 @@ public class GazePlay {
     }
 
     public void onDisplayAOI(Stats stats) {
-        AreaOfInterest areaOfInterest = new AreaOfInterest(this, stats);
+        onDisplayAOI(stats, AreaOfInterest.defaultSource(stats));
+    }
+
+    public void onDisplayAOI(Stats stats, AreaOfInterest.Source source) {
+        AreaOfInterest areaOfInterest = new AreaOfInterest(this, stats, source);
         areaOfInterest.setUpOnStage(primaryScene);
     }
 

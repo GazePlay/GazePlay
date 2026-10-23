@@ -36,6 +36,11 @@ licenseReport {
     configurations = ['runtimeClasspath']
 }
 
+// Name of the product in the files delivered (archives, launch scripts, installer): GazePlay Learning (decision of the
+// maintainer, October 2026). The Gradle projects, the Java packages and the files of the GazePlay folder keep their
+// names
+ext.distributionName = 'gazeplay-learning'
+
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
 apply from: "${rootDir}/gradle/jre.gradle"
@@ -136,13 +141,11 @@ subprojects {
         jvmArgs '--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow'
 
         // Hermetic tests: never read, write or move the real GazePlay folder (Documents/GazePlay_Learning, formerly
-        // ~/GazePlay), nor depend on the edition file (argsGazeplay.txt) of the machine running the build. A fresh
-        // home is created for each run. The GazePlay folder is given (gazeplay.folder): the Documents folder found by
-        // Windows does not depend on user.home
+        // ~/GazePlay). A fresh home is created for each run. The GazePlay folder is given (gazeplay.folder): the
+        // Documents folder found by Windows does not depend on user.home
         def testHome = layout.buildDirectory.dir("test-home/${name}").get().asFile
         systemProperty 'user.home', testHome.absolutePath
         systemProperty 'gazeplay.folder', new File(testHome, 'GazePlay').absolutePath
-        systemProperty 'gazeplay.argsFile', new File(testHome, 'argsGazeplay.txt').absolutePath
         // JavaFX runs without any window (Monocle) unless -Pgui is given, e.g. to watch a test while debugging.
         // AWT (screen recording, robot) is not affected and still needs a display (xvfb in the CI).
         if (!project.hasProperty('gui')) {
@@ -166,7 +169,6 @@ subprojects {
         doFirst {
             testHome.deleteDir()
             testHome.mkdirs()
-            new File(testHome, 'argsGazeplay.txt').setText('gazeplay', 'UTF-8')
         }
     }
 
@@ -208,8 +210,12 @@ def licenseReportContents = copySpec {
 }
 
 distributions {
+    main {
+        distributionBaseName = distributionName
+    }
+
     noJRE {
-        setDistributionBaseName "${project.name}-no-jre"
+        setDistributionBaseName "${distributionName}-no-jre"
         contents {
             with distributions.main.contents
             with licenseReportContents
@@ -220,13 +226,13 @@ distributions {
     }
 
     windows {
-        setDistributionBaseName "${project.name}-windows-x64"
+        setDistributionBaseName "${distributionName}-windows-x64"
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('win64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
-            from("build/bin/gazeplay-windows.bat") {
+            from("build/bin/gazeplay-learning-windows.bat") {
                 into 'bin'
             }
             from("build/jre/windows-x64") {
@@ -236,13 +242,13 @@ distributions {
     }
 
     linux {
-        setDistributionBaseName "${project.name}-linux-x64"
+        setDistributionBaseName "${distributionName}-linux-x64"
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('linux64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
-            from("build/bin/gazeplay-linux.sh") {
+            from("build/bin/gazeplay-learning-linux.sh") {
                 into 'bin'
             }
             from("build/jre/linux-x64") {
@@ -255,13 +261,13 @@ distributions {
     }
 
     arm {
-        setDistributionBaseName "${project.name}-arm"
+        setDistributionBaseName "${distributionName}-arm"
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('linux-arm64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
-            from("build/bin/gazeplay-arm.sh") {
+            from("build/bin/gazeplay-learning-arm.sh") {
                 into 'bin'
             }
             from("build/jre/arm") {
@@ -271,13 +277,13 @@ distributions {
     }
 
     macos {
-        setDistributionBaseName "${project.name}-macos"
+        setDistributionBaseName "${distributionName}-macos"
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('osx64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
-            from("build/bin/gazeplay-macos.sh") {
+            from("build/bin/gazeplay-learning-macos.sh") {
                 into 'bin'
             }
             from("build/jre/macos") {
@@ -288,13 +294,13 @@ distributions {
 
     // Apple Silicon: same launch scripts, native runtime and ffmpeg (the x64 one needs Rosetta 2)
     macosAarch64 {
-        setDistributionBaseName "${project.name}-macos-aarch64"
+        setDistributionBaseName "${distributionName}-macos-aarch64"
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('osxm1')
             exclude compileTimeJavaFxJars
             with licenseReportContents
-            from("build/bin/gazeplay-macos.sh") {
+            from("build/bin/gazeplay-learning-macos.sh") {
                 into 'bin'
             }
             from("build/jre/macos-aarch64") {

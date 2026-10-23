@@ -28,7 +28,8 @@ task prepareInnoSetupFiles(group: 'distribution') {
             rename("setup.iss.skel", "setup.iss")
             expand([
                     applicationVersion: "${version}",
-                    unpackedDirectory : "${installerInputDir}\\\\${project.name}-windows-x64-${version}"
+                    distributionName  : distributionName,
+                    unpackedDirectory : "${installerInputDir}\\\\${distributionName}-windows-x64-${version}"
             ])
             into(innoSetupDir)
         }
@@ -55,7 +56,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
 }
 
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
+    from zipTree("${buildDir}/distributions/${distributionName}-windows-x64-${version}.zip")
     into "${buildDir}/${installerInputDir}"
     filePermissions { unix(0777) }
     dirPermissions { unix(0777) }

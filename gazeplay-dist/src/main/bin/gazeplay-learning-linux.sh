@@ -1,5 +1,5 @@
 #!/bin/sh
-# GazePlay launcher (Linux x64)
+# GazePlay Learning launcher (Linux x64)
 set -e
 
 # Paths are resolved from the location of this script, whatever the working directory
