@@ -61,6 +61,10 @@ differences between the versions and converts the fixation sequence when the rep
 are dated when they are read from the eye tracker (`GazeSample.time`, carried by `GazeEvent.getSampleTime()`). The behaviour is pinned by
 `StatsRecordingCharacterizationTest` and `ReplayDataWriterTest`; the history is in MODERNIZATION.md.
 
+When the areas of interest are enabled, `Stats` also computes them during the game, for each source separately
+(`AreaOfInterestRecording`, one for the gaze and one for the mouse, grouping with `AreaOfInterestGrouper`). The
+`AreaOfInterest` screen shows one source at a time; nothing is written to disk.
+
 GazePlay Eval writes its exports (CSV in UTF-16, Excel) through `EvalReport`, tested by `EvalReportTest`.
 
 ## Configuration

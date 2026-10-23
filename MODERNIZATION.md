@@ -1358,21 +1358,21 @@ Paquets Java `net.gazeplay`, modules et jars Gradle, `GazePlay.properties`, `gaz
 ### Vérifié (Windows 11, JDK 25)
 - `./gradlew build smokeTest` : **414 tests, 0 échec** ; `smokeTest` 3/3 ; SpotBugs vert.
 - **Captures d'écran de la vraie application** (distribution Windows reconstruite, dossier jetable) : écran des profils (lettres animées et « Learning » dessous) et menu (nouveau logo, bandeau « GazePlay Learning »).
-- **Non vérifié** : l'écran des zones d'intérêt dans l'application (il faut activer les zones et jouer une partie) ; le thème sombre.
+- **Vérifié par le mainteneur** (23/10/2026) : « tout marche » (logo, réglages, menu, raccourci, écran des zones d'intérêt). Commit `14cf103b2` (étapes 30 à 32).
+- **Non vérifié** : le thème sombre.
 
 ---
 
 ## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 32)
 
 ### État
-- Branche **`addClaudeCode`**. Dernier commit poussé : `0c970566f` (étape 29), CI verte sur les 7 jobs. Les étapes 30 à 32 et ce ménage ne sont pas commités.
+- Branche **`addClaudeCode`**. Dernier commit poussé : `14cf103b2` (étapes 30 à 32), vérifié par le mainteneur dans l'application. La mise à jour de la documentation qui suit n'est pas commitée.
 - Suite locale : 414 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
 - Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
 - Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07).
 
 ### Reste à faire, dans l'ordre
-1. Essais du mainteneur : titre et logo « GazePlay Learning », réglages (page normale, sans « Dossier des vidéos »), choix d'un jeu au menu, création d'un raccourci de jeu, et l'écran des zones d'intérêt (activer les zones, jouer, puis bouton des zones : boutons « Regard » / « Souris »).
-2. **Fin de la modernisation**, puis, dans cet ordre (décision du mainteneur du 23/10/2026) : fusion de `GazePlayLearning` (avec les restes d'Eval : 3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs), test de l'installation réelle par l'installeur Windows, numéro de version (1.12.0 proposé) et publication.
+1. **Fin de la modernisation**, puis, dans cet ordre (décision du mainteneur du 23/10/2026) : fusion de `GazePlayLearning` (avec les restes d'Eval : 3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs), test de l'installation réelle par l'installeur Windows, numéro de version (1.12.0 proposé) et publication.
 
 ### Décisions du mainteneur en vigueur
 64 bits seulement ; formats de résultats versionnés (v3) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.
