@@ -1540,6 +1540,14 @@ Aucun format ne change. Les fichiers de résultats n'ont simplement plus de poin
 
 **Fin de la modernisation** : avec cette validation, les étapes 1 à 37 sont terminées. La suite (fusion de `GazePlayLearning`, refonte graphique du menu principal, puis GazePlay 2.0) et les décisions encore ouvertes sont listées en section 9.
 
+## 2ao. Correction après la fin : plantage aléatoire de SpaceGame (26/10/2026)
+
+- **Fait** : la CI de `0234f6cf9` (job `all-games`, run 40358905052) a signalé SpaceGame (variante EASY) : `IndexOutOfBoundsException: Index 1 out of bounds for length 1` dans l'écouteur de collision d'un tir du vaisseau (`SpaceGame.computeBulletPlayer`). Le jeu continuait, mais l'erreur était journalisée. Bogue ancien (logique d'origine, `e886ac934`), sans lien avec l'étape 37 ; il dépend du hasard de la partie, d'où `allGamesTest` vert en local.
+- **Cause (vérifiée dans le code compilé de JavaFX 21, `Parent.onProposedChange`)** : avant d'enlever un nœud de la liste, JavaFX le détache de son parent, ce qui relance les autres écouteurs de collision du même tir. Un tir qui touche deux aliens à la fois était alors retiré une seconde fois au milieu du premier retrait.
+- **Correction** : le tir est retiré de l'écran juste après les vérifications de collision (`removeBulletLater`, `Platform.runLater`), pour les aliens comme pour le boss. Règles du jeu inchangées : le tir disparaît au plus une image plus tard. Aucun effet sur les résultats.
+- **Vérifié** : compilation, tests et SpotBugs du module `gazeplay-games`. Pas de test qui reproduise le cas (il faut un tir sur deux aliens au même instant).
+- **Risque restant** : les écouteurs de collision sont recréés à chaque image pour chaque paire tir-ennemi (code d'origine, non modifié) ; ils ne disparaissent que lorsque le ramasse-miettes les libère (l'ancien code appelait `System.gc()` en commentaire « pour enlever les ralentissements des tirs »). **Hypothèse** : un même contact peut donc être compté plusieurs fois par le boss. À revoir si SpaceGame est repris.
+
 ---
 
 ## 9. État à la fin de la modernisation (26/10/2026)

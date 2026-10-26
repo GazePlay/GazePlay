@@ -1,6 +1,7 @@
 package net.gazeplay.games.space;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.event.Event;
@@ -617,6 +618,16 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     /**
+     * Removes a bullet of the ship from the screen after the current collision checks. Removed at once from a
+     * collision listener, the bullet leaves its parent in the middle of the removal, which runs its other collision
+     * listeners: a bullet touching two aliens was then removed a second time inside the first removal, which failed
+     * with an IndexOutOfBoundsException.
+     */
+    private void removeBulletLater(final Rectangle bullet) {
+        Platform.runLater(() -> middleLayer.getChildren().remove(bullet));
+    }
+
+    /**
      * Shoots the bullets of the ship at regular intervals, and checks whether they hit an alien or a boss.
      */
     private void computeBulletPlayer() {
@@ -674,7 +685,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             bulletListRec.remove(r);
                             aliens.remove(b);
                             backgroundLayer.getChildren().remove(b);
-                            middleLayer.getChildren().remove(r);
+                            removeBulletLater(r);
                             updateScore();
                         }
 
@@ -748,7 +759,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 parallelTransition4.play();
 
                                 bosses.remove(b);
-                                middleLayer.getChildren().remove(r);
+                                removeBulletLater(r);
                                 backgroundLayer.getChildren().remove(b);
                                 bossHit = 0;
                                 updateScore();
