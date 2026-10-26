@@ -21,6 +21,10 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+/**
+ * A numbered dot of the DotToDot game, selected by a fixation; selecting the right next dot draws the line from the
+ * previous one.
+ */
 @Slf4j
 public class DotEntity extends Parent {
     private final IGameContext gameContext;
@@ -80,14 +84,23 @@ public class DotEntity extends Parent {
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
     }
 
+    /**
+     * @return the horizontal position of the center of the dot
+     */
     double getXValue() {
         return this.dotShape.getLayoutX() + this.dotShape.getPrefWidth() / 2;
     }
 
+    /**
+     * @return the vertical position of the center of the dot
+     */
     double getYValue() {
         return this.dotShape.getLayoutY() + this.dotShape.getPrefHeight() / 2;
     }
 
+    /**
+     * Draws the line from the previous dot when this dot is the expected one; otherwise counts a fail.
+     */
     public void drawTheLine() {
         if (previous == gameObject.getPrevious()) {
 
@@ -141,6 +154,9 @@ public class DotEntity extends Parent {
         }
     }
 
+    /**
+     * Draws a line between two dots.
+     */
     public void nextDot(double startX, double startY, double endX, double endY) {
         Line line = new Line(startX, startY, endX, endY);
         line.setStyle("-fx-stroke: indigo;");
@@ -151,6 +167,9 @@ public class DotEntity extends Parent {
         gameContext.getChildren().add(line);
     }
 
+    /**
+     * @return whether the player may go to the next level: no dot with more than one fail in the last three rounds
+     */
     public boolean nextLevelDecision() {
         int nbOfGoalsReached = stats.nbGoalsReached;
         int compare = 3;
@@ -162,6 +181,9 @@ public class DotEntity extends Parent {
         return (compare == 3);
     }
 
+    /**
+     * Applies the size of the progress indicator chosen in the settings.
+     */
     private void verifyProgressBarValue() {
         progressIndicator.setMinWidth(gameContext.getConfiguration().getProgressBarSize() / 100.0);
         progressIndicator.setMinHeight(gameContext.getConfiguration().getProgressBarSize() / 100.0);

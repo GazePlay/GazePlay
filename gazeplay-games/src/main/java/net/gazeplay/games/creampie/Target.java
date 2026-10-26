@@ -22,6 +22,8 @@ import net.gazeplay.components.RandomPositionGenerator;
 import java.util.ArrayList;
 
 /**
+ * The target of the Creampie game, showing a picture of the user (or a default one).
+ * <p>
  * Created by schwab on 26/12/2016.
  */
 @Slf4j
@@ -82,6 +84,9 @@ public class Target extends ProgressPortrait {
         gameContext.start();
     }
 
+    /**
+     * Places the target at a random place of the upper 80 % of the game area.
+     */
     private void createTarget() {
         final Position newPosition = randomPositionGenerator.newRandomBoundedPositionCreamPie(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
@@ -99,6 +104,9 @@ public class Target extends ProgressPortrait {
         active();
     }
 
+    /**
+     * Counts a goal and throws a pie at the target.
+     */
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
@@ -118,6 +126,9 @@ public class Target extends ProgressPortrait {
         return this.targetAOIList;
     }
 
+    /**
+     * @return the animation of the target hit by the pie
+     */
     private Animation createAnimation() {
         final Timeline timeline = new Timeline();
 
@@ -144,6 +155,9 @@ public class Target extends ProgressPortrait {
         return timeline;
     }
 
+    /**
+     * Moves the target to another random place.
+     */
     private void newPosition() {
         final Position newPosition = randomPositionGenerator.newRandomBoundedPositionCreamPie(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();

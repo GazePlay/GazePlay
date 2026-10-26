@@ -8,6 +8,10 @@ import net.gazeplay.games.TowerDefense.maps.Map;
 
 import static net.gazeplay.games.TowerDefense.maps.Map.*;
 
+/**
+ * An enemy of the Tower Defense game, following the road of the map from its start to its end. Positions and speeds in
+ * tiles (per frame).
+ */
 public abstract class Enemy {
 
     private final Map map;
@@ -45,6 +49,10 @@ public abstract class Enemy {
         this.enemyImage = enemyImage;
     }
 
+    /**
+     * Moves the enemy along the road, turning at its bends; marks it when it reaches the end. The game does not move
+     * the enemies frozen by its blizzard.
+     */
     public void move(){
         double newX = x + speedX;
         if(speedX > 0){
@@ -106,18 +114,30 @@ public abstract class Enemy {
         return y;
     }
 
+    /**
+     * @return the zone where the projectiles hit the enemy
+     */
     public Rectangle getHitbox() {
         return new Rectangle(x + 0.3, y + 0.3, 0.4, 0.4);
     }
 
+    /**
+     * @return the center of the enemy
+     */
     public Point2D getCenter(){
         return new Point2D(x + 0.5, y + 0.5);
     }
 
+    /**
+     * @return the health left, as a fraction of the maximum
+     */
     public double getRelativeHeath(){
         return currentHealth/maxHealth;
     }
 
+    /**
+     * Removes health.
+     */
     public void loseHP(double value){
         currentHealth -= value;
     }
@@ -134,11 +154,17 @@ public abstract class Enemy {
         return reachedEnd;
     }
 
+    /**
+     * Makes the enemy stronger (later waves), its health full.
+     */
     public void multiplyHealth(double multiplier){
         maxHealth = maxHealth*multiplier;
         currentHealth = maxHealth;
     }
 
+    /**
+     * @return the angle of the enemy, for its direction
+     */
     public double getRotation() {
         double rotation = 0;
         if(speedX>0){

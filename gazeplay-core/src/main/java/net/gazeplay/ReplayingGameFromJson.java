@@ -51,6 +51,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+/**
+ * Replay of a game from its replayData.json file: the game is started again with the same variant and random seed (so
+ * the same targets appear), and the recorded gaze and mouse samples are dispatched to it at their recorded pace, drawn
+ * as two trails (blue for the gaze, red for the mouse) on a canvas over the game.
+ * <p>
+ * Only the games of {@link #replayIsAllowed(String) the replayable list} are offered: the others do not replay
+ * faithfully (see the list). The files of every version of the format are read (see {@code ReplayDataFormat}).
+ */
 @Slf4j
 public class ReplayingGameFromJson {
 
@@ -114,7 +122,6 @@ public class ReplayingGameFromJson {
     private LifeCycle lifeCycle;
     private RoundsDurationReport roundsDurationReport;
     private SavedStatsInfo savedStatsInfo;
-    private int nextTimeMouse, nextTimeGaze, prevTimeMouse, prevTimeGaze;
     private double sceneAspectRatio;
 
     private Thread workingThread;
@@ -128,10 +135,17 @@ public class ReplayingGameFromJson {
         this.gamesList = games;
     }
 
+    /**
+     * @return whether the replay of this game is offered
+     */
     public static boolean replayIsAllowed(String gameCode) {
         return replayableGameList.contains(gameCode);
     }
 
+    /**
+     * Reads a replayData.json file (checked against its JSON schema; a mismatch is only logged), and the names of the
+     * other result files of its round. Does nothing for a null name (file chooser cancelled).
+     */
     public void pickJSONFile(String fileName) throws IOException {
         this.fileName = fileName;
         if (fileName == null) {
@@ -186,6 +200,11 @@ public class ReplayingGameFromJson {
             colorBandsFile, replayDataFile);
     }
 
+    /**
+     * Asks the user to choose a replayData.json file.
+     *
+     * @return the chosen file, null when cancelled
+     */
     public String getFileName() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -201,6 +220,9 @@ public class ReplayingGameFromJson {
         return selectedFileName;
     }
 
+    /**
+     * Replays the chosen file in a new JVM, in a window of the proportions of the scene of the recorded game.
+     */
     public void replayGame() {
         if (fileName == null) {
             return;
@@ -219,6 +241,9 @@ public class ReplayingGameFromJson {
         launchGame((int) width, (int) height);
     }
 
+    /**
+     * Shows a new game screen, and finds the game and the variant of the file.
+     */
     public void getSpecAndVariant() {
         gameContext = gameContextFactory.get();
         gazePlay.onGameLaunch(gameContext);
@@ -234,6 +259,10 @@ public class ReplayingGameFromJson {
         }
     }
 
+    /**
+     * Starts the replay in this JVM: the game is created with the saved seed, and a background thread dispatches the
+     * recorded samples at their pace; the statistics screen is shown at the end.
+     */
     public void drawLines() {
         if (fileName == null) {
             return;
@@ -272,6 +301,9 @@ public class ReplayingGameFromJson {
         workingThread.start();
     }
 
+    /**
+     * Shows the loading screen and starts the JVM of the replay, of the given size.
+     */
     private void launchGame(final int width, final int height) {
         Task task = new Task<Void>() {
             @Override
@@ -288,6 +320,11 @@ public class ReplayingGameFromJson {
         GameMenuController.runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
     }
 
+    /**
+     * @return the command starting GazePlay in a new JVM to replay the file, with the JVM options of
+     *   {@link GazePlayLauncher#jvmOptions()}, the GazePlay folder, the user, the game, the file and the size of the
+     *   window
+     */
     public ProcessBuilder createBuilder(int height, int width) {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome +
@@ -295,10 +332,14 @@ public class ReplayingGameFromJson {
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
-        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin,
-            // The same GazePlay folder as the menu: the game does not look for it, nor move it, again
-            "-D" + GazePlayDirectories.GAZEPLAY_FOLDER_PROPERTY + "=" + GazePlayDirectories.getGazePlayFolder().getAbsolutePath(),
-            "-cp", classpath, GazePlayLauncher.class.getName()));
+        // The same JVM options as a game started from the menu (GameMenuController): the replay JVM used to start
+        // without them, and Java 25 then warned about the native access of JavaFX and Tobii
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-Djdk.gtk.version=2"));
+        commands.addAll(GazePlayLauncher.jvmOptions());
+        // The same GazePlay folder as the menu: the game does not look for it, nor move it, again
+        commands.add("-D" + GazePlayDirectories.GAZEPLAY_FOLDER_PROPERTY + "="
+            + GazePlayDirectories.getGazePlayFolder().getAbsolutePath());
+        commands.addAll(Arrays.asList("-cp", classpath, GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
         if (user != null && !user.equals("")) {
@@ -328,43 +369,53 @@ public class ReplayingGameFromJson {
         gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
 
+    /**
+     * Plays the recorded samples, on the background thread of the replay: each one is drawn and dispatched on the
+     * JavaFX thread at its recorded time since the start of the round. Stops when the thread is interrupted (home
+     * button).
+     * <p>
+     * The thread used to wait, after each sample, the interval since the previous sample of the same source: with the
+     * gaze and the mouse, the waits of both sources added up and the replay lasted longer than the game.
+     */
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
         Dimension2D dim2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double sceneWidth = dim2D.getWidth();
         double sceneHeight = dim2D.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
+        final long replayStart = System.nanoTime();
         synchronized (coordinatesAndTimeStamp) {
             for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
                 JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
                 String nextEvent = coordinateAndTimeObj.get("event").getAsString();
                 int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
                 int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
-                int delay;
-                if (nextEvent.equals("gaze")) {
-                    prevTimeGaze = nextTimeGaze;
-                    nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-                    delay = nextTimeGaze - prevTimeGaze;
-                    Platform.runLater(() -> {
-                        paint(graphics, canvas, nextX, nextY, "gaze");
-                    });
-                } else {
-                    prevTimeMouse = nextTimeMouse;
-                    nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-                    delay = nextTimeMouse - prevTimeMouse;
-                    Platform.runLater(() -> {
-                        paint(graphics, canvas, nextX, nextY, "mouse");
-                    });
-                }
+                final long sampleTime = Long.parseLong(coordinateAndTimeObj.get("time").getAsString());
+                final long elapsed = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - replayStart);
                 try {
-                    TimeUnit.MILLISECONDS.sleep(delay);
+                    TimeUnit.MILLISECONDS.sleep(delayBeforeSample(sampleTime, elapsed));
                 } catch (InterruptedException e) {
                     log.info("Game has been interrupted");
                     break;
                 }
+                final String event = nextEvent.equals("gaze") ? "gaze" : "mouse";
+                Platform.runLater(() -> paint(graphics, canvas, nextX, nextY, event));
             }
         }
     }
 
+    /**
+     * @param sampleTime time of a recorded sample since the start of the round, in ms
+     * @param elapsed    time since the start of the replay, in ms
+     * @return how long to wait before playing the sample: 0 when its time has come (the samples of the two sources can
+     *   be slightly out of order since format version 3)
+     */
+    static long delayBeforeSample(final long sampleTime, final long elapsed) {
+        return Math.max(0, sampleTime - elapsed);
+    }
+
+    /**
+     * Adds a gaze position to the trail, keeping the last {@code numberOfelementToDisplay} ones.
+     */
     public void updateGazeTab(int nextX, int nextY) {
         while (lastGazeCoordinates.size() >= numberOfelementToDisplay) {
             lastGazeCoordinates.pop();
@@ -372,6 +423,9 @@ public class ReplayingGameFromJson {
         lastGazeCoordinates.add(new Point2D(nextX, nextY));
     }
 
+    /**
+     * Adds a mouse position to the trail, keeping the last {@code numberOfelementToDisplay} ones.
+     */
     public void updateMouseTab(int nextX, int nextY) {
         while (lastMouseCoordinates.size() >= numberOfelementToDisplay) {
             lastMouseCoordinates.pop();
@@ -381,6 +435,9 @@ public class ReplayingGameFromJson {
 
     }
 
+    /**
+     * Draws the trails of the gaze and of the mouse.
+     */
     public void drawOvals(GraphicsContext graphics) {
 
         int circleSize = 10;
@@ -392,6 +449,9 @@ public class ReplayingGameFromJson {
         }
     }
 
+    /**
+     * Draws a trail: a line fading from the oldest to the newest position, and a dot on the newest one.
+     */
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
         Color tempStokeColor = strokeColor;
         Point2D point;
@@ -401,8 +461,8 @@ public class ReplayingGameFromJson {
             if (point != null && i != lastGazeCoordinates.size() - 1) {
                 tempStokeColor = Color.rgb(
                     (int) (strokeColor.getRed() * 255),
-                    (int) (strokeColor.getBlue() * 255),
                     (int) (strokeColor.getGreen() * 255),
+                    (int) (strokeColor.getBlue() * 255),
                     i * 1d / lastGazeCoordinates.size());
                 graphics.setStroke(tempStokeColor);
                 graphics.setLineWidth(5);
@@ -420,6 +480,9 @@ public class ReplayingGameFromJson {
 
     }
 
+    /**
+     * Draws a recorded sample and dispatches it to the game as a gaze or mouse event.
+     */
     public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
         if (!gameContext.getChildren().contains(canvas)) {
             gameContext.getChildren().add(canvas);
@@ -441,6 +504,9 @@ public class ReplayingGameFromJson {
 
 }
 
+/**
+ * Content of a replayData.json file, as read by Gson (the names of the fields are the keys of the file).
+ */
 class JsonFile {
     @Getter
     private double gameSeed;

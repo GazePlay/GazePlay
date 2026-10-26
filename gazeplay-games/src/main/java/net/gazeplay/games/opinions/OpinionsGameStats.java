@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Opinions" (see {@code Stats}).
+ */
 public class OpinionsGameStats extends Stats {
 
     public OpinionsGameStats(Scene gameContextScene) {

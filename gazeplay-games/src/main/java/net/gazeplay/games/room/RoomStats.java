@@ -11,6 +11,10 @@ import net.gazeplay.stats.ExplorationGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Room", with the info-game.csv file of the games without goal (see
+ * {@code ExplorationGamesStats}).
+ */
 @Slf4j
 public class RoomStats extends ExplorationGamesStats {
     public RoomStats(Scene scene) {

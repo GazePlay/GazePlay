@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
+/**
+ * The colors a client can ask for.
+ */
 public enum PotionMix {
     RED_Potion("Red", Color.RED),
     YELLOW_Potion("Yellow", Color.YELLOW),
@@ -24,6 +27,9 @@ public enum PotionMix {
         this.color = color;
     }
 
+    /**
+     * @return a color drawn at random
+     */
     public static PotionMix getRandomPotionRequest(ReplayablePseudoRandom randomGenerator) {
         return values()[randomGenerator.nextInt(values().length)];
     }

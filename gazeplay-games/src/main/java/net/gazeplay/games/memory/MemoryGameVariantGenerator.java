@@ -8,6 +8,10 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
 
+/**
+ * Gives the variants of the games "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters" and
+ * "OpenMemoryNumbers" proposed in the menu.
+ */
 public class MemoryGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {

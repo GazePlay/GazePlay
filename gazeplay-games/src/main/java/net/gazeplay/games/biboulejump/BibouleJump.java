@@ -6,7 +6,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -99,11 +98,17 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.variant = variant;
     }
 
+    /**
+     * Makes the biboule jump, with a sound; the stronger the platform, the higher the jump.
+     */
     private void bounce(final double intensity, final String soundName) {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
         gameContext.getSoundManager().add(DATA_PATH + "/sounds/" + soundName);
     }
 
+    /**
+     * Adds the background image, if enabled in the settings.
+     */
     void initBackground() {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
@@ -150,9 +155,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.platformWidth = dimensions.getWidth() / 7;
 
         initBackground();
-
-        final Label onScreenText = new Label();
-        foregroundLayer.getChildren().add(onScreenText);
 
         scoreText = new Text(0, 50, "0");
         scoreText.setTextAlignment(TextAlignment.CENTER);
@@ -451,9 +453,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         if (biboule.getY() >= dimensions.getHeight()) {
             death();
         }
-
-        // Uncomment to show on screen logs
-        // onScreenText.setText(logs);
     }
 
     /**

@@ -7,6 +7,10 @@ import lombok.Getter;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Color themes of the user interface (CSS_FILE setting), each one a stylesheet of data/stylesheets. The setting holds
+ * "builtin:" followed by the name of the theme, or the path of its stylesheet (older versions).
+ */
 @AllArgsConstructor
 public enum BuiltInUiTheme {
 
@@ -34,7 +38,6 @@ public enum BuiltInUiTheme {
     @Getter
     private final String label;
 
-    // @Getter
     private final String stylesheetResourceName;
 
     @Getter
@@ -46,10 +49,16 @@ public enum BuiltInUiTheme {
         this.supportedConfigPropertyValues = Sets.newHashSet(BUILTIN_PREFIX + name(), getStyleSheetPath());
     }
 
+    /**
+     * @return the value saved in the settings for this theme
+     */
     public String getPreferredConfigPropertyValue() {
         return BUILTIN_PREFIX + name();
     }
 
+    /**
+     * @return the resource path of the stylesheet, null for the system theme (no stylesheet)
+     */
     public String getStyleSheetPath() {
         if (stylesheetResourceName == null) {
             return null;
@@ -59,6 +68,9 @@ public enum BuiltInUiTheme {
 
     public static final BuiltInUiTheme DEFAULT_THEME = SILVER_AND_GOLD;
 
+    /**
+     * @return the theme of a value of the setting, empty when it is no built-in theme (e.g. a removed one)
+     */
     public static Optional<BuiltInUiTheme> findFromConfigPropertyValue(String configPropertyValue) {
         for (BuiltInUiTheme builtInUiTheme : BuiltInUiTheme.values()) {
             if (builtInUiTheme.getSupportedConfigPropertyValues().contains(configPropertyValue)) {

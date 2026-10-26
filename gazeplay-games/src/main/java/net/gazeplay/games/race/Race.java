@@ -26,6 +26,11 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
+/**
+ * Game "FrogsRace": bugs fly across the screen; each bug the gaze (or the mouse) enters is caught by the player's frog,
+ * whose racer moves forward after a number of bugs. The other frogs move on their own; the round ends when the first
+ * frog reaches the finish.
+ */
 @Slf4j
 public class Race extends Parent implements GameLifeCycle {
 
@@ -119,6 +124,9 @@ public class Race extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * @return the background picture
+     */
     Rectangle createBackground() {
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -145,6 +153,9 @@ public class Race extends Parent implements GameLifeCycle {
         return imageRectangle;
     }
 
+    /**
+     * Updates the positions used to aim at the bugs.
+     */
     private void updatePoints(final Rectangle rectangle) {
 
         endPoints[1].y = rectangle.getHeight();
@@ -165,6 +176,9 @@ public class Race extends Parent implements GameLifeCycle {
         endPoints[7].y = rectangle.getHeight();
     }
 
+    /**
+     * @return the angle from the frog to a point, in degrees
+     */
     public float getAngle(final Point target) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         float angle = (float) Math
@@ -177,6 +191,9 @@ public class Race extends Parent implements GameLifeCycle {
         return angle;
     }
 
+    /**
+     * Places the frog (catching the bugs) for the size of the game area.
+     */
     public void updateHand() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double x = dimension2D.getHeight();
@@ -195,6 +212,9 @@ public class Race extends Parent implements GameLifeCycle {
         hand.setLayoutY(dimension2D.getHeight() / cst2);
     }
 
+    /**
+     * Places the cage for the size of the game area.
+     */
     public void updateCage() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
@@ -211,6 +231,9 @@ public class Race extends Parent implements GameLifeCycle {
         cage.setPreserveRatio(true);
     }
 
+    /**
+     * Places the score for the size of the game area.
+     */
     public void updateScore(final Label sc, final Label tc) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -333,7 +356,6 @@ public class Race extends Parent implements GameLifeCycle {
 
         this.getChildren().add(sc);
 
-        this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
         updateCage();
@@ -374,26 +396,10 @@ public class Race extends Parent implements GameLifeCycle {
         this.getChildren().clear();
     }
 
-    private Transition restartTransition(final Target t) {
-
-        final FadeTransition ft = new FadeTransition(Duration.millis(1), t);
-        ft.setFromValue(0);
-        ft.setToValue(1);
-
-        final TranslateTransition tt1 = new TranslateTransition(Duration.millis(1), t);
-        tt1.setToY(0);
-        tt1.setToX(0);
-
-        final ScaleTransition st = new ScaleTransition(Duration.millis(1), t);
-        st.setToX(1);
-        st.setToY(1);
-
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(ft, tt1, st);
-
-        return pt;
-    }
-
+    /**
+     * Catches a bug: counts it, plays a sound, makes it disappear and sends another one; the player's racer moves
+     * forward every few bugs.
+     */
     private void enter(final Target t) {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -463,6 +469,9 @@ public class Race extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Sends a new bug.
+     */
     private void newCircle() {
 
         final Target sp = buildCircle();
@@ -485,6 +494,9 @@ public class Race extends Parent implements GameLifeCycle {
         moveCircle(sp);
     }
 
+    /**
+     * Creates the racer of the player.
+     */
     private void makePlayer(final double racerPosition) {
 
         Scene scene = gameContext.getPrimaryScene();
@@ -501,6 +513,9 @@ public class Race extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Moves the racer of the player forward.
+     */
     private void movePlayer(final Target frogRacer, final int iteration) {
         final double timelength = 1000;
         final double movementDistance = iteration * 0.05;
@@ -521,6 +536,9 @@ public class Race extends Parent implements GameLifeCycle {
         pt.play();
     }
 
+    /**
+     * Shows the end of the race.
+     */
     private void raceFinished() {
         for (int i = 0; i < 3; i++) {
             getChildren().remove(racers[i]);
@@ -532,13 +550,14 @@ public class Race extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Creates the other racers, moving on their own.
+     */
     private Target makeRacers(final double racerPosition) {
 
         Scene scene = gameContext.getPrimaryScene();
         final double size = Math.min(scene.getWidth() / 10, scene.getHeight() / 10);
         final Target frogRacer = buildRacer(size);
-
-        int numberOfRacer = 0;
 
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setSaturation(1.3);
@@ -571,6 +590,9 @@ public class Race extends Parent implements GameLifeCycle {
         return frogRacer;
     }
 
+    /**
+     * Resizes an image for the size of the scene.
+     */
     private void resize(final ImageView i) {
         Scene scene = gameContext.getPrimaryScene();
         final double size = Math.min(scene.getWidth() / 30, scene.getHeight() / 30);
@@ -578,11 +600,17 @@ public class Race extends Parent implements GameLifeCycle {
         i.setFitWidth(size * 5 / 4);
     }
 
+    /**
+     * Resizes a racer.
+     */
     private void resizeRacer(final ImageView i, final double size) {
         i.setFitHeight(size);
         i.setFitWidth(size * 5 / 4);
     }
 
+    /**
+     * @return a racer frog
+     */
     private Target buildRacer(final double racerSize) {
 
         final Target sp = new Target();
@@ -592,6 +620,9 @@ public class Race extends Parent implements GameLifeCycle {
         return sp;
     }
 
+    /**
+     * @return a bug
+     */
     private Target buildCircle() {
 
         final Target sp = new Target();
@@ -623,6 +654,9 @@ public class Race extends Parent implements GameLifeCycle {
         return sp;
     }
 
+    /**
+     * Moves a bug to a random place, in a random time.
+     */
     private void moveCircle(final Target sp) {
         final double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
 
@@ -678,6 +712,9 @@ public class Race extends Parent implements GameLifeCycle {
         pt.play();
     }
 
+    /**
+     * Starts a new race when a racer reaches the finish.
+     */
     private void endGame(Target frogRacer) {
         if (frogRacer.getBoundsInParent().getMinX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
             numberOfRacerFinished = numberOfRacerFinished + 1;

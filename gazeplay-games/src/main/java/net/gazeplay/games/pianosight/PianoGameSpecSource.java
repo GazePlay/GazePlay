@@ -5,6 +5,10 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
+/**
+ * Declares the game "Piano" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class PianoGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

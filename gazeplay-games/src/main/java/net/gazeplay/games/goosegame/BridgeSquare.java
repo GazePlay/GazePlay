@@ -4,6 +4,9 @@ import lombok.Setter;
 import net.gazeplay.components.Position;
 
 
+/**
+ * Bridge square of the Goose game: the pawn landing on it goes on to its destination square.
+ */
 public class BridgeSquare extends Square {
     @Setter
     Square destinationSquare;

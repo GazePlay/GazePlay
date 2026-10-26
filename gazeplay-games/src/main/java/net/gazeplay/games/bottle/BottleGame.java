@@ -22,6 +22,10 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
 
+/**
+ * Game "Bottle": bottles stand on shelves; a fixation on a bottle throws a ball that breaks it. The score counts the
+ * bottles broken; a restart button appears once they are all broken.
+ */
 @Slf4j
 public class BottleGame implements GameLifeCycle {
 
@@ -195,12 +199,18 @@ public class BottleGame implements GameLifeCycle {
         gameContext.onGameStarted();
     }
 
+    /**
+     * Creates the ball, hidden until a bottle is chosen.
+     */
     private void initBall() {
         ball = new Circle(Math.min(dimension2D.getWidth() / 40, dimension2D.getHeight() / 20) / 2);
         ball.setFill(new ImagePattern(new Image("data/bottle/ball.png")));
         ball.setVisible(false);
     }
 
+    /**
+     * Creates the shelves.
+     */
     private void initBar() {
         Rectangle bar1 = new Rectangle(dimension2D.getWidth() / 10, dimension2D.getHeight() / 7 + dimension2D.getHeight() / 6, dimension2D.getWidth() * 8 / 10, dimension2D.getHeight() / 20);
         bar1.setFill(new ImagePattern(new Image("data/bottle/etagere.png")));
@@ -210,6 +220,9 @@ public class BottleGame implements GameLifeCycle {
         gameContext.getChildren().addAll(bar1, bar2);
     }
 
+    /**
+     * Puts {@code nb} bottles on the shelves, of the size and type of the variant.
+     */
     private void createBottle(final int nb) {
         //Normal size
         int sizex=12;
@@ -294,6 +307,9 @@ public class BottleGame implements GameLifeCycle {
     }
 
 
+    /**
+     * Throws the ball from the bottom of the screen at a bottle, which breaks when the ball reaches it.
+     */
     private void ballMovement(ProgressButton bottle) {
         ball.toFront();
         ball.setTranslateX(dimension2D.getWidth() / 2);
@@ -319,6 +335,9 @@ public class BottleGame implements GameLifeCycle {
         timeline.play();
     }
 
+    /**
+     * Shows a bottle broken, then makes it disappear.
+     */
     private void bottleBreaker(ProgressButton bottle) {
         bottle.getImage().setImage(brokenBottle);
 
@@ -332,6 +351,9 @@ public class BottleGame implements GameLifeCycle {
         isBroken = false;
     }
 
+    /**
+     * Adds a point to the score.
+     */
     private void updateScore() {
         score = score + 1;
         scoreText.setText(String.valueOf(score));

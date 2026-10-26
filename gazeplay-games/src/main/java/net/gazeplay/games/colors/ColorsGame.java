@@ -215,8 +215,6 @@ public class ColorsGame implements GameLifeCycle {
 
         buildToolBox(width, height);
 
-        // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
-
         buildDraw(gameContext.getConfiguration().getColorsDefaultImage(), width, height);
 
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
@@ -231,6 +229,9 @@ public class ColorsGame implements GameLifeCycle {
 
     }
 
+    /**
+     * Adds the tool box beside the drawing.
+     */
     private void buildToolBox(final double width, final double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this, gameContext, height/12);
@@ -249,6 +250,9 @@ public class ColorsGame implements GameLifeCycle {
         colorToolBox.minHeightProperty().bind(gameContext.getRoot().heightProperty());
     }
 
+    /**
+     * Shows a drawing, turned into black and white, in the area left by the tool box.
+     */
     private void buildDraw(final String imgURL, final double width, final double height) {
 
         rectangle = new Rectangle(width, height);
@@ -278,6 +282,9 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.toBack();
     }
 
+    /**
+     * Shows the next drawing of the "colors" folder.
+     */
     private void changeImageNext ()
     {
         String imgURL;
@@ -297,6 +304,9 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows the previous drawing of the "colors" folder.
+     */
     private void changeImagePrev ()
     {
         String imgURL;
@@ -316,6 +326,9 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the drawing of a file, or of a resource when it is not a file
+     */
     private Image getDrawingImage(String imgURL) {
         Image img;
         try {
@@ -336,6 +349,9 @@ public class ColorsGame implements GameLifeCycle {
         return img;
     }
 
+    /**
+     * Makes a drawing editable and turns it into black and white.
+     */
     private void javaFXEditing(final Image image, final String imageName) {
 
         this.updateImage(image, imageName);
@@ -364,6 +380,9 @@ public class ColorsGame implements GameLifeCycle {
 
     }
 
+    /**
+     * Resizes the drawing for the game area.
+     */
     private void updateRectangle() {
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -383,6 +402,9 @@ public class ColorsGame implements GameLifeCycle {
 
     }
 
+    /**
+     * Places the tool box for the game area.
+     */
     private void updateToolBox() {
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -418,42 +440,12 @@ public class ColorsGame implements GameLifeCycle {
         pixelWriter = writableImg.getPixelWriter();
         pixelReader = writableImg.getPixelReader();
 
-
-        /*
-        //THIS PART OF CODE CAN BE UNCOMMENTED
-        //IF YOU WANT THE USER TO CHOOSE IF THE IMAGE
-        //HAVE TO BE CONVERTED TO B&W
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.initOwner(gameContext.getPrimaryStage());
-        alert.initModality(Modality.WINDOW_MODAL);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setContentText(translator.translate("confirmBWText") + imageName);
-        alert.setTitle(translator.translate("confirmBWTitle"));
-        alert.setHeaderText(translator.translate("confirmBWHeader"));
-
-        // Make sure the alert is on top
-        alert.initOwner(gameContext.getPrimaryStage());
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.setAlwaysOnTop(true);
-
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
-
-        alert.getButtonTypes().setAll(yesButton, noButton);
-
-        stage.toFront();
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == yesButton) {
-            toBlackAndWhite();
-        }
-
-         */
-
         toBlackAndWhite();
     }
 
+    /**
+     * @return the average gray level of the drawing, used as threshold of the black and white conversion
+     */
     private double getAvgThresholdValue() {
         double sum = 0;
         for (int i = 0; i < writableImg.getWidth(); ++i) {
@@ -466,6 +458,9 @@ public class ColorsGame implements GameLifeCycle {
         return 3 * sum / 4;
     }
 
+    /**
+     * Turns the drawing into black and white: darker pixels than the average become black, the others white.
+     */
     private void toBlackAndWhite() {
 
 
@@ -496,11 +491,8 @@ public class ColorsGame implements GameLifeCycle {
 
         final int pixelX = (int) ((x - rectangle.getX()) * writableImg.getWidth() / rectangle.getWidth());
         final int pixelY = (int) ((y - rectangle.getY()) * writableImg.getHeight() / rectangle.getHeight());
-        // log.info("pixel at x= {}, y = {}", pixelX, pixelY);
 
         final Color color = pixelReader.getColor(pixelX, pixelY);
-        // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
-        // color.getOpacity());
 
         /*
          * Don't fill the zone if the pixel selected is already of the same color. Also don't fill black zones
@@ -516,19 +508,28 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * Fills with a color the zone of the pixel at (x, y): its neighbours of the same color, up to other colors.
+     */
     private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor, final int x,
                                  final int y, final int width, final int height) {
 
         final Color oldColor = pixelReader.getColor(x, y);
 
-        // floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
         floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
     }
 
+    /**
+     * @return a pattern filling a rectangle with an image
+     */
     public ImagePattern createImagePattern(final Image img, final Rectangle r) {
         return new ImagePattern(img, 0, 0, 1, 1, true);
     }
 
+    /**
+     * Fills the line of a pixel to the left and right, then searches the zones above and below to fill (scan line flood
+     * fill, without recursion).
+     */
     private void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader,
                                       final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
 
@@ -541,11 +542,13 @@ public class ColorsGame implements GameLifeCycle {
         while (horiZones.size() > 0) {
 
             final HorizontalZone zone = horiZones.pop();
-            // log.info("zone : {}", zone.toString());
             searchZone(zone, oldColor, pixelReader, pixelWriter, newColor, width, height);
         }
     }
 
+    /**
+     * Searches the horizontal zones of the old color above and below a filled zone, and fills them.
+     */
     private void searchZone(final HorizontalZone zone, final Color oldColor, final PixelReader pixelReader,
                             final PixelWriter pixelWriter, final Color newColor, final int width, final int height) {
 
@@ -574,6 +577,11 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * Fills a line from a pixel to the left or the right, up to another color.
+     *
+     * @return the last x filled
+     */
     private int floodInLine(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor,
                             final int x, final int y, final int width, final boolean isLeftFIll, final Color oldColor) {
 
@@ -601,6 +609,9 @@ public class ColorsGame implements GameLifeCycle {
         return currentX;
     }
 
+    /**
+     * Enables or disables the coloring by the gaze.
+     */
     void setEnableColorization(final boolean enable) {
         this.drawingEnable.setValue(enable);
     }
@@ -613,6 +624,9 @@ public class ColorsGame implements GameLifeCycle {
         final int rightX;
         final int y;
 
+        /**
+         * A horizontal zone of pixels, from {@code lX} to {@code rX} on line {@code y}, waiting to be searched.
+         */
         HorizontalZone(final int lX, final int rX, final int y) {
             this.leftX = lX;
             this.rightX = rX;
@@ -625,6 +639,10 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * Colors the zone of the drawing where the gaze stays during the fixation length of the settings (the mouse colors
+     * at a click).
+     */
     private class CustomEventHandler {
 
         private Double gazeXOrigin = 0.;
@@ -658,7 +676,6 @@ public class ColorsGame implements GameLifeCycle {
         };
 
         private void onMouseExited(final MouseEvent event) {
-            // log.info("mouse exited = ({},{})", currentX, currentY);
             gazeProgressIndicator.stop();
         }
 
@@ -737,6 +754,9 @@ public class ColorsGame implements GameLifeCycle {
             gazeProgressIndicator.start();
         }
 
+        /**
+         * Colors the zone at the position of the mouse.
+         */
         private void onMouseClicked(final MouseEvent event) {
             colorize(currentX, currentY);
         }

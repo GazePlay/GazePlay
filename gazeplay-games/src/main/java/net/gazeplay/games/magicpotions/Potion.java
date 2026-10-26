@@ -18,12 +18,11 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
+ * A potion of the Potions game (red, yellow or blue), chosen by a fixation.
+ *
  * @author Johana MARKU
  */
-
 @Slf4j
 class Potion extends Parent {
 
@@ -94,6 +93,9 @@ class Potion extends Parent {
         progressButton.active();
     }
 
+    /**
+     * @return the button of the potion, selected by a fixation
+     */
     private ProgressButton createProgressIndicator(double positionX, double positionY) {
         final ProgressButton indicator = new ProgressButton();
         indicator.setImage(potion);
@@ -103,6 +105,9 @@ class Potion extends Parent {
         return indicator;
     }
 
+    /**
+     * Ends the round when the mix is the color asked: counts a goal and plays the win animation.
+     */
     private void onMixAchieved() {
 
         gameInstance.gameEnded = true;
@@ -133,6 +138,9 @@ class Potion extends Parent {
         currentTimeline.play();
     }
 
+    /**
+     * Makes the mix explode when a potion that is not in the asked color is chosen, and ends the round.
+     */
     private void onWrongPotionSelected() {
         gameInstance.gameEnded = true;
         gameInstance.getPotionBlue().removeEventFilter(MouseEvent.ANY, gameInstance.getPotionBlue().getEnterEvent());
@@ -169,6 +177,9 @@ class Potion extends Parent {
         });
     }
 
+    /**
+     * @return the handler adding the potion to the mix, and checking the mix
+     */
     private EventHandler<Event> buildEvent(ProgressButton progressButton) {
         return event -> {
             chosen = true;

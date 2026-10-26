@@ -7,6 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * JavaFX boolean property whose value is not held in memory but read from, and written to, a key/value store at each
+ * access (implemented by the ApplicationConfigBacked... subclass). The default value is given while the key is absent.
+ * Each change is also reported to a {@link PropertyChangeListener} (the configuration, which saves its file).
+ */
 @RequiredArgsConstructor
 @Slf4j
 public abstract class PropertiesBooleanProperty extends BooleanPropertyBase {

@@ -16,7 +16,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-/*
+/**
  * Abstract class for all Mouse version containing arrows
  */
 public abstract class MouseArrows extends Mouse {
@@ -79,6 +79,9 @@ public abstract class MouseArrows extends Mouse {
 
     protected abstract void recomputeArrowsPositions();
 
+    /**
+     * Lights the arrows of the directions the mouse can go to.
+     */
     protected void updateArrowsColor() {
         // If we can go up
         if (indiceY - 1 >= 0 && gameInstance.isFreeForMouse(indiceY - 1, indiceX)) {
@@ -106,6 +109,9 @@ public abstract class MouseArrows extends Mouse {
         }
     }
 
+    /**
+     * @return whether the event is the gaze or the mouse entering an arrow
+     */
     private Boolean isActivated(Event e) {
         return (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED);
     }
@@ -116,11 +122,17 @@ public abstract class MouseArrows extends Mouse {
         b.setOpacity(1);
     }
 
+    /**
+     * Shows an arrow lit.
+     */
     private void putInLight(String s, Rectangle b) {
         b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "ArrowLight.png"), 5, 5, 1, 1, true));
         b.setOpacity(0.5);
     }
 
+    /**
+     * @return the handler moving the mouse up after a fixation on the up arrow
+     */
     private EventHandler<Event> buildButtonUp() {
         return e -> {
 
@@ -158,6 +170,9 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
+    /**
+     * @return the handler moving the mouse down after a fixation on the down arrow
+     */
     private EventHandler<Event> buildButtonDownEvent() {
         return e -> {
 
@@ -197,6 +212,9 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
+    /**
+     * @return the handler moving the mouse right after a fixation on the right arrow
+     */
     private EventHandler<Event> buildButtonRightEvent() {
         return e -> {
             if (indiceX + 1 < gameInstance.nbBoxesColumns && gameInstance.isFreeForMouse(indiceY, indiceX + 1)
@@ -235,6 +253,9 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
+    /**
+     * @return the handler moving the mouse left after a fixation on the left arrow
+     */
     private EventHandler<Event> buildButtonLeftEvent() {
         return e -> {
 
@@ -271,14 +292,6 @@ public abstract class MouseArrows extends Mouse {
             }
 
         };
-    }
-
-    protected void creationButton(double x, double y, double width, double height, String s,
-                                  EventHandler<Event> e) {
-        Rectangle b = new Rectangle(x, y, width, height);
-        b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "Arrow.png"), 5, 5, 1, 1, true));
-        b.addEventHandler(MouseEvent.ANY, e);
-        b.addEventHandler(GazeEvent.ANY, e);
     }
 
 }

@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Keeps the list of the games of another locator after its first call.
+ */
 @AllArgsConstructor
 public class CachingGamesLocator implements GamesLocator {
 

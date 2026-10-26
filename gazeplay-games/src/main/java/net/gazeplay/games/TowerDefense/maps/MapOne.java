@@ -1,5 +1,8 @@
 package net.gazeplay.games.TowerDefense.maps;
 
+/**
+ * First map of the Tower Defense game.
+ */
 public class MapOne extends Map {
     public MapOne() {
         super();

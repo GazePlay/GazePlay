@@ -31,6 +31,11 @@ import java.util.HashMap;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
+/**
+ * Window of the variants of a game, opened from the menu: one button per variant. For some games the variants are
+ * grouped (sizes, difficulties, modes...), radio buttons choosing the group shown; Train Switches also asks for its
+ * number of trains.
+ */
 @Slf4j
 public class GameVariantDialog extends Stage {
     private int easyMode = 0;
@@ -395,30 +400,20 @@ public class GameVariantDialog extends Stage {
 
 
             EventHandler<Event> event = mouseEvent -> {
-                /*if (gameSpec.getGameSummary().getNameCode().equals("Ninja") && variant.toString().equals("EnumGameVariant:net.gazeplay.games.ninja.NinjaGameVariant:LEVEL")){
-                    TextInputDialog dialog = new TextInputDialog("1");
-                    dialog.setTitle("Choose a level");
-                    dialog.setHeaderText("Choose a level:");
-                    dialog.setContentText("level:");
-                    Optional<String> result = dialog.showAndWait();
-                    result.ifPresent(level -> {
-                    });*/
-                //}else{
-                    close();
-                    root.setDisable(false);
-                    if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
-                        whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
-                        IntStringGameVariant v = (IntStringGameVariant) variant;
-                        int numberOfTrains = 10;
-                        numberOfTrains = Integer.parseInt(numberField.getText());
-                        log.debug("number of trains : {}", numberOfTrains);
-                        v.setNumber2(numberOfTrains);
-                        gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, v);
-                    } else {
-                        gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
-                    }
-                //}
+                close();
+                root.setDisable(false);
+                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
+                    whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
+                } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
+                    IntStringGameVariant v = (IntStringGameVariant) variant;
+                    int numberOfTrains = 10;
+                    numberOfTrains = Integer.parseInt(numberField.getText());
+                    log.debug("number of trains : {}", numberOfTrains);
+                    v.setNumber2(numberOfTrains);
+                    gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, v);
+                } else {
+                    gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
+                }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
         }
@@ -432,6 +427,9 @@ public class GameVariantDialog extends Stage {
         setHeight(primaryStage.getHeight() / 2);
     }
 
+    /**
+     * Asks for the folder of the custom images of "Where is it?" before starting it.
+     */
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
         String whereIsItPromptLabel = "WhereIsItNot Config Directory";
         GameWhereIsItErrorPathDialog errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
@@ -440,6 +438,9 @@ public class GameVariantDialog extends Stage {
         errorDialog.toFront();
     }
 
+    /**
+     * @return a pane laying out the buttons of the variants
+     */
     private FlowPane createFlowPane() {
         FlowPane newFlowPane = new FlowPane();
         newFlowPane.setAlignment(Pos.CENTER);

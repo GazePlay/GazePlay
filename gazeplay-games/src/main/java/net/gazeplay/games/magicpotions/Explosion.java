@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 
 /**
+ * The explosion shown when a wrong mix is made.
+ *
  * @author Johana MARKU
  */
 @Slf4j
@@ -21,7 +23,7 @@ class Explosion extends Rectangle {
     @Setter
     private boolean enableRewardSound;
 
-    Explosion(final IGameContext gameContext, final Dimension2D gameDimension/* , Image expImage */) {
+    Explosion(final IGameContext gameContext, final Dimension2D gameDimension) {
         super(0, 0, 0, 0);
         this.enableRewardSound = gameContext.getConfiguration().isRewardSoundEnabled();
 

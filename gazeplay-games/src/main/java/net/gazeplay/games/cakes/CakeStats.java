@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Cakes" (see {@code Stats}).
+ */
 public class CakeStats extends Stats {
 
     public CakeStats(Scene scene) {

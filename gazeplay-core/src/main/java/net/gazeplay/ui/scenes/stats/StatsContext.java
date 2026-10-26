@@ -42,8 +42,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//import javax.swing.text.TableView;
-
 /**
  * The statistics screen shown after a game. The screen of the BERA edition (GazePlay Eval scores, buttons to show and
  * open the Eval result file), unreachable since the edition was removed in October 2026, was removed too.
@@ -55,6 +53,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private final double RATIO = 0.35;
 
+    /**
+     * Builds the screen of a game.
+     *
+     * @param continueButton the button going on with the game (a new round), null when there is none
+     */
     StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
 
@@ -165,7 +168,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                     else
                         centerPane.getChildren().remove(lineChart);
-                    //centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(levelChart);
                     centerPane.getStylesheets().add("data/common/chart.css");
                 } else {
@@ -196,7 +198,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                     else
                         centerPane.getChildren().remove(lineChart);
-                    //centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(chi2Chart);
                     centerPane.getStylesheets().add("data/common/table.css");
                 } else {
@@ -263,7 +264,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     /**
      * @return the images of the results that can be shown, for the inputs of the game (EYE_TRACKER): the mouse alone,
-     * the gaze alone, or both with the mouse and gaze image too (decision of the maintainer, October 2026)
+     *   the gaze alone, or both with the mouse and gaze image too (decision of the maintainer, October 2026)
      */
     static List<String> metricsShown(EyeTracker inputs) {
         if (!inputs.usesGaze()) {
@@ -275,12 +276,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         return List.of("Mouse", "Gaze", "MouseAndGaze");
     }
 
+    /**
+     * @return a button showing one of the metrics images (mouse, gaze, or both)
+     */
     I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
         I18NButton displayButton = new I18NButton(getGazePlay().getTranslator(), buttonName);
         displayButton.setOnMouseClicked((e) -> showMetrics(buttonName, stats, metrics));
         return displayButton;
     }
 
+    /**
+     * Shows a metrics image of the round in the image of the screen.
+     */
     private static void showMetrics(String metricsName, Stats stats, ImageView metrics) {
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         if (savedStatsInfo == null) {
@@ -299,6 +306,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Adds the figures of the game to the grid: total time, goals, durations of the rounds, levels, mistakes...,
+     * depending on the kind of game.
+     */
     void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
@@ -365,6 +376,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Adds a figure (its label and its value) on a new row of the grid.
+     */
     private void addToGrid(
         GridPane grid,
         AtomicInteger currentFormRow,
@@ -400,6 +414,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * @return the buttons of the screen: home, continue, areas of interest, scan path, folder of the results, and the
+     *   choice of the images and charts shown
+     */
     HBox createControlButtonPane(
         GazePlay gazePlay,
         Stats stats,

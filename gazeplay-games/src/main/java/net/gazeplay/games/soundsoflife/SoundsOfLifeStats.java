@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "SoundsOfLife" (see {@code SelectionGamesStats}).
+ */
 @Slf4j
 public class SoundsOfLifeStats extends SelectionGamesStats {
 

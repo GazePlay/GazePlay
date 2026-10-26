@@ -10,6 +10,9 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "GazeRace" (see {@code SelectionGamesStats}).
+ */
 public class GazeRaceStats extends SelectionGamesStats {
 
     public GazeRaceStats(Scene gameContextScene) {

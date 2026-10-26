@@ -18,6 +18,9 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.GazeIndicator;
 
+/**
+ * A color of the tool box of the "Coloring" game, selected by a fixation (or a click).
+ */
 @Slf4j
 public class ColorBox extends StackPane {
 
@@ -80,6 +83,9 @@ public class ColorBox extends StackPane {
         toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
     }
 
+    /**
+     * Resizes the box for the size of the tool box.
+     */
     public void updateHeight() {
         graphic.setHeight(computeHeight());
     }
@@ -105,12 +111,18 @@ public class ColorBox extends StackPane {
         return freeSpace / (ColorToolBox.NB_COLORS_DISPLAYED + 1);
     }
 
+    /**
+     * Marks the box as the selected one.
+     */
     public void select() {
 
         this.button.setSelected(true);
         this.button.getStyleClass().add("selectedColorBox");
     }
 
+    /**
+     * Removes the mark of the selected box.
+     */
     public void unselect() {
 
         progressIndicator.stop();
@@ -118,11 +130,17 @@ public class ColorBox extends StackPane {
         this.button.getStyleClass().remove("selectedColorBox");
     }
 
+    /**
+     * Changes the color of the box.
+     */
     public void setColor(final Color color) {
         this.color = color;
         this.graphic.setFill(color);
     }
 
+    /**
+     * Makes this color the one used to color the drawing.
+     */
     protected void action() {
 
         toolBox.getSelectedColorBox().unselect();
@@ -132,6 +150,9 @@ public class ColorBox extends StackPane {
         toolBox.setSelectedColorBox(this);
     }
 
+    /**
+     * Selects the color after a fixation on the box, or at once on a click.
+     */
     private class ColorEventHandler implements EventHandler<Event> {
 
         private final ColorBox colorBox;

@@ -15,6 +15,9 @@ import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressButton;
 
 
+/**
+ * A pawn of the Horses game: its team, its square (none while in its stable), and the button choosing it.
+ */
 public class Pawn {
 
     @Getter
@@ -40,6 +43,9 @@ public class Pawn {
         currentSquare = null;
     }
 
+    /**
+     * Moves the pawn to a square, with an animation.
+     */
     public void moveToSquare(final Square square) {
         currentSquare = square;
         final Position position = square.getPawnPosition();
@@ -54,6 +60,9 @@ public class Pawn {
         newTimeline.playFromStart();
     }
 
+    /**
+     * Sends the pawn back to its stable.
+     */
     public void moveBackToStart() {
         currentSquare = null;
         final Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
@@ -62,18 +71,30 @@ public class Pawn {
         newTimeline.playFromStart();
     }
 
+    /**
+     * Puts the pawn on the start square of its team.
+     */
     public void spawn() {
         moveToSquare(startSquare);
     }
 
+    /**
+     * @return whether the pawn can move with this outcome of the die
+     */
     public boolean canMove(final int diceOutcome) {
         return currentSquare.canPawnMove(diceOutcome);
     }
 
+    /**
+     * @return whether the pawn left its stable
+     */
     public boolean isOnTrack() {
         return currentSquare != null;
     }
 
+    /**
+     * Makes the pawn selectable by a fixation, to move it.
+     */
     public void activate(final EventHandler<Event> eventHandler, IGameContext gameContext) {
         button.assignIndicatorUpdatable(eventHandler, gameContext);
         button.active();
@@ -81,11 +102,17 @@ public class Pawn {
         button.setLayoutY(pawnDisplay.getLayoutY());
     }
 
+    /**
+     * Makes the pawn unselectable.
+     */
     public void deactivate() {
         button.setLayoutX(-1000);
         button.setLayoutY(-1000);
     }
 
+    /**
+     * Moves the pawn by one square, then the next one when the animation ends, until the movement is done.
+     */
     private void move() {
         if (nbMovementsLeft > 0) {
             final Square destination = currentSquare.getDestination(this, nbMovementsLeft * movementOrientation, lastThrow);
@@ -106,6 +133,9 @@ public class Pawn {
         }
     }
 
+    /**
+     * Moves the pawn by a number of squares (out of its stable onto its start square if it is in it).
+     */
     public void move(final int nbMovements) {
         if (currentSquare == null) {
             currentSquare = startSquare;
@@ -116,6 +146,9 @@ public class Pawn {
         move();
     }
 
+    /**
+     * Stops the movement of the pawn.
+     */
     public void cancelMovement() {
         nbMovementsLeft = 0;
     }

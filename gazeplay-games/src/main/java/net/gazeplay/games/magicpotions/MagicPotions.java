@@ -21,15 +21,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author Johana MARKU - the graphics are kindly provided by these -
- * @artists 0melapics, macrovector, vectorpouch / Freepik
+ * Game "Potions": a client asks for a potion of a color; the player mixes the right potions among red, yellow and blue,
+ * chosen by fixations. A wrong potion makes the mix explode.
+ * <p>
+ * The graphics are kindly provided by 0melapics, macrovector, vectorpouch / Freepik.
+ *
+ * @author Johana MARKU
  */
-
 @Slf4j
 public class MagicPotions extends Parent implements GameLifeCycle {
 
 
     protected boolean gameEnded;
+    /**
+     * State of a round: the potions to mix, the color asked, the potions chosen, and the pot of the mix.
+     */
     @Data
     public static class RoundDetails {
 
@@ -173,6 +179,9 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Adds the background picture, if enabled in the settings.
+     */
     void initBackground(final String imagePATH) {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());

@@ -17,6 +17,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -70,6 +71,17 @@ class WhereIsItTest {
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
         assert randomPictures.getPictureCardList().size() == 4;
+    }
+
+    /**
+     * From the 5th replay of a level, the threshold index used to be outside the 4 critical values
+     * (IndexOutOfBoundsException): the threshold stays the one of the first replays.
+     */
+    @Test
+    void shouldKeepTheChiSquaredThresholdForManyReplays() {
+        for (int replays = 1; replays <= 20; replays++) {
+            assertEquals(0.45, WhereIsIt.chi2Threshold(replays));
+        }
     }
 
 }

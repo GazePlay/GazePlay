@@ -6,13 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
+/**
+ * A tile of the round keyboard of the Piano game: a sector of a ring.
+ */
 class Tile extends Parent {
 
     int note;
     EventHandler<Event> tileEventEnter;
     EventHandler<Event> tileEventExited;
     Color color1;
-    //Color color2;
 
     final Shape arc;
 
@@ -26,10 +28,8 @@ class Tile extends Parent {
         Circle c
     ) {
         super();
-        //
         Arc arcTemp = new Arc(centerX, centerY, radiusX, radiusY, startAngle, length);
         arcTemp.setType(ArcType.ROUND);
-        //
         arc = Shape.subtract(arcTemp, c);
         arc.setStroke(Color.BLACK);
         arc.setStrokeLineJoin(StrokeLineJoin.ROUND);

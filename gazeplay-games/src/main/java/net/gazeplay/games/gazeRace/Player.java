@@ -14,6 +14,9 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+/**
+ * The player's vehicle of the GazeRace game: it moves towards the position of the gaze (or of the mouse), at its speed.
+ */
 public class Player extends Rectangle {
 
     protected double speed;
@@ -25,7 +28,6 @@ public class Player extends Rectangle {
     private final EventHandler<Event> enterEvent;
     protected boolean isInvincible;
     protected AnimationTimer playerAnimationMovement;
-    //private ImagePattern playerImage = new ImagePattern(new Image(""));
     private boolean direction;
 
     public Player(double x, double y, double width, double height,  GazeRace gameInstance, IGameContext gameContext, double speed, int health, boolean direction) {
@@ -90,6 +92,9 @@ public class Player extends Rectangle {
 
     }
 
+    /**
+     * Makes the player invincible for a while after a collision, blinking.
+     */
     protected void startTimerInvincible(){
 
         isInvincible = true;
@@ -137,6 +142,9 @@ public class Player extends Rectangle {
         invincibleAnimation.start();
     }
 
+    /**
+     * @return the handler following the position of the gaze and of the mouse
+     */
     private EventHandler<Event> buildEvent(){
         return e -> {
 

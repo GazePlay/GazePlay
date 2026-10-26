@@ -9,9 +9,13 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Game "Simon": the computer plays a sequence of colored notes, and the player repeats it by fixations; a note is added
+ * at each success. Variants: easy, normal and hard (longer sequences), "Simon copy you" (the computer repeats the
+ * sequence of the player), and multiplayer.
+ */
 public class Simon  extends Parent implements GameLifeCycle {
 
 
@@ -53,6 +57,9 @@ public class Simon  extends Parent implements GameLifeCycle {
         gameContext.firstStart();
     }
 
+    /**
+     * Gives the four buttons four notes drawn at random.
+     */
     private void initMusicNotes(){
         ArrayList<String> temp = new ArrayList<>();
         temp.add("do");
@@ -70,6 +77,9 @@ public class Simon  extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Plays a note, at the volume of the effects.
+     */
     protected void playSound(String soundPath){
         Configuration config = gameContext.getConfiguration();
         if (config.isSoundEnabled()){
@@ -82,6 +92,9 @@ public class Simon  extends Parent implements GameLifeCycle {
     public void dispose() {
         gameContext.getChildren().clear();
     }
+    /**
+     * Starts the game: the device and the first note of the computer.
+     */
     public void startGame(){
 
         couleurs.add("vert");
@@ -91,14 +104,10 @@ public class Simon  extends Parent implements GameLifeCycle {
         Borne borne = new Borne(gameContext,this);
         borne.nbNoteMax = 33;
         if (gameVariant.equals(SimonGameVariant.EASY_CLASSIC)){
-            //borne.secondsReset = 11;
             borne.nbNoteMax = 10;
         }else if (gameVariant.equals(SimonGameVariant.NORMAL_CLASSIC)){
-            //borne.secondsReset = 8;
             borne.nbNoteMax = 22;
-        }/*else if (gameVariant.equals(SimonGameVariant.HARD_CLASSIC)){
-            borne.secondsReset = 6;
-        }*/
+        }
         if (!gameVariant.equals(SimonGameVariant.MODE2)){
             addNoteToComputerSequence();
         }else{
@@ -112,12 +121,18 @@ public class Simon  extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Adds a color drawn at random to the sequence of the computer.
+     */
     protected void addNoteToComputerSequence(){
         Collections.shuffle(couleurs);
         computerSequence.add(couleurs.get(0));
     }
 
 
+    /**
+     * Ends the game and shows the statistics.
+     */
     public void endGame(){
         dispose();
         gameContext.showRoundStats(stats,this);

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.gazeplay.games.slidingpuzzle;
 
 import javafx.geometry.Dimension2D;
@@ -22,12 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Game "Puzzle" (sliding puzzle): a picture cut into tiles is shuffled, with one empty place; a fixation on a tile next
+ * to the empty place slides it there. The round is won when the picture is rebuilt.
+ *
  * @author Peter Bardawil
  */
-
 @Slf4j
 public class SlidingPuzzle implements GameLifeCycle {
 
+    /**
+     * The tiles of a round.
+     */
     @Data
     @AllArgsConstructor
     private static class RoundDetails {
@@ -35,6 +35,9 @@ public class SlidingPuzzle implements GameLifeCycle {
         private final int winnerImageIndexAmongDisplayedImages;
     }
 
+    /**
+     * A position of a tile.
+     */
     @Data
     @AllArgsConstructor
     private static class Coord {
@@ -71,7 +74,6 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
 
-    private static final float cardRatio = 0.8f;
     private static final float zoom_factor = 1.33f;
     private static final int minHeight = 30;
 
@@ -150,14 +152,23 @@ public class SlidingPuzzle implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
+    /**
+     * @return the height of the box of a tile
+     */
     private static double computeCardBoxHeight(final Dimension2D gameDimension2D, final int nbLines) {
         return gameDimension2D.getHeight() / nbLines;
     }
 
+    /**
+     * @return the width of the box of a tile
+     */
     private static double computeCardBoxWidth(final Dimension2D gameDimension2D, final int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
     }
 
+    /**
+     * @return the height of a tile, not below a minimum
+     */
     private static double computeCardHeight(final double boxHeight) {
         if ((boxHeight / zoom_factor) < minHeight) {
             return minHeight;
@@ -166,6 +177,9 @@ public class SlidingPuzzle implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the tiles of the picture, at shuffled places
+     */
     private List<SlidingPuzzleCard> createCards(final Configuration config) {
 
         final int fixationlength = config.getFixationLength();
@@ -208,6 +222,9 @@ public class SlidingPuzzle implements GameLifeCycle {
         return result;
     }
 
+    /**
+     * Records the new position of a tile moved, and of the empty place.
+     */
     void fixCoord(final int id, final int initX, final int initY, final int kx, final int ky) {
         if (this.currentRoundDetails == null) {
             return;
@@ -230,6 +247,9 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     }
 
+    /**
+     * Updates the tiles after a move: the tiles next to the new empty place become movable.
+     */
     void replaceCards(final double fl, final int x, final int y, final int id) {
 
         if (this.currentRoundDetails == null) {
@@ -250,17 +270,9 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     }
 
-    void showCards() {
-
-        for (final SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
-            log.info("index :" + pictureCard.getCardId());
-            log.info("x Coordinate :" + pictureCard.getInitX());
-            log.info("Y Coordinate :" + pictureCard.getInitY());
-            log.info("KX Coordinate :" + pictureCard.getKingPosX());
-            log.info("KY Coordinate :" + pictureCard.getKingPosY());
-        }
-    }
-
+    /**
+     * @return whether each tile is at its place
+     */
     boolean isGameOver() {
         int counter = 0;
         for (final SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
@@ -306,14 +318,16 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     }
 
-    private static double computeCardWidth(final double cardHeight) {
-        return cardHeight * cardRatio;
-    }
-
+    /**
+     * @return the horizontal position of a tile of a column
+     */
     private static double computePositionX(final double cardBoxWidth, final double cardWidth, final int colIndex) {
         return (cardBoxWidth / 3) + (colIndex * cardWidth);
     }
 
+    /**
+     * @return the vertical position of a tile of a line
+     */
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (rowIndex * cardHeight) - 60;
     }

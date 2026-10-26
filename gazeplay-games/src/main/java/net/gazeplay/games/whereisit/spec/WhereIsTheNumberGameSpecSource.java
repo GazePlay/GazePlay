@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheNumberGameLauncher;
 
+/**
+ * Declares the game "WhereIsTheNumber" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class WhereIsTheNumberGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

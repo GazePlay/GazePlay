@@ -11,6 +11,10 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "CupsBalls", with the info-game.csv file of the games where items are found (see
+ * {@code HiddenItemsGamesStats}).
+ */
 @Slf4j
 public class CupsAndBallsStats extends HiddenItemsGamesStats {
 

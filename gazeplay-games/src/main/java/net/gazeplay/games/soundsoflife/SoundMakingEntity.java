@@ -19,6 +19,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
+/**
+ * A picture of the SoundsOfLife game (an animal...), playing one of its sounds after a fixation on it.
+ */
 @Slf4j
 public class SoundMakingEntity extends Parent {
     private final ArrayList<String> audioClips;
@@ -71,6 +74,9 @@ public class SoundMakingEntity extends Parent {
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
     }
 
+    /**
+     * Plays a sound of the picture and counts a goal.
+     */
     private void selected() {
         progressIndicator.setOpacity(0);
         progressIndicator.setProgress(0);

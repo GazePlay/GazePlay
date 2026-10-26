@@ -27,10 +27,13 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Games "ShootTheBiboules" and "ShootTheRobots": targets fly out of a moving box at random places; each target the gaze
+ * (or the mouse) enters is shot, the gun turning towards it, and counted.
+ */
 @Slf4j
 public class ShooterGame extends Parent implements GameLifeCycle {
 
@@ -112,6 +115,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * @return the background picture of the game
+     */
     private Rectangle createBackground() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -138,6 +144,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         return imageRectangle;
     }
 
+    /**
+     * @return the angle from the gun to a point, in degrees
+     */
     private float getAngle(final Point target) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         float angle = (float) Math
@@ -145,6 +154,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         return (angle < 0) ?  angle : angle + 360;
     }
 
+    /**
+     * Moves the box from side to side at regular intervals.
+     */
     private void initBoxTimeline() {
         minuteur = new Timer();
         TimerTask tache = new TimerTask() {
@@ -162,6 +174,11 @@ public class ShooterGame extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * Moves the box across the screen, by one of three paths drawn at random.
+     *
+     * @return whether the box ends on the right side
+     */
     private boolean moveBox(final boolean isOnLeftSide) {
 
         clearTransition();
@@ -209,11 +226,17 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         return goesFromLeftToRight;
     }
 
+    /**
+     * Stops the movement of the box.
+     */
     public void clearTransition(){
         st.stop();
         st.getChildren().clear();
     }
 
+    /**
+     * Places the gun for the size of the game area.
+     */
     public void updateHand() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double x = dimension2D.getHeight();
@@ -232,6 +255,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         hand.setLayoutY(dimension2D.getHeight() / cst2);
     }
 
+    /**
+     * Places the score for the size of the game area.
+     */
     public void updateScore(final Label sc, final Label tc) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (gameType.equals("biboule")) {
@@ -354,7 +380,6 @@ public class ShooterGame extends Parent implements GameLifeCycle {
 
         this.getChildren().add(sc);
 
-        this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
         box.layoutXProperty().bind(imageRectangle.widthProperty().multiply(8.5/29.7).subtract(box.fitWidthProperty().divide(2)));
@@ -402,6 +427,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         gameContext.setOffFixationLengthControl();
     }
 
+    /**
+     * Stops the timer of the box.
+     */
     private void closeTimer(){
         if(minuteur != null) {
             minuteur.cancel();
@@ -417,6 +445,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         this.getChildren().clear();
     }
 
+    /**
+     * @return the transition bringing a target back into the box
+     */
     private Transition restartTransition(final Target t) {
 
         final FadeTransition ft = new FadeTransition(Duration.millis(1), t);
@@ -437,6 +468,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         return pt;
     }
 
+    /**
+     * Shoots a target: counts it, plays a sound, turns the gun and shows the target destroyed, then sends a new one.
+     */
     private void enter(final Target t) {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -498,6 +532,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         pt.play();
     }
 
+    /**
+     * Sends a new target.
+     */
     private void newCircle() {
 
         final Target sp = buildTarget();
@@ -518,11 +555,17 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         moveTarget(sp);
     }
 
+    /**
+     * Gives a target its initial size.
+     */
     private void setInitialSize(final ImageView targetFramesView) {
         targetFramesView.setFitHeight(MIN_RADIUS);
         targetFramesView.setFitWidth(MIN_RADIUS * 5.d / 4.d);
     }
 
+    /**
+     * @return a new target
+     */
     private Target buildTarget() {
 
         final Target target = new Target();
@@ -541,6 +584,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         return target;
     }
 
+    /**
+     * @return one of the destinations of the targets
+     */
     private Point getRandomPoint(int random) {
 
         switch(random){
@@ -563,6 +609,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Moves a target out of the box to a random place, growing, in a random time.
+     */
     private void moveTarget(final Target sp) {
         final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
 
@@ -610,6 +659,9 @@ public class ShooterGame extends Parent implements GameLifeCycle {
         pt.play();
     }
 
+    /**
+     * Brings a target back into the box, then sends it again.
+     */
     public void restart(final Target sp) {
         final Transition pt = restartTransition(sp);
         sp.addEventFilter(MouseEvent.ANY, enterEvent);

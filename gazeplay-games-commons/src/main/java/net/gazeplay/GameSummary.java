@@ -5,14 +5,23 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.SortedSet;
 
+/**
+ * Description of a game in the menu.
+ */
 @Builder
 @Slf4j
 @EqualsAndHashCode
 public class GameSummary {
 
+    /**
+     * Identifier of the game: its translation key, the name of its folder of statistics and the value of --game.
+     */
     @Getter
     private final String nameCode;
 
+    /**
+     * Resource path of the image of the game in the menu.
+     */
     @Getter
     @NonNull
     private final String gameThumbnail;
@@ -21,9 +30,15 @@ public class GameSummary {
     @Singular("category")
     private final SortedSet<GameCategories.Category> categories;
 
+    /**
+     * Music played during the game, instead of the background music (none when null).
+     */
     @Getter
     private final String backgroundMusicUrl;
 
+    /**
+     * Translation key of the description of the game.
+     */
     @Getter
     private final String description;
 

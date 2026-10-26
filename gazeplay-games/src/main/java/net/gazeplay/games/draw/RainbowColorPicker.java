@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Gives the colors of the rainbow, one after the other.
+ */
 public class RainbowColorPicker implements ColorPicker {
 
     private final List<Color> rainbow = createRainbow();
@@ -14,6 +17,9 @@ public class RainbowColorPicker implements ColorPicker {
         createRainbow();
     }
 
+    /**
+     * @return the 7 colors of the rainbow
+     */
     private List<Color> createRainbow() {
         final List<Color> rainbow = new ArrayList<>();
         rainbow.add(Color.web("#9400D3"));

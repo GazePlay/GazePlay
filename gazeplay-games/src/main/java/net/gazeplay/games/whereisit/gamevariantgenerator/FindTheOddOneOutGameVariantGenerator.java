@@ -8,6 +8,9 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
 
+/**
+ * Gives the variants of the game "FindTheOddOneOut" proposed in the menu.
+ */
 public class FindTheOddOneOutGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {

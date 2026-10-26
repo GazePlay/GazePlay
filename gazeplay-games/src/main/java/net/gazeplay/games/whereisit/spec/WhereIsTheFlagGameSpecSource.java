@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheFlagGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheFlagGameLauncher;
 
+/**
+ * Declares the game "WhereIsTheFlag" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class WhereIsTheFlagGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

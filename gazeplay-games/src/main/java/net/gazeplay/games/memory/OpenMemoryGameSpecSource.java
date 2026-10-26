@@ -5,6 +5,10 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
+/**
+ * Declares the game "OpenMemory" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class OpenMemoryGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

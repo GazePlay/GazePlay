@@ -15,6 +15,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games where items are found: the info-game.csv file holds the date, the time, the total duration,
+ * the number of goals, and the durations to reach them (sum, average, standard deviation, then each one).
+ */
 public class HiddenItemsGamesStats extends Stats {
 
     public HiddenItemsGamesStats(final Scene scene) {

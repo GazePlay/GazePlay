@@ -2,6 +2,9 @@ package net.gazeplay.commons.utils.multilinguism;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Translations of one translation file, with a fallback to English.
+ */
 @Slf4j
 public class Multilinguism {
 
@@ -11,6 +14,10 @@ public class Multilinguism {
         this.i18n = i18n;
     }
 
+    /**
+     * @return the translation of a key in a language, else in English, else "[untranslated!] " and the key; a missing
+     *   translation is logged as a warning
+     */
     public String getTranslation(final String key, final String language) {
         final String translate = i18n.translate(key, language);
         if (translate == null || translate.isBlank()) {

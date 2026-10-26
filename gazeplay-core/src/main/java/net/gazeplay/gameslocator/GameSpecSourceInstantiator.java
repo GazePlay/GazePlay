@@ -7,6 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Creates the declarations of the games from their classes, with their constructor without parameters.
+ */
 public class GameSpecSourceInstantiator {
 
     static class GameSpecInstantiationException extends RuntimeException {
@@ -15,6 +18,10 @@ public class GameSpecSourceInstantiator {
         }
     }
 
+    /**
+     * @return one instance per class
+     * @throws GameSpecInstantiationException when a class is not a {@code GameSpecSource} or cannot be created
+     */
     public List<GameSpecSource> instantiateGameSpecSources(List<Class> gamesClasses) {
         return gamesClasses
             .stream()

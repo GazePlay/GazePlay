@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 
+/**
+ * A section of the railway of TrainSwitches: a path the trains follow, and its length.
+ */
 public class Section {
 
     private final Path path;
@@ -35,6 +38,9 @@ public class Section {
         this.size = size;
     }
 
+    /**
+     * Adds an element (line, curve) to the path.
+     */
     public void add(PathElement elem){
         path.getElements().add(elem);
     }

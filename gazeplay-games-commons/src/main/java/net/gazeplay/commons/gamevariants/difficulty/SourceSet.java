@@ -17,9 +17,16 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Resources of a game by variant, read from a JSON resource whose keys are the variants and values the lists of
+ * resources (e.g. the images of each difficulty).
+ */
 public class SourceSet {
     private final JsonObject variants;
 
+    /**
+     * @throws FileNotFoundException when the resource is missing or unreadable
+     */
     public SourceSet(String resourceFile) throws FileNotFoundException {
         try (
             InputStream is = getClass().getClassLoader().getResourceAsStream(resourceFile);
@@ -32,6 +39,9 @@ public class SourceSet {
         }
     }
 
+    /**
+     * @return the resources of a variant, empty when the file has none
+     */
     public Set<String> getResources(String variant) {
         if (variants.has(variant)) {
             Type setType = new TypeToken<Set<String>>() {}.getType();

@@ -2,6 +2,9 @@ package net.gazeplay.games.cups.utils;
 
 import lombok.Getter;
 
+/**
+ * A movement of a cup, from a cell of the grid to another.
+ */
 public class Action {
 
     @Getter

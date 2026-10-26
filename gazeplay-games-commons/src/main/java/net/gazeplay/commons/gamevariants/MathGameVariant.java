@@ -4,6 +4,9 @@ import lombok.Data;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 
+/**
+ * Variant of the arithmetic games: the range of the numbers used, from {@code min} to {@code max}.
+ */
 @Data
 public class MathGameVariant implements IGameVariant {
 

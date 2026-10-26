@@ -1,5 +1,8 @@
 package net.gazeplay;
 
+/**
+ * A game, as seen by the game screen: it is launched for each round and disposed between the rounds.
+ */
 public interface GameLifeCycle {
 
     /**

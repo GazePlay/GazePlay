@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.gazeplay.GameSpec;
 
+/**
+ * The card of a game in the menu, with the handlers of its selection by a fixation.
+ */
 @RequiredArgsConstructor
 public class GameButtonPane extends BorderPane {
 

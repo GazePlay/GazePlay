@@ -8,14 +8,28 @@ import java.io.File;
 import java.util.Objects;
 
 /**
- * This is a basically marker interface, but it comes also with a label in order to recognise it by a text label
+ * A variant of a game (a size, a level, a theme...), chosen in the menu. Its {@link #toString()} is its persistent
+ * form, "Type:value:value...", saved in replayData.json and given to --variant; {@link #toGameVariant(String)} reads it
+ * back.
  */
 public interface IGameVariant {
 
+    /**
+     * @return the name of the variant shown in the menu
+     */
     String getLabel(Translator translator);
 
+    /**
+     * @return the persistent form of the variant, read back by {@link #toGameVariant(String)}
+     */
     String toString();
 
+    /**
+     * Reads a variant from its persistent form. An unknown type is the name of an evaluation (GazePlay Eval) when a
+     * folder of that name exists in evals of the files folder.
+     *
+     * @return the variant, null when it cannot be read
+     */
     static IGameVariant toGameVariant(String gameVariantTotext) {
         String[] split = gameVariantTotext.split(":");
         switch (split[0]) {

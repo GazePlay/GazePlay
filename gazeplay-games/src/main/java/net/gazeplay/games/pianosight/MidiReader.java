@@ -8,14 +8,13 @@ import javax.sound.midi.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Reads the notes of a MIDI file one after the other, for the Piano game.
+ */
 @Slf4j
 public class MidiReader {
 
     private static final int NOTE_ON = 0x90;
-
-    private static final int NOTE_OFF = 0x80;
-
-    private static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
     private Track track;
 
@@ -25,8 +24,6 @@ public class MidiReader {
     private int key;
 
     private int tickIndex;
-
-    private final Instru instru = new Instru();
 
     private Stats stats;
 
@@ -52,6 +49,9 @@ public class MidiReader {
 
     }
 
+    /**
+     * @return the number of notes of the track
+     */
     public int getTrackSize(){
         int nbOfNotes = 0;
         int index = 0;
@@ -73,6 +73,9 @@ public class MidiReader {
         return nbOfNotes;
     }
 
+    /**
+     * @return the next note of the track, -1 at its end
+     */
     int nextNote() {
         int note = -1;
         if (tickIndex + 1 < track.size()) {

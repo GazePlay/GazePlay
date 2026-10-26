@@ -3,6 +3,9 @@ package net.gazeplay.games.draw;
 import javafx.scene.paint.Color;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
+/**
+ * Gives random colors, with the random generator of the game.
+ */
 public class RandomColorPicker implements ColorPicker {
 
     private final ReplayablePseudoRandom randomColorPicker;
@@ -16,6 +19,9 @@ public class RandomColorPicker implements ColorPicker {
         return pickRandomColor();
     }
 
+    /**
+     * @return a color drawn at random
+     */
     private Color pickRandomColor() {
         int r = randomColorPicker.nextInt(255);
         int g = randomColorPicker.nextInt(255);

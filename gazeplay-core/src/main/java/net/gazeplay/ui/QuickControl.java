@@ -4,6 +4,9 @@ import javafx.scene.control.Slider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Common sizes of the sliders of the side panels.
+ */
 @NoArgsConstructor
 public class QuickControl {
 
@@ -23,6 +26,9 @@ public class QuickControl {
 
     public static final double SLIDERS_MAX_WIDTH = SLIDERS_PREF_WIDTH;
 
+    /**
+     * @return a slider of a volume, from 0 to 1
+     */
     public Slider createVolumeSlider() {
         final Slider slider = new Slider();
         slider.setMinWidth(SLIDERS_MIN_WIDTH);

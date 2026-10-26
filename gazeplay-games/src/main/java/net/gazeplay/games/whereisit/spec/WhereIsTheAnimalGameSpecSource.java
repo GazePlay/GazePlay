@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheAnimalGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheAnimalGameLauncher;
 
+/**
+ * Declares the game "WhereIsTheAnimal" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class WhereIsTheAnimalGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

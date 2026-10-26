@@ -16,6 +16,9 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 
 /**
+ * The win animation ("bravo"): an image that grows and shrinks three times over the game, with a reward sound when it
+ * is enabled in the settings.
+ * <p>
  * Created by schwab on 30/10/2016.
  */
 @Slf4j
@@ -61,6 +64,9 @@ public class Bravo extends Rectangle {
         }
     }
 
+    /**
+     * The default "bravo" image and sound, the sound only if the reward sound is enabled in the settings.
+     */
     public Bravo() {
         this(defaultPictureResourceLocation, defaultSoundResourceLocation,
             ActiveConfigurationContext.getInstance().isRewardSoundEnabled());
@@ -77,10 +83,17 @@ public class Bravo extends Rectangle {
         this.enableRewardSound = enableRewardSound;
     }
 
+    /**
+     * Plays the win animation over {@code root}, then calls {@code onFinishedEventHandler}.
+     */
     public void playWinTransition(final Region root, final EventHandler<ActionEvent> onFinishedEventHandler) {
         playWinTransition(root, 0, onFinishedEventHandler);
     }
 
+    /**
+     * Plays the win animation over {@code root} after {@code initialDelay} ms, then calls
+     * {@code onFinishedEventHandler}.
+     */
     public void playWinTransition(
         final Region root,
         final long initialDelay,
@@ -97,6 +110,9 @@ public class Bravo extends Rectangle {
         delayedStart(initialDelay);
     }
 
+    /**
+     * Adds 100 colored confetti falling over the game area.
+     */
     public void setConfettiOnStart(final GameContext gc) {
         final Dimension2D dim = gc.getGamePanelDimensionProvider().getDimension2D();
         final RandomColorGenerator randomColorGenerator = RandomColorGenerator.getInstance();
@@ -131,6 +147,9 @@ public class Bravo extends Rectangle {
         }
     }
 
+    /**
+     * Starts the animation (and the sound) after a delay.
+     */
     private void delayedStart(final long initialDelay) {
         final Runnable uiRunnable = () -> {
             // set visible only after all other properties have been set
@@ -168,6 +187,10 @@ public class Bravo extends Rectangle {
         AsyncUiTaskExecutor.getInstance().getExecutorService().submit(deferredAnimationRunnable);
     }
 
+    /**
+     * @return the whole animation: a pause after the start of the sound, then the image grows and appears, then
+     *   disappears
+     */
     private SequentialTransition createFullTransition() {
         final PauseTransition delayBetweenSoundStartAndAnimationStartTransition = new PauseTransition(
             Duration.millis(animationDelayDuration));
@@ -195,6 +218,9 @@ public class Bravo extends Rectangle {
         return fullTransition;
     }
 
+    /**
+     * Puts the image back at its initial size, centered in {@code root}, hidden.
+     */
     private void resetState(final Region root) {
         final Image image = new Image(pictureResourceLocation);
 
@@ -225,6 +251,9 @@ public class Bravo extends Rectangle {
         toFront(); // bug when it is uncommented (with bloc at least).
     }
 
+    /**
+     * @return the animation growing the image to the height of the scene
+     */
     private ScaleTransition createScaleTransition() {
         final ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(zoomInDuration), this);
         scaleTransition.setInterpolator(Interpolator.LINEAR);
@@ -242,6 +271,9 @@ public class Bravo extends Rectangle {
         return scaleTransition;
     }
 
+    /**
+     * @return the animation making the image appear
+     */
     private FadeTransition createFadeInTransition() {
         final FadeTransition fadeInTransition = new FadeTransition(new Duration(fadeInDuration), this);
         fadeInTransition.setFromValue(0.0);

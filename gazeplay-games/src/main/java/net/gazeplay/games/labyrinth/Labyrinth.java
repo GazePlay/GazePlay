@@ -5,6 +5,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -15,6 +16,12 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Game "Labyrinth": a mouse (or another character) must reach the cheese through a labyrinth drawn at random. The
+ * variants change how the player moves it: by looking at the next box, at arrows around the mouse or around the
+ * labyrinth, or by selecting the mouse then looking where it goes. Each cheese reached counts as a goal and moves the
+ * cheese.
+ */
 @Slf4j
 public class Labyrinth extends Parent implements GameLifeCycle {
 
@@ -43,6 +50,10 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     private final LabyrinthGameVariant variant;
 
+    /**
+     * The random generator of the game (labyrinth, cheese and character), saved for the replay.
+     */
+    @Getter
     private final ReplayablePseudoRandom randomGenerator;
     private List<Integer> listAnim = new ArrayList<Integer>();
 
@@ -104,6 +115,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * @return the box at a line and column
+     */
     public GameBox getBoxAt(final int i, final int j) {
         return walls[i][j];
     }
@@ -143,6 +157,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the mouse of the version of the variant
+     */
     private Mouse createMouse() {
         // Creation of the mouse
         Mouse mouse;
@@ -238,14 +255,23 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * @return the horizontal position of a column, in pixels
+     */
     protected double positionX(final int j) {
         return entiereRecX + j * caseWidth;
     }
 
+    /**
+     * @return the vertical position of a line, in pixels
+     */
     protected double positionY(final int i) {
         return entiereRecY + i * caseHeight;
     }
 
+    /**
+     * @return the boxes of the labyrinth, walls or free
+     */
     private GameBox[][] creationLabyrinth() {
         final GameBox[][] walls = new GameBox[nbBoxesLine][nbBoxesColumns];
         for (int i = 0; i < nbBoxesLine; i++) { // i = rows number = Coord Y
@@ -259,19 +285,11 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         return walls;
     }
 
+    /**
+     * @return a labyrinth drawn at random (1 for a wall, 0 for a free box): a digging robot opens paths between goals
+     *   spread over the grid, from the top left box
+     */
     private int[][] constructionWallMatrix() {
-        /*return new int[][]
-            {
-                {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1},
-                {0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1},
-                {0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                {0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0},
-                {1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-            };
-
-         */
         //Initialisation
         int[][] lab = new int[nbBoxesLine][nbBoxesColumns];
         int[][] ret = new int[nbBoxesLine][nbBoxesColumns];
@@ -370,6 +388,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         return lab;
     }
 
+    /**
+     * @return whether the mouse can go to a box (inside the labyrinth, not a wall)
+     */
     boolean isFreeForMouse(final int i, final int j) {
         if (i >= nbBoxesLine || j >= nbBoxesColumns) {
             return false;
@@ -377,10 +398,16 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         return (!walls[i][j].isAWall());
     }
 
+    /**
+     * @return whether the cheese can be put on a box (not a wall, not the mouse)
+     */
     boolean isFreeForCheese(final int i, final int j) {
         return (!walls[i][j].isAWall() && !mouse.isTheMouse(i, j));
     }
 
+    /**
+     * Counts a goal and moves the cheese when the mouse reaches it.
+     */
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
             stats.incrementNumberOfGoalsReached();
@@ -391,6 +418,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Plays the next animation of the mouse, if any.
+     */
     void anim(int delay) {
         if (!listAnim.isEmpty()) {
             PauseTransition wait = new PauseTransition(Duration.millis(delay));
@@ -426,6 +456,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Enables the animations of the mouse in the "Anime" variants.
+     */
     private void chooseAnim() {
         doAnim = variant.getLabel().startsWith("Anime");
     }

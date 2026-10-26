@@ -14,6 +14,10 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "Follow" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class FollowGameLauncher implements IGameLauncher<Stats, EnumGameVariant<FollowGameVariant>> {
 
     private FollowGamesStats gameStat;

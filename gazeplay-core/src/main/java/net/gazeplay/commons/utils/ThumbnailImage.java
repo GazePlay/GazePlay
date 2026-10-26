@@ -3,6 +3,9 @@ package net.gazeplay.commons.utils;
 import java.util.AbstractMap;
 import java.util.Map;
 
+/**
+ * Resource paths of the thumbnails of the games, by short name.
+ */
 public class ThumbnailImage {
 
     Map<String, String> thumbnailsPath = Map.ofEntries(
@@ -79,6 +82,9 @@ public class ThumbnailImage {
     public ThumbnailImage(){
     }
 
+    /**
+     * @return the resource path of a thumbnail, null for an unknown name
+     */
     public String getPathThumbnailImg(String nameImg){
         return this.thumbnailsPath.get(nameImg);
     }

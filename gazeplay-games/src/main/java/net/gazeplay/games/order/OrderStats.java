@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
+ * Statistics of the game "Order", with the info-game.csv file of the games where targets are hit (see
+ * {@code ShootGamesStats}).
+ *
  * @author vincent
  */
 public class OrderStats extends ShootGamesStats {

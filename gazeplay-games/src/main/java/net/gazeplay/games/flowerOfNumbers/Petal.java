@@ -1,5 +1,9 @@
 package net.gazeplay.games.flowerOfNumbers;
 
+/**
+ * The petals of the flower: the kind of representation of the numbers they take, how many values are proposed for them,
+ * and how many they can hold.
+ */
 public enum Petal {
     DIGITS(9, 4),
     WORDS(20, 1),
@@ -30,6 +34,9 @@ public enum Petal {
         return capacity;
     }
 
+    /**
+     * @return the number of values proposed for the petals before this one
+     */
     public static int getTotalNumberOfObjectsBeforePetal(final Petal petal) {
         int res = 0;
         for (int index = 0; index < petal.ordinal(); index++) {

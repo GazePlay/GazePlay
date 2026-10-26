@@ -25,6 +25,10 @@ import java.math.RoundingMode;
 
 import static net.gazeplay.ui.QuickControl.*;
 
+/**
+ * Control of the animation speed, in the side panel of the game screen: a slider from x0.10 (slower) to x10 (faster),
+ * also moved with the keyboard.
+ */
 @NoArgsConstructor
 @Slf4j
 public class AnimationSpeedRatioControl {
@@ -38,6 +42,9 @@ public class AnimationSpeedRatioControl {
 
     private static final double SPEED_RATIO_SLIDER_MAX_VALUE = SPEED_RATIO_RANGE_WIDTH;
 
+    /**
+     * @return the pane of the control, bound to the ANIMATION_SPEED_RATIO setting
+     */
     public TitledPane createSpeedEffectsPane(Configuration config, Translator translator, Scene primaryScene) {
         Label speedEffectValueLabel = new Label("");
         speedEffectValueLabel.setMinWidth(ICON_SIZE);
@@ -61,6 +68,10 @@ public class AnimationSpeedRatioControl {
         return pane;
     }
 
+    /**
+     * @return the slider: its value is converted to a speed ratio (see {@link #sliderValueToSpeedRatio(double)}) saved
+     *   in the settings and shown in the label
+     */
     public Slider createSpeedEffectSlider(Configuration config, Label speedEffectValueLabel) {
         final double initialSpeedRatioValue = config.getAnimationSpeedRatio();
 
@@ -92,10 +103,16 @@ public class AnimationSpeedRatioControl {
         return slider;
     }
 
+    /**
+     * @return the speed ratio as shown, e.g. "x1.50"
+     */
     public String formatValue(double speedRatioValue) {
         return "x" + String.format("%.2f", speedRatioValue);
     }
 
+    /**
+     * @return the speed ratio of a value of the slider: 1 + value above 0, a fraction of 1 below (slower)
+     */
     public double sliderValueToSpeedRatio(double value) {
         if (value >= 0d) {
             return 1d + value;
@@ -105,6 +122,9 @@ public class AnimationSpeedRatioControl {
         }
     }
 
+    /**
+     * @return the value of the slider of a speed ratio (inverse of {@link #sliderValueToSpeedRatio(double)})
+     */
     public double speedRatioToSliderValue(double value) {
         if (value >= 1d) {
             return value - 1d;
@@ -116,6 +136,9 @@ public class AnimationSpeedRatioControl {
     }
 
 
+    /**
+     * Makes Ctrl + Up and Ctrl + Down increase and decrease the speed during the game.
+     */
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider animationSpeedRatioSlider) {
 
         EventHandler<KeyEvent> increaseSpeedEventHandler = event -> {

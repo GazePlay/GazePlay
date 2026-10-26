@@ -33,6 +33,11 @@ import net.gazeplay.components.ProgressButton;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Game "Cakes": the player builds a cake of up to three layers, choosing for each layer its base, cream and decorations
+ * from menus selected by fixations. In the variants with a model, a cake drawn at random must be reproduced; the game
+ * is won when the cake matches it.
+ */
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
 
@@ -143,6 +148,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         initBackground(dimension2D);
     }
 
+    /**
+     * Adds the background, if enabled in the settings.
+     */
     private void initBackground(Dimension2D dimension2D) {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -171,6 +179,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Changes the color of the background (each menu has its own).
+     */
     void updateBackgroundColor(Color c) {
         if (background != null) {
             background.setFill(c);
@@ -190,6 +201,10 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Checks whether the cake matches the model (in the variants with a model) and shows the button validating the
+     * cake.
+     */
     void winButton(final boolean winOnly) {
         win = true;
         boolean currentOk = true;
@@ -243,6 +258,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Makes the buttons of a menu selectable, and the others not; -1 makes all the buttons unselectable.
+     */
     public void active(final int i) {
         if (i == -1) {
             for (final List<ProgressButton> progressButtons : p) {
@@ -252,7 +270,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         } else {
             for (int j = 0; j < p.length; j++) {
-                final boolean b = true;
                 if (j == i) {
                     for (final Node child : p[j]) {
                         ((ProgressButton) child).active();
@@ -268,6 +285,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Ends the round when the cake is finished: shows the model next to it, then the win animation.
+     */
     void winFunction() {
         active(-1);
         final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
@@ -279,6 +299,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         ft.play();
     }
 
+    /**
+     * Compares the layers of the cake with those of the model.
+     */
     private void checkGoodAnswer() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -292,6 +315,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Plays the win animation, then shows the statistics.
+     */
     private void playWin() {
         gameContext.playWinTransition(500, actionEvent -> {
 
@@ -305,6 +331,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         });
     }
 
+    /**
+     * Creates the menus (main menu, bases, creams, decorations...) and their buttons.
+     */
     private void createStack() {
         @SuppressWarnings("unchecked") // an array of a generic type cannot be created directly
         final List<ProgressButton>[] layers = new List[6];
@@ -337,6 +366,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Applies a choice of a menu to the current layer, with its animation (the spraying of the cream for the creams).
+     */
     private void execAnim(final int i, final int j) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (j == 1) {
@@ -351,6 +383,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         layers[currentCake][j - 1] = i + 1;
     }
 
+    /**
+     * Animates the sprayer putting the cream on the current layer.
+     */
     private void aerographAnimation(final int i, final int j, final Dimension2D dimension2D) {
         final double cakeheight = (((ImageView) cake[currentCake].getChildren().get(0)).getImage().getHeight()
             * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
@@ -444,6 +479,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         sq.play();
     }
 
+    /**
+     * Creates the buttons of a menu of choices.
+     */
     private void otherPages(final int j, final int k) {
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -462,6 +500,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Creates a button of a menu of choices, which applies its choice when selected.
+     */
     private void createSelectionButton(final ProgressButton bt, final int i, final int j, final int k, final Dimension2D dimension2D) {
         final EventHandler<Event> buttonHandler;
         bt.setLayoutX((i + 1) * dimension2D.getWidth() / k - buttonSize / 2);
@@ -484,6 +525,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p[j].add(bt);
     }
 
+    /**
+     * Creates the button going back from a menu of choices to the main menu.
+     */
     private void createReturnButton(final ProgressButton bt, final int j, final Dimension2D dimension2D) {
         final EventHandler<Event> buttonHandler;
         final ImageView iv = new ImageView(new Image("data/cake/images/return.png"));
@@ -502,6 +546,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p[j].add(bt);
     }
 
+    /**
+     * Goes back to the main menu.
+     */
     private void backtoScreenZero() {
         for (int c = 0; c <= maxCake; c++) {
             cake[c].toFront();
@@ -517,6 +564,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         updateBackgroundColor(col[0]);
     }
 
+    /**
+     * Adds a layer to the cake.
+     */
     private void createCake(final int i) {
         layers[i][0] = 1;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -584,6 +634,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         sq.play();
     }
 
+    /**
+     * Draws the model cake at random, with the random generator of the game.
+     */
     private void generateRandomCake() {
         if (!variant.equals(CakeGameVariant.ONELAYER)) {
             for (int i = 0; i < 3; i++) {
@@ -686,7 +739,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         generateRandomCake();
         winButton(false);
 
-        this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         this.gameContext.firstStart();

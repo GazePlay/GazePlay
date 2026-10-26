@@ -15,6 +15,10 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
+ * Games "Divisor" and "Rabbits": a target bounces across the screen; when the gaze (or the mouse) enters it, it bursts
+ * into two smaller targets, up to a level of difficulty. The round ends when all the targets are gone. "Divisor"
+ * shows the portraits of the user; "Rabbits" shows rabbits, on a background picture.
+ * <p>
  * Created by givaudan on 15/02/2018.
  */
 @Slf4j
@@ -54,7 +58,6 @@ public class Divisor implements GameLifeCycle {
         if (isRabbit) {
             imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images", randomGenerator);
             initBackground();
-            gameContext.resetBordersToFront();
         } else {
             imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
         }
@@ -75,6 +78,9 @@ public class Divisor implements GameLifeCycle {
         gameContext.setOffFixationLengthControl();
     }
 
+    /**
+     * Adds the background of the Rabbits game, if enabled in the settings.
+     */
     private void initBackground() {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -97,6 +103,9 @@ public class Divisor implements GameLifeCycle {
         }
     }
 
+    /**
+     * Ends the round and shows the statistics.
+     */
     public void restart() {
         this.dispose();
         gameContext.showRoundStats(stats, this);

@@ -6,6 +6,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
+/**
+ * The cheese of the Labyrinth game, placed on a free box; the mouse must reach it.
+ */
 class Cheese extends Parent {
 
     private final Rectangle cheese;
@@ -21,16 +24,21 @@ class Cheese extends Parent {
         this.gameInstance = gameInstance;
         this.isCheese=true;
         cheese = new Rectangle(entiereRecX, entiereRecY, width, height);
-        //cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
         indexY = 0;
         indexX = 0;
         cheese.setMouseTransparent(true);
         this.randomGenerator = random;
     }
+    /**
+     * Places the cheese on the house box.
+     */
     void setToHouse()
     {
         this.isCheese=false;
     }
+    /**
+     * Places the cheese on a first free box.
+     */
     void beginCheese() {
         moveCheese();
         if(this.isCheese)
@@ -44,6 +52,9 @@ class Cheese extends Parent {
         this.getChildren().add(cheese);
     }
 
+    /**
+     * Moves the cheese to a free box drawn at random.
+     */
     void moveCheese() {
         int x, y;
         do {
@@ -63,6 +74,9 @@ class Cheese extends Parent {
 
     }
 
+    /**
+     * @return whether the cheese is on a box
+     */
     boolean isTheCheese(final int i, final int j) {
         return (i == indexY && j == indexX);
     }

@@ -10,6 +10,9 @@ import net.gazeplay.games.shooter.ShooterGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Simon" (see {@code ShooterGamesStats}).
+ */
 public class SimonStats extends ShooterGamesStats {
 
     public SimonStats(Scene scene, String gameType) {

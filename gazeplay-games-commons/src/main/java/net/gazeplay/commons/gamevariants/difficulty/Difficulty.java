@@ -1,5 +1,8 @@
 package net.gazeplay.commons.gamevariants.difficulty;
 
+/**
+ * Difficulty of a game, shown capitalized ("Easy", "Normal", "Hard").
+ */
 public enum Difficulty {
     EASY, NORMAL, HARD;
 

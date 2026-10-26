@@ -13,6 +13,10 @@ public final class AoiGeometry {
     private AoiGeometry() {
     }
 
+    /**
+     * @return the corners of the rectangle around the points, with a margin (see
+     *   {@code AreaOfInterestGrouper.rectangle})
+     */
     public static Double[] calculateRectangle(final Point2D[] point2D) {
         final double[] xs = new double[point2D.length];
         final double[] ys = new double[point2D.length];
@@ -23,6 +27,9 @@ public final class AoiGeometry {
         return AreaOfInterestGrouper.rectangle(xs, ys);
     }
 
+    /**
+     * @return the convex hull of the points (gift wrapping algorithm, from the left-most point), as x1, y1, x2, y2...
+     */
     public static Double[] calculateConvexHull(final Point2D[] points) {
         final int numberOfPoints = points.length;
         final ArrayList<Double> convexHullPoints = new ArrayList<>();
@@ -59,6 +66,9 @@ public final class AoiGeometry {
         return hullPointsArray;
     }
 
+    /**
+     * @return the turn made by going from p1 to p2 to p3: 0 when they are aligned, 1 or -1 for the two directions
+     */
     public static int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
 
         final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())

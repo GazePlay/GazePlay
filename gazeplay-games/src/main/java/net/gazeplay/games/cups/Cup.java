@@ -21,6 +21,9 @@ import net.gazeplay.games.cups.utils.PositionCup;
 
 import java.awt.*;
 
+/**
+ * A cup of the "CupsBalls" game, on a cell of a grid; a fixation on it lifts it.
+ */
 @Slf4j
 public class Cup {
 
@@ -94,6 +97,9 @@ public class Cup {
 
     }
 
+    /**
+     * Lets the player choose the cup by a fixation, once the cups have stopped moving.
+     */
     public void createEvent() {
 
         this.item.addEventFilter(MouseEvent.ANY, enterEvent);
@@ -110,18 +116,27 @@ public class Cup {
         this.hasBall = hasBall;
     }
 
+    /**
+     * Moves the cup to another cell of the grid.
+     */
     public void updatePosition(final int newCellX, final int newCellY) {
         final Point newPosCup = positionCup.calculateXY(newCellX, newCellY);
         item.setX(newPosCup.getX());
         item.setY(newPosCup.getY());
     }
 
+    /**
+     * Moves the progress indicator of the fixation with the cup.
+     */
     public void progressBarUpdatePosition(final double newXCupPos, final double newYCupPos) {
         gameContext.getChildren().remove(progressIndicator);
         progressIndicator = createProgressIndicator(newXCupPos, newYCupPos);
         progressIndicator.toFront();
     }
 
+    /**
+     * @return the progress indicator of a fixation on the cup
+     */
     private ProgressIndicator createProgressIndicator(final double xCupPos, final double yCupPos) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         final double indicatorWidth = item.getFitWidth() * 0.645;
@@ -133,12 +148,13 @@ public class Cup {
         indicator.addEventFilter(MouseEvent.ANY, enterEvent);
         indicator.addEventFilter(GazeEvent.ANY, enterEvent);
 
-        /* gameContext.getGazeDeviceManager().addEventFilter(indicator); */
-
         gameContext.getChildren().add(indicator);
         return indicator;
     }
 
+    /**
+     * Counts a goal, lifts the cup showing the ball, and ends the round.
+     */
     private void onCorrectCupSelected() {
         stats.incrementNumberOfGoalsReached();
 
@@ -169,6 +185,9 @@ public class Cup {
         revealBallTransition.play();
     }
 
+    /**
+     * Lifts the cup, which hides nothing.
+     */
     private void onWrongCupSelected() {
         progressIndicator.setOpacity(0);
         final TranslateTransition revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), item);
@@ -178,6 +197,9 @@ public class Cup {
         revealBallTransition.play();
     }
 
+    /**
+     * @return the handler lifting the cup after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent() {
         return (Event e) -> {
 
@@ -222,10 +244,16 @@ public class Cup {
         };
     }
 
+    /**
+     * Counts a movement of the cup.
+     */
     public void increaseActionsDone() {
         actionsDone++;
     }
 
+    /**
+     * Applies the size of the progress indicator chosen in the settings.
+     */
     private void verifyProgressBarValue() {
         progressIndicator.setMinWidth(gameContext.getConfiguration().getProgressBarSize() / 100.0);
         progressIndicator.setMinHeight(gameContext.getConfiguration().getProgressBarSize() / 100.0);

@@ -5,6 +5,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 
+/**
+ * The boss of the SpaceGame, appearing from time to time, with several health points.
+ */
 public class Boss extends Rectangle {
     @Getter
     private final String soundFileLocation;
@@ -50,6 +53,9 @@ public class Boss extends Rectangle {
         leftMovement.playFrom(Duration.seconds((rightLimit % 5) * animTime / 5));
     }
 
+    /**
+     * Moves the boss down to a height, in 3 seconds.
+     */
     public void moveToLower(final double x, final double y) {
         final TranslateTransition t = new TranslateTransition(Duration.seconds(3), this);
         t.setToY(y);
@@ -58,25 +64,12 @@ public class Boss extends Rectangle {
         t.play();
     }
 
+    /**
+     * Moves the boss up to a height, in 3 seconds.
+     */
     public void moveToUpper(final double x, final double y) {
         final TranslateTransition t = new TranslateTransition(Duration.seconds(3), this);
         t.setToY(-y);
-        t.setCycleCount(1);
-        t.setInterpolator(Interpolator.LINEAR);
-        t.play();
-    }
-
-    public void moveToLeft(final double x, final double y) {
-        final TranslateTransition t = new TranslateTransition(Duration.seconds(3), this);
-        t.setToX(-x);
-        t.setCycleCount(1);
-        t.setInterpolator(Interpolator.LINEAR);
-        t.play();
-    }
-
-    public void moveToLRight(final double x, final double y) {
-        final TranslateTransition t = new TranslateTransition(Duration.seconds(3), this);
-        t.setToY(x);
         t.setCycleCount(1);
         t.setInterpolator(Interpolator.LINEAR);
         t.play();

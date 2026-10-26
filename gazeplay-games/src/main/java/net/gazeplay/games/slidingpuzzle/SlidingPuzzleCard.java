@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.gazeplay.games.slidingpuzzle;
 
 import javafx.animation.Animation;
@@ -30,6 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * A tile of the Puzzle game, showing a part of the picture; the tile 9 is the empty place.
+ *
  * @author Peter Bardawil
  */
 @Slf4j
@@ -110,6 +107,9 @@ class SlidingPuzzleCard extends Parent {
         currentTimeline = new Timeline();
     }
 
+    /**
+     * @return the progress indicator of a fixation on the tile
+     */
     private ProgressIndicator createProgressIndicator(final double width) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(initX);
@@ -121,6 +121,9 @@ class SlidingPuzzleCard extends Parent {
         return indicator;
     }
 
+    /**
+     * @return whether the tile is next to the empty place
+     */
     private Boolean checkIfNeighbor() {
 
         if (this.initX == kingPosX && ((this.initY == kingPosY + initWidth) || (this.initY == kingPosY - initWidth))) {
@@ -131,10 +134,12 @@ class SlidingPuzzleCard extends Parent {
         }
     }
 
+    /**
+     * Makes a tile next to the empty place movable.
+     */
     private void isMyNeighborEvent() {
 
         progressIndicator.setOpacity(0.7);
-        // currentTimeline.stop();
         currentTimeline = new Timeline();
         final KeyValue xValue = new KeyValue(card.xProperty(), kingPosX);
         final KeyValue yValue = new KeyValue(card.yProperty(), kingPosY);
@@ -144,9 +149,11 @@ class SlidingPuzzleCard extends Parent {
 
     }
 
+    /**
+     * Moves the empty place.
+     */
     void isKingCardEvent(final double x, final double y) {
         progressIndicator.setOpacity(0);
-        // currentTimeline.stop();
         currentTimeline = new Timeline();
         final KeyValue xValue = new KeyValue(card.xProperty(), x);
         final KeyValue yValue = new KeyValue(card.yProperty(), y);
@@ -155,13 +162,13 @@ class SlidingPuzzleCard extends Parent {
         currentTimeline.play();
     }
 
+    /**
+     * Counts a goal and ends the round with the win animation.
+     */
     private void onGameOver() {
         stats.incrementNumberOfGoalsReached();
 
         progressIndicator.setOpacity(0);
-
-        // currentTimeline.stop();
-        // currentTimeline = new Timeline();
 
         currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
 
@@ -183,6 +190,9 @@ class SlidingPuzzleCard extends Parent {
         }
     }
 
+    /**
+     * @return the handler sliding the tile to the empty place after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent() {
 
         return e -> {
@@ -195,7 +205,6 @@ class SlidingPuzzleCard extends Parent {
                 progressIndicator.setOpacity(0.7);
                 progressIndicator.setProgress(0);
 
-                // currentTimeline.stop();
                 currentTimeline = new Timeline();
 
                 timelineProgressBar = new Timeline();
@@ -208,15 +217,11 @@ class SlidingPuzzleCard extends Parent {
                     progressIndicator.setTranslateX(kingPosX);
                     progressIndicator.setTranslateY(kingPosY);
 
-                    // gameInstance.showCards();
-
                     gameInstance.replaceCards(gameContext.getConfiguration().getFixationLength(), initX, initY, CardId);
 
                     isMyNeighborEvent();
 
                     gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
-                    // gameInstance.showCards();
-
                     if (gameInstance.isGameOver()) {
                         onGameOver();
                     }
@@ -233,6 +238,9 @@ class SlidingPuzzleCard extends Parent {
         };
     }
 
+    /**
+     * @return the handler of the tile 9, the empty place: it does nothing
+     */
     private EventHandler<Event> buildEvent2() {
 
         return e -> {

@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheSoundGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheSoundGameLauncher;
 
+/**
+ * Declares the game "WhereIsTheSound" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class WhereIsTheSoundGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

@@ -3,6 +3,9 @@ package net.gazeplay.games.TowerDefense;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+/**
+ * Missile of the missile tower: an animated projectile that explodes on impact, damaging the enemies around.
+ */
 public class Missile extends Projectile {
 
     private int frameIndex;

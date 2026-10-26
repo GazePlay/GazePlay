@@ -4,6 +4,9 @@ package net.gazeplay.games.surviveAgainstRobots;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A variant of the games "SurviveAgainstRobots" and "SurviveAgainstRobotsMouse", chosen in the menu.
+ */
 @RequiredArgsConstructor
 public enum SurviveAgainstRobotsVariant {
     DIFFICULTY_EASY_KEYBOARD("Easy_KEYBOARD"),

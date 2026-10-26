@@ -7,6 +7,9 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
+/**
+ * Games "EggGame" and "PersonalizeEggGame": an egg breaks after a number of fixations, revealing a picture.
+ */
 @Slf4j
 public class EggGame implements GameLifeCycle {
 
@@ -58,6 +61,9 @@ public class EggGame implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
+    /**
+     * @return the egg, broken after the number of turns of the variant
+     */
     private Egg createEgg(final Configuration config) {
         return new Egg(gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), numberOfTurns, type, modeImage);
     }

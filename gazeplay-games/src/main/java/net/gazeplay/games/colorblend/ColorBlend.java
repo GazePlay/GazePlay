@@ -38,8 +38,6 @@ public class ColorBlend implements GameLifeCycle {
     private Paint color1;
     private Paint color2;
     private Circle circle;
-
-    private static final int CIRCLE_RADIUS = 400;
     private ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
 
@@ -181,6 +179,9 @@ public class ColorBlend implements GameLifeCycle {
         return rectangle;
     }
 
+    /**
+     * @return the handler selecting a color of the palette after a fixation of the length of the settings
+     */
     private EventHandler<Event> rectangleBuildEvent(final Rectangle rectangle) {
         return e -> {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -208,6 +209,9 @@ public class ColorBlend implements GameLifeCycle {
         };
     }
 
+    /**
+     * @return the handler resetting the mix after a fixation on the reset button
+     */
     private EventHandler<Event> resetBuildEvent(HBox buttonBox) {
         return e -> {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -236,6 +240,9 @@ public class ColorBlend implements GameLifeCycle {
         };
     }
 
+    /**
+     * @return the progress indicator of a fixation on a color
+     */
     private ProgressIndicator createProgressIndicator(final Rectangle rectangle) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setMinWidth(rectangle.getWidth() / 2);
@@ -244,6 +251,9 @@ public class ColorBlend implements GameLifeCycle {
         return indicator;
     }
 
+    /**
+     * @return an empty square of the palette
+     */
     private Rectangle createPaletteRectangle(double width, double height) {
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.BEIGE);
@@ -252,6 +262,9 @@ public class ColorBlend implements GameLifeCycle {
         return rectangle;
     }
 
+    /**
+     * Adds a color to the mix: the first one fills the circle, the next ones are blended with the current mix.
+     */
     private void handleColorClick(Rectangle color) {
         if (this.color1 == null) {
             this.color1 = color.getFill();
@@ -267,6 +280,9 @@ public class ColorBlend implements GameLifeCycle {
 
     }
 
+    /**
+     * Empties the mix and the circle.
+     */
     private void handleReset() {
         // Réinitialisation des couleurs et du cercle
         color1 = null;
@@ -300,6 +316,9 @@ public class ColorBlend implements GameLifeCycle {
         return new Color(r,g,b,1);
     }
 
+    /**
+     * @return the circle showing the mix
+     */
     private Circle createCirle(){
         Circle circle = new Circle();
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();

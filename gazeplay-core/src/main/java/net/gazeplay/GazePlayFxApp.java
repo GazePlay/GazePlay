@@ -30,6 +30,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The JavaFX application. Without options it shows the user selection page; the command line options (see
+ * {@link MainCommand}) can select the profile, start a game directly (with its variant, or show its variants), or
+ * replay a replayData.json file. A game started from the menu runs in its own JVM, started this way.
+ */
 @Slf4j
 public class GazePlayFxApp extends Application {
 
@@ -55,9 +60,7 @@ public class GazePlayFxApp extends Application {
     public void init() {
         final CompositionRoot root = compositionRoot;
         this.options = applicationOptions;
-        //
         log.info("options = {}", options);
-        //
         gazePlay = root.getGazePlay();
         gameMenuController = root.getGameMenuController();
         gamesLocator = root.getGamesLocator();
@@ -67,7 +70,6 @@ public class GazePlayFxApp extends Application {
     @Override
     public void start(final Stage primaryStage) {
 
-        //final Configuration mainConfig = ActiveConfigurationContext.getInstance();
         boolean displayStageAtTheEnd = true;
 
         boolean showUserSelectPage = true;
@@ -225,6 +227,9 @@ public class GazePlayFxApp extends Application {
         }
     }
 
+    /**
+     * Creates the scene of the window, of the size of the window, with the stylesheets of the settings.
+     */
     private Scene createPrimaryScene(final Stage primaryStage) {
         final Pane rootPane = new Pane();
         final Scene primaryScene = new Scene(rootPane, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
@@ -233,6 +238,10 @@ public class GazePlayFxApp extends Application {
         return primaryScene;
     }
 
+    /**
+     * Creates the scene of the window, of a given size (--width and --height options), with the stylesheets of the
+     * settings.
+     */
     private Scene createPrimaryScene(final Stage primaryStage, final double width, final double height) {
         final Pane rootPane = new Pane();
         final Scene primaryScene = new Scene(rootPane, width, height, Color.BLACK);
@@ -241,6 +250,9 @@ public class GazePlayFxApp extends Application {
         return primaryScene;
     }
 
+    /**
+     * Sets the title and the icon of the window.
+     */
     private void configurePrimaryStage(final Stage primaryStage) {
         primaryStage.setTitle("GazePlay Learning");
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
@@ -250,6 +262,9 @@ public class GazePlayFxApp extends Application {
         primaryStage.getIcons().add(icon);
     }
 
+    /**
+     * Makes the window fill the screen, in full screen mode.
+     */
     private void autosize(final Stage primaryStage) {
         final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 

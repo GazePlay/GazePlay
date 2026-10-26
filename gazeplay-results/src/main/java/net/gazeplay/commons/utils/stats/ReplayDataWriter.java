@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Content of replayData.json, written at the end of each round: free of JavaFX, extracted from {@link Stats}.
+ * Content of replayData.json, written at the end of each round: free of JavaFX, extracted from {@code Stats}.
  * Persistent format, read by the replay of the games and by researchers: version {@link ReplayDataFormat#CURRENT_VERSION},
  * written in "formatVersion"; the other keys and their order are those of version 1 (structure pinned by
  * {@code StatsTest.shouldSaveStats} and {@code ReplayDataWriterTest}).
@@ -47,6 +47,9 @@ final class ReplayDataWriter {
     private ReplayDataWriter() {
     }
 
+    /**
+     * @return the content of replayData.json for a round, in the order of the keys of the format
+     */
     static JsonObject toJson(final Round round) {
         final Gson gson = new GsonBuilder().create();
         // The fixation sequence is null when it is disabled in the settings: the conversion used to fail ("Not a JSON

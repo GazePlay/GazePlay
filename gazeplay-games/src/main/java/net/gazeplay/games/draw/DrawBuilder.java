@@ -14,6 +14,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Creates the canvas of the drawing game, which draws where the gaze (or the mouse) moves.
+ */
 @Slf4j
 public class DrawBuilder {
 
@@ -29,6 +32,9 @@ public class DrawBuilder {
         colorPicker = new RandomColorPicker(randomGenerator);
     }
 
+    /**
+     * @return a canvas of the size of the scene divided by {@code coefficient}
+     */
     public Canvas createCanvas(final Scene scene, final double coefficient, Stats stats) {
 
         Dimension2D canvasDimension = new Dimension2D(scene.getWidth() / coefficient, scene.getHeight() / coefficient);
@@ -40,6 +46,9 @@ public class DrawBuilder {
         return canvas;
     }
 
+    /**
+     * @return a canvas of the given size, drawing the movements of the gaze and of the mouse
+     */
     public Canvas createCanvas(final Dimension2D canvasDimension, Stats stats) {
         this.stats = stats;
         final Canvas canvas = new Canvas(canvasDimension.getWidth(), canvasDimension.getHeight());
@@ -48,7 +57,6 @@ public class DrawBuilder {
 
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
             graphicsContext.lineTo(event.getX(), event.getY());
-            // graphicsContext.setStroke(colorPicker.pickColor());
             graphicsContext.stroke();
         });
 
@@ -73,7 +81,6 @@ public class DrawBuilder {
 
                     if (((event.getX() - canvas.getWidth() / 2) * (event.getX() - canvas.getWidth() / 2) + (event.getY() - canvas.getHeight() / 2) * (event.getY() - canvas.getHeight() / 2)) > 0.15) {
                         graphicsContext.lineTo(event.getX(), event.getY());
-                        // graphicsContext.setStroke(colorPicker.pickColor());
                         graphicsContext.stroke();
                     }
                 }
@@ -89,16 +96,25 @@ public class DrawBuilder {
         return canvas;
     }
 
+    /**
+     * Takes the next color (when the gaze or the mouse enters the canvas), counted as a goal.
+     */
     private void changeColor(GraphicsContext graphicsContext) {
         stats.incrementNumberOfGoalsReached();
         graphicsContext.setStroke(colorPicker.pickColor());
         graphicsContext.beginPath();
     }
 
+    /**
+     * Sets the width of the line.
+     */
     private void initDraw(final GraphicsContext gc) {
         gc.setLineWidth(drawLineWidth);
     }
 
+    /**
+     * Resets the drawing settings of the canvas.
+     */
     public void clear(final Canvas canvas) {
         initDraw(canvas.getGraphicsContext2D());
     }

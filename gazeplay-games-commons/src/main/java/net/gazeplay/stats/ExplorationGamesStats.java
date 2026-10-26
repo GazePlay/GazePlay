@@ -15,6 +15,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games without goal (drawing, exploration...): the info-game.csv file only holds the date, the time
+ * and the total duration.
+ */
 public class ExplorationGamesStats extends Stats {
 
     public ExplorationGamesStats(final Scene scene) {

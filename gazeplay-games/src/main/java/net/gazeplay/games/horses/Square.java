@@ -5,6 +5,9 @@ import lombok.Setter;
 import net.gazeplay.components.Position;
 
 
+/**
+ * A square of the track of the Horses game, linked to the previous and next squares.
+ */
 public class Square {
 
     @Getter
@@ -32,6 +35,10 @@ public class Square {
         return previousSquare;
     }
 
+    /**
+     * A pawn stops on the square: a pawn of another team already there goes back to its stable; a pawn of the same team
+     * makes it step back.
+     */
     public void pawnLands(final Pawn pawn) {
         if (stationnedPawn != null && stationnedPawn != pawn && stationnedPawn.getTeam() != pawn.getTeam()) {
             stationnedPawn.moveBackToStart();
@@ -42,6 +49,9 @@ public class Square {
         game.endOfTurn();
     }
 
+    /**
+     * @return the next square of a pawn moving over this one, or null when it cannot move
+     */
     public Square getDestination(final Pawn pawn, final int nbMovementsLeft, final int nbMovementsTotal) {
         if (nbMovementsLeft == nbMovementsTotal) {
             stationnedPawn = null;
@@ -53,10 +63,16 @@ public class Square {
         }
     }
 
+    /**
+     * @return whether a pawn on this square can move with this outcome of the die
+     */
     public boolean canPawnMove(final int diceOutcome) {
         return true;
     }
 
+    /**
+     * @return whether a pawn is on the square
+     */
     public boolean isOccupied() {
         return stationnedPawn != null;
     }

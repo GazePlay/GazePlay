@@ -6,6 +6,10 @@ import javafx.beans.value.ObservableValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Keeps a ratio property (e.g. a volume) between 0 and 1: a value out of range is replaced by the nearest bound, with a
+ * warning in the log.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class RatioChangeListener implements ChangeListener<Number> {

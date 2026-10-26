@@ -15,6 +15,10 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "MemoryNumbers" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class MemoryNumbersGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {

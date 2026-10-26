@@ -5,8 +5,14 @@ import lombok.Getter;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Start and stop times of a game, each settable once.
+ */
 public class LifeCycle {
 
+    /**
+     * Thrown when the life cycle is started twice, or stopped before being started.
+     */
     public static class LifeCycleControlException extends RuntimeException {
 
         public LifeCycleControlException(final String message) {
@@ -29,6 +35,11 @@ public class LifeCycle {
 
     private final AtomicBoolean stopped = new AtomicBoolean(false);
 
+    /**
+     * Runs {@code onBeforeStart}, then records the start time.
+     *
+     * @throws LifeCycleControlException when already started
+     */
     public void start(final Runnable onBeforeStart) {
         if (started.compareAndSet(false, true)) {
             onBeforeStart.run();
@@ -41,6 +52,11 @@ public class LifeCycle {
         }
     }
 
+    /**
+     * Records the stop time, then runs {@code onAfterStop}. Does nothing when already stopped.
+     *
+     * @throws LifeCycleControlException when never started
+     */
     public void stop(final Runnable onAfterStop) {
         if (stopped.compareAndSet(false, true)) {
             if (started.get()) {
@@ -49,11 +65,13 @@ public class LifeCycle {
             } else {
                 throw new LifeCycleControlException("cannot stop when never started");
             }
-        } else {
-            // throw new LifeCycleControlException("already stopped");
         }
+        // stopping a stopped life cycle does nothing
     }
 
+    /**
+     * @return the time from the start to the stop, or to now when not stopped, in ms
+     */
     public long computeTotalElapsedDuration() {
         return Objects.requireNonNullElseGet(stopTime, System::currentTimeMillis) - startTime;
     }

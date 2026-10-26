@@ -10,6 +10,10 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "DotToDot", with the info-game.csv file of the games where items are found (see
+ * {@code HiddenItemsGamesStats}).
+ */
 public class DotToDotGameStats extends HiddenItemsGamesStats {
 
     public DotToDotGameStats(Scene scene) {

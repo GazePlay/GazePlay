@@ -5,6 +5,10 @@ import lombok.Setter;
 import net.gazeplay.components.Position;
 
 
+/**
+ * A square of the Goose game board, linked to the previous and next squares. Subclasses change what happens to a pawn
+ * stopping on them or passing by.
+ */
 public class Square {
 
     @Getter
@@ -25,10 +29,16 @@ public class Square {
         this.game = game;
     }
 
+    /**
+     * What happens when a pawn stops on the square: by default, the turn ends.
+     */
     protected void pawnStays(final Pawn pawn) {
         game.endOfTurn();
     }
 
+    /**
+     * What happens when a pawn passes over the square: by default, a sound.
+     */
     protected void pawnPassesBy(final Pawn pawn) {
         game.playMovementSound();
     }

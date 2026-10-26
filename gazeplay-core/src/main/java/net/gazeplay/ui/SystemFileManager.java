@@ -31,6 +31,9 @@ public final class SystemFileManager {
         start(showFileCommand(System.getProperty("os.name"), file));
     }
 
+    /**
+     * @return the command opening a folder in the file manager of the system (Explorer, Finder, or xdg-open)
+     */
     static List<String> openFolderCommand(final String osName, final File folder) {
         final String os = osName.toLowerCase(Locale.ROOT);
         if (os.contains("win")) {
@@ -41,6 +44,10 @@ public final class SystemFileManager {
         return List.of("xdg-open", folder.getAbsolutePath());
     }
 
+    /**
+     * @return the command showing a file selected in the file manager of the system (Explorer, Finder, or its folder
+     *   with xdg-open)
+     */
     static List<String> showFileCommand(final String osName, final File file) {
         final String os = osName.toLowerCase(Locale.ROOT);
         if (os.contains("win")) {
@@ -52,6 +59,9 @@ public final class SystemFileManager {
         return List.of("xdg-open", file.getAbsoluteFile().getParent());
     }
 
+    /**
+     * Runs a command without waiting for it; a failure is logged.
+     */
     private static void start(final List<String> command) {
         try {
             new ProcessBuilder(command).start();

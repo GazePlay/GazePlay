@@ -5,7 +5,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
@@ -18,6 +17,10 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "WhereIsTheFlag" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {

@@ -7,10 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import net.gazeplay.IGameContext;
-
-import java.util.ArrayList;
-
+/**
+ * A car of the GazeRace game, driving along the road as an obstacle for the player.
+ */
 public class Car extends Rectangle {
 
 
@@ -57,6 +56,9 @@ public class Car extends Rectangle {
         moveCar(this.direction);
     }
 
+    /**
+     * Moves the car along the road, in its direction.
+     */
     private void moveCar(String direction){
 
         AnimationTimer carAnimation = new AnimationTimer() {

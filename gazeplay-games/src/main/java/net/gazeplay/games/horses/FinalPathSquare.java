@@ -3,6 +3,10 @@ package net.gazeplay.games.horses;
 
 import net.gazeplay.components.Position;
 
+/**
+ * A square of the final path of a team ("Horses"): the pawn goes up to the next square only with the exact number shown
+ * on the square.
+ */
 public class FinalPathSquare extends Square {
 
     private final int requiredNumber;

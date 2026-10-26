@@ -6,7 +6,6 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -21,8 +20,9 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
-import java.util.List;
-
+/**
+ * A round picture selected by a fixation: like {@link ProgressButton}, with the image fitted in the circle.
+ */
 public class ProgressPortrait extends StackPane {
 
     @Getter
@@ -47,6 +47,9 @@ public class ProgressPortrait extends StackPane {
         this.getChildren().addAll(button, image, indicator);
     }
 
+    /**
+     * Makes the portrait visible and selectable.
+     */
     public void active() {
         inuse = true;
         this.setOpacity(1);
@@ -55,6 +58,9 @@ public class ProgressPortrait extends StackPane {
         this.button.setDisable(false);
     }
 
+    /**
+     * Hides and disables the portrait if {@code b}, else makes it visible and selectable.
+     */
     public void disable(final boolean b) {
         if (b) {
             disable();
@@ -63,6 +69,9 @@ public class ProgressPortrait extends StackPane {
         }
     }
 
+    /**
+     * Hides the portrait and makes it unselectable.
+     */
     public void disable() {
         inuse = false;
         this.setOpacity(0);
@@ -70,25 +79,40 @@ public class ProgressPortrait extends StackPane {
         this.button.setDisable(true);
     }
 
+    /**
+     * Keeps the portrait visible, but no longer selectable.
+     */
     public void disableProgressIndicator() {
         inuse = false;
     }
 
+    /**
+     * Applies the color of the progress indicator chosen in the settings.
+     */
     public void styleProgressIndicator(IGameContext gameContext){
         indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
     }
 
+    /**
+     * Applies the size of the progress indicator chosen in the settings (percentage of the size of the portrait).
+     */
     public void sizeProgressIndicator(IGameContext gameContext){
         indicator.setMinHeight(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
         indicator.setMinWidth(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
     }
 
+    /**
+     * Replaces the image of the portrait.
+     */
     public void setImage(final ImageView img) {
         image = img;
         image.setMouseTransparent(true);
         this.getChildren().set(1, image);
     }
 
+    /**
+     * Makes the portrait visible and listens to the gaze and the mouse entering and leaving it.
+     */
     public void active2() {
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
@@ -101,8 +125,10 @@ public class ProgressPortrait extends StackPane {
         this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
     }
 
+    /**
+     * Creates the progress indicator; the indicator and the image follow the size of the circle.
+     */
     public void init() {
-        final double buttonWidth = 0;
         buttonHeight = 0;
         indicator = new ProgressIndicator(0);
         indicator.setMouseTransparent(true);
@@ -119,6 +145,12 @@ public class ProgressPortrait extends StackPane {
         indicator.setOpacity(0);
     }
 
+    /**
+     * Sets the action run after a fixation of {@code fixationLength} ms (with a delay of 300 ms before the indicator
+     * starts).
+     *
+     * @return the progress indicator
+     */
     public ProgressIndicator assignIndicator(final EventHandler<Event> enterEvent, final int fixationLength) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
@@ -162,6 +194,11 @@ public class ProgressPortrait extends StackPane {
         return indicator;
     }
 
+    /**
+     * Sets the action run after a fixation of the length of the settings, read at each fixation.
+     *
+     * @return the progress indicator
+     */
     public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent, final IGameContext gameContext) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
@@ -205,19 +242,18 @@ public class ProgressPortrait extends StackPane {
         return indicator;
     }
 
+    /**
+     * @return the position of the center of the portrait, translation included
+     */
     public Position getCurrentCenterPositionWithTranslation() {
         return new Position(
             (int) getLayoutX() + (int) getTranslateX() + getButton().getRadius(),
             (int) getLayoutY() + (int) getTranslateY() + getButton().getRadius());
     }
 
-    protected Image pickRandomImage(final List<Image> availableImages) {
-        final int count = availableImages.size();
-        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
-        final int index = r.nextInt(count);
-        return availableImages.get(index);
-    }
-
+    /**
+     * @return the library of the "portraits" folder of the images of the user, with the default images as fallback
+     */
     public static ImageLibrary createImageLibrary(ReplayablePseudoRandom randomGenerator) {
         return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
     }

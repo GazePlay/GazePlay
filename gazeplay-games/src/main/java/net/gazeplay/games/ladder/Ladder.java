@@ -20,6 +20,11 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
 
+/**
+ * Game "Ladder" (Amidakuji): five vertical lines are joined by rungs drawn at random. The player chooses a line at the
+ * top by a fixation; the pawn goes down it, crossing each rung it meets to the next line, down to the picture at the
+ * bottom of a line.
+ */
 @Slf4j
 public class Ladder implements GameLifeCycle {
 
@@ -110,12 +115,18 @@ public class Ladder implements GameLifeCycle {
         }
     }
 
+    /**
+     * Adds the background.
+     */
     private void background() {
         Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         back.setFill(Color.WHITE);
         gameContext.getChildren().add(back);
     }
 
+    /**
+     * Creates the vertical lines and the slanted rungs drawn at random between them, and the pictures at the bottom.
+     */
     private void creation() {
         Step s;
         for (int i = 0; i < 5; i++) {
@@ -161,6 +172,9 @@ public class Ladder implements GameLifeCycle {
         }
     }
 
+    /**
+     * Draws a segment of the ladder.
+     */
     private void screencreation(Step step) {
         Line line = new Line(ecartw + spacew * step.x1, ecarth + spaceh * step.y1, ecartw + spacew * step.x2, ecarth + spaceh * step.y2);
         line.setStrokeWidth(5);
@@ -168,6 +182,9 @@ public class Ladder implements GameLifeCycle {
         gameContext.getChildren().add(line);
     }
 
+    /**
+     * Creates the buttons choosing the starting line.
+     */
     private void button() {
         ProgressButton b;
 
@@ -272,6 +289,9 @@ public class Ladder implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(b);
     }
 
+    /**
+     * Moves the pawn along a segment, then looks for the next one.
+     */
     private void move(Step step, boolean start) {
         steps.remove(step);
         fall.remove(step);
@@ -299,6 +319,9 @@ public class Ladder implements GameLifeCycle {
         translateTransition.play();
     }
 
+    /**
+     * @return the next segment from a point: a rung first, else the line going down; the game is won at the bottom
+     */
     private void find(int x, int y) {
         boolean search = true;
         for (Step step : steps) {
@@ -321,6 +344,9 @@ public class Ladder implements GameLifeCycle {
         }
     }
 
+    /**
+     * Ends the game: plays the win animation and shows the statistics.
+     */
     private void win() {
         stats.stop();
 

@@ -8,8 +8,11 @@ import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.Random;
 
+/**
+ * The character the player moves in the labyrinth: the mouse, or a character drawn at random. Subclasses define how it
+ * is moved.
+ */
 public abstract class Mouse extends Parent {
 
     protected final IGameContext gameContext;
@@ -20,7 +23,6 @@ public abstract class Mouse extends Parent {
     private String orientation;
     public boolean souris;
     String ImageChoisie;
-    private static final Random r=new Random();
 
     int indiceX; // j
     int indiceY; // i
@@ -44,6 +46,9 @@ public abstract class Mouse extends Parent {
 
     }
 
+    /**
+     * Shows the picture of the character.
+     */
     public void setImage ()
     {
         if (this.souris == true) {
@@ -52,12 +57,18 @@ public abstract class Mouse extends Parent {
             this.mouse.setFill(new ImagePattern(new Image(ImageChoisie), 5, 5, 1, 1, true));
         }
     }
+    /**
+     * Replaces the mouse by a character drawn at random.
+     */
     public void setRandomPersonnage(){
         this.souris=false;
     }
+    /**
+     * @return the picture of a character drawn at random
+     */
     String getRandomCaractere()
     {
-        int choix = r.nextInt(17);
+        int choix = gameInstance.getRandomGenerator().nextInt(17);
         String img;
         switch (choix)
         {
@@ -116,10 +127,16 @@ public abstract class Mouse extends Parent {
         return img;
     }
 
+    /**
+     * @return whether the mouse is on a box
+     */
     boolean isTheMouse(final int i, final int j) {
         return (i == indiceY && j == indiceX);
     }
 
+    /**
+     * Highlights the mouse (selected).
+     */
     void putInBold() {
         if (souris == true) {
             switch (orientation) {
@@ -148,6 +165,9 @@ public abstract class Mouse extends Parent {
         }
     }
 
+    /**
+     * Removes the highlight of the mouse.
+     */
     void putInLight() {
         if (souris == true) {
             switch (orientation) {
@@ -172,6 +192,9 @@ public abstract class Mouse extends Parent {
         }
     }
 
+    /**
+     * Turns the mouse in the direction of its move.
+     */
     void reOrientateMouse(final int oldColumn, final int oldRow, final int newColumn, final int newRow) {
         if(souris ==true) {
             putInBold();
@@ -204,6 +227,9 @@ public abstract class Mouse extends Parent {
         }
     }
 
+    /**
+     * @return a progress indicator of a fixation
+     */
     protected ProgressIndicator createProgressIndicator(final double x, final double y, final double width, final double height) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(x + width * 0.05);

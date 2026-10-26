@@ -3,6 +3,9 @@ package net.gazeplay.games.TowerDefense;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
+/**
+ * A projectile shot by a tower, moving in a straight line; positions and speeds in tiles (per frame).
+ */
 public class Projectile {
 
     private double x;
@@ -21,6 +24,9 @@ public class Projectile {
         this.damage = damage;
     }
 
+    /**
+     * Moves the projectile by its speed.
+     */
     public void move(){
         x += speedX;
         y += speedY;
@@ -42,6 +48,9 @@ public class Projectile {
         return damage;
     }
 
+    /**
+     * @return the zone where the projectile hits an enemy
+     */
     public Shape getHitbox(){
         return new Circle(x, y, size);
     }

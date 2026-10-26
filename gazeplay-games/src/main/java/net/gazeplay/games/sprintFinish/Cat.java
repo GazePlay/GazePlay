@@ -21,6 +21,10 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
+/**
+ * The cat of the SprintFinish game, or one of the dogs chasing it. The cat follows the gaze (or the mouse), or the keys
+ * of the keyboard in the keyboard variants; a dog stops while the gaze (or the mouse) is on it.
+ */
 public class Cat extends Parent {
 
 
@@ -309,6 +313,9 @@ public class Cat extends Parent {
 
     }
 
+    /**
+     * @return the handler following the gaze for the cat, or stopping a dog while it is looked at
+     */
     private EventHandler<Event> buildEvent() {
         return e -> {
             if (!gameInstance.catNotKeyboard){
@@ -448,6 +455,9 @@ public class Cat extends Parent {
     }
 
 
+    /**
+     * Keeps the current position as the initial position.
+     */
     public void initPos(){
         this.initPosX = this.hitbox.getX();
         this.initPosY = this.hitbox.getY();

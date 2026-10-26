@@ -3,6 +3,10 @@ package net.gazeplay.commons.ui;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 
+/**
+ * Label whose text (also its tooltip and accessible text) is the translation of keys, updated when the language
+ * changes.
+ */
 public class I18NLabel extends Label implements Translator.LanguageChangeListener {
 
     private final String[] textKeys;
@@ -13,12 +17,10 @@ public class I18NLabel extends Label implements Translator.LanguageChangeListene
         super();
         this.textKeys = textKeys;
         this.translator = translator;
-        //
         String newText = translator.translate(textKeys);
         setText(newText);
         setTooltip(new Tooltip(newText));
         setAccessibleText(newText);
-        //
         translator.registerLanguageChangeListener(this);
     }
 

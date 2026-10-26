@@ -116,6 +116,10 @@ public class HeatMap {
         }
     }
 
+    /**
+     * @return the legend of the heatmap: a vertical gradient of its colors, the hottest at the top, with the values of
+     *   the limits of the color steps
+     */
     public WritableImage getColorKey(final int width, final int height) {
         final WritableImage keyImage = new WritableImage(width, height);
         final Canvas canvas = new Canvas(width, height);

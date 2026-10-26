@@ -34,6 +34,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * The Goose game ("GooseGame"), for 2 to 5 players: each player in turn rolls two dice by a fixation and moves their
+ * pawn; special squares send the pawn further (geese, bridge), make it throw again, skip turns, wait in prison until
+ * another pawn passes, or go back to the start. The first pawn landing exactly on the last square wins; a pawn going
+ * past it moves back.
+ */
 @Slf4j
 public class GooseGame implements GameLifeCycle {
 
@@ -538,6 +544,9 @@ public class GooseGame implements GameLifeCycle {
         gameContext.playWinTransition(200, actionEvent -> dispose());
     }
 
+    /**
+     * Plays one of the sounds of the moving pawn, drawn at random.
+     */
     public void playMovementSound() {
         String soundResource = String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6));
         gameContext.getSoundManager().add(soundResource);

@@ -6,6 +6,10 @@ import net.gazeplay.commons.ui.Translator;
 import java.util.Objects;
 import java.util.function.Function;
 
+/**
+ * Variant given by a value of an enum of the game; its label is the translation of the text given by a function of the
+ * value (by default its name).
+ */
 @Data
 public class EnumGameVariant<K extends Enum<K>> implements IGameVariant {
 

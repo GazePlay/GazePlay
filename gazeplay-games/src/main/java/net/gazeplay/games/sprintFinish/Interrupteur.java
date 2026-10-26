@@ -241,16 +241,8 @@ public class Interrupteur extends Parent {
         return interrupteur;
     }
 
-    public void setInterrupteur(Rectangle interrupteur) {
-        this.interrupteur = interrupteur;
-    }
-
     public ArrayList<Rectangle> getPortes() {
         return portes;
-    }
-
-    public void setPortes(ArrayList<Rectangle> portes) {
-        this.portes = portes;
     }
 
 

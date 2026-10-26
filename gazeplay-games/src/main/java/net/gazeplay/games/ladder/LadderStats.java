@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Ladder" (see {@code Stats}).
+ */
 public class LadderStats extends Stats {
 
     public LadderStats(Scene scene) {

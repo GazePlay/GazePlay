@@ -5,6 +5,9 @@ import net.gazeplay.commons.configuration.ApplicationConfig;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * A decimal setting, stored under a key of GazePlay.properties.
+ */
 public class ApplicationConfigBackedDoubleProperty extends PropertiesDoubleProperty {
 
     private final ApplicationConfig properties;

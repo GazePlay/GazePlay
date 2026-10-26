@@ -8,10 +8,16 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * A set of texts (e.g. the favorite games), stored under a key of GazePlay.properties as one text.
+ */
 public class ApplicationConfigBackedStringSetProperty extends PropertiesStringSetProperty {
 
     private final ApplicationConfig properties;
 
+    /**
+     * The items are separated by commas; blank items are ignored and the others trimmed when the value is read.
+     */
     public ApplicationConfigBackedStringSetProperty(
         final ApplicationConfig properties,
         final String propertyName,
@@ -31,6 +37,12 @@ public class ApplicationConfigBackedStringSetProperty extends PropertiesStringSe
         );
     }
 
+    /**
+     * @param delimiter               separator of the items in the stored text
+     * @param itemUnmarshallingFilter keeps the stored items to read
+     * @param itemUnmarshallingMapper converts a stored item into an item of the set
+     * @param itemMarshallingMapper   converts an item of the set into a stored item
+     */
     public ApplicationConfigBackedStringSetProperty(
         final ApplicationConfig properties,
         final String propertyName,

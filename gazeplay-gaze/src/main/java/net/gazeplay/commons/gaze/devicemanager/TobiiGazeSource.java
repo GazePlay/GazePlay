@@ -20,6 +20,10 @@ public class TobiiGazeSource implements GazeSource {
 
     private PositionPollerRunnable positionPollerRunnable;
 
+    /**
+     * Starts polling the eye tracker on a new thread. The first call to the wrapper loads its native library and
+     * connects to the eye tracker; without one, the poller receives no gaze data and gives no sample (R9).
+     */
     @Override
     public void start(final Supplier<Dimension2D> screenDimension, final Supplier<Point2D> screenPosition, final Consumer<GazeSample> consumer) {
         positionPollerRunnable = new PositionPollerRunnable(screenDimension, screenPosition, consumer);
@@ -27,6 +31,9 @@ public class TobiiGazeSource implements GazeSource {
         executorService.submit(positionPollerRunnable);
     }
 
+    /**
+     * Asks the polling thread to stop after its current poll, and releases it.
+     */
     @Override
     public void stop() {
         if (positionPollerRunnable != null) {

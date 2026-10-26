@@ -6,6 +6,9 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * A wall of the 3D room: a thin box placed on an axis, on one side.
+ */
 @Slf4j
 public class Wall {
 

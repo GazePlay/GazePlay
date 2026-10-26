@@ -2,6 +2,9 @@ package net.gazeplay.commons.ui;
 
 import javafx.scene.control.TitledPane;
 
+/**
+ * Titled pane whose title is the translation of keys, updated when the language changes.
+ */
 public class I18NTitledPane extends TitledPane implements Translator.LanguageChangeListener {
 
     private final String[] textKeys;
@@ -12,9 +15,7 @@ public class I18NTitledPane extends TitledPane implements Translator.LanguageCha
         super();
         this.textKeys = textKeys;
         this.translator = translator;
-        //
         setText(translator.translate(textKeys));
-        //
         translator.registerLanguageChangeListener(this);
     }
 

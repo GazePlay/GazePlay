@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * The cards of a round of a Math101 game, and the index of the right answer.
+ */
 @Data
 @AllArgsConstructor
 public class RoundDetails {

@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Dates and times as written in the names and contents of the result files. These patterns are a persistent format.
+ */
 public class DateUtils {
 
     /**
@@ -44,7 +47,7 @@ public class DateUtils {
     }
 
     /**
-     * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
+     * @return current date and time in the format yyyy-MM-dd-HH-mm-ss
      */
     public static String dateTimeNow() {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");

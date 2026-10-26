@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
@@ -23,9 +22,9 @@ import net.gazeplay.components.RandomPositionGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 /**
+ * The target of the Ninja game.
+ * <p>
  * Created by schwab on 26/12/2016.
  */
 @Slf4j
@@ -102,6 +101,9 @@ public class Target extends ProgressPortrait {
         gameContext.start();
     }
 
+    /**
+     * Sizes and fills the target, and starts its movement.
+     */
     private void createTarget() {
 
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
@@ -117,6 +119,9 @@ public class Target extends ProgressPortrait {
         active();
     }
 
+    /**
+     * @return the small balls the target is cut into
+     */
     private List<Portrait> generateMiniBallsPortraits(final ImageLibrary imageLibrary, final int count) {
         final List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
@@ -128,13 +133,12 @@ public class Target extends ProgressPortrait {
         return result;
     }
 
+    /**
+     * @return the handler cutting the target when the gaze or the mouse enters it, unless it is already being cut
+     */
     private EventHandler<Event> buildEvent() {
 
         return e -> {
-
-            // if((e.getEventType() == MouseEvent.MOUSE_ENTERED_TARGET ||e.getEventType() == MouseEvent.MOUSE_ENTERED ||
-            // e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED ||
-            // e.getEventType() == GazeEvent.GAZE_MOVED) && anniOff) {
 
             if (animationStopped) {
 
@@ -144,6 +148,9 @@ public class Target extends ProgressPortrait {
         };
     }
 
+    /**
+     * Moves the target to a random place, in a duration that depends on the variant.
+     */
     private void moveRandom(final long length) {
 
         final Position currentPosition = new Position((int) getLayoutX(), (int) getLayoutY());
@@ -185,6 +192,9 @@ public class Target extends ProgressPortrait {
         translation.play();
     }
 
+    /**
+     * Puts the target back at a position, at its normal size and opacity.
+     */
     private void resetTargetAtPosition(final Position pos) {
         Target.this.setScaleX(1);
         Target.this.setScaleY(1);
@@ -198,6 +208,9 @@ public class Target extends ProgressPortrait {
         Target.this.setTranslateZ(0);
     }
 
+    /**
+     * Moves the target back and forth between two positions.
+     */
     private void createBackAndForthTranslations(final Position pos1, final Position pos2, final long length) {
 
         final Timeline translation1 = new Timeline(new KeyFrame(new Duration(length),
@@ -232,6 +245,9 @@ public class Target extends ProgressPortrait {
         translation1.playFrom(new Duration(length).multiply(randomGen.nextDouble()));
     }
 
+    /**
+     * Moves the target in the way of the variant, for 1 to 3 seconds.
+     */
     private void move() {
         int lengthRandom = randomGen.nextInt(2000) + 1000;// between 1 and 3 seconds
 
@@ -308,6 +324,9 @@ public class Target extends ProgressPortrait {
 
     }
 
+    /**
+     * @return the position of the gaze or of the mouse of an event
+     */
     public Position getPointerPosition(final Event e) {
         double mousePositionX = 0;
         double mousePositionY = 0;
@@ -324,6 +343,9 @@ public class Target extends ProgressPortrait {
         return new Position((int) mousePositionX, (int) mousePositionY);
     }
 
+    /**
+     * Counts a goal, cuts the target into small balls flying away, then moves it elsewhere.
+     */
     private void enter(final Event e) {
 
         stats.incrementNumberOfGoalsReached();
@@ -334,8 +356,6 @@ public class Target extends ProgressPortrait {
         if (runningTranslation != null) {
             runningTranslation.stop();
         }
-
-        // this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Transition transition1 = createTransition1();
 
@@ -399,6 +419,9 @@ public class Target extends ProgressPortrait {
         gameContext.getSoundManager().add(audioClipResourceLocation);
     }
 
+    /**
+     * @return the transition hiding the target
+     */
     private Transition createTransition1() {
         final FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
         fadeTransition.setToValue(0.5);
@@ -408,12 +431,18 @@ public class Target extends ProgressPortrait {
         return new ParallelTransition(fadeTransition, timeline1);
     }
 
+    /**
+     * @return the transition showing the target again
+     */
     private Transition createTransition2() {
         final FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
         fadeTransition.setToValue(0);
         return fadeTransition;
     }
 
+    /**
+     * @return the transition fading the target
+     */
     private Transition createTransition4() {
         final FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
         fadeTransition.setToValue(1);

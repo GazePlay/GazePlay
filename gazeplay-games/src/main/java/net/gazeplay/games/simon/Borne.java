@@ -2,7 +2,6 @@ package net.gazeplay.games.simon;
 
 import lombok.extern.slf4j.Slf4j;
 import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
@@ -20,6 +19,10 @@ import net.gazeplay.IGameContext;
 
 import java.util.ArrayList;
 
+/**
+ * The Simon device: four colored buttons around a center. It plays the sequence of the computer, then waits for the
+ * sequence of the player.
+ */
 @Slf4j
 public class Borne extends Parent {
     private final IGameContext gameContext;
@@ -27,11 +30,8 @@ public class Borne extends Parent {
     private final ArrayList<Bouton> boutons;
     private final double radius;
     private Timeline computerPlayAnimation;
-    //private AnimationTimer timeBeforeResetComputerAnimation;
     private boolean computerPlay;
     private boolean nextNote;
-   // protected int secondsReset;
-   // private int nbSecond;
     private boolean resetComputerAnimation;
     protected boolean multiplayer;
     protected boolean simonCopy;
@@ -50,7 +50,6 @@ public class Borne extends Parent {
         this.nbNoteMax = 0;
         this.radius = 400;
         this.resetComputerAnimation = false;
-        //this.nbSecond = 0;
         this.multiplayer = false;
         this.right = new ImageView(new Image("data/simonGame/right.png"));
         this.wrong = new ImageView(new Image("data/simonGame/wrong.png"));
@@ -60,6 +59,9 @@ public class Borne extends Parent {
 
     }
 
+    /**
+     * Creates the device and starts its animation loop: the computer plays its sequence, then the player repeats it.
+     */
     protected void generateBorne(){
 
 
@@ -82,28 +84,6 @@ public class Borne extends Parent {
             this.turn = true;
         }
 
-
-
-
-        /*
-        if (!simonCopy){
-            timeBeforeResetComputerAnimation = new AnimationTimer() {
-                int nbframes = 0;
-                @Override
-                public void handle(long now) {
-                    if (nbframes == 60){
-                        nbframes = 0;
-                        nbSecond++;
-                        if (nbSecond == secondsReset){
-                            resetComputerAnimation = true;
-                        }
-                    }
-                    nbframes++;
-                }
-            };
-            timeBeforeResetComputerAnimation.start();
-        }
-*/
         nextNote = true;
         lastNotePlayer = false;
         computerPlayAnimation = new Timeline(new KeyFrame(Duration.millis(16), event -> {
@@ -169,6 +149,9 @@ public class Borne extends Parent {
         computerPlayAnimation.play();
     }
 
+    /**
+     * After a turn of the "copy" mode, where the computer repeats the sequence of the player.
+     */
     private void resetComputerAnimationCopy(){
         boolean verifIncrement = false;
 
@@ -195,6 +178,10 @@ public class Borne extends Parent {
     }
 
 
+    /**
+     * After a turn of the classic mode: a new note is added when the player repeated the sequence, otherwise the game
+     * ends.
+     */
     private void resetComputerAnimationClassic(){
         boolean increment = gameInstance.playerSequence.equals(gameInstance.computerSequence);
         log.debug("sequences of the same size : {}", gameInstance.playerSequence.size() == gameInstance.computerSequence.size());
@@ -231,6 +218,9 @@ public class Borne extends Parent {
         resetComputerAnimation = false;
     }
 
+    /**
+     * Shows a success or a failure.
+     */
     private void playSuccessAnimation(boolean win){
         if (win){
             this.right.setOpacity(1);
@@ -246,6 +236,9 @@ public class Borne extends Parent {
         animation.play();
     }
 
+    /**
+     * Lights a button and plays its note.
+     */
     private void playSongAnimation(Bouton bouton){
         log.debug("playsong for : {}", bouton.couleur);
         nextNote = false;
@@ -267,12 +260,18 @@ public class Borne extends Parent {
 
         animation.play();
     }
+    /**
+     * Makes the buttons unselectable (while the computer plays).
+     */
     private void disableAllBoutons(){
         for(Bouton bouton : boutons){
             bouton.setDisable(true);
         }
     }
 
+    /**
+     * Makes the buttons selectable.
+     */
     private void activateAllBoutons(){
         for (Bouton bouton : boutons){
             bouton.setDisable(false);
@@ -280,6 +279,9 @@ public class Borne extends Parent {
     }
 
 
+    /**
+     * Draws the device.
+     */
     private void initBorne(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -322,6 +324,9 @@ public class Borne extends Parent {
 
     }
 
+    /**
+     * Creates the four colored buttons, each with its note.
+     */
     private void initBoutons(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Bouton topRight = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius-5,radius-5,0,90,gameContext,gameInstance, "rouge",gameInstance.musicNotes.get(0));

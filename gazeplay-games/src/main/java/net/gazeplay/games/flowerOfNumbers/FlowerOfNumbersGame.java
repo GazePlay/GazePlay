@@ -35,6 +35,11 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
 
+/**
+ * Game "FlowerOfNumbers": a number is shown in the pistil of a flower; the player fills each petal with representations
+ * of this number (digits, words, fingers, dice, money), chosen by fixations among those around the flower. A value put
+ * in a petal can be taken back by a fixation on it. The flower is complete when each petal sums up to the number.
+ */
 @Slf4j
 public class FlowerOfNumbersGame implements GameLifeCycle {
     private final IGameContext gameContext;
@@ -122,6 +127,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows the flower.
+     */
     private void createFlower() {
         final Image image = new Image("data/flowerOfNumbers/images/flower.png");
         final Rectangle flower = createRectangle(image);
@@ -129,6 +137,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         log.info("flower background create successfully");
     }
 
+    /**
+     * Shows the number of the pistil.
+     *
+     * @return the index of the pistil among the nodes of the game
+     */
     private int createPistil() {
         final int res = gameContext.getChildren().size();
         final Image image = createImageFromText(String.valueOf(0), maxNumberSize);
@@ -144,6 +157,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return res;
     }
 
+    /**
+     * Creates the auras showing that a petal is complete (hidden at first).
+     *
+     * @return the index of the first aura among the nodes of the game
+     */
     private int createAura() {
         final int res = gameContext.getChildren().size();
         for (Petal petal : Petal.values()) {
@@ -156,6 +174,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return res;
     }
 
+    /**
+     * @return a rectangle filled with an image, following the size of the game area
+     */
     private Rectangle createRectangle(final Image image) {
         final Rectangle rectangle = new Rectangle(0, 0, 10, 10);
         rectangle.setFill(new ImagePattern(image));
@@ -166,6 +187,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return rectangle;
     }
 
+    /**
+     * Creates the buttons of the values that can be put in the petals.
+     *
+     * @return the index of the first of them among the nodes of the game
+     */
     private int createNumbers() {
         final int res = gameContext.getChildren().size();
 
@@ -204,6 +230,10 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return res;
     }
 
+    /**
+     * Creates the button of a value of a petal: a fixation on it puts a copy of the value in the first free place of
+     * the petal, and a fixation on that copy takes it back.
+     */
     private void createButton(final Petal petal, final int value, final double size, final double x, final double y) {
         final Image image = switch (petal) {
             case DIGITS -> createImageFromText(String.valueOf(value), maxDigitSize);
@@ -294,6 +324,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         button.active();
     }
 
+    /**
+     * @return a new number for the pistil, different from the previous one
+     */
     private int choosePistilValue() {
         int newPistilValue = oldPistilValue;
         while (newPistilValue == oldPistilValue) {
@@ -303,6 +336,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return newPistilValue;
     }
 
+    /**
+     * Disables the values of a petal when it is full, and enables them again when it is not.
+     */
     private void checkIfPetalIsFull(final Petal petal) {
         final int startIndex = startIndexNumbers + Petal.getTotalNumberOfObjectsBeforePetal(petal);
         final int endIndex = startIndex + petal.getNumberOfObjects();
@@ -317,6 +353,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows the aura of a petal when its values sum up to the number of the pistil.
+     */
     private void checkIfPetalIsComplete(final Petal petal) {
         final boolean isComplete = flower.petalIsComplete(petal);
         final Rectangle aura = (Rectangle) gameContext.getChildren().get(startIndexAuras + petal.ordinal());
@@ -326,6 +365,10 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return whether every petal is complete; then the values can no longer be chosen, and the round is won if
+     *   {@code win}
+     */
     private boolean checkIfFlowerIsComplete(final boolean disable, final boolean win) {
         if (flower.isComplete()) {
             if (disable) {
@@ -352,6 +395,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return false;
     }
 
+    /**
+     * @return the position, as ratios of the game area, of a place of a petal
+     */
     private Pair<Double, Double> calculateCoordinates(final Petal petal, final int index) {
         return switch (petal) {
             case DIGITS -> switch (index) {
@@ -386,6 +432,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         };
     }
 
+    /**
+     * @return an image of a text, in the color of the theme
+     */
     private Image createImageFromText(final String text, final int maxTextWidth) {
         final Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
             @Override
@@ -428,6 +477,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return SwingFXUtils.toFXImage(image, null);
     }
 
+    /**
+     * @return the width, in pixels, of the widest number up to {@code endValue}
+     */
     private int calculateMaxIntegerSize(final int endValue) {
         final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2d = image.createGraphics();
@@ -445,6 +497,9 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return maxSize;
     }
 
+    /**
+     * @return the width, in pixels, of the widest number written in words in the current language
+     */
     private int calculateMaxWordSize() {
         final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2d = image.createGraphics();

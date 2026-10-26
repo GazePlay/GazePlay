@@ -5,6 +5,9 @@ import lombok.Setter;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Thread factory putting its threads in one named thread group, and logging their uncaught exceptions.
+ */
 public class GroupingThreadFactory implements ThreadFactory {
 
     private final ThreadGroup threadGroup;

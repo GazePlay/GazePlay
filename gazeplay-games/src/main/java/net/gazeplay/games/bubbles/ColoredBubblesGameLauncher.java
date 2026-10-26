@@ -14,6 +14,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "ColoredBubbles" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class ColoredBubblesGameLauncher implements IGameLauncher<Stats, EnumGameVariant<BubblesGameVariant>> {
     @Override
     public Stats createNewStats(final Scene scene) {

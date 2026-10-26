@@ -6,6 +6,9 @@ import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
+/**
+ * Tower shooting faster, alternately from its left and right canon.
+ */
 public class DoubleTower extends Tower {
 
     private boolean shootLeft;

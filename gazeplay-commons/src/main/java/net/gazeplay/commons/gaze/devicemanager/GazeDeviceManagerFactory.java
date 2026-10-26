@@ -11,6 +11,10 @@ import net.gazeplay.commons.gaze.EyeTracker;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+/**
+ * Creates the gaze device manager of the eye tracker chosen in the settings. Only one is active at a time: getting a
+ * new one stops the previous one.
+ */
 @Slf4j
 public class GazeDeviceManagerFactory {
 
@@ -31,6 +35,9 @@ public class GazeDeviceManagerFactory {
         this.currentScreenPositionSupplier = currentScreenPositionSupplier;
     }
 
+    /**
+     * Stops the current gaze device manager, if any, and creates a new one for the current settings.
+     */
     public synchronized GazeDeviceManager get() {
         GazeDeviceManager gazeDeviceManager = currentInstanceReference.get();
         if (gazeDeviceManager != null) {

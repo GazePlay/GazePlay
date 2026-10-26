@@ -9,6 +9,9 @@ import net.gazeplay.commons.configuration.Configuration;
 import java.io.File;
 import java.net.URL;
 
+/**
+ * Plays the sound effects of the games, at the volume of the effects set in the settings (and following its changes).
+ */
 @Slf4j
 public class ForegroundSoundsUtils {
 
@@ -19,6 +22,11 @@ public class ForegroundSoundsUtils {
 
     private static MediaPlayer lastSoundPlayer;
 
+    /**
+     * Plays a sound, without stopping the previous one.
+     *
+     * @param resource path of the sound: a resource of the classpath, or else a file
+     */
     public static void playSound(String resource) {
         synchronized (LOCK) {
             playSoundLocked(resource);
@@ -40,7 +48,6 @@ public class ForegroundSoundsUtils {
             log.debug("using url");
             path = url.toString();
         }
-       // stopSound();
         final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
         MediaPlayer soundPlayer = new MediaPlayer(media);
@@ -50,6 +57,9 @@ public class ForegroundSoundsUtils {
         lastSoundPlayer = soundPlayer;
     }
 
+    /**
+     * Stops the last sound played.
+     */
     public static void stopSound() {
         synchronized (LOCK) {
             MediaPlayer activeSoundPlayer = lastSoundPlayer;

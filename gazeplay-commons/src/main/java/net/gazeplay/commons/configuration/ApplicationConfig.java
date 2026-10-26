@@ -20,10 +20,16 @@ public class ApplicationConfig {
         properties.putAll(initialProperties);
     }
 
+    /**
+     * @return the value of a key, or null when the file has none
+     */
     public synchronized String getProperty(final String key) {
         return properties.getProperty(key);
     }
 
+    /**
+     * Sets the value of a key, or removes the key when {@code value} is null. Nothing is written until {@link #store}.
+     */
     public synchronized void setProperty(final String key, final String value) {
         if (value == null) {
             properties.remove(key);
@@ -32,6 +38,9 @@ public class ApplicationConfig {
         }
     }
 
+    /**
+     * Writes all the pairs in the format of {@link Properties#store}, with {@code comments} as first line.
+     */
     public synchronized void store(final OutputStream out, final String comments) throws IOException {
         properties.store(out, comments);
     }

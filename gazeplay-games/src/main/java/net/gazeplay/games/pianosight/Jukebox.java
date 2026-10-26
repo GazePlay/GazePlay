@@ -8,6 +8,9 @@ import net.gazeplay.IGameContext;
 
 import java.io.File;
 
+/**
+ * Chooser of a MIDI file played by the Piano game.
+ */
 @Slf4j
 public class Jukebox extends Pane {
 
@@ -18,6 +21,11 @@ public class Jukebox extends Pane {
         this.gameContext = gameContext;
     }
 
+    /**
+     * Asks the user to choose a MIDI file.
+     *
+     * @return the chosen file, null when cancelled
+     */
     public String getS() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");

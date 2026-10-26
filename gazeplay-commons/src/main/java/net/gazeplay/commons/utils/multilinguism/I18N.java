@@ -10,15 +10,25 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Translations of a CSV file: the first line gives the languages (from the second column), each other line a key (first
+ * column) and its translation in each language. The values must not contain commas.
+ */
 @Slf4j
 public class I18N {
 
     private final Map<Entry, String> translations;
 
+    /**
+     * @param resourcePath a file path, or else a resource of the classpath
+     */
     public I18N(String resourcePath) {
         this.translations = loadFromFile(resourcePath);
     }
 
+    /**
+     * Key of a translation: a key of the file in a language.
+     */
     @Data
     @AllArgsConstructor
     protected static class Entry {
@@ -26,6 +36,10 @@ public class I18N {
         public String language;
     }
 
+    /**
+     * Reads all the translations of a file. A line with more columns than the header is logged as an error and its
+     * extra columns are ignored, so that one wrong line does not prevent the game using the file from starting.
+     */
     protected static Map<Entry, String> loadFromFile(String resourceLocation) {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
@@ -77,6 +91,9 @@ public class I18N {
         }
     }
 
+    /**
+     * @return the translation of a key in a language, null when the file has none
+     */
     public String translate(String key, String language) {
         return translations.get(new Entry(key, language));
     }

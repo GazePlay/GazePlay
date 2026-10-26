@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * Thread factory naming each thread after a prefix and the class of its task, to find them in the logs and thread
+ * dumps.
+ */
 @Slf4j
 public class CustomThreadFactory implements ThreadFactory {
 

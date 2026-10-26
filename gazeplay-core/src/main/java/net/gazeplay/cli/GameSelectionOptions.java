@@ -3,6 +3,9 @@ package net.gazeplay.cli;
 import lombok.Data;
 import picocli.CommandLine;
 
+/**
+ * Game to start directly: {@code --game <name code>}, or {@code --random-game}.
+ */
 @Data
 public class GameSelectionOptions {
 

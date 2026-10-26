@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
 
+/**
+ * Gives the variants of the game "Puzzle" proposed in the menu.
+ */
 public class PuzzleGameVariantGenerator extends EnumGameVariantGenerator<PuzzleGameVariantGenerator.PuzzleGameVariant> {
 
     public PuzzleGameVariantGenerator() {

@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A target of a game, given to the statistics for the areas of interest screen: its position, its radius, when it
+ * appeared and disappeared, and its outline.
+ */
 @Data
 @RequiredArgsConstructor
 public class TargetAOI {

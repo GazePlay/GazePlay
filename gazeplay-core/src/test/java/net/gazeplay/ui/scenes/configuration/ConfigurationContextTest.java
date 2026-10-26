@@ -1,6 +1,5 @@
 package net.gazeplay.ui.scenes.configuration;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -120,7 +119,7 @@ class ConfigurationContextTest {
             }
 
             // Layout of the "gazeplay" edition (the "bera" edition builds another grid)
-            assertEquals(72 - notDisplayedElts, children.size());
+            assertEquals(70 - notDisplayedElts, children.size());
             // Language settings
             assertTrue(children.get(3) instanceof MenuButton);
             // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
@@ -144,16 +143,16 @@ class ConfigurationContextTest {
             assertTrue(children.get(43 - notDisplayedElts) instanceof Button);
             assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
-            // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled, convex hull),
+            // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled),
             // sequence, video
             assertTrue(children.get(51 - notDisplayedElts) instanceof Button);
             assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
             assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(65 - notDisplayedElts) instanceof CheckBox);
+            // The "convex hulls" setting, which did nothing, was removed (October 2026): one row (2 nodes) less
+            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(71 - notDisplayedElts) instanceof CheckBox);
         });
         TestingUtils.waitForRunLater();
 

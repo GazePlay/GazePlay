@@ -37,6 +37,10 @@ import java.util.List;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 
+/**
+ * Window shown when "Where is it?" is started with custom images but without a valid folder: it asks for the folder
+ * (see {@code WhereIsItVaildator}), then starts the game.
+ */
 public class GameWhereIsItErrorPathDialog extends Stage {
 
     public GameWhereIsItErrorPathDialog(
@@ -110,6 +114,9 @@ public class GameWhereIsItErrorPathDialog extends Stage {
         setHeight(primaryStage.getHeight() / 2);
     }
 
+    /**
+     * @return the chooser of the folder of the images; the "done" button is enabled once a valid folder is chosen
+     */
     Node buildDirectoryChooser(
         Configuration configuration,
         GazePlay gazePlay,

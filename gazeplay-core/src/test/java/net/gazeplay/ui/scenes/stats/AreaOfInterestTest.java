@@ -4,8 +4,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.Translator;

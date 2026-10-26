@@ -11,6 +11,10 @@ import net.gazeplay.commons.utils.screen.PrimaryScreenSupplier;
 
 import java.util.function.Supplier;
 
+/**
+ * Gives the screen showing the window of GazePlay (it can be a second screen), or the primary screen while there is no
+ * window yet.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class CurrentScreenSupplier implements Supplier<Screen> {
@@ -51,7 +55,6 @@ public class CurrentScreenSupplier implements Supplier<Screen> {
             return primaryScreenSupplier.get();
         }
         Screen screen = screensForRectangle.get(0);
-        //log.info("current screen = {}", screen);
         return screen;
     }
 }

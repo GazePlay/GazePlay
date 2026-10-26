@@ -5,6 +5,9 @@ import javafx.scene.layout.StackPane;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * A target of the shooting games, with its animation.
+ */
 public class Target extends StackPane {
 
     @Getter

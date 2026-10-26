@@ -6,6 +6,10 @@ import net.gazeplay.commons.configuration.ApplicationConfig;
 import java.beans.PropertyChangeListener;
 import java.util.function.Function;
 
+/**
+ * A setting of any type (e.g. an enum), stored under a key of GazePlay.properties as the text given by a marshaller,
+ * and read back by an unmarshaller.
+ */
 public class ApplicationConfigBackedObjectProperty<T> extends PropertiesObjectProperty<T> {
 
     private final ApplicationConfig properties;

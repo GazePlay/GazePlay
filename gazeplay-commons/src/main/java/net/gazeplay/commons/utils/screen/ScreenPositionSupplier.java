@@ -6,6 +6,10 @@ import javafx.stage.Screen;
 
 import java.util.function.Supplier;
 
+/**
+ * Gives the position, in the desktop, of the top left corner of the screen given by another supplier: not (0, 0) for a
+ * second screen.
+ */
 public class ScreenPositionSupplier implements Supplier<Point2D> {
 
     private final Supplier<Screen> screenSupplier;

@@ -5,6 +5,9 @@ import net.gazeplay.commons.configuration.ApplicationConfig;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * A boolean setting, stored under a key of GazePlay.properties.
+ */
 public class ApplicationConfigBackedBooleanProperty extends PropertiesBooleanProperty {
 
     private final ApplicationConfig properties;

@@ -37,6 +37,9 @@ import java.util.List;
  */
 public final class ReplayDataFormat {
 
+    /**
+     * Version written in the new files.
+     */
     public static final int CURRENT_VERSION = 4;
 
     /**
@@ -47,6 +50,10 @@ public final class ReplayDataFormat {
     private ReplayDataFormat() {
     }
 
+    /**
+     * @param formatVersion the "formatVersion" of a file, null when absent
+     * @return the version of the file
+     */
     public static int versionOf(final Integer formatVersion) {
         return formatVersion == null ? LEGACY_VERSION : formatVersion;
     }
@@ -59,8 +66,8 @@ public final class ReplayDataFormat {
     }
 
     /**
-     * @return the sequences read from a file of the given version, in the convention used in memory; null when the
-     * file has none, as the replay received before this conversion existed (an empty list would change the replay)
+     * @return the sequences read from a file of the given version, in the convention used in memory; null when the file
+     *   has none, as the replay received before this conversion existed (an empty list would change the replay)
      */
     public static ArrayList<LinkedList<FixationPoint>> fromFile(
         final int version, final List<LinkedList<FixationPoint>> inFile) {

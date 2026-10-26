@@ -1,6 +1,5 @@
 package net.gazeplay.commons.soundsmanager;
 
-import javafx.application.Platform;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -10,6 +9,10 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Plays the sounds requested by a game one after the other: a background thread asks every 10 ms to play the next sound
+ * of the queue on the JavaFX thread.
+ */
 @Slf4j
 public class SoundManager {
     @Getter
@@ -21,12 +24,18 @@ public class SoundManager {
     @Getter
     private Queue<String> listOfMusicToPlay = new LinkedList<>();
 
+    /**
+     * Starts the background thread.
+     */
     public void init() {
         soundPlayerRunnable = new SoundPlayerRunnable(this);
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(soundPlayerRunnable);
     }
 
+    /**
+     * Stops the background thread.
+     */
     public void destroy() {
         soundPlayerRunnable.setStopRequested(true);
         if (executorService != null) {
@@ -34,6 +43,9 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Plays the next sound of the queue, if any. On the JavaFX thread.
+     */
     public void playRequestedSounds() {
         if (listOfMusicToPlay.size() > 0) {
             String nextToPlay = listOfMusicToPlay.poll();
@@ -45,11 +57,19 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Empties the queue.
+     */
     public void clear() {
-            listOfMusicToPlay.clear();
+        listOfMusicToPlay.clear();
     }
 
-     public void add(String resource) {
-            listOfMusicToPlay.add(resource);
+    /**
+     * Adds a sound to the queue.
+     *
+     * @param resource path of the sound (resource of the classpath or file)
+     */
+    public void add(String resource) {
+        listOfMusicToPlay.add(resource);
     }
 }

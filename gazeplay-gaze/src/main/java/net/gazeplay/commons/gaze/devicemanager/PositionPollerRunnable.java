@@ -10,6 +10,14 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Reads the gaze position of the Tobii eye tracker every 10 ms, until it is asked to stop, and gives each new position
+ * to a consumer as a {@link GazeSample}, in screen coordinates.
+ * <p>
+ * The wrapper gives a position as two ratios (0 to 1) of the screen width and height: they are converted to pixels of
+ * the screen showing GazePlay, then moved by the position of that screen in the desktop (second screen). The "no data"
+ * value of the wrapper and the repeated positions are ignored (anomalies R9 and R6).
+ */
 @Slf4j
 public class PositionPollerRunnable implements Runnable {
 
@@ -40,10 +48,18 @@ public class PositionPollerRunnable implements Runnable {
     @Setter
     private transient boolean stopRequested = false;
 
+    /**
+     * @param screenDimensionSupplier dimension of the screen showing GazePlay, read at each poll (the window can move)
+     * @param screenPositionSupplier  position of that screen in the desktop
+     * @param sampleConsumer          receives the samples, on the polling thread
+     */
     public PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final Supplier<Point2D> screenPositionSupplier, final Consumer<GazeSample> sampleConsumer) {
         this(screenDimensionSupplier, screenPositionSupplier, sampleConsumer, Tobii::gazePosition);
     }
 
+    /**
+     * Constructor for the tests: the position comes from {@code gazePositionSource} instead of the wrapper.
+     */
     PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final Supplier<Point2D> screenPositionSupplier,
                            final Consumer<GazeSample> sampleConsumer, final Supplier<float[]> gazePositionSource) {
         this.screenDimensionSupplier = screenDimensionSupplier;
@@ -52,6 +68,10 @@ public class PositionPollerRunnable implements Runnable {
         this.gazePositionSource = gazePositionSource;
     }
 
+    /**
+     * Polls until {@link #setStopRequested(boolean)} is called. An exception of a poll is logged and the polling goes
+     * on.
+     */
     @Override
     public void run() {
         while (!stopRequested) {
@@ -70,6 +90,9 @@ public class PositionPollerRunnable implements Runnable {
         }
     }
 
+    /**
+     * Reads one position and gives it to the consumer if it is a new one.
+     */
     void poll() {
         // The acquisition time is taken here, on the polling thread, before the hop to the JavaFX thread
         nextGazePoint().ifPresent(point -> sampleConsumer.accept(GazeSample.now(point, GazeSample.Source.GAZE)));

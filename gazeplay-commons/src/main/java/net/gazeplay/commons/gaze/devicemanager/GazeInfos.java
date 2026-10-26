@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * State of a registered node for the dispatch: whether the gaze, and the mouse, are on it, and since when ({@code
+ * time}, -1 after they left it).
+ * <p>
  * Created by schwab on 24/08/2016.
  */
 class GazeInfos {

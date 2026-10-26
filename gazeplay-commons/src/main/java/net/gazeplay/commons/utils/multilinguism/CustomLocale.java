@@ -2,6 +2,10 @@ package net.gazeplay.commons.utils.multilinguism;
 
 import java.util.Locale;
 
+/**
+ * Locales of the languages of GazePlay, as written in the header of the translation files (ISO 639-3 codes, and a
+ * country when two variants exist). Some codes are not ISO ones ("chn", "vnm"), but they are those of the files.
+ */
 public class CustomLocale {
     public static final Locale ALBANIA = Locale.of("alb");
     public static final Locale ARAB_LEAGUE = Locale.of("ara");

@@ -9,6 +9,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Threads for the tasks started from the interface that must not freeze it (e.g. the delayed start of the win
+ * animation, see {@link Bravo}): up to 4 at a time, stopped after one minute without task.
+ */
 public class AsyncUiTaskExecutor {
 
     @Getter

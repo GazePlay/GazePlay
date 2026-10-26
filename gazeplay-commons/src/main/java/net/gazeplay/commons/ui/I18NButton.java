@@ -2,9 +2,12 @@ package net.gazeplay.commons.ui;
 
 import javafx.scene.control.Button;
 
+/**
+ * Button whose text is the translation of keys, updated when the language changes.
+ */
 public class I18NButton extends Button implements Translator.LanguageChangeListener {
 
-    private String[] textKeys;
+    private final String[] textKeys;
 
     private final Translator translator;
 
@@ -12,15 +15,8 @@ public class I18NButton extends Button implements Translator.LanguageChangeListe
         super();
         this.textKeys = textKeys;
         this.translator = translator;
-        //
         languageChanged();
-        //
         translator.registerLanguageChangeListener(this);
-    }
-
-    public void setTextKeys(String[] value) {
-        this.textKeys = value;
-        languageChanged();
     }
 
     @Override

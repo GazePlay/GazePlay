@@ -11,6 +11,9 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.LinkedList;
 
+/**
+ * The buttons of a menu of the Cakes game.
+ */
 public class ScreenCake extends LinkedList<ProgressButton> {
 
     public IGameContext gameContext;
@@ -22,6 +25,9 @@ public class ScreenCake extends LinkedList<ProgressButton> {
         }
     }
 
+    /**
+     * Creates the buttons of the main menu: one per menu of choices, and the validation button.
+     */
     public void createScreenZero(final CakeFactory cakef, final boolean easy) {
         gameContext = cakef.getGameContext();
         final double buttonSize = cakef.getButtonSize();
@@ -39,6 +45,9 @@ public class ScreenCake extends LinkedList<ProgressButton> {
         }
     }
 
+    /**
+     * Sets the image and the action of a button of the main menu.
+     */
     public void createButton(final int i, final ProgressButton bt, final EventHandler<Event> buttonHandler, final CakeFactory cakef) {
         final double buttonSize = cakef.getButtonSize();
         final ImageView iv = new ImageView(new Image("data/cake/images/menu" + i + ".png"));
@@ -54,6 +63,9 @@ public class ScreenCake extends LinkedList<ProgressButton> {
 
     }
 
+    /**
+     * @return the action opening a menu of choices
+     */
     public EventHandler<Event> createprogessButtonHandler(final int i, final CakeFactory cakef) {
         final EventHandler<Event> buttonHandler;
         buttonHandler = e -> {

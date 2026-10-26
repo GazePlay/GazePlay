@@ -7,12 +7,11 @@ import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-/*
+/**
  * MouseTransparentArrows :
  * Arrows are around the mouse but there are transparent.
  * This version is the same as MouseV0 for the player
  */
-
 public class MouseTransparentArrows extends MouseArrows {
 
     public MouseTransparentArrows(final double positionX, final double positionY, final double width, final double height,

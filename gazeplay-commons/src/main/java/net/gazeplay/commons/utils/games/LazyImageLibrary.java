@@ -10,6 +10,9 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Image library of the image files of a directory, loaded when drawn (the last 10 are kept in a cache).
+ */
 public class LazyImageLibrary extends AbstractImageLibrary {
 
     private final Cache<Integer, Image> imageCache = CacheBuilder.newBuilder().maximumSize(10).weakValues().build();

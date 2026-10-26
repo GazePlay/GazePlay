@@ -42,6 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Tool box of the "Coloring" game, beside the drawing: the palettes of colors (with previous and next buttons), a
+ * custom color, the switch enabling the coloring, and the management of the drawings (import, previous and next
+ * drawing, save, print, black and white).
+ */
 @Slf4j
 public class ColorToolBox extends Pane {
 
@@ -303,6 +308,9 @@ public class ColorToolBox extends Pane {
         ImageIO.write(swingImg, format, file);
     }
 
+    /**
+     * Prints the drawing, after the print and page setup dialogs of the system.
+     */
     private void printImage(final Image image) {
         final PrinterJob printerJob = PrinterJob.createPrinterJob();
         if (printerJob.showPrintDialog(gameContext.getPrimaryStage()) && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
@@ -330,20 +338,32 @@ public class ColorToolBox extends Pane {
         }
     }
 
+    /**
+     * Lets the file chooser show all images, or only the JPG, PNG or GIF ones.
+     */
     private static void configureImageFileChooser(final FileChooser imageFileChooser) {
         imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
             new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"),
             new FileChooser.ExtensionFilter("GIF", "*.gif"));
     }
 
+    /**
+     * Lets the file chooser save PNG files only.
+     */
     private static void configureImageFileSaver(final FileChooser imageFileChooser) {
         imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("png", "*.png"));
     }
 
+    /**
+     * @return whether a format can be saved (PNG only)
+     */
     private static boolean checkFormat(final String format) {
         return "png".equals(format);
     }
 
+    /**
+     * Copies an imported drawing into the "colors" folder of the data of the profile.
+     */
     private void copyFile(final File imageFile) {
         if (imageFile != null) {
             final Path from = Paths.get(imageFile.toURI());
@@ -361,6 +381,9 @@ public class ColorToolBox extends Pane {
         }
     }
 
+    /**
+     * @return the buttons managing the drawings: import, previous, next, save, print
+     */
     private Pane buildImageManager() {
         final Translator translator = gameContext.getTranslator();
         final Stage primaryStage = gameContext.getPrimaryStage();
@@ -429,6 +452,9 @@ public class ColorToolBox extends Pane {
         return bottomBox;
     }
 
+    /**
+     * @return the "colors" folder of the data of the profile, created if missing
+     */
     private File getColorsDirectory() {
         final Configuration config = gameContext.getConfiguration();
         final String userName = config.getUserName();
@@ -442,6 +468,9 @@ public class ColorToolBox extends Pane {
         return colorsDirectory;
     }
 
+    /**
+     * Shows the current palette of colors.
+     */
     private void updatePallet(final Button previousPallet, final Button nextPallet) {
 
         mainPane.getChildren().clear();
@@ -468,12 +497,18 @@ public class ColorToolBox extends Pane {
         }
     }
 
+    /**
+     * Adds the custom color and the button choosing it.
+     */
     private void buildAddCustomCostomColorButton() {
 
         final Pane customColorPane = new VBox(customColorPickerButton, customBox);
         mainPane.getChildren().add(customColorPane);
     }
 
+    /**
+     * @return the switch enabling or disabling the coloring by the gaze
+     */
     private Pane buildColorizationPane() {
 
         Image buttonImg = null;
@@ -545,6 +580,9 @@ public class ColorToolBox extends Pane {
         return new StackPane(colorizeButtonPane, stopColorizeButtonPane, colorizeButtonIndicator);
     }
 
+    /**
+     * @return the window choosing the custom color
+     */
     private Stage buildCustomColorDialog() {
         final Translator translator = gameContext.getTranslator();
         final Stage primaryStage = gameContext.getPrimaryStage();

@@ -8,7 +8,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
@@ -20,9 +19,12 @@ import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * A bubble: it moves across the screen (or stays still in the "Fix" variants) and bursts into fragments when the gaze
+ * or the mouse enters it, then comes back at another place.
+ */
 @Slf4j
 public class Target extends ProgressPortrait {
 
@@ -63,7 +65,7 @@ public class Target extends ProgressPortrait {
         super(gameContext.getConfiguration().getElementSize());
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
-        this.randomGenerator = new ReplayablePseudoRandom();
+        this.randomGenerator = randomGenerator;
         this.blocs = blocs;
         this.stats = stats;
         this.type = type;
@@ -125,10 +127,16 @@ public class Target extends ProgressPortrait {
         gameContext.start();
     }
 
+    /**
+     * @return the handler bursting the bubble
+     */
     private EventHandler<Event> buildEvent() {
         return this::enter;
     }
 
+    /**
+     * @return the fragments shown when the bubble bursts
+     */
     private List<Circle> buildFragments(final BubbleType bubbleType) {
         final List<Circle> fragments = new ArrayList<>(nbFragments);
 
@@ -153,6 +161,9 @@ public class Target extends ProgressPortrait {
         return fragments;
     }
 
+    /**
+     * Bursts the bubble: its fragments fly away from where it was, and one block hiding the background disappears.
+     */
     public void explose() {
         stats.takeScreenShot();
 
@@ -202,13 +213,14 @@ public class Target extends ProgressPortrait {
 
         if (blocs != null){
             if (blocs.size() != 0){
-                Collections.shuffle(blocs);
-                blocs.get(0).setOpacity(0);
-                blocs.remove(0);
+                blocs.remove(randomGenerator.nextInt(blocs.size())).setOpacity(0);
             }
         }
     }
 
+    /**
+     * Counts a goal, bursts the bubble and sends it again from another place.
+     */
     private void enter(final Event e) {
 
         if (this.gameVariant.toString().endsWith("FIX") && wait != null) {
@@ -235,6 +247,9 @@ public class Target extends ProgressPortrait {
 
     }
 
+    /**
+     * Sizes the bubble, fills it, and starts its movement.
+     */
     private void createTarget() {
 
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -244,6 +259,9 @@ public class Target extends ProgressPortrait {
         moveTarget();
     }
 
+    /**
+     * Fills the bubble with a random color, or with a portrait.
+     */
     private void updateFillProperty() {
         if (type == BubbleType.COLOR) {
             getButton().setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 0.9));
@@ -252,6 +270,9 @@ public class Target extends ProgressPortrait {
         }
     }
 
+    /**
+     * Gives the bubble a random size, between a thirtieth and a twelfth of the screen.
+     */
     private void updateRadius(Dimension2D screenDimension) {
         double maxRadius = Math.min(screenDimension.getWidth() / 12, screenDimension.getHeight() / 12);
         double minRadius = Math.min(screenDimension.getHeight() / 30, screenDimension.getWidth() / 30);
@@ -259,6 +280,10 @@ public class Target extends ProgressPortrait {
         getButton().setRadius(radius);
     }
 
+    /**
+     * Sends the bubble from a side of the screen to the opposite one, in the direction of the variant, at the animation
+     * speed of the settings (or places it at a random place in the "Fix" variants).
+     */
     private void moveTarget() {
         updateFillProperty();
 
@@ -310,19 +335,6 @@ public class Target extends ProgressPortrait {
         setLayoutY(centerY);
 
         timeline.play();
-    }
-
-    private static class Bloc extends Rectangle {
-
-        final int posX;
-        final int posY;
-
-        Bloc(final double x, final double y, final double width, final double height, final int posX, final int posY) {
-            super(x, y, width, height);
-            this.posX = posX;
-            this.posY = posY;
-        }
-
     }
 
 }

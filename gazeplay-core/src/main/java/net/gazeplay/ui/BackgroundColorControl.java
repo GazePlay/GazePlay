@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 import static net.gazeplay.ui.QuickControl.*;
 
+/**
+ * Control of the background color of the game area, in the side panel of the game screen.
+ */
 @NoArgsConstructor
 public class BackgroundColorControl {
 
@@ -23,6 +26,10 @@ public class BackgroundColorControl {
     private static final BackgroundColorControl instance = new BackgroundColorControl();
     ArrayList<Label> labels;
 
+    /**
+     * @return the pane of the control: one colored square per color, the chosen one marked, saved in the settings and
+     *   applied to the game area at once
+     */
     public TitledPane createBackgroundColorControlPane(Configuration config, Translator translator, Pane gamingRoot) {
 
         I18NLabel colorLabel = new I18NLabel(translator, "Color");
@@ -72,6 +79,9 @@ public class BackgroundColorControl {
         return pane;
     }
 
+    /**
+     * Marks the square of the chosen color.
+     */
     public void setSelected(int pos){
         for (int i = 0; i < labels.size(); i++) {
             if(i==pos) labels.get(i).setText("⬤");

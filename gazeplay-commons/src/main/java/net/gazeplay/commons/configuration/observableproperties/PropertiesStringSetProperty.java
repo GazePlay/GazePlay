@@ -16,6 +16,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * JavaFX set property backed by a key/value store, where the set is stored as one text: see {@link
+ * PropertiesBooleanProperty}.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public abstract class PropertiesStringSetProperty extends SetPropertyBase<String> {
@@ -48,6 +52,10 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
 
     protected abstract String getProperty(String propertyName);
 
+    /**
+     * @return a new observable set read from the store; adding or removing an item of this set writes the whole set
+     *   back to the store
+     */
     @Override
     public ObservableSet<String> get() {
         final SetChangeListener<String> observer = new SetChangeListener<>() {
@@ -58,7 +66,6 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
                 PropertiesStringSetProperty.this.set((ObservableSet<String>) change.getSet());
             }
         };
-        //
         final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             final ObservableSet<String> result = FXCollections.observableSet(new LinkedHashSet<>(defaultValue));

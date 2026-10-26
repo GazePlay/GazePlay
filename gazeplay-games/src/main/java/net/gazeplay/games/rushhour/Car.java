@@ -23,6 +23,10 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.awt.*;
 
+/**
+ * A car of the RushHour game, moving only along its direction (horizontal or vertical). The player selects it by a
+ * fixation, then moves it by looking ahead of it or behind it.
+ */
 @Slf4j
 public class Car extends Rectangle {
 
@@ -32,7 +36,6 @@ public class Car extends Rectangle {
     @Getter
     private final boolean direction;
     private int size;
-    private int move = 0;
     private int x;
     private int y;
     private final int l;
@@ -141,6 +144,9 @@ public class Car extends Rectangle {
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
+    /**
+     * Resizes and places the car for the size of a cell of the parking.
+     */
     public void update(final int size) {
         this.size = size;
         this.setWidth(l * size);
@@ -149,6 +155,10 @@ public class Car extends Rectangle {
         this.setToY(y);
     }
 
+    /**
+     * @return the way to move the selected car towards the gaze: 1 forward, -1 backward, 0 when the gaze is not in its
+     *   line (the car is then unselected)
+     */
     private int checkPos(final Point pointerCoordinates) {
 
         if (!direction && (this.getX() < pointerCoordinates.getX()) && (pointerCoordinates.getX() < this.getX() + this.getWidth())) {
@@ -164,6 +174,9 @@ public class Car extends Rectangle {
         return 0;
     }
 
+    /**
+     * Moves the car by one cell, back to its place if it hits another car or the border.
+     */
     private void moveTo(final int way) {
         final double saveX = this.getX();
         final double saveY = this.getY();
@@ -184,6 +197,9 @@ public class Car extends Rectangle {
         }
     }
 
+    /**
+     * @return whether a position is on the car
+     */
     private boolean onMouse(final Point mousePosition) {
         final Point2D coord = this.sceneToLocal(
             mousePosition.getX() - gameContext.getPrimaryScene().getX()
@@ -194,16 +210,25 @@ public class Car extends Rectangle {
             && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight());
     }
 
+    /**
+     * Places the car on a column.
+     */
     public void setToX(final int i) {
         super.setX(size + i * size);
         x = i;
     }
 
+    /**
+     * Places the car on a line.
+     */
     public void setToY(final int i) {
         super.setY(size + i * size);
         y = i;
     }
 
+    /**
+     * Selects or unselects the car.
+     */
     public void setSelected(final boolean b) {
         selected = b;
 

@@ -2,6 +2,9 @@ package net.gazeplay.games.trainSwitches;
 
 
 
+/**
+ * The colors of the trains and stations.
+ */
 public enum TrainColors {
     BLACK("black"),
     BROWN("brown"),

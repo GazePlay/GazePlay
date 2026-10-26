@@ -10,6 +10,10 @@ import net.gazeplay.stats.ShootGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "TicTacToe", with the info-game.csv file of the games where targets are hit (see
+ * {@code ShootGamesStats}).
+ */
 class TicTacToeStats extends ShootGamesStats {
 
     TicTacToeStats(Scene scene) {

@@ -7,12 +7,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Levels reached in the rounds of a game with levels, for the statistics screen.
+ */
 @Slf4j
 public class LevelsReport {
 
     @Getter
     private final List<Long> levelsPerRounds = new ArrayList<>();
 
+    /**
+     * Adds the level of a round.
+     */
     public void addRoundLevel(final long level) {
         this.levelsPerRounds.add(level);
     }
@@ -21,6 +27,9 @@ public class LevelsReport {
         return Collections.unmodifiableList(levelsPerRounds);
     }
 
+    /**
+     * @return the sum of the levels of the rounds
+     */
     public long totalLevelSum(){
         long total = 0;
         for (long level: levelsPerRounds) {
@@ -29,6 +38,9 @@ public class LevelsReport {
         return total;
     }
 
+    /**
+     * @return the average level, rounded down (integer division); 0 without round
+     */
     public long computeAverageLevel() {
         final int count = levelsPerRounds.size();
         if (count == 0) {
@@ -37,6 +49,9 @@ public class LevelsReport {
         return totalLevelSum() / count;
     }
 
+    /**
+     * @return the population variance (divided by n) of the levels, around the rounded average; 0 without round
+     */
     public double computeVariance() {
         final double average = computeAverageLevel();
         double sum = 0;
@@ -52,6 +67,9 @@ public class LevelsReport {
         return result;
     }
 
+    /**
+     * @return the standard deviation of the levels (square root of {@link #computeVariance()})
+     */
     public double computeSD() {
         return Math.sqrt(computeVariance());
     }

@@ -7,6 +7,10 @@ import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
 
+/**
+ * The command line of GazePlay (picocli): its options (see {@link ReusableOptions}) are given to the JavaFX
+ * application, which is then launched until its window is closed.
+ */
 @Slf4j
 @CommandLine.Command(name = "main", mixinStandardHelpOptions = true)
 public class MainCommand implements Callable<Integer> {
@@ -24,9 +28,7 @@ public class MainCommand implements Callable<Integer> {
     public Integer call() {
         GazePlayFxApp.setCompositionRoot(compositionRoot);
         GazePlayFxApp.setApplicationOptions(options);
-        //
         Application.launch(GazePlayFxApp.class, (String[]) null);
-        //
         return 0;
     }
 

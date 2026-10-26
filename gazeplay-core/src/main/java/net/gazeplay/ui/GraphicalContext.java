@@ -17,6 +17,10 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTooltip;
 
+/**
+ * A screen of GazePlay (menu, settings, game, statistics...): its root node, put on the scene of the window by
+ * {@link #setUpOnStage(Scene)}, and the music controls shared by the screens.
+ */
 @Slf4j
 public abstract class GraphicalContext<T extends Parent> {
 
@@ -35,6 +39,9 @@ public abstract class GraphicalContext<T extends Parent> {
         this.musicControl = new MusicControl(gazePlay);
     }
 
+    /**
+     * Shows this screen in the window.
+     */
     public void setUpOnStage(final Scene scene) {
         // Make sure we are the root of the scene
         scene.setRoot(root);
@@ -46,11 +53,17 @@ public abstract class GraphicalContext<T extends Parent> {
 
     public abstract ObservableList<Node> getChildren();
 
+    /**
+     * Removes all the nodes of the screen.
+     */
     public void clear() {
         getChildren().clear();
-        log.warn("Nodes not removed: {}", getChildren().size());
+        log.debug("Nodes not removed: {}", getChildren().size());
     }
 
+    /**
+     * @return a button switching between full screen and windowed, its image and text following the state of the window
+     */
     public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
         EventHandler<Event> eventHandler = e -> gazePlay.toggleFullScreen();
 
@@ -64,6 +77,9 @@ public abstract class GraphicalContext<T extends Parent> {
         return button;
     }
 
+    /**
+     * Sets the image and text of the full screen button for the state of the window.
+     */
     private void configureFullScreenToggleButton(Boolean isFullScreen, I18NButton button) {
         final Image buttonGraphics;
         final String label;

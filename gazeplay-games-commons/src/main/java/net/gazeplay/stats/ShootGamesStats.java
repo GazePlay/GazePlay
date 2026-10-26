@@ -15,6 +15,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games where targets are hit: like {@link HiddenItemsGamesStats}, plus the targets hit sooner than
+ * 100 ms after the previous one, counted apart as accidental ("Uncounted Shots" column of info-game.csv).
+ */
 public class ShootGamesStats extends Stats {
 
     public ShootGamesStats(final Scene scene) {

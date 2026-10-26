@@ -21,6 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Games "Memory" (pictures, letters or numbers): pairs of cards are face down, and the player turns them over two by
+ * two by fixations to find the pairs. In the "Open" versions the cards are face up. With the dynamic difficulty, the
+ * number of cards changes from round to round with the number of tries.
+ */
 @Slf4j
 public class Memory implements GameLifeCycle {
 
@@ -29,11 +34,17 @@ public class Memory implements GameLifeCycle {
     // Changed during the game (smaller for many cards): an instance field, it was a static shared by all instances
     private int minHeight = 30;
 
+    /**
+     * What the cards show.
+     */
     public enum MemoryGameType {
 
         LETTERS, NUMBERS, DEFAULT
     }
 
+    /**
+     * The cards of a round.
+     */
     @Data
     @AllArgsConstructor
     public static class RoundDetails {
@@ -161,6 +172,9 @@ public class Memory implements GameLifeCycle {
 
     }
 
+    /**
+     * @return the images of the pairs, drawn at random, by identifier of the pair
+     */
     HashMap<Integer, Image> pickRandomImages() {
         final int cardsCount = nbColumns * nbLines;
         final HashMap<Integer, Image> res = new HashMap<>();
@@ -208,6 +222,9 @@ public class Memory implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes the cards of a pair found.
+     */
     public void removeSelectedCards() {
         if (this.currentRoundDetails == null) {
             return;
@@ -223,6 +240,9 @@ public class Memory implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
+    /**
+     * @return the cards of the grid, two per image, at random places
+     */
     private List<MemoryCard> createCards(final HashMap<Integer, Image> im, final Configuration config) {
         final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -275,14 +295,23 @@ public class Memory implements GameLifeCycle {
         return result;
     }
 
+    /**
+     * @return the height of a card for the number of lines
+     */
     private static double computeCardHeight(final Dimension2D gameDimension2D, final int nbLines) {
         return gameDimension2D.getHeight() * 0.9 / nbLines;
     }
 
+    /**
+     * @return the width of a card for the number of columns
+     */
     private static double computeCardWidth(final Dimension2D gameDimension2D, final int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
     }
 
+    /**
+     * @return a place drawn at random among those not used yet
+     */
     private int getRandomValue(final HashMap<Integer, Integer> indUsed) {
         int value;
         do {
@@ -292,30 +321,52 @@ public class Memory implements GameLifeCycle {
         return value;
     }
 
+    /**
+     * Counts a wrong pair.
+     */
     public void incNbWrongCards() {
         nbWrongCards++;
     }
 
+    /**
+     * Resets the count of the wrong pairs.
+     */
     public void resetNbWrongCards() {
         nbWrongCards = 0;
     }
 
+    /**
+     * Counts a pair found.
+     */
     public void incNbCorrectCards() {
         nbCorrectCards++;
     }
 
+    /**
+     * Resets the count of the pairs found.
+     */
     public void resetNbCorrectCards() {
         nbCorrectCards = 0;
     }
 
+    /**
+     * @return the number of tries of the round
+     */
     public int totalNbOfTries() {
         return getNbCorrectCards() + getNbWrongCards();
     }
 
+    /**
+     * Adds the number of tries of a round.
+     */
     public void addRoundResult(int lastRoundResult) {
         listOfResults.add(lastRoundResult);
     }
 
+    /**
+     * Sets the size of the grid for the current level: 2 lines of {@code level} cards, or 4 x 3, 4 x 4, 6 x 3 and 5 x 4
+     * for the levels 6, 8, 9 and 10.
+     */
     public void adaptLevel() {
 
         if (level == 6) {

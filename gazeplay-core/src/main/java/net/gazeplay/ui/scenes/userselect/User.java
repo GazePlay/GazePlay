@@ -4,6 +4,9 @@ import javafx.scene.layout.HBox;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * The card of a user profile on the user selection page.
+ */
 @AllArgsConstructor
 public class User extends HBox {
 

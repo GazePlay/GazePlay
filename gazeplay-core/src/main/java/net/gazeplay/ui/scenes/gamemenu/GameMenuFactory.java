@@ -25,11 +25,13 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ThumbnailImage;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
-import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
+/**
+ * Creates the cards of the games of the menu: thumbnail, name, description, and the heart marking a favorite game.
+ */
 @Slf4j
 @Data
 public class GameMenuFactory {
@@ -37,10 +39,12 @@ public class GameMenuFactory {
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
 
-    private final static long FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS = 1000;
-
     private final GameMenuController gameMenuController;
 
+    /**
+     * @return the card of a game; a click (or a fixation) starts the game, a click on the heart adds it to the
+     *   favorites or removes it
+     */
     public GameButtonPane createGameButton(
         @NonNull final GazePlay gazePlay,
         @NonNull final Region root,
@@ -258,16 +262,7 @@ public class GameMenuFactory {
             backgroundMusicManager.pause();
         });
 
-        @Data
-        class EventState {
-            private final long time;
-            private final boolean wasFavorite;
-        }
-
         EventHandler<MouseEvent> favoriteGameSwitchEventHandler = new EventHandler<>() {
-
-            private final AtomicReference<EventState> enteredState = new AtomicReference<>();
-            private final AtomicReference<EventState> exitedState = new AtomicReference<>();
 
             @Override
             public void handle(MouseEvent event) {

@@ -11,8 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -46,6 +44,10 @@ import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * The menu of the games: the cards of the games (favorites first), the search bar and the category filters, the buttons
+ * to quit, change the user, open the settings and replay a game, and the music controls.
+ */
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
@@ -86,6 +88,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     }
 
+    /**
+     * Builds the menu.
+     */
     public void gazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
@@ -189,7 +194,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topPane.setRight(topRightPane);
         topPane.setCenter(topLogoPane);
         topPane.setBottom(topBotPane);
-        //gamesStatisticsPane.refreshPreferredSize();
 
         StackPane centerStackPane = new StackPane();
         errorMessage = new StackPane();
@@ -223,6 +227,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
+    /**
+     * @return the scrolling pane of the cards of the games
+     */
     private ScrollPane createGamePickerChoicePane(
         List<GameSpec> games,
         final Configuration config,
@@ -249,6 +256,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
+    /**
+     * @return the cards of all the games
+     */
     private List<Node> createGameCardsList(
         List<GameSpec> games,
         final Configuration config,
@@ -266,6 +276,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCardsList;
     }
 
+    /**
+     * @return the cards of the favorite games
+     */
     private List<Node> createFavGameCardsList(
         List<GameSpec> games,
         final Configuration config,
@@ -288,6 +301,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return favGameCardsList;
     }
 
+    /**
+     * @return the card of a game
+     */
     private GameButtonPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator, GameButtonOrientation gameButtonOrientation, final ProgressIndicator dwellTimeIndicator) {
 
         GameButtonPane gameCard = gameMenuFactory.createGameButton(
@@ -302,6 +318,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCard;
     }
 
+    /**
+     * Shows the cards of the games of the visible categories (favorites first) that match the search bar.
+     */
     private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, List<Node> completeFavGameCardsList, Configuration config, ProgressIndicator dwellTimeIndicator, Predicate<Node> gameCardPredicate) {
         List<Node> filteredList = completeGameCardsList
             .stream()
@@ -323,6 +342,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.getChildren().addAll(filteredList);
     }
 
+    /**
+     * @return the search bar, filtering the games by their translated name as it is typed
+     */
     private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
         TextField gameSearchBar = new TextField();
         Utils.addTextLimiter(gameSearchBar, 32);
@@ -339,6 +361,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameSearchBar;
     }
 
+    /**
+     * @return the search bar and one check box per category, saved in the HIDDEN_CATEGORIES setting
+     */
     private HBox buildFilterByCategory(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
 
 
@@ -364,36 +389,51 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return categoryFilters;
     }
 
+    /**
+     * @return whether a game is in the favorites of the settings
+     */
     private static boolean isFavorite(GameSpec g, Configuration configuration) {
         return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
     }
 
+    /**
+     * @return the button quitting GazePlay
+     */
     private CustomButton createExitButton(Dimension2D screenDimension) {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> getGazePlay().quit());
         return exitButton;
     }
 
+    /**
+     * @return the button going back to the user selection page
+     */
     private CustomButton createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
     }
 
+    /**
+     * @return the button scrolling the games up
+     */
     private CustomButton createUpArrowButton(Dimension2D screenDimension){
         CustomButton upArrowButton = new CustomButton("data/common/images/arrow-up.png", screenDimension);
-        //upArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
-        //upArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
         return upArrowButton;
     }
 
+    /**
+     * @return the button scrolling the games down
+     */
     private CustomButton createDownArrowButton(Dimension2D screenDimension){
         CustomButton downArrowButton = new CustomButton("data/common/images/arrow-down.png", screenDimension);
-        //downArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
-        //downArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
         return downArrowButton;
     }
 
+    /**
+     * @return the button asking for a replayData.json file and replaying its game, if replayable (see
+     *   {@code ReplayingGameFromJson})
+     */
     private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
         CustomButton replayButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
@@ -422,6 +462,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return replayButton;
     }
 
+    /**
+     * @return the check box showing or hiding the games of a category
+     */
     private CheckBox buildCategoryCheckBox(
         GameCategories.Category category,
         Configuration config,
@@ -451,6 +494,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return categoryCheckbox;
     }
 
+    /**
+     * Keeps the cards of the games having at least one visible category.
+     */
     @AllArgsConstructor
     private static class GameCardVisiblePredicate implements Predicate<Node> {
 

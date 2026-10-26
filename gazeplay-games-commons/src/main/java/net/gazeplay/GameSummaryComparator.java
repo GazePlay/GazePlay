@@ -5,6 +5,9 @@ import net.gazeplay.commons.ui.Translator;
 
 import java.util.Comparator;
 
+/**
+ * Order of the games in the menu: absolute priority, then categories, then priority, then translated name.
+ */
 @RequiredArgsConstructor
 public class GameSummaryComparator implements Comparator<GameSummary> {
 

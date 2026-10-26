@@ -12,7 +12,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-/*
+/**
  * Mouse V4
  * To move the mouse you must first select it,
  * Then the mouse will follow the player's gaze
@@ -43,6 +43,9 @@ public class MouseV4 extends Mouse {
 
     }
 
+    /**
+     * Makes all the boxes react to the gaze.
+     */
     private void mettreLesEventHandler() {
         for (int i = 0; i < gameInstance.nbBoxesLine; i++) {
             for (int j = 0; j < gameInstance.nbBoxesColumns; j++) {
@@ -54,6 +57,9 @@ public class MouseV4 extends Mouse {
         }
     }
 
+    /**
+     * @return whether the mouse, selected, must move towards the box the gaze entered
+     */
     private boolean conditionToMove(final Event e) {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
             && isSelectioned) {
@@ -63,6 +69,9 @@ public class MouseV4 extends Mouse {
         return false;
     }
 
+    /**
+     * @return whether the mouse must stop (the gaze entered a box that is not free)
+     */
     private boolean conditionToStop(final Event e) {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
             && isSelectioned) {
@@ -75,11 +84,17 @@ public class MouseV4 extends Mouse {
         return false;
     }
 
+    /**
+     * @return whether the event is on the box of the mouse
+     */
     private boolean isCurrentBox(final Event e) {
         final GameBox gb = (GameBox) e.getSource();
         return (gb.numCol == indiceX && gb.numRow == indiceY);
     }
 
+    /**
+     * @return the handler of the boxes: the selected mouse moves box by box towards the box the gaze is on
+     */
     private EventHandler<Event> buildEventBox() {
         return e -> {
 
@@ -118,6 +133,9 @@ public class MouseV4 extends Mouse {
 
     }
 
+    /**
+     * @return the handler selecting the mouse after a fixation on it
+     */
     private EventHandler<Event> buildEventMouse() {
         return e -> {
 

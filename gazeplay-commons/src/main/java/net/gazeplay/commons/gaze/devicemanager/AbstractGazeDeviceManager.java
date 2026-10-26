@@ -6,28 +6,24 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.GazeMotionListener;
-import net.gazeplay.commons.utils.ImmutableCachingSupplier;
-import net.gazeplay.commons.utils.RobotSupplier;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 /**
+ * Dispatch of the gaze samples to the registered nodes (see {@link GazeDeviceManager}), whatever their source.
+ * <p>
+ * The nodes added or removed by a game are only applied at the next sample ({@link #add()}, {@link #delete()}), so that
+ * a game can change them from an event handler during a dispatch.
+ * <p>
  * Created by schwab on 04/10/2017.
  */
 @Slf4j
 public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private boolean isInReplayMode = false;
-
-    private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
 
     // Also the lock of the dispatch: not exposed (it had unused public getters)
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = Collections.synchronizedMap(new HashMap<>());
@@ -36,8 +32,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private final List<Node> toRemove = new LinkedList<>();
     private final List<Node> toAdd = new LinkedList<>();
-
-    private final Supplier<Robot> robotSupplier = new ImmutableCachingSupplier<>(new RobotSupplier());
 
     public AbstractGazeDeviceManager() {
 
@@ -50,22 +44,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public abstract void destroy();
 
     @Override
-    public void addGazeMotionListener(GazeMotionListener listener) {
-        this.gazeMotionListeners.add(listener);
-    }
-
-    @Override
-    public void removeGazeMotionListener(GazeMotionListener listener) {
-        this.gazeMotionListeners.remove(listener);
-    }
-
-    private void notifyAllGazeMotionListeners(Point2D position) {
-        for (GazeMotionListener l : this.gazeMotionListeners) {
-            l.gazeMoved(position);
-        }
-    }
-
-    @Override
     public void addEventFilter(Node gs) {
         toAdd.add(gs);
     }
@@ -75,6 +53,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         isInReplayMode = b;
     }
 
+    /**
+     * Applies the pending additions of nodes.
+     */
     public void add() {
         synchronized (shapesEventFilter) {
             List<Node> temp = new LinkedList<>(toAdd);
@@ -109,6 +90,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         gameScene = new GazeInfos(stats.gameContextScene.getRoot());
     }
 
+    /**
+     * Applies the pending removals of nodes; a node that was under the gaze or the mouse receives GAZE_EXITED.
+     */
     public void delete() {
         synchronized (shapesEventFilter) {
             List<Node> temp = new LinkedList<>(toRemove);
@@ -144,7 +128,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         synchronized (shapesEventFilter) {
             shapesEventFilter.clear();
             shapesEventHandler.clear();
-            gazeMotionListeners.clear();
         }
     }
 
@@ -213,6 +196,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         eventFire(positionX, positionY, root, event, sample.time());
     }
 
+    /**
+     * @return whether a position of the screen is on the node
+     */
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
         if (localPosition != null) {

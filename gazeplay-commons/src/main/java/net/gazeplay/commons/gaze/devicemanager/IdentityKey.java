@@ -3,6 +3,9 @@ package net.gazeplay.commons.gaze.devicemanager;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Map key comparing its value by identity (==): two different nodes stay two entries even if equals() says otherwise.
+ */
 @Slf4j
 final class IdentityKey<T> {
 
@@ -16,7 +19,6 @@ final class IdentityKey<T> {
     @Override
     public int hashCode() {
         return this.value.hashCode();
-        // return this.value.getClass().getName().hashCode();
     }
 
     @Override

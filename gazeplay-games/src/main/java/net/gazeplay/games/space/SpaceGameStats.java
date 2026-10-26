@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "SpaceGame" (see {@code Stats}).
+ */
 public class SpaceGameStats extends Stats {
 
     public SpaceGameStats(Scene gameContextScene) {

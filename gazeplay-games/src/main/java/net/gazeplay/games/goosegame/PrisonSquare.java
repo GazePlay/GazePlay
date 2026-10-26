@@ -3,6 +3,9 @@ package net.gazeplay.games.goosegame;
 
 import net.gazeplay.components.Position;
 
+/**
+ * Prison or well square of the Goose game: the pawn landing on it stays there until another pawn passes by.
+ */
 public class PrisonSquare extends Square {
 
     private Pawn lockedPawn;

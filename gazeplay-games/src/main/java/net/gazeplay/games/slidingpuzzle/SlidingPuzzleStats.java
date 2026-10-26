@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.gazeplay.games.slidingpuzzle;
 
 import javafx.scene.Scene;
@@ -16,6 +11,9 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Puzzle" (see {@code SelectionGamesStats}).
+ */
 @Slf4j
 class SlidingPuzzleStats extends SelectionGamesStats {
 

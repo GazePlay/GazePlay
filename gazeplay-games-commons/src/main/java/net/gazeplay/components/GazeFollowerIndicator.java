@@ -9,12 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+/**
+ * A progress indicator that follows the gaze (or the mouse) on the game area, with a small triangle as pointer.
+ */
 @Slf4j
 public class GazeFollowerIndicator extends GazeIndicator {
 
     private static final double GAZE_PROGRESS_INDICATOR_SIZE = 100;
     private Polygon triangle;
 
+    /**
+     * @param root     the pane the indicator moves on (it receives the mouse and gaze movements)
+     * @param mainNode the node whose coordinates the gaze events give
+     */
     public GazeFollowerIndicator(IGameContext gameContext, final Pane root, final Node mainNode) {
 
         super(gameContext);

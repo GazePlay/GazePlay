@@ -2,7 +2,6 @@ package net.gazeplay.games.whereisit.launcher;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
@@ -18,6 +17,10 @@ import net.gazeplay.games.whereisit.WhereIsItStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "FindTheOddOneOut" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class FindTheOddOneOutGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {

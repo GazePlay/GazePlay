@@ -14,8 +14,6 @@ public enum BonusEnum {
     FIRERATE("FireRate", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/fire.png"))),
     SHIELD("Shield", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/shield.png"))),
     SLOW("Slow", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/slow.png")));
-    //AUTOTARGET("Auto-target bonus", new ImagePattern(new Image("autotarget.png"))),
-    //SPEED("Speed bonus", new ImagePattern(new Image("speed.png")));
     @Getter
     private final String name;
 

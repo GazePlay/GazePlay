@@ -20,12 +20,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Image of a fixation sequence ("scan path" of the statistics screen): the fixations of the gaze, or of the mouse, as
+ * numbered circles joined by a line, in the order they happened. The longer the fixation, the larger and darker its
+ * circle. Only the fixations longer than 100 ms are numbered and drawn.
+ */
 @Slf4j
 public class FixationSequence {
 
     private static final Font sanSerifFont = new Font("SanSerif", 10);
 
+    /**
+     * Index of the mouse sequence in the list of the sequences of a round.
+     */
     public static final int MOUSE_FIXATION_SEQUENCE = 0;
+    /**
+     * Index of the gaze sequence in the list of the sequences of a round.
+     */
     public static final int GAZE_FIXATION_SEQUENCE = 1;
 
     private final Color[][] colors = {
@@ -38,9 +49,20 @@ public class FixationSequence {
      */
     @Getter
     private final WritableImage image;
+    /**
+     * The points drawn, after the merging of the close ones and the removal of the short ones.
+     */
     @Getter
     private LinkedList<FixationPoint> sequence;
 
+    /**
+     * Draws the sequence.
+     *
+     * @param width          width of the image (of the scene of the game)
+     * @param height         height of the image
+     * @param fixationPoints the mouse and gaze sequences of the round
+     * @param sequenceIndex  {@link #MOUSE_FIXATION_SEQUENCE} or {@link #GAZE_FIXATION_SEQUENCE}
+     */
     public FixationSequence(final int width, final int height, ArrayList<LinkedList<FixationPoint>> fixationPoints, int sequenceIndex) {
         this.image = new WritableImage(width, height);
         final Canvas canvas = new Canvas(width, height);
@@ -62,6 +84,9 @@ public class FixationSequence {
         sequence.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
     }
 
+    /**
+     * Draws the line joining the points, blurred, in the light color of the sequence.
+     */
     private GraphicsContext drawFixationLines(Canvas canvas, LinkedList<FixationPoint> sequence, Color color) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -84,6 +109,10 @@ public class FixationSequence {
         return gc;
     }
 
+    /**
+     * Draws a numbered circle on each point longer than 100 ms, sized and darkened by the square root of its duration;
+     * the shorter points get a duration of -1, so that they are removed from {@link #getSequence()}.
+     */
     private void drawFixationCircles(GraphicsContext gc, LinkedList<FixationPoint> sequence, int sequenceIndex) {
         gc.setEffect(null);
         gc.setFont(sanSerifFont);
@@ -150,6 +179,12 @@ public class FixationSequence {
         }
     }
 
+    /**
+     * Merges each point closer than {@code tolerance} pixels to the last kept point into it, adding its duration to the
+     * kept point. Changes the durations of the given points.
+     *
+     * @return the kept points
+     */
     public static LinkedList<FixationPoint> vertexReduction(final LinkedList<FixationPoint> allPoints, final double tolerance) {
         double distance;
         FixationPoint pivotVertex = allPoints.get(0);

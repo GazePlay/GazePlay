@@ -8,6 +8,8 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 
 /**
+ * The MIDI synthesizer of the Piano game, playing the notes on a channel.
+ * <p>
  * Created by schwab on 28/08/2016.
  */
 @Slf4j
@@ -43,13 +45,6 @@ public class Instru {
      */
     public void noteOff(final int note) {
         canal.noteOff(note);
-    }
-
-    /**
-     * Set le type d'instrument dont le numéro MIDI est précisé en paramètre
-     */
-    public void setInstrument(final int instru) {
-        canal.programChange(instru);
     }
 
 }

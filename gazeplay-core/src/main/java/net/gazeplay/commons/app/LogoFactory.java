@@ -14,6 +14,10 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Creates the logo shown at the top of the main screens: the animated letters, or the static image of GazePlay
+ * Learning.
+ */
 @Slf4j
 public class LogoFactory {
 
@@ -31,6 +35,9 @@ public class LogoFactory {
     private PauseTransition logoAnimationDelay;
     private SequentialTransition logoAnimatedAnimationTransition;
 
+    /**
+     * @return the animated logo, a tenth of the height of the window, whose animation starts after a short delay
+     */
     public Node createLogoAnimated(Stage stage) {
         final double preferredHeight = stage.getHeight() * 0.1d;
         log.info("preferredHeight = {}", preferredHeight);
@@ -58,6 +65,9 @@ public class LogoFactory {
         return logo;
     }
 
+    /**
+     * Stops the animation of the animated logo, if any.
+     */
     public void stopAnimation(){
         if (logoAnimationDelay != null) {
             logoAnimationDelay.stop();
@@ -67,6 +77,9 @@ public class LogoFactory {
         }
     }
 
+    /**
+     * @return the static logo, which follows the size of the window
+     */
     public Node createLogoStatic(Stage stage) {
         final Image logoImage = new Image(staticLogoImagePath);
         final ImageView logoView = new ImageView(logoImage);
@@ -80,6 +93,9 @@ public class LogoFactory {
         return logoView;
     }
 
+    /**
+     * Fits the logo in half of the width and a tenth of the height of the window.
+     */
     private static void fitStaticLogo(ImageView logoView, Stage stage) {
         final double preferredWidth = stage.getWidth() * 0.5d;
         final double preferredHeight = stage.getHeight() * 0.1d;

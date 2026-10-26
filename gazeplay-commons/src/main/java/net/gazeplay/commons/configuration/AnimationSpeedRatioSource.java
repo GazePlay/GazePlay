@@ -2,6 +2,9 @@ package net.gazeplay.commons.configuration;
 
 import javafx.beans.property.DoubleProperty;
 
+/**
+ * Gives the animation speed chosen in the settings (ANIMATION_SPEED_RATIO): 1 is the normal speed, 2 twice as fast.
+ */
 public interface AnimationSpeedRatioSource {
 
     /**
@@ -11,6 +14,9 @@ public interface AnimationSpeedRatioSource {
      */
     double getDurationRatio();
 
+    /**
+     * @return the speed ratio, as a property that changes when the user changes the speed during a game
+     */
     DoubleProperty getSpeedRatioProperty();
 
 }

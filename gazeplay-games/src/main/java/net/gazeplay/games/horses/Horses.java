@@ -36,12 +36,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Games "Horses" and "Horses Simplified" (French "petits chevaux"), for 2 to 4 teams: each player in turn rolls the die
+ * by a fixation and chooses a pawn to move; a pawn landing on a pawn of another team sends it back to its stable. A
+ * pawn must climb its final path with the exact numbers; the first pawn arriving wins.
+ */
 @Slf4j
 public class Horses implements GameLifeCycle {
 
     private static final String BIBOULEPATH = "data/horses/biboules/%s.png";
     private static final String ROLLIMAGESPATH = "data/horses/rollImages/roll%s.png";
 
+    /**
+     * The teams, each with its color.
+     */
     public enum TEAMS {
         BLUE, RED, GREEN, YELLOW
     }

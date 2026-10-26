@@ -6,6 +6,9 @@ import javafx.scene.paint.ImagePattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * The colors of the player of SurviveAgainstRobots.
+ */
 @RequiredArgsConstructor
 public enum PlayerEnum {
 

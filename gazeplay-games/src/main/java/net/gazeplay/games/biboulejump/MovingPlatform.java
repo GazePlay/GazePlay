@@ -8,6 +8,9 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 
+/**
+ * A platform moving left and right across half of the width of the window, at the animation speed of the settings.
+ */
 @Slf4j
 public class MovingPlatform extends Platform {
 

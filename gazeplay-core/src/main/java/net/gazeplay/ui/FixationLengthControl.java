@@ -22,6 +22,10 @@ import net.gazeplay.commons.ui.Translator;
 
 import static net.gazeplay.ui.QuickControl.*;
 
+/**
+ * Control of the fixation length (FIXATION_LENGTH setting: how long the gaze must stay on an element to select it), in
+ * the side panel of the game screen, also changed with the keyboard.
+ */
 @NoArgsConstructor
 @Slf4j
 public class FixationLengthControl {
@@ -33,6 +37,9 @@ public class FixationLengthControl {
 
     private static final int FIXATION_LENGTH_SLIDER_MAX_VALUE = 10000;
 
+    /**
+     * @return the pane of the control
+     */
     public TitledPane createfixationLengthPane(Configuration config, Translator translator, Scene primaryScene) {
         Label fixationLengthValueLabel = new Label("");
         fixationLengthValueLabel.setMinWidth(ICON_SIZE);
@@ -56,6 +63,9 @@ public class FixationLengthControl {
         return pane;
     }
 
+    /**
+     * @return the slider, bound to the setting, its value shown in the label
+     */
     public Slider createFixationLengthSlider(Configuration config, Label fixationLengthValueLabel) {
         final int initialFixationLengthRatioValue = config.getFixationLength();
 
@@ -86,10 +96,16 @@ public class FixationLengthControl {
         return slider;
     }
 
+    /**
+     * @return a fixation length in ms as shown, in seconds, e.g. "0.50"
+     */
     public String formatValue(double fixationLengthValue) {
         return String.format("%.2f", fixationLengthValue / 1000.0);
     }
 
+    /**
+     * Makes Alt + Up and Alt + Down increase and decrease the fixation length (by 100 ms) during the game.
+     */
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider fixationLengthRatioSlider) {
 
         EventHandler<KeyEvent> increaseFixationLengthEventHandler = event -> {

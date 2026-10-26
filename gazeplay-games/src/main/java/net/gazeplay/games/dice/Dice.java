@@ -25,6 +25,10 @@ import net.gazeplay.components.ProgressPane;
 
 import java.util.ArrayList;
 
+/**
+ * Game "Dice": 1 to 6 dice, rolled together by a fixation on the roll button (or one by one on each die); the total is
+ * shown.
+ */
 @Slf4j
 public class Dice implements GameLifeCycle {
 
@@ -196,6 +200,9 @@ public class Dice implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows the total of the dice.
+     */
     private void addUp() {
         int total = 0;
         for (final int roll : rolls) {

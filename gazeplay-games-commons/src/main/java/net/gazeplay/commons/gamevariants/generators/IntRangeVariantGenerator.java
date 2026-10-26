@@ -7,6 +7,9 @@ import net.gazeplay.commons.gamevariants.IntGameVariant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * Proposes one variant per number, from {@code min} to {@code max}.
+ */
 @Data
 public class IntRangeVariantGenerator implements IGameVariantGenerator {
 

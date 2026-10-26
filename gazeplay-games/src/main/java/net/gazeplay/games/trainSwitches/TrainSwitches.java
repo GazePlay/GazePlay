@@ -30,6 +30,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Game "TrainSwitches": trains of different colors leave one after the other; the player changes the switches by
+ * fixations to send each train to the station of its color. A train reaching the right station is a goal, the wrong one
+ * a mistake.
+ */
 @Slf4j
 public class TrainSwitches implements GameLifeCycle {
 
@@ -426,6 +431,9 @@ public class TrainSwitches implements GameLifeCycle {
         };
     }
 
+    /**
+     * @return a section of the railway starting at a point, of a length
+     */
     private Section createSection(double startx, double starty, double size){
         Section section = new Section(size);
         section.add(createMoveTo(startx, starty));
@@ -433,6 +441,9 @@ public class TrainSwitches implements GameLifeCycle {
         return section;
     }
 
+    /**
+     * @return a section of the railway starting at a point
+     */
     private Section createSection(double startx, double starty){
         Section section = new Section();
         section.add(createMoveTo(startx, starty));
@@ -440,6 +451,9 @@ public class TrainSwitches implements GameLifeCycle {
         return section;
     }
 
+    /**
+     * @return the start of a path at a point, following the size of the game area
+     */
     private MoveTo createMoveTo(double x, double y){
         MoveTo moveTo = new MoveTo();
         moveTo.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
@@ -447,6 +461,9 @@ public class TrainSwitches implements GameLifeCycle {
         return moveTo;
     }
 
+    /**
+     * @return a line of a path to a point, following the size of the game area
+     */
     private LineTo createLineTo(double x, double y){
         LineTo lineTo = new LineTo();
         lineTo.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
@@ -454,6 +471,9 @@ public class TrainSwitches implements GameLifeCycle {
         return lineTo;
     }
 
+    /**
+     * Adds a station of a color at a point.
+     */
     private void createStation(TrainColors color, double x, double y){
         Station station = new Station(color);
         colors.add(color);
@@ -464,6 +484,9 @@ public class TrainSwitches implements GameLifeCycle {
         stations.add(station);
     }
 
+    /**
+     * @return a new train of a color, on the first section
+     */
     private Train createTrain(TrainColors color){
         Train train = new Train(color, initialTrainDirection);
         train.getShape().fitWidthProperty().bind(gameContext.getRoot().widthProperty().divide(levelWidth).divide(2));
@@ -523,6 +546,9 @@ public class TrainSwitches implements GameLifeCycle {
         return curve;
     }
 
+    /**
+     * @return a new switch at a point, changed by a fixation
+     */
     private Switch createSwitch(double x, double y){
         Switch s = new Switch();
         s.getGroup().addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEvent -> enterSwitchHandle(s));
@@ -539,6 +565,9 @@ public class TrainSwitches implements GameLifeCycle {
         return s;
     }
 
+    /**
+     * Starts the fixation on a switch, which changes it when it lasts long enough.
+     */
     private void enterSwitchHandle(Switch s){
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         progressIndicator.setMinSize(gameContext.getConfiguration().getProgressBarSize(), gameContext.getConfiguration().getProgressBarSize());
@@ -558,6 +587,9 @@ public class TrainSwitches implements GameLifeCycle {
         progressTimeline.play();
     }
 
+    /**
+     * Stops the fixation on a switch.
+     */
     private void exitHandle(){
         progressIndicator.setOpacity(0);
         progressTimeline.stop();
@@ -583,6 +615,9 @@ public class TrainSwitches implements GameLifeCycle {
         return null;
     }
 
+    /**
+     * Builds the railway of a level.
+     */
     private void initLevel(int level){
         switch (level){
             case 3 -> initLevel3();
@@ -592,6 +627,9 @@ public class TrainSwitches implements GameLifeCycle {
         }
     }
 
+    /**
+     * Builds the railway of the level with 3 stations.
+     */
     private void initLevel3(){
 
         // Level parameters
@@ -646,6 +684,9 @@ public class TrainSwitches implements GameLifeCycle {
         createStation(TrainColors.YELLOW, 3, 2);
     }
 
+    /**
+     * Builds the railway of the level with 8 stations.
+     */
     private void initLevel8(){
 
         levelWidth = 7;
@@ -749,6 +790,9 @@ public class TrainSwitches implements GameLifeCycle {
         createStation(TrainColors.RED, 4, 0);
     }
 
+    /**
+     * Builds the railway of the level with 13 stations.
+     */
     private void initLevel13(){
 
         levelWidth = 7;

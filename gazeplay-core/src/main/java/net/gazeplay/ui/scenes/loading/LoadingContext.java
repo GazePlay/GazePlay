@@ -1,11 +1,7 @@
 package net.gazeplay.ui.scenes.loading;
 
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.app.LogoFactory;
@@ -13,6 +9,9 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NLabel;
 
+/**
+ * Screen shown while a game starts in its own JVM: the animated logo and "Loading...".
+ */
 public class LoadingContext extends BorderPane {
 
     private LogoFactory logoFactory;
@@ -22,8 +21,10 @@ public class LoadingContext extends BorderPane {
         gazePlayLoadingContext(gazePlay);
     }
 
+    /**
+     * Builds the screen, for the light or dark theme.
+     */
     public void gazePlayLoadingContext(GazePlay gazePlay){
-        //  ImageView backgroundImage = new ImageView(new Image("data/common/images/bravo.gif"));
         I18NLabel loadingLabel = new I18NLabel(gazePlay.getTranslator(), "Loading...");
         Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isDarkThemeEnabled()) {
@@ -57,6 +58,9 @@ public class LoadingContext extends BorderPane {
         this.setCenter(stackPane);
     }
 
+    /**
+     * Stops the animation of the logo.
+     */
     public void stopAnimation(){
         logoFactory.stopAnimation();
     }

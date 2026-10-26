@@ -10,6 +10,10 @@ import net.gazeplay.stats.ShootGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games "ShootTheBiboules" and "ShootTheRobots", with the info-game.csv file of the games where
+ * targets are hit (see {@code ShootGamesStats}).
+ */
 public class ShooterGamesStats extends ShootGamesStats {
 
     public ShooterGamesStats(Scene scene, String gameType) {

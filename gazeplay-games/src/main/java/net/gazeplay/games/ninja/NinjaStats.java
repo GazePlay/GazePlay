@@ -10,6 +10,10 @@ import net.gazeplay.stats.ShootGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Ninja", with the info-game.csv file of the games where targets are hit (see
+ * {@code ShootGamesStats}).
+ */
 public class NinjaStats extends ShootGamesStats {
 
     public NinjaStats(Scene scene) {

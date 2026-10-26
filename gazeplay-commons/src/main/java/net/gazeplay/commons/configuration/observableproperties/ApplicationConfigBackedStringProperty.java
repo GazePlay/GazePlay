@@ -5,6 +5,9 @@ import net.gazeplay.commons.configuration.ApplicationConfig;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * A text setting, stored under a key of GazePlay.properties.
+ */
 public class ApplicationConfigBackedStringProperty extends PropertiesStringProperty {
 
     private final ApplicationConfig properties;

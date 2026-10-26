@@ -8,6 +8,9 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 
 import java.util.Set;
 
+/**
+ * Proposes the square grids from {@code minSize} x {@code minSize} to {@code maxSize} x {@code maxSize}.
+ */
 public class SquareDimensionVariantGenerator implements IGameVariantGenerator {
 
     private final int minSize;

@@ -114,6 +114,9 @@ public class Languages {
         return Collections.unmodifiableList(flagsList);
     }
 
+    /**
+     * @return the details of a language, or of French when it is null or not a language of GazePlay
+     */
     public static LanguageDetails getLocale(Locale locale) {
         Locale result = locale;
         if (result == null) {
@@ -129,10 +132,16 @@ public class Languages {
         return languageMap.get(result);
     }
 
+    /**
+     * @return all the languages, sorted by language code then country
+     */
     public static Collection<LanguageDetails> getAllLanguageDetails() {
         return languageMap.values();
     }
 
+    /**
+     * @return the locales of all the languages, sorted by language code then country
+     */
     public static Collection<Locale> getAllCodes() {
         return languageMap.keySet();
     }

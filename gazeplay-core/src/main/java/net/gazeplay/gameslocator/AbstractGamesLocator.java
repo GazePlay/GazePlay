@@ -10,6 +10,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Creates the declaration of each game found by the subclass, then sorts them for the menu.
+ */
 @Slf4j
 public abstract class AbstractGamesLocator implements GamesLocator {
 
@@ -37,6 +40,9 @@ public abstract class AbstractGamesLocator implements GamesLocator {
         return gameList;
     }
 
+    /**
+     * @return the classes declaring the games ({@code GameSpecSource})
+     */
     protected abstract List<Class> findGameSpecSourceClasses();
 
 }

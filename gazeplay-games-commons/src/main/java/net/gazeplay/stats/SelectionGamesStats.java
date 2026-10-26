@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the selection games: those of {@link Stats}, without info-game.csv file.
+ */
 public class SelectionGamesStats extends Stats {
 
     public SelectionGamesStats(final Scene gameContextScene) {

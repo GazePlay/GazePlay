@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.commons.ui.Translator;
 
+/**
+ * Variant given by a number and a translation key, with an optional second number (e.g. the number of trains of Train
+ * Switches, chosen in the menu).
+ */
 public class IntStringGameVariant implements IGameVariant {
 
     @Getter

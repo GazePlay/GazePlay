@@ -32,8 +32,15 @@ import net.gazeplay.components.AspectRatioImageRectangleUtil;
 import java.util.Collections;
 import java.util.Locale;
 
+/**
+ * Game "Letters": a letter is asked (written and said); the player must uncover a hidden picture by fixing the blocks
+ * of this letter among blocks of other letters.
+ */
 public class Letters implements GameLifeCycle {
 
+    /**
+     * State of a round: the asked letter, its blocks left, and the blocks.
+     */
     @Data
     public static class CurrentRoundDetails {
 
@@ -122,6 +129,9 @@ public class Letters implements GameLifeCycle {
 
     }
 
+    /**
+     * Shows the hidden picture, drawn from the images of the game.
+     */
     private void setHiddenPicture(IGameContext gameContext) {
         final Image randomPicture = imageLibrary.pickRandomImage();
 
@@ -180,7 +190,7 @@ public class Letters implements GameLifeCycle {
             double width = dimension2D.getWidth() / nbColomns;
             double height = dimension2D.getHeight() / nbLines;
 
-            Bloc[][] blocksList = createCards(mainLetter, width, height, config);
+            createCards(mainLetter, width, height, config);
             currentRoundDetails.remainingCount = correctCount;
 
             stats.notifyNewRoundReady();
@@ -190,19 +200,20 @@ public class Letters implements GameLifeCycle {
 
         fullAnimation.play();
 
-        // setHiddenPicture(gameContext);
-        // double width = dimension2D.getWidth() / nbColomns;
-        // double height = dimension2D.getHeight() / nbLines;
-        // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
-        // this.currentRoundDetails.remainingCount = correctCount;
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
     }
 
+    /**
+     * @return a letter of the alphabet drawn at random
+     */
     private String pickRandomLetter() {
         return alphabet[(randomGenerator.nextInt(alphabet.length))];
     }
 
+    /**
+     * Creates the grid of blocks: the asked letter on some of them, other letters on the others.
+     */
     private Bloc[][] createCards(String mainLetter, double width, double height,
                                  Configuration config) {
         correctCount = 0;
@@ -256,6 +267,9 @@ public class Letters implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes all the blocks (end of the round).
+     */
     void removeAllBlocs() {
         final Bloc[][] blocs = currentRoundDetails.blocs;
         int maxY = blocs[0].length;
@@ -266,6 +280,9 @@ public class Letters implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes a block, without its events.
+     */
     void removeBloc(Bloc toRemove) {
         if (toRemove == null) {
             return;
@@ -273,11 +290,13 @@ public class Letters implements GameLifeCycle {
         toRemove.removeEventFilter(MouseEvent.ANY, toRemove.enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, toRemove.enterEvent);
         gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
-        // gameContext.getChildren().remove(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
     }
 
+    /**
+     * @return the sound asking for a letter, said by a female or male voice drawn at random
+     */
     private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
         if (randomGenerator.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()
@@ -287,6 +306,9 @@ public class Letters implements GameLifeCycle {
             + ".mp3";
     }
 
+    /**
+     * Plays a sound.
+     */
     private void playSound(String path) {
         gameContext.getSoundManager().add(path);
     }

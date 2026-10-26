@@ -18,6 +18,10 @@ import net.gazeplay.games.cups.utils.Strategy;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Game "CupsBalls": a ball is shown under one of 3 to 5 cups, the cups are exchanged several times, then the player
+ * chooses the cup hiding the ball by a fixation.
+ */
 @Slf4j
 public class CupsAndBalls implements GameLifeCycle {
 
@@ -78,6 +82,9 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbExchanges = nbExchanges;
     }
 
+    /**
+     * Places the cups on the middle line of the grid and the ball under one of them, drawn at random.
+     */
     private void init() {
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -154,6 +161,9 @@ public class CupsAndBalls implements GameLifeCycle {
         stats.setTargetAOIList(targetAOIList);
     }
 
+    /**
+     * Plays the movements of the cups one after the other, then lets the player choose.
+     */
     private void createNewTransition(final ArrayList<Action> actions) {
         final int initCellX = actions.get(0).getInitCellX();
         final int initCellY = actions.get(0).getInitCellY();
@@ -211,6 +221,9 @@ public class CupsAndBalls implements GameLifeCycle {
         movementTransition.play();
     }
 
+    /**
+     * Lifts all the cups that do not hide the ball.
+     */
     public void openAllIncorrectCups() {
         TranslateTransition revealCup;
         for (final Cup cup : cups) {

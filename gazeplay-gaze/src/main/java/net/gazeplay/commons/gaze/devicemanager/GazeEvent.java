@@ -6,9 +6,17 @@ import javafx.scene.input.InputEvent;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * JavaFX event of the gaze (or of the mouse used as a gaze) on a node, fired by the gaze device manager on the nodes
+ * registered with it and on the root of the game. Games listen to it as to mouse events: GAZE_ENTERED when the
+ * position enters a node, GAZE_MOVED while it stays on it, GAZE_EXITED when it leaves it.
+ */
 @ToString
 public class GazeEvent extends InputEvent {
 
+    /**
+     * Parent type of all the gaze events.
+     */
     public static final EventType<GazeEvent> ANY = new EventType<>(InputEvent.ANY, "GAZE");
 
     public static final EventType<GazeEvent> GAZE_MOVED = new EventType<>(GazeEvent.ANY, "GAZE_MOVED");
@@ -31,6 +39,9 @@ public class GazeEvent extends InputEvent {
     @Getter
     private final long time;
 
+    /**
+     * Position in the coordinates of the node the event is fired on (0 when unknown).
+     */
     @Getter
     private final double x;
 
@@ -45,8 +56,7 @@ public class GazeEvent extends InputEvent {
     private final long sampleTime;
 
     /**
-     * Creates a new {@code LightningEvent} with an event type of {@code PLASMA_STRIKE}. The source and Target of the
-     * event is set to {@code NULL_SOURCE_TARGET}.
+     * Creates a GAZE_ENTERED event, at no time and position.
      */
     public GazeEvent() {
         this(GAZE_ENTERED);
@@ -73,12 +83,11 @@ public class GazeEvent extends InputEvent {
     }
 
     /**
-     * Construct a new {@code LightningEvent} with the specified event source and Target. If the source or Target is set
-     * to {@code null}, it is replaced by the {@code NULL_SOURCE_TARGET} value. All LightningEvents have their type set
-     * to {@code PLASMA_STRIKE}.
+     * Creates a GAZE_ENTERED event, at no time and position, with a source and a target (a null source or target is
+     * replaced by JavaFX with its NULL_SOURCE_TARGET).
      *
      * @param source the event source which sent the event
-     * @param target the event Target to associate with the event
+     * @param target the event target to associate with the event
      */
     public GazeEvent(final Object source, final EventTarget target) {
         super(source, target, GAZE_ENTERED);

@@ -21,9 +21,16 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Progress indicator of a fixation: it fills during the fixation length of the settings while the gaze (or the mouse)
+ * stays on a node, then calls its finish handler and stays shown one second. It empties when the gaze leaves.
+ */
 @Slf4j
 public class GazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
 
+    /**
+     * Not used by the indicator itself: free for the games that need to keep a duration with it.
+     */
     @Getter
     @Setter
     private double duration;
@@ -117,6 +124,10 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
 
     }
 
+    /**
+     * @return a handler starting the indicator when the gaze or the mouse enters the node, and stopping it when it
+     *   leaves
+     */
     protected EventHandler<Event> buildEventHandler(final Node node) {
 
         final GazeIndicator thisIndicator = this;

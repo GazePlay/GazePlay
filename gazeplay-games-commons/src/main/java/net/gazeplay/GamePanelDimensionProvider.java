@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Supplier;
 
+/**
+ * Gives the size of the area of the screen where the games draw.
+ */
 @AllArgsConstructor
 @Slf4j
 public class GamePanelDimensionProvider {
@@ -16,6 +19,9 @@ public class GamePanelDimensionProvider {
 
     private final Supplier<Scene> sceneSupplier;
 
+    /**
+     * @return the size of the game area; before it is laid out (first round), an estimate from the size of the scene
+     */
     public Dimension2D getDimension2D() {
         final Pane pane = paneSupplier.get();
         Dimension2D result = new Dimension2D(pane.getWidth(), pane.getHeight());

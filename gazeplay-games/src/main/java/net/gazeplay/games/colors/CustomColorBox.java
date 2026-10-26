@@ -5,6 +5,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import net.gazeplay.IGameContext;
 
+/**
+ * The custom color of the tool box, chosen in a dedicated window.
+ */
 public class CustomColorBox extends ColorBox {
 
     private final ColorBox representingBox;

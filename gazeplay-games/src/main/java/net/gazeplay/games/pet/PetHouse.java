@@ -33,6 +33,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Game "Pet": the player takes care of a pet, keeping its three needs (bath, food, sport) filled. Buttons chosen by
+ * fixations open each activity: the shower, the meal, the sport; the bars of the needs empty with time and fill again
+ * with the activities.
+ */
 @Slf4j
 public class PetHouse extends Parent implements GameLifeCycle {
 
@@ -117,7 +122,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
+        this.background.setFill(Color.BEIGE);
         gameContext.getChildren().add(this.background);
         water = new ArrayList<>();
         rd = new Timeline();
@@ -171,6 +176,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Moves the hand (sponge, food...) with the gaze or the mouse.
+     */
     private void onEvent(final Event e) {
         double offsetx = 0;
         double offsety = 0;
@@ -206,6 +214,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Makes the area of the pet follow the gaze and the mouse with the hand.
+     */
     private void createZoneEvents() {
         final EventHandler<Event> handevent = e -> {
             double offsetx = 0;
@@ -266,6 +277,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         zone.addEventFilter(GazeEvent.GAZE_EXITED, outhandevent);
     }
 
+    /**
+     * @return the three bars of the needs of the pet
+     */
     private HBox createBars() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -285,6 +299,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         return newBarsHBox;
     }
 
+    /**
+     * @return a bar of a need, made of colored squares
+     */
     private HBox createColoredProgressBar(final int numero) {
         final HBox progressBar = new HBox();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -299,6 +316,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         return progressBar;
     }
 
+    /**
+     * Starts emptying the bars of the needs with time.
+     */
     private void activateBars() {
         for (int i = 0; i < 3; i++) {
             final int index = getIt(i);
@@ -328,6 +348,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Creates the hand following the gaze in the activities.
+     */
     private void createHand() {
 
         hand = new Rectangle(0, 0, handSize, handSize);
@@ -338,11 +361,17 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(hand);
     }
 
+    /**
+     * @return the level of a need, after removing one square
+     */
     private int getIt(final int i) {
         it[i]--;
         return it[i];
     }
 
+    /**
+     * Creates the buttons of the activities, chosen by fixations.
+     */
     private void createButtons() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double buttonSize = dimension2D.getHeight() / 4;
@@ -375,12 +404,18 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the action of the button of an activity
+     */
     private EventHandler<Event> createprogessButtonHandler(final int number) {
         final EventHandler<Event> buttonHandler;
         buttonHandler = e -> activateScreen(number);
         return buttonHandler;
     }
 
+    /**
+     * Switches to an activity (or back to the home of the pet).
+     */
     private void activateScreen(final int number) {
         turnOffShower();
         stopSport();
@@ -431,6 +466,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Fills a need by one square.
+     */
     void refill(final int i) {
         if (it[i] < LIFE_SIZE) {
             if ((it[i] < LIFE_SIZE - 2) && (i == 1)) {
@@ -460,6 +498,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes the water of the shower.
+     */
     private void turnOffShower() {
         for (final Circle c : water) {
             gameContext.getChildren().remove(c);
@@ -468,6 +509,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Starts the shower: drops of water falling on the pet.
+     */
     private void turnOnShower() {
         water = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
@@ -535,6 +579,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Makes the pet fly around, for the sport.
+     */
     private void doSport() {
         final double coefx = (zone.getWidth() - zone.getWidth() / 3);
         final double coefy = (zone.getHeight() - zone.getHeight() / 3);
@@ -561,6 +608,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         rd.play();
     }
 
+    /**
+     * Stops the sport.
+     */
     private void stopSport() {
         rd.stop();
         rd.getKeyFrames().clear();
@@ -575,6 +625,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         rd.play();
     }
 
+    /**
+     * Starts the meal: food is given to the pet with the gaze.
+     */
     private void letsEat() {
 
         bowl = new ImageView(new Image("data/pet/images/bowl.png"));

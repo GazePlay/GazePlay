@@ -3,6 +3,9 @@ package net.gazeplay.cli;
 import lombok.Data;
 import picocli.CommandLine;
 
+/**
+ * All the options of the command line, also given to the JVM started for each game.
+ */
 @Data
 public class ReusableOptions {
 

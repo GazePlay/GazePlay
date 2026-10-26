@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * An area of interest as drawn by the areas of interest screen: its samples, its polygon and its information box.
+ */
 @Data
 public class AreaOfInterestProps {
     private final List<CoordinatesTracker> listOfPoints;
@@ -20,6 +23,9 @@ public class AreaOfInterestProps {
     private final long areaStartTime;
     private final long areaEndTime;
 
+    /**
+     * Score of the area for the targets of the game (higher when it matches a target better).
+     */
     private double priority;
 
     public AreaOfInterestProps(

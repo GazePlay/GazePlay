@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The state of the flower of the "FlowerOfNumbers" game: the number of the pistil (up to {@link #NUMBER_LIMIT}), and
+ * the values put in each petal.
+ */
 public class Flower {
     public static final int NUMBER_LIMIT = 20;
 

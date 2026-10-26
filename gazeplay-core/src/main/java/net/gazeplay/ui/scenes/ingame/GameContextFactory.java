@@ -38,10 +38,16 @@ public class GameContextFactory implements Supplier<GameContext> {
 
     static final double BUTTON_MIN_HEIGHT = 64;
 
+    /**
+     * @return the size of the configuration button: a tenth of the width of the window
+     */
     private static double computeButtonSize(Stage primaryStage) {
         return primaryStage.getWidth() / 10;
     }
 
+    /**
+     * @return the empty side panel of the game screen
+     */
     private static HBox createControlPanel() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -61,6 +67,9 @@ public class GameContextFactory implements Supplier<GameContext> {
         return hbox;
     }
 
+    /**
+     * Sizes the configuration button for the width of the window (at least {@link #BUTTON_MIN_HEIGHT}).
+     */
     private static void updateConfigButton(Button button, ImageView btnImg, Stage primaryStage) {
         double buttonSize = primaryStage.getWidth() / 10;
 
@@ -129,20 +138,6 @@ public class GameContextFactory implements Supplier<GameContext> {
 
         applyInputMode(gamingRoot, EyeTracker.fromConfigValue(config.getEyeTracker()));
 
-        //TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
-        /*Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
-            @Override
-            public Color visitLight() {
-                return Color.LIGHTGREY;
-            }
-
-            @Override
-            public Color visitDark() {
-                return Color.BLACK;
-            }
-        });*/
-
-        // TO BE USED WITH COLORED BACKGROUND SETTINGS
         Color color = Color.web(config.getBackgroundColorProperty().getValue());
 
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
@@ -154,7 +149,6 @@ public class GameContextFactory implements Supplier<GameContext> {
 
         double buttonSize = computeButtonSize(primaryStage);
 
-        // Button bt = new Button();
         ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
         buttonImg.setFitWidth(buttonSize);
         buttonImg.setFitHeight(buttonSize);
@@ -164,15 +158,9 @@ public class GameContextFactory implements Supplier<GameContext> {
         bt.setGraphic(buttonImg);
         bt.setStyle("-fx-background-color: transparent;");
         updateConfigButton(bt, buttonImg, primaryStage);
-        /*
-         * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
-         * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
-         * buttonSize + "px;");
-         */
 
         final HBox configPane = new HBox(2);
         configPane.setAlignment(Pos.CENTER_LEFT);
-        // Pane configPane = new Pane();
         primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(configPane, primaryStage));
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
         configPane.heightProperty().addListener((observable) -> updateConfigPane(configPane, primaryStage));
@@ -257,6 +245,10 @@ public class GameContextFactory implements Supplier<GameContext> {
         return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(), soundsManagerFactory.get(), configPane);
     }
 
+    /**
+     * Makes the configuration button fade out 2 seconds after it appears and when the mouse leaves it, and come back
+     * when the mouse is on it (unless the panel is open).
+     */
     private void buttonTransparentHandler(Button bt) {
         FadeTransition fd = new FadeTransition(Duration.millis(500), bt);
         fd.setFromValue(1);

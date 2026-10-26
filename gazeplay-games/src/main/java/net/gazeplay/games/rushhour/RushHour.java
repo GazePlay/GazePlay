@@ -19,6 +19,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Game "RushHour": the red car must leave the parking, whose exit is blocked by other cars; the player moves the cars
+ * one cell at a time along their direction. 33 levels.
+ */
 @Slf4j
 public class RushHour extends Parent implements GameLifeCycle {
 
@@ -69,6 +73,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         ground = new Rectangle(); // to avoid NullPointerException
     }
 
+    /**
+     * Builds a level: the parking, then its cars (see setLevel0 to setLevel32).
+     */
     private void setLevel(final int i) {
 
         garage = new LinkedList<>();
@@ -178,6 +185,9 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Places the cars of the level 0. The methods setLevel1 to setLevel32 do the same for the other levels.
+     */
     private void setLevel0(final Pane p, final ProgressIndicator pi) {
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -2442,6 +2452,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
+    /**
+     * Wins the game as soon as the red car has left the parking.
+     */
     private void toWinListener() {
         toWin.xProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
@@ -2456,6 +2469,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         });
     }
 
+    /**
+     * Ends the game: plays the win animation and shows the statistics.
+     */
     private void win () {
         endOfGame = true;
         stats.incrementNumberOfGoalsReached();
@@ -2467,6 +2483,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         });
     }
 
+    /**
+     * Makes each car check its collisions with the other cars.
+     */
     private void setIntersections() {
         for (final Car car : garage) {
             if (car.isDirection()) {
@@ -2477,6 +2496,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Puts a car back when it overlaps another car.
+     */
     private void checkIntersections(final Car car) {
         for (final Car car2 : garage) {
             if (car2 != car) {
@@ -2500,6 +2522,9 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Creates the parking and its exit.
+     */
     private void createGarage(final Pane p) {
         final int longueur = garageWidth;
         final int hauteur = garageHeight;

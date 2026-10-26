@@ -7,6 +7,10 @@ import javafx.scene.layout.Pane;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Computes the size of the pictures of "Where is it?" for the game area and the grid of the variant, keeping the
+ * proportions 4:3 or 16:9 of the pictures.
+ */
 @AllArgsConstructor
 @Slf4j
 public class GameSizingComputer {
@@ -15,24 +19,37 @@ public class GameSizingComputer {
     private final int nbColumns;
     private final boolean fourThree;
 
+    /**
+     * @return the sizing for the size of a scene
+     */
     public GameSizing computeGameSizing(Scene scene) {
         Rectangle2D bounds = new Rectangle2D(0, 0, scene.getWidth(), scene.getHeight());
 
         return computeGameSizing(bounds);
     }
 
+    /**
+     * @return the sizing for the size of a pane
+     */
     public GameSizing computeGameSizing(Pane pane) {
         Rectangle2D bounds = new Rectangle2D(0, 0, pane.getWidth(), pane.getHeight());
 
         return computeGameSizing(bounds);
     }
 
+    /**
+     * @return the sizing for a game area (its lower tenth left free)
+     */
     public GameSizing computeGameSizing(Dimension2D dimension2D) {
         Rectangle2D bounds = new Rectangle2D(0, 0, dimension2D.getWidth(), dimension2D.getHeight() * 0.9);
 
         return computeGameSizing(bounds);
     }
 
+    /**
+     * @return the sizing for an area
+     * @throws IllegalStateException when the area is empty
+     */
     public GameSizing computeGameSizing(Rectangle2D bounds) {
 
         double sceneWidth = bounds.getWidth();

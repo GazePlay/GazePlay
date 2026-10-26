@@ -10,6 +10,9 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games "SurviveAgainstRobots" and "SurviveAgainstRobotsMouse" (see {@code SelectionGamesStats}).
+ */
 public class SurviveAgainstRobotsStats extends SelectionGamesStats {
 
     public SurviveAgainstRobotsStats(Scene gameContextScene) {

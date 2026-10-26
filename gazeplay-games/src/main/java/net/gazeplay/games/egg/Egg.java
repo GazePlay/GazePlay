@@ -25,6 +25,10 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
+/**
+ * The egg of the EggGame: each fixation on it cracks it a little more (with a sound), and the last one breaks it,
+ * revealing the picture inside. In the "ImageShrink" mode the egg also shrinks at each fixation.
+ */
 @Slf4j
 public class Egg extends Parent {
 
@@ -135,6 +139,9 @@ public class Egg extends Parent {
 
     }
 
+    /**
+     * @return the progress indicator of a fixation on the egg
+     */
     private ProgressIndicator createProgressIndicator() {
         final ProgressIndicator indicator = new ProgressIndicator(0);
 
@@ -149,6 +156,10 @@ public class Egg extends Parent {
         return indicator;
     }
 
+    /**
+     * @return the handler cracking the egg after a fixation of the length of the settings, and breaking it at the last
+     *   turn
+     */
     private EventHandler<Event> buildEvent() {
         final Egg that = this;
 
@@ -229,11 +240,17 @@ public class Egg extends Parent {
         };
     }
 
+    /**
+     * Plays a sound of the egg (1: crack, 2: break).
+     */
     public void playSound(final int i) {
         final String soundResource = "data/egg/sounds/" + i + ".mp3";
         gameContext.getSoundManager().add(soundResource);
     }
 
+    /**
+     * Applies the color of the progress indicator chosen in the settings.
+     */
     private void verifyProgressBarValue() {
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor()); // To change the color of the progress bar
     }

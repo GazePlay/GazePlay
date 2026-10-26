@@ -20,6 +20,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.LevelsReport;
 import net.gazeplay.commons.utils.stats.Stats;
 
+/**
+ * A card of the Memory game; a fixation turns it over (face down cards) or selects it (face up cards).
+ */
 @Slf4j
 public class MemoryCard extends Parent {
 
@@ -113,6 +116,9 @@ public class MemoryCard extends Parent {
         this.mouseIsOverCard = false;
     }
 
+    /**
+     * @return the progress indicator of a fixation on the card
+     */
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(card.getX() + width * 0.05);
@@ -123,6 +129,10 @@ public class MemoryCard extends Parent {
         return indicator;
     }
 
+    /**
+     * Turns the card over: the first card of a pair stays turned; with the second one, the pair is removed if both
+     * match, else both are turned back after a while. The round is won when no card is left.
+     */
     private void onCorrectCardSelected() {
 
         gameInstance.incNbCorrectCards();
@@ -261,6 +271,9 @@ public class MemoryCard extends Parent {
         }
     }
 
+    /**
+     * @return the handler turning the card over after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent() {
         return e -> {
 

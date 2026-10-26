@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Image library of the image resources of a directory of the classpath (inside the jars), loaded when drawn (the last
+ * 10 are kept in a cache).
+ */
 public class ResourceImageLibrary extends AbstractImageLibrary {
 
     private final Cache<Integer, Image> imageCache = CacheBuilder.newBuilder().maximumSize(10).weakValues().build();

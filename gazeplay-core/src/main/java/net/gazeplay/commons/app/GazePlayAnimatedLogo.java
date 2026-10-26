@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 
+/**
+ * The GAZE PLAY logo of the user selection page, made of 8 letters that appear and move one after the other.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class GazePlayAnimatedLogo {
@@ -28,6 +31,9 @@ public class GazePlayAnimatedLogo {
         @Getter
         private final ImageView frontImageView;
 
+        /**
+         * A letter: a back image and a front image, the front one moving in the animations.
+         */
         LetterPane(ImageView backImageView, ImageView frontImageView) {
             this.backImageView = backImageView;
             this.frontImageView = frontImageView;
@@ -38,6 +44,9 @@ public class GazePlayAnimatedLogo {
             }
         }
 
+        /**
+         * @return an animation making the letter jump
+         */
         public Transition createBumpTransition() {
             SequentialTransition bumpTransition = new SequentialTransition();
             int offset = 20;
@@ -49,42 +58,42 @@ public class GazePlayAnimatedLogo {
             return bumpTransition;
         }
 
+        /**
+         * @return an animation making the letter tilt left then right
+         */
         public Transition createTiltTransition() {
             SequentialTransition tiltTransition = new SequentialTransition();
 
-            //
             int angle = 25;
             RotateTransition one = new RotateTransition(Duration.millis(200), frontImageView);
             one.setByAngle(-angle);
             RotateTransition two = new RotateTransition(Duration.millis(300), frontImageView);
             two.setByAngle(angle);
-            //
             int offset = 15;
             TranslateTransition right = new TranslateTransition(Duration.millis(200), frontImageView);
             right.setByX(offset);
             TranslateTransition left = new TranslateTransition(Duration.millis(100), frontImageView);
             left.setByX(-offset);
-            //
             tiltTransition.getChildren().addAll(new ParallelTransition(one, left), new ParallelTransition(two, right));
             return tiltTransition;
         }
 
     }
 
+    /**
+     * @return the logo, its letters of the given height
+     */
     public static GazePlayAnimatedLogo newInstance(int preferredHeight) {
         final HBox letters = new HBox();
 
-        //String imageType = "fixed-size";
         String imageType = "flow-size";
         for (int i = 0; i <= 3; i++) {
             StackPane letter = createLetterView(i, imageType, preferredHeight);
-            //
             letters.getChildren().add(letter);
         }
         letters.getChildren().add(createSpacingView(preferredHeight));
         for (int i = 4; i <= 7; i++) {
             StackPane letter = createLetterView(i, imageType, preferredHeight);
-            //
             letters.getChildren().add(letter);
         }
 
@@ -101,6 +110,9 @@ public class GazePlayAnimatedLogo {
         return new GazePlayAnimatedLogo(letters);
     }
 
+    /**
+     * @return the space between GAZE and PLAY
+     */
     private static StackPane createSpacingView(int preferredHeight) {
         ImageView imageView = new ImageView(new Image(IMAGES_PATH + "spacing.png"));
         // Same width as before, but the height of the letters: at its own height (262 px) the transparent image made
@@ -108,30 +120,31 @@ public class GazePlayAnimatedLogo {
         imageView.setPreserveRatio(false);
         imageView.setFitWidth(imageView.getImage().getWidth());
         imageView.setFitHeight(preferredHeight);
-        //
         StackPane letter = new StackPane();
         letter.getChildren().addAll(imageView);
         return letter;
     }
 
+    /**
+     * @return the letter of index {@code i} (0 to 7)
+     */
     private static LetterPane createLetterView(int i, String type, int preferredHeight) {
         log.info("preferredHeight = {}", preferredHeight);
-        //
         ImageView backImageView = new ImageView(new Image(IMAGES_PATH + type + "/" + i + "1.png"));
         ImageView frontImageView = new ImageView(new Image(IMAGES_PATH + type + "/" + i + "0.png"));
-        //
         backImageView.setPreserveRatio(true);
         frontImageView.setPreserveRatio(true);
-        //
         backImageView.setFitHeight(preferredHeight);
         frontImageView.setFitHeight(preferredHeight);
-        //
         return new LetterPane(backImageView, frontImageView);
     }
 
     @Getter
     private final Pane letters;
 
+    /**
+     * @return the animation of the logo: the letters disappear, then appear and jump one after the other, then tilt
+     */
     public SequentialTransition createAnimation() {
         SequentialTransition fadeOutOneByOne = new SequentialTransition();
         for (Node letter : letters.getChildren()) {
@@ -195,9 +208,11 @@ public class GazePlayAnimatedLogo {
         return sequentialTransition;
     }
 
+    /**
+     * @return an animation making a letter appear while it jumps
+     */
     private ParallelTransition createFadeInAndBumpTransition(Node letter) {
         ParallelTransition transition = new ParallelTransition();
-        //
         FadeTransition fadeInTransition = new FadeTransition(Duration.millis(500), letter);
         fadeInTransition.setFromValue(0);
         fadeInTransition.setToValue(1);

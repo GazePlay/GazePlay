@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The ball hidden under a cup; it moves with its cup.
+ */
 @Slf4j
 public final class Ball {
 
@@ -35,6 +38,9 @@ public final class Ball {
         updatePosition(theCup.getItem().getX(), theCup.getItem().getY());
     }
 
+    /**
+     * Places the ball at the bottom of its cup, at the new position of the cup.
+     */
     public void updatePosition(double newXPosCup, double newYPosCup) {
         this.XCenterPos = newXPosCup + theCup.getItem().getFitWidth() / 2;
         this.YCenterPos = newYPosCup + theCup.getItem().getFitHeight() - 2 * radius;

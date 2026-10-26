@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+/**
+ * A difference between the two pictures of SpotTheDifferences, on one of them; a fixation on it marks it, on both
+ * pictures.
+ */
 @Slf4j
 public class Difference extends Circle {
 

@@ -18,6 +18,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 
+/**
+ * Game "TicTacToe": the player puts crosses on a 3 x 3 grid by fixations, against another player or against the
+ * computer (depending on the variant); three in a row win.
+ */
 @Slf4j
 public class TicTacToe extends Parent implements GameLifeCycle {
 
@@ -95,6 +99,9 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
+    /**
+     * Ends the game: plays the win animation and shows the statistics.
+     */
     private void win() {
         stats.stop();
 
@@ -112,6 +119,9 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         });
     }
 
+    /**
+     * Adds the background.
+     */
     private void background() {
         Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         back.setFill(Color.WHITE);
@@ -134,6 +144,9 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(wall);
     }
 
+    /**
+     * Creates the nine cells of the grid, each played by a fixation.
+     */
     private void button() {
         {
             ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
@@ -463,6 +476,9 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return whether a player has three marks in a row, column or diagonal
+     */
     private boolean testgame() {
         if (game[0][0] * game[0][1] * game[0][2] == 1 ||
             game[1][0] * game[1][1] * game[1][2] == 1 ||
@@ -498,6 +514,9 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         return true;
     }
 
+    /**
+     * Makes the computer play a free cell.
+     */
     private void robot() {
         ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
         nought.setFitHeight(zone);
@@ -531,6 +550,9 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         wait.play();
     }
 
+    /**
+     * Empties the grid for a new game.
+     */
     private void restart() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {

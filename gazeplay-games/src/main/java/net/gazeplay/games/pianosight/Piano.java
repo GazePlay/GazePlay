@@ -30,6 +30,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Game "Piano": the notes of a song (a MIDI file of the game, or chosen by the user) are played one by one; the next
+ * note lights a tile of a round keyboard, and a fixation on it plays the note.
+ */
 @Slf4j
 public class Piano extends Parent implements GameLifeCycle {
 
@@ -85,6 +89,9 @@ public class Piano extends Parent implements GameLifeCycle {
         this.gameVariant = gameVariant;
     }
 
+    /**
+     * @return the fragments flying from a tile played
+     */
     private List<ImageView> buildFragments() {
         final int nbFragments = 5;
 
@@ -107,6 +114,9 @@ public class Piano extends Parent implements GameLifeCycle {
         return fragments;
     }
 
+    /**
+     * Makes the fragments fly from a point.
+     */
     private void explose(final double xcenter, final double ycenter) {
 
         final Timeline timeline1 = new Timeline();
@@ -162,6 +172,9 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Loads the song: the one of the game, or one chosen by the user if {@code b}.
+     */
     private void loadMusic(final boolean b) throws IOException {
         if (b) {
             final String fileName = jukebox.getS();
@@ -182,6 +195,9 @@ public class Piano extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Reads the notes of a MIDI stream, and lights the tile of the first one.
+     */
     private void loadMusicStream(final InputStream inputStream) {
         midiReader = new MidiReader(inputStream, stats);
         stats.incrementNumberOfGoalsToReach(midiReader.getTrackSize());
@@ -209,8 +225,6 @@ public class Piano extends Parent implements GameLifeCycle {
         instru = new Instru();
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
-
-        this.gameContext.resetBordersToFront();
 
         circ = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
         circ.setFill(Color.BLACK);
@@ -280,13 +294,15 @@ public class Piano extends Parent implements GameLifeCycle {
     public void dispose() {
     }
 
+    /**
+     * Creates a tile of the keyboard, played by a fixation when it is lit.
+     */
     private void createArc(final int index, final double angle, final Color color1, final Color color2, final double l, final double origin) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double size = dimension2D.getHeight() / l;
         final double theta = ((index * 360d) / 7d - origin);
         final Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
         a3.color1 = color1;
-        //a3.color2 = color2;
         a3.arc.setFill(color1);
         a3.arc.setStrokeWidth(10);
         a3.setVisible(true);
@@ -444,6 +460,9 @@ public class Piano extends Parent implements GameLifeCycle {
         tilesTab.add(index, a3);
     }
 
+    /**
+     * Creates the 7 tiles of the keyboard.
+     */
     private void createArcs() {
         for (int i = 0; i < 7; i++) {
             final double angle = 360d / 7d;
@@ -457,6 +476,9 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Creates the center of the keyboard, with its buttons.
+     */
     private void createCircle() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -523,6 +545,9 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
     }
 
+    /**
+     * @return the progress indicator of a fixation on a tile
+     */
     private ProgressIndicator createProgressIndicator(int index, double size, Dimension2D dimension2D) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setMinSize(dimension2D.getWidth() / 20, dimension2D.getHeight() / 20);

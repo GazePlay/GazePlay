@@ -1,6 +1,5 @@
 package net.gazeplay.games.draw;
 
-import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
@@ -12,7 +11,8 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
- * http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
+ * Game "Scribble": the gaze (or the mouse) draws a line on a canvas; each time it enters the canvas, the line takes the
+ * next color of the rainbow. Based on http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
  */
 public class DrawApplication implements GameLifeCycle {
 

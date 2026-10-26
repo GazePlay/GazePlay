@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import java.util.ArrayList;
 
+/**
+ * A train of a color, which must reach the station of its color.
+ */
 public class Train {
 
     private final String color;

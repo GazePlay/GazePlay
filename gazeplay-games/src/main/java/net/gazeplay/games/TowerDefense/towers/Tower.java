@@ -8,6 +8,10 @@ import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
+/**
+ * A tower of the Tower Defense game, on a tower place: it turns to the first enemy in its range and shoots at it at a
+ * regular rate.
+ */
 public abstract class Tower {
 
     protected double fireTickLimit;
@@ -42,6 +46,9 @@ public abstract class Tower {
         range = 3;
     }
 
+    /**
+     * Turns to the first enemy in range and shoots at it when the tower is ready.
+     */
     public void fire(IGameContext context){
         Enemy target = findEnemyInRange();
         if(target!=null){
@@ -80,6 +87,9 @@ public abstract class Tower {
         }
     }
 
+    /**
+     * @return the first enemy in the range of the tower, null when there is none
+     */
     private Enemy findEnemyInRange(){
         Circle circle = new Circle(getCenter().getX(), getCenter().getY(), range);
         for (Enemy enemy : enemies) {
@@ -94,14 +104,23 @@ public abstract class Tower {
         return rotation;
     }
 
+    /**
+     * @return where the projectiles start
+     */
     public Point2D getProjectileStart(){
         return getCenter();
     }
 
+    /**
+     * Restarts the delay before the next shot.
+     */
     public void resetTick(){
         tick = 0;
     }
 
+    /**
+     * Adds a projectile to the game.
+     */
     public void createProjectile(double x, double y, double speedX, double speedY, double size, double damage){
         projectiles.add(new Projectile(x, y, speedX, speedY, size, damage));
     }
@@ -114,6 +133,9 @@ public abstract class Tower {
         return row;
     }
 
+    /**
+     * @return the center of the tower
+     */
     public Point2D getCenter(){
         return new Point2D(col + 0.5, row + 0.5);
     }

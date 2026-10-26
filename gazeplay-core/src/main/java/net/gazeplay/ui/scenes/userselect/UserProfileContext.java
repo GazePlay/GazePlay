@@ -54,6 +54,11 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * The user selection page, first screen of GazePlay: one card per profile (the default one, and those of the "profiles"
+ * folder), to choose, create, edit (name and picture) or delete a profile. Each profile has its own settings, results
+ * and files.
+ */
 @Slf4j
 public class UserProfileContext extends GraphicalContext<BorderPane> {
 
@@ -74,6 +79,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         gazeplayUserProfileContext(gazePlay, screenDimension);
     }
 
+    /**
+     * Builds the page.
+     */
     public void gazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
@@ -114,6 +122,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
+    /**
+     * @return the names of the user profiles: the folders of the "profiles" folder of the GazePlay folder, sorted
+     */
     public static List<String> findAllUsersProfiles() {
         final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
         log.info("profilesDirectory = {}", profilesDirectory);
@@ -133,6 +144,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return listOfUsers;
     }
 
+    /**
+     * @return the scrolling pane of the cards of the profiles, with the card creating a new one
+     */
     ScrollPane createUserPickerChoicePane(final GazePlay gazePlay) {
         final int flowPaneGap = 40;
         final FlowPane choicePanel = new FlowPane();
@@ -192,6 +206,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return choicePanelScrollPane;
     }
 
+    /**
+     * @return the picture of a profile, the default picture when it has none or it cannot be read
+     */
     static ImagePattern lookupProfilePicture(final Configuration currentUserProfileConfiguration) {
         ImagePattern imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
         final String userPicture = currentUserProfileConfiguration.getUserPicture();
@@ -212,6 +229,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return imagePattern;
     }
 
+    /**
+     * @return the card of a profile; choosing it makes it the active profile and shows the menu
+     */
     User createUser(
         @NonNull final GazePlay gazePlay,
         @NonNull final FlowPane choicePanel,
@@ -294,6 +314,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return user;
     }
 
+    /**
+     * @return the button deleting a profile, after confirmation
+     */
     private BorderPane createDeleteUserButton(
         final GazePlay gazePlay,
         final FlowPane choicePanel,
@@ -326,6 +349,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
+    /**
+     * @return the button editing the name and picture of a profile
+     */
     private BorderPane createEditUserButton(final GazePlay gazePlay, final FlowPane choicePanel, final User user, final double size, final Dimension2D screenDimension) {
         final CustomButton button = new CustomButton("data/common/images/configuration-button-alt3.png", size);
 
@@ -353,12 +379,18 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
+    /**
+     * @return the button quitting GazePlay
+     */
     private CustomButton createExitButton(final Dimension2D screenDimension) {
         final CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> getGazePlay().quit());
         return exitButton;
     }
 
+    /**
+     * @return an empty modal window over the page
+     */
     private Stage initializeDialog(Stage primaryStage) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -368,6 +400,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
+    /**
+     * @return a scrolling pane of a window of the page
+     */
     private ScrollPane initializeScroller(Pane choicePane, Stage primaryStage) {
         final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
         choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
@@ -377,6 +412,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
+    /**
+     * @return the window confirming the deletion of a profile; confirming deletes its folder with all its content
+     */
     Stage createRemoveDialog(
         final Stage primaryStage,
         final FlowPane choicePanel,
@@ -421,6 +459,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
+    /**
+     * @return the window creating a profile, or editing one, with its name and picture
+     */
     Stage createDialog(
         final GazePlay gazePlay,
         final Stage primaryStage,
@@ -579,6 +620,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
+    /**
+     * @return a button of a window of the page
+     */
     private static Button createDialogButton(String text, double minHeight, double minWidth) {
         final Button button = new Button(text);
         button.getStyleClass().add("gameChooserButton");
@@ -589,11 +633,17 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return button;
     }
 
+    /**
+     * @return whether a name is free for a new profile
+     */
     private boolean checkNewName(final String s) {
         final boolean isNew = !findAllUsersProfiles().contains(s);
         return (isNew && !s.equals(getGazePlay().getTranslator().translate("DefaultUser")));
     }
 
+    /**
+     * Updates the card of a profile after its edition.
+     */
     private void modifyUser(final HBox user, final String name, final ImagePattern ip) {
         final BorderPane c = (BorderPane) user.getChildren().get(0);
         final Rectangle r = (Rectangle) c.getCenter();
@@ -605,10 +655,16 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * @return the content type of a file as recognised by the system, e.g. "image/png"
+     */
     public String getContentType(File file) throws IOException {
         return Files.probeContentType(Path.of(file.getAbsolutePath()));
     }
 
+    /**
+     * @return the image file chosen by the user, null when cancelled
+     */
     private File chooseImageFile(final Stage primaryStage) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -622,6 +678,11 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
+    /**
+     * Asks for a picture and shows it on the button.
+     *
+     * @return the path of the picture, null when the chosen file is not an image
+     */
     private String getImage(final Stage primaryStage, final Button targetButton) throws IOException {
         final File selectedImageFile = chooseImageFile(primaryStage);
         String typeImage = getContentType(selectedImageFile);
@@ -642,6 +703,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return result;
     }
 
+    /**
+     * Copies a file; a failure is logged.
+     */
     private static void copyFile(final File source, final File dest) {
         try {
             org.apache.commons.io.FileUtils.copyFile(source, dest);

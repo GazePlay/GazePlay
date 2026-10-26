@@ -18,11 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Game "MagicCards": cards are face down in a grid, one of them hiding a picture; the player turns the cards over by
+ * fixations until they find it.
+ * <p>
  * Created by schwab on 17/09/2016.
  */
 @Slf4j
 public class MagicCards implements GameLifeCycle {
 
+    /**
+     * The cards of a round, and the index of the winning one.
+     */
     @Data
     @AllArgsConstructor
     private static class RoundDetails {
@@ -85,7 +91,6 @@ public class MagicCards implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;
-        // final int winnerCardIndex = (int) (cardsCount * Math.random());
         final int winnerCardIndex = random.nextInt(cardsCount);
         final List<Card> cardList = createCards(winnerCardIndex, config);
 
@@ -110,6 +115,9 @@ public class MagicCards implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes all the cards except the winning one.
+     */
     public void removeAllIncorrectCards() {
         if (this.currentRoundDetails == null) {
             return;
@@ -127,6 +135,9 @@ public class MagicCards implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
+    /**
+     * @return the cards of the grid, one of them the winning card
+     */
     private List<Card> createCards(final int winnerCardIndex, final Configuration config) {
         final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -177,10 +188,16 @@ public class MagicCards implements GameLifeCycle {
         return result;
     }
 
+    /**
+     * @return the height of a card for the number of lines
+     */
     private static double computeCardHeight(final Dimension2D gameDimension2D, final int nbLines) {
         return gameDimension2D.getHeight() * 0.9 / nbLines;
     }
 
+    /**
+     * @return the width of a card for the number of columns
+     */
     private static double computeCardWidth(final Dimension2D gameDimension2D, final int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
     }

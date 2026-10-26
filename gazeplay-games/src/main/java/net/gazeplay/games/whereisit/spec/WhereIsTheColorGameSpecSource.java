@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheColorGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheColorGameLauncher;
 
+/**
+ * Declares the game "WhereIsTheColor" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class WhereIsTheColorGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

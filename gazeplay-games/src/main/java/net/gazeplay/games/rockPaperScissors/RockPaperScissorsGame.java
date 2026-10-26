@@ -38,6 +38,10 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
+/**
+ * Game "RockPaperScissors": the player chooses rock, paper or scissors by a fixation, against an opponent drawing its
+ * sign at random (shown or hidden, depending on the variant); the scores are counted over the rounds of the variant.
+ */
 @Slf4j
 public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCycle {
 
@@ -129,6 +133,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         gameContext.getGazeDeviceManager().addStats(stats);
     }
 
+    /**
+     * Sets the background picture.
+     */
     private void createBackground() {
         Background background = new Background(new BackgroundImage(
             new Image("data/rockPaperScissors/park.png"),
@@ -138,6 +145,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         gameContext.getRoot().setBackground(background);
     }
 
+    /**
+     * @return the scores of the player and of the opponent
+     */
     private GridPane createScoreTexts() {
         final String lang = configuration.getLanguage();
         final String userName = configuration.getUserName();
@@ -195,6 +205,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return textsGridPane;
     }
 
+    /**
+     * @return the sign of the opponent, hidden at first
+     */
     private Rectangle createOpponentHandSign() {
         final Image image = HandSign.UNKNOWN.getImage();
         final Rectangle rectangle = new Rectangle();
@@ -215,6 +228,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return rectangle;
     }
 
+    /**
+     * @return the button of a sign of the player, played after a fixation
+     */
     private ProgressButton createPlayerHandSigns(HandSign handSign) {
         final Image image = handSign.getImage();
         final ImageView view = new ImageView(image);
@@ -268,6 +284,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return button;
     }
 
+    /**
+     * @return the thumb shown when a round is won or lost
+     */
     private Rectangle createThumbSignal() {
         final Image image = new Image("data/rockPaperScissors/thumbs-up.png");
         final Rectangle rectangle = new Rectangle(0, 0, 10, 10);
@@ -284,6 +303,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return rectangle;
     }
 
+    /**
+     * @return the animation of the thumb at the end of a round
+     */
     private SequentialTransition createWinLossAnimation(Rectangle rectangle) {
         final ScaleTransition transition1 = new ScaleTransition(Duration.millis(1000), rectangle);
         transition1.setFromX(0);
@@ -311,12 +333,18 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return fullTransition;
     }
 
+    /**
+     * @return the pause shown after a draw
+     */
     private PauseTransition createDrawAnimation() {
         final PauseTransition transition = new PauseTransition(Duration.millis(1500));
         transition.setOnFinished(event -> launch());
         return transition;
     }
 
+    /**
+     * Counts a round won by the player.
+     */
     private void roundWin() {
         playerScore.setValue(playerScore.getValue() + 1);
 
@@ -333,10 +361,16 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         }
     }
 
+    /**
+     * Shows a draw.
+     */
     private void roundDraw() {
         drawAnimation.play();
     }
 
+    /**
+     * Counts a round won by the opponent.
+     */
     private void roundLoss() {
         opponentScore.setValue(opponentScore.getValue() + 1);
 
@@ -345,6 +379,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         winLossAnimation.play();
     }
 
+    /**
+     * Ends the game after its last round: resets the scores and shows the statistics.
+     */
     private void gameEnd() {
         playerScore.setValue(0);
         opponentScore.setValue(0);

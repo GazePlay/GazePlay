@@ -3,6 +3,9 @@ package net.gazeplay.commons.gamevariants;
 import lombok.Data;
 import net.gazeplay.commons.ui.Translator;
 
+/**
+ * Variant of a grid size (width x height) and a difficulty (translation key).
+ */
 @Data
 public class DimensionDifficultyGameVariant implements IGameVariant {
     private final int width;

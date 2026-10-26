@@ -22,6 +22,8 @@ import java.awt.geom.Point2D;
 
 
 /**
+ * A target of the Order game, numbered in the order it appeared.
+ *
  * @author vincent
  */
 public class Target extends Parent {
@@ -65,6 +67,9 @@ public class Target extends Parent {
         };
     }
 
+    /**
+     * @return a random position not overlapping the targets already shown
+     */
     private Position getInitialPosition(ReplayablePseudoRandom randomGenerator, int numberOfCurrentTargets){
         final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
@@ -86,6 +91,9 @@ public class Target extends Parent {
         return position;
     }
 
+    /**
+     * Selects the target after a fixation of the length of the settings.
+     */
     private void enter() {
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         progressIndicator.setOpacity(1);
@@ -100,6 +108,9 @@ public class Target extends Parent {
         timelineProgressBar.play();
     }
 
+    /**
+     * @return the progress indicator of a fixation on the target
+     */
     private ProgressIndicator createProgressIndicator(final double diameter) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(this.pos.getX() - (diameter / 2));
@@ -110,12 +121,18 @@ public class Target extends Parent {
         return indicator;
     }
 
+    /**
+     * Makes the target selectable.
+     */
     public void addEvent() {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
+    /**
+     * Makes the target unselectable.
+     */
     public void removeEvent() {
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);

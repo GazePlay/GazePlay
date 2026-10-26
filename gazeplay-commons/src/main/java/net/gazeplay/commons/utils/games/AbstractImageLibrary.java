@@ -12,6 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Image library drawing its images with the {@link ReplayablePseudoRandom} of the game, so that a replay draws the same
+ * images. When it has fewer images than requested, the missing ones are drawn from a fallback library.
+ */
 @Slf4j
 public abstract class AbstractImageLibrary implements ImageLibrary {
 
@@ -24,6 +28,9 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     @Override
     public abstract int getImagesCount();
 
+    /**
+     * @return the image at an index, from 0 to {@link #getImagesCount()} (excluded)
+     */
     protected abstract Image loadImageAtIndex(int index);
 
     @Override

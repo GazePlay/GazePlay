@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Translator reading the language of a configuration and the translations of a {@link Multilinguism}.
+ */
 @Slf4j
 public class DefaultTranslator implements Translator {
 

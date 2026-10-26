@@ -3,10 +3,16 @@ package net.gazeplay;
 import lombok.Getter;
 import lombok.NonNull;
 
+/**
+ * Categories of the games, shown as filters in the menu.
+ */
 public class GameCategories {
 
     private static final String categoryThumbnailsPath = "data/common/images/categoriesThumbnails/";
 
+    /**
+     * A category: its translation key and its thumbnail. The order of the values is the order of the games in the menu.
+     */
     public enum Category {
         ACTION_REACTION("Action-Reaction games", categoryThumbnailsPath + "action_reaction.png"),
         SELECTION("Selection games", categoryThumbnailsPath + "target.png"),

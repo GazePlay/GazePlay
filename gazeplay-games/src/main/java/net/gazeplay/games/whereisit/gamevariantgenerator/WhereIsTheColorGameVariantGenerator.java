@@ -9,6 +9,9 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
 
+/**
+ * Gives the variants of the game "WhereIsTheColor" proposed in the menu.
+ */
 public class WhereIsTheColorGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {

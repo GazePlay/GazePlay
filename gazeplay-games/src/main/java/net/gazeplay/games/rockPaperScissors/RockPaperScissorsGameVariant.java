@@ -3,6 +3,9 @@ package net.gazeplay.games.rockPaperScissors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A variant of the game "RockPaperScissors", chosen in the menu.
+ */
 @RequiredArgsConstructor
 public enum RockPaperScissorsGameVariant {
     HIDE_BO3(false, 2, "BO3"),

@@ -4,6 +4,10 @@ import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 
+/**
+ * A map of the Tower Defense game: a grid of tiles (grass, road, tower places...), the start of the road and the tower
+ * places.
+ */
 public abstract class Map {
 
     public static final int START = 8;
@@ -24,6 +28,9 @@ public abstract class Map {
         initLevel();
     }
 
+    /**
+     * Reads the grid given by the subclass, and finds the start of the road and the tower places.
+     */
     private void initLevel(){
         setStructure();
         nbRows = map.length;
@@ -55,6 +62,9 @@ public abstract class Map {
         return turretsTiles;
     }
 
+    /**
+     * @return the tile at a position; grass outside of the map
+     */
     public int getTile(int col, int row){
         if(row<0 || row>=nbRows || col<0 || col>=nbCols){
             return GRASS;
@@ -62,11 +72,17 @@ public abstract class Map {
         return map[row][col];
     }
 
+    /**
+     * @return the tile above a position
+     */
     public int getTileAbove(int col, int row){
         row = row - 1;
         return getTile(col, row);
     }
 
+    /**
+     * @return the tile left of a position
+     */
     public int getTileLeft(int col, int row){
         col = col - 1;
         return getTile(col, row);

@@ -4,6 +4,9 @@ package net.gazeplay.games.simon;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A variant of the game "Simon", chosen in the menu.
+ */
 @RequiredArgsConstructor
 public enum SimonGameVariant {
 

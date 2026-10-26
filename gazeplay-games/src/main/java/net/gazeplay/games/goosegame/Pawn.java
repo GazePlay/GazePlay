@@ -11,6 +11,9 @@ import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.components.Position;
 
 
+/**
+ * A pawn of the Goose game: its square, and the turns it must skip (or -1 while in prison).
+ */
 public class Pawn {
 
     @Getter
@@ -43,12 +46,18 @@ public class Pawn {
         this.animationSpeedRatioSource = animationSpeedRatioSource;
     }
 
+    /**
+     * Puts the pawn back on the start square.
+     */
     public void reset(final Square startSquare) {
         this.currentSquare = startSquare;
         pawnDisplay.setX(startSquare.getPawnPosition().getX() - pawnDisplay.getFitWidth() / 2);
         pawnDisplay.setY(startSquare.getPawnPosition().getY() - pawnDisplay.getFitHeight() / 2);
     }
 
+    /**
+     * Moves the pawn by a number of squares, one square at a time; at the end of the board it moves back.
+     */
     public void move(final int nbMovementsLeft) {
         this.lastThrowResult = nbMovementsLeft;
         this.nbMovementsLeft = nbMovementsLeft;
@@ -56,6 +65,9 @@ public class Pawn {
         move();
     }
 
+    /**
+     * Moves the pawn by one square, then the next one when the animation ends, until it stays on its square.
+     */
     private void move() {
         if (nbMovementsLeft == 0) {
             currentSquare.pawnStays(this);
@@ -78,22 +90,37 @@ public class Pawn {
         }
     }
 
+    /**
+     * Makes the pawn skip turns.
+     */
     public void skipTurns(final int nbTurns) {
         turnsLeftToSkip = nbTurns;
     }
 
+    /**
+     * Puts the pawn in prison, until another pawn frees it.
+     */
     public void imprison() {
         turnsLeftToSkip = -1;
     }
 
+    /**
+     * Frees the pawn from prison.
+     */
     public void free() {
         turnsLeftToSkip = 0;
     }
 
+    /**
+     * @return whether the pawn is in prison
+     */
     public boolean isStuck() {
         return turnsLeftToSkip == -1;
     }
 
+    /**
+     * @return whether the pawn skips this turn (one turn less to skip)
+     */
     public boolean isSleeping() {
         if (turnsLeftToSkip > 0) {
             turnsLeftToSkip--;
@@ -103,6 +130,9 @@ public class Pawn {
         }
     }
 
+    /**
+     * Moves the pawn to a square, with an animation.
+     */
     public void moveToSquare(final Square square) {
         currentSquare = square;
         final Position position = square.getPawnPosition();

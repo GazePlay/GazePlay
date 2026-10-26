@@ -22,12 +22,15 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Lists the image resources of the classpath (the images delivered in the jars of GazePlay and of the games).
+ */
 @Slf4j
 public class ResourceFileManager {
 
     /**
-     * @return the images found under the given resource folder (recursively), in every folder and jar of the
-     * classpath, as paths relative to the classpath with "/" separators
+     * @return the images found under the given resource folder (recursively), in every folder and jar of the classpath,
+     *   as paths relative to the classpath with "/" separators
      */
     public static Set<String> getResourcePaths(String path) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -85,6 +88,9 @@ public class ResourceFileManager {
         }
     }
 
+    /**
+     * @return the folders, under the given resource folder, that hold at least one image
+     */
     public static Set<String> getResourceFolders(String path) {
         Set<String> resources = getResourcePaths(path);
         Set<String> result = new HashSet<>();
@@ -96,11 +102,18 @@ public class ResourceFileManager {
         return result;
     }
 
+    /**
+     * @return whether an image resource exists whose path contains {@code location}
+     */
     public static boolean resourceExists(String location) {
         Set<String> resources = getMatchingResources(location);
         return resources.size() > 0;
     }
 
+    /**
+     * @return the image resources of the folder of {@code location} whose path contains its file name; empty for a path
+     *   without folder or file name
+     */
     public static Set<String> getMatchingResources(String location) {
         try {
             Path path = Paths.get(location);
@@ -127,6 +140,9 @@ public class ResourceFileManager {
         }
     }
 
+    /**
+     * @return a regular expression matching the file names with one of the extensions, whatever their case
+     */
     static String createExtensionRegex(Set<String> fileExtensions) {
         StringBuilder validExtensions = new StringBuilder();
         for (Iterator<String> it = fileExtensions.iterator(); it.hasNext(); ) {

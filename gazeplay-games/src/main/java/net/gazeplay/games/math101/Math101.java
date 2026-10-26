@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Games "Math101" (addition, subtraction, multiplication, division, all operations): an operation is asked, and the
+ * player chooses its answer among cards by a fixation. The numbers are in the range of the variant.
+ * <p>
  * Created by EL HUSSEINI Wafaa on 14/03/2019.
  */
-
 @Slf4j
 public class Math101 implements GameLifeCycle {
 
@@ -87,6 +89,10 @@ public class Math101 implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
+    /**
+     * @return an operation drawn at random, with numbers up to {@code maxValue}: the subtractions have a positive
+     *   answer and the divisions an integer one
+     */
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue, ReplayablePseudoRandom randomGenerator) {
 
         // choose numbers
@@ -149,6 +155,9 @@ public class Math101 implements GameLifeCycle {
             .build();
     }
 
+    /**
+     * @return the text of the question
+     */
     private Text createQuestionText(final Formula formula) {
         // Create Question
         final Text question = new Text(formula.createFormulaString());
@@ -157,7 +166,6 @@ public class Math101 implements GameLifeCycle {
         question.setFont(new Font("Grinched", 36));
         question.setFont(new Font("Tsukushi A Round Gothic Bold", 120));
         question.setFill(Color.WHITE);
-        // question.setfill(Color.WHITE);
         new Scene(new Group(question));
         question.applyCss();
 
@@ -224,10 +232,6 @@ public class Math101 implements GameLifeCycle {
         gameContext.onGameStarted(2000);
     }
 
-    private ArrayList<TargetAOI> getTargetAOIList() {
-        return this.targetAOIList;
-    }
-
     @Override
     public void dispose() {
 
@@ -245,6 +249,9 @@ public class Math101 implements GameLifeCycle {
         }
     }
 
+    /**
+     * Adds the background picture, if enabled in the settings.
+     */
     private void initBackground() {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
@@ -269,6 +276,9 @@ public class Math101 implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes all the cards except the right answer.
+     */
     void removeAllIncorrectCards() {
         if (this.currentRoundDetails == null) {
             return;
@@ -286,6 +296,9 @@ public class Math101 implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
+    /**
+     * @return the cards: the right answer on one of them, other different numbers drawn at random on the others
+     */
     private List<Card> createCards(final int winnerCardIndex, final int correctAnswer, final Configuration config, final MathOperation operator) {
 
         final double boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
@@ -346,26 +359,44 @@ public class Math101 implements GameLifeCycle {
         return result;
     }
 
+    /**
+     * @return the height of the box of a card
+     */
     private static double computeCardBoxHeight(final Dimension2D gameDimension2D, final int nbLines) {
         return gameDimension2D.getHeight() / nbLines;
     }
 
+    /**
+     * @return the width of the box of a card
+     */
     private static double computeCardBoxWidth(final Dimension2D gameDimension2D, final int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
     }
 
+    /**
+     * @return the height of a card in its box
+     */
     private static double computeCardHeight(final double boxHeight) {
         return boxHeight / zoom_factor;
     }
 
+    /**
+     * @return the width of a card of a height
+     */
     private static double computeCardWidth(final double cardHeight) {
         return cardHeight * cardRatio;
     }
 
+    /**
+     * @return the horizontal position of a card, centered in its box
+     */
     private static double computePositionX(final double cardBoxWidth, final double cardWidth, final int colIndex) {
         return ((cardBoxWidth - cardWidth) / 2) + (colIndex * cardBoxWidth);
     }
 
+    /**
+     * @return the vertical position of a card in its box
+     */
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
     }

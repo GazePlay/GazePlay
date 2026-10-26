@@ -27,15 +27,27 @@ public class AreaOfInterestRecording {
     @Getter
     private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
 
+    /**
+     * The samples of each area.
+     */
     @Getter
     private final List<List<CoordinatesTracker>> allAOIListTemp = new ArrayList<>();
 
+    /**
+     * For each area, the indexes in {@link #getMovementHistory()} of its first sample and of the sample that closed it.
+     */
     @Getter
     private final List<int[]> startAndEndIdx = new ArrayList<>();
 
+    /**
+     * The rectangle of each area, as a polygon to draw.
+     */
     @Getter
     private final List<Polygon> allAOIListPolygon = new ArrayList<>();
 
+    /**
+     * The corners of the rectangle of each area.
+     */
     @Getter
     private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
 

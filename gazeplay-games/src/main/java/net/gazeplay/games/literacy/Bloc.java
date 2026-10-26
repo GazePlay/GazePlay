@@ -20,7 +20,11 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class Bloc extends Parent {// Rectangle {
+/**
+ * A block of the Letters game, showing a letter over the hidden picture; a fixation on it says the letter, and a block
+ * of the asked letter disappears.
+ */
+public class Bloc extends Parent {
 
     private final double fixationlength;
 
@@ -38,8 +42,6 @@ public class Bloc extends Parent {// Rectangle {
     private final Letters gameInstance;
 
     private final ProgressIndicator progressIndicator;
-
-    private Timeline timelineProgressBar;
 
     final EventHandler<Event> enterEvent;
     final Stats stats;
@@ -100,6 +102,9 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
+    /**
+     * @return the progress indicator of a fixation on the block
+     */
     private ProgressIndicator createProgressIndicator(double width, double height) {
         ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(bloc.getX() + width * 0.25);
@@ -110,6 +115,9 @@ public class Bloc extends Parent {// Rectangle {
         return indicator;
     }
 
+    /**
+     * Removes the block of the asked letter (with an animation); the round is won when all of them are removed.
+     */
     private void onCorrectBlocSelected() {
         double finalZoom = 1.0;
 
@@ -141,7 +149,6 @@ public class Bloc extends Parent {// Rectangle {
 
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(bloc.yProperty(), 0)));
 
-        // currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
         if (gameInstance.currentRoundDetails.remainingCount == 0) {
             currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
                 gameInstance.dispose();
@@ -155,6 +162,9 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline.play();
     }
 
+    /**
+     * @return the sound of a letter, said by a female or male voice drawn at random
+     */
     private String createLetterSoundPath(String currentLanguage, String currentLetter) {
         ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         if (r.nextBoolean()) {
@@ -167,10 +177,16 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
+    /**
+     * Plays a sound.
+     */
     private void playSound(String path) {
         gameContext.getSoundManager().add(path);
     }
 
+    /**
+     * Leaves a block of another letter in place.
+     */
     private void onWrongBlocSelected() {
 
         currentTimeline.stop();
@@ -183,6 +199,9 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
+    /**
+     * @return the handler saying the letter and checking it after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent() {
 
         return e -> {

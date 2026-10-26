@@ -3,6 +3,9 @@ package net.gazeplay.games.trainSwitches;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * A station of a color, where the trains of that color must arrive.
+ */
 public class Station {
 
     private final String color;

@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "colorblend" (see {@code Stats}).
+ */
 public class ColorBlendStats extends Stats {
 
     public ColorBlendStats(Scene scene) {

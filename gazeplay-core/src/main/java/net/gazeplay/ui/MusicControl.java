@@ -30,6 +30,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static net.gazeplay.ui.QuickControl.*;
 
+/**
+ * Controls of the background music and of the volumes, in the side panels of the screens: title of the current music,
+ * play, pause, previous, next, and the volume of the music and of the effects.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class MusicControl {
@@ -96,6 +100,9 @@ public class MusicControl {
 
     private double beforeMutedValue;
 
+    /**
+     * Updates the title and the play/pause button to the current music.
+     */
     public void updateMusicController() {
         setMusicTitle(musicName);
         if (playButton != null && pauseButton != null) {
@@ -111,13 +118,15 @@ public class MusicControl {
         }
     }
 
+    /**
+     * @return the pane of the title and of the buttons of the music
+     */
     public TitledPane createMusicControlPane() {
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
 
-        // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
         musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMusic));
 
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
@@ -197,10 +206,16 @@ public class MusicControl {
         return pane;
     }
 
+    /**
+     * @return a round button with an image of the standard size (the text when the image cannot be loaded)
+     */
     private Button createButton(@NonNull final String altText, @NonNull final String imagePath, @NonNull final String toolTip) {
         return createButton(altText, imagePath, toolTip, ICON_SIZE);
     }
 
+    /**
+     * @return a round button with an image of the given size (the text when the image cannot be loaded)
+     */
     private Button createButton(@NonNull final String altText, @NonNull final String imagePath, @NonNull final String toolTip, final double imageSize) {
         Image image;
         try {
@@ -216,14 +231,6 @@ public class MusicControl {
             button = new Button("", new ImageView(image));
         }
 
-        //button.setStyle(
-        //    "-fx-background-radius: 5em; " +
-        //        "-fx-min-width: 3px; " +
-        //        "-fx-min-height: 3px; " +
-        //        "-fx-max-width: 3px; " +
-        //        "-fx-max-height: 3px;"
-        //);
-
         final double r = imageSize * 1.0d / 2d;
         button.setShape(new Circle(r));
         button.setMinSize(2 * r, 2 * r);
@@ -236,6 +243,9 @@ public class MusicControl {
         return button;
     }
 
+    /**
+     * Gives a button the small size of the mute switches.
+     */
     private void setUpSwitchButton(final Button button) {
         button.setPrefWidth(ICON_SIZE * 0.5d);
         button.setPrefHeight(ICON_SIZE * 0.5d);
@@ -247,6 +257,9 @@ public class MusicControl {
         button.setMaxHeight(ICON_SIZE * 0.5d);
     }
 
+    /**
+     * @return a button muting the volume of a slider, then restoring it
+     */
     Node createMuteSwitchButton(final Slider volumeSlider) {
         final Button muteButton = createButton("mute", SPEAKER_ICON, "mute", ICON_SIZE / 2d);
         final Button unmuteButton = createButton("unmute", MUTE_ICON, "unmute", ICON_SIZE / 2d);
@@ -280,6 +293,9 @@ public class MusicControl {
         return new StackPane(muteButton, unmuteButton);
     }
 
+    /**
+     * @return the slider of the volume of the music, bound to the MUSIC_VOLUME setting
+     */
     private Slider createMediaVolumeSlider(final Configuration config) {
         final Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getMusicVolume());
@@ -290,6 +306,9 @@ public class MusicControl {
         return slider;
     }
 
+    /**
+     * @return the slider of the volume of the effects, bound to the EFFECTS_VOLUME setting
+     */
     private Slider createEffectsVolumeSlider(final Configuration config) {
         final Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getEffectsVolume());
@@ -297,6 +316,9 @@ public class MusicControl {
         return slider;
     }
 
+    /**
+     * @return the pane of the volumes of the music and of the effects
+     */
     public TitledPane createVolumeLevelControlPane(final Configuration config, final Translator translator) {
         final Slider mediaVolumeSlider = createMediaVolumeSlider(config);
         final Node mediaMuteSwitchButton = createMuteSwitchButton(mediaVolumeSlider);
@@ -338,6 +360,9 @@ public class MusicControl {
         return pane;
     }
 
+    /**
+     * Shows the title of the current music.
+     */
     private void setMusicTitle(final MarqueeText musicLabel) {
         if (musicLabel != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();

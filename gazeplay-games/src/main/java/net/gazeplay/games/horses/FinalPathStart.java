@@ -5,6 +5,10 @@ import lombok.Setter;
 import net.gazeplay.components.Position;
 
 
+/**
+ * The square of the track where the pawns of a team leave it for their final path; the pawns of the other teams go on
+ * along the track.
+ */
 public class FinalPathStart extends Square {
 
     private final Horses.TEAMS team;

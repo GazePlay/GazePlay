@@ -9,6 +9,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Properties;
 
+/**
+ * Reads the GazePlay.properties files of the profiles: the default profile (in the GazePlay folder) and the user
+ * profiles (profiles/&lt;id&gt;/GazePlay.properties).
+ */
 @Slf4j
 public class ConfigurationSource {
 
@@ -18,14 +22,28 @@ public class ConfigurationSource {
         return new File(GazePlayDirectories.getUserProfileDirectory(profileId), "GazePlay.properties");
     }
 
+    /**
+     * @return the configuration of the default profile
+     */
     public static Configuration createFromDefaultProfile() {
         return createFromPropertiesResource(defaultProfileConfigFile);
     }
 
+    /**
+     * @return the configuration of a user profile
+     */
     public static Configuration createFromProfile(final String profileId) {
         return createFromPropertiesResource(getSpecificProfileConfigPath(profileId));
     }
 
+    /**
+     * Reads a GazePlay.properties file. A missing file gives the default settings (first launch, new profile); an
+     * unreadable one too, with an error in the log. The keys of older versions are migrated, and the paths that pointed
+     * into the former GazePlay folder are moved to the new one (in memory: the file is only written when a setting
+     * changes).
+     *
+     * @return the configuration, which writes the file back at each change of a setting
+     */
     public static Configuration createFromPropertiesResource(final File propertiesFile) {
         Properties properties;
 

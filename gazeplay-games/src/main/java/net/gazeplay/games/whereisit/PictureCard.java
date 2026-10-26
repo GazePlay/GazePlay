@@ -24,6 +24,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
+/**
+ * A picture of a round of "Where is it?"; a fixation on it chooses it, the right one ending the round.
+ */
 @Slf4j
 @ToString
 @Getter
@@ -96,6 +99,9 @@ class PictureCard extends Group {
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
     }
 
+    /**
+     * @return the filling of the progress indicator during a fixation of the length of the settings
+     */
     private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
         Timeline result = new Timeline();
 
@@ -110,6 +116,9 @@ class PictureCard extends Group {
         return result;
     }
 
+    /**
+     * @return the action at the end of the fixation: the picture is chosen
+     */
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsIt gameInstance) {
         return actionEvent -> {
 
@@ -130,6 +139,10 @@ class PictureCard extends Group {
         };
     }
 
+    /**
+     * Counts a goal (and a right decision for the levels), removes the other pictures and ends the round with the win
+     * animation.
+     */
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
@@ -172,14 +185,15 @@ class PictureCard extends Group {
             gameInstance.dispose();
             gameContext.clear();
             gameInstance.launch();
-            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-            // gameInstance.stats);
 
         }));
 
         fullAnimation.play();
     }
 
+    /**
+     * Shows that the picture is not the right one, and counts a wrong decision for the levels.
+     */
     private void onWrongCardSelected(WhereIsIt gameInstance) {
         //could be a single function?
         gameInstance.updateWrong();
@@ -215,6 +229,9 @@ class PictureCard extends Group {
         fullAnimation.play();
     }
 
+    /**
+     * @return the picture, keeping its proportions, centered in its place
+     */
     private ImageView createImageView(double posX, double posY, double width, double height,
                                       @NonNull String imagePath) {
         final Image image = new Image(imagePath);
@@ -241,6 +258,9 @@ class PictureCard extends Group {
         return result;
     }
 
+    /**
+     * @return the picture, filling its place
+     */
     private ImageView createStretchedImageView(double posX, double posY, double width, double height,
                                                @NonNull String imagePath) {
         final Image image = new Image(imagePath);
@@ -257,6 +277,9 @@ class PictureCard extends Group {
         return result;
     }
 
+    /**
+     * @return the cross shown on a wrong picture
+     */
     private Rectangle createErrorImageRectangle() {
         final Image image = new Image("data/common/images/error.png");
 
@@ -279,6 +302,9 @@ class PictureCard extends Group {
         return errorImageRectangle;
     }
 
+    /**
+     * @return the progress indicator of a fixation on the picture
+     */
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
         double minWidth = parentWidth / 2;
         double minHeight = parentHeight / 2;
@@ -296,6 +322,9 @@ class PictureCard extends Group {
         return result;
     }
 
+    /**
+     * Starts the fixation when the gaze (or the mouse) enters the picture, and stops it when it leaves.
+     */
     private class CustomInputEventHandler implements EventHandler<Event> {
 
         /**
@@ -323,6 +352,9 @@ class PictureCard extends Group {
 
         }
 
+        /**
+         * Starts the fixation on the picture.
+         */
         private void onEntered() {
             log.info("ENTERED {}", imagePath);
 
@@ -335,6 +367,9 @@ class PictureCard extends Group {
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
+        /**
+         * Stops the fixation on the picture.
+         */
         private void onExited() {
             log.info("EXITED {}", imagePath);
 

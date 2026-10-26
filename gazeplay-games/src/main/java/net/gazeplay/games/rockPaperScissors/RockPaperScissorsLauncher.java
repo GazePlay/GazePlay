@@ -13,6 +13,10 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "RockPaperScissors" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class RockPaperScissorsLauncher implements IGameLauncher<RockPaperScissorsStats, EnumGameVariant<RockPaperScissorsGameVariant>> {
 
     @Override

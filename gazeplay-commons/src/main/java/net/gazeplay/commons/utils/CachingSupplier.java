@@ -18,6 +18,11 @@ public class CachingSupplier<T> implements Supplier<T> {
 
     private final Cache<String, T> cache;
 
+    /**
+     * @param supplier           gives the value, at the first call and after each expiry
+     * @param expiryDuration     how long a value is kept
+     * @param expiryDurationUnit unit of {@code expiryDuration}
+     */
     public CachingSupplier(final Supplier<T> supplier, final long expiryDuration, final TimeUnit expiryDurationUnit) {
         this.supplier = supplier;
 

@@ -6,8 +6,9 @@ import java.io.PrintWriter;
  * Heatmap of a round: number of samples per cell of {@code cellSize} x {@code cellSize} pixels of the scene. Rows
  * follow the Y axis and columns the X axis. Each sample increments the cells of a disk around its position.
  * <p>
- * Extracted from {@link Stats} without any change of computation; free of JavaFX so that it can be tested and reused
- * alone. Gaze and mouse samples are added to the same grid (anomaly R1, see MODERNIZATION.md).
+ * Extracted from {@code Stats} without any change of computation; free of JavaFX so that it can be tested and reused
+ * alone. {@code Stats} keeps three grids per round: the gaze, the mouse, and both (one grid for both before format
+ * version 2, anomaly R1).
  */
 public final class HeatMapGrid {
 
@@ -20,6 +21,9 @@ public final class HeatMapGrid {
 
     private final double[][] counts;
 
+    /**
+     * @param cellSize side of a cell, in pixels of the scene (width / 400 since format version 4)
+     */
     HeatMapGrid(final double sceneWidth, final double sceneHeight, final double cellSize) {
         this.cellSize = cellSize;
         this.counts = new double[(int) (sceneHeight / cellSize)][(int) (sceneWidth / cellSize)];

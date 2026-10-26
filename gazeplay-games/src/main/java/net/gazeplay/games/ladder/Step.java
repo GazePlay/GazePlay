@@ -2,6 +2,9 @@ package net.gazeplay.games.ladder;
 
 import javafx.scene.shape.Line;
 
+/**
+ * A segment of the ladder, from a point to another (column, height), with its line on the screen.
+ */
 public class Step {
     public int x1;
     public int y1;

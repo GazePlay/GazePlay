@@ -2,6 +2,10 @@ package net.gazeplay.commons.ui;
 
 import javafx.scene.text.Text;
 
+/**
+ * Text whose content is the translation of keys, updated when the language changes. The parts of the "EnableGazeMouse"
+ * translation separated by ";" are put on separate lines.
+ */
 public class I18NText extends Text implements Translator.LanguageChangeListener {
 
     private final String[] textKeys;
@@ -12,9 +16,7 @@ public class I18NText extends Text implements Translator.LanguageChangeListener 
         super();
         this.textKeys = textKeys;
         this.translator = translator;
-        //
         setText(translator.translate(textKeys));
-        //
         translator.registerLanguageChangeListener(this);
     }
 

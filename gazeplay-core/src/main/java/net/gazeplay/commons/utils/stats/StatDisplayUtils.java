@@ -20,8 +20,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
@@ -33,9 +31,18 @@ import java.util.List;
 
 import static javafx.scene.chart.XYChart.Data;
 
+/**
+ * Builds the parts of the statistics screen: the charts (durations, levels, fixation coordinates), the chi-squared
+ * table, the metrics image, and their zoom (a click enlarges a chart or the image over the screen, another click puts
+ * it back).
+ */
 @Slf4j
 public class StatDisplayUtils {
 
+    /**
+     * @return the home button of the statistics screen, which ends the JVM of the game (the menu is shown again by its
+     *   own JVM)
+     */
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
         EventHandler<Event> homeEvent = e -> closeStatsWindow();
 
@@ -47,11 +54,18 @@ public class StatDisplayUtils {
         return homeButton;
     }
 
+    /**
+     * Ends the JVM of the game.
+     */
     static void closeStatsWindow() {
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * @return the chart of the durations of the rounds (time to reach each goal), with their average and standard
+     *   deviation; a click on it zooms it
+     */
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
 
         final CategoryAxis xAxis = new CategoryAxis();
@@ -124,6 +138,9 @@ public class StatDisplayUtils {
         return lineChart;
     }
 
+    /**
+     * @return the chart of the coordinates of the fixations over time; a click on it zooms it
+     */
     public static AreaChart<Number, Number> buildAreaChart(LinkedList<FixationPoint> points, final Region root) {
 
         final NumberAxis xAxis = new NumberAxis();
@@ -170,6 +187,10 @@ public class StatDisplayUtils {
             return null;
     }
 
+    /**
+     * @return the chart of the levels reached in the rounds, with their average and standard deviation; a click on it
+     *   zooms it
+     */
     public static LineChart<String, Number> buildLevelChart(Stats stats, final Region root) {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -237,6 +258,9 @@ public class StatDisplayUtils {
         return levelChart;
     }
 
+    /**
+     * @return the chi-squared table of the levels (see {@code ChiReport})
+     */
     public static TableView<ChiData> buildTable(Stats stats) {
         TableView<ChiData> table = new TableView<>();
         table.setMaxWidth(1200);
@@ -298,6 +322,10 @@ public class StatDisplayUtils {
         return table;
     }
 
+    /**
+     * @return the metrics image of both sources (screenshot, heatmap and fixation sequences), written by the game
+     *   before the statistics screen is shown; a click on it zooms it
+     */
     public static ImageView buildGazeMetrics(Stats stats, final Region root) {
         ImageView gazeMetrics = new ImageView();
         gazeMetrics.setPreserveRatio(true);
@@ -312,6 +340,9 @@ public class StatDisplayUtils {
         return gazeMetrics;
     }
 
+    /**
+     * Puts a zoomed node back at its place among the children of its parent.
+     */
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
         Parent parent = node.getParent();
 
@@ -321,12 +352,18 @@ public class StatDisplayUtils {
         parentVBox.getChildren().add(originalIndexInParent, node);
     }
 
+    /**
+     * @return the place of a node among the children of its parent
+     */
     private static int getOriginalIndexInParent(Node node) {
         Parent parent = node.getParent();
         VBox parentVBox = (VBox) parent;
         return parentVBox.getChildren().indexOf(node);
     }
 
+    /**
+     * @return a click handler putting a zoomed area chart back, then zooming it again at the next click
+     */
     private static EventHandler<Event> createZoomOutAreaChartEventHandler(XYChart<Number, Number> chart,
                                                                           final Region root, int originalIndexInParent) {
         return new EventHandler<>() {
@@ -344,6 +381,9 @@ public class StatDisplayUtils {
         };
     }
 
+    /**
+     * @return a click handler putting a zoomed line chart back, then zooming it again at the next click
+     */
     private static EventHandler<Event> createZoomOutLineChartEventHandler(XYChart<String, Number> chart,
                                                                           final Region root, int originalIndexInParent) {
         return new EventHandler<>() {
@@ -361,6 +401,9 @@ public class StatDisplayUtils {
         };
     }
 
+    /**
+     * @return a click handler zooming an area chart over the screen
+     */
     private static EventHandler<Event> createZoomInAreaChartEventHandler(XYChart<Number, Number> chart,
                                                                          final Region root) {
         return new EventHandler<>() {
@@ -378,6 +421,9 @@ public class StatDisplayUtils {
         };
     }
 
+    /**
+     * @return a click handler zooming a line chart over the screen
+     */
     private static EventHandler<Event> createZoomInLineChartEventHandler(XYChart<String, Number> chart,
                                                                          final Region root) {
         return new EventHandler<>() {
@@ -395,6 +441,9 @@ public class StatDisplayUtils {
         };
     }
 
+    /**
+     * @return a click handler putting the zoomed metrics image back
+     */
     private static EventHandler<Event> createZoomOutGazeMetricsEventHandler(ImageView gazeMetrics, final Region root,
                                                                             int originalIndexInParent) {
         return new EventHandler<>() {
@@ -412,6 +461,9 @@ public class StatDisplayUtils {
         };
     }
 
+    /**
+     * @return a click handler zooming the metrics image over the screen
+     */
     private static EventHandler<Event> createZoomInGazeMetricsEventHandler(ImageView gazeMetrics, final Region root) {
         return new EventHandler<>() {
             @Override
@@ -428,6 +480,9 @@ public class StatDisplayUtils {
         };
     }
 
+    /**
+     * Removes the zoom of a node.
+     */
     private static void zoomOutAndReset(Node node) {
         node.setScaleX(1);
         node.setScaleY(1);
@@ -435,6 +490,9 @@ public class StatDisplayUtils {
         node.setTranslateY(0);
     }
 
+    /**
+     * Enlarges a node to fill its parent, keeping its proportions if {@code preserveRatio}, and centers it.
+     */
     private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight, boolean preserveRatio) {
         Parent parent = node.getParent();
 
@@ -463,6 +521,9 @@ public class StatDisplayUtils {
         node.setTranslateY(translateY);
     }
 
+    /**
+     * @return a duration in ms as text: days, hours, minutes, seconds and milliseconds, the parts at zero left out
+     */
     public static String convert(long totalTime) {
         Duration duration = Duration.ofMillis(totalTime);
 

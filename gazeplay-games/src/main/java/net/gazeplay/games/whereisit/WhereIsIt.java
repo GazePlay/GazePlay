@@ -37,6 +37,12 @@ import java.util.stream.Collectors;
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
 /**
+ * Games of the "Where is it?" family (animals, colors, flags, letters, numbers, shapes, sounds, the odd one out, or the
+ * pictures of the user): a question is asked, written and said, and the player chooses the matching picture among
+ * several by a fixation. In the variant with levels, the level (1 to 5) chooses the set of pictures shown with the
+ * right one; it goes up or down every 8 goals, depending on whether the answers differ from answers at random
+ * (chi-squared test, shown on the statistics screen).
+ * <p>
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
@@ -147,6 +153,10 @@ public class WhereIsIt implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the animation showing the question (and its pictograms) in the middle of the screen, then moving it away
+     *   before the pictures appear
+     */
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
         questionText = new Text(question);
         questionText.setTranslateY(0);
@@ -221,15 +231,12 @@ public class WhereIsIt implements GameLifeCycle {
         fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            // gameContext.getChildren().remove(questionText);
             gameContext.getChildren().removeAll(pictogramsList);
 
-            //log.debug("Adding {} pictures", currentRoundDetails.getPictureCardList().size());
             if (currentRoundDetails != null) {
                 gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
                 for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-                    //  log.debug("p = {}", p);
                     p.toFront();
                     p.setOpacity(1);
                 }
@@ -244,6 +251,9 @@ public class WhereIsIt implements GameLifeCycle {
         return fullAnimation;
     }
 
+    /**
+     * Plays the sound of the question.
+     */
     void playQuestionSound() {
         String soundResource = currentRoundDetails.getQuestionSoundPath();
         gameContext.getSoundManager().add(soundResource);
@@ -264,6 +274,9 @@ public class WhereIsIt implements GameLifeCycle {
         stats.setTargetAOIList(targetAOIList);
     }
 
+    /**
+     * Removes all the pictures except the right one, and records the end of the round for the areas of interest.
+     */
     void removeAllIncorrectPictureCards() {
         //set the target AOI end time for this round
 
@@ -289,6 +302,9 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
+    /**
+     * @return whether the system recognises a file as an image
+     */
     static boolean fileIsImageFile(File file) {
         try {
             String mimetype = Files.probeContentType(file.toPath());
@@ -301,6 +317,10 @@ public class WhereIsIt implements GameLifeCycle {
         return false;
     }
 
+    /**
+     * @return the pictures of a round, drawn at random from the folders of the game (or of the custom folder), one of
+     *   them the right answer; null when there are not enough folders
+     */
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
                                             final int winnerImageIndexAmongDisplayedImages) {
         final Configuration config = gameContext.getConfiguration();
@@ -406,8 +426,6 @@ public class WhereIsIt implements GameLifeCycle {
                 final String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
-                    // TODO for now the line under is commented to avoid freeze
-                    //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
                     question = MultilinguismFactory.getSingleton().getTranslation("FindTheOddOneOut", config.getLanguage());
                     pictograms = getPictograms(folderName);
                 }
@@ -558,9 +576,11 @@ public class WhereIsIt implements GameLifeCycle {
         return folder.listFiles(file -> !file.getName().startsWith("."));
     }
 
+    /**
+     * Shows an error message when the pictures cannot be found.
+     */
     private void error(final String language) {
         gameContext.clear();
-        // HomeUtils.home(scene, group, choiceBox, null);
 
         final Multilinguism multilinguism = MultilinguismFactory.getSingleton();
 
@@ -572,6 +592,9 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().addAll(error);
     }
 
+    /**
+     * @return the sound of the question of a folder, in the language of the settings
+     */
     private String getPathSound(final String folder, final String language) {
         if (this.gameType == CUSTOMIZED) {
             final Configuration config = gameContext.getConfiguration();
@@ -614,6 +637,9 @@ public class WhereIsIt implements GameLifeCycle {
             + "." + language + ".mp3";
     }
 
+    /**
+     * @return the text of the question of a folder, in the language of the settings
+     */
     private String getQuestionText(final String folder, final String language) {
         log.debug("folder: {}", folder);
         log.debug("language: {}", language);
@@ -634,6 +660,9 @@ public class WhereIsIt implements GameLifeCycle {
         return localMultilinguism.getTranslation(folder, language);
     }
 
+    /**
+     * @return the pictograms illustrating the question of a folder
+     */
     private List<Image> getPictograms(final String folder) {
         final String language = "pictos";
 
@@ -664,59 +693,102 @@ public class WhereIsIt implements GameLifeCycle {
         return imageList;
     }
 
+    /**
+     * Counts a right answer of the current level.
+     */
     public void updateRight() {
         rightDecision++;
     }
 
+    /**
+     * Counts a wrong answer of the current level.
+     */
     public void updateWrong() {
         wrongDecision++;
     }
 
+    /**
+     * @return whether the player chose a wrong picture first in this round
+     */
     public boolean getFirstWrong() {
         return firstWrong;
     }
 
+    /**
+     * Records that the player chose a wrong picture first.
+     */
     public void firstWrongCardSelected() {
         firstWrong = true;
     }
 
+    /**
+     * Records that the player chose the right picture first.
+     */
     public void firstRightCardSelected() {
         firstWrong = false;
     }
 
+    /**
+     * @return n!
+     */
     public int factorial(int n) {
         return n == 0 ? 1 : (n * factorial(n - 1));
     }
 
+    /**
+     * @return the binomial coefficient "k among n"
+     */
     public float compute(int n, int k) {
         return (float) factorial(n) / (factorial(k) * factorial(n - k));
     }
 
+    /**
+     * @return the probability of k successes in n trials of probability p (binomial law)
+     */
     public double binomProba(int n, int k, double p) {
         return compute(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
     }
 
+    /**
+     * @return the chi-squared value of the right ({@code tp}) and wrong ({@code fp}) answers, against answers at random
+     *   (one chance in two), over 8 answers per replay of the level
+     */
     public double chi2Obs(int tp, int fp) {
         double[] probas = {8 * lvlReplays * binomProba(1, 1, 0.5), 8 * lvlReplays * binomProba(1, 0, 0.5)};
 
         return Math.pow(tp - probas[0], 2) / probas[0] + Math.pow(fp - probas[1], 2) / probas[1];
     }
 
-    public boolean chi2decision(int tp, int fp) {
-        final ArrayList<Double> chi2Theoretic = new ArrayList<>();
-        chi2Theoretic.add(3.84);
-        chi2Theoretic.add(2.71);
-        chi2Theoretic.add(1.32);
-        chi2Theoretic.add(0.45);
+    /**
+     * Critical values of the chi-squared law with one degree of freedom, for the risks 5 %, 10 %, 25 % and 50 %.
+     */
+    private static final double[] CHI2_THEORETIC = {3.84, 2.71, 1.32, 0.45};
 
+    /**
+     * @return whether the answers differ from random answers: the chi-squared value reaches the critical value of
+     *   {@link #chi2Threshold(int)}
+     */
+    public boolean chi2decision(int tp, int fp) {
         double chi2Obs = chi2Obs(tp, fp);
 
         log.info("tp = {}, fp = {}", tp, fp);
         log.info("chi2_obs = {}", chi2Obs);
-        log.info("chi2_th = {}, replays = {}", chi2Theoretic, lvlReplays);
+        log.info("chi2_th = {}, replays = {}", chi2Threshold(lvlReplays), lvlReplays);
 
-        int index = lvlReplays > 4 ? lvlReplays - 1 : 3;
+        return chi2Threshold(lvlReplays) <= chi2Obs;
+    }
 
-        return chi2Theoretic.get(index) <= chi2Obs;
+    /**
+     * The critical value used: 0.45 (risk 50 %). From the 5th replay of a level, the index used to be
+     * {@code replays - 1}, outside the 4 values: the game ended with an IndexOutOfBoundsException (a player staying
+     * at level 1 with answers judged random, after 40 right answers). The index is now kept on the last value, the one
+     * of the first 4 replays: the decisions that did not fail are unchanged.
+     *
+     * @param replays number of replays of the current level
+     * @return the critical value the observed chi-squared value is compared with
+     */
+    static double chi2Threshold(final int replays) {
+        final int index = replays > 4 ? replays - 1 : 3;
+        return CHI2_THEORETIC[Math.min(index, CHI2_THEORETIC.length - 1)];
     }
 }

@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheShapeGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheShapeGameLauncher;
 
+/**
+ * Declares the game "WhereIsTheShape" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class WhereIsTheShapeGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

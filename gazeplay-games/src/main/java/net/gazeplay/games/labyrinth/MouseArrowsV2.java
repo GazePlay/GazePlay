@@ -6,12 +6,11 @@ import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-/*
+/**
  * MouseArrowsV2 :
  * Arrows are at around the mouse
  * They move with the mouse.
  */
-
 public class MouseArrowsV2 extends MouseArrows {
 
     public MouseArrowsV2(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,

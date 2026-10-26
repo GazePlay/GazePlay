@@ -24,12 +24,17 @@ import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
-import java.util.Random;
 
+/**
+ * Game "Connect4": two players drop tokens in a grid of 7 columns and 6 rows, choosing a column by a fixation; the
+ * first to align four tokens wins. In the variants against the computer, it plays a random column
+ * (drawn with the random generator of the game: the same in a replay).
+ */
 public class Connect4 implements GameLifeCycle {
 
     private final Stats stats;
@@ -61,14 +66,15 @@ public class Connect4 implements GameLifeCycle {
     // Game management
     private IntegerProperty currentPlayer;
 
-    private Random r;
+    private final ReplayablePseudoRandom randomGenerator;
 
     Connect4(final IGameContext gameContext, final Stats stats, Connect4GameVariant gameVariant){
         this.stats = stats;
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
         topRectangles = new ArrayList<>();
-        r = new Random();
+        randomGenerator = new ReplayablePseudoRandom();
+        stats.setGameSeed(randomGenerator.getSeed());
         if(gameVariant==Connect4GameVariant.PLAYERSTART){
             currentPlayer = new SimpleIntegerProperty(1);
         }else{
@@ -82,7 +88,7 @@ public class Connect4 implements GameLifeCycle {
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
         topRectangles = new ArrayList<>();
-        r = new Random();
+        randomGenerator = new ReplayablePseudoRandom(gameSeed);
         if(gameVariant==Connect4GameVariant.PLAYERSTART){
             currentPlayer = new SimpleIntegerProperty(1);
         }else{
@@ -212,6 +218,9 @@ public class Connect4 implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
+    /**
+     * Computes the size of the cells for the size of the game area.
+     */
     public void updateSize(){
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         cellSize = Math.min(dimension2D.getWidth()*0.8/nbColumns, dimension2D.getHeight()*0.85/nbRows);
@@ -221,6 +230,9 @@ public class Connect4 implements GameLifeCycle {
         gridYOffset = dimension2D.getHeight()-gridHeight;
     }
 
+    /**
+     * Draws the grid again for the size of the game area.
+     */
     private void resize(){
         // Clear grid
         centerPane.getChildren().clear();
@@ -243,6 +255,9 @@ public class Connect4 implements GameLifeCycle {
         }
     }
 
+    /**
+     * Empties the grid.
+     */
     public void clearGrid(){
         for(int i = 0; i<nbColumns; i++){
             for(int j = 0; j<nbRows; j++){
@@ -251,6 +266,9 @@ public class Connect4 implements GameLifeCycle {
         }
     }
 
+    /**
+     * Draws the tokens of the grid.
+     */
     public void drawTokens(){
         Color color;
         for(int i = 0; i<nbColumns; i++){
@@ -278,6 +296,10 @@ public class Connect4 implements GameLifeCycle {
         }
     }
 
+    /**
+     * Drops a token of the current player in a column, if it is not full, then checks the end of the game and changes
+     * the player.
+     */
     public void putToken(int column){
         int j = nbRows-1;
         while(j>=0){
@@ -323,11 +345,17 @@ public class Connect4 implements GameLifeCycle {
 
     }
 
+    /**
+     * Makes the computer play a random column among those that are not full.
+     */
     private void playIA(){
         ArrayList<Integer> plays = getPossiblePlays();
-        putToken(plays.get(r.nextInt(plays.size())));
+        putToken(plays.get(randomGenerator.nextInt(plays.size())));
     }
 
+    /**
+     * @return the columns that are not full
+     */
     private ArrayList<Integer> getPossiblePlays(){
         ArrayList<Integer> plays = new ArrayList<>();
         for(int i = 0; i<nbColumns; i++) {
@@ -362,6 +390,9 @@ public class Connect4 implements GameLifeCycle {
         return 0;
     }
 
+    /**
+     * Starts a new game.
+     */
     private void restart(){
         gameContext.endWinTransition();
         clearGrid();

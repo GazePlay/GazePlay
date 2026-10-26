@@ -12,8 +12,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+/**
+ * Menu bar shown at the top of the main screens.
+ */
 public class MenuUtils {
 
+    /**
+     * @return a menu bar with the version of GazePlay Learning (opening the licence) and the current profile
+     */
     public static MenuBar buildMenuBar() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         String licenseFileAsString = loadLicenseFileAsString(classLoader);

@@ -21,6 +21,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Game "SoundsOfLife": a scene of the variant (farm, jungle, savanna, sea) shows pictures that play their sounds after
+ * a fixation; there is nothing to win, the player explores.
+ */
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
 
@@ -48,6 +52,9 @@ public class SoundsOfLife implements GameLifeCycle {
         }
     }
 
+    /**
+     * Places the background picture of the scene, scaled for the game area.
+     */
     private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
         background.setFitWidth(background.getImage().getWidth() * scaleRatio);
         background.setFitHeight(background.getImage().getHeight() * scaleRatio);

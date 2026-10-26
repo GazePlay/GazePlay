@@ -5,6 +5,9 @@ import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
+/**
+ * Tower shooting bullets at the enemies in its range.
+ */
 public class BasicTower extends Tower {
 
     public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";

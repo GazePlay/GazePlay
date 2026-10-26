@@ -29,6 +29,8 @@ import net.gazeplay.components.Position;
 import java.util.ArrayList;
 
 /**
+ * A target of the Divisor game, bouncing on the borders of the game area.
+ *
  * @author vincent
  */
 @Slf4j
@@ -94,6 +96,9 @@ class Target extends Parent {
         });
     }
 
+    /**
+     * Moves the target every 10 ms, bouncing on the borders.
+     */
     private void move() {
         timeline = new Timeline(new KeyFrame(Duration.millis(10),
             new EventHandler<>() {
@@ -128,6 +133,9 @@ class Target extends Parent {
 
     }
 
+    /**
+     * Counts a goal and bursts the target, into two smaller ones while the last level is not reached.
+     */
     public void enter() {
         stats.incrementNumberOfGoalsReached();
 
@@ -146,6 +154,9 @@ class Target extends Parent {
         }
     }
 
+    /**
+     * Shows particles flying from where the target burst.
+     */
     private void explodeAnimation(final double x, final double y) {
         final double particleRadius = 2;
         final ArrayList<Circle> particles = new ArrayList<>();
@@ -199,6 +210,9 @@ class Target extends Parent {
         }
     }
 
+    /**
+     * Adds the two smaller targets of the next level.
+     */
     private void createChildren(final double x, double y) {
         double tempX = x;
         double tempY = y;
@@ -213,6 +227,9 @@ class Target extends Parent {
         }
     }
 
+    /**
+     * @return a random speed, from 4 to 6 pixels, in a random direction
+     */
     private int randomDirection() {
         int x = randomGenerator.nextInt(3) + 4;
         if (randomGenerator.nextInt(2) >= 1) {
@@ -221,6 +238,9 @@ class Target extends Parent {
         return x;
     }
 
+    /**
+     * @return a random position near a start position, inside the game area
+     */
     private Position randomPosWithRange(final Position start, final double range, final double radius) {
         final double minX = (start.getX() - range);
         final double minY = (start.getY() - range);
@@ -240,6 +260,9 @@ class Target extends Parent {
         return new Position((int) positionX, (int) positionY);
     }
 
+    /**
+     * Bursts the target when the gaze or the mouse enters it.
+     */
     private void addEvent() {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);

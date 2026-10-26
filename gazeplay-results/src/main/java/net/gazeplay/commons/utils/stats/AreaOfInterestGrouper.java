@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Groups the samples kept for the areas of interest into areas, free of JavaFX. Extracted from {@link Stats} without any
+ * Groups the samples kept for the areas of interest into areas, free of JavaFX. Extracted from {@code Stats} without any
  * change (behaviour pinned by {@code StatsRecordingCharacterizationTest}):
  * <ul>
  * <li>a sample closer than {@link #GROUP_DISTANCE} px to the previous one, more than {@link #MIN_INTERVAL} ms later,
@@ -17,7 +17,7 @@ import java.util.Optional;
  * jump when the group was empty;</li>
  * <li>in both cases, and for a shorter jump, a new group starts.</li>
  * </ul>
- * Which samples are kept (one per change of position for the gaze, see R13 for the mouse) is decided by {@link Stats}.
+ * Which samples are kept (one per change of position for the gaze, see R13 for the mouse) is decided by {@code Stats}.
  */
 final class AreaOfInterestGrouper {
 
@@ -71,6 +71,10 @@ final class AreaOfInterestGrouper {
         return Optional.ofNullable(area);
     }
 
+    /**
+     * @param spread 0 for the rectangle around all the samples, otherwise the half side of a square around the first
+     *   sample
+     */
     private static Double[] rectangleAround(final List<CoordinatesTracker> samples, final int spread) {
         final double[] xs = new double[samples.size()];
         final double[] ys = new double[samples.size()];

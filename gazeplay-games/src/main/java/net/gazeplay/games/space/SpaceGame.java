@@ -36,6 +36,10 @@ import net.gazeplay.components.ProgressButton;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Game "SpaceGame": the spaceship follows the gaze (or the mouse) along the bottom of the screen and shoots on its own
+ * at the aliens and bosses; the game ends when the ship is hit. The best scores are kept (see {@code HighScores}).
+ */
 @Slf4j
 public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
@@ -422,6 +426,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     }
 
+    /**
+     * Removes all the elements of the game.
+     */
     private void removeAll() {
 
         bulletListRec.clear();
@@ -431,11 +438,17 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         middleLayer.getChildren().remove(spaceship);
     }
 
+    /**
+     * Places the ship for the size of the game area.
+     */
     private void updateShipPosition() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         spaceship.setY(6 * dimension2D.getHeight() / 7);
     }
 
+    /**
+     * Moves the ship towards the gaze.
+     */
     private void shipMovement() {
         final double distance = Math.floor(Math.abs(gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2)));
         final double direction = distance <= 5 ? 0
@@ -443,6 +456,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         shipSpeed(distance, direction);
     }
 
+    /**
+     * Sets the speed of the ship: the farther the gaze, the faster.
+     */
     private void shipSpeed(double distance, double direction) {
         final double maxSpeed = 0.7;
         if (distance > maxSpeed) {
@@ -452,6 +468,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
     }
 
+    /**
+     * Moves the aliens down and up in turn.
+     */
     private void verticalAlienMovement() {
         alienValue += 1;
         if (alienValue == 300) {
@@ -471,6 +490,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
     }
 
+    /**
+     * Sends new aliens, up to 10 at a time.
+     */
     private void spawnAlien() {
         while (aliens.size() < 10) {
             displayAlien();
@@ -482,16 +504,27 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     }
 
+    /**
+     * @return the speed of the game, from the animation speed of the settings
+     */
     private double getGameSpeed() {
         final double speed = gameContext.getAnimationSpeedRatioSource().getDurationRatio();
         return Math.max(speed, 1.0);
     }
 
+    /**
+     * Saves the score among the best ones.
+     *
+     * @return the best score
+     */
     private int getsetHighscore(final int score) {
         return HighScores.addAndGetBest(
             new File(new File(GazePlayDirectories.getUserStatsFolder(configuration.getUserName()), "space-game"), "highscore.dat"), score);
     }
 
+    /**
+     * Ends the game when the ship is hit: shows the score and the best score.
+     */
     private void death() {
         this.stop();
 
@@ -511,6 +544,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         stats.addRoundDuration();
     }
 
+    /**
+     * Computes the score: one point per alien, 125 per boss.
+     */
     private void updateScore() {
         score = aliensKilled.size() + bossKilled.size() * 125;
         stats.incrementNumberOfGoalsReached(score);
@@ -519,6 +555,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         gameContext.updateScore(stats, this);
     }
 
+    /**
+     * Adds an alien.
+     */
     private void createAlien(final double x, final double y) {
         final Alien b;
         b = new Alien(x, y, alienWidth, alienHeight, null, dimension2D.getWidth(), getGameSpeed(), 0, 0, 0, 0);
@@ -526,17 +565,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         aliens.add(b);
         b.setFill(new ImagePattern(alienImage.pickRandomImage()));
         backgroundLayer.getChildren().add(b);
-        //code for transition when biboule appear, bug sometimes when the game restart
-        /*
-        final FadeTransition bibouleAppear = new FadeTransition(Duration.seconds(1), b);
-        bibouleAppear.setInterpolator(Interpolator.LINEAR);
-        bibouleAppear.setCycleCount(1);
-        bibouleAppear.setFromValue(0);
-        bibouleAppear.setToValue(1);
-        bibouleAppear.play();
-        */
     }
 
+    /**
+     * Adds a boss.
+     */
     private void createBoss(final double x, final double y) {
         final Boss boss;
         boss = new Boss(x, y, bossWidth, bossHeight, null, dimension2D.getWidth(), getGameSpeed(), 0, 0, 0, 0);
@@ -551,6 +584,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bossAppear.play();
     }
 
+    /**
+     * Makes a boss appear at a random place.
+     */
     private void displayBoss() {
         final double bossX;
         final double bossY;
@@ -559,6 +595,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         createBoss(bossX, bossY);
     }
 
+    /**
+     * Makes an alien appear at a random place.
+     */
     private void displayAlien() {
         final double newBibX;
         final double newBibY;
@@ -567,6 +606,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         createAlien(newBibX, newBibY);
     }
 
+    /**
+     * Moves the elements of the game.
+     */
     private void updatePosition() {
         final Point2D p1 = new Point2D(200, 200);
         final Point2D p2 = new Point2D(300, 300);
@@ -574,6 +616,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         aliensPos.add(p2);
     }
 
+    /**
+     * Shoots the bullets of the ship at regular intervals, and checks whether they hit an alien or a boss.
+     */
     private void computeBulletPlayer() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - startTime >= 500) {
@@ -605,8 +650,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.setOnFinished(event -> {
                 bulletListRec.remove(bulletRec);
                 middleLayer.getChildren().remove(bulletRec);
-                //this fonction is usefull to remove freezes from bullets. He is commented because of gradle dislike this fonction so we can't merge with this.
-                //System.gc();
             });
 
             bulletTransition.play();
@@ -725,6 +768,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         updateShipPosition();
     }
 
+    /**
+     * Makes the aliens shoot from time to time, and checks whether their bullets hit the ship.
+     */
     private void computeBulletAlien() {
         for (final Rectangle b : aliens) {
             final int alienShoot = random.nextInt(1500);
@@ -744,7 +790,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.setOnFinished(event -> {
                     bulletAlienListRec.remove(bulletAlienRec);
                     backgroundLayer.getChildren().remove(bulletAlienRec);
-                    //System.gc();
                 });
                 timeline.play();
 
@@ -776,6 +821,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
     }
 
+    /**
+     * Makes the bosses shoot, and checks whether their bullets hit the ship.
+     */
     private void computeBulletBoss() {
         for (final Rectangle b : bosses) {
             final int bossShoot = random.nextInt(240);
@@ -795,7 +843,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.setOnFinished(event -> {
                     bulletBossListRec.remove(bulletBossRec);
                     backgroundLayer.getChildren().remove(bulletBossRec);
-                    //System.gc();
                 });
                 timeline.play();
 

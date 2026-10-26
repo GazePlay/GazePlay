@@ -8,6 +8,9 @@ import net.gazeplay.components.Portrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
 /**
+ * Game "Ninja": a target (a portrait of the user) moves across the screen, in the way of the variant (random, back and
+ * forth, dynamic...); when the gaze (or the mouse) enters it, it is cut into small balls and comes back elsewhere.
+ * <p>
  * Created by schwab on 26/12/2016.
  */
 public class Ninja implements GameLifeCycle {

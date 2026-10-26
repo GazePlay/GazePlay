@@ -10,6 +10,9 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Pet" (see {@code SelectionGamesStats}).
+ */
 public class PetStats extends SelectionGamesStats {
 
     public PetStats(Scene scene) {

@@ -7,11 +7,10 @@ import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-/*
+/**
  * MouseArrowsV3 :
  * Arrows are around the labyrinth.
  */
-
 public class MouseArrowsV3 extends MouseArrows {
 
     public MouseArrowsV3(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,

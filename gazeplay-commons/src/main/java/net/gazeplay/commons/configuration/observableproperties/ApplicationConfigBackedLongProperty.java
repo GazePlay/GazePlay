@@ -5,6 +5,9 @@ import net.gazeplay.commons.configuration.ApplicationConfig;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * A long integer setting (e.g. a time in milliseconds), stored under a key of GazePlay.properties.
+ */
 public class ApplicationConfigBackedLongProperty extends PropertiesLongProperty {
 
     private final ApplicationConfig properties;

@@ -42,6 +42,11 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The areas of interest screen, opened from the statistics: the screenshot of the game with the areas where the gaze
+ * (or the mouse) stayed, each with its information box (time to first fixation, time spent, number of samples), and a
+ * replay of the recorded positions at several speeds. One source at a time (R13), the gaze by default.
+ */
 @Slf4j
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
@@ -101,6 +106,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private double highestFixationTime = 0;
     private int intereatorAOI = 0;
 
+    /**
+     * Builds the screen for one source; the other one can be shown with its button.
+     */
     public AreaOfInterest(final GazePlay gazePlay, final Stats stats, final Source shownSource) {
         super(gazePlay, new BorderPane());
 
@@ -149,7 +157,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             for (final AreaOfInterestProps areaOfInterestProps : allAOIList) {
 
                 final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
-                final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
                 double maxScore = 0;
                 for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
 
@@ -268,6 +275,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
+    /**
+     * @return the buttons of the replay of the positions (normal speed and slowed down 5, 8 or 10 times)
+     */
     HBox createButtonBox() {
         final Button slowBtn10 = new Button("10X Slow ");
         final Button slowBtn8 = new Button("8X Slow ");
@@ -330,6 +340,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return sourceBox;
     }
 
+    /**
+     * Stops the replay and shows the areas of another source.
+     */
     private void showSource(final Source shown) {
         playing = false;
         if (player != null) {
@@ -344,6 +357,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
+    /**
+     * Builds the areas of the shown source from its samples (nothing for a source without sample).
+     */
     private void dataTreatment() {
         // treating the data, post processing to take performance constraint of during the data collection
         if (movementHistory.isEmpty()) {
@@ -359,6 +375,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Replays the recorded positions, slowed down by {@code progressRate}; the areas appear as the positions reach
+     * them.
+     */
     private void playButtonPressed(final double progressRate) {
         if (!playing && !movementHistory.isEmpty()) {
             playing = true;
@@ -383,6 +403,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Draws the position of a sample at its time, then the next one: a dot that disappears after 2 seconds.
+     */
     private void plotMovement(final int movementIndex, final Pane graphicsPane, final double progressRate) {
         new Timer().schedule(new TimerTask() {
             @Override
@@ -440,12 +463,18 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
     }
 
+    /**
+     * Draws all the areas.
+     */
     void addAllInitialArea() {
         for (final InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
     }
 
+    /**
+     * Shows the area that a sample of the replay enters, with its information box.
+     */
     private void calculateAreaOfInterest(final int index, final double startTime) {
         int i;
         for (i = 0; i < allAOIListTemp.size(); i++) {
@@ -539,34 +568,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Calculates a rectangle that can enclose all the points provided, with
-     * a set padding around the points.
-     *
-     * @param point2D The points to enclose.
-     * @return Double array containing all X and Y values of each rectangle point in
-     * sequence.
-     */
-    /**
-     * Determines the orientation of an ordered triplet of 2D points on a plane.
-     * The points provided can be counterclockwise, clockwise and collinear.
-     *
-     * @param p1 First Point
-     * @param p2 Second Point
-     * @param p3 Third Point
-     * @return Will return 0 if the points are collinear, 1 if the points are clockwise,
-     * or -1 if the points are counterclockwise.
-     */
-    /**
-     * Implements Jarvis's Algorithm to calculate the points on a Convex Hull.
-     * It starts by calculating the left-most point and will loop through all
-     * the points until it reaches this point again, finding the most convex points.
-     *
-     * @param points The array of Point2D objects to calculate the hull around.
-     * @return Double array containing all X and Y values of each hull point in
-     * sequence.
-     * @see Point2D
-     */
-    /**
      * Creates a rectangle surrounding each Area Of Interest in the provided
      * list. The rectangle is added as a transparent Polygon to each TargetAOI.
      *
@@ -644,6 +645,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return infoBox;
     }
 
+    /**
+     * @return the areas, the overlapping ones merged into one polygon
+     */
     private ArrayList<InitialAreaOfInterestProps> computeConnectedArea() {
         for (int i = 0; i < allAOIList.size(); i++) {
             AreaOfInterestProps currentAOI = allAOIList.get(i);

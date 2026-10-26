@@ -24,6 +24,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * A card of the Math101 games, showing a possible answer; a fixation on it chooses the answer.
+ */
 @Slf4j
 public class Card extends Parent {
 
@@ -78,10 +81,6 @@ public class Card extends Parent {
         this.card.setFill(Color.BEIGE);
         this.card.setFill(new ImagePattern(new Image("data/math101/images/note2.png"), 0, 0, 1, 1, true));
 
-        // Setting the height and width of the arc
-        // this.card.setArcWidth(30.0);
-        // this.card.setArcHeight(20.0);
-
         final DropShadow e = new DropShadow();
         e.setColor(Color.GRAY);
         e.setWidth(10);
@@ -135,6 +134,9 @@ public class Card extends Parent {
 
     }
 
+    /**
+     * @return the progress indicator of a fixation on the card, of the size of the settings
+     */
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
         double finalWidth = width * 0.9 * gameContext.getConfiguration().getProgressBarSize() / 100;
         double finalHeight = height * 0.9 * gameContext.getConfiguration().getProgressBarSize() / 100;
@@ -147,6 +149,9 @@ public class Card extends Parent {
         return indicator;
     }
 
+    /**
+     * Counts a goal, removes the other cards and ends the round with the win animation.
+     */
     private void onCorrectCardSelected() {
         stats.incrementNumberOfGoalsReached();
 
@@ -183,6 +188,9 @@ public class Card extends Parent {
         currentTimeline.play();
     }
 
+    /**
+     * Counts a mistake.
+     */
     private void onWrongCardSelected() {
         stats.incrementNumberOfMistakes();
 
@@ -197,6 +205,9 @@ public class Card extends Parent {
         text.setOpacity(0);
     }
 
+    /**
+     * @return the handler choosing the answer after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent() {
 
         return e -> {
@@ -277,6 +288,9 @@ public class Card extends Parent {
         };
     }
 
+    /**
+     * Applies the size and color of the progress indicator chosen in the settings.
+     */
     private void verifyProgressBarValue() {
         double finalSize = initWidth * 0.9 * gameContext.getConfiguration().getProgressBarSize() / 100;
         progressIndicator.setTranslateX(card.getX() + (initWidth - finalSize) * 1.15 / 2);

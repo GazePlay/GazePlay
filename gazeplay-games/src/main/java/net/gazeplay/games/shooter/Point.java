@@ -1,5 +1,8 @@
 package net.gazeplay.games.shooter;
 
+/**
+ * A point of the screen.
+ */
 public class Point {
 
     double x;

@@ -4,9 +4,10 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.rushhour.RushHourGameLauncher;
-import net.gazeplay.games.rushhour.RushHourGameVariant;
-
+/**
+ * Declares the game "Simon" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class SimonGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

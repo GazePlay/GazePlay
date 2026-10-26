@@ -7,6 +7,9 @@ import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
+/**
+ * Tower shooting slow missiles that explode, damaging the enemies around the impact.
+ */
 public class MissileTower extends Tower {
 
     public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";

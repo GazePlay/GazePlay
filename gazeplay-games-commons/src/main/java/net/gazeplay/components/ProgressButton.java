@@ -17,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+/**
+ * A round button selected by a fixation: a progress indicator fills during the fixation length of the settings while
+ * the gaze (or the mouse) stays on it, then the button's action runs. An image can be put on the button.
+ */
 @Slf4j
 public class ProgressButton extends StackPane {
 
@@ -44,6 +48,9 @@ public class ProgressButton extends StackPane {
         this.getChildren().addAll(button, image, indicator);
     }
 
+    /**
+     * Makes the button visible and selectable.
+     */
     public void active() {
         inuse = true;
         this.setOpacity(1);
@@ -52,6 +59,9 @@ public class ProgressButton extends StackPane {
         this.button.setDisable(false);
     }
 
+    /**
+     * Hides and disables the button if {@code b}, else makes it visible and selectable.
+     */
     public void disable(final boolean b) {
         if (b) {
             disable();
@@ -60,6 +70,9 @@ public class ProgressButton extends StackPane {
         }
     }
 
+    /**
+     * Hides the button and makes it unselectable.
+     */
     public void disable() {
         inuse = false;
         this.setOpacity(0);
@@ -67,21 +80,33 @@ public class ProgressButton extends StackPane {
         this.button.setDisable(true);
     }
 
+    /**
+     * Applies the color of the progress indicator chosen in the settings.
+     */
     public void styleProgressIndicator(IGameContext gameContext){
         indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
     }
 
+    /**
+     * Applies the size of the progress indicator chosen in the settings (percentage of the size of the button).
+     */
     public void sizeProgressIndicator(IGameContext gameContext){
         indicator.setMinHeight(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
         indicator.setMinWidth(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
     }
 
+    /**
+     * Replaces the image shown on the button.
+     */
     public void setImage(final ImageView img) {
         image = img;
         image.setMouseTransparent(true);
         this.getChildren().set(1, image);
     }
 
+    /**
+     * Makes the button visible and listens to the gaze and the mouse entering and leaving it.
+     */
     public void active2() {
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterButtonHandler);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitButtonHandler);
@@ -94,6 +119,9 @@ public class ProgressButton extends StackPane {
         this.addEventFilter(MouseEvent.MOUSE_EXITED, exitButtonHandler);
     }
 
+    /**
+     * Creates the progress indicator, sized with the button (and the image too when {@code imageResized}).
+     */
     public void init(boolean imageResized) {
         indicator = new ProgressIndicator(0);
         indicator.setMouseTransparent(true);
@@ -108,6 +136,13 @@ public class ProgressButton extends StackPane {
         });
     }
 
+    /**
+     * Sets the action of the button, run after a fixation of the length of the settings (read at each fixation, so a
+     * change during the game applies), with a delay of 300 ms before the indicator starts.
+     *
+     * @param enterEvent the action of the button, may be null
+     * @return the progress indicator
+     */
     public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent, final IGameContext gameContext) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);

@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Bottle" (see {@code Stats}).
+ */
 public class BottleGameStats extends Stats {
 
     public BottleGameStats(Scene gameContextScene) {

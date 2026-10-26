@@ -1,8 +1,9 @@
 package net.gazeplay.games.opinions;
 
 import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
-import net.gazeplay.games.cakes.CakeGameVariant;
-
+/**
+ * Gives the variants of the game "Opinions" proposed in the menu.
+ */
 public class OpinionsGameVariantGenerator extends EnumGameVariantGenerator<OpinionsGameVariant> {
 
     public OpinionsGameVariantGenerator() {

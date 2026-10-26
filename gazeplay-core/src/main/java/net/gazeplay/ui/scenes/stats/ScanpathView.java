@@ -30,11 +30,18 @@ import net.gazeplay.ui.GraphicalContext;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The scan path screen, opened from the statistics: the metrics image of the game with the fixation sequences drawn on
+ * it as numbered circles; hovering a circle shows the time and duration of its fixation.
+ */
 @Slf4j
 public class ScanpathView extends GraphicalContext<BorderPane> {
 
     private Color[] colors = {Color.RED, Color.BLUE};
 
+    /**
+     * @param continueButton the button going on with the game, or null
+     */
     public ScanpathView(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
         super(gazePlay, new BorderPane());
 
@@ -56,6 +63,9 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
         root.setBottom(bottom);
     }
 
+    /**
+     * @return the image with the circles of the gaze and mouse sequences
+     */
     private Pane buildCenterPane(Stats stats) {
         final Pane center = new Pane();
 
@@ -102,6 +112,9 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
         return center;
     }
 
+    /**
+     * @return the circles of a fixation sequence, sized by the duration of their fixation
+     */
     private List<Circle> initFixationSequenceCircleList(Stats stats, Pane center, int fixationIndex) {
         final List<Circle> points = new LinkedList<>();
 

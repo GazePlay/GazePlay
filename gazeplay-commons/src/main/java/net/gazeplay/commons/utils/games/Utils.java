@@ -3,19 +3,17 @@ package net.gazeplay.commons.utils.games;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 /**
+ * Access to the files folder of GazePlay (FILE_DIR setting) and to a few system facilities.
+ * <p>
  * Created by schwab on 23/12/2016.
  */
 @Slf4j
@@ -27,7 +25,7 @@ public class Utils {
      * @return The InputStream of the resource
      */
     public static InputStream getInputStream(final String resource) {
-        log.debug("Try to play " + resource);
+        log.debug("Opening resource {}", resource);
         return ClassLoader.getSystemResourceAsStream(resource);
     }
 
@@ -58,6 +56,10 @@ public class Utils {
         return new File(filesDirectory, "images");
     }
 
+    /**
+     * @return a subdirectory of the images of the files folder (images/&lt;subdirectoryName&gt;), created if missing;
+     *   the users put their own images there (e.g. "portraits")
+     */
     public static File getImagesSubdirectory(final String subdirectoryName) {
         final File baseImagesDirectory = getBaseImagesDirectory();
         createFolder(baseImagesDirectory, subdirectoryName);
@@ -66,6 +68,9 @@ public class Utils {
         return new File(baseImagesDirectory, subdirectoryName);
     }
 
+    /**
+     * Creates the images directory and one of its subdirectories, if missing.
+     */
     public static void createFolder(File baseImagesDirectory, String subdirectoryName){
         if (baseImagesDirectory.mkdirs()){
             log.info("Folder images created !");
@@ -81,6 +86,9 @@ public class Utils {
         // files/evals, for the evaluations of the removed BERA edition, is no longer created
     }
 
+    /**
+     * @return the path with "/" instead of "\"
+     */
     public static String convertWindowsPath(String path) {
         String windowsPath = path;
         windowsPath = windowsPath.replace("\\", "/");
@@ -95,6 +103,9 @@ public class Utils {
         return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
+    /**
+     * Logs all the system properties of the JVM (one line each), to help with the problems reported by users.
+     */
     public static void logSystemProperties() {
         final Enumeration<?> propertyNames = System.getProperties().propertyNames();
         while (propertyNames.hasMoreElements()) {

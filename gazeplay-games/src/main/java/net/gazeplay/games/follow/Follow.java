@@ -22,6 +22,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
+/**
+ * Game "Follow": the player character follows the gaze (or the mouse) across a maze of walls, to pick up the coins, or
+ * the keys opening the doors, of the map of the variant.
+ */
 @Slf4j
 public class Follow implements GameLifeCycle {
 
@@ -177,6 +181,9 @@ public class Follow implements GameLifeCycle {
         listWall.clear();
     }
 
+    /**
+     * Moves the player towards the gaze every 5 ms, at its speed, without going through the walls.
+     */
     private void followthegaze() {
         PauseTransition next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
@@ -251,17 +258,26 @@ public class Follow implements GameLifeCycle {
         next.play();
     }
 
+    /**
+     * Places the pointer at the position of the gaze.
+     */
     private void position() {
         gaze.setX(rx);
         gaze.setY(ry);
     }
 
+    /**
+     * Starts moving the player after a second.
+     */
     private void startafterdelay() {
         PauseTransition wait = new PauseTransition(Duration.millis(1000));
         wait.setOnFinished(waitevent -> followthegaze());
         wait.play();
     }
 
+    /**
+     * @return whether the player, at a position, would overlap a wall
+     */
     private boolean isInWall(Rectangle wall, double x, double y, double size) {
         double wx = wall.getX() + size / 2;
         double wy = wall.getY() + size / 2;
@@ -271,6 +287,9 @@ public class Follow implements GameLifeCycle {
         return (x + size > wx) && (y + size > wy) && (x < wx + ww) && (y < wy + wh);
     }
 
+    /**
+     * Ends the game: stops the statistics and plays the win animation.
+     */
     private void win() {
         stats.stop();
 
@@ -290,6 +309,9 @@ public class Follow implements GameLifeCycle {
         });
     }
 
+    /**
+     * Runs the action of the items the player reaches, and removes those used.
+     */
     private void checkEI() {
         ArrayList<EventItem> remove = new ArrayList<>();
         for (EventItem eI : listEI) {
@@ -304,24 +326,36 @@ public class Follow implements GameLifeCycle {
         listEI.removeAll(remove);
     }
 
+    /**
+     * Wins the game once the score reaches the goal.
+     */
     private void multigoals() {
         if (score >= scoretoreach) {
             win();
         }
     }
 
+    /**
+     * Creates the player character.
+     */
     private void player() {
         rPlayer = new Rectangle(px - sizeP / 2, py - sizeP / 2, sizeP, sizeP);
         rPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
         gameContext.getChildren().add(rPlayer);
     }
 
+    /**
+     * Creates the pointer showing the position of the gaze.
+     */
     private void pointer() {
         gaze = new Rectangle(0, 0, dimension2D.getWidth() / 200, dimension2D.getWidth() / 200);
         gaze.setFill(new ImagePattern(new Image("data/follow/ruby1RS.png")));
         gameContext.getChildren().add(gaze);
     }
 
+    /**
+     * Creates the walls around the game area.
+     */
     private void contour() {
         Rectangle w;
         for (int i = 0; i < x; i++) {
@@ -346,6 +380,9 @@ public class Follow implements GameLifeCycle {
         }
     }
 
+    /**
+     * Paves the floor of the game area.
+     */
     private void paving() {
         Rectangle d;
 
@@ -358,6 +395,9 @@ public class Follow implements GameLifeCycle {
         }
     }
 
+    /**
+     * Builds the walls and the items of a map.
+     */
     private void build(int[][] map) {
         Rectangle w;
         EventItem coin;
@@ -383,6 +423,9 @@ public class Follow implements GameLifeCycle {
         }
     }
 
+    /**
+     * Builds the easy map with keys and doors.
+     */
     private void fKEYEASY() {
         int[][] map = new int[][]
             {
@@ -434,6 +477,9 @@ public class Follow implements GameLifeCycle {
         }
     }
 
+    /**
+     * Builds the map with keys and doors.
+     */
     private void fKEY() {
         int[][] map = new int[][]
             {
@@ -518,6 +564,9 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(trap);
     }
 
+    /**
+     * Builds the map with coins.
+     */
     private void fCOIN() {
 
         int[][] map = new int[][]

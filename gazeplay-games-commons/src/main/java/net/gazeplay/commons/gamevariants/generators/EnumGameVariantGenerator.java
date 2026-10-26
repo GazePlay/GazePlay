@@ -10,6 +10,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Proposes one variant per value of an enum, in the order of the enum.
+ */
 @Data
 public class EnumGameVariantGenerator<K extends Enum<K>> implements IGameVariantGenerator {
 

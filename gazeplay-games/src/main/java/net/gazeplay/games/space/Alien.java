@@ -6,6 +6,10 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * An alien of the SpaceGame, moving down and up in the upper part of the screen; its collider can be smaller than its
+ * picture.
+ */
 @Slf4j
 public class Alien extends Rectangle {
     @Getter
@@ -50,6 +54,9 @@ public class Alien extends Rectangle {
         leftMovement.playFrom(Duration.seconds((rightLimit % 5) * animTime / 5));
     }
 
+    /**
+     * Moves the alien down to a height, in 3 seconds.
+     */
     public void moveToLower(final double x, final double y) {
         final TranslateTransition t = new TranslateTransition(Duration.seconds(3), this);
         t.setToY(y);
@@ -58,6 +65,9 @@ public class Alien extends Rectangle {
         t.play();
     }
 
+    /**
+     * Moves the alien up to a height, in 3 seconds.
+     */
     public void moveToUpper(final double x, final double y) {
         final TranslateTransition t = new TranslateTransition(Duration.seconds(3), this);
         t.setToY(-y);

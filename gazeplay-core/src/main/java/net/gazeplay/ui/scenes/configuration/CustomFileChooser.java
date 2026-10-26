@@ -42,6 +42,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Window managing the images of the user used by the games, in four sections (one per images folder: portraits, "Where
+ * is it?" images...): it shows the images of each folder, adds images copied from elsewhere, and removes them.
+ */
 @Slf4j
 public class CustomFileChooser extends Stage {
 
@@ -82,6 +86,9 @@ public class CustomFileChooser extends Stage {
         buildCustomColorDialog();
     }
 
+    /**
+     * Builds the content of the window.
+     */
     private void buildCustomColorDialog() {
         final BorderPane imageSelector = new BorderPane();
         final Scene scene = new Scene(imageSelector, 500, 500, Color.TRANSPARENT);
@@ -89,6 +96,9 @@ public class CustomFileChooser extends Stage {
         this.setScene(scene);
     }
 
+    /**
+     * @return the shadow of the images of the sections
+     */
     private DropShadow createNewDropShadow() {
         DropShadow dropShadowRight = new DropShadow();
         dropShadowRight.setRadius(10);
@@ -98,6 +108,9 @@ public class CustomFileChooser extends Stage {
         return dropShadowRight;
     }
 
+    /**
+     * Shows again the images of a section from its folder; clicking an image offers to remove it.
+     */
     private void updateFlow(int flowPaneIndex) {
         flowPanes[flowPaneIndex].getChildren().clear();
 
@@ -137,6 +150,9 @@ public class CustomFileChooser extends Stage {
         }
     }
 
+    /**
+     * @return the window asking whether to remove an image from its folder
+     */
     private Stage removeDialogue(int index, Image i, StackPane preview) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -193,11 +209,17 @@ public class CustomFileChooser extends Stage {
         return dialog;
     }
 
+    /**
+     * Closes a confirmation window and removes the blur of this window.
+     */
     private void closeDialog(Stage dialog) {
         this.getScene().getRoot().setEffect(null);
         dialog.close();
     }
 
+    /**
+     * @return a button of a confirmation window
+     */
     private I18NButton createAnswerButton(String text, EventHandler<Event> eventHandler) {
         I18NButton button = new I18NButton(translator, text);
         button.getStyleClass().add("gameChooserButton");
@@ -209,6 +231,9 @@ public class CustomFileChooser extends Stage {
         return button;
     }
 
+    /**
+     * @return the button adding images, chosen in a file chooser, to the folder of a section
+     */
     private I18NButton createAddButton(int flowPaneIndex) {
         I18NButton add = new I18NButton(translator, "addNewImages");
         add.setPrefHeight(10);
@@ -235,6 +260,10 @@ public class CustomFileChooser extends Stage {
         return add;
     }
 
+    /**
+     * @return the button adding an image to the "thumbs" subfolder of the folder of a section (images of the "Opinions"
+     *   game)
+     */
     private I18NButton createAddButtonOpinions(int flowPaneIndex, String opinions) {
         I18NButton add = new I18NButton(translator, "addNewImage" + opinions);
         add.setPrefHeight(10);
@@ -274,17 +303,22 @@ public class CustomFileChooser extends Stage {
         return add;
     }
 
+    /**
+     * Copies a file into a folder, replacing a file of the same name; a failure is logged.
+     */
     private void copyFile(File dir, File f, int flowPaneIndex) {
         File dest = new File(dir, f.getName());
         try {
             Files.copy(f.toPath(), dest.toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
-            log.info("peut etre par la");
         } catch (IOException ex) {
             log.info("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
         }
     }
 
+    /**
+     * Builds the four sections and the chooser of the files folder.
+     */
     private BorderPane initImageSelectorPane(BorderPane imageSelectorGridPane, Scene scene) {
 
         Group[] group = new Group[4];
@@ -399,6 +433,9 @@ public class CustomFileChooser extends Stage {
         return imageSelectorGridPane;
     }
 
+    /**
+     * Shows again the images of the four sections.
+     */
     private void updateFlows() {
         updateFlow(0);
         updateFlow(1);
@@ -406,6 +443,9 @@ public class CustomFileChooser extends Stage {
         updateFlow(3);
     }
 
+    /**
+     * @return the chooser of the files folder (FILE_DIR setting) holding the images folders
+     */
     private HBox buildFileChooser() {
         final HBox pane = new HBox(5);
         final String fileDir;

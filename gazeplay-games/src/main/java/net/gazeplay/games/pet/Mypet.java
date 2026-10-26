@@ -15,6 +15,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
+/**
+ * The pet of the Pet game (a biboule): its body, eyes, mouth and wings, and its moods (happy, smiling, eating, flying),
+ * reacting to the gaze or the mouse on its parts.
+ */
 @Slf4j
 class Mypet extends Pane {
 
@@ -85,6 +89,9 @@ class Mypet extends Pane {
 
     }
 
+    /**
+     * Draws the parts of the pet, sized for the game area.
+     */
     private void init() {
         final Image corps = new Image("data/pet/images/body.png");
         setBody(new Rectangle(0, 0, corps.getWidth() * wRatio, corps.getHeight() * hRatio));
@@ -116,8 +123,6 @@ class Mypet extends Pane {
         getMouth().setX(biboulew / 2 - getMouth().getWidth() / 2);
         getMouth().setY(3 * bibouleh / 4);
         getMouth().setFill(new ImagePattern(mouth));
-        // getMouth().setFHeight(mouth.getHeight() * hratio);
-        // getMouth().setFitWidth(mouth.getWidth() * wratio);
 
         final Image eyes = new Image("data/pet/images/eye.png");
 
@@ -133,6 +138,9 @@ class Mypet extends Pane {
 
     }
 
+    /**
+     * Puts the pet back in its normal mood.
+     */
     void setBasic() {
         getBody().setFill(new ImagePattern(new Image("data/pet/images/body.png")));
         getLeftWing().setImage(new Image("data/pet/images/wing.png"));
@@ -144,6 +152,9 @@ class Mypet extends Pane {
 
     }
 
+    /**
+     * Shows the pet happy (eyes closed).
+     */
     void setHappy() {
         getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
         getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
@@ -151,6 +162,9 @@ class Mypet extends Pane {
         eyesAreOpen = false;
     }
 
+    /**
+     * Shows the pet smiling.
+     */
     private void setSmiling() {
         getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
         getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
@@ -158,6 +172,9 @@ class Mypet extends Pane {
         eyesAreOpen = true;
     }
 
+    /**
+     * Animates the pet eating.
+     */
     private void setEating() {
         eatingBool = 10;
 
@@ -197,6 +214,9 @@ class Mypet extends Pane {
         eyesAreOpen = false;
     }
 
+    /**
+     * Starts or stops the flapping of the wings.
+     */
     private void setMovingWings(final Boolean isMoving) {
         if (isMoving) {
             final int duration = 150;
@@ -225,6 +245,9 @@ class Mypet extends Pane {
         }
     }
 
+    /**
+     * Makes the pet blink from time to time.
+     */
     private void setBlinking() {
         eyesAreOpen = true;
         t = new Timeline();
@@ -254,6 +277,9 @@ class Mypet extends Pane {
 
     }
 
+    /**
+     * Enables or disables the blinking.
+     */
     void setBlinkingEnabled(final boolean b) {
         if (b) {
             t.play();
@@ -263,12 +289,18 @@ class Mypet extends Pane {
 
     }
 
+    /**
+     * Makes the parts of the pet react to the gaze and the mouse.
+     */
     private void createHandlers() {
         createEyesHandlers();
         createBodyHandlers();
         createMouthHandlers();
     }
 
+    /**
+     * Makes the mouth react in the eating mode: the full spoon (the hand) brought to the mouth is eaten.
+     */
     private void createMouthHandlers() {
 
         ph.getHand().xProperty().addListener((o) -> {
@@ -288,6 +320,9 @@ class Mypet extends Pane {
         });
     }
 
+    /**
+     * Makes the body react to the hand: the pet is happy when it is stroked (home mode), and in the sport mode.
+     */
     private void createBodyHandlers() {
         getBody().setCursor(Cursor.OPEN_HAND);
         ph.getHand().xProperty().addListener((o) -> {
@@ -403,6 +438,9 @@ class Mypet extends Pane {
 
     }
 
+    /**
+     * Makes the eyes react to the hand.
+     */
     private void createEyesHandlers() {
         getLeftEye().setCursor(Cursor.HAND);
         getRightEye().setCursor(Cursor.HAND);

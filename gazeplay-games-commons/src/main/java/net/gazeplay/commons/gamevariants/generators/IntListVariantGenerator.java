@@ -9,6 +9,9 @@ import net.gazeplay.commons.gamevariants.IntGameVariant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * Proposes one variant per number of a list.
+ */
 @ToString
 @EqualsAndHashCode
 public class IntListVariantGenerator implements IGameVariantGenerator {

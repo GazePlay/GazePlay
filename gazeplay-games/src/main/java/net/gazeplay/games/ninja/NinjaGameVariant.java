@@ -3,6 +3,9 @@ package net.gazeplay.games.ninja;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A variant of the game "Ninja", chosen in the menu.
+ */
 @RequiredArgsConstructor
 public enum NinjaGameVariant {
     RANDOM("Random"),

@@ -9,6 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import java.util.ArrayList;
 
+/**
+ * A switch of the railway: it sends the trains to one of its output sections, changed by a fixation.
+ */
 public class Switch {
 
     private final ArrayList<Section> outputSections;
@@ -29,18 +32,30 @@ public class Switch {
         ycenter = new SimpleDoubleProperty(0);
     }
 
+    /**
+     * Adds the curve drawn for an output.
+     */
     public void addCurve(QuadCurve curve){
         curves.add(curve);
     }
 
+    /**
+     * Adds an output section.
+     */
     public void addOutput(Section section){
         outputSections.add(section);
     }
 
+    /**
+     * Selects the next output.
+     */
     public void changeOutputSelected(){
         outputSelected = (outputSelected+1)%curves.size();
     }
 
+    /**
+     * @return the drawing of the switch, its selected output highlighted
+     */
     public Group getGroup(){
         return group;
     }
@@ -65,9 +80,15 @@ public class Switch {
         return Math.abs(x - xcenter.get())<=50 && Math.abs(y - ycenter.get())<=50;
     }
 
+    /**
+     * @return the selected output section
+     */
     public Section getOutput(){
         return outputSections.get(outputSelected);
     }
+    /**
+     * @return an output section
+     */
     public Section getOutput(int index){
         return outputSections.get(index);
     }

@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 
+/**
+ * Orders the games of the menu by their categories: each category weighs the square of its rank from the end of
+ * {@link GameCategories.Category}, and the heavier set of categories comes first.
+ */
 public class CategoriesCollectionComparator implements Comparator<SortedSet<GameCategories.Category>>, Serializable {
 
     private static final Map<GameCategories.Category, Integer> weightMap = createWeightMap();

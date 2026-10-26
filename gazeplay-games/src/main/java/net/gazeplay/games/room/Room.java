@@ -18,6 +18,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import static net.gazeplay.games.room.MoveDirection.*;
 
+/**
+ * Game "Room": the player is inside a 3D room and looks around it with four arrows at the edges of the screen (north,
+ * south, east, west): the gaze (or the mouse) on an arrow turns the view in its direction.
+ */
 @Slf4j
 public class Room implements GameLifeCycle {
 

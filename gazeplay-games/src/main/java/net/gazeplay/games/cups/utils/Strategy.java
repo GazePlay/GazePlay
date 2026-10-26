@@ -6,6 +6,10 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 import java.util.ArrayList;
 
+/**
+ * Draws the exchanges of the cups: for each exchange, two cups swap their places by going around each other (one up and
+ * one down, or one stepping aside).
+ */
 @Slf4j
 public class Strategy {
     private final int nbExchanges;
@@ -15,6 +19,9 @@ public class Strategy {
     private final int maxCellsY;
     private final ReplayablePseudoRandom randomGenerator;
 
+    /**
+     * The kinds of exchanges.
+     */
     private enum Strategies {
         rotationUpDown, rotationMoveClosestInPlace
     }
@@ -27,6 +34,9 @@ public class Strategy {
         this.randomGenerator = random;
     }
 
+    /**
+     * @return the movements of the cups for all the exchanges
+     */
     public ArrayList<Action> chooseStrategy() {
         for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
@@ -56,6 +66,9 @@ public class Strategy {
         return actions;
     }
 
+    /**
+     * Adds the movements of an exchange where one cup goes up and the other down.
+     */
     private void rotationUpDown(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY,
                                 final Integer secondCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
@@ -66,6 +79,9 @@ public class Strategy {
         actions.add(new Action(targetCellX, firstCupMoveToY, targetCellX, maxCellsY / 2));
     }
 
+    /**
+     * Adds the movements of an exchange where one cup steps aside while the other takes its place.
+     */
     private void rotationMoveClosestInPlace(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
         actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
@@ -86,6 +102,9 @@ public class Strategy {
         actions.add(new Action(targetCellX, firstCupMoveToY, targetCellX, maxCellsY / 2));
     }
 
+    /**
+     * @return a cell drawn at random
+     */
     public Integer randomCupOneChoice(final boolean isYChoice) {
         final ArrayList<Integer> numbersToChooseFrom = new ArrayList<>();
         for (int index = 0; index < maxCellsX; index++) {
@@ -99,6 +118,9 @@ public class Strategy {
         return numbersToChooseFrom.get(cupChoice);
     }
 
+    /**
+     * @return two different cells drawn at random
+     */
     public ArrayList<Integer> randomCupTwoChoices(final boolean isYChoice) {
         final ArrayList<Integer> numbersToChooseFrom = new ArrayList<>();
         for (int index = 0; index < maxCellsX; index++) {

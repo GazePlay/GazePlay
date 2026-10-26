@@ -6,6 +6,10 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 import net.gazeplay.commons.gamevariants.generators.SquareDimensionVariantGenerator;
 
+/**
+ * Declares the game "Blocks" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class BlocsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

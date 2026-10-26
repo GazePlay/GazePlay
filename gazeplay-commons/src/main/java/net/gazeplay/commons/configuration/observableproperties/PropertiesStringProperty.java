@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * JavaFX text property backed by a key/value store: see {@link PropertiesBooleanProperty}.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public abstract class PropertiesStringProperty extends StringPropertyBase {

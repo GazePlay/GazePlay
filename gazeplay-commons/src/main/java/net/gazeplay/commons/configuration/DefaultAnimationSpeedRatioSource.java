@@ -3,6 +3,9 @@ package net.gazeplay.commons.configuration;
 import javafx.beans.property.DoubleProperty;
 import lombok.Setter;
 
+/**
+ * The animation speed of a configuration, set with {@link #setConfiguration(Configuration)} before use.
+ */
 public class DefaultAnimationSpeedRatioSource implements AnimationSpeedRatioSource {
 
     @Setter

@@ -1,16 +1,11 @@
 package net.gazeplay.games.surviveAgainstRobots;
 
-import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 
 import java.util.Random;

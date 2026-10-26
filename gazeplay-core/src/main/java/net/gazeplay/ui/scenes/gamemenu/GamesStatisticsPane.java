@@ -3,7 +3,6 @@ package net.gazeplay.ui.scenes.gamemenu;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
 import net.gazeplay.GameSpec;
@@ -12,6 +11,9 @@ import net.gazeplay.commons.ui.Translator;
 
 import java.util.List;
 
+/**
+ * Number of games and of variants, shown in the menu.
+ */
 public class GamesStatisticsPane extends GridPane {
 
     @Getter
@@ -38,7 +40,6 @@ public class GamesStatisticsPane extends GridPane {
         setHgap(30);
         setVgap(10);
 
-        //setAllColumnsConstraints();
         if (darkMode) {
             setAllLabelsStyleDark();
         } else {
@@ -51,26 +52,9 @@ public class GamesStatisticsPane extends GridPane {
         gamesVariantsCountValueLabel.setText(Integer.toString(variantsCount));
     }
 
-    public void refreshPreferredSize() {
-        double maxPreferredWidth = 0d;
-        for (Node node : this.getChildren()) {
-            if (node instanceof I18NLabel) {
-                I18NLabel label = (I18NLabel) node;
-                maxPreferredWidth = Math.max(maxPreferredWidth, label.getPrefWidth());
-            }
-        }
-        setPrefWidth(maxPreferredWidth * 2 + 40);
-    }
-
-    private void setAllColumnsConstraints() {
-        final int columnsCount = 2;
-        for (int i = 0; i < columnsCount; i++) {
-            ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(100.0 / columnsCount);
-            getColumnConstraints().add(colConst);
-        }
-    }
-
+    /**
+     * Styles the pane for the dark theme.
+     */
     public void setAllLabelsStyleDark() {
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
         this.setStyle("-fx-background-color: black");
@@ -79,6 +63,9 @@ public class GamesStatisticsPane extends GridPane {
         }
     }
 
+    /**
+     * Styles the pane for the light theme.
+     */
     public void setAllLabelsStyleLight() {
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: black;";
         this.setStyle("-fx-background-color: #fffaf0");

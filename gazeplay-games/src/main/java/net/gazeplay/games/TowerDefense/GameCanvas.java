@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 import static net.gazeplay.games.TowerDefense.maps.Map.*;
 
+/**
+ * Canvas drawing the Tower Defense game at each frame: the map, the enemies with their health bars, the towers and the
+ * projectiles. Positions are in tiles, converted to pixels with the size of a tile.
+ */
 public class GameCanvas extends Canvas {
 
     // UI
@@ -71,6 +75,9 @@ public class GameCanvas extends Canvas {
         heightProperty().addListener(evt -> draw());
     }
 
+    /**
+     * Draws the whole game.
+     */
     public void draw() {
         gc.clearRect(0,0, getWidth(), getHeight());
 
@@ -79,6 +86,9 @@ public class GameCanvas extends Canvas {
         drawTowers();
         drawProjectiles();
     }
+    /**
+     * Draws the tiles of the map (grass, road, tower places, start and end).
+     */
     private void drawTerrain(){
         for (int row = 0; row < map.getNbRows(); row++) {
             for (int col = 0; col < map.getNbCols(); col++) {
@@ -95,6 +105,9 @@ public class GameCanvas extends Canvas {
         }
     }
 
+    /**
+     * Draws the enemies, turned in their direction, with their health bars.
+     */
     private void drawEnemies(){
         for (Enemy enemy : enemies) {
             double x = enemy.getX()*tileWidth.get();
@@ -114,14 +127,12 @@ public class GameCanvas extends Canvas {
 
             gc.setFill(Color.GREEN);
             gc.fillRect(x, y - healthBarHeight, tileWidth.get()*enemy.getRelativeHeath(), healthBarHeight);
-
-            // Show Hitbox
-//            Rectangle rect = enemy.getHitbox();
-//            gc.setStroke(Color.RED);
-//            gc.strokeRect(rect.getX()*tileWidth.get(), rect.getY()*tileHeight.get(), rect.getWidth()*tileWidth.get(), rect.getHeight()*tileHeight.get());
         }
     }
 
+    /**
+     * Draws the towers, turned towards their target.
+     */
     private void drawTowers(){
         for (Tower tower : towers) {
             Image towerImage = basicTowerImage;
@@ -141,6 +152,9 @@ public class GameCanvas extends Canvas {
         }
     }
 
+    /**
+     * Draws the bullets, the missiles, and the explosions of the missiles.
+     */
     private void drawProjectiles(){
         for (Projectile projectile : projectiles) {
             if(projectile instanceof Missile missile){
@@ -150,15 +164,6 @@ public class GameCanvas extends Canvas {
                     gc.rotate(((Missile) projectile).getRotation());
                     gc.drawImage(missileImage, -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
                     gc.restore();
-
-                    // Show Hitbox
-//                    Bounds rect = missile.getHitbox().getBoundsInLocal();
-//                    gc.setStroke(Color.RED);
-//                    gc.save();
-//                    gc.translate((rect.getMinX()+rect.getWidth()/2)*tileWidth.get(), (rect.getMinY()+rect.getHeight()/2)*tileHeight.get());
-//                    gc.rotate(missile.getRotation());
-//                    gc.strokeRect(-rect.getWidth()*tileWidth.get()/2, -rect.getHeight()*tileHeight.get()/2, rect.getWidth()*tileWidth.get(), rect.getHeight()*tileHeight.get());
-//                    gc.restore();
                 }else{
                     gc.drawImage(explosionImage, 96*missile.getFrameIndex(), 0, 96,96, projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), tileHeight.get()*1.5, tileWidth.get()*1.5);
                 }

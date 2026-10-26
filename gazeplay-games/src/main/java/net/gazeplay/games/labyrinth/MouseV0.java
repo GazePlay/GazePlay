@@ -11,7 +11,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-/*
+/**
  * MouseV0 :
  * To move the mouse :
  * you have to look at a box that is adjacent to it.
@@ -19,7 +19,6 @@ import net.gazeplay.commons.utils.stats.Stats;
  * It is replaced by the version MouseTransparentArrows
  * which produces the same effect on the user side
  */
-
 public class MouseV0 extends Mouse {
 
     private final EventHandler<Event> event;
@@ -34,6 +33,9 @@ public class MouseV0 extends Mouse {
 
     }
 
+    /**
+     * Makes the boxes next to the mouse selectable by a fixation.
+     */
     private void mettreAJourLesEventHandler() {
 
         for (int i = 0; i < gameInstance.nbBoxesLine; i++) {
@@ -56,6 +58,9 @@ public class MouseV0 extends Mouse {
         }
     }
 
+    /**
+     * @return the handler moving the mouse to a box next to it after a fixation on the box
+     */
     public EventHandler<Event> buildEvent() {
         return e -> {
 

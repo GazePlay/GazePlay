@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
+/**
+ * Gives random colors (confetti of the win animation).
+ */
 public class RandomColorGenerator {
 
     @Getter
@@ -11,6 +14,9 @@ public class RandomColorGenerator {
 
     private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
+    /**
+     * @return an opaque color drawn at random
+     */
     public Color randomColor() {
         return Color.rgb(randomShort(), randomShort(), randomShort());
     }

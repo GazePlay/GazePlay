@@ -3,6 +3,10 @@ package net.gazeplay.games.biboulejump;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 
+/**
+ * A platform of Biboule Jump, with its bounce sound and strength. Its collider, the zone where the biboule lands on it,
+ * can be smaller than its image (margins).
+ */
 public class Platform extends Rectangle {
 
     @Getter
@@ -32,11 +36,17 @@ public class Platform extends Rectangle {
             height * (1 - colliderMarginUp - colliderMarginDown));
     }
 
+    /**
+     * Moves the platform down when the screen scrolls up.
+     */
     public void scroll(final double difference) {
         setY(getY() + difference);
         collider.setY(collider.getY() + difference);
     }
 
+    /**
+     * @return whether a rectangle (the biboule) touches the collider of the platform
+     */
     public boolean isColliding(final Rectangle rect) {
         return collider.getX() < rect.getX() + rect.getWidth() && collider.getX() + collider.getWidth() > rect.getX()
             && collider.getY() < rect.getY() + rect.getHeight()

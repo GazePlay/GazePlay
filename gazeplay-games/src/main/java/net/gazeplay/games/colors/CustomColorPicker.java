@@ -22,6 +22,9 @@ import net.gazeplay.components.GazeIndicator;
 
 import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;
 
+/**
+ * Window choosing the custom color among a grid of colors, by a fixation.
+ */
 @Slf4j
 public class CustomColorPicker extends Pane {
 
@@ -29,7 +32,7 @@ public class CustomColorPicker extends Pane {
         Color.CADETBLUE, Color.DARKGRAY, Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE,
         Color.SIENNA, Color.YELLOWGREEN};
 
-    public static final int NB_COLOR_PER_ROW = 5/* ((int) Math.sqrt(COLOR_LIST.length)) */;
+    public static final int NB_COLOR_PER_ROW = 5;
 
     // Credits
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from

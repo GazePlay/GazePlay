@@ -6,6 +6,9 @@ import lombok.Getter;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A language proposed in the settings, with its flags.
+ */
 @Builder
 public class LanguageDetails {
 
@@ -21,9 +24,15 @@ public class LanguageDetails {
     @Getter
     private final String label;
 
+    /**
+     * Whether the translation is complete enough to be proposed as stable.
+     */
     @Getter
     private final boolean stableTranslationAvailable;
 
+    /**
+     * False for the languages written from right to left (Arabic).
+     */
     @Getter
     private final boolean leftAligned;
 

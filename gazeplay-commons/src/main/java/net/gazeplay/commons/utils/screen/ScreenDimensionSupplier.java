@@ -6,6 +6,9 @@ import javafx.stage.Screen;
 
 import java.util.function.Supplier;
 
+/**
+ * Gives the size, in pixels, of the screen given by another supplier (e.g. the screen showing GazePlay).
+ */
 public class ScreenDimensionSupplier implements Supplier<Dimension2D> {
 
     private final Supplier<Screen> screenSupplier;

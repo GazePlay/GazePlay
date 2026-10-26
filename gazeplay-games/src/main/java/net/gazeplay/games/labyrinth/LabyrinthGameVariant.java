@@ -4,6 +4,9 @@ package net.gazeplay.games.labyrinth;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A variant of the game "Labyrinth", chosen in the menu.
+ */
 @RequiredArgsConstructor
 public enum LabyrinthGameVariant {
     LOOK_DESTINATION("Look at the destination box to move"),

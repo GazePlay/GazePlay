@@ -9,6 +9,9 @@ import net.gazeplay.components.Portrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
 /**
+ * Game "Creampie": a target appears at a random place; when the gaze (or the mouse) enters it, a hand throws a cream
+ * pie at it, and the target moves to another place.
+ * <p>
  * Created by schwab on 12/08/2016.
  */
 public class CreamPie implements GameLifeCycle {

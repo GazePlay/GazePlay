@@ -2,6 +2,13 @@ package net.gazeplay.commons.utils.stats;
 
 import javafx.beans.property.*;
 
+/**
+ * A line of the chi-squared table of the statistics screen (game "Where is it?" with levels): the chi-squared value
+ * observed for a level, and the decision ("good" choices or "random") for each risk level, from 0.5 % to 50 %.
+ * <p>
+ * The table reads the values by reflection ({@code PropertyValueFactory}: the xxxProperty() methods, else the getters),
+ * so these methods look unused but must stay.
+ */
 public class ChiData {
 
     private final SimpleIntegerProperty id;

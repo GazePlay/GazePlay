@@ -1431,16 +1431,84 @@ Constat du mainteneur : en mode `tobii`, la souris remplissait encore les indica
 
 ---
 
-## 9. Reprise à la prochaine session (à jour le 23/10/2026, après l'étape 35)
+## 2am. Étape 36 — Code mort, commentaires et plateformes (26/10/2026, demande du mainteneur)
 
-### État
-- Branche **`addClaudeCode`**. Dernier commit poussé : `14cf103b2` (étapes 30 à 32), vérifié par le mainteneur. CI de `14cf103b2` verte sur les 7 jobs (après relance des 4 jobs Linux, bloqués par les miroirs Ubuntu). Ensuite commités et poussés : `3088d9100` (documentation), `16cd901bd` (étape 33), puis les étapes 34 et 35, vérifiées par le mainteneur.
+Demande du mainteneur (pendant son test de l'installeur) : retirer ce qui n'est pas utilisé (code et commentaires), commenter les fonctions qui n'en ont pas ou qui en ont besoin, vérifier que l'application fonctionne sous Windows, Linux et macOS, et dire si l'eye tracker fonctionne sur ces trois systèmes.
+
+### Code mort retiré (vérifié : aucune référence, ni dans les tests, ni par réflexion, ni par Lombok)
+- **Classes** : `GazeMotionListener` (interface jamais branchée : aucun écouteur n'était jamais prévenu) et son câblage dans `GazeDeviceManager` / `AbstractGazeDeviceManager` ; `I18NToggleButton` ; `RobotSupplier` et `ImmutableCachingSupplier` (seulement pour un champ inutilisé du gestionnaire du regard) ; la classe interne `Bloc` des cibles des bulles.
+- **Méthodes et champs** jamais appelés : une quarantaine, dont les setters inutilisés de `Configuration`, `Stats.computeRoundsDurationVariance`, `GazePlayDirectories.getTempFolder`, `ConfigurationContext.resetPane` et trois méthodes privées de la page des réglages jamais appelées, `IGameContext.resetBordersToFront` (vide, appelée par 6 jeux), l'état « favori » inutilisé du menu, et des méthodes de jeux (labyrinthe, points à relier, espace, piano, course, taquin, Math101).
+- **Réglage mort** : `FIRST_OPENING` (jamais lu). Une valeur déjà présente dans un `GazePlay.properties` reste dans le fichier, sans effet (même règle qu'à l'étape 32).
+- **Code laissé en commentaire** : environ 150 lignes dans une quarantaine de fichiers (anciens essais, traces de débogage, blocs `/* … */`, matrice du labyrinthe, en-têtes de modèle NetBeans, `//` vides).
+- **Imports inutilisés** : 87.
+- Une trace de débogage oubliée (`log.info("peut etre par la")`) ; un avertissement émis à chaque changement d'écran (« Nodes not removed: 0 ») passe en niveau `debug`.
+- **Gardé exprès** : `ChiData` (lu par réflexion par le tableau du khi-deux), `SystemFileManager.showFile` (pour Eval), tout le code Eval (`gazeplayEval`, `gazeplayEvalTest`, champs Eval de `Stats`) : il sera fusionné depuis `GazePlayLearning`, et le modifier ici créerait des conflits.
+- **Limite** : la recherche des méthodes inutilisées repose sur leur nom (un nom présent une seule fois dans le dépôt). Une méthode inutilisée qui porte le même nom qu'une méthode utilisée ailleurs n'est pas détectée.
+
+### Commentaires
+- **1 802 commentaires Javadoc ajoutés** (640 fichiers Java modifiés) : chaque classe, interface et énumération de tous les modules a maintenant un commentaire qui dit son rôle (hors code Eval, voir ci-dessus), et les méthodes non évidentes ont le leur (les accesseurs simples et les redéfinitions n'en ont pas besoin). Les commentaires sont en anglais, comme le code existant. Les mentions d'auteur des anciens en-têtes (« Created by … », `@author`) sont gardées.
+- Chaque commentaire a été écrit d'après le code ; les affirmations non évidentes (règles d'un jeu, plages de valeurs, raccourcis clavier) ont été vérifiées dans le code.
+- **Commentaires faux corrigés** : `GazeEvent` (copié d'un exemple, il parlait de « LightningEvent » et « PLASMA_STRIKE »), `HeatMapGrid` (disait regard et souris dans une même grille, faux depuis la v2), `ReplayablePseudoRandom` (« entre 0 et 1 » pour une borne quelconque), `DateUtils`, `DiceRoller` (« 2 à 3 tours » : toujours 2), une trace « Try to play » à l'ouverture d'une ressource.
+- **Javadoc** : `./gradlew javadoc` ne signale plus aucune erreur (liens vers des classes d'un autre module, HTML mal formé, balise `@artists` inconnue, tous antérieurs).
+
+### Constats relevés pendant la lecture, puis corrigés (26/10/2026, demande du mainteneur)
+- **Plantage possible de « Où est… ? » avec niveaux** (`WhereIsIt.chi2decision`) — *fait* : dès la 5ᵉ répétition d'un niveau, l'indice du seuil du khi-deux (`lvlReplays - 1`) sortait de la liste des 4 seuils. Un joueur restant au niveau 1 avec des réponses jugées aléatoires aurait vu le jeu planter après 40 bonnes réponses (`IndexOutOfBoundsException`, déduit du code, non reproduit). **Correction** : l'indice reste sur le dernier seuil (0,45, risque 50 %), celui qu'utilisaient déjà les 4 premières répétitions ; aucune décision qui fonctionnait ne change. Test : `WhereIsItTest.shouldKeepTheChiSquaredThresholdForManyReplays`.
+- **Rejeu, options Java** — *fait* : la JVM lancée pour rejouer un fichier reçoit maintenant les mêmes options qu'une partie lancée du menu (`-Djdk.gtk.version=2` et `GazePlayLauncher.jvmOptions()`), sans quoi Java 25 avertissait de l'accès natif de JavaFX et de Tobii.
+- **Rejeu, rythme** — *fait* : chaque point est rejoué à son instant enregistré depuis le début de la manche. Avant, le fil attendait après chaque point l'intervalle depuis le point précédent de la même source : avec regard et souris, les attentes s'additionnaient et le rejeu durait plus longtemps que la partie. Test : `ReplayingGameFromJsonTest`.
+- **Rejeu, couleur de la traînée** — *fait* : le vert et le bleu étaient inversés (`Color.rgb(rouge, bleu, vert)`).
+- **Hasard non rejouable** — *fait* pour les jeux qui ont un rejeu : Tarte à la crème (positions, `RandomPositionGenerator.createPositionCreamPie`), Bulles (le générateur passé à chaque bulle était ignoré ; le bloc du fond découvert était tiré par `Collections.shuffle`), Puissance 4 (coups de l'ordinateur ; la graine n'était pas non plus enregistrée) et Labyrinthe (personnage) utilisent maintenant le générateur rejouable de la partie. GazeRace et Simon gardent `java.util.Random` : leur lanceur ne prend pas de graine, ils n'ont pas de rejeu (la liste des jeux rejouables ne les propose pas). **Impact** : les parties de ces quatre jeux tirent leurs valeurs autrement (même loi uniforme) ; aucun format ne change ; un fichier enregistré avant ne se rejoue pas plus fidèlement qu'avant.
+- **Musique d'un jeu** (`BackgroundMusicManager.playMusicAlone`) — *fait* : la musique téléchargée dans `cache/music` est maintenant lue depuis le cache (elle était téléchargée, puis relue depuis Internet). Le fichier du cache garde l'extension de l'adresse (JavaFX reconnaît le format à l'extension ; c'est probablement pour cela que le cache n'était pas lu) et son nom est en Base64 « URL-safe » (le Base64 standard peut contenir `/`, qui créait des sous-dossiers). Les fichiers déjà en cache sous l'ancien nom ne sont plus utilisés : ces musiques sont retéléchargées une fois. Tests : `BackgroundMusicManagerTest` (noms du cache, extension).
+- **Réglage « Use convex hulls for AOI »** — *retiré* : il était affiché grisé et lu par rien (les enveloppes convexes ne sont pas implémentées). Retiré de la page, de `Configuration` et de la traduction ; une valeur `CONVEX_HULL_DISABLED` déjà présente dans un `GazePlay.properties` y reste, sans effet (même règle qu'à l'étape 32).
+- **`ProgressPane`** (dés du jeu Dice lancés un par un) — *fait* : il réagit maintenant à la souris comme au regard ; avant, à la souris seule, ces dés ne pouvaient pas être lancés un par un. En mode « Tobii seul », la souris reste arrêtée par le filtre de la zone de jeu.
+- **Mise en page de 42 commentaires** — *fait* : la suite d'un `@return` sur plusieurs lignes était coupée de travers par l'outil d'insertion ; remise en forme. Trois commentaires orphelins de `AreaOfInterest` (méthodes déplacées dans `AoiGeometry` autrefois) sont retirés.
+
+### Plateformes (Windows, Linux, macOS)
+- **Fait** : la CI du dernier commit poussé (`87692bd97`, run 39976195535) est verte sur ses 7 jobs : tests (JDK 25 et 26, Linux), lancement des 75 jeux (Linux), et **construction puis lancement réel des distributions Windows x64, Linux x64 et macOS Apple Silicon** (menu puis un jeu, runtime embarqué).
+- **Fait** : les changements de cette étape sont vérifiés sous Windows 11 (voir « Vérifié »). Ils ne touchent aucun code propre à un système ; pour les voir passer sous Linux et macOS, il faut pousser la branche (la CI les lance) : **à faire après accord du mainteneur**.
+- **Non vérifié, faute de machine** : Linux ARM (aarch64) et macOS Intel.
+
+### L'eye tracker sur les trois systèmes
+- **Windows x64 : oui** — vérifié par le mainteneur avec l'Eye Tracker 5 (21-23/10/2026).
+- **macOS : non** — le wrapper `TobiiStreamEngineForJava` 5.0 ne contient aucune bibliothèque macOS (vérifié dans le jar : seulement `.dll` Windows et `.so` Linux), et Tobii ne fournit pas de Stream Engine macOS pour l'Eye Tracker 5. GazePlay y fonctionne à la souris.
+- **Linux x64 : très probablement non** — le jar contient bien une bibliothèque Linux x64, mais jamais testée avec un appareil ; Tobii ne prend pas officiellement en charge l'Eye Tracker 5 sous Linux (pas de service Tobii ni de Tobii Experience pour le calibrage, nécessaire même sous Windows) ; les pilotes Linux du 4C ont été retirés (étape 34). Hypothèse appuyée par des recherches (aucun support officiel trouvé, témoignages d'échec), non testée faute de matériel Linux. Sans données, GazePlay continue à la souris, sans regard fantôme (R9).
+- **Linux ARM : non** — aucune bibliothèque ARM dans le wrapper.
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest allGamesTest` : **422 tests, 0 échec** ; `smokeTest` 3/3 ; **`allGamesTest` 75/75** (chaque jeu lancé) ; SpotBugs vert ; `javadoc` sans erreur. Relecture du diff : hors commentaires, seules des suppressions voulues et une réindentation.
+
+Après la correction des constats (même jour) : **425 tests, 0 échec** (3 nouveaux : seuil du khi-deux, rythme du rejeu, nom du cache de musique ; `ConfigurationContextTest` suit la ligne de réglage retirée) ; `smokeTest` 3/3 ; `allGamesTest` 75/75 ; SpotBugs vert ; `javadoc` sans erreur.
+
+
+---
+
+## 9. Reprise à la prochaine session (pause du vendredi 23/10/2026 au soir, reprise le lundi 26/10/2026)
+
+### À faire lundi en premier
+1. **Le mainteneur teste l'installeur** `build/distributions/gazeplay-learning-windows-x64-1.11.10-installer.exe` (construit le 23/10/2026 à 17:34). Points à vérifier :
+   - la licence s'affiche avec ses accents ;
+   - l'installeur est en français et propose de désinstaller l'ancien GazePlay 1.11.9-SNAPSHOT (`C:\Program Files (x86)\GazePlay`) ; avec Oui, la désinstallation se passe bien et les données de `Documents\GazePlay_Learning` restent ;
+   - installation dans `C:\Program Files\GazePlay Learning`, raccourcis du menu Démarrer et du bureau ;
+   - lancement : titre et logo, données retrouvées, Eye Tracker 5 en « Tobii seul », une partie jusqu'à l'écran des statistiques ;
+   - un raccourci de jeu créé depuis les réglages ;
+   - désinstallation de GazePlay Learning depuis les paramètres de Windows (les données restent).
+2. **Commiter et pousser les corrections de l'installeur**, non commitées le 23/10/2026 au soir (seulement sur demande du mainteneur) : `gradle/installer.gradle` (`unzipDistribution` en `Sync`, licence et script en UTF-8 avec BOM), `gradle/innosetup/setup.iss.skel` (français/anglais, désinstallation proposée de l'ancien GazePlay), `MODERNIZATION.md`. Si le test révèle un problème : corriger, `./gradlew generateWindowsInstaller` (avec `JAVA_HOME` en JDK 25), redonner l'installeur.
+
+### État au 23/10/2026 au soir
+- Branche **`addClaudeCode`**, dernier commit poussé **`87692bd97`** (étapes 33 à 35), CI verte sur les 7 jobs. Étapes 29 à 35 vérifiées par le mainteneur dans l'application.
 - Suite locale : 422 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
 - Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
-- Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07).
+- Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07). Réglage de l'appareil : les modes `mouse_control`, `tobii` (regard seul) et `tobii_and_mouse` existent depuis l'étape 35.
 
-### Reste à faire, dans l'ordre
-1. **Fin de la modernisation**, puis, dans cet ordre (décision du mainteneur du 23/10/2026) : fusion de `GazePlayLearning` (avec les restes d'Eval : 3 usages dépréciés, 3 conversions non vérifiées, 2 alertes SpotBugs), test de l'installation réelle par l'installeur Windows, numéro de version (1.12.0 proposé) et publication.
+### Reste à faire, dans l'ordre (décision du mainteneur du 23/10/2026, au soir)
+1. **Installeur Windows testé par le mainteneur.** Premier essai (23/10/2026) : deux retours, corrigés.
+   - **Licence aux accents illisibles** : `licence.txt` était en UTF-8 sans BOM, qu'Inno Setup lit comme de l'ANSI (« rÃ©alisÃ© »). `prepareInnoSetupFiles` écrit maintenant `licence.txt` et `setup.iss` en UTF-8 avec BOM.
+   - **Ancien GazePlay** : l'installeur cherche l'identifiant `GazePlay_is1` (tous utilisateurs en 32 et 64 bits, puis utilisateur courant) et propose de le désinstaller d'abord. Ses données sont gardées : GazePlay Learning les utilise. Si le mainteneur refuse, les deux sont installés côte à côte. Sur le poste du mainteneur : GazePlay 1.11.9-SNAPSHOT dans `C:\Program Files (x86)\GazePlay`, trouvé à cet endroit.
+   - Messages de l'installeur en **français** ou en anglais, selon la langue de Windows (`French.isl` d'Inno Setup 6).
+   - Avant le premier essai, `unzipDistribution` copiait l'archive Windows par-dessus un build précédent : l'installeur local embarquait encore `eyetribe-clientsdk`. La tâche synchronise maintenant le dossier.
+   - Installeur reconstruit : `build/distributions/gazeplay-learning-windows-x64-1.11.10-installer.exe`, SHA-256 `2e32baa9…e6c5`. Second essai du mainteneur : lundi 26/10/2026.
+2. Si l'installation est bonne : **numéro de version et publication** (1.12.0 proposé ; notes de version prêtes dans `GazePlay-1.12.0.md`, à relire ; publication par `release.yml`, qui produit les fichiers `gazeplay-learning-*`).
+3. ~~Passe de nettoyage et de documentation du code~~ : **faite le 26/10/2026 à la demande du mainteneur (étape 36, 2am), non commitée**. À pousser pour la voir passer en CI sous Linux et macOS. Les constats relevés ont été corrigés le même jour (2am).
+4. Fusion de `GazePlayLearning` (Eval) : pas encore placée dans cet ordre par le mainteneur.
 
 ### Décisions du mainteneur en vigueur
 64 bits seulement ; formats de résultats versionnés (v4) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.

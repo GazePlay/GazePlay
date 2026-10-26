@@ -5,6 +5,10 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
+/**
+ * Declares the game "Ninja" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class NinjaGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

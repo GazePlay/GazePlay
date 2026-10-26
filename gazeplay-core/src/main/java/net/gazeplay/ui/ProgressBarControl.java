@@ -16,12 +16,18 @@ import net.gazeplay.commons.ui.Translator;
 
 import static net.gazeplay.ui.QuickControl.*;
 
+/**
+ * Control of the size and color of the progress indicators of the fixations, in the side panel of the game screen.
+ */
 @NoArgsConstructor
 public class ProgressBarControl {
 
     @Getter
     private static final ProgressBarControl instance = new ProgressBarControl();
 
+    /**
+     * @return the pane of the control: a slider of the size and one colored square per color
+     */
     public TitledPane createProgressControlPane(Configuration config, Translator translator, Scene primaryScene) {
         Label progressBarSizeLabel = new Label("");
         I18NLabel colorStringLabel = new I18NLabel(translator, "Color");
@@ -54,6 +60,9 @@ public class ProgressBarControl {
         return pane;
     }
 
+    /**
+     * @return the slider of the size, bound to the PROGRESS_BAR_SIZE setting, its value shown in the label
+     */
     public Slider createProgressBarSizeSlider(Configuration config, Label progressBarSizeLabel) {
         final int initialSizeValue = config.getProgressBarSize();
         Slider slider = new Slider();
@@ -83,6 +92,9 @@ public class ProgressBarControl {
         return slider;
     }
 
+    /**
+     * Marks the square of the chosen color.
+     */
     public void setTextOnLabel(Label[] labels, int position){
         for(int i=0; i< labels.length; i++){
             if(i==position) labels[i].setText("⬤");
@@ -90,6 +102,9 @@ public class ProgressBarControl {
         }
     }
 
+    /**
+     * Colors a square, and saves its color in the PROGRESS_BAR_COLOR setting when it is clicked.
+     */
     public void initializeColorLabel(Label[] labels, int position, String colorName, Configuration config){
         labels[position].setStyle("-fx-background-color: " + colorName + ";");
         labels[position].setOnMouseClicked(event -> {
@@ -100,6 +115,9 @@ public class ProgressBarControl {
             setTextOnLabel(labels, position);
     }
 
+    /**
+     * @return the squares of the colors, the one of the settings marked
+     */
     public Label[] createColorLabel(Configuration config){
         // Sequence : Red Orange Yellow Limegreen Cyan DodgerBlue Violet
         Label[] labels = new Label[7];
@@ -122,10 +140,16 @@ public class ProgressBarControl {
         return labels;
     }
 
+    /**
+     * @return the size as shown, in percent
+     */
     public String formatValue(int speedRatioValue) {
         return speedRatioValue + "%";
     }
 
+    /**
+     * @return the size of a value of the slider
+     */
     public int sliderValueToSizeRatio(double value) {
         return (int)value;
     }

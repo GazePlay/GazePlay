@@ -5,6 +5,9 @@ import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
+/**
+ * Tower shooting bullets, like the basic tower, with another look.
+ */
 public class CanonTower extends Tower {
 
     public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";

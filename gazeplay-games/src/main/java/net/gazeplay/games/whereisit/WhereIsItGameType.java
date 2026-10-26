@@ -3,6 +3,9 @@ package net.gazeplay.games.whereisit;
 import lombok.Getter;
 import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
+/**
+ * The games of the "Where is it?" family: their name, the folder of their pictures, and their variant.
+ */
 public enum WhereIsItGameType {
     FIND_ODD("findTheOddOneOut", "findTheOddOneOut", "NoVariant"),
 

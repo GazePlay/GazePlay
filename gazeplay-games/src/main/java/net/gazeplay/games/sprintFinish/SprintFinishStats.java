@@ -10,6 +10,9 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games "SprintFinish" and "SprintFinishMouse" (see {@code SelectionGamesStats}).
+ */
 public class SprintFinishStats extends SelectionGamesStats {
 
     public SprintFinishStats(Scene gameContextScene) {

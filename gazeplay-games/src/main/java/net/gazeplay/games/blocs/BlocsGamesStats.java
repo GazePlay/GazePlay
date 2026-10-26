@@ -10,6 +10,10 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "Blocks", with the info-game.csv file of the games where items are found (see
+ * {@code HiddenItemsGamesStats}).
+ */
 public class BlocsGamesStats extends HiddenItemsGamesStats {
 
     public BlocsGamesStats(Scene scene) {

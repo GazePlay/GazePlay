@@ -54,6 +54,9 @@ public class CompositionRoot implements GazePlay.Screens {
     @Getter
     private final Supplier<GameContext> gameContextFactory;
 
+    /**
+     * Creates and connects the components of the application (translator, games catalogue, menus, game screen...).
+     */
     public CompositionRoot() {
         translator = new DefaultTranslator(ActiveConfigurationContext.getInstance(), MultilinguismFactory.getSingleton());
         gamesLocator = new CachingGamesLocator(new CatalogBasedGamesLocator());

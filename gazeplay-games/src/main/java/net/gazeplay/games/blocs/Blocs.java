@@ -21,6 +21,10 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
+/**
+ * Game "Blocks": a picture is hidden under a grid of blocks, and each block the gaze (or the mouse) enters disappears
+ * (with its neighbours when the trail is enabled). The round is won when enough of the picture is uncovered.
+ */
 @Slf4j
 public class Blocs implements GameLifeCycle {
 
@@ -38,6 +42,9 @@ public class Blocs implements GameLifeCycle {
     private final int trail = 10;
     private final ImageLibrary imageLibrary;
 
+    /**
+     * State of a round: the blocks left, and whether the round is finished.
+     */
     @Data
     public static class CurrentRoundDetails {
 
@@ -97,6 +104,9 @@ public class Blocs implements GameLifeCycle {
         initCount = nbColumns * nbLines;
     }
 
+    /**
+     * Shows a picture drawn from the portraits of the user (or the default images), filling the game area.
+     */
     private void setHiddenPicture(final IGameContext gameContext) {
         final Image randomPicture = imageLibrary.pickRandomImage();
 
@@ -172,6 +182,9 @@ public class Blocs implements GameLifeCycle {
 
     }
 
+    /**
+     * Removes all the blocks left (end of the round).
+     */
     private void removeAllBlocs() {
         final Bloc[][] blocs = currentRoundDetails.blocs;
         final int maxY = blocs[0].length;
@@ -183,6 +196,9 @@ public class Blocs implements GameLifeCycle {
         }
     }
 
+    /**
+     * Removes a block; when enough blocks are removed, the round is won.
+     */
     private void removeBloc(final Bloc toRemove) {
 
         if (toRemove == null) {
@@ -197,6 +213,9 @@ public class Blocs implements GameLifeCycle {
         currentRoundDetails.remainingCount--;
     }
 
+    /**
+     * @return the handler removing the block the gaze or the mouse enters, and its neighbours with the trail
+     */
     private EventHandler<Event> buildEvent(final IGameContext gameContext, final Stats stats, final boolean useTrail) {
         return e -> {
 
@@ -253,6 +272,9 @@ public class Blocs implements GameLifeCycle {
         };
     }
 
+    /**
+     * A block of the grid, with its position (column, line).
+     */
     private static class Bloc extends Rectangle {
 
         final int posX;

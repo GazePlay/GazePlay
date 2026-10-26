@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the games "Math101: Addition", "Math101: All operations", "Math101: Division", "Math101:
+ * Multiplication" and "Math101: Substraction" (see {@code SelectionGamesStats}).
+ */
 @Slf4j
 public class MathGamesStats extends SelectionGamesStats {
     public MathGamesStats(Scene gameContextScene) {

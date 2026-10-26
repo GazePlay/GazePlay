@@ -25,6 +25,9 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.components.Portrait;
 
+/**
+ * A mole of the WhacAMole game, in its hole.
+ */
 @Slf4j
 public class MolesChar extends Parent {
 
@@ -122,6 +125,9 @@ public class MolesChar extends Parent {
 
     }
 
+    /**
+     * @return the progress indicator of a fixation on the mole
+     */
     private ProgressIndicator createProgressIndicatorMoles() {
         final ProgressIndicator indicatorMoles = new ProgressIndicator(0);
         indicatorMoles.setMinSize(this.width / 2, this.height / 2);
@@ -134,6 +140,9 @@ public class MolesChar extends Parent {
         return indicatorMoles;
     }
 
+    /**
+     * @return the handler whacking the mole when it is out and the gaze (or the mouse) stays on it
+     */
     public EventHandler<Event> buildEvent() {
         return e -> {
 
@@ -223,6 +232,9 @@ public class MolesChar extends Parent {
         translation.play();
     }
 
+    /**
+     * Makes the mole go back into its hole.
+     */
     private void goIn() {
         canTouched = false;
         out = false;

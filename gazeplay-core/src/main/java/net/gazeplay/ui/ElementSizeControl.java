@@ -22,6 +22,10 @@ import net.gazeplay.commons.ui.Translator;
 
 import static net.gazeplay.ui.QuickControl.*;
 
+/**
+ * Control of the size of the elements of the games (ELEMENT_SIZE setting), in the side panel of the game screen, also
+ * changed with the keyboard.
+ */
 @NoArgsConstructor
 @Slf4j
 public class ElementSizeControl {
@@ -33,6 +37,9 @@ public class ElementSizeControl {
 
     private static final int ELEMENT_SIZE_SLIDER_MAX_VALUE = 200;
 
+    /**
+     * @return the pane of the control
+     */
     public TitledPane createElementSizePane(Configuration config, Translator translator, Scene primaryScene) {
         Label elementSizeValueLabel = new Label("");
         elementSizeValueLabel.setMinWidth(ICON_SIZE);
@@ -56,6 +63,9 @@ public class ElementSizeControl {
         return pane;
     }
 
+    /**
+     * @return the slider, bound to the setting, its value shown in the label
+     */
     public Slider createElementSizeSlider(Configuration config, Label elementSizeValueLabel) {
         final int initialElementSizeValue = config.getElementSize();
 
@@ -86,10 +96,16 @@ public class ElementSizeControl {
         return slider;
     }
 
+    /**
+     * @return the size as shown
+     */
     public String formatValue(double elementSizeValue) {
         return "x" + String.format("%.2f", elementSizeValue);
     }
 
+    /**
+     * Makes Shift + Up and Shift + Down increase and decrease the size during the game.
+     */
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider elementSizeRatioSlider) {
 
         EventHandler<KeyEvent> increaseElementSizeEventHandler = event -> {

@@ -15,6 +15,11 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the games "Math101: Addition", "Math101: All operations", "Math101: Division", "Math101: Multiplication" and
+ * "Math101: Substraction" and their statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 @RequiredArgsConstructor
 public final class MathGameLauncher implements IGameLauncher<Stats, MathGameVariant> {
 

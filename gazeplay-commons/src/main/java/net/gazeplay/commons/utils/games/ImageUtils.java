@@ -8,6 +8,9 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import java.io.File;
 import java.util.*;
 
+/**
+ * Creation of the image libraries of the games, and reading of image files.
+ */
 @Slf4j
 public class ImageUtils {
 
@@ -65,6 +68,10 @@ public class ImageUtils {
         return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary, randomGenerator);
     }
 
+    /**
+     * @return the image files of a directory (jpg, jpeg, png, gif, bmp, wbmp; hidden files excluded), empty when it
+     *   does not exist
+     */
     public static List<File> listImageFiles(final File directoryFile) {
         log.debug("Listing images in directory {}", directoryFile.getAbsolutePath());
         File[] files = directoryFile.listFiles(ImageUtils::isImage);
@@ -76,6 +83,9 @@ public class ImageUtils {
         return result;
     }
 
+    /**
+     * @return the images of the files, loaded now
+     */
     public static List<Image> loadAllAsImages(final List<File> imageFiles) {
         final List<Image> result = new ArrayList<>();
         for (final File currentFile : imageFiles) {
@@ -84,10 +94,16 @@ public class ImageUtils {
         return result;
     }
 
+    /**
+     * @return the image of a file
+     */
     public static Image loadImage(final File file) {
         return new Image(file.toURI().toString());
     }
 
+    /**
+     * @return the image of a URL or of a resource of the classpath
+     */
     public static Image loadImage(final String resource) {
         return new Image(resource);
     }

@@ -27,6 +27,14 @@ final class FixationSequenceRecorder {
     private FixationSequenceRecorder() {
     }
 
+    /**
+     * Adds a sample to a fixation sequence: it extends the last point when it is close enough to it, otherwise it
+     * starts a new point. Either way, the duration of the last point is updated up to the time of this sample.
+     *
+     * @param time time of the sample (acquisition time for the gaze since format version 3)
+     * @param x    horizontal position in the scene
+     * @param y    vertical position in the scene
+     */
     static void add(final LinkedList<FixationPoint> fixationSequence, final long time, final int x, final int y) {
         if (!fixationSequence.isEmpty()) {
             final FixationPoint last = fixationSequence.getLast();

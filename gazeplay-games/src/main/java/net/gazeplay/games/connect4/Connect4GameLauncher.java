@@ -14,6 +14,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "Connect4" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class Connect4GameLauncher implements IGameLauncher<Stats, EnumGameVariant<Connect4GameVariant>> {
     @Override
     public Stats createNewStats(Scene scene) {

@@ -17,6 +17,11 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.ProgressButton;
 
+/**
+ * Game "Opinions": pictures are shown one after the other, and the player gives their opinion on each one by a fixation
+ * on a button (thumb down, no opinion, thumb up; or yes / no, depending on the variant). The round ends after 10
+ * pictures.
+ */
 @Slf4j
 public class OpinionsGame implements GameLifeCycle {
 
@@ -187,6 +192,11 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(opinionGameStats);
     }
 
+    /**
+     * Counts an answer; after 10 answers, ends the round.
+     *
+     * @return whether the round ended
+     */
     private boolean updateScore() {
         boolean end = false;
         score = score + 1;
@@ -199,6 +209,9 @@ public class OpinionsGame implements GameLifeCycle {
         return  end;
     }
 
+    /**
+     * Places an answer button, with its image, and makes it show the next picture after a fixation.
+     */
     private void createAddButtonOpinions(ProgressButton button, String link, double setLayoutX, double setLayoutY) {
         button.setLayoutX(setLayoutX);
         button.setLayoutY(setLayoutY);

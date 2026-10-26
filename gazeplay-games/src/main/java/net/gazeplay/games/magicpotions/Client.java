@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * The client of the Potions game, asking for a potion of a color.
+ *
  * @author Johana MARKU
  */
 class Client extends Rectangle {
@@ -30,6 +32,10 @@ class Client extends Rectangle {
         this.colorsToMix = toMix(request);
     }
 
+    /**
+     * @return the primary colors to mix for the color asked: the color itself for red, yellow and blue, two or three of
+     *   them for the others
+     */
     private List<Color> toMix(final PotionMix potionRequest) {
         final List<Color> colorsToMix = new LinkedList<>();
         if (potionRequest.getColor() == Color.RED || potionRequest.getColor() == Color.YELLOW

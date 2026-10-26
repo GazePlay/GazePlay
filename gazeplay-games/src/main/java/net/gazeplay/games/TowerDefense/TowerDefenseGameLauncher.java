@@ -5,7 +5,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
-import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
@@ -13,6 +12,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
+/**
+ * Creates the game "TowerDefense" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class TowerDefenseGameLauncher implements IGameLauncher<Stats, EnumGameVariant<TowerDefenseVariant>> {
 
     @Override

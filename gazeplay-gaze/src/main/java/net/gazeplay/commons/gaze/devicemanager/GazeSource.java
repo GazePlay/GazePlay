@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 /**
  * An eye tracker, seen by GazePlay: it gives gaze samples, in screen coordinates, from any thread. The dispatch to the
- * nodes of the games (on the JavaFX thread) is done by {@link GazeSourceDeviceManager}.
+ * nodes of the games (on the JavaFX thread) is done by {@code GazeSourceDeviceManager}.
  */
 public interface GazeSource {
 
@@ -32,5 +32,8 @@ public interface GazeSource {
      */
     void start(Supplier<Dimension2D> screenDimension, Supplier<Point2D> screenPosition, Consumer<GazeSample> consumer);
 
+    /**
+     * Stops giving samples. The source can be started again.
+     */
     void stop();
 }

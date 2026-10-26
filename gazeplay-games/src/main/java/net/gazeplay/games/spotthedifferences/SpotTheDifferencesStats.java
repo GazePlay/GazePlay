@@ -10,6 +10,10 @@ import net.gazeplay.stats.ShootGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "SpotDifference", with the info-game.csv file of the games where targets are hit (see
+ * {@code ShootGamesStats}).
+ */
 public class SpotTheDifferencesStats extends ShootGamesStats {
 
     public SpotTheDifferencesStats(Scene scene) {

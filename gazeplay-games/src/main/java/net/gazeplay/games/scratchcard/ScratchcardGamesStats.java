@@ -10,6 +10,10 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "ScratchCard", with the info-game.csv file of the games where items are found (see
+ * {@code HiddenItemsGamesStats}).
+ */
 public class ScratchcardGamesStats extends HiddenItemsGamesStats {
 
     public ScratchcardGamesStats(Scene scene) {

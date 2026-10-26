@@ -9,9 +9,10 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * The hand of the Creampie game, at the bottom of the screen, throwing the pies.
+ * <p>
  * Created by schwab on 17/08/2016.
  */
-
 @Slf4j
 public class Hand extends Parent {
 
@@ -45,6 +46,9 @@ public class Hand extends Parent {
         this.getChildren().add(hand);
     }
 
+    /**
+     * Places the hand at the bottom center of the game area.
+     */
     public void recomputePosition() {
         final Pane parent = (Pane) this.getParent();
         if (parent != null) {
@@ -61,12 +65,18 @@ public class Hand extends Parent {
         }
     }
 
+    /**
+     * Throws a pie at a target.
+     */
     public void onTargetHit(final Target target) {
 
         final Animation animation = createAnimation(target);
         animation.play();
     }
 
+    /**
+     * @return the animation of the pie flying to the target and of the hand
+     */
     private Animation createAnimation(final Target target) {
         final Timeline timeline = new Timeline();
         final Timeline timeline2 = new Timeline();

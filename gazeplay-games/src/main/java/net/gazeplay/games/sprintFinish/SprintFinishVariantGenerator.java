@@ -10,6 +10,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Gives the variants of the games "SprintFinish" and "SprintFinishMouse" proposed in the menu.
+ */
 public class SprintFinishVariantGenerator implements IGameVariantGenerator {
 
     @Override

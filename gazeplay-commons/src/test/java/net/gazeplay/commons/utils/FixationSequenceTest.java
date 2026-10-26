@@ -1,8 +1,6 @@
 package net.gazeplay.commons.utils;
 
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;

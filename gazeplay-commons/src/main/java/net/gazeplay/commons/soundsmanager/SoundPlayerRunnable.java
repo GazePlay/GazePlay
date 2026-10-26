@@ -4,6 +4,10 @@ import javafx.application.Platform;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Background thread of a {@link SoundManager}: until it is asked to stop, it asks the JavaFX thread every 10 ms to play
+ * the next sound of the queue.
+ */
 @Slf4j
 public class SoundPlayerRunnable implements Runnable {
 

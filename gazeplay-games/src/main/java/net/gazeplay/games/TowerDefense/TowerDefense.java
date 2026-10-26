@@ -43,7 +43,10 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 /**
- * Try to defend your castle from the enemies coming from the opposite
+ * Tower Defense: waves of enemies follow the road towards the castle; the player builds towers on the tower places
+ * (chosen by a fixation), paid with the money won by killing the enemies, and can freeze the enemies for 5 seconds
+ * with a blizzard. Each enemy reaching the castle costs a life.
+ *
  * @author HugolinBouhineau, Yaniissou
  *
  */
@@ -410,6 +413,9 @@ public class TowerDefense implements GameLifeCycle {
         projectiles.clear();
     }
 
+    /**
+     * Builds a tower of a type on a tower place, if the player has the money.
+     */
     private void createTower(int col, int row, int type){
         Tower tower;
         switch (type){
@@ -452,6 +458,9 @@ public class TowerDefense implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the tower on a tile, null when there is none
+     */
     private Tower getTower(double col, double row){
         for (Tower tower : towers) {
             if(tower.getCol()==col && tower.getRow()==row){
@@ -461,6 +470,10 @@ public class TowerDefense implements GameLifeCycle {
         return null;
     }
 
+    /**
+     * Applies the hits of the projectiles (and the explosions of the missiles) to the enemies, and gives the reward of
+     * the enemies killed.
+     */
     private void checkColisions() {
         ArrayList<Circle> explosions = new ArrayList<>();
 
@@ -523,6 +536,9 @@ public class TowerDefense implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows the money won where an enemy died.
+     */
     private void playEnemyDeathAnimation(Enemy enemy){
             ImageView image = new ImageView(moneyGainImage);
             image.setFitWidth(tileWidth.get()/2);
@@ -543,6 +559,9 @@ public class TowerDefense implements GameLifeCycle {
             gameContext.getChildren().add(image);
     }
 
+    /**
+     * Moves the enemies along the road; an enemy reaching the end costs a life.
+     */
     private void moveEnemies(){
         ListIterator<Enemy> enemyIter = enemies.listIterator();
         while (enemyIter.hasNext()) {
@@ -557,6 +576,9 @@ public class TowerDefense implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return a label with an icon (life, money, wave), whose font follows the size of the tiles
+     */
     private Label createLabel(String text, String imagePath){
         Label label = new Label(text);
         tileWidth.addListener(observable -> label.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'"));
@@ -568,6 +590,9 @@ public class TowerDefense implements GameLifeCycle {
         return label;
     }
 
+    /**
+     * Removes a life; the game is lost at zero.
+     */
     private void loseLife(){
         life.set(life.get()-1);
         if(life.get()<=0){
@@ -578,6 +603,9 @@ public class TowerDefense implements GameLifeCycle {
         }
     }
 
+    /**
+     * Prepares the next wave of enemies, alternately 5 and 10, stronger at each wave.
+     */
     private void createWave(){
         // Alternate between 5 and 10 enemies
         enemiesSent = 0;
@@ -591,6 +619,9 @@ public class TowerDefense implements GameLifeCycle {
         sendWaveButton.setVisible(false);
     }
 
+    /**
+     * Sends the next enemy of the wave when its delay has passed.
+     */
     private void spawnEnemies(){
         if (enemiesSent < enemiesToSend && enemySpawnTick >= ENEMY_SPAWN_TICK_LIMIT){
             enemySpawnTick = 0;
@@ -614,6 +645,10 @@ public class TowerDefense implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows, around a tower place, the towers that can be built there (or the button selling the tower already there),
+     * selected by a fixation.
+     */
     private void createTowerSelection(int col, int row){
 
         Group group = new Group();
@@ -668,6 +703,9 @@ public class TowerDefense implements GameLifeCycle {
 
     }
 
+    /**
+     * Adds to the selection the icon of a type of tower, with its price; a fixation on it builds the tower.
+     */
     private void createTowerIcon(int towerType, int col, int row, double mainCircleRadius, Group group){
         StackPane stackPane = new StackPane();
 
@@ -747,6 +785,9 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(tower);
     }
 
+    /**
+     * Adds to the selection the icon selling the tower of the tile; a fixation on it sells the tower.
+     */
     private void createSellIcon(int col, int row, double mainCircleRadius, Group group){
         ImageView sellIcon = new ImageView(sellTowerImage);
         sellIcon.setPickOnBounds(true);

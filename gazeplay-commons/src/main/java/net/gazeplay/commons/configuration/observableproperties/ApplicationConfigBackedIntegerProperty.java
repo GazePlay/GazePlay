@@ -5,6 +5,9 @@ import net.gazeplay.commons.configuration.ApplicationConfig;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * An integer setting, stored under a key of GazePlay.properties.
+ */
 public class ApplicationConfigBackedIntegerProperty extends PropertiesIntegerProperty {
 
     private final ApplicationConfig properties;

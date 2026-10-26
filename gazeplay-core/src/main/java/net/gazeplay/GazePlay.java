@@ -23,6 +23,11 @@ import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfileContext;
 import java.util.function.Supplier;
 
+/**
+ * The application seen by its screens: the window, its scene, and the navigation between the screens (user selection,
+ * menu, settings, game, statistics, areas of interest, scan path). Each screen is put on the same scene with its
+ * setUpOnStage method.
+ */
 @Slf4j
 public class GazePlay {
 
@@ -73,39 +78,63 @@ public class GazePlay {
         this.screens = screens;
     }
 
+    /**
+     * Shows the game screen.
+     */
     public void onGameLaunch(GameContext gameContext) {
         gameContext.setUpOnStage(primaryScene);
     }
 
+    /**
+     * Shows the menu of the games; the background music of the menu comes back.
+     */
     public void onReturnToMenu() {
         this.loadHomePage();
         homeMenuScreen.setUpOnStage(primaryScene);
         BackgroundMusicManager.getInstance().onEndGame();
     }
 
+    /**
+     * Shows the statistics screen of a game.
+     */
     public void onDisplayStats(StatsContext statsContext) {
         statsContext.setUpOnStage(primaryScene);
     }
 
+    /**
+     * Shows the areas of interest of a game, of the gaze if it has any, else of the mouse.
+     */
     public void onDisplayAOI(Stats stats) {
         onDisplayAOI(stats, AreaOfInterest.defaultSource(stats));
     }
 
+    /**
+     * Shows the areas of interest of a game for one source.
+     */
     public void onDisplayAOI(Stats stats, AreaOfInterest.Source source) {
         AreaOfInterest areaOfInterest = new AreaOfInterest(this, stats, source);
         areaOfInterest.setUpOnStage(primaryScene);
     }
 
+    /**
+     * Shows the scan path (fixation sequence) of a game.
+     */
     public void onDisplayScanpath(ScanpathView scanPath) {
         scanPath.setUpOnStage(primaryScene);
     }
 
+    /**
+     * Shows the settings page.
+     */
     public void onDisplayConfigurationManagement() {
         this.loadSettingsPage();
-        //configurationContext.resetPane(this);
         configurationContext.setUpOnStage(primaryScene);
     }
 
+    /**
+     * Goes back to the user selection page: the default profile becomes the active one again, with its language and
+     * theme.
+     */
     public void goToUserPage() {
         ActiveConfigurationContext.switchToDefaultUser();
 
@@ -132,6 +161,9 @@ public class GazePlay {
         System.exit(0);
     }
 
+    /**
+     * Switches the window between full screen and windowed.
+     */
     public void toggleFullScreen() {
 
         boolean fullScreen = !primaryStage.isFullScreen();
@@ -149,6 +181,10 @@ public class GazePlay {
         return primaryStage.fullScreenProperty();
     }
 
+    /**
+     * Creates the menu of the games (and the settings page) at the first call; creates the "music" folder with the
+     * default music if needed.
+     */
     public void loadHomePage() {
         if (!this.loadedHomePage) {
             this.loadedHomePage = true;
@@ -158,6 +194,9 @@ public class GazePlay {
         }
     }
 
+    /**
+     * Creates the settings page at the first call.
+     */
     public void loadSettingsPage() {
         if (!this.loadedSettingsPage) {
             this.loadedSettingsPage = true;

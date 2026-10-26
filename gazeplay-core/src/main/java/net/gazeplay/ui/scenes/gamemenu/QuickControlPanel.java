@@ -9,11 +9,17 @@ import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.ui.MusicControl;
 
+/**
+ * Panel of the menu with the settings button and the music controls.
+ */
 public class QuickControlPanel {
 
     @Getter
     private static final QuickControlPanel instance = new QuickControlPanel();
 
+    /**
+     * @return the panel
+     */
     public HBox createQuickControlPanel(
         GazePlay gazePlay,
         MusicControl musicControl,

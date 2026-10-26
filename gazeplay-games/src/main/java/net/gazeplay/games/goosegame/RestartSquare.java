@@ -3,6 +3,9 @@ package net.gazeplay.games.goosegame;
 
 import net.gazeplay.components.Position;
 
+/**
+ * Death square of the Goose game: the pawn landing on it goes back to the first square.
+ */
 public class RestartSquare extends Square {
 
     private final Square firstSquare;

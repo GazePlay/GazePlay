@@ -5,6 +5,10 @@ import lombok.NonNull;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import net.gazeplay.commons.gamevariants.generators.NoVariantGenerator;
 
+/**
+ * Everything the menu needs to know about a game: its summary (name, thumbnail, categories), its variants, and how to
+ * launch it.
+ */
 public class GameSpec {
 
     @Getter
@@ -29,6 +33,9 @@ public class GameSpec {
         this.gameLauncher = gameLauncher;
     }
 
+    /**
+     * A game without variants.
+     */
     public GameSpec(final GameSummary gameSummary, final IGameLauncher gameLauncher) {
         this(gameSummary, new NoVariantGenerator(), gameLauncher);
     }

@@ -25,7 +25,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.NonNull;
@@ -61,6 +60,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The settings page: one row per setting of {@link Configuration}, grouped by category (language, games, eye tracking,
+ * graphics, folders, statistics...), each control bound to its property so that a change is saved at once. Arabic is
+ * laid out from right to left.
+ */
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
@@ -79,6 +83,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     Configuration config = ActiveConfigurationContext.getInstance();
 
+    /**
+     * Builds the page for the active profile, with a home button and the music controls.
+     */
     public ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -155,6 +162,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         this.changeConstrutorCss(config);
     }
 
+    /**
+     * @return the home button, which applies the theme and goes back to the menu
+     */
     HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
         HomeButton homeButton = new HomeButton(screenDimension);
@@ -177,6 +187,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
+    /**
+     * @return the grid of all the settings
+     */
     GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -299,13 +312,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            // TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
-//            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
-//            HBox input = buildBackgroundStyleToggleGroup(config, translator);
-//
-//            addToGrid(grid, currentFormRow, label, input);
-
-            // TO BE USED WITH COLORED BACKGROUND SETTINGS
             I18NText label = new I18NText(translator, "BackgroundColor", COLON);
 
             HBox input = chooseColorHBox(config.getBackgroundColorProperty());
@@ -393,18 +399,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addSubToGrid(grid, currentFormRow, label, input);
         }
-        {
-            I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
-
-            CheckBox input = buildCheckBox(config.getConvexHullDisabledProperty());
-
-            /* REMOVE FROM HERE */
-            input.setDisable(true);
-            label.setOpacity(0.5);
-            /* TO HERE TO ENABLE CONVEX HULL FOR AOI */
-
-            addSubToGrid(grid, currentFormRow, label, input);
-        }
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
         // More Stats settings
         {
@@ -426,6 +420,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
+    /**
+     * Adds the title of a category on a new row of the grid (on the right side for a right-to-left language).
+     */
     void addCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
         int columnIndexLabelLeft = 0;
         int columnIndexLabelRight = 2;
@@ -448,6 +445,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Adds the title of a subcategory on a new row of the grid.
+     */
     void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
         int columnIndexLabelLeft = 1;
         int columnIndexLabelRight = 2;
@@ -473,10 +473,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    public void resetPane(GazePlay gazePlay) {
-        gridPane = buildConfigGridPane(this, gazePlay.getTranslator());
-    }
-
+    /**
+     * Adds a setting (its label and its control) on a new row of the grid.
+     */
     void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
         int columnIndexLabelLeft = 1;
         int columnIndexInputLeft = 2;
@@ -500,6 +499,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Adds a setting of a subcategory, indented, on a new row of the grid.
+     */
     void addSubToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
         int columnIndexLabelLeft = 2;
         int columnIndexInputLeft = 3;
@@ -523,6 +525,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * @return a spinner of a decimal setting, bound to its property, between {@code min} and {@code max}
+     */
     static Spinner<Double> buildSpinner(
         double min,
         double max,
@@ -590,40 +595,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Function to use to permit to user to choose his/her own css file
+     * Folders that can be chosen in the settings.
      */
-    private static Button buildStyleFileChooser(Configuration configuration,
-                                                ConfigurationContext configurationContext) {
-
-        Button buttonLoad = new Button(configuration.getCssFile());
-
-        buttonLoad.setOnAction(arg0 -> {
-            FileChooser fileChooser = new FileChooser();
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = fileChooser.showOpenDialog(scene.getWindow());
-            buttonLoad.setText(file.toString());
-
-            String newPropertyValue = file.toString();
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-
-            configuration.setCssFile(newPropertyValue);
-
-            scene.getStylesheets().remove(0);
-            scene.getStylesheets().add("file://" + newPropertyValue);
-
-            log.info(scene.getStylesheets().toString());
-        });
-
-        return buttonLoad;
-    }
-
     enum DirectoryType {
         FILE, WHERE_IS_IT, MUSIC, SHORTCUT
     }
 
+    /**
+     * @return the button opening the chooser of the images of the games (see {@link CustomFileChooser})
+     */
     private Node buildImageChooser(Configuration configuration,
                                    ConfigurationContext configurationContext,
                                    Translator translator) {
@@ -640,6 +620,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return selectButton;
     }
 
+    /**
+     * @return the button opening the folder of the results in the file manager of the system
+     */
     private Node buildResultFolder(Configuration configuration,
                                    ConfigurationContext configurationContext,
                                    Translator translator) {
@@ -660,6 +643,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return selectButton;
     }
 
+    /**
+     * @return the button choosing a folder of a setting (files, "Where is it?" images, music or shortcuts), showing the
+     *   current folder, and a reset button going back to the default folder
+     */
     Node buildDirectoryChooser(
         Configuration configuration,
         ConfigurationContext configurationContext,
@@ -784,6 +771,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
+    /**
+     * @return the controls creating a shortcut that starts a game (and a variant) directly: the folder of the
+     *   shortcuts, the game, and the "Generate" button
+     */
     VBox buildVariantShortcutMaker(
         Configuration configuration,
         ConfigurationContext configurationContext
@@ -847,7 +838,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         shortCutBox.getChildren().add(gameBox);
 
-        // generateButton.disabledProperty().isNotEqualTo(gameBox.textProperty().isEqualTo("Select Game"));
         generateButton.setOnAction(e3 -> {
             if (currentSelectedGame != null) {
                 String gameOption = "--game \"" + currentSelectedGame.getGameSummary().getNameCode() + "\"";
@@ -876,6 +866,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return shortCutBox;
     }
 
+    /**
+     * @return the menu of the languages, with their flags; choosing one translates the interface at once
+     */
     MenuButton buildLanguageChooser(
         Configuration configuration,
         ConfigurationContext configurationContext
@@ -947,6 +940,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return languageBox;
     }
 
+    /**
+     * @return the choice of the input of the games (mouse only, Tobii only, both), bound to the EYE_TRACKER setting
+     */
     static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration, Translator translator) {
         ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
 
@@ -985,6 +981,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
+    /**
+     * @return the input of the settings, null for an unknown value
+     */
     private static EyeTracker findSelectedEyeTracker(Configuration configuration) {
         for (EyeTracker currentEyeTracker : EyeTracker.values()) {
             if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
@@ -994,6 +993,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return null;
     }
 
+    /**
+     * @return a check box bound to a boolean setting
+     */
     static CheckBox buildCheckBox(BooleanProperty selectionProperty) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(selectionProperty.getValue());
@@ -1001,65 +1003,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private HBox buildBackgroundStyleToggleGroup(
-        Configuration configuration,
-        Translator translator
-    ) {
-        ToggleGroup group = new ToggleGroup();
-        I18NToggleButton darkButton = new I18NToggleButton(translator, "Dark");
-        I18NToggleButton lightButton = new I18NToggleButton(translator, "Light");
-        darkButton.setToggleGroup(group);
-        lightButton.setToggleGroup(group);
-
-
-        configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
-            @Override
-            public Void visitLight() {
-                lightButton.setSelected(true);
-                return null;
-            }
-
-            @Override
-            public Void visitDark() {
-                darkButton.setSelected(true);
-                return null;
-            }
-        });
-
-        configuration.getBackgroundStyleProperty().addListener((obs, oldVal, newVal) -> {
-            newVal.accept(new BackgroundStyleVisitor<Void>() {
-                @Override
-                public Void visitLight() {
-                    lightButton.setSelected(true);
-                    return null;
-                }
-
-                @Override
-                public Void visitDark() {
-                    darkButton.setSelected(true);
-                    return null;
-                }
-            });
-        });
-
-        lightButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
-            }
-        });
-
-        darkButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                configuration.setBackgroundStyle(BackgroundStyle.DARK);
-            }
-        });
-
-        HBox hb = new HBox();
-        hb.getChildren().addAll(darkButton, lightButton);
-
-        return hb;
-    }
-
+    /**
+     * @return the choice of the orientation of the buttons of the menu, bound to the MENU_BUTTONS_ORIENTATION setting
+     */
     static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
         Configuration configuration
     ) {
@@ -1076,6 +1022,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
+    /**
+     * Sets the music folder and loads its music into the playlist; a blank folder gives the "music" folder of the
+     * GazePlay folder, created with the default music.
+     */
     static void changeMusicFolder(final String newMusicFolder, Configuration config) {
 
         String musicFolder = newMusicFolder;
@@ -1099,6 +1049,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     }
 
+    /**
+     * Creates a music folder with the default music in it, if it does not exist.
+     */
     static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
         // Copy resource into users root folder, and set that to be the new default music folder. Then the user
         // can easily add their own songs to it without having to change configurations.
@@ -1124,6 +1077,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * @return the orientation of the settings, null when unknown
+     */
     private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
         final String configValue = configuration.getMenuButtonsOrientation();
         if (configValue == null) {
@@ -1137,6 +1093,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * @return the choice of the key leaving a game, bound to the QUIT_KEY setting
+     */
     ChoiceBox<String> buildQuitKeyChooser(
         Configuration configuration
     ) {
@@ -1150,6 +1109,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
+    /**
+     * @return the choice of the opacity of the heatmaps, from 0 to 1, bound to the HEATMAP_OPACITY setting
+     */
     ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
         for (double i = 0; i <= 10; i++) {
@@ -1163,6 +1125,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
+    /**
+     * Adds one color picker per color of the heatmaps; a change saves the colors.
+     */
     private void fillHBoxWithColorPickers(HBox hbox, Configuration config) {
         for (Color color : config.getHeatMapColors()) {
             ColorPicker colorPicker = new ColorPicker(color);
@@ -1172,6 +1137,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * @return a color picker bound to a color setting
+     */
     private HBox chooseColorHBox(StringProperty property){
         HBox hBox = new HBox();
         hBox.setSpacing(5);
@@ -1181,6 +1149,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hBox;
     }
 
+    /**
+     * @return the colors of the heatmaps, with buttons resetting them, adding a color and removing the last one
+     */
     HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
@@ -1239,6 +1210,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
+    /**
+     * @return the time limit of the games: enabled or not, and its duration in seconds
+     */
     private HBox buildLimiterTime(Configuration config, Translator translator) {
 
         HBox hbox = new HBox();
@@ -1282,6 +1256,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
+    /**
+     * @return the score limit of the games: enabled or not, and the score
+     */
     private HBox buildLimiterScore(Configuration config, Translator translator) {
 
         HBox hbox = new HBox();
@@ -1326,6 +1303,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
+    /**
+     * @return the check box of the dark theme, which restyles the page at once
+     */
     private HBox buildDarktheme(Configuration config, ConfigurationContext configurationContext) {
 
         HBox hbox = new HBox();
@@ -1342,6 +1322,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
+    /**
+     * Saves the colors of the color pickers as the colors of the heatmaps.
+     */
     private void updateHeatMapColorProperty(HBox hbox, Configuration config) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 3; i < hbox.getChildren().size(); i++) {
@@ -1353,10 +1336,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         config.setHeatMapColors(stringBuilder.toString());
     }
 
-    private void updateTileColorProperty(HBox hbox, Configuration config) {
-        config.setTileColors(((ColorPicker) (hbox.getChildren().get(0))).getValue().toString());
-    }
-
+    /**
+     * Styles the page for the light or dark theme.
+     */
     public void changeConstrutorCss(Configuration config){
         if (!config.isDarkThemeEnabled()) {
             root.setStyle(
@@ -1367,6 +1349,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    /**
+     * Styles the grid of the settings for the light or dark theme.
+     */
     public void changeGridCss(Configuration config){
         if (config.isDarkThemeEnabled()) {
             root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "

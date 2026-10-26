@@ -7,6 +7,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.games.whereisit.gamevariantgenerator.FindTheOddOneOutGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.FindTheOddOneOutGameLauncher;
 
+/**
+ * Declares the game "FindTheOddOneOut" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}).
+ */
 public class FindTheOddOneOutGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {

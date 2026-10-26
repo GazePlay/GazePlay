@@ -15,6 +15,9 @@ import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+/**
+ * A colored button of the Simon device, with its note, selected by a fixation.
+ */
 @Slf4j
 public class Bouton extends Arc {
 
@@ -43,6 +46,9 @@ public class Bouton extends Arc {
         gameContext.getChildren().add(this.progressIndicator);
     }
 
+    /**
+     * @return the progress indicator of a fixation on the button
+     */
     private ProgressIndicator createProgressIndicator(final double width, final double height){
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -77,6 +83,9 @@ public class Bouton extends Arc {
         return indicator;
     }
 
+    /**
+     * @return the handler selecting the button after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent(){
         return e->{
             if (isActivated){
@@ -90,6 +99,9 @@ public class Bouton extends Arc {
             }
         };
     }
+    /**
+     * Stops the fixation on the button.
+     */
     private void stopTimer(){
         if (timelineProgressBar != null){
             if (!this.isDisabled()){
@@ -102,6 +114,9 @@ public class Bouton extends Arc {
         }
     }
 
+    /**
+     * Starts the fixation on the button.
+     */
     private void initTimer(){
         this.setOpacity(0.8);
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());

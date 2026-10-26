@@ -48,6 +48,13 @@ import net.gazeplay.ui.scenes.stats.StatsContextFactory;
 import java.io.IOException;
 import java.util.function.Supplier;
 
+/**
+ * The game screen: the game area ({@link #getRoot()}, where the game draws), the configuration button and its side
+ * panel (music, volumes, speed, fixation length, element size, progress indicators, background color, full screen, home
+ * and replay buttons), the "bravo" animation, and the gaze and sound managers of the game.
+ * <p>
+ * It implements {@link IGameContext}, the interface the games see. Created by {@link GameContextFactory}.
+ */
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
@@ -57,6 +64,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Getter
     private ReplayButton replayButton;
 
+    /**
+     * Keeps the configuration button at the bottom of the window.
+     */
     public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
 
@@ -101,6 +111,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private GridPane leftControlPane;
 
+    /**
+     * Use {@link GameContextFactory} to create a game screen.
+     */
     protected GameContext(
         @NonNull GazePlay gazePlay,
         @NonNull Translator translator,
@@ -137,11 +150,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         log.info("SETTING UP");
         updateConfigPane(configPane, getGazePlay().getPrimaryStage());
-    }
-
-    public void resetBordersToFront() {
-        // rootBorderPane.setBottom(null);
-        // rootBorderPane.setBottom(bottomPane);
     }
 
     @Override
@@ -210,10 +218,16 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     }
 
+    /**
+     * @return the time between two instants in ms, in seconds
+     */
     private double time(double start, double end) {
         return (end - start) / 1000;
     }
 
+    /**
+     * Makes the quit key of the settings (QUIT_KEY) end the game, as the home button does, when it is released.
+     */
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         Configuration config = getConfiguration();
         final Scene scene = gazePlay.getPrimaryScene();
@@ -235,6 +249,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         });
     }
 
+    /**
+     * Fills the side panel with the controls; during a replay, without the replay button.
+     */
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, boolean inReplayMode) {
         Configuration config = getConfiguration();
         MusicControl musicControl = getMusicControl();
@@ -293,6 +310,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
     }
 
+    /**
+     * Sizes the buttons of the side panel for the width of the window.
+     */
     public void updateControllPanel(ScrollPane scrollPane, I18NButton toggleFullScreenButtonInGameScreen, Stage primaryStage) {
         double buttonSize = primaryStage.getWidth() / 10;
 
@@ -307,6 +327,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
     }
 
+    /**
+     * @return the home button: it ends the game, saves its results and shows its statistics
+     */
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
                                                    @NonNull GameLifeCycle currentGame) {
 
@@ -323,6 +346,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return homeButton;
     }
 
+    /**
+     * @return the replay button: it ends the game and replays it at once
+     */
     public ReplayButton createReplayButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
                                                        @NonNull GameLifeCycle currentGame) {
 
@@ -341,6 +367,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return replayButton;
     }
 
+    /**
+     * Ends the game for its replay: saves the results and shows the statistics (the gaze manager is kept for the
+     * replay).
+     */
     public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
@@ -364,6 +394,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
 
+    /**
+     * Ends the game: stops the game, its sounds, the gaze and the statistics, saves the results and shows the
+     * statistics screen.
+     */
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
@@ -400,16 +434,25 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
     }
 
+    /**
+     * @return a home button without action
+     */
     public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
         return new HomeButton(screenDimension);
     }
 
+    /**
+     * @return a replay button without action
+     */
     public ReplayButton createReplayButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
         return new ReplayButton(screenDimension);
     }
 
+    /**
+     * Ends the replay of a replayData.json file and shows the statistics of the recorded game (nothing is saved again).
+     */
     public void exitReplayJsonGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
@@ -509,11 +552,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return gamingRoot;
     }
 
-    /*
-     * When the game starts,
-     * the player can't select an element
-     * until the delay is over
-     */
     public void onGameStarted() {
     }
 

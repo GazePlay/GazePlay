@@ -19,6 +19,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
+/**
+ * Games "SprintFinish" and "SprintFinishMouse": the cat must reach its food dish through walls, doors opened by
+ * switches and moving walls, while dogs chase it (looking at a dog stops it). Several levels.
+ */
 public class SprintFinish extends Parent implements GameLifeCycle {
 
     /**
@@ -238,6 +242,9 @@ public class SprintFinish extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * Builds a level: its walls, switches, doors, dogs and dish.
+     */
     private void setLevel(final int i){
 
         this.level = i;

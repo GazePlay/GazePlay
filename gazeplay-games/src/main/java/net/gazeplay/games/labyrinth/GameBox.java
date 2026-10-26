@@ -8,6 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.IGameContext;
 
+/**
+ * A box of the labyrinth: a wall or a free box, with a progress indicator for the versions where the player looks at
+ * the box to go to.
+ */
 public class GameBox extends Parent {
 
     @Getter
@@ -62,12 +66,18 @@ public class GameBox extends Parent {
         return isAWall;
     }
 
+    /**
+     * @return whether a box is next to this one (same line or column, one box away)
+     */
     boolean isNextTo(final int i, final int j) {
         final boolean nextToInRow = (i == numRow) && (j == numCol - 1 || j == numCol + 1);
         final boolean nextToInCol = (j == numCol) && (i == numRow - 1 || i == numRow + 1);
         return (nextToInRow || nextToInCol);
     }
 
+    /**
+     * @return the progress indicator of a fixation on the box
+     */
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(this.x + width * 0.05);
@@ -78,6 +88,9 @@ public class GameBox extends Parent {
         return indicator;
     }
 
+    /**
+     * Applies the color of the progress indicator chosen in the settings.
+     */
     public void verifyProgressBarValue(IGameContext gameContext) {
         indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
     }

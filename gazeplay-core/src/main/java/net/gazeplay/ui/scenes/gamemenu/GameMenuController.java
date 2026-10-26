@@ -21,14 +21,15 @@ import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+/**
+ * Starts the games chosen in the menu. Each game runs in its own JVM (decision of the maintainer: isolation and fresh
+ * state for each game): the menu shows a loading screen, starts the JVM, and comes back after 6 seconds.
+ */
 @Slf4j
 public class GameMenuController {
 
@@ -39,6 +40,9 @@ public class GameMenuController {
         this.gameContextFactory = gameContextFactory;
     }
 
+    /**
+     * Starts a game chosen in the menu: shows its variants when it has several, otherwise starts it directly.
+     */
     public void onGameSelection(
         @NonNull GazePlay gazePlay,
         @NonNull Parent root,
@@ -62,6 +66,9 @@ public class GameMenuController {
         }
     }
 
+    /**
+     * Starts a game, and its variant, in a new JVM of the size of the window (full screen if the window is).
+     */
     public void chooseAndStartNewGameProcess(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
@@ -85,6 +92,10 @@ public class GameMenuController {
 
 
 
+    /**
+     * Starts a JVM, its output in the output of this one, and shows the menu again after 6 seconds (the time for the
+     * game to appear over it).
+     */
     public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
 
         Thread displayLoadingContextThread = new Thread(() -> {
@@ -111,6 +122,11 @@ public class GameMenuController {
         }
     }
 
+    /**
+     * @return the command starting a game in a new JVM: the same Java and classpath, the JVM options of
+     *   {@link GazePlayLauncher#jvmOptions()}, the GazePlay folder, the user, the game, its variant and the size of the
+     *   window (none for the full screen)
+     */
     public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width) {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome +
@@ -146,6 +162,10 @@ public class GameMenuController {
         return new ProcessBuilder(commands);
     }
 
+    /**
+     * Starts a game in this JVM (used by the JVM of the game itself, started with --game): shows the game screen,
+     * creates the game and its statistics, and starts it.
+     */
     public void chooseAndStartNewGame(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
@@ -190,6 +210,10 @@ public class GameMenuController {
         log.info("Game launched : {}, variant {}", gameNameCode, gameVariantLabel);
     }
 
+    /**
+     * Plays the music of the game, if it has one, instead of the background music; otherwise the background music goes
+     * on.
+     */
     void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {
         MediaPlayer currentMusic = musicManager.getCurrentMusic();
         boolean defaultMusicPlaying = true;

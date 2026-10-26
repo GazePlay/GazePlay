@@ -3,6 +3,9 @@ package net.gazeplay.games.math101;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+/**
+ * The kinds of Math101 games: their name, color and operators.
+ */
 public enum MathGameType {
 
     ADDITION("math-101-addition", Colors.pastelBlue, MathOperation.PLUS),
@@ -34,6 +37,9 @@ public enum MathGameType {
         this.operators = operators;
     }
 
+    /**
+     * @return the operator of the next operation, drawn at random when the game has several
+     */
     public MathOperation chooseOperator(ReplayablePseudoRandom random) {
         if (operators.length == 1) {
             return operators[0];
@@ -43,6 +49,9 @@ public enum MathGameType {
         }
     }
 
+    /**
+     * Background colors of the games.
+     */
     public static class Colors {
 
         public static final Color pastelRed = Color.rgb(255, 227, 227);

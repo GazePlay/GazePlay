@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * Main class of GazePlay Learning (see {@link #main(String[])}).
+ */
 public class GazePlayLauncher {
 
     /**
@@ -57,6 +60,11 @@ public class GazePlayLauncher {
             "--sun-misc-unsafe-memory-access=allow");
     }
 
+    /**
+     * Entry point of GazePlay Learning, for the menu and for each game (one JVM per game). The GazePlay folder is found
+     * (and moved from its former location if needed) before anything is logged, since the log file is in it; the
+     * application then runs on a bootstrap thread, and the process exits with the exit code of the command line.
+     */
     public static void main(String[] args) {
 
         // Before anything is logged
@@ -91,6 +99,9 @@ public class GazePlayLauncher {
         return new CommandLine(new MainCommand(compositionRoot)).execute(args);
     }
 
+    /**
+     * Logs how the GazePlay folder was found, and creates it if missing.
+     */
     private static void initGazePlayDirectory(List<String> gazePlayFolderMessages) {
         // What was done when the folder was found (moved from its former location in the home directory...)
         gazePlayFolderMessages.forEach(message -> log().info(message));
@@ -103,6 +114,9 @@ public class GazePlayLauncher {
         }
     }
 
+    /**
+     * Logs the version, the system properties and the memory of the JVM, to help with the problems reported by users.
+     */
     private static void printStartupInfo() {
         final String versionInfo = VersionInfo.findVersionInfo();
 

@@ -8,6 +8,9 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
 
+/**
+ * Gives the variants of the games "EggGame" and "PersonalizeEggGame" proposed in the menu.
+ */
 public class EggGameVariantGenerator implements IGameVariantGenerator {
 
     @Override

@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 
+/**
+ * Position of a cup: its cell in the grid, converted to pixels.
+ */
 @Slf4j
 public class PositionCup {
     @Getter
@@ -36,6 +39,9 @@ public class PositionCup {
         this.imageHeight = imageHeight;
     }
 
+    /**
+     * @return the position in pixels of a cell
+     */
     public Point calculateXY(final int newCellX, final int newCellY) {
         final double cellSizeWidth = screenWidth / maxCellsX;
         final double cellSizeHeight = screenHeight / maxCellsY;

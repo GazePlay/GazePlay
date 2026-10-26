@@ -14,6 +14,10 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Creates the game "Coloring" and its statistics, for a new game or for the replay of a saved one (see
+ * {@code IGameLauncher}).
+ */
 public class ColorsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
 
     private ColorsGamesStats gameStat;

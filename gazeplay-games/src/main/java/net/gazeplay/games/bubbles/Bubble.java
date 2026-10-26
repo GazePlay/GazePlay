@@ -2,7 +2,6 @@ package net.gazeplay.games.bubbles;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -10,16 +9,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.RandomPositionGenerator;
-import net.gazeplay.games.blocs.Blocs;
-
 import java.util.ArrayList;
 
 /**
+ * Games "ColoredBubbles" and "PortraitBubbles": bubbles (colored, or showing the portraits of the user) move across the
+ * screen in the direction of the variant, or stay still; each bubble the gaze (or the mouse) enters bursts and comes
+ * back elsewhere. With the background enabled, an ocean picture is hidden under black blocks, one of which disappears
+ * at each burst.
+ * <p>
  * Created by schwab on 28/08/2016.
  */
 @Slf4j
@@ -62,6 +63,9 @@ public class Bubble implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
+    /**
+     * Adds the ocean picture drawn at random, covered by a grid of 6 x 6 black blocks, if the background is enabled.
+     */
     void initBackground(boolean useBackgroundImage) {
         if (useBackgroundImage && gameContext.getConfiguration().isBackgroundEnabled()) {
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -126,6 +130,9 @@ public class Bubble implements GameLifeCycle {
         gameContext.clear();
     }
 
+    /**
+     * A black block hiding the background picture.
+     */
     public static class Bloc extends Rectangle {
 
         final int posX;

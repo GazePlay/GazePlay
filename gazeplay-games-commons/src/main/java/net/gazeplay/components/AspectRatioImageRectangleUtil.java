@@ -5,14 +5,24 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Fills a rectangle with an image without distorting it, centered in the game area.
+ */
 public class AspectRatioImageRectangleUtil {
 
+    /**
+     * Same as {@link #setFillImageKeepingAspectRatio(Rectangle, Image, Dimension2D)}, for an image resource.
+     */
     public void setFillImageKeepingAspectRatio(final Rectangle rectangle, final String imageResourceLocation,
                                                final Dimension2D gamingContextDimension2D) {
         final Image image = new Image(imageResourceLocation);
         setFillImageKeepingAspectRatio(rectangle, image, gamingContextDimension2D);
     }
 
+    /**
+     * Keeps the height of the rectangle, sets its width to the proportions of the image, centers it in the game area
+     * and fills it with the image (any translation or scale is reset).
+     */
     public void setFillImageKeepingAspectRatio(final Rectangle rectangle, final Image image, final Dimension2D gamingContextDimension2D) {
         final double imageWidth = image.getWidth();
         final double imageHeight = image.getHeight();

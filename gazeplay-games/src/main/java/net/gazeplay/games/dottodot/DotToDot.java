@@ -6,8 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -19,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -30,6 +27,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Game "DotToDot": the dots of a drawing must be joined by fixations, in the order of their numbers (or of the order
+ * given), to reveal the drawing. The "Dynamic" variants go to the next level when the player makes few mistakes. The
+ * dots of each level are read from a JSON resource.
+ */
 @Slf4j
 public class DotToDot implements GameLifeCycle {
 
@@ -78,20 +80,6 @@ public class DotToDot implements GameLifeCycle {
 
     }
 
-    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
-
-        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
-        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
-
-        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
-        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
-
-        background.setX(offsetX);
-        background.setY(offsetY);
-
-        gameContext.getChildren().add(background);
-    }
-
     @Override
     public void launch() {
 
@@ -107,20 +95,6 @@ public class DotToDot implements GameLifeCycle {
         JsonObject jsonRoot;
         jsonRoot = (JsonObject) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level + indexElement + ".json")), StandardCharsets.UTF_8));
-
-        /* Uncomment this part when images will be available */
-//        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-//        Configuration config = gameContext.getConfiguration();
-//        String backgroundPath = path + jsonRoot.get("background").getAsString();
-//        Image backgroundImage = new Image(backgroundPath);
-//        ImageView background = new ImageView(backgroundImage);
-//
-//        double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
-//            dimensions.getHeight() / backgroundImage.getHeight());
-//
-//        if (config.isBackgroundEnabled()) {
-//            createBackground(background, dimensions, scaleRatio, gameContext);
-//        }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
 
@@ -138,10 +112,16 @@ public class DotToDot implements GameLifeCycle {
         gameContext.clear();
     }
 
+    /**
+     * Counts a wrong dot chosen.
+     */
     public void catchFail() {
         fails++;
     }
 
+    /**
+     * Creates the dots of a level, from their positions and numbers in the JSON resource.
+     */
     public void createDots(JsonArray elements) {
         int index = 0;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -213,11 +193,6 @@ public class DotToDot implements GameLifeCycle {
         stats.incrementNumberOfGoalsToReach();
         gameContext.firstStart();
 
-    }
-
-    public void positioningDot(DotEntity dot) {
-        gameContext.getChildren().add(dot);
-        gameContext.getGazeDeviceManager().addEventFilter(dot);
     }
 
 }

@@ -3,6 +3,9 @@ package net.gazeplay.games.opinions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A variant of the game "Opinions", chosen in the menu.
+ */
 @RequiredArgsConstructor
 public enum OpinionsGameVariant {
     OPINIONS("Opinions"),

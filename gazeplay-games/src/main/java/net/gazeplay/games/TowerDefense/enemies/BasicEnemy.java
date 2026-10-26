@@ -3,6 +3,9 @@ package net.gazeplay.games.TowerDefense.enemies;
 import javafx.scene.image.Image;
 import net.gazeplay.games.TowerDefense.maps.Map;
 
+/**
+ * Enemy of normal speed and health.
+ */
 public class BasicEnemy extends Enemy {
 
     public BasicEnemy(Map map, double x, double y) {

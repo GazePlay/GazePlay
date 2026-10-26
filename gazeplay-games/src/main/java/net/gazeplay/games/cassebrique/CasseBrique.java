@@ -24,6 +24,12 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
+/**
+ * Game "CasseBrique" (brick breaker): the paddle follows the gaze (or the mouse) horizontally and sends the ball back
+ * towards a wall of bricks drawn by the variant (block, space invader, arc, smiley). Each brick hit disappears, except
+ * the grey ones, which cannot be broken; the game is won when all the other bricks are broken. A fallen ball comes back
+ * on the paddle.
+ */
 @Slf4j
 public class CasseBrique implements GameLifeCycle {
 
@@ -131,6 +137,9 @@ public class CasseBrique implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
+    /**
+     * Removes the fallen ball and puts a new one on the paddle, which starts after a delay.
+     */
     private void ballfall() {
         speed = 0;
         rad = 0;
@@ -139,23 +148,35 @@ public class CasseBrique implements GameLifeCycle {
         startafterdelay(1500);
     }
 
+    /**
+     * Puts a ball on the paddle.
+     */
     private void createball() {
         ball = new Circle(barre.getX() + widthbarre / 2, dimension2D.getHeight() * 0.85, sizeball);
         gameContext.getChildren().add(ball);
     }
 
+    /**
+     * Creates the paddle, at the bottom of the screen.
+     */
     private void createbarre() {
         barre = new Rectangle(dimension2D.getWidth() / 2 - widthbarre / 2, dimension2D.getHeight() * 0.92 - heightbarre / 2, widthbarre, heightbarre);
         barre.setFill(Color.BROWN);
         gameContext.getChildren().add(barre);
     }
 
+    /**
+     * Starts the ball after a delay.
+     */
     private void startafterdelay(int delay) {
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
         wait.setOnFinished(e -> speed = 8);
         wait.play();
     }
 
+    /**
+     * Moves the ball every 15 ms, bouncing on the borders, the paddle and the bricks; checks the end of the game.
+     */
     private void move() {
         PauseTransition wait = new PauseTransition(Duration.millis(15));
         wait.setOnFinished(e -> {
@@ -206,6 +227,9 @@ public class CasseBrique implements GameLifeCycle {
         wait.play();
     }
 
+    /**
+     * Bounces the ball on the paddle, its angle changed by the movement of the paddle.
+     */
     private void bounceBarre() {
         if (onLeft(barre)) {
             touchX = true;
@@ -223,6 +247,9 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
+    /**
+     * Bounces the ball on a brick, and removes the brick if {@code remove}.
+     */
     private void bounceWall(Rectangle wall, boolean remove) {
         boolean touch = false;
         if (onLeft(wall) || onRight(wall)) {
@@ -239,12 +266,18 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
+    /**
+     * Changes the angle of the ball by the movement of the paddle since the last frame.
+     */
     private void radInertiaBarre() {
         double e = 1 - Math.abs(Math.sin(rad));
         double d = (oldXbarre - barre.getX()) / dimension2D.getWidth();
         rad += e * Math.cbrt(d);
     }
 
+    /**
+     * Ends the game when no breakable brick is left.
+     */
     private void testwin() {
         if (walllist.isEmpty()) {
             stats.stop();
@@ -262,22 +295,37 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return whether the ball touches the top of a rectangle
+     */
     private boolean onTop(Rectangle wall) {
         return ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth();
     }
 
+    /**
+     * @return whether the ball touches the bottom of a rectangle
+     */
     private boolean onBottom(Rectangle wall) {
         return ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight() && ball.getCenterY() + sizeball >= wall.getY() + wall.getHeight() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth();
     }
 
+    /**
+     * @return whether the ball touches the left side of a rectangle
+     */
     private boolean onLeft(Rectangle wall) {
         return ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight();
     }
 
+    /**
+     * @return whether the ball touches the right side of a rectangle
+     */
     private boolean onRight(Rectangle wall) {
         return ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth() && ball.getCenterX() + sizeball >= wall.getX() + wall.getWidth() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight();
     }
 
+    /**
+     * Adds a background picture drawn from the "opinions" images of the user (or the default images).
+     */
     private void initbackground() {
         ImageView background = new ImageView(ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), new ReplayablePseudoRandom()).pickRandomImage());
         background.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
@@ -292,6 +340,9 @@ public class CasseBrique implements GameLifeCycle {
         gameContext.getChildren().add(backgroundCenteredPane);
     }
 
+    /**
+     * Builds the bricks of a map of colors: grey bricks cannot be broken, transparent cells are empty.
+     */
     private void build(Color[][] map) {
         int width = map[0].length;
         int height = map.length;
@@ -315,6 +366,9 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
+    /**
+     * Builds the "block" map.
+     */
     private void bloc() {
         Color c1 = Color.PURPLE;
         Color c2 = Color.BLUE;
@@ -339,6 +393,9 @@ public class CasseBrique implements GameLifeCycle {
         build(map);
     }
 
+    /**
+     * Builds the "space invader" map.
+     */
     private void space() {
         Color cT = Color.TRANSPARENT;
         Color c1 = Color.CYAN;
@@ -358,6 +415,9 @@ public class CasseBrique implements GameLifeCycle {
         build(map);
     }
 
+    /**
+     * Builds the "arc" map.
+     */
     private void arc() {
         Color cT = Color.TRANSPARENT;
         Color c1 = Color.PURPLE;
@@ -383,6 +443,9 @@ public class CasseBrique implements GameLifeCycle {
         build(map);
     }
 
+    /**
+     * Builds the "smiley" map.
+     */
     private void smiley() {
         Color cT = Color.TRANSPARENT;
         Color c1 = Color.YELLOW;

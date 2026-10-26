@@ -12,11 +12,19 @@ import java.io.File;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * Stylesheets of the scenes: the light or dark base, one adapted to the width of the screen, the color theme of the
+ * settings, then the user's own stylesheets of the "styles" folder of the GazePlay folder.
+ */
 @Slf4j
 public class CssUtil {
 
     private static final int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
 
+    /**
+     * Replaces the stylesheets of a scene by those of the current settings. A theme that is neither built in nor an
+     * existing file gives the default theme.
+     */
     public static void setPreferredStylesheets(final Configuration config, final Scene scene, final Supplier<Dimension2D> screenDimensionSupplier) {
         final ObservableList<String> stylesheets = scene.getStylesheets();
 
@@ -53,6 +61,9 @@ public class CssUtil {
         log.info(stylesheets.toString());
     }
 
+    /**
+     * Adds the stylesheet of the largest supported width not wider than the screen (none below 800 pixels).
+     */
     private static void addMediaWidthStylesheet(final ObservableList<String> stylesheets, final Supplier<Dimension2D> screenDimensionSupplier) {
         final int actualScreenWidth = (int) screenDimensionSupplier.get().getWidth();
         log.info("actualScreenWidth = {}", actualScreenWidth);
@@ -67,6 +78,9 @@ public class CssUtil {
         }
     }
 
+    /**
+     * Adds the .css files of the "styles" folder of the GazePlay folder, if any.
+     */
     public static void addStylesheets(final ObservableList<String> styleSheets) {
         final File styleFolder = getStylesFolder();
         if (styleFolder.exists()) {

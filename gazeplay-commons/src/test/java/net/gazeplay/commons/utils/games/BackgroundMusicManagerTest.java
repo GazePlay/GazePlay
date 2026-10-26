@@ -179,8 +179,8 @@ class BackgroundMusicManagerTest {
 
         File result = musicManagerSpy.downloadAndGetFromCache(resource, resource.toExternalForm());
 
-        File expected = new File(cacheFolder, "music/" +
-            new String(Base64.getEncoder().encode(resource.toExternalForm().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
+        File expected = new File(cacheFolder, "music/" + Base64.getUrlEncoder().withoutPadding()
+            .encodeToString(resource.toExternalForm().getBytes(StandardCharsets.UTF_8)) + ".mp3");
         assertEquals(expected, result);
         assertTrue(expected.isFile());
 
@@ -194,8 +194,8 @@ class BackgroundMusicManagerTest {
         File folder = new File(cacheFolder, "music");
         folder.mkdirs();
 
-        File expected = new File(folder,
-            new String(Base64.getEncoder().encode(resource.toExternalForm().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
+        File expected = new File(folder, Base64.getUrlEncoder().withoutPadding()
+            .encodeToString(resource.toExternalForm().getBytes(StandardCharsets.UTF_8)) + ".mp3");
         expected.createNewFile();
 
         // Nothing is downloaded: the file is already in the cache
@@ -204,4 +204,19 @@ class BackgroundMusicManagerTest {
         assertEquals(expected, result);
         FileUtils.deleteDirectory(cacheFolder);
     }
+    /**
+     * The file in the cache keeps the extension of the URL, from which JavaFX recognises the format: the music is
+     * played from the cache (it used to be downloaded, then played from its URL again).
+     */
+    @Test
+    void shouldKeepTheExtensionOfTheMusicInTheCache() {
+        assertEquals("mp3", BackgroundMusicManager.extensionOf("https://opengameart.org/sites/default/files/a_0.mp3"));
+        assertEquals("mp3", BackgroundMusicManager.extensionOf("jar:file:/C:/gazeplay.jar!/data/music/a.mp3"));
+        assertEquals("wav", BackgroundMusicManager.extensionOf("file:/C:/music/a.wav?x=1"));
+        assertEquals("", BackgroundMusicManager.extensionOf("https://opengameart.org/music"));
+        assertEquals("", BackgroundMusicManager.extensionOf("https://opengameart.org/"));
+        assertTrue(BackgroundMusicManager.cacheFileOf("https://a.org/b.mp3").getName().endsWith(".mp3"));
+        assertFalse(BackgroundMusicManager.cacheFileOf("https://a.org/b.mp3").getName().contains("/"));
+    }
+
 }

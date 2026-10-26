@@ -10,6 +10,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "CasseBrique" (see {@code Stats}).
+ */
 public class CasseBriqueStats extends Stats {
 
     public CasseBriqueStats(Scene scene) {

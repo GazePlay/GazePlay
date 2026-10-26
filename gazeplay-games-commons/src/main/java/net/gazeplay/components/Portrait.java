@@ -1,6 +1,5 @@
 package net.gazeplay.components;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
@@ -9,13 +8,17 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
-import java.util.List;
-
 /**
+ * A circle filled with an image drawn from a library, at a random position (the bubbles of the "Bubbles" game, for
+ * instance).
+ * <p>
  * Created by schwab on 12/08/2016.
  */
 public class Portrait extends Circle {
 
+    /**
+     * @return the library of the "portraits" folder of the images of the user, with the default images as fallback
+     */
     public static ImageLibrary createImageLibrary(ReplayablePseudoRandom randomGenerator) {
         return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
     }
@@ -32,24 +35,12 @@ public class Portrait extends Circle {
         setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
     }
 
+    /**
+     * Moves the center of the circle.
+     */
     public void setPosition(final Position position) {
         this.setCenterX(position.getX());
         this.setCenterY(position.getY());
-    }
-
-    public Position getPosition() {
-        return new Position((int) getCenterX(), (int) getCenterY());
-    }
-
-    public Position getCurrentPositionWithTranslation() {
-        return new Position((int) getCenterX() + (int) getTranslateX(), (int) getCenterY() + (int) getTranslateY());
-    }
-
-    protected Image pickRandomImage(final List<Image> availableImages) {
-        final int count = availableImages.size();
-        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
-        final int index = r.nextInt(count);
-        return availableImages.get(index);
     }
 
 }

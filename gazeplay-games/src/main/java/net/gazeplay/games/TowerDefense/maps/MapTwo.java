@@ -1,5 +1,8 @@
 package net.gazeplay.games.TowerDefense.maps;
 
+/**
+ * Second map of the Tower Defense game.
+ */
 public class MapTwo extends Map{
     @Override
     public void setStructure() {

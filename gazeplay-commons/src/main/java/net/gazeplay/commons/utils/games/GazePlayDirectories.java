@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+/**
+ * Locations of the files of GazePlay: the GazePlay folder (Documents\GazePlay_Learning) and its subfolders, for the
+ * default profile and for each user profile (profiles/&lt;user&gt;/...).
+ */
 public class GazePlayDirectories {
 
     /**
@@ -34,8 +38,8 @@ public class GazePlayDirectories {
     private static List<String> resolutionMessages = List.of();
 
     /**
-     * @return Directory for GazePlay: a folder called GazePlay_Learning in the Documents folder of the user. It used
-     * to be ~/GazePlay: a folder found there is moved at the first call (see {@link GazePlayFolderMigration})
+     * @return Directory for GazePlay: a folder called GazePlay_Learning in the Documents folder of the user. It used to
+     *   be ~/GazePlay: a folder found there is moved at the first call (see {@link GazePlayFolderMigration})
      */
     public static File getGazePlayFolder() {
         final String folder = System.getProperty(GAZEPLAY_FOLDER_PROPERTY);
@@ -104,31 +108,39 @@ public class GazePlayDirectories {
         GazePlayFolderMigration.relocatePaths(properties, getLegacyGazePlayFolder(), getGazePlayFolder());
     }
 
+    /**
+     * @return the default files folder (FILE_DIR setting): the images and the shortcuts of the games
+     */
     public static File getDefaultFileDirectoryDefaultValue() {
         return new File(getGazePlayFolder(), "files");
     }
 
+    /**
+     * @return the default folder of the shortcuts of the games created from the settings
+     */
     public static File getShortcutDirectory() {
         return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "shortcut");
     }
 
+    /**
+     * @return the folder of the user profiles
+     */
     public static File getProfilesDirectory() {
         return new File(getGazePlayFolder(), "profiles");
     }
 
+    /**
+     * @return the default files folder of a user profile
+     */
     public static File getFileDirectoryUserValue(String user) {
         return new File(getUserProfileDirectory(user), "files");
     }
 
+    /**
+     * @return the folder of a user profile (its settings, statistics, files...)
+     */
     public static File getUserProfileDirectory(String user) {
         return new File(getProfilesDirectory(), user);
-    }
-
-    /**
-     * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
-     */
-    public static File getTempFolder() {
-        return new File(getGazePlayFolder(), "temp");
     }
 
     /**
@@ -146,6 +158,9 @@ public class GazePlayDirectories {
         return new File(getGazePlayFolder(), "data");
     }
 
+    /**
+     * @return the statistics folder of a user, or of the default profile when {@code user} is empty
+     */
     public static File getUserStatsFolder(String user) {
         if (!user.equals("")) {
             return new File(getUserProfileDirectory(user), "statistics");
@@ -154,6 +169,9 @@ public class GazePlayDirectories {
         }
     }
 
+    /**
+     * @return the data folder of a user, or of the default profile when {@code user} is empty
+     */
     public static File getUserDataFolder(String user) {
         if (!user.equals("")) {
             return new File(getUserProfileDirectory(user), "data");

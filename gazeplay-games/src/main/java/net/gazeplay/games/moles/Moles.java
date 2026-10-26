@@ -27,9 +27,16 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Game "WhacAMole": moles come out of their holes at random, and go back after a while; a mole the gaze (or the mouse)
+ * stays on is whacked and counted.
+ */
 @Slf4j
 public class Moles extends Parent implements GameLifeCycle {
 
+    /**
+     * The moles of a round.
+     */
     @Data
     @AllArgsConstructor
     public static class RoundDetails {
@@ -143,12 +150,14 @@ public class Moles extends Parent implements GameLifeCycle {
         lab.setLayoutY(0.08 * dimension2D.getHeight());
         gameContext.getChildren().add(lab);
 
-        this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         play();
     }
 
+    /**
+     * Adjusts the background picture to the light or dark background style.
+     */
     void adjustBackground(Rectangle image) {
         int backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Integer>() {
             @Override
@@ -244,6 +253,9 @@ public class Moles extends Parent implements GameLifeCycle {
         stats.incrementNumberOfGoalsToReach();
     }
 
+    /**
+     * @return the positions of the 10 holes in the field
+     */
     private double[][] creationTableauPlacement(double width, double height, double distTrans) {
         double[][] tabPlacement = new double[10][2];
 
@@ -271,6 +283,9 @@ public class Moles extends Parent implements GameLifeCycle {
         return tabPlacement;
     }
 
+    /**
+     * @return the moles, one per hole
+     */
     private List<MolesChar> initMoles(MolesGameVariant variant, ReplayablePseudoRandom randomGenerator) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -295,18 +310,30 @@ public class Moles extends Parent implements GameLifeCycle {
         return result;
     }
 
+    /**
+     * @return the distance a mole moves to come out of its hole
+     */
     private static double computeDistTransMole(Dimension2D gameDimension2D) {
         return gameDimension2D.getHeight() * 0.16;
     }
 
+    /**
+     * @return the height of a mole
+     */
     private static double computeMoleHeight(Dimension2D gameDimension2D) {
         return gameDimension2D.getHeight() * 0.14;
     }
 
+    /**
+     * @return the width of a mole
+     */
     private static double computeMoleWidth(Dimension2D gameDimension2D) {
         return gameDimension2D.getWidth() * 0.13;
     }
 
+    /**
+     * Counts a whacked mole and updates the score.
+     */
     void oneMoleWhacked() {
 
         nbMolesWhacked++;

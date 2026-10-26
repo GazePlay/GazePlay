@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 
+/**
+ * A variant of the games "SurviveAgainstRobots" and "SurviveAgainstRobotsMouse", chosen in the menu.
+ */
 public enum SurviveAgainstRobotsMouseVariant {
 
     DIFFICULTY_EASY_MOUSE("Easy_MOUSE"),

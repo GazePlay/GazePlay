@@ -19,6 +19,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
+ * A card of the MagicCards game, face down; a fixation turns it over.
+ * <p>
  * Created by schwab on 17/09/2016.
  */
 @Slf4j
@@ -101,6 +103,9 @@ public class Card extends Parent {
         currentTimeline = new Timeline();
     }
 
+    /**
+     * @return the progress indicator of a fixation on the card
+     */
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(card.getX() + width * 0.05);
@@ -111,6 +116,9 @@ public class Card extends Parent {
         return indicator;
     }
 
+    /**
+     * Turns over the winning card, removes the others and ends the round with the win animation.
+     */
     private void onCorrectCardSelected() {
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -152,6 +160,9 @@ public class Card extends Parent {
         currentTimeline.play();
     }
 
+    /**
+     * Makes a card that is not the winning one fade away.
+     */
     private void onWrongCardSelected() {
 
         currentTimeline.stop();
@@ -164,6 +175,9 @@ public class Card extends Parent {
         progressIndicator.setOpacity(0);
     }
 
+    /**
+     * @return the handler turning the card over after a fixation of the length of the settings
+     */
     private EventHandler<Event> buildEvent() {
 
         return e -> {

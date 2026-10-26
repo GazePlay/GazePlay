@@ -3,6 +3,9 @@ package net.gazeplay.games.goosegame;
 
 import net.gazeplay.components.Position;
 
+/**
+ * Square of the Goose game (inn): the pawn landing on it skips turns.
+ */
 public class SkipSquare extends Square {
     private final int nbTurnsToSkip;
 

@@ -17,6 +17,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -33,6 +34,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The background music: a playlist of the music files of a folder (MUSIC_DIR setting, by default the "music" folder of
+ * the GazePlay folder), played one after the other at the music volume of the settings. A game can also play its own
+ * music "alone" ({@link #playMusicAlone(String)}); the default playlist comes back at the end of the game, unless the
+ * user chose a music folder.
+ * <p>
+ * One shared instance ({@link #getInstance()}), replaced when the configuration changes (another profile).
+ */
 @Slf4j
 public class BackgroundMusicManager {
 
@@ -42,6 +51,9 @@ public class BackgroundMusicManager {
     @Getter
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
 
+    /**
+     * Stops the music and replaces the shared instance (called when another profile is selected).
+     */
     public static void onConfigurationChanged() {
         instance.stop();
         instance = new BackgroundMusicManager();
@@ -107,6 +119,10 @@ public class BackgroundMusicManager {
 
     }
 
+    /**
+     * At the end of a game, puts the default playlist back in place of the music of the game, unless the user chose a
+     * music folder.
+     */
     public void onEndGame() {
 
         if (!isCustomMusicSet.getValue()) {
@@ -117,6 +133,10 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Adds the music files of a folder, and of its subfolders, to the playlist. A missing or blank folder is logged and
+     * ignored.
+     */
     public void getAudioFromFolder(String folderPath) {
 
         log.info("audio folder : {}", folderPath);
@@ -128,11 +148,9 @@ public class BackgroundMusicManager {
         }
         final File folder = new File(folderPath);
         if (!folder.exists()) {
-            // throw new RuntimeException("invalid path for audio folder : " + folderPath);
             log.warn("invalid path for audio folder : " + folderPath);
             return;
         } else if (!folder.isDirectory()) {
-            // throw new RuntimeException("path for audio folder is not a directory : " + folderPath);
             log.warn("path for audio folder is not a directory : " + folderPath);
             return;
         }
@@ -176,6 +194,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Makes the music at the current index of the playlist the current one, still playing if the previous one was.
+     */
     public void changeCurrentMusic() {
         if (playlist.isEmpty()) {
             return;
@@ -202,6 +223,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * @return whether the music is playing (not paused)
+     */
     public boolean isPlaying() {
 
         return this.isPlayingProperty.getValue();
@@ -211,7 +235,7 @@ public class BackgroundMusicManager {
      * Change the current selected music. If invalid index then nothing will be done. If everything is correct, then it
      * will play the newly selected music.
      *
-     * @param newMusicIndex The new index to use. Must be >= 0 and < playlist.size() otherwise nothing will be done.
+     * @param newMusicIndex The new index to use. Must be at least 0 and less than the size of the playlist, otherwise nothing will be done.
      */
     public void changeMusic(int newMusicIndex) {
 
@@ -229,6 +253,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Stops the music and empties the playlist.
+     */
     public void emptyPlaylist() {
         if (currentMusic != null) {
             stop();
@@ -262,6 +289,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Pauses the current music.
+     */
     public void pause() {
         this.isPlayingProperty.setValue(false);
     }
@@ -276,6 +306,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Stops the current music (it will start again from the beginning).
+     */
     public void stop() {
         if (currentMusic != null) {
             if (isPlaying()) {
@@ -285,6 +318,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Goes to the next music of the playlist, after the last one the first.
+     */
     public void next() {
         if (playlist.isEmpty()) {
             return;
@@ -293,6 +329,9 @@ public class BackgroundMusicManager {
         changeMusic(currentMusicIndex);
     }
 
+    /**
+     * Goes to the previous music of the playlist, before the first one the last.
+     */
     public void previous() {
         if (playlist.isEmpty()) {
             return;
@@ -301,6 +340,9 @@ public class BackgroundMusicManager {
         changeMusic(currentMusicIndex);
     }
 
+    /**
+     * Sets the volume of the current music, from 0 to 1.
+     */
     public void setVolume(double value) {
         if ((value < 0) || (value > 1)) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
@@ -314,8 +356,12 @@ public class BackgroundMusicManager {
      * @param resourceUrlAsString The resource to the music
      */
     public void playMusicAlone(String resourceUrlAsString) {
-        // If there is already the music in playlist, just play it
-        final MediaPlayer mediaPlayerInPlaylist = getMediaPlayerFromSource(resourceUrlAsString);
+        // If there is already the music in playlist, just play it (played from the cache, or from its URL before the
+        // cache was used for the playback)
+        MediaPlayer mediaPlayerInPlaylist = getMediaPlayerFromSource(resourceUrlAsString);
+        if (mediaPlayerInPlaylist == null) {
+            mediaPlayerInPlaylist = getMediaPlayerFromSource(cacheFileOf(resourceUrlAsString).toURI().toString());
+        }
         if (mediaPlayerInPlaylist != null) {
             playAlone(mediaPlayerInPlaylist);
             return;
@@ -339,9 +385,10 @@ public class BackgroundMusicManager {
 
             final String localResourceName = mediaFile.toURI().toString();
 
+            // The copy in the cache is played: the music used to be downloaded, then played from its URL again
             MediaPlayer localMediaPlayer = null;
             try {
-                localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+                localMediaPlayer = createMediaPlayer(localResourceName);
             } catch (RuntimeException e) {
                 log.error("Exception while playing media file {} ", localResourceName, e);
             }
@@ -371,16 +418,51 @@ public class BackgroundMusicManager {
         play();
     }
 
-    File downloadAndGetFromCache(URL resourceURL, String resourceUrlExternalForm) {
-        // the local cache filename is a Base64 encoding of the URL
-        // so that we avoid name clash,
-        // and so that we have the same local file for the same resource URL
-        final Charset utf8 = StandardCharsets.UTF_8;
-        byte[] encodedUrl = Base64.getEncoder().encode(resourceUrlExternalForm.getBytes(utf8));
-        final String localCacheFileName = new String(encodedUrl, utf8);
+    /**
+     * The file of a music in the cache: its URL encoded in URL-safe Base64 (one file per URL, no "/" in the name), with
+     * the extension of the URL, from which JavaFX recognises the format. The former names (standard Base64, without
+     * extension) are no longer used: those musics are downloaded again once.
+     *
+     * @param resourceUrlExternalForm the URL of the music
+     * @return the file of the music in the cache/music folder of the GazePlay folder
+     */
+    static File cacheFileOf(final String resourceUrlExternalForm) {
+        final String encodedUrl = Base64.getUrlEncoder().withoutPadding()
+            .encodeToString(resourceUrlExternalForm.getBytes(StandardCharsets.UTF_8));
+        final String extension = extensionOf(resourceUrlExternalForm);
+        final String name = extension.isEmpty() ? encodedUrl : encodedUrl + "." + extension;
+        return new File(new File(GazePlayDirectories.getGazePlayFolder(), "cache/music"), name);
+    }
 
-        File musicCacheFolder = new File(GazePlayDirectories.getGazePlayFolder(), "cache/music");
-        File outputFile = new File(musicCacheFolder, localCacheFileName);
+    /**
+     * @return the extension of the file of a URL ("mp3"), also inside a jar ("jar:file:...!/a.mp3"); empty when it has
+     *   none, or not a plain one
+     */
+    static String extensionOf(final String url) {
+        String path;
+        try {
+            final URI uri = URI.create(url);
+            path = uri.isOpaque() ? uri.getSchemeSpecificPart() : uri.getPath();
+        } catch (IllegalArgumentException e) {
+            path = url;
+        }
+        if (path == null) {
+            return "";
+        }
+        final String file = path.substring(path.lastIndexOf('/') + 1);
+        final int dot = file.lastIndexOf('.');
+        final String extension = dot < 0 ? "" : file.substring(dot + 1);
+        return extension.matches("[A-Za-z0-9]{1,5}") ? extension : "";
+    }
+
+    /**
+     * Copies a music file into the cache of the GazePlay folder (see {@link #cacheFileOf(String)}), unless it is already
+     * there.
+     *
+     * @return the file in the cache
+     */
+    File downloadAndGetFromCache(URL resourceURL, String resourceUrlExternalForm) {
+        File outputFile = cacheFileOf(resourceUrlExternalForm);
 
         if (!outputFile.exists()) {
             // use a temporary file while downloading
@@ -410,6 +492,10 @@ public class BackgroundMusicManager {
         return new MediaPlayer(media);
     }
 
+    /**
+     * @return a player of a music, following the music volume of the settings and going to the next music at its end;
+     *   null when the media cannot be loaded
+     */
     MediaPlayer createMediaPlayer(String source) {
         try {
             final Media media = new Media(source);
@@ -442,6 +528,9 @@ public class BackgroundMusicManager {
         return null;
     }
 
+    /**
+     * @return the title of a music: from its metadata, else the name of its file; "None" without music
+     */
     public static String getMusicTitle(final MediaPlayer music) {
         if (music == null) {
             return "None";
@@ -461,6 +550,9 @@ public class BackgroundMusicManager {
         return title;
     }
 
+    /**
+     * @return the name of a music file, without its folder and extension
+     */
     public static String getMusicTitle(final String musicPath) {
 
         String title;
@@ -470,10 +562,16 @@ public class BackgroundMusicManager {
         return title;
     }
 
+    /**
+     * @return a property set to true while the current music changes, then to false (followed by the music controls)
+     */
     public ReadOnlyBooleanProperty getIsMusicChanging() {
         return isMusicChanging.getReadOnlyProperty();
     }
 
+    /**
+     * Creates the "music" folder of the GazePlay folder if needed, and puts the default music in it when it is empty.
+     */
     public void checkDefaultMusic(){
         File defaultPath = GazePlayDirectories.getGazePlayFolder();
         if (new File(defaultPath + "/music/").mkdirs()){
@@ -489,6 +587,9 @@ public class BackgroundMusicManager {
         }
     }
 
+    /**
+     * Copies the default music of GazePlay into the "music" folder of a GazePlay folder.
+     */
     public void addDefaultSong(File path){
 
         File gazePlayMusicFolder = new File(path, "music");

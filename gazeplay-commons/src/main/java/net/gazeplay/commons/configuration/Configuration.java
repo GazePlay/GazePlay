@@ -5,7 +5,6 @@ import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.observableproperties.*;
 import net.gazeplay.commons.gaze.EyeTracker;
@@ -26,6 +25,14 @@ import java.util.Locale;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
+/**
+ * The settings of a profile, stored in its GazePlay.properties file.
+ * <p>
+ * Each setting is a JavaFX property backed by a key of the file (see {@link ApplicationConfigBackedBooleanProperty} and
+ * its siblings): the pages and the games bind to the property, and each change rewrites the whole file, atomically. The
+ * names of the keys are a persistent format: they must not change (older names are migrated by {@code
+ * LegacyConfigurationKeys}). The getters and setters below are shortcuts to the values of the properties.
+ */
 @Slf4j
 public class Configuration {
 
@@ -70,7 +77,6 @@ public class Configuration {
     private static final String PROPERTY_NAME_HEATMAP_COLORS = "HEATMAP_COLORS";
     private static final String PROPERTY_NAME_TILE_COLORS = "TILE_COLORS";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
-    private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
     private static final String PROPERTY_NAME_FIXATION_SEQUENCE_DISABLED = "FIXATION_SEQUENCE_DISABLED";
     /* In game settings */
@@ -85,7 +91,6 @@ public class Configuration {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
     private static final String PROPERTY_NAME_DISPLAY_NEWS_FORCED = "DISPLAY_NEWS_FORCED";
-    private static final String PROPERTY_NAME_FIRST_OPENING = "FIRST_OPENING";
     private static final String PROPERTY_NAME_SHORTCUT_DIR = "SHORTCUT_DIR";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
@@ -128,7 +133,6 @@ public class Configuration {
     public static final String DEFAULT_VALUE_HEATMAP_COLORS = "0000FF,00FF00,FFFF00,FF0000";
     public static final String DEFAULT_VALUE_TILE_COLORS = "FFA500";
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
-    private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
     private static final boolean DEFAULT_VALUE_FIXATION_SEQUENCE_DISABLED = false;
     /* In game settings */
@@ -143,7 +147,6 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
     private static final boolean DEFAULT_VALUE_DISPLAY_NEWS_FORCED = false;
-    private static final boolean DEFAULT_VALUE_FIRST_OPENING = true;
     public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/draw-flower.png";
 
     /* PROPERTIES */
@@ -221,8 +224,6 @@ public class Configuration {
     @Getter
     private final BooleanProperty areaOfInterestDisabledProperty;
     @Getter
-    private final BooleanProperty convexHullDisabledProperty;
-    @Getter
     private final BooleanProperty fixationSequenceDisabledProperty;
     @Getter
     private final BooleanProperty videoRecordingEnabledProperty;
@@ -249,8 +250,6 @@ public class Configuration {
     @Getter
     private final BooleanProperty latestNewsDisplayForcedProperty;
     @Getter
-    private final BooleanProperty firstOpeningProperty;
-    @Getter
     private final StringProperty colorsDefaultImageProperty;
     @Getter
     private final StringProperty shortcutDirProperty;
@@ -259,13 +258,13 @@ public class Configuration {
     @Getter
     private final SetProperty<String> hiddenCategoriesProperty;
 
-    @Getter
-    @Setter
-    private boolean mouseFree = false;
-
     private final File configFile;
     private final ApplicationConfig applicationConfig;
 
+    /**
+     * @param configFile        the GazePlay.properties file written at each change
+     * @param applicationConfig the values read from it (empty for a new profile)
+     */
     protected Configuration(final File configFile, final ApplicationConfig applicationConfig) {
         this.configFile = configFile;
         this.applicationConfig = applicationConfig;
@@ -318,7 +317,6 @@ public class Configuration {
         heatMapColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS, propertyChangeListener);
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
-        convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATION_SEQUENCE_DISABLED, DEFAULT_VALUE_FIXATION_SEQUENCE_DISABLED, propertyChangeListener);
         videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
 
@@ -335,7 +333,6 @@ public class Configuration {
         userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
         latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
         latestNewsDisplayForcedProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DISPLAY_NEWS_FORCED, DEFAULT_VALUE_DISPLAY_NEWS_FORCED, propertyChangeListener);
-        firstOpeningProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIRST_OPENING, DEFAULT_VALUE_FIRST_OPENING, propertyChangeListener);
         shortcutDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_SHORTCUT_DIR, GazePlayDirectories.getShortcutDirectory().getAbsolutePath(), propertyChangeListener);
         colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
@@ -535,6 +532,9 @@ public class Configuration {
         return heatMapOpacityProperty.getValue();
     }
 
+    /**
+     * @return the colors of the heatmaps, from the coldest to the hottest
+     */
     public List<Color> getHeatMapColors() {
         final String colorsString = heatMapColorsProperty.getValue();
         final List<Color> colors = new ArrayList<>();
@@ -544,16 +544,19 @@ public class Configuration {
         return colors;
     }
 
+    /**
+     * @return the color of the tiles of the areas of interest
+     */
     public Color getTileColors(){
         return Color.web(tileColorsProperty.getValue());
     }
 
+    /**
+     * Despite its name, kept because it is the key of the file (AREA_OF_INTEREST_DISABLED): true means that the areas
+     * of interest are ENABLED (button shown on the statistics screen).
+     */
     public Boolean isAreaOfInterestDisabled() {
         return areaOfInterestDisabledProperty.getValue();
-    }
-
-    public Boolean isConvexHullDisabled() {
-        return convexHullDisabledProperty.getValue();
     }
 
     public Boolean isFixationSequenceDisabled() {
@@ -604,10 +607,6 @@ public class Configuration {
         return latestNewsDisplayForcedProperty.getValue();
     }
 
-    public Boolean isFirstOpening() {
-        return firstOpeningProperty.getValue();
-    }
-
     public String getShortcutDir() {
         return shortcutDirProperty.getValue();
     }
@@ -634,34 +633,12 @@ public class Configuration {
         quitKeyProperty.setValue(quitKey);
     }
 
-    public void setQuestionLength(final long questionLength) {
-        questionLengthProperty.setValue(questionLength);
-    }
-
-    public void setQuestionReaskedOnFail(final boolean questionReaskedOnFail) {
-        questionReaskedOnFailProperty.setValue(questionReaskedOnFail);
-    }
-
-    public void setLimiterScoreEnabled(final boolean limiterScoreEnabled) {
-        limiterScoreEnabledProperty.setValue(limiterScoreEnabled);
-    }
-
     public void setLimiterScore(final int limiterScore) {
         limiterScoreProperty.setValue(limiterScore);
     }
 
-    public void setLimiterTimeEnabled(final boolean limiterTimeEnabled) {
-        limiterTimeEnabledProperty.setValue(limiterTimeEnabled);
-    }
-
     public void setLimiterTime(final int limiterTime) {
         limiterTimeProperty.setValue(limiterTime);
-    }
-
-    /* Settings of the evaluations (GazePlay Eval) */
-
-    public void setFeedback(final String feedback) {
-        feedbackProperty.setValue(feedback);
     }
 
     /* Eye-tracking settings */
@@ -687,7 +664,6 @@ public class Configuration {
     public void setDarkThemeEnabled(final boolean darkThemeEnabled) {
         darkThemeEnabledProperty.setValue(darkThemeEnabled);
     }
-
 
     public void setMenuButtonsOrientation(final String menuButtonsOrientation) {
         menuButtonsOrientationProperty.setValue(menuButtonsOrientation);
@@ -717,26 +693,10 @@ public class Configuration {
         heatMapColorsProperty.setValue(heatMapColors);
     }
 
-    public void setTileColors(final String tileColors){
-        tileColorsProperty.setValue(tileColors);
-    }
-
     /* In game settings */
 
     public void setAnimationSpeedRatio(double animationSpeedRatio) {
         animationSpeedRatioProperty.setValue(animationSpeedRatio);
-    }
-
-    public void setElementSize(int elementSize) {
-        elementSizeProperty.setValue(elementSize);
-    }
-
-    public void setProgressBarSize(final int progressBarSize) {
-        progressBarSizeProperty.setValue(progressBarSize);
-    }
-
-    public void setProgressBarColor(final String progressBarColor) {
-        progressBarColorProperty.setValue(progressBarColor);
     }
 
     /* Menu settings */
@@ -747,10 +707,6 @@ public class Configuration {
 
     public void setUserPicture(final String newPicture) {
         userPictureProperty.setValue(newPicture);
-    }
-
-    public void setFirstOpening(final boolean firstOpening) {
-        firstOpeningProperty.setValue(firstOpening);
     }
 
     public void setShortcutDir(final String shortcutDir) {

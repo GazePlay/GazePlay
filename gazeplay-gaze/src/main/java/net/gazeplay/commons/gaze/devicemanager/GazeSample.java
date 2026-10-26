@@ -25,6 +25,9 @@ public record GazeSample(long time, Point2D screenPosition, Source source) {
             this.eventName = eventName;
         }
 
+        /**
+         * @return the name of the source in the files and in the dispatch: "gaze" or "mouse"
+         */
         public String eventName() {
             return eventName;
         }
@@ -37,6 +40,9 @@ public record GazeSample(long time, Point2D screenPosition, Source source) {
         }
     }
 
+    /**
+     * @return a sample of the given position and source, acquired now
+     */
     public static GazeSample now(final Point2D screenPosition, final Source source) {
         return new GazeSample(System.currentTimeMillis(), screenPosition, source);
     }

@@ -8,6 +8,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+/**
+ * Pointers of the mouse (red) and of the gaze (blue) drawn over the game while the screen is recorded
+ * (VIDEO_RECORDING_ENABLED setting), so that the video shows where the player looked.
+ */
 public class VideoRecordingContext {
 
     private final EventHandler<Event> pointerEvent;
@@ -48,6 +52,9 @@ public class VideoRecordingContext {
         root.addEventFilter(GazeEvent.ANY, pointerEvent);
     }
 
+    /**
+     * Removes the pointers.
+     */
     public void pointersClear() {
         root.removeEventFilter(MouseEvent.ANY, pointerEvent);
         root.removeEventFilter(GazeEvent.ANY, pointerEvent);

@@ -4,12 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import javafx.animation.AnimationTimer;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -18,13 +16,15 @@ import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.surviveAgainstRobots.SurviveAgainstRobots;
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * Game "GazeRace": the player's vehicle follows the gaze (or the mouse) on a scrolling road and must avoid the other
+ * cars and the obstacles; a collision costs a life, followed by a short invincibility. The game ends when no life is
+ * left.
+ */
 @Slf4j
 public class GazeRace extends Parent implements GameLifeCycle {
 
@@ -62,6 +62,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * Creates the road, the player and the first cars, and starts the animation of the game.
+     */
     private void startGame(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.colors.add(Color.RED);
@@ -220,6 +223,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * Places the pieces of the scrolling road again.
+     */
     private void resetBackgroundPos(){
         int espacement = 0;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -243,6 +249,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * Updates the speed of the road and of the cars.
+     */
     private void updateSpeedObject() {
 
 
@@ -260,6 +269,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
     }
 
+    /**
+     * Adds a car at the edge of the road, with a random color and lane, if there is room.
+     */
     private void generateCar(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Collections.shuffle(colors);
@@ -375,6 +387,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
+    /**
+     * @return whether an object moving in a direction at a speed would hit an obstacle at its next position
+     */
     protected boolean willCollideWithAnObstacle(String direction, double speed, Rectangle object) {
         // Calculate the next position of the object based on the given direction and speed
         double nextX = object.getX();
@@ -444,6 +459,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
         return false;
     }
 
+    /**
+     * Shows a flash where an object was destroyed.
+     */
     private void playDeathAnimation(int deathDuration, Rectangle object){
         Rectangle death = new Rectangle(object.getX(),object.getY(),object.getWidth(),object.getHeight());
         death.setFill(this.death);
@@ -483,6 +501,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
         deathAnimation.start();
     }
 
+    /**
+     * Creates the borders of the road, which destroy what reaches them.
+     */
     private void initGameBox(){
 
         // Get the dimensions of the game panel from the game context
@@ -533,6 +554,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(rightDeathBarrier);
     }
 
+    /**
+     * Ends the game and shows the statistics.
+     */
     protected void endOfGame(){
         generalAnimation.stop();
         dispose();
@@ -541,6 +565,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * @return whether an object touches an obstacle
+     */
     protected boolean isCollidingWithAnObstacle(Rectangle object){
         for (Rectangle obstacle : obstacles) {
             if (isCollidingWithASpecificObstacle(object, obstacle)) {
@@ -551,6 +578,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * @return whether two objects touch
+     */
     protected boolean isCollidingWithASpecificObstacle(Rectangle object1, Rectangle object2){
 
         return object1.getX() < object2.getX() + object2.getWidth() && object1.getX() + object1.getWidth() > object2.getX()
@@ -559,6 +589,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
     }
 
 
+    /**
+     * A piece of the road scrolling under the cars.
+     */
     private static class BackgroundRoad extends Rectangle{
 
         protected boolean stopTimer;

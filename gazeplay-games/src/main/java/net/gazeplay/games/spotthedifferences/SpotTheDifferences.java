@@ -28,10 +28,12 @@ import net.gazeplay.components.ProgressButton;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.Random;
-
+/**
+ * Game "SpotDifference": two pictures side by side differ in a few places; each difference found by a fixation is
+ * circled on both pictures. The round is won when all of them are found. The pictures and their differences are read
+ * from a JSON resource.
+ */
 @Slf4j
 public class SpotTheDifferences implements GameLifeCycle {
 
@@ -126,6 +128,9 @@ public class SpotTheDifferences implements GameLifeCycle {
                 StandardCharsets.UTF_8));
     }
 
+    /**
+     * Adds a difference at the same place on both pictures.
+     */
     private void createDifference(final double x, final double y, final double radius) {
         final Difference d1 = new Difference(gameContext, this, leftGap + x, y, radius);
         final TargetAOI targetAOI1 = new TargetAOI(leftGap + x, y, (int)radius, System.currentTimeMillis());
@@ -139,6 +144,9 @@ public class SpotTheDifferences implements GameLifeCycle {
         d2.setPair(d1);
     }
 
+    /**
+     * Counts a difference found; the round is won when all are found.
+     */
     void differenceFound() {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
@@ -158,8 +166,7 @@ public class SpotTheDifferences implements GameLifeCycle {
 
         gameContext.setLimiterAvailable();
 
-        //Random random = new Random();
-        final JsonObject instance = (JsonObject) instances.get(currentInstance);// random.nextInt(instances.size()));
+        final JsonObject instance = (JsonObject) instances.get(currentInstance);
         currentInstance = (currentInstance + 1) % instances.size();
 
         leftImage.setImage(new Image("data/spotthedifferences/" + instance.get("image1").getAsString()));

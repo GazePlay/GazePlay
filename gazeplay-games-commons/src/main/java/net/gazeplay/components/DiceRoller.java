@@ -18,6 +18,9 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import java.util.ArrayList;
 
+/**
+ * A 3D die, textured with the six faces of data/common/images/dice.png, which rolls and tells its result.
+ */
 @Slf4j
 public class DiceRoller extends MeshView {
 
@@ -25,6 +28,11 @@ public class DiceRoller extends MeshView {
     private final ArrayList<Rotate> rotations;
     private final SoundManager soundManager;
 
+    /**
+     * @param dieWidth        half of the side of the die
+     * @param soundManager    plays the sound of the roll
+     * @param randomGenerator the random generator of the game, for the replay
+     */
     public DiceRoller(final float dieWidth, SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
         super();
         this.soundManager = soundManager;
@@ -67,12 +75,18 @@ public class DiceRoller extends MeshView {
         getTransforms().addAll(rotations.get(0), rotations.get(1));
     }
 
+    /**
+     * Rolls the die: it turns for one second, then settles on a face, which is the result.
+     *
+     * @param onFinishedEventHandler called when the die has settled, may be null
+     * @return the face shown at the end of the animation, from 1 to 6 (known before the animation ends)
+     */
     public int roll(final EventHandler<ActionEvent> onFinishedEventHandler) {
         // Resetting angles to 0
         rotations.get(0).setAngle(0);
         rotations.get(1).setAngle(0);
 
-        // Between 2 and 3 turns plus 1 partial turn
+        // 2 full turns (nextInt(1) is always 0) plus a partial turn, on each axis
         int angleX = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
         int angleY = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
 

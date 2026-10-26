@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.gazeplay.games.order;
 
 import javafx.animation.KeyFrame;
@@ -21,6 +16,9 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
+ * Game "Order": 3, 5 or 7 targets appear one after the other, then the player must select them by fixations in the
+ * order they appeared. A wrong target ends the round.
+ *
  * @author vincent
  */
 @Slf4j
@@ -40,7 +38,6 @@ public class Order implements GameLifeCycle {
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
-        //this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
@@ -52,7 +49,6 @@ public class Order implements GameLifeCycle {
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
-        //this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
@@ -65,6 +61,9 @@ public class Order implements GameLifeCycle {
         spawn();
     }
 
+    /**
+     * Checks a target selected by the player.
+     */
     public void enter(Target t) {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
@@ -77,6 +76,9 @@ public class Order implements GameLifeCycle {
         }
     }
 
+    /**
+     * Shows a success or a failure on a selected target; a failure starts the round again.
+     */
     private void handleAnswer(Target t, boolean correct) {
 
         Circle c = new Circle(t.getPos().getX(), t.getPos().getY(), t.getRadius());
@@ -105,6 +107,9 @@ public class Order implements GameLifeCycle {
         pause.play();
     }
 
+    /**
+     * Makes the targets appear one per second, then lets the player select them.
+     */
     public void spawn() {
         tabTarget = new Target[nbTarget];
         Timeline timer = new Timeline();
@@ -135,6 +140,9 @@ public class Order implements GameLifeCycle {
         timer.play();
     }
 
+    /**
+     * Starts a new round.
+     */
     private void restart() {
         this.dispose();
         this.launch();

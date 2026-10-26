@@ -9,14 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Polygon;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
@@ -54,18 +52,27 @@ import java.util.function.LongSupplier;
 
 
 /**
+ * Statistics of a game: what is recorded while it is played, and the result files written at its end.
+ * <p>
+ * While a round is running (from {@link #start()} to {@link #stop()}), filters on the root of the scene record each
+ * gaze sample and each mouse movement: raw samples (for replayData.json and the replay), heatmaps (gaze, mouse, both),
+ * fixation sequences and areas of interest, as enabled in the settings. The games count their goals, mistakes and
+ * rounds with the increment... and notify... methods. {@link #saveStats()} then writes the files of the round in
+ * statistics/&lt;game&gt;/&lt;yyyy-MM-dd&gt;/ (see {@link ReplayDataFormat} for the versions of the format).
+ * <p>
+ * Games with their own counters extend this class (e.g. ShootGamesStats).
+ * <p>
  * Created by schwab on 16/08/2017.
  */
 @Slf4j
 @ToString
-public class Stats implements GazeMotionListener {
+public class Stats {
 
     private final double heatMapPixelSize;
     public final Scene gameContextScene;
     protected String gameName;
 
     long startTime;
-    int sceneCounter = 0;
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
     /**
@@ -85,7 +92,6 @@ public class Stats implements GazeMotionListener {
     private final AreaOfInterestRecording mouseAreasOfInterest = new AreaOfInterestRecording();
 
     private File movieFolder;
-    private final boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     /**
@@ -97,18 +103,31 @@ public class Stats implements GazeMotionListener {
     private HeatMapGrid mouseHeatMapGrid;
 
 
+    /**
+     * Goals reached by the player (targets hit, right answers...).
+     */
     @Getter
     public int nbGoalsReached = 0;
 
+    /**
+     * Goals proposed to the player.
+     */
     @Getter
     protected int nbGoalsToReach = 0;
 
+    /**
+     * A goal reached sooner than this delay (ms) after the previous one is counted apart
+     * ({@code nbUnCountedGoalsReached}), as accidental.
+     */
     @Setter
     private long accidentalShotPreventionPeriod = 0;
 
     @Getter
     private int nbUnCountedGoalsReached;
 
+    /**
+     * Mistakes of the player; -1 for the games that do not count them.
+     */
     @Getter
     private int nbMistakes = -1;
 
@@ -147,6 +166,7 @@ public class Stats implements GazeMotionListener {
 
     public String variantType = "";
 
+    // Scores of the evaluations (GazePlay Eval, code kept but unreachable until the merge of GazePlayLearning)
     //Phonology
     public int totalPhonology = 0;
     public int simpleScoreItemsPhonology = 0;
@@ -193,14 +213,26 @@ public class Stats implements GazeMotionListener {
      */
     LongSupplier clock = System::currentTimeMillis;
 
+    /**
+     * Statistics of a game being played, whose name is set later by the subclass.
+     */
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
     }
 
+    /**
+     * Statistics of a replayed game, read from its replayData.json.
+     */
     public Stats(final Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
+    /**
+     * Statistics of a game being played.
+     *
+     * @param gameContextScene the scene of the game: its root receives the events to record
+     * @param gameName         name of the game, also the name of its folder of statistics
+     */
     public Stats(final Scene gameContextScene, final String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
@@ -209,6 +241,9 @@ public class Stats implements GazeMotionListener {
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
 
+    /**
+     * Statistics of a replayed game, read from its replayData.json: nothing is counted again.
+     */
     public Stats(final Scene gameContextScene, final String gameName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
@@ -228,6 +263,10 @@ public class Stats implements GazeMotionListener {
         return this.targetAOIList;
     }
 
+    /**
+     * Sets the targets of the game, for the areas of interest screen; the duration of each target is computed from its
+     * times (0 for the last one).
+     */
     public void setTargetAOIList(final ArrayList<TargetAOI> targetAOIList) {
         this.targetAOIList = targetAOIList;
         for (int i = 0; i < targetAOIList.size() - 1; i++) {
@@ -239,11 +278,18 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * To be called by a game when a new round is displayed: starts the timing of the round and takes the screenshot
+     * drawn under the heatmaps.
+     */
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
         takeScreenShot();
     }
 
+    /**
+     * To be called by a game when a round ends: adds its duration.
+     */
     public void notifyNextRound() {
         final long currentRoundEndTime = System.currentTimeMillis();
         final long currentRoundDuration = currentRoundEndTime - this.currentRoundStartTime;
@@ -251,6 +297,10 @@ public class Stats implements GazeMotionListener {
         currentRoundStartTime = currentRoundEndTime;
     }
 
+    /**
+     * Starts recording the screen into an AVI file of the statistics folder of the day (VIDEO_RECORDING_ENABLED
+     * setting). A failure is logged: the game goes on without video.
+     */
     public void startVideoRecording() {
         directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
         this.movieFolder = new File(directoryOfVideo);
@@ -316,6 +366,10 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Stops the video recording in the background; {@link #awaitVideoRecordingEnd(long, TimeUnit)} waits for the end of
+     * the writing.
+     */
     public void endVideoRecording() {
         final ScreenRecorder recorder = this.screenRecorder;
         if (recorder == null) {
@@ -373,6 +427,12 @@ public class Stats implements GazeMotionListener {
         return files.isEmpty() ? Optional.empty() : Optional.of(files.get(files.size() - 1));
     }
 
+    /**
+     * Starts the round: starts the video recording if enabled, resets the recorded data, and puts on the root of the
+     * scene the filters recording the gaze and the mouse.
+     *
+     * @throws LifeCycle.LifeCycleControlException when already started (use {@link #reset()} for a new round)
+     */
     public void start() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
@@ -463,6 +523,10 @@ public class Stats implements GazeMotionListener {
         return e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED;
     }
 
+    /**
+     * Adds a raw sample to "coordinatesAndTimeStamp": X and Y as ratios of the size of the scene, the time since the
+     * start of the round, and the source ("gaze" or "mouse").
+     */
     private void setJSONCoordinates(long timeElapsedMillis, int getX, int getY, String event) {
         JsonObject coordinates = new JsonObject();
         coordinates.addProperty("X", getX / gameContextScene.getWidth());
@@ -472,6 +536,9 @@ public class Stats implements GazeMotionListener {
         saveCoordinates(coordinates);
     }
 
+    /**
+     * Starts a new round: the counters, the durations and the recorded data start again from zero.
+     */
     public void reset() {
         nbGoalsReached = 0;
         nbMistakes = -1;
@@ -483,6 +550,9 @@ public class Stats implements GazeMotionListener {
         start();
     }
 
+    /**
+     * Ends the round: stops the video recording if enabled, and the recording of the samples.
+     */
     public void stop() {
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
@@ -508,9 +578,10 @@ public class Stats implements GazeMotionListener {
         recordingRoot = null;
     }
 
-    // function used for testing purposes
-    @Override
-    public void gazeMoved(final javafx.geometry.Point2D position) {
+    /**
+     * Records a gaze position directly, without going through the gaze events: only used by the tests.
+     */
+    void gazeMoved(final javafx.geometry.Point2D position) {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incrementHeatMap(positionX, positionY, true);
@@ -525,6 +596,11 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Draws the screenshot of the game, on a black background, into an image of the metrics.
+     *
+     * @return the graphics of the image, to draw the heatmap and the fixation sequence on it
+     */
     public Graphics initGazeMetricsImage(BufferedImage bImage, BufferedImage screenshotImage) {
 
         final Graphics graphics = bImage.getGraphics();
@@ -535,6 +611,10 @@ public class Stats implements GazeMotionListener {
         return graphics;
     }
 
+    /**
+     * @return an empty metrics image: the size of the screenshot, plus a band on the right for the legend of the
+     *   heatmap
+     */
     private BufferedImage newBufferImage(BufferedImage screenshotImage) {
         return new BufferedImage(
             screenshotImage.getWidth() + (heatMapGrid != null ? screenshotImage.getWidth() / 20 + 10 : 0),
@@ -542,6 +622,9 @@ public class Stats implements GazeMotionListener {
     }
 
 
+    /**
+     * Draws a heatmap, smoothed, over the screenshot of a metrics image, and its legend on the right.
+     */
     private void addHeatMapToMetrics(HeatMap hm, BufferedImage bImage, Graphics graphics, BufferedImage screenshotImage) {
         BufferedImage heatmapImage = SwingFXUtils.fromFXImage(hm.getImage(), null);
         final Kernel kernel = new Kernel(3, 3,
@@ -556,6 +639,10 @@ public class Stats implements GazeMotionListener {
         graphics.drawImage(keyMouse, bImage.getWidth() - keyMouse.getWidth(), (bImage.getHeight() - keyMouse.getHeight()) / 2, null);
     }
 
+    /**
+     * Draws a fixation sequence on its metrics image and on the image of both sources, and keeps the reduced sequence
+     * (the one written in replayData.json).
+     */
     private void addFixationSequence(int fixationSequenceIndex, Graphics gMouseOrGaze, Graphics gMouseAndGaze, BufferedImage screenshotImage) {
         if (this.fixationSequence.get(fixationSequenceIndex) != null && fixationSequence.get(fixationSequenceIndex).size() > 0) {
             final FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
@@ -567,6 +654,13 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Writes the files of the round in the statistics folder of the day, all named after the current time: the
+     * screenshot, replayData.json, the heatmaps as CSV (heatmap, heatmapGaze, heatmapMouse) and the metrics images
+     * (metricsMouse, metricsGaze, metricsMouseAndGaze).
+     *
+     * @return the files written
+     */
     public SavedStatsInfo saveStats() throws IOException {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -637,34 +731,51 @@ public class Stats implements GazeMotionListener {
 
     public RoundsDurationReport getRoundsDurationReport() { return roundsDurationReport;}
 
+    /**
+     * @return the average duration of the rounds, in ms
+     */
     public long computeRoundsDurationAverageDuration() {
         return roundsDurationReport.computeAverageLength();
     }
 
+    /**
+     * @return the start time of the round (System.currentTimeMillis())
+     */
     public long getStartTime() {
         return this.startTime;
     }
 
+    /**
+     * @return the median duration of the rounds, in ms
+     */
     public long computeRoundsDurationMedianDuration() {
         return roundsDurationReport.computeMedianDuration();
     }
 
+    /**
+     * @return the sum of the durations of the rounds, in ms
+     */
     public long getRoundsTotalAdditiveDuration() {
         return roundsDurationReport.getTotalAdditiveDuration();
     }
 
+    /**
+     * @return the duration of the game, from its start to its stop (or to now), in ms
+     */
     public long computeTotalElapsedDuration() {
         return lifeCycle.computeTotalElapsedDuration();
     }
 
-    public double computeRoundsDurationVariance() {
-        return roundsDurationReport.computeVariance();
-    }
-
+    /**
+     * @return the standard deviation of the durations of the rounds, in ms
+     */
     public double computeRoundsDurationStandardDeviation() {
         return roundsDurationReport.computeSD();
     }
 
+    /**
+     * Adds a goal to reach (not during a replay), and starts the timing of the next goal.
+     */
     public void incrementNumberOfGoalsToReach() {
         if (!inReplayMode) {
             nbGoalsToReach++;
@@ -673,6 +784,9 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Adds {@code i} goals to reach (not during a replay), and starts the timing of the next goal.
+     */
     public void incrementNumberOfGoalsToReach(int i) {
         if (!inReplayMode) {
             nbGoalsToReach += i;
@@ -681,6 +795,10 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Counts a goal reached (not during a replay), with its duration; or as accidental when it comes sooner than the
+     * accidental shot prevention period.
+     */
     public void incrementNumberOfGoalsReached() {
         if (!inReplayMode) {
             final long currentRoundEndTime = System.currentTimeMillis();
@@ -696,6 +814,9 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Counts a mistake (not during a replay).
+     */
     public void incrementNumberOfMistakes() {
         if (!inReplayMode) {
             nbMistakes++;
@@ -703,10 +824,16 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Adds the time since the start of the current round as a round duration.
+     */
     public void addRoundDuration() {
         this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
     }
 
+    /**
+     * @return the percentage of the goals reached among the goals to reach; 100 when there was no goal
+     */
     public int getShotRatio() {
         if (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsToReach == 0) {
             return 100;
@@ -715,14 +842,23 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * @return the durations of the rounds, ordered for the chart of the statistics screen
+     */
     public List<Long> getSortedDurationsBetweenGoals() {
         return this.roundsDurationReport.getSortedDurationsBetweenGoals();
     }
 
+    /**
+     * @return the durations of the rounds, in the order they were played
+     */
     public List<Long> getOriginalDurationsBetweenGoals() {
         return this.roundsDurationReport.getOriginalDurationsBetweenGoals();
     }
 
+    /**
+     * @return a new "...-info-game.csv" file of the statistics folder of the day, named after the current time
+     */
     protected File createInfoStatsFile() {
         final File outputDirectory = getGameStatsOfTheDayDirectory();
 
@@ -730,6 +866,10 @@ public class Stats implements GazeMotionListener {
         return new File(outputDirectory, fileName);
     }
 
+    /**
+     * @return the statistics folder of the game for today (statistics/&lt;game&gt;/&lt;yyyy-MM-dd&gt;, in the folder of
+     *   the current profile), created if missing
+     */
     public File getGameStatsOfTheDayDirectory() {
         final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
         final File gameDirectory = new File(statsDirectory, gameName);
@@ -750,6 +890,9 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    /**
+     * Adds a sample, at the current time, to a fixation sequence.
+     */
     void incrementFixationSequence(final int x, final int y, LinkedList<FixationPoint> fixationSequence) {
         incrementFixationSequence(x, y, clock.getAsLong(), fixationSequence);
     }
@@ -758,6 +901,9 @@ public class Stats implements GazeMotionListener {
         FixationSequenceRecorder.add(fixationSequence, time, x, y);
     }
 
+    /**
+     * Adds a sample to the heatmap of its source and to the one of both sources.
+     */
     void incrementHeatMap(final int x, final int y, final boolean gaze) {
         currentGazeTime = System.currentTimeMillis();
         if (heatMapGrid != null) {
@@ -768,12 +914,15 @@ public class Stats implements GazeMotionListener {
 
     /**
      * @return the raw heatmap matrix of mouse and gaze (rows follow the Y axis, columns the X axis), null if the
-     * heatmap is disabled
+     *   heatmap is disabled
      */
     double[][] getHeatMapData() {
         return heatMapGrid == null ? null : heatMapGrid.counts();
     }
 
+    /**
+     * @return the raw heatmap matrix of the gaze or of the mouse, null if the heatmap is disabled
+     */
     double[][] getHeatMapData(final boolean gaze) {
         final HeatMapGrid grid = gaze ? gazeHeatMapGrid : mouseHeatMapGrid;
         return grid == null ? null : grid.counts();
@@ -786,8 +935,8 @@ public class Stats implements GazeMotionListener {
 
     /**
      * @return the size of a cell of the heatmaps: the width of the scene divided into {@link #HEAT_MAP_COLUMNS}. Before
-     * format version 4 it depended on the memory of the JVM (R7): 400 columns from 1 GiB, 200 below (a game started
-     * from the menu gets a quarter of the memory of the machine, so 200 columns on a machine with less than 4 GB)
+     *   format version 4 it depended on the memory of the JVM (R7): 400 columns from 1 GiB, 200 below (a game started
+     *   from the menu gets a quarter of the memory of the machine, so 200 columns on a machine with less than 4 GB)
      */
     double computeHeatMapPixelSize(final Scene gameContextScene) {
         final double result = gameContextScene.getWidth() / HEAT_MAP_COLUMNS;
@@ -795,6 +944,9 @@ public class Stats implements GazeMotionListener {
         return result;
     }
 
+    /**
+     * Takes the screenshot of the scene drawn under the heatmaps (not during a replay).
+     */
     public void takeScreenShot() {
         if (!inReplayMode) {
             gameScreenShot = gameContextScene.snapshot(null);
@@ -815,10 +967,16 @@ public class Stats implements GazeMotionListener {
         return coordinateData;
     }
 
+    /**
+     * @return the greatest common divisor of two numbers (Euclid's algorithm)
+     */
     public int greatestCommonFactor(int width, int height) {
         return (height == 0) ? width : greatestCommonFactor(height, width % height);
     }
 
+    /**
+     * @return the aspect ratio of the main screen, e.g. "16:9"
+     */
     String getScreenRatio() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int screenWidth = gd.getDisplayMode().getWidth();
@@ -831,15 +989,24 @@ public class Stats implements GazeMotionListener {
         return widthRatio + ":" + heightRatio;
     }
 
+    /**
+     * @return the height of the scene divided by its width
+     */
     double getSceneRatio() {
         return gameContextScene.getHeight() / gameContextScene.getWidth();
     }
 
+    /**
+     * Sets the variant and the name of the game, written in replayData.json for the replay.
+     */
     public void setGameVariant(String gameVariant, String gameNameCode) {
         currentGameVariant = gameVariant;
         currentGameNameCode = gameNameCode;
     }
 
+    /**
+     * Sets the seed of the random generator of the game, written in replayData.json for the replay.
+     */
     public void setGameSeed(double gameSeed) {
         currentGameSeed = gameSeed;
     }
@@ -864,6 +1031,10 @@ public class Stats implements GazeMotionListener {
         return this.chiReport;
     }
 
+    /**
+     * Tells whether the configuration menu of the game screen is open: the mouse is not recorded while it is, since it
+     * is then used for the menu.
+     */
     public static void setConfigMenuOpen(boolean configMenuStatus) {
         configMenuOpen = configMenuStatus;
     }

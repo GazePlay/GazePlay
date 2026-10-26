@@ -35,6 +35,10 @@ public class MarqueeText extends Region {
 
     private final static int DEFAULT_NB_CHAR_DISPLAYED = 25;
 
+    /**
+     * @param nbCharDisplayed width of the text, in characters
+     * @param speed           speed of the scrolling, in pixels per second
+     */
     public MarqueeText(final String text, final int nbCharDisplayed, final double speed) {
         super();
         this.speed.setValue(speed);
@@ -72,16 +76,21 @@ public class MarqueeText extends Region {
         this(text, DEFAULT_NB_CHAR_DISPLAYED, DEFAULT_SPEED);
     }
 
+    /**
+     * Starts the scrolling again from the start, if the text is wider than its area.
+     */
     private void rerunAnimation() {
         transition.stop();
         recalculateTransition();
 
-        // log.info("duration : {}", transition.getDuration().toMillis());
         if (transition.getDuration().toMillis() > 0) {
             transition.playFromStart();
         }
     }
 
+    /**
+     * Computes the scrolling for the current text and width: none when the text fits.
+     */
     private void recalculateTransition() {
 
         this.text.setTranslateX(this.getTranslateX());
@@ -89,7 +98,6 @@ public class MarqueeText extends Region {
         final double textWidth = getTextWidth(text.getText());
 
         final double diff = textWidth - this.getWidth();
-        // log.info("textWidth {}, diff {}", textWidth, diff);
         if (diff < 0) {
             transition.setDuration(new Duration(0));
         } else {
@@ -99,13 +107,18 @@ public class MarqueeText extends Region {
         }
     }
 
+    /**
+     * @return the duration of one scroll of the text, in ms
+     */
     private double computeDuration() {
 
         final double textWidth = getTextWidth(text.getText());
-        // log.info ("textWidth : {} / speed : {} = duration {}", textWidth, speed.getValue(), duration);
         return textWidth / speed.getValue() * 1000;
     }
 
+    /**
+     * @return the width of a text in the font of the marquee, in pixels
+     */
     private double getTextWidth(final String textToMeasure) {
 
         final Text testText = new Text(textToMeasure);

@@ -2,9 +2,15 @@ package net.gazeplay.games.rockPaperScissors;
 
 import javafx.scene.image.Image;
 
+/**
+ * The signs of rock paper scissors, and the hidden sign of the opponent before it plays.
+ */
 public enum HandSign {
     ROCK, PAPER, SCISSORS, UNKNOWN;
 
+    /**
+     * @return 1 when this sign beats the other one, -1 when it loses, 0 for a draw
+     */
     public int fight(HandSign opponentHandSign) {
         return switch (this) {
             case ROCK -> switch (opponentHandSign) {
@@ -29,6 +35,9 @@ public enum HandSign {
         };
     }
 
+    /**
+     * @return the horizontal position of the button of the sign, as a ratio of the width of the game area
+     */
     public double getPosX() {
         return switch (this) {
             case ROCK -> 1.0 / 6.0;
@@ -38,6 +47,9 @@ public enum HandSign {
         };
     }
 
+    /**
+     * @return the picture of the sign
+     */
     public Image getImage() {
         return new Image("data/rockPaperScissors/" + this + ".png");
     }

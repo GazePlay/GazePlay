@@ -10,6 +10,9 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Statistics of the game "RushHour" (see {@code SelectionGamesStats}).
+ */
 public class RushHourStats extends SelectionGamesStats {
 
     public RushHourStats(Scene scene)  {
