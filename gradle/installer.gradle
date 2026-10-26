@@ -26,6 +26,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
         copy {
             from("${rootDir}/gradle/innosetup/setup.iss.skel")
             rename("setup.iss.skel", "setup.iss")
+            filteringCharset = 'UTF-8'
             expand([
                     applicationVersion: "${version}",
                     distributionName  : distributionName,
@@ -36,11 +37,21 @@ task prepareInnoSetupFiles(group: 'distribution') {
 
         copy {
             from("${rootDir}/gradle/templates/licence.txt")
+            filteringCharset = 'UTF-8'
             expand([
                     version: version,
                     "date"   : new Date().format('yyyy-MM-dd')
             ])
             into(innoSetupDir)
+        }
+        // Inno Setup reads a text file without byte order mark as ANSI: the accents of the licence were shown as
+        // "rÃ©alisÃ©". The script also holds accented messages (French)
+        ['licence.txt', 'setup.iss'].each { name ->
+            def file = new File(innoSetupDir, name)
+            def text = file.getText('UTF-8')
+            if (!text.startsWith('\uFEFF')) {
+                file.setText('\uFEFF' + text, 'UTF-8')
+            }
         }
 
         copy {
@@ -55,7 +66,9 @@ task prepareInnoSetupFiles(group: 'distribution') {
     }
 }
 
-task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+// Sync, not Copy: files of a previous build (e.g. a removed library) must not stay in the folder given to Inno Setup
+// (a jar removed from the distribution was still installed by a local build)
+task unzipDistribution(dependsOn: ['packageApp'], type: Sync, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${distributionName}-windows-x64-${version}.zip")
     into "${buildDir}/${installerInputDir}"
     filePermissions { unix(0777) }

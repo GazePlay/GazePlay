@@ -57,44 +57,66 @@ Name: "{commondesktop}\\GazePlay Learning"; Filename: "{app}\\bin\\gazeplay-lear
 [Run]
 Filename: "{app}\\bin\\gazeplay-learning-windows.bat"; Description: "{cm:LaunchProgram,GazePlay Learning}"; Flags: shellexec postinstall skipifsilent
 
+[Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "french"; MessagesFile: "compiler:Languages\\French.isl"
+
+[CustomMessages]
+english.UninstallFormerGazePlay=GazePlay, the former version of GazePlay Learning, is installed on this computer.%n%nDo you want to uninstall it first? Its data (profiles, settings, results) are kept: GazePlay Learning uses them.%n%nIf you answer No, both are installed side by side.
+french.UninstallFormerGazePlay=GazePlay, l'ancienne version de GazePlay Learning, est installé sur cet ordinateur.%n%nVoulez-vous d'abord le désinstaller ? Ses données (profils, réglages, résultats) sont gardées : GazePlay Learning les utilise.%n%nSi vous répondez Non, les deux seront installés côte à côte.
+english.UninstallOlderGazePlayLearning=An older version of GazePlay Learning was detected. Do you want to uninstall it?
+french.UninstallOlderGazePlayLearning=Une version précédente de GazePlay Learning est installée. Voulez-vous la désinstaller ?
+
 [Code]
-function GetUninstallString: string;
+const
+  UninstallKeys = 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\';
+
+{ Uninstall command of an application installed by Inno Setup, for all users (32 or 64 bits view) or the current
+  user, or '' if it is not installed }
+function FindUninstallString(const AppId: String): String;
 var
-  sUnInstPath: string;
-  sUnInstallString: String;
+  Key: String;
 begin
   Result := '';
-  sUnInstPath := ExpandConstant('Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\GazePlayLearning_is1'); { Your App GUID/ID }
-  sUnInstallString := '';
-  if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
-    RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString);
-  Result := sUnInstallString;
+  Key := UninstallKeys + AppId + '_is1';
+  if RegQueryStringValue(HKLM, Key, 'UninstallString', Result) then
+    Exit;
+  if IsWin64 and RegQueryStringValue(HKLM64, Key, 'UninstallString', Result) then
+    Exit;
+  if RegQueryStringValue(HKCU, Key, 'UninstallString', Result) then
+    Exit;
+  Result := '';
 end;
 
-function IsUpgrade: Boolean;
+{ Runs an uninstaller and waits for its end }
+procedure RunUninstaller(const UninstallString: String);
+var
+  ResultCode: Integer;
 begin
-  Result := (GetUninstallString() <> '');
+  Exec(RemoveQuotes(UninstallString), '', '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
 end;
 
 function InitializeSetup: Boolean;
 var
-  V: Integer;
-  iResultCode: Integer;
-  sUnInstallString: string;
+  UninstallString: String;
 begin
-  Result := True; { in case when no previous version is found }
-  if RegValueExists(HKEY_LOCAL_MACHINE,'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\GazePlayLearning_is1', 'UninstallString') then  { Your App GUID/ID }
+  Result := True;
+
+  { Former GazePlay (AppId GazePlay): optional, GazePlay Learning can be installed next to it }
+  UninstallString := FindUninstallString('GazePlay');
+  if UninstallString <> '' then
   begin
-    V := MsgBox(ExpandConstant('An older version of GazePlay Learning was detected. Do you want to uninstall it?'), mbInformation, MB_YESNO); { Custom Message if App installed }
-    if V = IDYES then
-    begin
-      sUnInstallString := GetUninstallString();
-      sUnInstallString :=  RemoveQuotes(sUnInstallString);
-      Exec(ExpandConstant(sUnInstallString), '', '', SW_SHOW, ewWaitUntilTerminated, iResultCode);
-      Result := True; { if you want to proceed after uninstall }
-      { Exit; //if you want to quit after uninstall }
-    end
+    if MsgBox(CustomMessage('UninstallFormerGazePlay'), mbConfirmation, MB_YESNO) = IDYES then
+      RunUninstaller(UninstallString);
+  end;
+
+  { Older GazePlay Learning: uninstalled first, as before; the installation stops if it is kept }
+  UninstallString := FindUninstallString('GazePlayLearning');
+  if UninstallString <> '' then
+  begin
+    if MsgBox(CustomMessage('UninstallOlderGazePlayLearning'), mbConfirmation, MB_YESNO) = IDYES then
+      RunUninstaller(UninstallString)
     else
-      Result := False; { when older version present and not uninstalled }
+      Result := False;
   end;
 end;
