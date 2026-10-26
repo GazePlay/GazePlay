@@ -1473,6 +1473,19 @@ Demande du mainteneur (pendant son test de l'installeur) : retirer ce qui n'est 
 - **Linux x64 : très probablement non** — le jar contient bien une bibliothèque Linux x64, mais jamais testée avec un appareil ; Tobii ne prend pas officiellement en charge l'Eye Tracker 5 sous Linux (pas de service Tobii ni de Tobii Experience pour le calibrage, nécessaire même sous Windows) ; les pilotes Linux du 4C ont été retirés (étape 34). Hypothèse appuyée par des recherches (aucun support officiel trouvé, témoignages d'échec), non testée faute de matériel Linux. Sans données, GazePlay continue à la souris, sans regard fantôme (R9).
 - **Linux ARM : non** — aucune bibliothèque ARM dans le wrapper.
 
+### Pistes pour faire fonctionner l'Eye Tracker 5 sous Linux et macOS (26/10/2026, pour plus tard)
+Question du mainteneur : peut-on faire fonctionner l'Eye Tracker 5 sous Linux et macOS ? **Pas avec le seul code de GazePlay** : ce qui manque, ce sont les pilotes de Tobii.
+- **Pourquoi (fait)** : sous macOS, Tobii ne fournit ni pilote ni logiciel pour l'Eye Tracker 5, et le wrapper ne contient aucune bibliothèque macOS. Sous Linux, le wrapper contient une bibliothèque, mais l'appareil dépend du service Tobii et de Tobii Experience (calibrage), qui n'existent que sous Windows ; Tobii ne le prend pas en charge sous Linux (témoignages d'échec). Rien n'a pu être testé : pas de Linux ni d'appareil disponibles pour un essai.
+
+Pistes, de la moins coûteuse à la plus large :
+1. **Essai sous Linux, sans changer le code** : brancher l'Eye Tracker 5 sur un PC Linux x64, lancer GazePlay en « Tobii seul » (réglage `tobii`). Si des positions arrivent, ça marche ; sinon GazePlay reste à la souris (aucun regard fantôme, R9). Coût : une demi-heure avec le matériel. **Hypothèse** : échec très probable.
+2. **Passer par Talon** (logiciel tiers, propriétaire) : sa documentation annonce la prise en charge de l'Eye Tracker 5 (et du 4C) et des versions macOS et Linux, avec son propre calibrage. Côté GazePlay : une nouvelle source de regard (`GazeSource`, comme `TobiiGazeSource`) qui reçoit les positions envoyées par un script Talon (par exemple par une connexion locale), sans toucher au reste. **Non vérifié** : le fonctionnement réel de l'Eye Tracker 5 avec Talon sous macOS et Linux, sa licence et son coût ; une source non officielle (Stork.ai, mai 2026) signale que Talon pourrait abandonner Linux X11. Seule piste réaliste pour macOS, mais dépendante d'un logiciel tiers.
+3. **Un autre appareil** (décision du mainteneur, car c'est un choix de matériel) : les eye trackers Tobii Pro (recherche, chers), dont le SDK fonctionne sous macOS et Linux ; ou une solution par webcam comme Beam Eye Tracker (annoncé sur Linux et macOS en 2026, bien moins précis). Il faudrait une nouvelle `GazeSource` ; l'architecture le permet (une source = une classe, voir `GazeSourceDeviceManager`).
+
+Ordre proposé si le sujet est repris : piste 1, puis vérification de Talon (piste 2) sur une machine avec l'appareil, avant d'écrire du code.
+
+Sources consultées : [documentation Talon](https://talonvoice.com/docs/), [Stork.ai : Talon Voice](https://www.stork.ai/fr/talon-voice), [forum SCS : Tobii 4C et 5 sous Linux](https://forum.scssoft.com/viewtopic.php?p=2061139), [configuration Talon de la communauté](https://gh.nn.ci/fidgetingbits/fidgetingbits-talon), [GamingOnLinux : Beam Eye Tracker sur Linux et macOS](https://gamingonlinux.com/2026/09/beam-eye-tracker-gets-linux-and-macos-support), [wrapper TobiiStreamEngineForJava](https://github.com/GazePlay/TobiiStreamEngineForJava).
+
 ### Vérifié (Windows 11, JDK 25)
 `./gradlew build smokeTest allGamesTest` : **422 tests, 0 échec** ; `smokeTest` 3/3 ; **`allGamesTest` 75/75** (chaque jeu lancé) ; SpotBugs vert ; `javadoc` sans erreur. Relecture du diff : hors commentaires, seules des suppressions voulues et une réindentation.
 
@@ -1523,38 +1536,29 @@ Aucun format ne change. Les fichiers de résultats n'ont simplement plus de poin
 `GazeDispatchCharacterizationTest.shouldReleaseTheNodesAndFireNothingWhilePaused`, `GameContextFactoryMenuTest` (souris hors du menu et clavier arrêtés, touche « quitter » et menu laissés passer, rien d'arrêté menu fermé).
 
 ### Vérifié (Windows 11, JDK 25)
-`./gradlew build smokeTest allGamesTest` : **429 tests, 0 échec** (4 nouveaux) ; `smokeTest` 3/3 ; `allGamesTest` 75/75 ; SpotBugs vert. **À vérifier par le mainteneur** dans l'application : menu ouvert, le jeu ne réagit plus au regard, à la souris ni au clavier (sauf la touche « quitter ») ; menu refermé, tout reprend.
+`./gradlew build smokeTest allGamesTest` : **429 tests, 0 échec** (4 nouveaux) ; `smokeTest` 3/3 ; `allGamesTest` 75/75 ; SpotBugs vert. **Vérifié par le mainteneur** (26/10/2026, installeur de 17:26, SHA-256 `FEAE294B…4326`, Eye Tracker 5) : menu ouvert, le jeu ne réagit plus au regard, à la souris ni au clavier ; menu refermé, tout reprend ; « tout fonctionne ».
+
+**Fin de la modernisation** : avec cette validation, les étapes 1 à 37 sont terminées. La suite (fusion de `GazePlayLearning`, refonte graphique du menu principal, puis GazePlay 2.0) et les décisions encore ouvertes sont listées en section 9.
 
 ---
 
-## 9. Reprise à la prochaine session (pause du vendredi 23/10/2026 au soir, reprise le lundi 26/10/2026)
+## 9. État à la fin de la modernisation (26/10/2026)
 
-### À faire lundi en premier
-1. **Le mainteneur teste l'installeur** `build/distributions/gazeplay-learning-windows-x64-1.11.10-installer.exe` (construit le 23/10/2026 à 17:34). Points à vérifier :
-   - la licence s'affiche avec ses accents ;
-   - l'installeur est en français et propose de désinstaller l'ancien GazePlay 1.11.9-SNAPSHOT (`C:\Program Files (x86)\GazePlay`) ; avec Oui, la désinstallation se passe bien et les données de `Documents\GazePlay_Learning` restent ;
-   - installation dans `C:\Program Files\GazePlay Learning`, raccourcis du menu Démarrer et du bureau ;
-   - lancement : titre et logo, données retrouvées, Eye Tracker 5 en « Tobii seul », une partie jusqu'à l'écran des statistiques ;
-   - un raccourci de jeu créé depuis les réglages ;
-   - désinstallation de GazePlay Learning depuis les paramètres de Windows (les données restent).
-2. **Commiter et pousser les corrections de l'installeur**, non commitées le 23/10/2026 au soir (seulement sur demande du mainteneur) : `gradle/installer.gradle` (`unzipDistribution` en `Sync`, licence et script en UTF-8 avec BOM), `gradle/innosetup/setup.iss.skel` (français/anglais, désinstallation proposée de l'ancien GazePlay), `MODERNIZATION.md`. Si le test révèle un problème : corriger, `./gradlew generateWindowsInstaller` (avec `JAVA_HOME` en JDK 25), redonner l'installeur.
-
-### État au 23/10/2026 au soir
-- Branche **`addClaudeCode`**, dernier commit poussé **`87692bd97`** (étapes 33 à 35), CI verte sur les 7 jobs. Étapes 29 à 35 vérifiées par le mainteneur dans l'application.
-- Suite locale : 422 tests, 0 échec ; `smokeTest` 3/3 ; SpotBugs vert. Les 4 stashes sont intacts.
+### Modernisation terminée
+- Étapes 1 à 37 faites ; la dernière (menu de l'engrenage, 2an) est **vérifiée par le mainteneur** avec l'installeur Windows du 26/10/2026, 17:26 (SHA-256 `FEAE294B…4326`). L'installation réelle par l'installeur est validée (premier essai le 23/10/2026, corrections, nouveaux essais réussis le 26/10/2026 : licence lisible, français, désinstallation proposée de l'ancien GazePlay, données gardées).
+- Branche **`addClaudeCode`**, dernier commit de code poussé **`0234f6cf9`**. Suite locale : 429 tests, 0 échec ; `smokeTest` 3/3 ; `allGamesTest` 75/75 ; SpotBugs vert. Les 4 stashes sont intacts.
+- Plateformes : CI verte sur Windows x64, Linux x64 et macOS Apple Silicon (distributions lancées). Eye tracker : Windows x64 seulement (voir 2am).
 - Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
-- Dossier de données du mainteneur : `Documents\GazePlay_Learning` (déplacé le 23/10/2026, 14:07). Réglage de l'appareil : les modes `mouse_control`, `tobii` (regard seul) et `tobii_and_mouse` existent depuis l'étape 35.
 
-### Reste à faire, dans l'ordre (décision du mainteneur du 23/10/2026, au soir)
-1. **Installeur Windows testé par le mainteneur.** Premier essai (23/10/2026) : deux retours, corrigés.
-   - **Licence aux accents illisibles** : `licence.txt` était en UTF-8 sans BOM, qu'Inno Setup lit comme de l'ANSI (« rÃ©alisÃ© »). `prepareInnoSetupFiles` écrit maintenant `licence.txt` et `setup.iss` en UTF-8 avec BOM.
-   - **Ancien GazePlay** : l'installeur cherche l'identifiant `GazePlay_is1` (tous utilisateurs en 32 et 64 bits, puis utilisateur courant) et propose de le désinstaller d'abord. Ses données sont gardées : GazePlay Learning les utilise. Si le mainteneur refuse, les deux sont installés côte à côte. Sur le poste du mainteneur : GazePlay 1.11.9-SNAPSHOT dans `C:\Program Files (x86)\GazePlay`, trouvé à cet endroit.
-   - Messages de l'installeur en **français** ou en anglais, selon la langue de Windows (`French.isl` d'Inno Setup 6).
-   - Avant le premier essai, `unzipDistribution` copiait l'archive Windows par-dessus un build précédent : l'installeur local embarquait encore `eyetribe-clientsdk`. La tâche synchronise maintenant le dossier.
-   - Installeur reconstruit : `build/distributions/gazeplay-learning-windows-x64-1.11.10-installer.exe`, SHA-256 `2e32baa9…e6c5`. Second essai du mainteneur : lundi 26/10/2026.
-2. Si l'installation est bonne : **numéro de version et publication** (1.12.0 proposé ; notes de version prêtes dans `GazePlay-1.12.0.md`, à relire ; publication par `release.yml`, qui produit les fichiers `gazeplay-learning-*`).
-3. ~~Passe de nettoyage et de documentation du code~~ : **faite le 26/10/2026 à la demande du mainteneur (étape 36, 2am), non commitée**. À pousser pour la voir passer en CI sous Linux et macOS. Les constats relevés ont été corrigés le même jour (2am).
-4. Fusion de `GazePlayLearning` (Eval) : pas encore placée dans cet ordre par le mainteneur.
+### Suite (décision du mainteneur du 26/10/2026)
+1. **Fusion de `GazePlayLearning`** (Eval ; anomalie R12).
+2. **Refonte graphique du menu principal.**
+3. **Sortie de GazePlay 2.0** : pas de 1.12.0 ; les notes `GazePlay-1.12.0.md` seront reprises pour la 2.0 ; `CLAUDE.md` à mettre à jour à ce moment.
+
+### Décisions encore ouvertes (documentées, à trancher par le mainteneur)
+- Temps passé dans le menu de l'engrenage compté dans les durées : options A, B et C (2an).
+- Eval : format officiel des exports, règle d'arrêt à 5 erreurs, données personnelles et RGPD.
+- Eye Tracker 5 sous Linux et macOS : impossible avec le seul code de GazePlay (pilotes Tobii absents) ; trois pistes documentées en 2am, « Pistes pour faire fonctionner l'Eye Tracker 5 sous Linux et macOS ».
 
 ### Décisions du mainteneur en vigueur
 64 bits seulement ; formats de résultats versionnés (v4) ; pas de retraitement des fichiers v1 ; une JVM par partie ; Gradle 9.8.2 ; SpotBugs seul ; licence Tobii réglée ; pas de pull request ; dossier `Documents\GazePlay_Learning` ; nom visible « GazePlay Learning », installeur à côté de GazePlay ; R13 corrigé (option 3, zones séparées par source) ; logo : lettres GAZE PLAY gardées, « Learning » en Fredoka dessous.
