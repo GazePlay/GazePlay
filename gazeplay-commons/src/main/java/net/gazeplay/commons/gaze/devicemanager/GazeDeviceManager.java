@@ -74,4 +74,11 @@ public interface GazeDeviceManager {
      * In replay mode, the samples of the eye tracker are ignored: only the recorded samples are dispatched.
      */
     void setInReplayMode(boolean b);
+
+    /**
+     * Pauses the dispatch, e.g. while the configuration menu of the game screen is open: the nodes under the gaze
+     * receive GAZE_EXITED at once (a fixation in progress does not end while the player changes the settings), then
+     * no event is fired until the dispatch is resumed. To be called on the JavaFX thread.
+     */
+    void setPaused(boolean paused);
 }

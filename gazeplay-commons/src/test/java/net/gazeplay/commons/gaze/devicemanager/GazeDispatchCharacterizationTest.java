@@ -213,4 +213,22 @@ class GazeDispatchCharacterizationTest {
 
         assertEquals(List.of(), eventTypes());
     }
+    /**
+     * While the configuration menu of the game screen is open, the dispatch is paused: the node under the gaze
+     * receives GAZE_EXITED at once (no fixation ends during the settings), and nothing more until the menu closes.
+     */
+    @Test
+    void shouldReleaseTheNodesAndFireNothingWhilePaused() throws InterruptedException {
+        startRecording();
+
+        sample(110, 110, "gaze");
+        onFxThread(() -> manager.setPaused(true));
+        sample(120, 120, "gaze");
+        sample(130, 130, "gaze");
+        onFxThread(() -> manager.setPaused(false));
+        sample(140, 140, "gaze");
+
+        assertEquals(List.of("GAZE_ENTERED", "GAZE_EXITED", "GAZE_ENTERED"), eventTypes());
+    }
+
 }

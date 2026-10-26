@@ -1481,6 +1481,52 @@ Après la correction des constats (même jour) : **425 tests, 0 échec** (3 nouv
 
 ---
 
+## 2an. Étape 37 — Le menu de l'engrenage met le jeu de côté (26/10/2026, demande du mainteneur)
+
+Constat du mainteneur (après son test réussi de l'installeur) : dans un jeu, quand le menu de l'engrenage bleu (en bas à gauche) est ouvert pour changer un réglage ou quitter le jeu, le regard et la souris continuent d'être enregistrés et d'agir sur le jeu. Demande : ne plus rien enregistrer et bloquer toute interaction avec le jeu tant que le menu est ouvert, **pour tous les jeux**.
+
+### Avant (fait)
+- Seule la souris cessait d'être enregistrée (`Stats.setConfigMenuOpen`) ; le regard continuait d'être enregistré et d'atteindre le jeu (une fixation pouvait se terminer pendant le réglage).
+- Rien n'empêchait la souris ou le clavier d'atteindre le jeu : trois jeux (GazeRace, SprintFinish, SurviveAgainstRobots) écoutent même la souris et le clavier sur toute la scène.
+- Bug annexe : chaque ouverture du menu ajoutait un écouteur de fermeture de plus, qui s'exécutait même menu fermé.
+
+### Correction (dans l'écran de jeu commun : tous les jeux sont couverts, aucun jeu n'est modifié)
+- **Regard** : le gestionnaire du regard se met en pause (`GazeDeviceManager.setPaused`). À l'ouverture, les nœuds sous le regard reçoivent aussitôt `GAZE_EXITED` (une fixation en cours ne se termine pas pendant le réglage) ; ensuite plus aucun événement n'est envoyé, ni au jeu ni aux statistiques, jusqu'à la fermeture du menu.
+- **Souris et clavier** : à l'entrée de la scène (`GameContextFactory.blocksGameInput`, répartiteur d'événements de la scène), les événements de la souris hors du menu et ceux du clavier sont arrêtés tant que le menu est ouvert. Le menu lui-même (réglages, bouton de retour au menu) reste utilisable, ainsi que la touche « quitter » (QUIT_KEY). Seul l'écran de jeu est concerné, pas l'écran des statistiques affiché ensuite sur la même scène.
+- **Statistiques** : aucun point de regard ni de souris n'est enregistré pendant que le menu est ouvert.
+- L'écouteur de fermeture du menu n'est plus ajouté qu'une fois.
+- **Non changé** : le jeu n'est pas mis en pause (ses animations et le minuteur de la limite de temps continuent) : la demande portait sur les interactions et l'enregistrement.
+
+### Ce que cela change pour les résultats
+- **Plus précis** (fait) : ce que la personne regarde ou pointe pendant qu'elle règle la partie (le menu, les curseurs) n'entre plus dans les points de regard et de souris de `replayData.json`, ni dans les heatmaps, les séquences de fixation et les zones d'intérêt. Une fixation commencée sur une cible juste avant l'ouverture du menu ne peut plus se terminer pendant le réglage et compter comme une réponse.
+
+### Limite connue : les durées comptent encore le temps passé dans le menu (non changé, à décider)
+Le jeu n'étant pas mis en pause, **le temps passé dans le menu reste compté** dans :
+- la **durée totale** de la partie (`lifeCycle` : `startTime`/`stopTime` de `replayData.json`, « Total Time » des `info-game.csv`) ;
+- la **durée des manches**, c'est-à-dire le temps pour atteindre chaque objectif (`roundsDurationReport` : `durationBetweenGoals`, `totalAdditiveDuration` ; colonnes « Length », « Average Length », « Standard Deviation » et « shot n » des `info-game.csv` ; graphique des durées de l'écran des statistiques) ;
+- la **limite de temps** des réglages (LIMITER_TIME), si elle est activée : le menu consomme du temps de jeu ;
+- le **temps des points** enregistrés ensuite (`time` des points de `coordinatesAndTimeStamp`, `timeGaze` des fixations) : il reste mesuré depuis le début de la manche, avec un trou pendant l'ouverture du menu (aucun point), sans décalage.
+
+Exemple : une personne qui passe une minute dans les réglages pendant une manche fait paraître cette manche une minute plus longue.
+
+**Si l'on veut changer cela plus tard** (décision du mainteneur, car le sens des mesures change) :
+- **Option A** — retirer le temps du menu des durées : mémoriser l'instant d'ouverture et ajouter le temps passé dans le menu à un cumul, soustrait par `LifeCycle.computeTotalElapsedDuration`, par `Stats.incrementNumberOfGoalsReached`/`notifyNextRound` (durée de la manche en cours) et par le minuteur de la limite de temps (`GameContext.updateScore`). Changement de sens des durées, donc **nouvelle version du format** (`formatVersion` 5) à documenter dans `ReplayDataFormat`. Le temps des points pourrait être laissé tel quel (le trou montre la pause) ou décalé (à trancher).
+- **Option B** — mettre vraiment le jeu en pause (animations, minuteurs) pendant le menu : bien plus large, chaque jeu ayant ses propres animations et minuteurs ; à faire jeu par jeu.
+- **Option C** — garder les durées telles quelles et enregistrer les ouvertures du menu (instants d'ouverture et de fermeture) dans `replayData.json`, pour que les chercheurs les retirent eux-mêmes : changement de format plus léger (un champ ajouté, `formatVersion` 5), sans changer le sens des durées existantes.
+
+Les points de code concernés : `GameContextFactory.setMenuOpen` (ouverture et fermeture du menu), `Stats` (durées des manches et enregistrement), `LifeCycle` (durée totale), `GameContext.updateScore` (limite de temps).
+
+### Données
+Aucun format ne change. Les fichiers de résultats n'ont simplement plus de points pendant l'ouverture du menu (ils avaient ceux du regard avant).
+
+### Tests
+`GazeDispatchCharacterizationTest.shouldReleaseTheNodesAndFireNothingWhilePaused`, `GameContextFactoryMenuTest` (souris hors du menu et clavier arrêtés, touche « quitter » et menu laissés passer, rien d'arrêté menu fermé).
+
+### Vérifié (Windows 11, JDK 25)
+`./gradlew build smokeTest allGamesTest` : **429 tests, 0 échec** (4 nouveaux) ; `smokeTest` 3/3 ; `allGamesTest` 75/75 ; SpotBugs vert. **À vérifier par le mainteneur** dans l'application : menu ouvert, le jeu ne réagit plus au regard, à la souris ni au clavier (sauf la touche « quitter ») ; menu refermé, tout reprend.
+
+---
+
 ## 9. Reprise à la prochaine session (pause du vendredi 23/10/2026 au soir, reprise le lundi 26/10/2026)
 
 ### À faire lundi en premier
@@ -1550,4 +1596,5 @@ Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `"
 ## Annexe C — Constats annexes encore ouverts
 
 - **`multilinguism.csv`** : « Petit Ours Brun » n'a pas de traduction anglaise (exception documentée dans `TranslationFilesTest`).
+- **Durées et menu de l'engrenage** : le temps passé dans le menu reste compté dans les durées (partie, manches, limite de temps). Détail et options de correction : 2an, « Limite connue ».
 - Réglés depuis l'étape 1, pour mémoire : anciennes clés de configuration (migrées, étape 3), affichage des scores BERA (retiré avec BERA), emplacement Windows de `GazePlayArgs` (classe retirée, 2ag), tests JavaFX sans fenêtre (Monocle, étape 2), « Dossier des vidéos » et `DATA_COLLECT_AUTHORIZED` (retirés, 2ai), clés de traduction en double (2aj).

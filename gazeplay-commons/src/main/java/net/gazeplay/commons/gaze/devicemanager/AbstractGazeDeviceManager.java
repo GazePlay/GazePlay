@@ -25,6 +25,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private boolean isInReplayMode = false;
 
+    /**
+     * See {@link #setPaused(boolean)}. Set and read on the JavaFX thread.
+     */
+    private boolean paused = false;
+
     // Also the lock of the dispatch: not exposed (it had unused public getters)
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = Collections.synchronizedMap(new HashMap<>());
 
@@ -51,6 +56,29 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     @Override
     public void setInReplayMode(boolean b) {
         isInReplayMode = b;
+    }
+
+    @Override
+    public void setPaused(final boolean paused) {
+        this.paused = paused;
+        if (!paused) {
+            return;
+        }
+        final List<GazeInfos> nodes;
+        synchronized (shapesEventFilter) {
+            nodes = new ArrayList<>(shapesEventFilter.values());
+        }
+        if (gameScene != null) {
+            nodes.add(gameScene);
+        }
+        for (GazeInfos gi : nodes) {
+            if (gi.isOnGaze() || gi.isOnMouse()) {
+                gi.setOnGaze(false);
+                gi.setOnMouse(false);
+                gi.setTime(-1);
+                fire(gi.getNode(), new GazeEvent(GazeEvent.GAZE_EXITED, -1, 0, 0));
+            }
+        }
     }
 
     /**
@@ -169,7 +197,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
      * queued with Platform.runLater (pinned by GazeDispatchCharacterizationTest).
      */
     private void dispatch(final GazeSample sample, final boolean isBeingReplayed) {
-        if (isInReplayMode && !isBeingReplayed) {
+        if ((isInReplayMode || paused) && !isBeingReplayed) {
             return;
         }
 
