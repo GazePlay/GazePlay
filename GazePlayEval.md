@@ -846,6 +846,9 @@ réglages du même jour. **Rien n'est commité.** « Eval Test » n'est pas cod�
 Demande du mainteneur : revoir le graphisme du **menu principal**, des **paramètres**, du **choix de l'utilisateur** et
 du **choix du mode**. Ce qui suit est un état des lieux et une méthode ; **rien n'est codé**.
 
+> **Suite** : les réponses du mainteneur (27/10/2026) et le plan détaillé sont dans **`REFONTE_GRAPHIQUE.md`**, qui
+> remplace cette section pour la refonte.
+
 **Les écrans et leur code (faits)**
 
 | Écran | Classes | Taille |
