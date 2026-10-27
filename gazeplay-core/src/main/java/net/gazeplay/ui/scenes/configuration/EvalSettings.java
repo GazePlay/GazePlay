@@ -33,10 +33,11 @@ import java.util.stream.Collectors;
 
 /**
  * The controls of the settings page for GazePlay Eval: the imported evaluations (import of a .zip of the website,
- * deletion), the way the evaluations are taken (EVAL_OPTIONS) and the folder of their results.
+ * deletion), the way the evaluations are taken (EVAL_OPTIONS) and the folder of their results. The import and the
+ * folder of the results are also used by the menu of the evaluations.
  */
 @Slf4j
-final class EvalSettings {
+public final class EvalSettings {
 
     private static final double PREF_WIDTH = 200;
 
@@ -93,7 +94,7 @@ final class EvalSettings {
     /**
      * Asks for a .zip of the website, checks it, asks before replacing an evaluation of the same name, then imports it.
      */
-    static void importEvaluation(Translator translator, Stage owner) {
+    public static void importEvaluation(Translator translator, Stage owner) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle(translator.translate("EvalImportButton"));
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("GazePlay Eval (.zip)", "*.zip", "*.ZIP"));
@@ -174,14 +175,19 @@ final class EvalSettings {
      */
     static Node buildResultsFolderButton(Translator translator) {
         Button button = new I18NButton(translator, "SeeFolder");
-        button.setOnAction(e -> {
-            File folder = GazePlayDirectories.getEvaluationResultsFolder();
-            if (!folder.isDirectory() && !folder.mkdirs()) {
-                log.warn("Cannot create the folder {}", folder);
-            }
-            SystemFileManager.openFolder(folder);
-        });
+        button.setOnAction(e -> openResultsFolder());
         return button;
+    }
+
+    /**
+     * Opens the folder of the results of the evaluations (GazePlayLearning_Eval in Documents), created if needed.
+     */
+    public static void openResultsFolder() {
+        File folder = GazePlayDirectories.getEvaluationResultsFolder();
+        if (!folder.isDirectory() && !folder.mkdirs()) {
+            log.warn("Cannot create the folder {}", folder);
+        }
+        SystemFileManager.openFolder(folder);
     }
 
     private static String problems(List<EvalProblem> problems, Translator translator) {

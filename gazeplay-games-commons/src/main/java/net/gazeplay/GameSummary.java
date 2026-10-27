@@ -69,4 +69,11 @@ public class GameSummary {
      */
     @Getter
     private final int absolutePriority;
+
+    /**
+     * Whether this entry of the catalog is an evaluation (GazePlay Eval): shown in the "Evaluations" mode of the
+     * application only, the other entries in the "Games" mode only.
+     */
+    @Getter
+    private final boolean evaluation;
 }

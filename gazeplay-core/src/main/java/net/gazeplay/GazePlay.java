@@ -15,8 +15,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
+import net.gazeplay.ui.scenes.evalmenu.EvalMenuScreen;
 import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.ui.scenes.modeselect.ModeSelectionContext;
 import net.gazeplay.ui.scenes.stats.AreaOfInterest;
 import net.gazeplay.ui.scenes.stats.ScanpathView;
 import net.gazeplay.ui.scenes.stats.StatsContext;
@@ -24,9 +26,10 @@ import net.gazeplay.ui.scenes.userselect.UserProfileContext;
 import java.util.function.Supplier;
 
 /**
- * The application seen by its screens: the window, its scene, and the navigation between the screens (user selection,
- * menu, settings, game, statistics, areas of interest, scan path). Each screen is put on the same scene with its
- * setUpOnStage method.
+ * The application seen by its screens: the window, its scene, and the navigation between the screens (mode selection,
+ * user selection, menu, settings, game, statistics, areas of interest, scan path). Each screen is put on the same scene
+ * with its setUpOnStage method. The mode of the session ({@link AppMode}: games or evaluations) chooses the menu and the
+ * settings shown.
  */
 @Slf4j
 public class GazePlay {
@@ -40,6 +43,10 @@ public class GazePlay {
         ConfigurationContext newConfigurationContext();
 
         UserProfileContext newUserProfileContext();
+
+        ModeSelectionContext newModeSelectionContext();
+
+        EvalMenuScreen newEvalMenuScreen();
     }
 
     @Setter
@@ -65,7 +72,14 @@ public class GazePlay {
 
     private final Screens screens;
 
+    /**
+     * The mode of the session: the games until another one is chosen (e.g. started with --user or --default-user).
+     */
+    @Getter
+    private AppMode mode = AppMode.GAMES;
+
     HomeMenuScreen homeMenuScreen;
+    EvalMenuScreen evalMenuScreen;
     ConfigurationContext configurationContext;
     UserProfileContext userProfileScreen;
 
@@ -86,12 +100,35 @@ public class GazePlay {
     }
 
     /**
-     * Shows the menu of the games; the background music of the menu comes back.
+     * Shows the menu of the mode (the games or the evaluations); the background music of the menu comes back.
      */
     public void onReturnToMenu() {
         this.loadHomePage();
-        homeMenuScreen.setUpOnStage(primaryScene);
+        if (mode == AppMode.EVALUATIONS) {
+            evalMenuScreen.setUpOnStage(primaryScene);
+        } else {
+            homeMenuScreen.setUpOnStage(primaryScene);
+        }
         BackgroundMusicManager.getInstance().onEndGame();
+    }
+
+    /**
+     * Shows the page choosing the mode (games or evaluations), at startup and from the profile page.
+     */
+    public void goToModePage() {
+        ModeSelectionContext modeSelectionContext = screens.newModeSelectionContext();
+        modeSelectionContext.setUpOnStage(primaryScene);
+        primaryStage.show();
+    }
+
+    /**
+     * Chooses the mode of the session, then shows the profile page. The menus and the settings page are built again for
+     * this mode.
+     */
+    public void chooseMode(AppMode mode) {
+        log.info("Mode = {}", mode);
+        this.mode = mode;
+        goToUserPage();
     }
 
     /**
@@ -182,7 +219,7 @@ public class GazePlay {
     }
 
     /**
-     * Creates the menu of the games (and the settings page) at the first call; creates the "music" folder with the
+     * Creates the menu of the mode (and the settings page) at the first call; creates the "music" folder with the
      * default music if needed.
      */
     public void loadHomePage() {
@@ -190,7 +227,11 @@ public class GazePlay {
             this.loadedHomePage = true;
             BackgroundMusicManager.getInstance().checkDefaultMusic();
             this.loadSettingsPage();
-            homeMenuScreen = screens.newHomeMenuScreen();
+            if (mode == AppMode.EVALUATIONS) {
+                evalMenuScreen = screens.newEvalMenuScreen();
+            } else {
+                homeMenuScreen = screens.newHomeMenuScreen();
+            }
         }
     }
 

@@ -27,7 +27,11 @@ Versions of all libraries and plugins: `gradle/libs.versions.toml`.
    line with picocli (`MainCommand`). There are no product editions any more (AFSR and BERA removed).
 2. `CompositionRoot` builds and wires the components (no dependency injection framework): translator, game locator,
    `GazePlay` (navigation between screens), gaze device and sound factories, game menu.
-3. `GazePlayFxApp` (JavaFX `Application`) shows the profile selection, the menu, or directly a game (`--game`).
+3. `GazePlayFxApp` (JavaFX `Application`) shows the choice of the mode (`AppMode`: games or evaluations of GazePlay
+   Eval, held in memory by `GazePlay`), then the profile selection, then the menu of the mode (`HomeMenuScreen` for
+   the games, `EvalMenuScreen` for the evaluations); with `--user`/`--default-user`, directly the menu of the games;
+   or directly a game (`--game`). The menus use the mouse and the keyboard only: only the JVM of a game reads
+   the eye tracker.
 4. Each game started from the menu runs **in its own JVM** (`GameMenuController.createBuilder`), launched with
    `--user`/`--default-user`, `--game` and `--variant`.
 

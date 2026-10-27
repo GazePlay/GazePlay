@@ -16,11 +16,13 @@ import net.gazeplay.gameslocator.CachingGamesLocator;
 import net.gazeplay.gameslocator.CatalogBasedGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
+import net.gazeplay.ui.scenes.evalmenu.EvalMenuScreen;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuFactory;
 import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.ingame.GameContextFactory;
+import net.gazeplay.ui.scenes.modeselect.ModeSelectionContext;
 import net.gazeplay.ui.scenes.userselect.UserProfileContext;
 
 import java.util.concurrent.TimeUnit;
@@ -90,5 +92,15 @@ public class CompositionRoot implements GazePlay.Screens {
     @Override
     public UserProfileContext newUserProfileContext() {
         return new UserProfileContext(gazePlay);
+    }
+
+    @Override
+    public ModeSelectionContext newModeSelectionContext() {
+        return new ModeSelectionContext(gazePlay);
+    }
+
+    @Override
+    public EvalMenuScreen newEvalMenuScreen() {
+        return new EvalMenuScreen(gazePlay, gameMenuController, gamesLocator);
     }
 }

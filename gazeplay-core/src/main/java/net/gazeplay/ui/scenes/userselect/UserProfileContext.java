@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -28,12 +29,14 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.AppMode;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FileUtils;
@@ -90,7 +93,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
 
         final CustomButton exitButton = createExitButton(screenDimension);
-        topRightPane.getChildren().add(exitButton);
+        topRightPane.getChildren().addAll(createChangeModeButton(gazePlay), exitButton);
 
         final Node userPickerChoicePane = createUserPickerChoicePane(gazePlay);
 
@@ -99,8 +102,16 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(userPickerChoicePane);
 
+        // The mode chosen before (games or evaluations), under the logo
+        final AppMode mode = gazePlay.getMode() == null ? AppMode.GAMES : gazePlay.getMode();
+        final Label modeLabel = new Label(gazePlay.getTranslator().translate(mode.getTranslationKey()));
+        modeLabel.setStyle("-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: "
+            + (config.isDarkThemeEnabled() ? "white" : "black") + ";");
+        final VBox logoAndMode = new VBox(10, logo, modeLabel);
+        logoAndMode.setAlignment(Pos.CENTER);
+
         final BorderPane topPane = new BorderPane();
-        topPane.setCenter(logo);
+        topPane.setCenter(logoAndMode);
         topPane.setRight(topRightPane);
 
         root.setTop(topPane);
@@ -377,6 +388,16 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         rbp.minHeightProperty().bind(button.heightProperty());
 
         return rbp;
+    }
+
+    /**
+     * @return the button going back to the choice of the mode (games or evaluations)
+     */
+    private static Button createChangeModeButton(final GazePlay gazePlay) {
+        final Button button = new I18NButton(gazePlay.getTranslator(), "ModeChange");
+        button.getStyleClass().add("gameChooserButton");
+        button.setOnAction(e -> gazePlay.goToModePage());
+        return button;
     }
 
     /**

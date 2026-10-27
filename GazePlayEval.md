@@ -2,7 +2,8 @@
 
 Sections 1 à 11 : repérage du 27/10/2026, branche `addClaudeCode` (après l'étape 37 de `MODERNIZATION.md`), écrit
 **avant toute modification** : ce qu'elles décrivent du code est l'état d'avant la fusion. **La réalisation est en
-section 12.** Légende :
+section 12.** Section 13 : les deux modes « Jeux » et « Évaluations » au lancement (état des lieux et plan) ;
+section 14 : leur réalisation. Légende :
 **Fait** (lu dans le code ou un fichier), **Hypothèse** (déduit, non vérifié en exécution), **Risque**,
 **Recommandation**, **Question** (décision du mainteneur).
 
@@ -548,3 +549,274 @@ Changements hors Eval, tous vérifiés par la suite complète et `allGamesTest` 
   il vérifie maintenant un encadrement. `Stats` n'a pas changé.
 - `Stats` : ajout de l'accesseur `isConfigMenuOpen()`. `Configuration` : deux clés nouvelles. `GazePlayDirectories` :
   `getEvaluationsFolder()`. Aucune valeur ni comportement existant modifié.
+
+Commit local `5751834b6` (27/10/2026), **non poussé** : le mainteneur teste d'abord.
+
+---
+
+## 13. Deux modes au lancement : « Jeux » et « Évaluations » (état des lieux et plan, 27/10/2026)
+
+Écrit avant le code (demande du mainteneur : regarder, puis documenter la façon de faire). Les réponses du mainteneur
+aux questions Q-M1 à Q-M6 sont en 13.6 et **priment sur 13.3 et 13.4** ; **la réalisation est en section 14**.
+
+### 13.1 La demande
+
+Au lancement, **avant le choix du profil**, un écran propose deux modes :
+- **Jeux** : GazePlay avec ses jeux et leurs réglages, **sans** les évaluations ni leurs réglages ;
+- **Évaluations** : seulement les évaluations (GazePlay Eval et « Eval Test ») et leurs réglages, **rien** qui
+  concerne les jeux.
+
+### 13.2 État actuel (faits)
+
+**Démarrage** (`GazePlayFxApp.start`) :
+- sans option : `gazePlay.goToUserPage()` → page des profils (`UserProfileContext`) ; le choix d'un profil appelle
+  `gazePlay.onReturnToMenu()` → menu des jeux (`HomeMenuScreen`) ;
+- avec `--user` ou `--default-user` : pas de page des profils, directement le menu (raccourcis de bureau) ;
+- avec `--game` (+ `--variant`) : directement le jeu. C'est ainsi que le menu lance chaque partie dans **sa propre
+  JVM** (`GameMenuController.createBuilder`).
+
+**Navigation** : tout passe par `GazePlay` (une instance par JVM) : `goToUserPage`, `onReturnToMenu`,
+`onDisplayConfigurationManagement`. Les écrans sont créés par `CompositionRoot` (`newHomeMenuScreen`,
+`newConfigurationContext`, `newUserProfileContext`), et le menu et les réglages sont gardés en cache
+(`loadedHomePage`, `loadedSettingsPage`), remis à zéro par `goToUserPage`.
+
+**La JVM d'une partie se ferme à la fin** : le bouton « accueil » de l'écran de statistiques appelle
+`System.exit` (`StatDisplayUtils.closeStatsWindow`), et le menu se réaffiche dans la JVM d'origine. **Le mode n'a donc
+d'importance que dans la JVM du menu** : une partie (jeu ou évaluation) n'a pas besoin de le connaître.
+
+**Un seul catalogue** (`games-catalog.txt`, 76 entrées), lu par `CatalogBasedGamesLocator`, utilisé à deux
+endroits : le menu (`HomeMenuScreen`, ligne 114) et la création de raccourcis des réglages
+(`ConfigurationContext.buildVariantShortcutMaker`, ligne 833). Rien ne distingue aujourd'hui une évaluation d'un jeu,
+sauf son nom (`GazePlayEval`).
+
+**Menu des jeux** (`HomeMenuScreen`) : logo, cartes des jeux (favoris d'abord), barre de recherche, filtres par
+catégorie, statistiques par catégorie (`GamesStatisticsPane`), boutons : quitter, profils (« déconnexion »),
+réglages, rejouer un `replayData.json`, flèches de défilement.
+
+**Réglages** (`ConfigurationContext.buildConfigGridPane`) : une seule grille de 9 rubriques. Classement selon le mode :
+
+| Réglage | Jeux | Évaluations |
+|---|---|---|
+| Langue | oui | oui |
+| Créer un raccourci (Windows) | oui | non (des raccourcis vers une évaluation : plus tard, Q-M5) |
+| Touche pour quitter | oui | oui (elle quitte aussi une évaluation) |
+| Durée des questions, question reposée, son de récompense, limites de temps et de score, couleurs du piano | oui | non (Eval ne les lit pas) |
+| Mode d'entrée (souris, Tobii, les deux) | oui | oui |
+| Durée de fixation | oui | oui (boutons « Recommencer / Continuer ») |
+| Thème, couleur de fond, thème sombre | oui | oui (Eval choisit la couleur de ses textes d'après le fond) |
+| Orientation du menu, image de fond du menu | oui | non |
+| Dossiers : images des jeux, musique, « Où est-ce ? » | oui | non |
+| Évaluations : importées, import, mode de passation, délai avant sélection, blocage par le son, dossier des résultats | non | oui |
+| Dossier des résultats des jeux | oui | non |
+| Cartes de chaleur : désactivation, opacité, couleurs | oui | oui (les cartes de chaque écran d'une évaluation utilisent l'opacité et les couleurs) |
+| Zones d'intérêt, séquence de fixation, enregistrement vidéo | oui | non |
+
+**« Eval Test »** : le jeu `gazeplayEvalTest` (libellé du menu « Tester sa configuration ») **a été retiré** le
+27/10/2026 (section 12.5) : c'était le protocole d'entraînement « ANR » codé en dur, à l'ancien format `config.json`
+(Q2). Il n'existe donc plus rien sous ce nom (voir Q-M1).
+
+**Musique** : dans la JVM d'une partie, la musique de fond n'est lancée que si le jeu en déclare une
+(`GameMenuController`, ligne 191) ; GazePlay Eval n'en déclare pas (hypothèse : aucune musique pendant une
+évaluation, à confirmer à l'essai). Le panneau de contrôle d'une partie (musique, vitesse, engrenage) est le même pour
+tous les jeux.
+
+**Tests qui figent le démarrage et les écrans** : `UserProfileContextTest` (le choix d'un profil appelle
+`onReturnToMenu`), `ConfigurationContextTest` (position de chaque élément de la grille des réglages : il faudra un
+test par mode), `CatalogBasedGamesLocatorTest`, `LaunchSmokeTest` (lance l'application avec `--default-user`, puis un
+jeu), `AllGamesLaunchTest` (`--game`, non concerné).
+
+**Leçon de l'ancienne « édition BERA »** (retirée les 21-23/10/2026, `MODERNIZATION.md` 2k et 2ag) : elle passait par
+un fichier d'édition persistant (`argsGazeplay.txt`), hérité par les JVM des jeux, un nom de catalogue dans un champ
+statique, et des `if (bera)` dans le menu, les réglages et les statistiques. Défauts constatés : édition qui « collait »
+d'un lancement à l'autre, état statique, branches mortes difficiles à retirer. **À ne pas refaire.**
+
+### 13.3 Conception proposée
+
+**Principe** : le mode est un **choix de la session**, tenu en mémoire par `GazePlay` (une JVM = un menu), **ni
+persistant ni statique**, et décrit en **un seul endroit** (quels jeux, quelles rubriques de réglages), sans `if` répartis
+dans le code.
+
+1. **`AppMode`** (nouveau, `gazeplay-core`) : `GAMES`, `EVALUATIONS`. Chaque valeur dit :
+   - quelles entrées du catalogue elle montre (`GAMES` : tout sauf les évaluations ; `EVALUATIONS` : seulement elles) ;
+   - quelles rubriques de réglages elle montre (tableau 13.2).
+2. **Marquer les évaluations** : un champ `evaluation` dans `GameSummary` (`@Builder.Default false`), mis à vrai par
+   `GazeplayEvalGameSpecSource` (et le futur « Eval Test »). Ajout sans effet sur les 75 jeux.
+3. **`GazePlay`** reçoit le mode courant (`getMode()`, `goToModePage()`), et `onReturnToMenu()` montre le menu du mode.
+   Changer de mode remet à zéro le menu et les réglages en cache, comme `goToUserPage` le fait déjà.
+4. **Nouvel écran de choix du mode** (`ModeSelectionContext`, `ui/scenes/modeselect`) : logo, deux grandes cartes
+   « Jeux » et « Évaluations » (image et texte, souris et clavier ; le regard aussi, avec la durée de fixation, si le
+   mainteneur le souhaite, Q-M3), bouton quitter. Ensuite : la page des profils, inchangée, avec le mode rappelé en
+   titre et un bouton « Changer de mode ».
+5. **Démarrage** (`GazePlayFxApp`) :
+   - sans option → écran des modes ;
+   - nouvelle option `--mode jeux|evaluations` → saute l'écran des modes (pour deux raccourcis de bureau ou de
+     l'installeur, Q-M4) ;
+   - `--user` / `--default-user` sans `--mode` → mode Jeux, **comme aujourd'hui** (raccourcis existants inchangés) ;
+   - `--game` → la partie, comme aujourd'hui (le mode n'y sert pas).
+6. **Mode Jeux** : `HomeMenuScreen` tel quel, avec le catalogue filtré (sans GazePlay Eval) ; réglages sans la rubrique
+   Évaluations. Création de raccourcis : sans les évaluations.
+7. **Mode Évaluations** : un **menu propre** (`EvalMenuScreen`, `ui/scenes/evalmenu`), plutôt que le menu des jeux
+   filtré (catégories, favoris, statistiques par catégorie et recherche n'ont pas de sens pour 1 ou 2 entrées) :
+   - une carte par **évaluation importée** (nom, nombre d'écrans, date d'import), qui lance directement la passation
+     (`GameMenuController.chooseAndStartNewGameProcess` avec la variante de l'évaluation : une JVM par passation,
+     comme aujourd'hui) ;
+   - boutons : importer une évaluation, supprimer, ouvrir le dossier des résultats (`GazePlayLearning_Eval`),
+     « Eval Test » (Q-M1), réglages, profils, changer de mode, quitter ;
+   - réutilise `EvalSettings` (import, suppression, dossier), déjà écrit pour les réglages.
+8. **Réglages** : `ConfigurationContext` construit sa grille selon `gazePlay.getMode()`, en ne gardant que les rubriques
+   du mode (une liste décrite par `AppMode`, chaque rubrique restant écrite une seule fois). Le bouton « accueil »
+   revient au menu du mode (`onReturnToMenu`, déjà le cas).
+9. **Rien ne change dans la JVM d'une partie** ni dans les fichiers de résultats.
+
+### 13.4 Étapes d'implémentation
+
+Chaque étape compile, garde la suite verte, et le mode Jeux reste identique à aujourd'hui.
+
+1. `AppMode` + champ `evaluation` de `GameSummary` + filtrage du catalogue selon le mode (`HomeMenuScreen`,
+   raccourcis). Tests : le mode Jeux liste 75 entrées sans GazePlay Eval, le mode Évaluations seulement les
+   évaluations.
+2. `GazePlay` : mode courant, `goToModePage`, `onReturnToMenu` selon le mode, remise à zéro des écrans en cache.
+   Tests sur la navigation (comme `UserProfileContextTest`).
+3. `ModeSelectionContext` + démarrage (`GazePlayFxApp`) + option `--mode`. Tests : écran (deux cartes, quitter),
+   choix → page des profils ; `LaunchSmokeTest` avec `--mode evaluations`.
+4. Réglages par mode. `ConfigurationContextTest` : une grille par mode (positions figées comme aujourd'hui).
+5. `EvalMenuScreen`. Tests : une carte par évaluation importée (dossier de test), lancement de la passation
+   (commande construite, comme `GameMenuControllerTest`), import et suppression.
+6. « Eval Test » selon la réponse à Q-M1.
+7. Traductions (français, anglais), documentation (`ARCHITECTURE.md`, `CLAUDE.md`, ce fichier), puis la suite
+   complète, `smokeTest`, `allGamesTest`, et un essai réel des deux modes.
+
+**Risque** : la refonte graphique du menu principal est prévue juste après (`MODERNIZATION.md` 9). L'écran des modes et
+le menu des évaluations seront donc simples et fonctionnels, sans travail graphique poussé, pour ne pas le faire
+deux fois.
+
+### 13.5 Questions pour le mainteneur
+
+- **Q-M1 — « Eval Test ».** Le jeu `gazeplayEvalTest` a été retiré (ancien protocole ANR à l'ancien format). Que doit
+  être « Eval Test » dans le mode Évaluations ?
+  a) un **test de la configuration** avant une passation (son ancien libellé : « Tester sa configuration ») :
+     affichage du point de regard, quelques cibles à fixer aux coins et au centre, mesure de la précision et du taux de
+     perte du regard, avec un « OK / à recalibrer » (recommandé) ;
+  b) une évaluation d'entraînement à faire passer avant la vraie, construite avec le site (rien à coder) ;
+  c) le retour de l'ancien protocole ANR (contraire à la réponse Q2).
+- **Q-M2 — Profils.** Les profils sont-ils communs aux deux modes (comme prévu ici), ou le mode Évaluations doit-il
+  avoir ses propres profils (par exemple un par examinateur) ?
+- **Q-M3 — Écran des modes au regard.** Les deux cartes doivent-elles se choisir aussi au regard, ou seulement à la
+  souris et au clavier (c'est l'adulte qui choisit) ?
+- **Q-M4 — Raccourcis.** Faut-il deux raccourcis dans l'installeur Windows (« GazePlay Learning – Jeux » et
+  « – Évaluations », avec `--mode`), en plus du raccourci actuel qui ouvre l'écran des modes ?
+- **Q-M5 — Raccourci vers une évaluation.** Faut-il pouvoir créer un raccourci de bureau qui lance directement une
+  évaluation donnée (comme pour un jeu) ?
+- **Q-M6 — Après une évaluation.** L'écran de statistiques des jeux s'affiche à la fin d'une passation. Faut-il plutôt
+  un écran de fin propre aux évaluations (résumé des réponses, bouton vers le dossier `Eval<n>_<date>`) ?
+
+### 13.6 Réponses du mainteneur (27/10/2026) et conséquences sur le plan
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Q-M1 Eval Test | **a) test de la configuration** | Noté, **pas codé pour l'instant** (demande du mainteneur). L'étape 6 de 13.4 attend son feu vert ; le bouton « Eval Test » n'apparaît pas tant que le test n'existe pas. |
+| Q-M2 Profils | **Communs aux deux modes** | Comme prévu en 13.3 : page des profils inchangée. |
+| Q-M3 Regard | **Écran des modes et page des profils : souris et clavier seulement.** Le **menu principal** de chaque mode se choisit **au regard** quand le mode d'entrée est `tobii` ou `tobii_and_mouse` | Voir ci-dessous : travail nouveau. **Abandonné le 27/10/2026** (14.3) : les menus restent à la souris. |
+| Q-M4 Raccourcis de l'installeur | **Aucun raccourci** | Pas d'option `--mode` (13.3 point 5 et 13.4 étape 3 allégés) : sans option → écran des modes ; `--user` / `--default-user` → mode Jeux, comme aujourd'hui ; `--game` inchangé. |
+| Q-M5 Raccourci vers une évaluation | **Non** | La création de raccourcis des réglages reste dans le mode Jeux seulement, sans les évaluations. |
+| Q-M6 Écran de fin | **L'écran actuel convient** (le mainteneur réfléchit à mieux) | Rien à faire pour l'instant. |
+
+**Interprétation (à confirmer)** : « pas de raccourci tout court » est lu comme « aucun nouveau raccourci » ; la
+création de raccourcis de jeux qui existe déjà dans les réglages est gardée en mode Jeux.
+
+**Menu principal au regard (Q-M3)** — faits relevés dans le code :
+- **Aujourd'hui, le menu ne réagit pas au regard.** Le gestionnaire du regard (`GazeDeviceManagerFactory`) n'est créé
+  que pour une partie (`GameContextFactory`), dans la JVM de la partie. Dans la JVM du menu, aucune source Tobii n'est
+  démarrée : les gestionnaires `GAZE_ENTERED` / `GAZE_EXITED` des flèches de défilement de `HomeMenuScreen` (lignes
+  142-143, 184-185) ne reçoivent donc rien, et le `ProgressIndicator dwellTimeIndicator` passé aux cartes des jeux
+  n'est utilisé nulle part (code resté d'une ancienne version).
+- Les cartes des jeux (`GameMenuFactory.createGameButton`) ne réagissent qu'à la souris.
+
+Ce qu'il faut ajouter (nouvelle étape, avant l'écran des évaluations) :
+1. **Démarrer le regard dans la JVM du menu** quand le mode d'entrée est `tobii` ou `tobii_and_mouse` : un gestionnaire
+   créé par `GazeDeviceManagerFactory` à l'ouverture du menu, les cartes et boutons utiles enregistrés
+   (`addEventFilter`), arrêté en quittant le menu.
+2. **Le suspendre pendant une partie** : la JVM du menu reste vivante pendant que la partie tourne dans la sienne.
+   **Risque** : deux processus clients du Tobii en même temps. **Hypothèse** (non vérifiée) : Stream Engine accepte
+   plusieurs clients, mais deux flux à 100 Hz consomment pour rien et le regard ne doit de toute façon pas déclencher
+   une carte du menu caché. Recommandation : arrêter la source du menu au lancement d'une partie
+   (`GameMenuController`) et la redémarrer au retour du menu ; à vérifier avec l'Eye Tracker 5.
+3. **Sélection par fixation** des cartes (jeux et évaluations) et des boutons principaux, avec la durée de fixation des
+   réglages et un indicateur de progression (comme les cibles d'Eval, `EvalTarget`), réutilisé par les deux menus.
+   Les boutons à ne pas déclencher par erreur (quitter, profils, réglages) restent à la souris : à confirmer.
+4. **Mode `tobii`** : dans les parties, la souris est bloquée (`GameContextFactory.applyInputMode`). Dans le menu, la
+   souris reste active dans tous les modes (c'est l'adulte qui prépare) : à confirmer.
+5. Tests : avec un `GazeSource` simulé (comme `GazeDispatchCharacterizationTest`), une fixation sur une carte lance la
+   partie ; aucune source démarrée en mode `mouse_control`.
+
+**Étapes révisées** (remplacent 13.4) :
+1. `AppMode` + champ `evaluation` de `GameSummary` + filtrage du catalogue (inchangé).
+2. `GazePlay` : mode courant, navigation (inchangé).
+3. `ModeSelectionContext` + démarrage, **sans `--mode`**, écran à la souris et au clavier.
+4. Réglages par mode (inchangé).
+5. `EvalMenuScreen` (sans le bouton « Eval Test »).
+6. **Menu au regard** (ci-dessus), pour le menu des jeux et celui des évaluations.
+7. Traductions, documentation, suite complète, `smokeTest`, `allGamesTest`, essai réel des deux modes avec
+   l'Eye Tracker 5.
+8. Plus tard, sur demande : « Eval Test » (test de la configuration).
+
+## 14. Réalisation des deux modes (27/10/2026)
+
+Codé après le feu vert du mainteneur (réponses de 13.6, confirmées : « oui pour les 3 »), avec ses retours sur les
+réglages du même jour. **Rien n'est commité.** « Eval Test » n'est pas codé (Q-M1 : plus tard).
+
+### 14.1 Retours du mainteneur sur les réglages
+
+- Mode d'entrée : « Tobii seul (regard) » devient **« Tobii seul »** (anglais « Tobii only »).
+- Modes de passation : **les appellations du mainteneur** (celles de la branche `GazePlayLearning`) reviennent :
+  « Classique », « Autonomie Soutien Oral », « Autonomie Soutien Visuel », « Autonomie Totale ». Seuls les libellés
+  changent : les valeurs enregistrées (`EVAL_OPTIONS`) sont les mêmes.
+- Évaluations importées : autant qu'on veut ; dans le menu des évaluations, **« Lancer une évaluation » ouvre une
+  fenêtre** qui liste les évaluations importées, et l'on choisit celle à lancer.
+- Réglage `MENU_PROGRESS_INDICATOR` (jauge pendant une fixation dans le menu) : ajouté puis retiré avec le regard
+  dans les menus (14.3).
+
+### 14.2 Ce qui a été fait
+
+| Élément | Où | Rôle |
+|---|---|---|
+| `AppMode` (`GAMES`, `EVALUATIONS`) | `gazeplay-core`, `net.gazeplay` | Le mode de la session, en mémoire seulement (ni sauvé, ni transmis à la JVM d'une partie). `filter` : la part du catalogue de chaque mode. |
+| `GameSummary.evaluation` | `gazeplay-games-commons` | Marque une entrée du catalogue comme évaluation (vrai pour GazePlay Eval seulement). |
+| `ModeSelectionContext` | `ui/scenes/modeselect` | Premier écran : « Jeux » ou « Évaluations », à la souris et au clavier ; bouton quitter. |
+| `GazePlay` | `gazeplay-core` | `goToModePage`, `chooseMode` (puis page des profils), `onReturnToMenu` montre le menu du mode ; menu et réglages reconstruits quand le mode change. |
+| Page des profils | `UserProfileContext` | Mode rappelé sous le logo, bouton « Changer de mode ». Profils communs aux deux modes. |
+| `EvalMenuScreen` | `ui/scenes/evalmenu` | Menu des évaluations : nombre d'évaluations importées, « Lancer une évaluation », « Importer une évaluation », « Résultats des évaluations » (dossier `GazePlayLearning_Eval`), réglages, profils, plein écran, quitter. |
+| `EvalChooserDialog` | `ui/scenes/evalmenu` | Fenêtre ouverte par « Lancer une évaluation » : un bouton par évaluation importée (lance la passation dans sa JVM, comme un jeu) et « Annuler ». |
+| Menu des jeux | `HomeMenuScreen` | Sans GazePlay Eval (cartes et statistiques par catégorie). Le rejeu d'un `replayData.json` garde tout le catalogue. |
+| Réglages par mode | `ConfigurationContext` | Mode Jeux : la page d'avant, sans la rubrique Évaluations. Mode Évaluations : langue, oculomètre, thème (thème, couleur de fond, thème sombre), Évaluations (avec la touche pour quitter), cartes de chaleur. Raccourcis : jeux seulement. |
+| Démarrage | `GazePlayFxApp` | Sans option : écran des modes. `--user` / `--default-user` : menu des jeux, comme avant (pas d'option `--mode`, Q-M4). `--game` : inchangé. |
+
+### 14.3 Le regard dans les menus : essayé puis retiré (27/10/2026)
+
+- **Fait** : un regard dans les menus principaux (`MenuGaze` : cartes des jeux, variantes, lancement et choix d'une
+  évaluation, par fixation, avec le réglage `MENU_PROGRESS_INDICATOR`) a été codé, puis **retiré le jour même à la
+  demande du mainteneur** : activer le Tobii dans le menu provoquait des erreurs dans les jeux, et le menu actuel de
+  GazePlay n'est pas fait pour l'oculomètre.
+- **Le menu est revenu comme avant** : il ne lit pas l'oculomètre (aucune connexion Tobii dans la JVM du menu), seule
+  la JVM d'une partie s'y connecte. Retirés : `MenuGaze` et son test, le réglage `MENU_PROGRESS_INDICATOR` et son
+  libellé, `AbstractGazeDeviceManager.setDispatchWithoutStats`, le suivi « partie en cours » de `GameMenuController`.
+  `AbstractGazeDeviceManager`, `GameMenuController`, `GameMenuFactory`, `GameVariantDialog` et `Configuration` sont
+  identiques au commit `5751834b6`. La clé `MENU_PROGRESS_INDICATOR` n'a jamais été publiée ; si elle se trouve dans un
+  `GazePlay.properties` d'essai, elle est ignorée.
+- **Hypothèse** (non vérifiée) sur les erreurs : deux connexions Tobii ouvertes en même temps (le wrapper n'a pas de
+  fonction de déconnexion, la JVM du menu gardait la sienne pendant la partie).
+- **Recommandation** : un menu au regard demanderait un menu conçu pour l'oculomètre (grandes cibles, peu de boutons)
+  et une vraie déconnexion du Tobii avant une partie (processus séparé pour le regard du menu, ou fonction de
+  déconnexion ajoutée au wrapper). À reprendre seulement sur demande, avec la refonte du menu.
+
+### 14.4 Vérifications
+
+- `./gradlew build` : **462 tests, 0 échec** (451 + 11 : `AppModeTest`, `GazePlayModeTest`, `EvalMenuScreensTest`,
+  grille des réglages du mode Évaluations), SpotBugs vert, après le retrait du regard dans les menus (14.3). Avant ce
+  retrait : 468 tests, avec les 6 de `MenuGazeTest`.
+- Les deux tests de la grille des réglages s'exécutaient dans `Platform.runLater` : une assertion fausse n'y faisait
+  pas échouer le test. Ils passent maintenant par `WaitForAsyncUtils.asyncFx(...).get()`.
+- `smokeTest` 3/3 (lancement avec `--default-user` : menu des jeux, comme avant) et `allGamesTest` 76/76 (avant le
+  retrait du regard dans les menus ; le retrait remet le code de lancement d'une partie à l'identique du commit).
+- **Non vérifié** : un essai réel des deux modes, à la souris et avec l'Eye Tracker 5 (rendu des écrans, une
+  évaluation au regard).

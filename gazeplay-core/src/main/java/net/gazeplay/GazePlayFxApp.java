@@ -31,9 +31,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * The JavaFX application. Without options it shows the user selection page; the command line options (see
- * {@link MainCommand}) can select the profile, start a game directly (with its variant, or show its variants), or
- * replay a replayData.json file. A game started from the menu runs in its own JVM, started this way.
+ * The JavaFX application. Without options it shows the choice of the mode (games or evaluations), then the user
+ * selection page; the command line options (see {@link MainCommand}) can select the profile (the menu of the games is
+ * then shown, as before the modes), start a game directly (with its variant, or show its variants), or replay a
+ * replayData.json file. A game started from the menu runs in its own JVM, started this way.
  */
 @Slf4j
 public class GazePlayFxApp extends Application {
@@ -131,7 +132,8 @@ public class GazePlayFxApp extends Application {
         gazePlay.setPrimaryStage(primaryStage);
 
         if (showUserSelectPage) {
-            gazePlay.goToUserPage();
+            // The choice of the mode (games or evaluations), then the profile page
+            gazePlay.goToModePage();
         } else {
             log.info("options = {}", options);
             final GameSelectionOptions gameSelectionOptions = options.getGameSelectionOptions();

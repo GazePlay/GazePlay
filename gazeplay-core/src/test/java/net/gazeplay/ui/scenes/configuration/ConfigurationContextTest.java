@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.AppMode;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -40,6 +41,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.io.File;
 import java.util.List;
@@ -106,8 +108,46 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldBuildConfigGridPane() throws InterruptedException {
-        Platform.runLater(() -> {
+    void shouldBuildTheConfigGridPaneOfTheEvaluations() throws Exception {
+        when(mockGazePlay.getMode()).thenReturn(AppMode.EVALUATIONS);
+        // asyncFx(...).get(): a failed assertion fails the test (not in Platform.runLater)
+        WaitForAsyncUtils.asyncFx(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+
+            GridPane pane = context.buildConfigGridPane(context, mockTranslator);
+
+            ObservableList<Node> children = pane.getChildren();
+
+            // Only the settings used by the evaluations: no shortcut, no games, folders, AOI nor more statistics
+            assertEquals(42, children.size());
+            // Language
+            assertTrue(children.get(3) instanceof MenuButton);
+            // Eye-tracker settings: eye-tracker, fixation length
+            assertTrue(children.get(7) instanceof ChoiceBox);
+            assertTrue(children.get(9) instanceof Spinner);
+            // Graphics settings: theme, background color, dark theme
+            assertTrue(children.get(13) instanceof ChoiceBox);
+            assertTrue(children.get(15) instanceof HBox);
+            assertTrue(children.get(17) instanceof HBox);
+            // Evaluations: quit key, imported evaluations and import, way of taking them, delay before selection,
+            // sound blocking the selection, results folder
+            assertTrue(children.get(21) instanceof ChoiceBox);
+            assertTrue(children.get(23) instanceof VBox);
+            assertTrue(children.get(25) instanceof ChoiceBox);
+            assertTrue(children.get(27) instanceof Spinner);
+            assertTrue(children.get(29) instanceof CheckBox);
+            assertTrue(children.get(31) instanceof Button);
+            // Heatmaps of the screens: disabled, opacity, colors
+            assertTrue(children.get(37) instanceof CheckBox);
+            assertTrue(children.get(39) instanceof ChoiceBox);
+            assertTrue(children.get(41) instanceof HBox);
+        }).get();
+    }
+
+    @Test
+    void shouldBuildConfigGridPane() throws Exception {
+        // asyncFx(...).get(): a failed assertion fails the test (not in Platform.runLater)
+        WaitForAsyncUtils.asyncFx(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
 
             GridPane pane = context.buildConfigGridPane(context, mockTranslator);
@@ -119,8 +159,8 @@ class ConfigurationContextTest {
                 notDisplayedElts = 2;
             }
 
-            // Layout of the "gazeplay" edition (the "bera" edition builds another grid)
-            assertEquals(82 - notDisplayedElts, children.size());
+            // Layout of the "Games" mode (the mode of a mocked GazePlay is null: the games), without the evaluations
+            assertEquals(70 - notDisplayedElts, children.size());
             // Language settings
             assertTrue(children.get(3) instanceof MenuButton);
             // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
@@ -144,26 +184,17 @@ class ConfigurationContextTest {
             assertTrue(children.get(43 - notDisplayedElts) instanceof Button);
             assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
-            // Evaluations (GazePlay Eval): imported evaluations and import, way of taking them, delay before
-            // selection, sound blocking the selection, results folder
-            assertTrue(children.get(51 - notDisplayedElts) instanceof VBox);
-            assertTrue(children.get(53 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(55 - notDisplayedElts) instanceof Spinner);
-            assertTrue(children.get(57 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(59 - notDisplayedElts) instanceof Button);
             // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled),
             // sequence, video
-            assertTrue(children.get(63 - notDisplayedElts) instanceof Button);
-            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(69 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(71 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(75 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(51 - notDisplayedElts) instanceof Button);
+            assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
             // The "convex hulls" setting, which did nothing, was removed (October 2026): one row (2 nodes) less
-            assertTrue(children.get(79 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(81 - notDisplayedElts) instanceof CheckBox);
-        });
-        TestingUtils.waitForRunLater();
-
+            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
+        }).get();
     }
 
     @Test

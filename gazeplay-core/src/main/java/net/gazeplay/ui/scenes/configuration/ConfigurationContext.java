@@ -30,6 +30,7 @@ import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import mslinks.ShellLink;
+import net.gazeplay.AppMode;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.ui.SystemFileManager;
@@ -188,9 +189,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the grid of all the settings
+     * @return the grid of the settings of the mode of the session: in the "Evaluations" mode, only the settings used by
+     *   the evaluations (language, quit key, eye tracker, theme, heatmaps, evaluations); in the "Games" mode, all the
+     *   others, without the evaluations
      */
     GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
+        final boolean evaluations = getGazePlay().getMode() == AppMode.EVALUATIONS;
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if ((config.getUserName()) != null && !config.getUserName().equals("")) {
@@ -220,7 +224,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-        if (Utils.isWindows()) {
+        if (Utils.isWindows() && !evaluations) {
             {
                 I18NText label = new I18NText(translator, "CreateShortcut", COLON);
 
@@ -230,57 +234,53 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
         }
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
-        // Games settings
-        {
-            I18NText label = new I18NText(translator, "QuitKey", COLON);
+        if (!evaluations) {
+            addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
+            // Games settings
+            addQuitKey(grid, currentFormRow, translator, config);
+            {
+                I18NText label = new I18NText(translator, "QuestionLength", COLON);
 
-            ChoiceBox<String> input = buildQuitKeyChooser(config);
+                Spinner<Double> input = buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
+                    0.5, config.getQuestionLengthProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "QuestionLength", COLON);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
 
-            Spinner<Double> input = buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
-                0.5, config.getQuestionLengthProperty());
+                CheckBox input = buildCheckBox(config.getQuestionReaskedOnFailProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
 
-            CheckBox input = buildCheckBox(config.getQuestionReaskedOnFailProperty());
+                CheckBox input = buildCheckBox(config.getRewardSoundEnabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "Limiter Time", COLON);
 
-            CheckBox input = buildCheckBox(config.getRewardSoundEnabledProperty());
+                HBox input = buildLimiterTime(config, translator);
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "Limiter Time", COLON);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "Limiter Score", COLON);
 
-            HBox input = buildLimiterTime(config, translator);
+                HBox input = buildLimiterScore(config, translator);
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "Limiter Score", COLON);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "PianoTileColors", COLON);
 
-            HBox input = buildLimiterScore(config, translator);
+                HBox input = chooseColorHBox(config.getTileColorsProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "PianoTileColors", COLON);
-
-            HBox input = chooseColorHBox(config.getTileColorsProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
+                addToGrid(grid, currentFormRow, label, input);
+            }
         }
 
 
@@ -318,16 +318,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
-            CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
+        if (!evaluations) {
+            {
+                I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+                ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
+                CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+                addToGrid(grid, currentFormRow, label, input);
+            }
         }
         {
             I18NText label = new I18NText(translator, "DarkTh", COLON);
@@ -335,61 +337,66 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, darkTheme);
         }
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
-        // Folders settings
-        {
-            I18NText label = new I18NText(translator, "FileDir", COLON);
+        if (!evaluations) {
+            addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
+            // Folders settings
+            {
+                I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Node input = buildImageChooser(config, configurationContext, translator);
+                Node input = buildImageChooser(config, configurationContext, translator);
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "MusicFolder", COLON);
-            final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "MusicFolder", COLON);
+                final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT);
+                Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT);
 
-            addToGrid(grid, currentFormRow, label, input);
+                addToGrid(grid, currentFormRow, label, input);
+            }
         }
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EvalSettings", COLON));
-        // Evaluations of GazePlay Eval
-        {
-            I18NText label = new I18NText(translator, "EvalImported", COLON);
-            Node input = EvalSettings.buildLibrary(translator, getGazePlay().getPrimaryStage());
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EvalOptions", COLON);
-            ChoiceBox<EvalOptions> input = EvalSettings.buildOptionsChooser(config, translator);
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EvalDelayBeforeSelection", COLON);
-            Spinner<Double> input = buildSpinner(0, 5, (double) config.getDelayBeforeSelectionTime() / 1000,
-                0.1, config.getDelayBeforeSelectionTimeProperty());
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EvalSoundBlocksSelection", COLON);
-            CheckBox input = buildCheckBox(config.getEvalSoundBlocksSelectionProperty());
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EvalResults", COLON);
-            Node input = EvalSettings.buildResultsFolderButton(translator);
-            addToGrid(grid, currentFormRow, label, input);
+        if (evaluations) {
+            addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EvalSettings", COLON));
+            // Evaluations of GazePlay Eval (the quit key also quits an evaluation)
+            addQuitKey(grid, currentFormRow, translator, config);
+            {
+                I18NText label = new I18NText(translator, "EvalImported", COLON);
+                Node input = EvalSettings.buildLibrary(translator, getGazePlay().getPrimaryStage());
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "EvalOptions", COLON);
+                ChoiceBox<EvalOptions> input = EvalSettings.buildOptionsChooser(config, translator);
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "EvalDelayBeforeSelection", COLON);
+                Spinner<Double> input = buildSpinner(0, 5, (double) config.getDelayBeforeSelectionTime() / 1000,
+                    0.1, config.getDelayBeforeSelectionTimeProperty());
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "EvalSoundBlocksSelection", COLON);
+                CheckBox input = buildCheckBox(config.getEvalSoundBlocksSelectionProperty());
+                addToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "EvalResults", COLON);
+                Node input = EvalSettings.buildResultsFolderButton(translator);
+                addToGrid(grid, currentFormRow, label, input);
+            }
         }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
-        // Stats settings
-        {
+        // Stats settings (the evaluations use only the heatmap settings)
+        if (!evaluations) {
             // Opens the folder of the results
             I18NText label = new I18NText(translator, "ResultDir", COLON);
 
@@ -419,34 +426,47 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addSubToGrid(grid, currentFormRow, label, input);
         }
 
-        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
-        // AOI settings
-        {
-            I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
+        if (!evaluations) {
+            addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
+            // AOI settings
+            {
+                I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
 
-            CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
+                CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
 
-            addSubToGrid(grid, currentFormRow, label, input);
-        }
-        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
-        // More Stats settings
-        {
-            I18NText label = new I18NText(translator, "DisableSequence", COLON);
+                addSubToGrid(grid, currentFormRow, label, input);
+            }
+            addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
+            // More Stats settings
+            {
+                I18NText label = new I18NText(translator, "DisableSequence", COLON);
 
-            CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
+                CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
 
-            addSubToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
+                addSubToGrid(grid, currentFormRow, label, input);
+            }
+            {
+                I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
 
-            CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
+                CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
 
-            addSubToGrid(grid, currentFormRow, label, input);
+                addSubToGrid(grid, currentFormRow, label, input);
+            }
         }
 
         this.changeGridCss(config);
         return grid;
+    }
+
+    /**
+     * Adds the choice of the key quitting a game or an evaluation.
+     */
+    private void addQuitKey(GridPane grid, AtomicInteger currentFormRow, Translator translator, Configuration config) {
+        I18NText label = new I18NText(translator, "QuitKey", COLON);
+
+        ChoiceBox<String> input = buildQuitKeyChooser(config);
+
+        addToGrid(grid, currentFormRow, label, input);
     }
 
     /**
@@ -830,7 +850,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         GamesLocator gamesLocator = getGazePlay().getGamesLocator();
         if (gamesLocator != null) {
-            List<GameSpec> games = gamesLocator.listGames(getGazePlay().getTranslator());
+            // Shortcuts to the games only (decision of the maintainer: no shortcut to an evaluation)
+            List<GameSpec> games = AppMode.GAMES.filter(gamesLocator.listGames(getGazePlay().getTranslator()));
             for (GameSpec game : games) {
 
                 Set<IGameVariant> variants = game.getGameVariantGenerator().getVariants();

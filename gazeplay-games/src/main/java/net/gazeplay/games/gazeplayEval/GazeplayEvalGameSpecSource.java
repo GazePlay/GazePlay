@@ -16,6 +16,7 @@ public class GazeplayEvalGameSpecSource implements GameSpecSource {
                 .gameThumbnail("whereIsIt")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)
+                .evaluation(true)
                 .build(),
             new GazeplayEvalVariantGenerator(), new GazeplayEvalGameLauncher());
     }

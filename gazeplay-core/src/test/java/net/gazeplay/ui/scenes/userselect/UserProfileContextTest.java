@@ -282,7 +282,8 @@ class UserProfileContextTest {
         BorderPane topPane = (BorderPane) context.getRoot().getTop();
         HBox topRightPane = (HBox) topPane.getRight();
 
-        CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(0);
+        // After the button changing the mode
+        CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(1);
 
         exitButton.fireEvent(TestingUtils.clickOnTarget(exitButton));
 

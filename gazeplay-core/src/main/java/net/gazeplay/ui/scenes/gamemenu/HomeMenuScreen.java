@@ -111,9 +111,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
-        final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+        // The evaluations have their own menu (mode "Evaluations"); a replay may concern any entry of the catalog
+        final List<GameSpec> allGames = gamesLocator.listGames(gazePlay.getTranslator());
+        final List<GameSpec> games = AppMode.GAMES.filter(allGames);
 
-        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
+        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, allGames);
 
         I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
         I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
