@@ -123,8 +123,8 @@ public class Math101 implements GameLifeCycle {
                 break;
             case DIVID:
                 // operator is /
-                while ((number2 == 0 && number1 == 0) || (number1 % number2 != 0)) {
-                    // both cannot be 0
+                // No division by 0: a first draw of 0 as the divisor used to compute number1 % 0 and crash the game
+                while (number2 == 0 || number1 % number2 != 0) {
                     number1 = randomGenerator.nextInt(maxValue + 1);
                     number2 = randomGenerator.nextInt(maxValue + 1);
 

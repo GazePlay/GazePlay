@@ -145,6 +145,8 @@ subprojects {
         def testHome = layout.buildDirectory.dir("test-home/${name}").get().asFile
         systemProperty 'user.home', testHome.absolutePath
         systemProperty 'gazeplay.folder', new File(testHome, 'GazePlay').absolutePath
+        // Same for the Documents folder, where GazePlay Eval writes its results (GazePlayLearning_Eval)
+        systemProperty 'gazeplay.documents', new File(testHome, 'Documents').absolutePath
         // JavaFX runs without any window (Monocle) unless -Pgui is given, e.g. to watch a test while debugging.
         // AWT (screen recording, robot) is not affected and still needs a display (xvfb in the CI).
         if (!project.hasProperty('gui')) {

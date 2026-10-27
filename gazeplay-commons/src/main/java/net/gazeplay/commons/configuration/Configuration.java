@@ -57,6 +57,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
     private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
     private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
+    private static final String PROPERTY_NAME_EVAL_OPTIONS = "EVAL_OPTIONS";
+    private static final String PROPERTY_NAME_EVAL_SOUND_BLOCKS_SELECTION = "EVAL_SOUND_BLOCKS_SELECTION";
     /* Eye-tracking settings */
     private static final String PROPERTY_NAME_EYE_TRACKER = "EYE_TRACKER";
     private static final String PROPERTY_NAME_FIXATION_LENGTH = "FIXATION_LENGTH";
@@ -114,6 +116,8 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
+    private static final String DEFAULT_VALUE_EVAL_OPTIONS = EvalOptions.Classique.name();
+    private static final boolean DEFAULT_VALUE_EVAL_SOUND_BLOCKS_SELECTION = true;
     /* Eye-tracking settings */
     private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii_and_mouse.toString();
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
@@ -187,6 +191,10 @@ public class Configuration {
     private final BooleanProperty soundEnabledProperty;
     @Getter
     private final StringProperty feedbackProperty;
+    @Getter
+    private final StringProperty evalOptionsProperty;
+    @Getter
+    private final BooleanProperty evalSoundBlocksSelectionProperty;
     /* Eye-tracking settings */
     @Getter
     private final StringProperty eyeTrackerProperty;
@@ -293,6 +301,8 @@ public class Configuration {
         columnarImagesEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED, DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED, propertyChangeListener);
         soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
         feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
+        evalOptionsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EVAL_OPTIONS, DEFAULT_VALUE_EVAL_OPTIONS, propertyChangeListener);
+        evalSoundBlocksSelectionProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_EVAL_SOUND_BLOCKS_SELECTION, DEFAULT_VALUE_EVAL_SOUND_BLOCKS_SELECTION, propertyChangeListener);
 
         /* Eye-tracking settings */
         eyeTrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYE_TRACKER, DEFAULT_VALUE_EYE_TRACKER, propertyChangeListener);
@@ -474,6 +484,20 @@ public class Configuration {
 
     public String getFeedback() {
         return feedbackProperty.getValue();
+    }
+
+    /**
+     * @return how the evaluations are taken (EVAL_OPTIONS); the classic mode for an unknown value
+     */
+    public EvalOptions getEvalOptions() {
+        return EvalOptions.fromConfigValue(evalOptionsProperty.getValue());
+    }
+
+    /**
+     * @return whether, in an evaluation, the sound of a selected cell blocks the other selections until its end
+     */
+    public boolean isEvalSoundBlocksSelection() {
+        return evalSoundBlocksSelectionProperty.getValue();
     }
 
     /* Eye-tracking settings */

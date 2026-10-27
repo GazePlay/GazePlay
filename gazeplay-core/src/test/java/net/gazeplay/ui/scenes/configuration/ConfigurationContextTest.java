@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
@@ -119,7 +120,7 @@ class ConfigurationContextTest {
             }
 
             // Layout of the "gazeplay" edition (the "bera" edition builds another grid)
-            assertEquals(70 - notDisplayedElts, children.size());
+            assertEquals(82 - notDisplayedElts, children.size());
             // Language settings
             assertTrue(children.get(3) instanceof MenuButton);
             // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
@@ -143,16 +144,23 @@ class ConfigurationContextTest {
             assertTrue(children.get(43 - notDisplayedElts) instanceof Button);
             assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
+            // Evaluations (GazePlay Eval): imported evaluations and import, way of taking them, delay before
+            // selection, sound blocking the selection, results folder
+            assertTrue(children.get(51 - notDisplayedElts) instanceof VBox);
+            assertTrue(children.get(53 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(55 - notDisplayedElts) instanceof Spinner);
+            assertTrue(children.get(57 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(59 - notDisplayedElts) instanceof Button);
             // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled),
             // sequence, video
-            assertTrue(children.get(51 - notDisplayedElts) instanceof Button);
-            assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
-            // The "convex hulls" setting, which did nothing, was removed (October 2026): one row (2 nodes) less
+            assertTrue(children.get(63 - notDisplayedElts) instanceof Button);
             assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(69 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(71 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(75 - notDisplayedElts) instanceof CheckBox);
+            // The "convex hulls" setting, which did nothing, was removed (October 2026): one row (2 nodes) less
+            assertTrue(children.get(79 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(81 - notDisplayedElts) instanceof CheckBox);
         });
         TestingUtils.waitForRunLater();
 

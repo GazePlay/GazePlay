@@ -1038,4 +1038,11 @@ public class Stats {
     public static void setConfigMenuOpen(boolean configMenuStatus) {
         configMenuOpen = configMenuStatus;
     }
+
+    /**
+     * @return whether the configuration menu of the game screen is open (GazePlay Eval pauses its screens meanwhile)
+     */
+    public static boolean isConfigMenuOpen() {
+        return configMenuOpen;
+    }
 }

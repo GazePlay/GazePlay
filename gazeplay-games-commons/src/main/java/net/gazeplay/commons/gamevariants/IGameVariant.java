@@ -1,11 +1,7 @@
 package net.gazeplay.commons.gamevariants;
 
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.eval.EvalLibrary;
 import net.gazeplay.commons.ui.Translator;
-
-import java.io.File;
-import java.util.Objects;
 
 /**
  * A variant of a game (a size, a level, a theme...), chosen in the menu. Its {@link #toString()} is its persistent
@@ -25,14 +21,16 @@ public interface IGameVariant {
     String toString();
 
     /**
-     * Reads a variant from its persistent form. An unknown type is the name of an evaluation (GazePlay Eval) when a
-     * folder of that name exists in evals of the files folder.
+     * Reads a variant from its persistent form. An unknown type is the name of an imported evaluation (GazePlay Eval,
+     * former persistent form) when a folder of that name exists in the evaluations folder.
      *
      * @return the variant, null when it cannot be read
      */
     static IGameVariant toGameVariant(String gameVariantTotext) {
         String[] split = gameVariantTotext.split(":");
         switch (split[0]) {
+            case GazeplayEvalGameVariant.TYPE:
+                return new GazeplayEvalGameVariant(gameVariantTotext.substring(GazeplayEvalGameVariant.TYPE.length() + 1));
             case "StringGameVariant":
                 return new StringGameVariant(split[1], split[2]);
             case "IntGameVariant":
@@ -60,18 +58,9 @@ public interface IGameVariant {
                     return null;
                 }
             default:
-                Configuration config = ActiveConfigurationContext.getInstance();
-                File directoryPath = new File(config.getFileDir() + "\\evals\\");
-                String[] content = directoryPath.list();
-
-                if (content != null){
-                    for (String s : content) {
-                        if (Objects.equals(s, split[0])) {
-                            return new GazeplayEvalGameVariant(split[0]);
-                        }
-                    }
+                if (EvalLibrary.names().contains(gameVariantTotext)) {
+                    return new GazeplayEvalGameVariant(gameVariantTotext);
                 }
-
                 return null;
         }
     }

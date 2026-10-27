@@ -1559,13 +1559,13 @@ Aucun format ne change. Les fichiers de résultats n'ont simplement plus de poin
 - Poste du mainteneur : JDK 25 dans `C:\Users\arrig\.jdks\azul-25.0.4` (préfixer Gradle par `$env:JAVA_HOME = 'C:\Users\arrig\.jdks\azul-25.0.4';`). La configuration « GazePlay » d'IntelliJ utilise les jars des modules construits par Gradle : lancer un build Gradle après une modification. Inno Setup 6 est installé.
 
 ### Suite (décision du mainteneur du 26/10/2026)
-1. **Fusion de `GazePlayLearning`** (Eval ; anomalie R12).
+1. **Fusion de `GazePlayLearning`** (Eval ; anomalie R12) : **faite le 27/10/2026, non commitée**, suivie dans [GazePlayEval.md](GazePlayEval.md) (section 12). Reste l'essai réel avec le Tobii Eye Tracker 5.
 2. **Refonte graphique du menu principal.**
 3. **Sortie de GazePlay 2.0** : pas de 1.12.0 ; les notes `GazePlay-1.12.0.md` seront reprises pour la 2.0 ; `CLAUDE.md` à mettre à jour à ce moment.
 
 ### Décisions encore ouvertes (documentées, à trancher par le mainteneur)
 - Temps passé dans le menu de l'engrenage compté dans les durées : options A, B et C (2an).
-- Eval : format officiel des exports, règle d'arrêt à 5 erreurs, données personnelles et RGPD.
+- Eval : données personnelles et RGPD (anonymisation), règle d'arrêt (abandonnée de fait : le site ne la connaît pas). Le format des exports est maintenant celui de `GazePlayEval.md` 12.4 (version 1).
 - Eye Tracker 5 sous Linux et macOS : impossible avec le seul code de GazePlay (pilotes Tobii absents) ; trois pistes documentées en 2am, « Pistes pour faire fonctionner l'Eye Tracker 5 sous Linux et macOS ».
 
 ### Décisions du mainteneur en vigueur

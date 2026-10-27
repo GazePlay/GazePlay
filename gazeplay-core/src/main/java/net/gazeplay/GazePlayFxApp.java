@@ -173,7 +173,7 @@ public class GazePlayFxApp extends Application {
                             if (selectedVariantCode != null) {
                                 IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                            } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator) {
+                            } else if (hasNoVariant(selectedGameSpec)) {
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                             } else {
                                 GameVariantDialog dialog = new GameVariantDialog(
@@ -194,7 +194,7 @@ public class GazePlayFxApp extends Application {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                        } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator) {
+                        } else if (hasNoVariant(selectedGameSpec)) {
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                         } else {
                             GameVariantDialog dialog = new GameVariantDialog(
@@ -225,6 +225,15 @@ public class GazePlayFxApp extends Application {
             primaryStage.centerOnScreen();
             primaryStage.show();
         }
+    }
+
+    /**
+     * @return whether a game has no variant to choose: as in the menu ({@code GameMenuController.onGameSelection}), it
+     * is then started without variant (e.g. GazePlay Eval with no imported evaluation), instead of an empty choice
+     */
+    static boolean hasNoVariant(final GameSpec gameSpec) {
+        return gameSpec.getGameVariantGenerator() instanceof NoVariantGenerator
+            || gameSpec.getGameVariantGenerator().getVariants().isEmpty();
     }
 
     /**

@@ -1,0 +1,260 @@
+[
+  {
+    "Type": "instruction",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 8,
+    "Ajouter un media": true,
+    "Type de media": "Video",
+    "Nom du fichier": "134944-760686132_medium.mp4",
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 1
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 2,
+    "Mettre une croix de fixation": true,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "stimuli",
+    "Nombre de lignes": 2,
+    "Nombre de colonnes": 2,
+    "Mettre un temps avant passage à l'écran suivant": false,
+    "Combien de temps": 10,
+    "Combien de temps de fixation": 2,
+    "Choix de sélection": "Tout",
+    "Combien à sélectionner": 1,
+    "Position stimuli aléatoire": false,
+    "Caché stimuli après selection": false,
+    "Mettre un son": false,
+    "Nom du fichier": "",
+    "Liste des stimuli": {
+      "0": {
+        "imageName": "oeuf de Pâques.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "1": {
+        "imageName": "citrouille d'halloween.png",
+        "soundName": "shut_up_ghost-witchy-cackle-140925.mp3",
+        "goodAnswer": true
+      },
+      "2": {
+        "imageName": "sapin de Noël.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "3": {
+        "imageName": "ballon de foot.png",
+        "soundName": "",
+        "goodAnswer": false
+      }
+    }
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 3,
+    "Mettre une croix de fixation": false,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "instruction",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 8,
+    "Ajouter un media": true,
+    "Type de media": "Video",
+    "Nom du fichier": "191856-891315505_medium.mp4",
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 1
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 3,
+    "Mettre une croix de fixation": true,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "stimuli",
+    "Nombre de lignes": 2,
+    "Nombre de colonnes": 2,
+    "Mettre un temps avant passage à l'écran suivant": false,
+    "Combien de temps": 10,
+    "Combien de temps de fixation": 2,
+    "Choix de sélection": "Tout",
+    "Combien à sélectionner": 1,
+    "Position stimuli aléatoire": false,
+    "Caché stimuli après selection": false,
+    "Mettre un son": false,
+    "Nom du fichier": "",
+    "Liste des stimuli": {
+      "0": {
+        "imageName": "perroquet.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "1": {
+        "imageName": "médecin(1).png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "2": {
+        "imageName": "sapin de Noël.png",
+        "soundName": "alex-morgan-jingle-bells-545481.wav",
+        "goodAnswer": true
+      },
+      "3": {
+        "imageName": "colle.png",
+        "soundName": "",
+        "goodAnswer": false
+      }
+    }
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 2,
+    "Mettre une croix de fixation": false,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "instruction",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 8,
+    "Ajouter un media": true,
+    "Type de media": "Video",
+    "Nom du fichier": "205193-926528071_medium.mp4",
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 1
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 3,
+    "Mettre une croix de fixation": true,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "stimuli",
+    "Nombre de lignes": 2,
+    "Nombre de colonnes": 2,
+    "Mettre un temps avant passage à l'écran suivant": false,
+    "Combien de temps": 10,
+    "Combien de temps de fixation": 2,
+    "Choix de sélection": "Tout",
+    "Combien à sélectionner": 1,
+    "Position stimuli aléatoire": false,
+    "Caché stimuli après selection": false,
+    "Mettre un son": false,
+    "Nom du fichier": "",
+    "Liste des stimuli": {
+      "0": {
+        "imageName": "ballon de foot.png",
+        "soundName": "foule match foot.wav",
+        "goodAnswer": true
+      },
+      "1": {
+        "imageName": "balle de tennis.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "2": {
+        "imageName": "citrouille d'halloween.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "3": {
+        "imageName": "oeuf de Pâques.png",
+        "soundName": "",
+        "goodAnswer": false
+      }
+    }
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 3,
+    "Mettre une croix de fixation": false,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "instruction",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 6,
+    "Ajouter un media": true,
+    "Type de media": "Video",
+    "Nom du fichier": "49808-458438856_medium.mp4",
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 1
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 2,
+    "Mettre une croix de fixation": true,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "stimuli",
+    "Nombre de lignes": 2,
+    "Nombre de colonnes": 2,
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 20,
+    "Combien de temps de fixation": 2,
+    "Choix de sélection": "Tout",
+    "Combien à sélectionner": 1,
+    "Position stimuli aléatoire": false,
+    "Caché stimuli après selection": false,
+    "Mettre un son": false,
+    "Nom du fichier": "",
+    "Liste des stimuli": {
+      "0": {
+        "imageName": "raquette de tennis.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "1": {
+        "imageName": "sapin de Noël.png",
+        "soundName": "",
+        "goodAnswer": false
+      },
+      "2": {
+        "imageName": "médecin(1).png",
+        "soundName": "soundreality-heart-beat-137135.wav",
+        "goodAnswer": true
+      },
+      "3": {
+        "imageName": "ballon de foot.png",
+        "soundName": "",
+        "goodAnswer": false
+      }
+    }
+  },
+  {
+    "Type": "transition",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 3,
+    "Mettre une croix de fixation": false,
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 0
+  },
+  {
+    "Type": "instruction",
+    "Mettre un temps avant passage à l'écran suivant": true,
+    "Combien de temps": 8,
+    "Ajouter un media": true,
+    "Type de media": "Video",
+    "Nom du fichier": "224237_tiny.mp4",
+    "Mettre un temps de fixation": false,
+    "Combien de temps de fixation": 1
+  }
+]

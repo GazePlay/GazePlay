@@ -109,13 +109,14 @@ class StatsTest {
     void shouldAddRoundDurationToReportOnNextRound() {
         long start = System.currentTimeMillis();
         stats.notifyNewRoundReady();
-
-        long end = System.currentTimeMillis();
         stats.notifyNextRound();
+        long end = System.currentTimeMillis();
 
-        Long duration = end - start;
-
-        assertTrue(stats.getOriginalDurationsBetweenGoals().contains(duration));
+        // The round is timed by Stats between the two calls: within the times measured around them (an exact
+        // comparison failed when the clock ticked between a call and the measure)
+        List<Long> durations = stats.getOriginalDurationsBetweenGoals();
+        assertTrue(durations.stream().anyMatch(duration -> duration >= 0 && duration <= end - start),
+            durations + " has no duration in [0, " + (end - start) + "]");
     }
 
     @Test

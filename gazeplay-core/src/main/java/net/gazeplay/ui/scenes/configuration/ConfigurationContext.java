@@ -358,6 +358,35 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EvalSettings", COLON));
+        // Evaluations of GazePlay Eval
+        {
+            I18NText label = new I18NText(translator, "EvalImported", COLON);
+            Node input = EvalSettings.buildLibrary(translator, getGazePlay().getPrimaryStage());
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EvalOptions", COLON);
+            ChoiceBox<EvalOptions> input = EvalSettings.buildOptionsChooser(config, translator);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EvalDelayBeforeSelection", COLON);
+            Spinner<Double> input = buildSpinner(0, 5, (double) config.getDelayBeforeSelectionTime() / 1000,
+                0.1, config.getDelayBeforeSelectionTimeProperty());
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EvalSoundBlocksSelection", COLON);
+            CheckBox input = buildCheckBox(config.getEvalSoundBlocksSelectionProperty());
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EvalResults", COLON);
+            Node input = EvalSettings.buildResultsFolderButton(translator);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
         // Stats settings
         {

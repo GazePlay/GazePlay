@@ -10,7 +10,7 @@ Short map of the code, for developers. The history of the changes and the open d
 | `gazeplay-results` | Computations and files of the results, **without JavaFX** (the JavaFX plugin is not applied: an import of `javafx.*` does not compile): `HeatMapGrid` (heatmap and its CSV files), `FixationSequenceRecorder`, `ReplayDataWriter` (`replayData.json`), `ReplayDataFormat` (versions of the format), `AreaOfInterestGrouper` (areas of interest computed during a game) and `CoordinatesTracker`, `FixationPoint`. Same packages as before (`net.gazeplay.commons.utils...`), so no import changed. |
 | `gazeplay-gaze` | Acquisition of the gaze: `GazeSample`, `GazeEvent`, `EyeTracker`, the eye trackers as `GazeSource` (`TobiiGazeSource` and its `PositionPollerRunnable`; EyeTribe was removed in October 2026) and its native libraries. Same packages as before (`net.gazeplay.commons.gaze...`). |
 | `gazeplay-commons` | Configuration (`Configuration`, `ActiveConfigurationContext`), dispatch of the gaze samples to the nodes of the games (`gaze/devicemanager`: `AbstractGazeDeviceManager`, `GazeSourceDeviceManager`), recording of the results during a game (`utils/stats/Stats`, which delegates the computations to `gazeplay-results`) and their rendering (heatmap and scanpath images), translations, shared utilities. Test fixtures (`src/testFixtures`) shared by the other modules. |
-| `gazeplay-games-commons` | Contract of the games: `GameSpec`, `GameSummary`, `IGameLauncher`, `GameLifeCycle`, variants, specialized `Stats`. |
+| `gazeplay-games-commons` | Contract of the games: `GameSpec`, `GameSummary`, `IGameLauncher`, `GameLifeCycle`, variants, specialized `Stats`. The evaluations of the GazePlay Eval website (`net.gazeplay.commons.eval`): reading and checking (`EvalReader`), import of their .zip (`EvalImporter`), imported evaluations (`EvalLibrary`), shared by the game and the settings page. |
 | `gazeplay-core` | The application: launcher, composition root, menus, configuration screen, statistics screens, game catalog. |
 | `gazeplay-games` | The games (one package per game, one `*SpecSource` per game entry) and GazePlay Eval (`gazeplayEval`). |
 | `gazeplay-dist` | Launch scripts of the distributions. |
@@ -24,8 +24,7 @@ Versions of all libraries and plugins: `gradle/libs.versions.toml`.
 
 1. `GazePlayLauncher.main` finds the GazePlay folder (`Documents/GazePlay_Learning`, formerly `~/GazePlay`: found, and
    moved if needed, by `GazePlayDirectories.initGazePlayFolder` before anything is logged), then parses the command
-   line with picocli (`MainCommand`). There are no product editions any more (AFSR and BERA removed; the dormant Eval
-   code is not reachable).
+   line with picocli (`MainCommand`). There are no product editions any more (AFSR and BERA removed).
 2. `CompositionRoot` builds and wires the components (no dependency injection framework): translator, game locator,
    `GazePlay` (navigation between screens), gaze device and sound factories, game menu.
 3. `GazePlayFxApp` (JavaFX `Application`) shows the profile selection, the menu, or directly a game (`--game`).
@@ -34,10 +33,14 @@ Versions of all libraries and plugins: `gradle/libs.versions.toml`.
 
 ## Games
 
-The `*SpecSource` classes of `gazeplay-games` are listed at build time in `games-catalog.txt` and
-`evals-catalog.txt` (tasks `generateGamesCatalog`, `generateEvalsCatalog` of `gazeplay-core`) and loaded by
-`CatalogBasedGamesLocator`. A game provides a `GameSpecSource` (summary, variants, launcher), an `IGameLauncher`
-(creates its `Stats` and its `GameLifeCycle`) and runs in the `GameContext` given by the application.
+The `*SpecSource` classes of `gazeplay-games` are listed at build time in `games-catalog.txt` (task
+`generateGamesCatalog` of `gazeplay-core`) and loaded by `CatalogBasedGamesLocator`. A game provides a
+`GameSpecSource` (summary, variants, launcher), an `IGameLauncher` (creates its `Stats` and its `GameLifeCycle`) and
+runs in the `GameContext` given by the application.
+
+GazePlay Eval (`gazeplayEval`) is a game of the catalog whose variants are the evaluations imported from the GazePlay
+Eval website (settings page, section "Evaluations"; stored in `Documents/GazePlay_Learning/evaluations/<name>`). See
+[GazePlayEval.md](GazePlayEval.md).
 
 ## Gaze
 
@@ -65,7 +68,13 @@ When the areas of interest are enabled, `Stats` also computes them during the ga
 (`AreaOfInterestRecording`, one for the gaze and one for the mouse, grouping with `AreaOfInterestGrouper`). The
 `AreaOfInterest` screen shows one source at a time; nothing is written to disk.
 
-GazePlay Eval writes its exports (CSV in UTF-16, Excel) through `EvalReport`, tested by `EvalReportTest`.
+GazePlay Eval writes, for each session, in `Documents/GazePlayLearning_Eval/Eval<n>_<yyyy-MM-dd>/` (the number
+starts from 1 each day; `GazePlayDirectories.getEvaluationResultsFolder`): `session.json` (its `formatVersion`, the
+participant, the settings), `resultats.csv`/`resultats.xlsx` (one row per screen shown), `evenements.csv` (entries in
+and exits from the targets by source, selections, sounds, keys...), `echantillons.csv` (positions of the gaze and of
+the mouse with the target under them) and `heatmaps/`, the heatmap of the gaze and of the mouse of each screen
+(`HeatMapGrid` and `HeatMap`, as GazePlay) (`EvalSessionRecorder`, `EvalResultsWriter`, pinned by
+`EvalResultsWriterTest`). The usual `Stats` files are written too, in `statistics/GazePlayEval/<date>/`.
 
 ## Configuration
 

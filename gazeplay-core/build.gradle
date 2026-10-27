@@ -76,38 +76,33 @@ tasks.named('processResources') {
     dependsOn createLicence
 }
 
-// Catalogs of the games and of the GazePlay Eval evaluations: the *SpecSource classes of gazeplay-games, read by
+// Catalog of the games (GazePlay Eval included): the *SpecSource classes of gazeplay-games, read by
 // CatalogBasedGamesLocator. Everything is resolved when the build is configured (no access to the project during the
-// execution, deprecated by Gradle), the inputs are declared (the catalogs are regenerated only when a source changes)
-// and the lists are sorted (reproducible builds).
+// execution, deprecated by Gradle), the inputs are declared (the catalog is regenerated only when a source changes)
+// and the list is sorted (reproducible builds).
 def generatedResources = layout.buildDirectory.dir('generated-resources/main')
 def gamesJavaSources = project(':gazeplay-games').layout.projectDirectory.dir('src/main/java').asFile
+def gamesCatalogFile = generatedResources.map { it.file('games-catalog.txt') }
 
-def registerCatalogTask = { String taskName, String fileName, boolean evaluations ->
-    def catalogFile = generatedResources.map { it.file(fileName) }
-    tasks.register(taskName) {
-        inputs.dir(gamesJavaSources).withPathSensitivity(PathSensitivity.RELATIVE)
-        outputs.file(catalogFile)
-        doLast {
-            def root = gamesJavaSources.toPath()
-            def classes = java.nio.file.Files.walk(root).withCloseable { paths ->
-                paths.map { root.relativize(it).toString().replace(File.separator, '/') }
-                    .filter { it.endsWith('.java') && it.contains('SpecSource') }
-                    .filter { it.contains('GazeplayEval') == evaluations }
-                    .map { it.replace('/', '.').replace('.java', '') }
-                    .sorted()
-                    .collect(java.util.stream.Collectors.toList())
-            }
-            def file = catalogFile.get().asFile
-            file.parentFile.mkdirs()
-            file.text = classes.collect { it + '\n' }.join('')
+tasks.register('generateGamesCatalog') {
+    inputs.dir(gamesJavaSources).withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.file(gamesCatalogFile)
+    doLast {
+        def root = gamesJavaSources.toPath()
+        def classes = java.nio.file.Files.walk(root).withCloseable { paths ->
+            paths.map { root.relativize(it).toString().replace(File.separator, '/') }
+                .filter { it.endsWith('.java') && it.contains('SpecSource') }
+                .map { it.replace('/', '.').replace('.java', '') }
+                .sorted()
+                .collect(java.util.stream.Collectors.toList())
         }
+        def file = gamesCatalogFile.get().asFile
+        file.parentFile.mkdirs()
+        file.text = classes.collect { it + '\n' }.join('')
     }
 }
-registerCatalogTask('generateGamesCatalog', 'games-catalog.txt', false)
-registerCatalogTask('generateEvalsCatalog', 'evals-catalog.txt', true)
 
-sourceSets.main.output.dir(generatedResources, builtBy: ['generateGamesCatalog', 'generateEvalsCatalog'])
+sourceSets.main.output.dir(generatedResources, builtBy: ['generateGamesCatalog'])
 
 // The launch tests start the real application in child JVMs: slower, run separately (also in the CI)
 tasks.named('test') {

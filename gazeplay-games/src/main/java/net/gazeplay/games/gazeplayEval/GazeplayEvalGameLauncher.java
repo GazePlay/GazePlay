@@ -1,8 +1,6 @@
 package net.gazeplay.games.gazeplayEval;
 
 import javafx.scene.Scene;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
@@ -16,8 +14,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-@Slf4j
-@RequiredArgsConstructor
+/**
+ * Launcher of GazePlay Eval: the variant is the imported evaluation to play (null when none is imported: the game then
+ * says how to import one).
+ */
 public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEvalGameVariant> {
 
     @Override
@@ -32,11 +32,11 @@ public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEv
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant, Stats stats) {
-        return new GazeplayEval(false, gameContext, gameVariant, stats);
+        return new GazeplayEval(gameContext, gameVariant, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new GazeplayEval(false, gameContext, gameVariant, stats, gameSeed);
+        return new GazeplayEval(gameContext, gameVariant, stats, gameSeed);
     }
 }

@@ -1,0 +1,550 @@
+# GazePlayEval.md — Fusion de GazePlay Eval
+
+Sections 1 à 11 : repérage du 27/10/2026, branche `addClaudeCode` (après l'étape 37 de `MODERNIZATION.md`), écrit
+**avant toute modification** : ce qu'elles décrivent du code est l'état d'avant la fusion. **La réalisation est en
+section 12.** Légende :
+**Fait** (lu dans le code ou un fichier), **Hypothèse** (déduit, non vérifié en exécution), **Risque**,
+**Recommandation**, **Question** (décision du mainteneur).
+
+Ici, « fusion » ne veut pas dire `git merge` : il s'agit de comprendre ce que font `gazeplayEval` et
+`gazeplayEvalTest`, de garder ce qui sert, et de faire jouer dans GazePlay Learning les évaluations créées avec le
+site **GazePlay Eval**.
+
+---
+
+## 1. Sources examinées
+
+| Source | Emplacement | État |
+|---|---|---|
+| Site GazePlay Eval (version à jour) | `C:\Users\arrig\Documents\Tests\GazePlay-Eval`, branche `addClaudeCode`, commit `ce72839` (16/10/2026). En ligne : https://lig-gazeplay.imag.fr/#/home | Angular 21, sans serveur. `CLAUDE.md`, `README.md`, guide intégré (`src/app/pages/guide/`) |
+| Export du site | `services/download/download.service.ts`, `shared/screenModel.ts`, `shared/saveModel.ts`, `services/eval-validation/eval-validation.service.ts` | Lu en entier |
+| Évaluation de référence | `Téléchargements\Tests sons et vidéos-gazeplayEval.zip` (47 Mo, 24 entrées) | Extraite dans le dossier temporaire de la session, rien n'a été copié dans le dépôt |
+| Lecteur actif | Branche `GazePlayLearning`, dernier commit `f15e550e1` (15/07/2026), 64 commits depuis le point de séparation `4351ac74b` (16/01/2023) | Lue par `git archive`, sans changer de branche |
+| Code dormant | `addClaudeCode` : `gazeplay-games/.../gazeplayEval` et `gazeplayEvalTest`, `EvalReport` (+ tests) | Ancien format `config.json`, inaccessible depuis l'étape 30 |
+
+Autres dépôts trouvés à côté, **anciens, non retenus** : `GitHub\GazePlayEvalWebsite` (squelette Angular 15, un seul
+commit), `GitHub\GazePlayEvalForm` (2023-2024), `GitHub\GazePlay-Eval-Simon` (copie de travail des stagiaires, en
+retard de 65 commits sur son dépôt distant).
+
+---
+
+## 2. Le format produit par le site (le contrat à respecter)
+
+### 2.1 Les deux fichiers du site
+
+- **`.zip`** (bouton « Exporter le .zip », étape 5) : **le seul fichier destiné à GazePlay Learning.**
+- **`.gpSave`** : même structure plus les noms d'écrans, les paramètres globaux et les cases masquées. Sert à
+  rouvrir l'évaluation dans le site. **Fait** : GazePlay Learning n'a pas à le lire.
+
+### 2.2 Structure du `.zip`
+
+```
+<nom de l'évaluation>/
+├── evalData.json      tableau ordonné des écrans
+├── evalInfo.json      nom, format des résultats, champs participant
+├── images/            images des instructions et des cases
+├── audio/             sons des instructions, des écrans de stimuli et des cases
+└── videos/            vidéos des instructions
+```
+
+Nom du fichier : `<nom>-gazeplayEval.zip`. Les noms de fichiers gardent accents, espaces et apostrophes
+(référence : `oeuf de Pâques.png`, `citrouille d'halloween.png`, `médecin(1).png`).
+
+### 2.3 `evalInfo.json`
+
+```json
+{
+  "Nom de l'évaluation": "Tests sons et vidéos",
+  "Format choisi": "Csv&Xlsx",
+  "Informations participant": ["Prénom", "Nom"]
+}
+```
+
+- `Format choisi` : `Csv&Xlsx` (par défaut), `Csv` ou `Xlsx` (l'ancien `Xsl` n'est plus proposé).
+- `Informations participant` : libellés des champs **à remplir dans GazePlay Learning à chaque passation** (guide du
+  site, étape 2). Peut être vide.
+- **Fait** : aucun numéro de version de format, ni ici ni dans `evalData.json`.
+
+### 2.4 `evalData.json` : un objet par écran, clés en français
+
+Le site construit chaque objet à partir d'un tableau positionnel (`values[]`) et d'une liste de clés
+(`*ScreenConstKey`). Les clés sont donc **le contrat** : le `CLAUDE.md` du site interdit de les changer sans analyse
+de compatibilité. Toutes les durées sont en **secondes, avec décimales possibles** (pas de 0,1 s dans l'éditeur).
+
+**Transition** (`"Type": "transition"`)
+
+| Clé | Type | Sens |
+|---|---|---|
+| `Mettre un temps avant passage à l'écran suivant` | booléen | passage automatique après un délai |
+| `Combien de temps` | nombre (s) | ce délai |
+| `Mettre une croix de fixation` | booléen | afficher une croix au centre |
+| `Mettre un temps de fixation` | booléen | il faut fixer la croix pour passer |
+| `Combien de temps de fixation` | nombre (s) | durée de fixation exigée |
+
+**Instruction** (`"Type": "instruction"`)
+
+| Clé | Type | Sens |
+|---|---|---|
+| `Mettre un temps avant passage à l'écran suivant` / `Combien de temps` | booléen / nombre (s) | comme la transition |
+| `Ajouter un media` | booléen | l'écran affiche un contenu |
+| `Type de media` | `Image` / `Video` / `Texte` / `Son` | |
+| `Nom du fichier` | texte | nom du média, **ou le texte de la consigne si `Texte`** |
+| `Mettre un temps de fixation` | booléen | **en réalité : « Ajouter un bouton pour lancer l'évaluation »** (le participant le fixe pour démarrer) |
+| `Combien de temps de fixation` | nombre (s) | durée de fixation du bouton |
+
+**Fait** : le nom de clé `Mettre un temps de fixation` ne correspond pas à son sens pour l'instruction (index 6 du
+tableau du site : « bouton ? »). C'est un piège pour le lecteur Java, à documenter, pas à corriger côté site sans
+accord.
+
+**Stimuli** (`"Type": "stimuli"`)
+
+| Clé | Type | Sens |
+|---|---|---|
+| `Nombre de lignes`, `Nombre de colonnes` | entiers ≥ 1 | grille |
+| `Mettre un temps avant passage à l'écran suivant` / `Combien de temps` | booléen / nombre (s) | durée maximale de l'écran |
+| `Combien de temps de fixation` | nombre (s) | fixation nécessaire pour sélectionner une case |
+| `Choix de sélection` | `Tout` / `BonneReponse` | quelles cases comptent pour valider l'écran |
+| `Combien à sélectionner` | entier ≤ lignes × colonnes | nombre de cases à valider pour passer |
+| `Position stimuli aléatoire` | booléen | mélanger les cases |
+| `Caché stimuli après selection` | booléen | masquer une case une fois choisie |
+| `Mettre un son` / `Nom du fichier` | booléen / texte | son joué sur l'écran |
+| `Liste des stimuli` | objet `{"0": {...}, "1": {...}}` | cases, en ordre ligne par ligne |
+
+Une case : `{"imageName": "...", "soundName": "...", "goodAnswer": true|false}` (image et son facultatifs ; le son
+est joué quand le participant regarde la case).
+
+**Faits sur la grille** :
+- Les clés de `Liste des stimuli` sont des nombres écrits en texte (`"0"` … `"n-1"`).
+- L'éditeur garde exactement lignes × colonnes cases (`checkStimuliCells`), y compris les **emplacements vides**
+  (`hidden: true`). Mais l'export du `.zip` **retire `hidden`** : un emplacement vide devient une case sans image ni
+  son, impossible à distinguer d'une case volontairement vide.
+- Le guide du site dit lui-même que le `.zip` ne garde pas « les emplacements vides des grilles ».
+
+### 2.5 Ce que contient l'évaluation de référence
+
+`Tests sons et vidéos` : 17 écrans, `Csv&Xlsx`, champs participant `Prénom`, `Nom`.
+
+- 5 instructions **vidéo** (6 à 8 s, passage automatique, pas de bouton) ;
+- 8 transitions (2 ou 3 s), dont 4 avec croix de fixation **sans** fixation exigée ;
+- 4 grilles **2 × 2**, `Tout`, 1 case à sélectionner, fixation 2 s, une case par grille avec un son (mp3 ou wav) ;
+  les trois premières **sans durée maximale**, la dernière avec 20 s.
+- Toutes les valeurs numériques sont entières.
+
+**Ce que la référence ne couvre pas** : instructions `Texte`, `Image`, `Son`, bouton de démarrage, croix à fixer,
+`BonneReponse`, ordre aléatoire, masquage après sélection, son d'écran, grilles de plus de 10 cases, emplacements
+vides, durées décimales, champs participant vides.
+**Recommandation** : créer avec le site une seconde évaluation de test qui couvre ces cas (petits médias), pour les
+tests automatiques et manuels.
+
+---
+
+## 3. Ce que fait `GazeplayEval` sur `GazePlayLearning`
+
+**Fait principal : ce lecteur lit déjà le format du site.** Il ouvre
+`<fileDir>\evals\<nom>\evalData.json` et lit les clés en français (`JTCconvert`, `parseTransition`,
+`parseInstruction`, `parseStimuli`). La structure de dossiers attendue est celle du `.zip`.
+
+### 3.1 Déroulement
+
+- Import : bouton « Importer une évaluation » des réglages (`ImportGame`), qui décompresse le `.zip` dans
+  `<fileDir>\evals\` (protection contre les chemins sortant du dossier : présente).
+- Variantes du jeu `GazePlayEval` : un sous-dossier de `evals` = une évaluation (`GazeplayEvalVariantGenerator`).
+- Lecture écran par écran (`generateScreen`) : transition (croix éventuelle, minuterie), instruction (image, texte,
+  son ou vidéo, minuterie), stimuli (grille de `PictureCard`, son d'écran, durée maximale).
+- Sélection d'une case : fixation de la durée demandée (`ProgressIndicator`), puis son de la case. Avec le réglage
+  « Sélection avec son » (`SOUND_ENABLED`), les autres cases sont bloquées pendant le son.
+- Fin : écran des statistiques habituel.
+
+### 3.2 Contrôles de l'examinateur (clavier)
+
+- `Espace` : passer à l'écran suivant.
+- `P` : rejouer le son de l'écran de stimuli.
+
+### 3.3 Modes de passation (réglage `EVAL_OPTIONS`, ajouté sur cette branche)
+
+Après chaque écran terminé, un écran « Recommencer / Continuer » peut s'afficher :
+
+| Valeur | Comportement |
+|---|---|
+| `Classique` (défaut) | pas d'écran intermédiaire |
+| `Autonomie_Soutien_Oral` | l'examinateur clique sur un des deux boutons |
+| `Autonomie_Soutien_Visuel` | le regard du participant (3 s, codé en dur) entoure un bouton en rouge, l'examinateur clique |
+| `Autonomie_Total` | le regard du participant (3 s) déclenche le bouton |
+
+« Recommencer » rejoue l'écran précédent sans remélanger les cases.
+
+### 3.4 Résultats produits
+
+- Dossier codé en dur : `C:/Users/<user>/Documents/GazePlayLearning_Eval/Eval<n>_<date>/`.
+- `Stats_<date>.csv` (UTF-8 avec BOM, séparateur `;`), **une ligne par écran de stimuli** : `Stimuli` (noms des
+  images, `image_vide` pour une case sans image), `ID écran` (index dans la liste de tous les écrans, à partir de 0),
+  `Réponse attendue`, `Réponse donnée`, `Temps écran (ms)`.
+- Une image de carte de chaleur du regard **par écran** (`<date-heure>-metricsGaze.png`, `Stats.screenHeatMapGaze`).
+- Le fichier Excel est écrit par du code présent mais **commenté** (`createExcelFile`, `closeExcelFile`).
+- Les statistiques habituelles de GazePlay (fin de partie).
+
+### 3.5 Réglages ajoutés sur `GazePlayLearning`
+
+`EVAL_OPTIONS`, `SOA_ENABLED` (son décalé de 2 s, utilisé par `gazeplayEvalTest`, masqué dans l'interface),
+`FRAME_GAZE_POSITION` (cadence d'échantillonnage du regard de `gazeplayEvalTest`, masqué), libellé
+« Sélection avec son » pour `SOUND_ENABLED`, bulle d'aide sur `DELAY_BEFORE_SELECTION_TIME`.
+
+---
+
+## 4. Ce que fait `GazePlayEvalTest` sur `GazePlayLearning`
+
+**Fait : ce n'est pas un lecteur d'évaluations du site.** C'est un protocole d'entraînement « ANR » codé en dur :
+
+- Lit l'**ancien** format positionnel `config.json` (1ʳᵉ ligne = nom ; puis par planche : lignes, colonnes, images,
+  son, nombre d'images à voir, durée de fixation, durée d'affichage, mélange). La bonne réponse est reconnue au
+  préfixe `C_` du nom d'image.
+- Ordre des planches **mélangé** ; écran de consigne (`oculometrie.png`, `question.png`, son `sounds/Consigne.m4a`),
+  croix entre les planches, **pause à mi-parcours** (`picto_pause.png`), écran de fin (`feux_artifice.png`,
+  `sounds/Cloture.m4a`).
+- Pendant chaque planche, une `Timeline` relève la position du regard à cadence fixe (`FRAME_GAZE_POSITION`) et
+  l'écrit dans `StatsTraining_<date>.xlsx` : `Timepoint`, `X`, `Y`, identifiant de l'image cible, et les images en
+  haut à gauche, haut à droite, bas à gauche, bas à droite (**grille 2 × 2 supposée**). Plus un `.txt` décrivant les
+  planches.
+- Dossier codé en dur : `C:/Users/<user>/Documents/ANR_Project/EvalTraining<n>_<date>/`.
+- Clavier : `Entrée` lance la planche, `Retour arrière` termine, `Espace` passe la consigne ou la fin, `P` sort de la
+  pause.
+
+**Ce qui a de la valeur** : l'export « position du regard au cours du temps, avec ce qui est affiché où », qui
+permet une analyse fine (de type regard pendant l'écoute). **Fait** : sur `addClaudeCode`, `Stats` enregistre déjà
+chaque point de regard daté (`replayData.json`, format v4, sans répétitions) ; ce qui manque est le lien
+point ↔ case de la grille.
+
+---
+
+## 5. État actuel sur `addClaudeCode`
+
+- `gazeplayEval` (671 lignes) et `gazeplayEvalTest` (637 lignes) sont les versions **d'avant** `GazePlayLearning`
+  (ancien `config.json` : `EvalName`, `Scores`, `Assets`, `Output`, `Anonymous`, `Profil`). **Fait : incompatibles
+  avec le site.**
+- `EvalReport` (export CSV UTF-16 et XLSX, extrait à l'étape 3) et `EvalReportTest` : liés à l'ancien format.
+- Plus d'import d'évaluation (`ImportGame` retiré le 23/10/2026), plus de mode BERA, plus d'écran des scores Eval.
+  Le dossier `files\evals` n'est plus créé. Les jeux Eval sont exclus du catalogue (`CatalogBasedGamesLocatorTest`).
+  `evals-catalog.txt` est encore généré mais n'est plus lu.
+- Gardés pour la fusion : `GazeplayEvalGameVariant`, la lecture des variantes Eval dans
+  `IGameVariant.toGameVariant` (chemin `\\evals\\` codé en dur), les champs Eval de `Stats`,
+  `SystemFileManager.showFile`, les réglages Eval de `Configuration` (`TRANSITION_TIME`, `QUESTION_TIME`, `FEEDBACK`,
+  `SOUND_ENABLED`…), le code de `GameSizingComputer`.
+- Ce que la modernisation apporte et que le lecteur doit utiliser : `IGameContext.getConfiguration()`, les modes
+  d'entrée `mouse_control` / `tobii` / `tobii_and_mouse` (filtrage de la souris par `GameContextFactory`),
+  `GazeEvent.getSampleTime()`, `Stats` par source (v4), le dossier `Documents\GazePlay_Learning`, la pause du regard
+  et de la souris quand le menu de l'engrenage est ouvert (étape 37), la règle « la scène ne se modifie que sur le
+  thread JavaFX, `PauseTransition` pour les délais ».
+
+---
+
+## 6. Écarts entre le site et le lecteur de `GazePlayLearning`
+
+| Fonction du site | Lecteur `GazePlayLearning` | Constat |
+|---|---|---|
+| Structure du `.zip` | Lue telle quelle | **OK** |
+| Durées décimales (`1.5`) | Lues par `getAsInt()` | **Fait** : Gson tronque (1,5 s → 1 s, 0,5 s → 0 s) |
+| Ordre des cases | Clés triées **comme du texte** | **Fait** : à partir de 11 cases, `"10"` passe avant `"2"` : la grille est mélangée |
+| Nombre de cases ≠ lignes × colonnes | Prend les 3 × (lignes × colonnes) dernières valeurs | **Risque** : liste plus courte → exception ; plus longue → mauvaises cases |
+| Emplacements vides | Case `image_vide` encadrée et **sélectionnable** | **Fait** ; la donnée `hidden` n'est pas exportée par le site |
+| `Caché stimuli après selection` | Lu, **jamais utilisé** | **Fait** |
+| `BonneReponse` | Seules les bonnes réponses comptent ; les mauvaises restent enregistrées | Conforme au guide |
+| Bouton de démarrage (instruction) | Seulement pour `Image` : on fixe **l'image elle-même** | **Fait** : ignoré pour `Texte`, `Son`, `Video` |
+| Croix à fixer (transition) | Gérée (`ScreenCard`) | Voir défaut E1 |
+| Son d'écran (stimuli) | Joué ; `P` le rejoue | OK |
+| `Format choisi` | **Ignoré** : CSV seulement | **Fait** |
+| `Informations participant` | **Ignoré** (aucun formulaire, `evalInfo.json` jamais lu) | **Fait**, alors que le guide du site l'annonce |
+| Formats des médias | `Image` / `Media` JavaFX | **Risque** : le site accepte `image/*`, `video/*`, `audio/*` ; JavaFX ne lit ni WebP, ni WebM, ni OGG, ni FLAC (il lit PNG, JPEG, GIF, BMP, MP3, WAV, AAC/M4A, MP4 H.264) |
+
+---
+
+## 7. Défauts du lecteur `GazePlayLearning` repérés à la lecture
+
+Aucun n'a été vérifié en exécution. Chaque point dit pourquoi il est probable.
+
+- **E1 — Écran sauté.** `getScreenHeatmapGaze()` appelle déjà `afterScreenHeatMap()` (qui avance d'un écran et
+  affiche le suivant). Or `ScreenCard` (croix ou image fixée) puis la touche `Espace` avancent **une seconde fois**.
+  Effet probable : un écran sauté et deux écrans construits l'un sur l'autre. La référence n'emprunte pas ces
+  chemins (aucune fixation exigée), sauf si l'examinateur appuie sur `Espace`.
+- **E2 — Exception au premier écran.** `afterScreenHeatMap()` calcule `System.currentTimeMillis() -
+  currentRoundStartTime`, un `Long` qui reste `null` tant qu'aucune grille n'a été affichée. Une croix à fixer ou
+  `Espace` avant la première grille donne probablement une `NullPointerException`.
+- **E3 — Colonnes du CSV décalées.** Le temps est ajouté pour **tous** les écrans passés par
+  `afterScreenHeatMap()` (transitions, instructions), mais les autres colonnes seulement pour les grilles. Les
+  lignes du CSV mélangent donc les temps d'écrans différents.
+- **E4 — Unité fausse.** Quand la durée maximale d'une grille est atteinte, la colonne `Temps écran (ms)` reçoit
+  la durée réglée **en secondes** (`get(4)`).
+- **E5 — Regard ignoré en mode par défaut.** `PictureCard`, `ScreenCard` et `EvalOptionsCard` n'écoutent le regard
+  que si `EYE_TRACKER` vaut exactement `tobii`, sinon la souris seule. Sur `addClaudeCode`, la valeur par défaut est
+  `tobii_and_mouse` : le regard serait ignoré.
+- **E6 — Blocage possible.** Une grille sans durée maximale (3 sur 4 dans la référence) ne se termine que par une
+  sélection ou par `Espace` (voir E1).
+- **E7 — Chemins Windows.** `"\\evals\\"`, `C:/Users/<user>/Documents/...` : faux ailleurs que sous Windows, et en
+  dehors du dossier GazePlay (`Documents\GazePlay_Learning`).
+- **E8 — Zones de regard.** La zone de détection d'une case (`createGazeArea`) mesure la moitié de la largeur de
+  l'image et se décale selon la colonne (`firstPosition`). **Hypothèse** : la zone ne recouvre pas exactement
+  l'image affichée ; à mesurer sur écran.
+- **E9 — Minuteries pendant le menu de l'engrenage.** Les `Timeline` d'écran ne sont pas mises en pause quand le
+  menu est ouvert (étape 37). Lié à la décision encore ouverte sur le temps de menu (`MODERNIZATION.md` 2an).
+- **E10 — État partagé.** Beaucoup de champs `public` modifiés par `PictureCard`, `ScreenCard`,
+  `EvalOptionsCard`, et du code mort (échantillonnage du regard, `listImages` jamais rempli) : difficile à tester.
+
+---
+
+## 8. Modifications de `GazePlayLearning` hors Eval
+
+Le diff depuis le point de séparation touche 60 fichiers. Hors des deux paquets Eval :
+
+| Modification | Recommandation |
+|---|---|
+| `Stats` : enregistre **soit** le regard **soit** la souris selon le réglage ; images `metrics*.png` et carte de chaleur de fin **commentées** (R12) | **Ne pas reprendre.** `addClaudeCode` enregistre les deux sources séparément (v2 à v4). Refaire seulement la carte de chaleur **par écran**, sur le `Stats` actuel |
+| `getPosition()` ajouté à `GazeDeviceManager`, `TobiiGazeDeviceManager`, `PositionPollerRunnable` (champ public écrit par un autre thread) | **Ne pas reprendre** : le lecteur doit utiliser les `GazeEvent` |
+| `SoundManager.stop()` | Équivalent à prévoir si besoin |
+| Réglages `EVAL_OPTIONS`, `SOA_ENABLED`, `FRAME_GAZE_POSITION` et leur page | Reprendre `EVAL_OPTIONS` si les modes de passation sont gardés (question Q4) |
+| `ImportGame` (bouton « Terminé », libellés) | Refaire un import propre au format du site |
+| Jeu `FollowEmmanuel` (labyrinthes, 3 niveaux) | Hors Eval (question Q8) |
+| `lib/EyeTribeJavaFx.jar`, dépendances et versions Gradle de 2023 | **Ne pas reprendre** (EyeTribe retiré, dépendances à jour) |
+| Catalogues `FollowEmmanuel` et `OpenMemoryGame` dans `generateEvalsCatalog` | Ne pas reprendre |
+| Images `blackCross*`, `whiteCrossMini`, `oculometrie`, `picto_pause`, `question`, `feux_artifice` | Reprendre celles qui servent (croix) |
+| Traductions (`EvalOptions`, `SelectionWithSound`, `ImportEval`, `removeEval`…) | Reprendre celles qui servent |
+
+**Recommandation** : pas de `git merge` de `GazePlayLearning` : les deux branches ont divergé depuis janvier 2023 et
+la modernisation a réécrit `Stats`, la configuration, le lancement et le dossier de données. Un port à la main, guidé
+par ce document, est plus sûr. La branche `GazePlayLearning` reste intacte comme référence.
+
+---
+
+## 9. Ce qu'on garde, ce qu'on laisse
+
+**À garder (comportement, pas forcément le code)** :
+- la lecture du `.zip` du site et le déroulement écran par écran ;
+- la sélection par fixation avec indicateur de progression, le son des cases, le blocage pendant le son ;
+- les contrôles de l'examinateur (`Espace`, `P`) ;
+- les modes de passation (si Q4 les confirme) ;
+- l'export par grille (stimuli affichés, attendus, choisis, temps) et la carte de chaleur par écran ;
+- l'idée de `gazeplayEvalTest` : regard daté relié aux cases affichées, pour toute grille ;
+- `GameSizingComputer`, `GazeplayEvalGameVariant`, l'approche testée d'`EvalReport` (CSV et XLSX).
+
+**À laisser** :
+- l'ancien format `config.json` (`gazeplayEval` actuel, `gazeplayEvalTest`), sauf si Q2 dit le contraire ;
+- l'échantillonnage du regard par `Timeline` et `getPosition()` (les points existent déjà dans `Stats`) ;
+- les modifications globales de `Stats`, les chemins codés en dur, les dépendances anciennes.
+
+---
+
+## 10. Organisation proposée
+
+Chaque étape est vérifiée avant la suivante, et suivie dans ce fichier.
+
+1. **Décisions** (section 11).
+2. **Le contrat, en Java, sans JavaFX.** Un modèle typé (`EvalDefinition`, un type par écran) lu avec Gson, durées
+   en `double`, cases triées par valeur numérique, nombre de cases vérifié, `Mettre un temps de fixation` interprété
+   selon le type d'écran. Un rapport de validation qui suit celui du site (`EvalValidationService` : champs
+   manquants, médias absents ou de format illisible par JavaFX). Tests unitaires sur le JSON de la référence et sur
+   la seconde évaluation de test (sans les vidéos de 47 Mo dans le dépôt).
+3. **Import.** Décompresser un `.zip` du site dans `Documents\GazePlay_Learning\files\evals\<nom>\` (dossier GazePlay
+   actuel, pas de chemin Windows codé en dur) ; refus d'un chemin hors du dossier ; validation avant copie ; question
+   avant d'écraser une évaluation du même nom ; liste et suppression. Interface : dans les réglages ou dans le futur
+   menu (lié à la refonte du menu).
+4. **Lecteur.** Une machine à états simple : un écran à la fois, une seule façon de passer au suivant (corrige
+   E1 à E3 par construction), `PauseTransition`, écoute des `GazeEvent` et de la souris en laissant le mode d'entrée
+   filtrer (corrige E5), masquage après sélection, bouton de démarrage pour tous les types d'instruction, emplacements
+   vides non sélectionnables (si le site les exporte, Q6), minuteries en pause avec le menu de l'engrenage (selon la
+   décision 2an).
+5. **Passation et résultats.** Formulaire participant d'après `evalInfo.json` avant le premier écran ; résultats
+   dans le dossier GazePlay, au format choisi (CSV et/ou XLSX), **avec `formatVersion`** ; temps en millisecondes ;
+   une ligne par grille et par essai (`Recommencer` compris, numéroté) ; carte de chaleur par écran depuis le
+   `Stats` actuel ; en option, regard daté relié aux cases (héritage de `gazeplayEvalTest`).
+6. **Lancement.** Une JVM par passation, comme les jeux (`--game GazePlayEval --variant <nom>`), et l'entrée dans le
+   menu.
+7. **Nettoyage.** Retirer l'ancien code Eval (`config.json`), `gazeplayEvalTest` et ce qui ne sert plus (selon Q2).
+8. **Vérification.** Tests unitaires ; passation complète sans fenêtre (Monocle) d'une évaluation courte ; ajout au
+   job `all-games` ; passation réelle de la référence avec le Tobii Eye Tracker 5.
+
+---
+
+## 11. Questions pour le mainteneur
+
+- **Q1 — Site comme référence.** Le dépôt `Documents\Tests\GazePlay-Eval` (branche `addClaudeCode`) et le site en
+  ligne sont-ils bien la version de référence du format ?
+- **Q2 — Ancien format.** Existe-t-il encore des évaluations au format `config.json` (ancien Eval, protocole ANR de
+  `gazeplayEvalTest`) qu'il faut pouvoir jouer ? Sinon, on ne garde que le format du site.
+- **Q3 — Protocole ANR.** Les écrans fixes de `gazeplayEvalTest` (consigne sonore, pause à mi-parcours, fin) et son
+  export du regard échantillonné sont-ils encore utilisés ? Le site sait déjà faire consigne et transitions.
+- **Q4 — Modes de passation.** Garder les quatre modes (`Classique`, soutien oral, soutien visuel, autonomie totale) ?
+  Leur fixation de 3 s doit-elle être réglable ? Doit-on noter dans les résultats qu'un écran a été recommencé ?
+- **Q5 — Résultats.** Emplacement (dans `Documents\GazePlay_Learning`, ou un dossier séparé comme
+  `GazePlayLearning_Eval`) ; colonnes attendues ; faut-il aussi les résultats « de jeu » habituels de GazePlay ?
+  (Rejoint la question ouverte « format officiel des exports, règle d'arrêt, RGPD ».)
+- **Q6 — Évolutions du site.** Accepte-t-on de modifier l'export du site, de façon **additive** (nouvelles clés
+  seulement, anciennes conservées) : `formatVersion`, emplacements vides exportés, restriction aux formats de
+  médias lisibles par JavaFX ?
+- **Q7 — Données personnelles.** Les champs participant sont-ils écrits en clair dans les résultats ? Anonymisation
+  possible ? (RGPD, question déjà ouverte.)
+- **Q8 — `FollowEmmanuel`.** Ce jeu de labyrinthe de `GazePlayLearning` est-il à reprendre ? (Le mode « emmanuel » a
+  été retiré le 21/10/2026.)
+- **Q9 — Règle d'arrêt.** L'ancien Eval s'arrêtait après 5 erreurs consécutives ; le site n'a pas cette notion.
+  Est-elle abandonnée ?
+
+---
+
+## 12. Réalisation (27/10/2026)
+
+### 12.1 Décisions du mainteneur
+
+- Objectif : une évaluation exportée par le site s'importe, se joue et produit ses résultats dans GazePlay Learning
+  modernisé, **sans rien casser pour les autres jeux**. Carte blanche sur la façon de faire.
+- **Q2** : plus d'évaluation à l'ancien format `config.json` → l'ancien lecteur, `EvalReport` et `gazeplayEvalTest`
+  sont retirés.
+- **Q4** : les quatre modes de passation sont gardés (ils adaptent le style de l'évaluation).
+- **Q5** : résultats au choix de Claude, avec les informations de la souris et du regard (entrées, sorties,
+  validations…).
+- **Q6** : au choix de Claude (voir 12.7).
+- Q1, Q3, Q7, Q8, Q9 : non tranchées, voir 12.8.
+
+### 12.2 Ce qui a été fait
+
+Un **portage à la main** (pas de `git merge`) : le comportement de `GazePlayLearning` est repris et réécrit sur le
+code modernisé ; la branche `GazePlayLearning` n'a pas été touchée.
+
+| Partie | Où | Rôle |
+|---|---|---|
+| Format du site | `gazeplay-games-commons`, `net.gazeplay.commons.eval` : `EvalScreen`, `EvalDefinition`, `EvalReader`, `EvalProblem` | Lit `evalData.json` et `evalInfo.json`, sans JavaFX. Durées décimales, cases triées comme des nombres, cases manquantes ou sans média = emplacements vides, clés inconnues ignorées. Vérifie la présence et le format des médias, signale les écrans que seul l'examinateur peut terminer. Problèmes traduits (clé + arguments) |
+| Import | `EvalImporter`, `EvalLibrary` | Extrait le `.zip` dans un dossier temporaire, le lit, **puis seulement** le met en place (question avant de remplacer une évaluation du même nom). Chemins hors du dossier refusés, taille et nombre de fichiers limités, noms UTF-8 (repli IBM437), `__MACOSX` ignoré, archive avec ou sans dossier racine |
+| Réglages | `gazeplay-core`, `EvalSettings` + section « Évaluations (GazePlay Eval) » de `ConfigurationContext` | Liste des évaluations importées (suppression), import, mode de passation, délai avant sélection, blocage par le son, dossier des résultats |
+| Jeu | `gazeplay-games`, `gazeplayEval` : `GazeplayEval`, `EvalTarget`, `EvalSessionRecorder`, `EvalResultsWriter` | Le lecteur, les cibles regard/souris, l'enregistrement de la passation et l'écriture des résultats |
+| Catalogue | `gazeplay-core/build.gradle` | GazePlay Eval est un jeu du catalogue normal ; `evals-catalog.txt` (plus lu) n'est plus généré |
+| Variante | `GazeplayEvalGameVariant` | Une variante par évaluation importée, forme persistante `GazeplayEvalGameVariant:<nom>` (aller-retour testé, accents et apostrophes compris) |
+
+**Dossiers** : évaluations importées dans `Documents\GazePlay_Learning\evaluations\<nom>\` (communes à tous les
+profils) ; résultats dans **`Documents\GazePlayLearning_Eval\Eval<n>_<aaaa-mm-jj>\`** (décision du mainteneur du
+27/10/2026, voir 12.4 ; le bouton « voir dossier » des réglages y mène).
+
+### 12.3 Déroulement d'une passation
+
+1. Menu → GazePlay Eval → choix de l'évaluation (une JVM par passation, comme les autres jeux). Sans évaluation
+   importée, le jeu explique comment en importer une ; une évaluation devenue illisible affiche ses erreurs.
+2. **Formulaire participant** (champs de `evalInfo.json`), rempli par l'examinateur au clavier, `Entrée` pour
+   commencer. Les lettres tapées n'atteignent pas l'écran de jeu (la touche `Q` ne quitte pas pendant la saisie).
+3. **Écrans dans l'ordre** :
+   - transition : croix de fixation éventuelle, qui peut devoir être fixée ;
+   - instruction : texte, image, vidéo ou son ; **bouton « Commencer » à fixer pour tous les types** (le site
+     l'appelle « bouton pour lancer l'évaluation ») ;
+   - grille : images et/ou sons, sélection par fixation (indicateur de progression), son de la case, son de l'écran,
+     règle `Tout` / `BonneReponse`, masquage après sélection, positions aléatoires (les emplacements vides restent en
+     place, le même ordre est gardé quand la grille est recommencée), durée maximale.
+4. **Après chaque grille**, selon le mode de passation (réglage `EVAL_OPTIONS`) : rien (classique), ou un écran
+   « Recommencer / Continuer » : choisi par l'examinateur (soutien oral : la souris ou le clavier, le regard du
+   participant sur les boutons est enregistré), désigné du regard puis confirmé par l'examinateur (soutien visuel),
+   ou choisi du regard (autonomie totale). La fixation des boutons est celle du réglage « durée de fixation » de
+   GazePlay (autrefois 3 s codées en dur).
+5. Fin : « Fin de l'évaluation », résultats écrits, puis l'écran de statistiques habituel.
+
+**Touches de l'examinateur** : `Espace` écran suivant, `P` rejouer le son (ou la vidéo) de l'écran, `R` ou `←`
+recommencer, `C` ou `→` continuer, `Entrée` confirmer la proposition du participant (sinon continuer). Elles
+remplacent la souris en mode « regard seul », où la souris est bloquée dans la zone de jeu.
+
+**Corrections par construction** des défauts relevés en section 7 : un écran ne se termine qu'à un seul endroit, qui
+ignore les minuteries et les rappels des écrans déjà finis (E1, E2, E3) ; temps toujours en millisecondes (E4) ;
+regard **et** souris écoutés, le mode d'entrée de GazePlay faisant le tri (E5) ; dossier GazePlay, aucun chemin
+Windows codé en dur (E7) ; la cible d'une image est l'image affichée plus une petite marge (E8) ; minuteries, médias
+et sélection **en pause** pendant que le menu de l'engrenage est ouvert, avec les événements `menu_ouvert` /
+`menu_ferme` dans les résultats (E9 ; propre à Eval, la décision 2an pour les autres jeux reste ouverte).
+
+**Réglages** (nouvelles clés, valeurs par défaut sans effet sur les autres jeux) : `EVAL_OPTIONS` (défaut
+`Classique`), `EVAL_SOUND_BLOCKS_SELECTION` (défaut vrai : le son d'une case choisie bloque les autres sélections ;
+clé propre à Eval, car `SOUND_ENABLED` est aussi lu par Simon). `DELAY_BEFORE_SELECTION_TIME` (défaut 1 s, lu par
+Eval seulement) est maintenant modifiable dans les réglages.
+
+### 12.4 Résultats d'une passation (format version 1)
+
+**Dossier** (décision du mainteneur du 27/10/2026) : `GazePlayLearning_Eval` dans Documents (créé s'il n'existe
+pas ; le dossier personnel s'il n'y a pas de Documents), puis un dossier par passation **`Eval<n>_<aaaa-mm-jj>`** :
+le numéro repart de 1 chaque jour et augmente avec les passations du jour (`Eval1_2026-10-27`, `Eval2_2026-10-27`…),
+toutes évaluations confondues. Ce sont l'emplacement et les noms de la version `GazePlayLearning` : les dossiers
+déjà présents (`Eval1_2026-06-29`…) restent à côté, intacts. Le nom de l'évaluation est dans `session.json` et le
+`.xlsx`. La création du dossier est atomique (deux passations simultanées reçoivent deux numéros). Pour les tests,
+le dossier Documents est remplacé (`gazeplay.documents`, `build.gradle`) : ils n'écrivent jamais dans le vrai.
+
+CSV en UTF-8 avec BOM, séparateur `;` (ouverture directe dans un tableur français). Temps en ms depuis le début de la session, positions en pixels de la
+zone de jeu. Sources : `regard`, `souris`, `clavier`, `systeme`.
+
+| Fichier | Contenu |
+|---|---|
+| `session.json` | `formatVersion` (1), évaluation, début, fin, durée, `terminee` (faux si la partie a été quittée), **participant**, mode de passation, mode d'entrée, délai avant sélection, blocage par le son, fixation des choix, graine du hasard, taille de la zone de jeu, dossiers |
+| `resultats.csv` (et/ou `.xlsx`, selon le « Format choisi » du site) | Une ligne par écran affiché (et par essai) : écran, essai, type, début, fin, durée, fin de l'écran (`validé`, `temps écoulé`, `délai écoulé`, `fixation`, `passé par l'examinateur`, `interrompu`) ; pour les grilles : lignes, colonnes, règle, à sélectionner, stimuli affichés (`L1C2:image.png`, ordre affiché), réponses attendues, réponses données (dans l'ordre), leurs sources, leurs temps depuis le début de l'écran, bonnes et mauvaises réponses, validé, première réponse |
+| `evenements.csv` (et feuille « Événements » du `.xlsx`) | Chaque événement : `debut_session`, `debut_ecran`, `fin_ecran`, **`entree` et `sortie`** d'une cible (case, croix, bouton) par le regard ou la souris, avec position, `selection` (bonne ou mauvaise réponse), `fixation_validee`, `debut_son`/`fin_son`, `debut_video`/`fin_video`, `son_case`, `son_ecran`, `touche`, `ecran_choix`, `proposition`, `choix_option`, `menu_ouvert`/`menu_ferme`, `erreur_media`, `fin_session` |
+| `echantillons.csv` | Chaque position du regard (une par échantillon de l'appareil, datée à son acquisition) et chaque déplacement de la souris, avec la cible sous le point (héritage de `gazeplayEvalTest`, pour toute grille). Toujours en CSV |
+| `heatmaps\ecran-NN-<type>-essai-K-regard.png`, `…-souris.png` | **Carte de chaleur de chaque écran** (transitions, consignes et grilles), à sa fin : l'image de l'écran, la carte du regard ou de la souris par-dessus, et la légende. Même calcul et même rendu que les cartes de GazePlay (grille de 400 colonnes, `HeatMapGrid` ; couleurs et opacité des réglages). Une source sans position sur l'écran n'a pas de carte ; un écran sans aucune position a son image seule (`ecran-NN-<type>-essai-K.png`). Un écran quitté en cours a aussi la sienne |
+
+Les fichiers habituels de GazePlay (`replayData.json` v4, cartes de chaleur de toute la partie, `info-game.csv`)
+sont aussi écrits, dans `statistics\GazePlayEval\<date>\`, par `Stats`, qui n'a pas été modifié (seul un accesseur
+`Stats.isConfigMenuOpen()` a été ajouté ; `HeatMapGrid` est devenu public, sans changement de calcul).
+
+**Données personnelles** : les champs participant sont écrits en clair dans `session.json` et `resultats.xlsx`. Le
+nom du dossier ne contient que la date. Voir Q7.
+
+### 12.5 Ce qui a été retiré
+
+L'ancien lecteur Eval (`config.json`), `PictureCard`, `RoundDetails`, `GameSizing*`, `EvalReport` et
+`EvalReportTest`, tout le paquet `gazeplayEvalTest`, la tâche `generateEvalsCatalog`, la traduction
+`GazePlayEvalTest`. Gardés, inutilisés : les champs de scores BERA de `Stats` (format interne, sans effet).
+
+### 12.6 Vérifications
+
+- Tests ajoutés : `EvalReaderTest` (9, dont la lecture du JSON de « Tests sons et vidéos »), `EvalImporterTest` (7),
+  `GazeplayEvalGameVariantTest` (1), `EvalResultsWriterTest` (4), `GazeplayEvalTest` (numérotation des dossiers
+  `Eval<n>_<date>`, emplacement dans le dossier de test, et 4 passations complètes sans fenêtre : grille
+  sélectionnée à la souris jusqu'aux fichiers de résultats et aux cartes de chaleur ; formulaire
+  participant, touche Espace et partie quittée ; soutien oral avec « Recommencer » puis « Continuer » ; aucune
+  évaluation importée). `ConfigurationContextTest` et `CatalogBasedGamesLocatorTest` mis à jour.
+- Le reste est donné en 12.9 (suite complète, `smokeTest`, `allGamesTest`, import du vrai zip).
+
+### 12.7 Le site GazePlay Eval (Q6)
+
+Choix : **aucune modification du site n'est nécessaire**, et aucune n'a été faite. GazePlay Learning s'adapte au
+format actuel :
+- les emplacements vides (non exportés) sont reconnus comme les cases sans image ni son ; la clé `hidden` est lue si
+  le site l'exporte un jour ;
+- les clés inconnues (par exemple un futur `formatVersion`) sont ignorées ;
+- les médias illisibles par JavaFX (WebP, WebM, OGG, FLAC…) sont refusés **à l'import**, avec le nom du fichier et les
+  formats acceptés.
+
+Améliorations possibles du site, toutes additives (à faire dans son dépôt, avec ses tests d'aller-retour) :
+`formatVersion` dans `evalInfo.json` ; limiter les sélecteurs de fichiers (`image/*`, `video/*`, `audio/*`) aux
+formats lus par GazePlay, ou l'avertir à l'étape 5 ; renommer dans l'interface le réglage « Mettre un temps de
+fixation » des instructions, qui est en réalité le bouton de démarrage (la clé exportée, elle, ne doit pas changer).
+
+### 12.8 Reste ouvert
+
+- **Essai réel** avec le Tobii Eye Tracker 5 et l'évaluation « Tests sons et vidéos » (vidéos, sons, regard) : à faire
+  par le mainteneur (réglages → Évaluations → Importer, puis menu → GazePlay Eval). Les vidéos et les sons n'ont pas été lus dans les tests sans fenêtre (Monocle n'a pas de
+  sortie média) : leur code d'erreur est prévu (`erreur_media`, l'écran continue).
+- Q7 (anonymisation), Q9 (règle d'arrêt) : non tranchées ; rien n'est prévu pour l'instant.
+- Q3 : l'export du regard échantillonné de `gazeplayEvalTest` est repris pour toutes les grilles
+  (`echantillons.csv`) ; ses écrans fixes (consigne sonore, pause, fin) se construisent maintenant avec le site.
+- Q8 (`FollowEmmanuel`) : non repris.
+
+### 12.9 Vérifications faites (27/10/2026) et changements hors Eval
+
+- `./gradlew build` : réussi, **449 tests, 0 échec** (451 après le changement de dossier des résultats : test de la
+  numérotation `Eval<n>` et de l'emplacement), SpotBugs sans alerte (les alertes de chemins pouvant être nuls
+  sur les nouvelles classes ont été corrigées).
+- `smokeTest` : 3/3. `allGamesTest` : **76/76** (les 75 jeux d'avant + GazePlay Eval, lancé sans évaluation
+  importée : il affiche le message d'import et tourne sans erreur).
+- **Import du vrai zip** « Tests sons et vidéos » (Téléchargements, 47 Mo) par `EvalImporter`, avec un test temporaire
+  supprimé ensuite : aucun problème, 17 écrans, 20 fichiers, champs « Prénom » et « Nom », format CSV et XLSX.
+- **Pas encore fait** : la passation réelle de ce zip dans l'application, avec les vidéos, les sons et le Tobii
+  Eye Tracker 5.
+
+Changements hors Eval, tous vérifiés par la suite complète et `allGamesTest` :
+- `GazePlayFxApp` : lancé sans `--variant`, un jeu **sans aucune variante** démarre directement, comme le menu le
+  faisait déjà (`GameMenuController.onGameSelection`), au lieu d'ouvrir une fenêtre de choix vide. Aucun effet sur
+  les jeux qui ont des variantes.
+- `Math101` : **défaut existant corrigé**, révélé par `allGamesTest` (Division) : un premier tirage avec un diviseur 0
+  et un dividende non nul calculait `x % 0` et faisait planter le jeu au lancement, au hasard. Le diviseur 0 est
+  maintenant retiré.
+- `StatsTest.shouldAddRoundDurationToReportOnNextRound` : test **instable** (égalité à la milliseconde entre deux
+  mesures d'horloge prises de part et d'autre de l'appel), échoué une fois puis réussi à la relance sans changement ;
+  il vérifie maintenant un encadrement. `Stats` n'a pas changé.
+- `Stats` : ajout de l'accesseur `isConfigMenuOpen()`. `Configuration` : deux clés nouvelles. `GazePlayDirectories` :
+  `getEvaluationsFolder()`. Aucune valeur ni comportement existant modifié.

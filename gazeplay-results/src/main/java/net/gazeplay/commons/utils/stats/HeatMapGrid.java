@@ -8,7 +8,7 @@ import java.io.PrintWriter;
  * <p>
  * Extracted from {@code Stats} without any change of computation; free of JavaFX so that it can be tested and reused
  * alone. {@code Stats} keeps three grids per round: the gaze, the mouse, and both (one grid for both before format
- * version 2, anomaly R1).
+ * version 2, anomaly R1). GazePlay Eval uses it for the heatmap of each screen.
  */
 public final class HeatMapGrid {
 
@@ -24,7 +24,7 @@ public final class HeatMapGrid {
     /**
      * @param cellSize side of a cell, in pixels of the scene (width / 400 since format version 4)
      */
-    HeatMapGrid(final double sceneWidth, final double sceneHeight, final double cellSize) {
+    public HeatMapGrid(final double sceneWidth, final double sceneHeight, final double cellSize) {
         this.cellSize = cellSize;
         this.counts = new double[(int) (sceneHeight / cellSize)][(int) (sceneWidth / cellSize)];
     }
@@ -32,7 +32,7 @@ public final class HeatMapGrid {
     /**
      * Adds a sample at the given position of the scene, in pixels.
      */
-    void add(final int x, final int y) {
+    public void add(final int x, final int y) {
         final int row = (int) (y / cellSize);
         final int column = (int) (x / cellSize);
         for (int i = -TRAIL; i <= TRAIL; i++) {
@@ -53,7 +53,7 @@ public final class HeatMapGrid {
     /**
      * @return the counts, by row (Y) then column (X); the array itself, not a copy
      */
-    double[][] counts() {
+    public double[][] counts() {
         return counts;
     }
 

@@ -26,8 +26,8 @@ public class GazePlayDirectories {
     public static final String DOCUMENTS_FOLDER_NAME = "GazePlay_Learning";
 
     /**
-     * System property replacing the Documents folder, for the tests of the move of the GazePlay folder only: the one
-     * of Windows does not depend on user.home.
+     * System property replacing the Documents folder, for the tests (move of the GazePlay folder, results of GazePlay
+     * Eval): the one of Windows does not depend on user.home.
      */
     public static final String DOCUMENTS_FOLDER_PROPERTY = "gazeplay.documents";
 
@@ -83,6 +83,30 @@ public class GazePlayDirectories {
      * @return the GazePlay folder in the Documents folder of the user, or null if there is none
      */
     static File getDocumentsGazePlayFolder() {
+        final File documents = getDocumentsFolder();
+        return documents == null ? null : new File(documents, DOCUMENTS_FOLDER_NAME);
+    }
+
+    /**
+     * @return the folder of the results of the evaluations of GazePlay Eval: GazePlayLearning_Eval in the Documents
+     *   folder of the user (decision of the maintainer), in the home directory if there is no Documents folder
+     */
+    public static File getEvaluationResultsFolder() {
+        final File documents = getDocumentsFolder();
+        return new File(documents == null ? new File(System.getProperty("user.home")) : documents,
+            EVALUATION_RESULTS_FOLDER_NAME);
+    }
+
+    /**
+     * Name of the folder of the results of the evaluations, in Documents.
+     */
+    public static final String EVALUATION_RESULTS_FOLDER_NAME = "GazePlayLearning_Eval";
+
+    /**
+     * @return the Documents folder of the user (the one known to Windows, also when it is moved, else ~/Documents),
+     *   or null if there is none
+     */
+    static File getDocumentsFolder() {
         File documents = null;
         final String documentsForTests = System.getProperty(DOCUMENTS_FOLDER_PROPERTY);
         if (documentsForTests != null && !documentsForTests.isBlank()) {
@@ -98,7 +122,7 @@ public class GazePlayDirectories {
         if (documents == null || !documents.isDirectory()) {
             documents = new File(System.getProperty("user.home"), "Documents");
         }
-        return documents.isDirectory() ? new File(documents, DOCUMENTS_FOLDER_NAME) : null;
+        return documents.isDirectory() ? documents : null;
     }
 
     /**
@@ -149,6 +173,13 @@ public class GazePlayDirectories {
 
     public static File getStatsFolder() {
         return new File(getGazePlayFolder(), "statistics");
+    }
+
+    /**
+     * @return the folder of the evaluations imported from the GazePlay Eval website, shared by all the profiles
+     */
+    public static File getEvaluationsFolder() {
+        return new File(getGazePlayFolder(), "evaluations");
     }
 
     /**
