@@ -820,3 +820,70 @@ réglages du même jour. **Rien n'est commité.** « Eval Test » n'est pas cod�
   retrait du regard dans les menus ; le retrait remet le code de lancement d'une partie à l'identique du commit).
 - **Non vérifié** : un essai réel des deux modes, à la souris et avec l'Eye Tracker 5 (rendu des écrans, une
   évaluation au regard).
+
+## 15. Bilan du 27/10/2026 et suite
+
+### 15.1 Ce qui a été fait aujourd'hui
+
+| Quoi | Où | État |
+|---|---|---|
+| État des lieux de la fusion avec la branche `GazePlayLearning` (Eval) | Sections 1 à 11 | Fait |
+| GazePlay Eval joue les évaluations du site : import du `.zip`, lecteur, 4 modes de passation, résultats versionnés (`formatVersion` 1) dans `Documents\GazePlayLearning_Eval\Eval<n>_<aaaa-mm-jj>\`, carte de chaleur du regard et de la souris par écran | Section 12 | Commit `5751834b6`, poussé |
+| Deux modes au lancement (« Jeux » / « Évaluations »), menu des évaluations avec la fenêtre de choix des évaluations importées, réglages propres à chaque mode, libellés du mainteneur (« Tobii seul », « Autonomie Soutien Oral »…) | Sections 13 et 14 | Commit `65a0d1622`, poussé |
+| Regard dans les menus (`MenuGaze`, réglage `MENU_PROGRESS_INDICATOR`) | 14.3 | Essayé puis **retiré** (erreurs dans les jeux, menu pas adapté à l'oculomètre) |
+| Deux solutions pour libérer vraiment la connexion Tobii du menu (processus séparé, ou déconnexion ajoutée au wrapper) | 14.3 (recommandation) | Expliquées, non codées : sans objet tant que le menu ne lit pas le regard |
+
+- **Vérifications** : `./gradlew build` 462 tests, 0 échec, SpotBugs vert ; `smokeTest` 3/3 ; `allGamesTest` 76/76
+  (avant le retrait du regard des menus, qui remet le lancement d'une partie à l'identique de `5751834b6`).
+- **Testé par le mainteneur** avant le push : les deux modes et une évaluation.
+- **Toujours ouvert** : « Eval Test » (test de configuration, plus tard), anonymisation et RGPD (Q7), règle d'arrêt
+  (Q9).
+- Branche de travail : `addClaudeCode` seulement (rappel du mainteneur : ne pas s'occuper des autres branches, ni des
+  alertes Dependabot de la branche par défaut).
+
+### 15.2 Demain : revoir le graphisme de quatre écrans
+
+Demande du mainteneur : revoir le graphisme du **menu principal**, des **paramètres**, du **choix de l'utilisateur** et
+du **choix du mode**. Ce qui suit est un état des lieux et une méthode ; **rien n'est codé**.
+
+**Les écrans et leur code (faits)**
+
+| Écran | Classes | Taille |
+|---|---|---|
+| Choix du mode | `ui/scenes/modeselect/ModeSelectionContext` | 110 lignes, 6 styles écrits dans le code (`setStyle`) |
+| Choix de l'utilisateur | `ui/scenes/userselect/UserProfileContext` | 737 lignes, 3 `setStyle` |
+| Menu principal des jeux | `ui/scenes/gamemenu/HomeMenuScreen`, cartes `GameMenuFactory` | 535 + 286 lignes, 2 `setStyle` |
+| Menu principal des évaluations | `ui/scenes/evalmenu/EvalMenuScreen`, `EvalChooserDialog` | 194 + 122 lignes, 6 + 2 `setStyle` |
+| Paramètres | `ui/scenes/configuration/ConfigurationContext` | 1 416 lignes, une grille de lignes « libellé : champ », 4 `setStyle` |
+
+- **Styles** : `gazeplay-core/src/main/resources/data/stylesheets/`. `base-light.css` / `base-dark.css` (fond clair ou
+  sombre), un fichier par thème de couleur (`main-*.css`, 7 thèmes dans `BuiltInUiTheme`, **Argent et or** par
+  défaut), et des tailles par largeur d'écran (`base-max-width-0800.css` à `2560`). `CssUtil.setPreferredStylesheets`
+  les applique (12 appels).
+- Réglages liés à l'apparence, à garder (clés persistantes) : thème (`CSS_FILE`), fond clair/sombre, couleur de fond,
+  orientation du menu, fond activé.
+
+**Méthode proposée**
+1. **Voir l'existant** : captures des quatre écrans (thème par défaut, clair et sombre, 1920 et 1366 de large), à
+   regarder avec le mainteneur.
+2. **Choisir une direction** avec le mainteneur (questions ci-dessous), puis une maquette par écran, avant de coder.
+3. **Une base commune** : couleurs, tailles de texte, marges et boutons en classes CSS ; les `setStyle` des nouveaux
+   écrans (mode, évaluations) passent dans les feuilles de style.
+4. **Un écran à la fois**, dans l'ordre : choix du mode, choix de l'utilisateur, menu principal (jeux, puis
+   évaluations), paramètres (le plus gros).
+5. **Vérifier à chaque écran** : `./gradlew build`, `smokeTest`, `allGamesTest`, les 7 thèmes, clair et sombre,
+   plusieurs largeurs d'écran, à la souris.
+
+**Risques**
+- Les feuilles de style sont aussi chargées dans les jeux (`CssUtil`) : changer une classe partagée
+  (`gameChooserButton`, `button`…) peut modifier l'apparence des jeux. Préférer de nouvelles classes propres aux menus.
+- Les tests de la page des paramètres comptent les nœuds de la grille (`ConfigurationContextTest`) : une nouvelle mise
+  en page demandera de les réécrire.
+- Le graphisme ne se vérifie pas dans les tests (Monocle, sans fenêtre) : il faut des essais réels.
+
+**Questions pour le mainteneur (demain)**
+1. Une direction visuelle souhaitée (exemples, couleurs, public : enfants, personnes en situation de handicap) ?
+2. Garder les 7 thèmes de couleur et le choix clair/sombre, ou en réduire le nombre ?
+3. Paramètres : une seule longue page comme aujourd'hui, ou des onglets/rubriques ?
+4. Menu des jeux : garder les cartes et l'orientation horizontale/verticale, les filtres par catégorie, les favoris ?
+5. Page des profils : garder la grille d'images, l'ajout et la modification d'un profil au même endroit ?
