@@ -3,12 +3,17 @@ package net.gazeplay;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
@@ -16,8 +21,12 @@ import net.gazeplay.components.CssUtil;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -53,14 +62,17 @@ public final class MenuScreenshots {
         Files.writeString(new File(gazePlayFolder, "GazePlay.properties").toPath(),
             "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n",
             StandardCharsets.UTF_8);
-        // A second profile, so that the profile page shows a card besides the default one and "Add"
-        final File profile = GazePlayDirectories.getUserProfileDirectory("Camille");
-        if (!profile.isDirectory() && !profile.mkdirs()) {
-            throw new IOException("Cannot create " + profile);
+        // Two more profiles, without and with a picture, besides the default one and "Add"
+        final String settings = "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n";
+        createProfile("Camille", settings);
+        // A name without accent: the settings are written here in UTF-8, GazePlay writes them escaped
+        final File picture = new File(createProfile("Leo", settings), "bear.jpg");
+        try (InputStream image = MenuScreenshots.class.getResourceAsStream("/data/common/default/images/bear.jpg")) {
+            Files.copy(Objects.requireNonNull(image), picture.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
-        Files.writeString(new File(profile, "GazePlay.properties").toPath(),
-            "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n",
-            StandardCharsets.UTF_8);
+        // Forward slashes: a backslash is an escape character in a .properties file
+        Files.writeString(new File(picture.getParentFile(), "GazePlay.properties").toPath(),
+            settings + "USER_PICTURE=" + picture.getAbsolutePath().replace('\\', '/') + "\n", StandardCharsets.UTF_8);
 
         final CompletableFuture<Void> started = new CompletableFuture<>();
         Platform.startup(() -> started.complete(null));
@@ -91,6 +103,18 @@ public final class MenuScreenshots {
                 return null;
             });
             capture(gazePlay, output, "2-profils-" + suffix);
+            if (mode == AppMode.GAMES) {
+                // The windows of the profiles: creating one (Enter on the last card), deleting one (first delete button)
+                captureDialog(gazePlay, output, "2a-profil-nouveau", () -> {
+                    final List<Node> cards = List.copyOf(gazePlay.getPrimaryScene().getRoot()
+                        .lookupAll(".gp-profile-card"));
+                    final Node addCard = cards.get(cards.size() - 1);
+                    addCard.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
+                        false, false));
+                });
+                captureDialog(gazePlay, output, "2b-profil-supprimer", () ->
+                    ((Button) gazePlay.getPrimaryScene().getRoot().lookup(".gp-danger")).fire());
+            }
             onFx(() -> {
                 ActiveConfigurationContext.switchToDefaultUser();
                 gazePlay.onReturnToMenu();
@@ -104,6 +128,42 @@ public final class MenuScreenshots {
             capture(gazePlay, output, "4-parametres-" + suffix);
         }
         System.exit(0);
+    }
+
+    /**
+     * @return the folder of a new profile, with the given settings
+     */
+    private static File createProfile(final String name, final String settings) throws IOException {
+        final File profile = GazePlayDirectories.getUserProfileDirectory(name);
+        if (!profile.isDirectory() && !profile.mkdirs()) {
+            throw new IOException("Cannot create " + profile);
+        }
+        Files.writeString(new File(profile, "GazePlay.properties").toPath(), settings, StandardCharsets.UTF_8);
+        return profile;
+    }
+
+    /**
+     * Opens a window with an action of the page, captures it, then closes it (the page loses its blur effect).
+     */
+    private static void captureDialog(final GazePlay gazePlay, final File output, final String name,
+                                      final Runnable open) throws Exception {
+        onFx(() -> {
+            open.run();
+            return null;
+        });
+        Thread.sleep(SETTLE_MILLIS);
+        final WritableImage image = onFx(() -> {
+            final Stage dialog = (Stage) Window.getWindows().stream()
+                .filter(window -> window != gazePlay.getPrimaryStage() && window.isShowing())
+                .findFirst().orElseThrow();
+            final WritableImage snapshot = dialog.getScene().snapshot(null);
+            dialog.close();
+            gazePlay.getPrimaryScene().getRoot().setEffect(null);
+            return snapshot;
+        });
+        final File file = new File(output, name + ".png");
+        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        System.out.println("Capture : " + file);
     }
 
     private static void capture(final GazePlay gazePlay, final File output, final String name)

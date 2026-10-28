@@ -17,11 +17,224 @@
     -fx-text-fill: -gp-text;
 }
 
-/* Scrolling areas show the background of the screen */
+/* Scrolling areas show the background of the screen (also when the scrolling area is the root of a dialog) */
 
 .gp-menu .scroll-pane,
-.gp-menu .scroll-pane > .viewport {
+.gp-menu .scroll-pane > .viewport,
+.gp-menu.scroll-pane > .viewport {
     -fx-background-color: transparent;
+}
+
+.gp-menu .gp-error {
+    -fx-fill: -gp-danger;
+}
+
+/* Windows of the menus (MenuDialog): a rounded card in a transparent window, with a title and a close button */
+
+/* Room around the card for its shadow */
+.gp-menu.gp-dialog-root {
+    -fx-background-color: transparent;
+    -fx-padding: 24;
+}
+
+.gp-menu .gp-dialog {
+    -fx-background-color: -gp-bg;
+    -fx-background-radius: 24;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 24, 0, 0, 6);
+}
+
+.gp-menu .gp-dialog-header {
+    -fx-alignment: center-left;
+    -fx-padding: 12 12 0 28;
+    -fx-cursor: move;
+}
+
+.gp-menu .gp-dialog-header .button {
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-dialog-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 18pt;
+}
+
+/* Buttons with a text: gp-button plus gp-button-primary (the action), gp-button-secondary or gp-button-danger */
+
+.gp-menu .gp-button {
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-radius: 999;
+    -fx-border-width: 2;
+    -fx-padding: 10 24 10 24;
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 15pt;
+    -fx-graphic-text-gap: 10;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-button-primary {
+    -fx-background-color: -gp-accent;
+    -fx-border-color: -gp-accent;
+    -fx-text-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-button-primary:hover {
+    -fx-background-color: derive(-gp-accent, -10%);
+}
+
+.gp-menu .gp-button-secondary {
+    -fx-background-color: -gp-surface;
+    -fx-border-color: -gp-border;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-button-secondary:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-button-danger {
+    -fx-background-color: -gp-danger;
+    -fx-border-color: -gp-danger;
+    -fx-text-fill: -gp-on-danger;
+}
+
+.gp-menu .gp-button-danger:hover {
+    -fx-background-color: derive(-gp-danger, -10%);
+}
+
+.gp-menu .gp-button:pressed {
+    -fx-translate-y: 1;
+}
+
+.gp-menu .gp-button:focus-visible {
+    -fx-border-color: -gp-text;
+}
+
+/* Text fields */
+
+.gp-menu .text-field {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 8 12 8 12;
+    -fx-text-fill: -gp-text;
+    -fx-prompt-text-fill: -gp-text-muted;
+}
+
+.gp-menu .text-field:focused {
+    -fx-border-color: -gp-accent;
+}
+
+/* Reminder of the chosen mode (profiles page) */
+
+.gp-menu .gp-mode-chip {
+    -fx-background-radius: 999;
+    -fx-padding: 8 20 8 14;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.gp-menu .gp-mode-chip.gp-mode-games {
+    -fx-background-color: -gp-accent;
+}
+
+.gp-menu .gp-mode-chip.gp-mode-evaluations {
+    -fx-background-color: -gp-teal;
+}
+
+.gp-menu .gp-mode-chip .label {
+    -fx-text-fill: -gp-on-accent;
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 15pt;
+}
+
+.gp-menu .gp-mode-chip .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+/* Profiles (UserProfileContext): a card per profile, with a round picture or a colored disc */
+
+.gp-menu .gp-profile-card {
+    -fx-padding: 20 20 16 20;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-profile-card:hover {
+    -fx-background-color: -gp-surface-hover;
+    -fx-border-color: -gp-accent;
+    -fx-translate-y: -4;
+}
+
+.gp-menu .gp-profile-card:focus-visible {
+    -fx-border-color: -gp-accent;
+    -fx-border-width: 4;
+}
+
+/* Two lines, the same height on every card: the cards of a row stay aligned */
+.gp-menu .gp-profile-name {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 16pt;
+    -fx-padding: 12 0 0 0;
+    -fx-min-height: 70;
+    -fx-pref-height: 70;
+    -fx-max-height: 70;
+}
+
+.gp-menu .gp-avatar-shape.gp-avatar-accent {
+    -fx-fill: -gp-accent;
+}
+
+.gp-menu .gp-avatar-shape.gp-avatar-teal {
+    -fx-fill: -gp-teal;
+}
+
+.gp-menu .gp-avatar-shape.gp-avatar-violet {
+    -fx-fill: -gp-violet;
+}
+
+.gp-menu .gp-avatar-shape.gp-avatar-sky {
+    -fx-fill: -gp-sky;
+}
+
+.gp-menu .gp-avatar .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+/* The card creating a profile: a dashed circle with a plus */
+
+.gp-menu .gp-avatar-shape.gp-avatar-new {
+    -fx-fill: -gp-bg;
+    -fx-stroke: -gp-text-muted;
+    -fx-stroke-width: 3;
+    -fx-stroke-type: inside;
+    -fx-stroke-dash-array: 12 10;
+}
+
+.gp-menu .gp-avatar.gp-avatar-new .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+/* Edit and delete buttons next to a profile */
+
+.gp-menu .gp-icon-button.gp-profile-action {
+    -fx-background-color: -gp-surface;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-padding: 8;
+}
+
+.gp-menu .gp-icon-button.gp-profile-action:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-icon-button.gp-profile-action:focus-visible {
+    -fx-border-color: -gp-accent;
 }
 
 .gp-menu .scroll-bar .thumb {

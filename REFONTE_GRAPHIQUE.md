@@ -1,8 +1,8 @@
 # Refonte graphique des menus — état des lieux et plan
 
-Rédigé le 27/10/2026, branche `addClaudeCode`. Travail commencé le 28/10/2026 : étapes 0, 1 et 2 faites (section 8),
-en attente du retour du mainteneur sur l'écran du choix du mode. Ce document sert de référence à chaque étape et sera
-complété au fur et à mesure.
+Rédigé le 27/10/2026, branche `addClaudeCode`. Travail commencé le 28/10/2026 : étapes 0 à 2 validées et commitées,
+étape 3 (profils) faite, en attente du retour du mainteneur (section 8). Ce document sert de référence à chaque étape
+et sera complété au fur et à mesure.
 
 Écrans concernés : **choix du mode**, **choix de l'utilisateur** (profils), **menu principal** (jeux et évaluations),
 **paramètres**.
@@ -328,6 +328,55 @@ haut de la fenêtre était un peu coupé.
   (`GazePlayModeTest.shouldCenterTheWindowOnlyWhenLeavingTheFullScreen`) ; `build` réussi, **463 tests, 0 échec**.
 - **Hypothèse à confirmer par un essai réel** : Monocle n'a pas de vrai plein écran, la correction n'est vérifiée que
   par le test et la lecture du code.
+
+Étapes 0 à 2 et correction du plein écran : commit `1703ea4b5` (28/10/2026, à la demande du mainteneur).
+
+### 8.3 bis Étape 3 — profils (28/10/2026)
+
+Fonctionnement inchangé (décision du mainteneur) : mêmes cartes dans une grille, mêmes fenêtres de création,
+modification et suppression, mêmes contrôles dans le même ordre. Seule l'apparence change.
+
+- **Page** : plus de `setStyle` (fond, bordure blanche et ombre noire écrits dans le code). En haut à droite :
+  « Changer de mode » (bouton secondaire avec icône) et quitter (disque rouge, comme le choix du mode). Au centre :
+  logo statique (l'animé n'est plus utilisé ici), **puce du mode** (icône et nom, orange pour Games, turquoise pour
+  Eval), titre « Choisissez un profil » (nouvelle clé `ProfileChoose`, anglais et français), puis les cartes.
+- **Cartes** : surface arrondie, image ronde, nom centré sur deux lignes au plus (plus de coupure à 20 caractères),
+  même largeur et même hauteur pour toutes. Sans photo, un disque coloré avec une icône : profil par défaut en
+  orange avec une personne et un engrenage, autres profils en turquoise, violet ou bleu ciel selon leur nom (toujours
+  la même couleur pour un même profil), « Ajouter » en cercle pointillé avec un plus. Les images
+  `DefaultUser.png`, `ConfigUser.png` et `AddUser.png` ne servent plus (à retirer à l'étape 7).
+- **Modifier et supprimer** : boutons ronds avec icônes (crayon ; corbeille rouge) et infobulles, à côté de la carte
+  comme avant.
+- **Clavier** : une carte de profil prend le focus et se choisit avec Entrée ou Espace (avant : souris seulement).
+- **Fenêtres** : au style des menus (fond, police, champ de texte arrondi, boutons « pilule » : Ok en accent,
+  « Oui (supprimer) » en rouge, les autres secondaires) ; Ok est le bouton par défaut (Entrée). Message « déjà
+  utilisé » en rouge par la feuille de style.
+- **Correction en passant** : annuler le choix d'une image (fenêtre de fichiers fermée) levait une
+  `NullPointerException` ; c'est maintenant sans effet.
+- **`lookupProfilePicture`** renvoie `null` sans photo (au lieu de l'image par défaut) : la carte montre alors le
+  disque coloré. Rien ne change dans les réglages enregistrés.
+- **Tests** (`UserProfileContextTest`) : adaptés aux nouveaux composants (avatar, boutons, barre du haut) ; ajoutés :
+  retour au choix du mode, disque coloré sans photo. **Constat** : `shouldLookupProfilePicture` lisait un fichier
+  absent (`src/test/resources/bear.jpg` n'existe pas dans `gazeplay-core`) et ne passait que grâce à l'image par
+  défaut ; il lit maintenant une vraie image des ressources.
+- **Captures** : l'outil crée un profil avec photo (« Leo ») et capture aussi les fenêtres de création et de
+  suppression (`2a-profil-nouveau`, `2b-profil-supprimer`, mode Jeux). Regardées en clair 1366 et 800, sombre 1920.
+- **Vérifications** : `build` réussi, `smokeTest` réussi : **468 tests, 0 échec** (465 + 3 lancements).
+  `allGamesTest` non relancé : seules des règles sous `.gp-menu` ont changé.
+
+**Retour du mainteneur (28/10/2026)** : page et contenu des fenêtres validés, mais le cadre des fenêtres (barre de
+titre de Windows, style `UTILITY`, croix rouge) « fait tâche ».
+- **`MenuDialog`** (nouveau composant, `ui/menus`) : fenêtre sans cadre système (`StageStyle.TRANSPARENT`), dessinée
+  comme une carte arrondie avec une ombre ; en haut, le titre de la fenêtre (Fredoka) et un bouton rond de fermeture
+  (icône Material « close », infobulle « Fermer », nouvelle clé `Close`). La fenêtre se déplace en tirant son titre ;
+  Échap la ferme. Fermer retire aussi le flou de la page. Servira aux fenêtres des variantes et des évaluations.
+- Fenêtres des profils : hauteur à leur contenu (plus de hauteur minimale d'un tiers de l'écran, qui laissait un grand
+  vide dans la fenêtre de suppression) ; largeur minimale d'un tiers de la fenêtre, comme avant.
+- Test ajouté : la fenêtre est sans cadre et son bouton la ferme, retire le flou et ne supprime rien. Il utilise
+  `WaitForAsyncUtils.asyncFx(...).get()` : **constat**, les autres tests des fenêtres de ce fichier vérifient dans
+  `Platform.runLater`, où une assertion qui échoue ne fait pas échouer le test (à corriger à part).
+- `build` et `smokeTest` réussis : **469 tests, 0 échec**. Captures `etape3b` regardées (clair 1366, sombre 1920).
+- **À vérifier sur la vraie machine** : fenêtre transparente sous Windows (ombre, coins), déplacement par le titre.
 
 ### 8.4 Vérifications
 

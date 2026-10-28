@@ -1,6 +1,7 @@
 package net.gazeplay.ui.scenes.userselect;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.collections.FXCollections;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
@@ -12,17 +13,18 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -34,9 +36,11 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.util.Collections;
@@ -117,6 +121,8 @@ class UserProfileContextTest {
         MockitoAnnotations.initMocks(this);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> screenDimension);
         when(mockGazePlay.getPrimaryStage()).thenReturn(mockStage);
+        // The static logo follows the height of the window
+        when(mockStage.heightProperty()).thenReturn(new ReadOnlyDoubleWrapper(1080).getReadOnlyProperty());
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockTranslator.translate(anyString())).thenReturn("UserName");
@@ -151,24 +157,29 @@ class UserProfileContextTest {
         assertEquals(3, panel.getChildren().size()); // Should render Default, New User and test1
     }
 
+    /**
+     * An existing picture. Formerly a missing file (src/test/resources/bear.jpg does not exist here), which passed only
+     * because the default picture was returned.
+     */
     @Test
-    void shouldLookupProfilePicture() {
-        when(mockConfig.getUserPicture()).thenReturn(localDataFolder + "bear.jpg");
+    void shouldLookupProfilePicture() throws URISyntaxException {
+        File picture = new File(getClass().getResource("/data/common/default/images/bear.jpg").toURI());
+        when(mockConfig.getUserPicture()).thenReturn(picture.getAbsolutePath());
 
         ImagePattern result = UserProfileContext.lookupProfilePicture(mockConfig);
 
         assertNotNull(result.getImage());
     }
 
+    /**
+     * No picture, or a missing file: none (the card then shows a colored disc with an icon).
+     */
     @Test
-    void shouldGetDefaultProfilePicture() {
+    void shouldGetNoProfilePicture() {
         when(mockConfig.getUserPicture()).thenReturn(null).thenReturn("someOtherFile.png");
 
-        ImagePattern result1 = UserProfileContext.lookupProfilePicture(mockConfig);
-        ImagePattern result2 = UserProfileContext.lookupProfilePicture(mockConfig);
-
-        assertTrue(result1.getImage().getUrl().contains("DefaultUser.png"));
-        assertTrue(result2.getImage().getUrl().contains("DefaultUser.png"));
+        assertNull(UserProfileContext.lookupProfilePicture(mockConfig));
+        assertNull(UserProfileContext.lookupProfilePicture(mockConfig));
     }
 
     /**
@@ -176,14 +187,57 @@ class UserProfileContextTest {
      * and exists: the screen of the profiles failed when opening it as an image (AccessDeniedException on Windows).
      */
     @Test
-    void shouldGetDefaultProfilePictureForAnEmptyValueOrAFolder() {
+    void shouldGetNoProfilePictureForAnEmptyValueOrAFolder() {
         when(mockConfig.getUserPicture()).thenReturn("").thenReturn(localDataFolder);
 
-        ImagePattern result1 = UserProfileContext.lookupProfilePicture(mockConfig);
-        ImagePattern result2 = UserProfileContext.lookupProfilePicture(mockConfig);
+        assertNull(UserProfileContext.lookupProfilePicture(mockConfig));
+        assertNull(UserProfileContext.lookupProfilePicture(mockConfig));
+    }
 
-        assertTrue(result1.getImage().getUrl().contains("DefaultUser.png"));
-        assertTrue(result2.getImage().getUrl().contains("DefaultUser.png"));
+    /**
+     * @return the content of a window of the page, in the card drawn by MenuDialog (below the title and close button)
+     */
+    private static ScrollPane contentOf(Stage dialog) {
+        return (ScrollPane) dialog.getScene().getRoot().lookup(".scroll-pane");
+    }
+
+    /**
+     * The windows are drawn in the look of the menus, without the frame of the system: their own close button closes
+     * them and removes the blur of the page.
+     */
+    @Test
+    void shouldCloseAWindowWithItsOwnButton() throws Exception {
+        UserProfileContext context = new UserProfileContext(mockGazePlay);
+        BorderPane page = new BorderPane();
+        page.setEffect(new BoxBlur());
+        when(mockStage.getScene()).thenReturn(mockScene);
+        when(mockScene.getRoot()).thenReturn(page);
+
+        FlowPane choicePanel = new FlowPane();
+        User user = new User("test");
+        choicePanel.getChildren().add(user);
+
+        // asyncFx(...).get(): a failed assertion fails the test (not with Platform.runLater)
+        WaitForAsyncUtils.asyncFx(() -> {
+            Stage result = context.createRemoveDialog(mockStage, choicePanel, user, () -> screenDimension);
+            assertEquals(StageStyle.TRANSPARENT, result.getStyle());
+            result.show();
+
+            Button close = (Button) result.getScene().getRoot().lookup(".gp-dialog-header .gp-icon-button");
+            close.fire();
+
+            assertFalse(result.isShowing());
+            assertNull(page.getEffect());
+            // Nothing deleted
+            assertTrue(choicePanel.getChildren().contains(user));
+        }).get();
+    }
+
+    /**
+     * @return the circle of the picture of a profile card: a Rectangle with rounded corners, first in its avatar
+     */
+    private static Rectangle pictureOf(BorderPane content) {
+        return (Rectangle) ((StackPane) content.getCenter()).getChildren().get(0);
     }
 
     @Test
@@ -196,7 +250,7 @@ class UserProfileContextTest {
         User result = context.createUser(mockGazePlay, choicePanel, "Default User",
             imagePattern, false, false, screenDimension);
         BorderPane content = (BorderPane) result.getChildren().get(0);
-        Rectangle picture = (Rectangle) content.getCenter();
+        Rectangle picture = pictureOf(content);
 
         assertEquals("Default User", result.getName());
         assertNotNull(picture.getFill());
@@ -222,15 +276,15 @@ class UserProfileContextTest {
         User result = context.createUser(mockGazePlay, choicePanel, "Test User",
             imagePattern, true, false, screenDimension);
         BorderPane content = (BorderPane) result.getChildren().get(0);
-        Rectangle picture = (Rectangle) content.getCenter();
+        Rectangle picture = pictureOf(content);
         VBox buttonBox = (VBox) result.getChildren().get(1);
-        BorderPane editButton = (BorderPane) buttonBox.getChildren().get(0);
-        BorderPane deleteButton = (BorderPane) buttonBox.getChildren().get(1);
+        Button editButton = (Button) buttonBox.getChildren().get(0);
+        Button deleteButton = (Button) buttonBox.getChildren().get(1);
 
         assertEquals("Test User", result.getName());
-        assertNotNull(picture.getFill());
-        assertTrue(deleteButton.getStyleClass().containsAll(List.of("gameChooserButton", "button")));
-        assertTrue(editButton.getStyleClass().containsAll(List.of("gameChooserButton", "button")));
+        assertEquals(imagePattern, picture.getFill());
+        assertTrue(deleteButton.getStyleClass().containsAll(List.of("gp-profile-action", "gp-danger")));
+        assertTrue(editButton.getStyleClass().contains("gp-profile-action"));
 
         try (MockedStatic<BackgroundMusicManager> musicManager = mockStatic(BackgroundMusicManager.class, CALLS_REAL_METHODS);
              MockedStatic<ActiveConfigurationContext> configurationContext = mockStatic(ActiveConfigurationContext.class, CALLS_REAL_METHODS)) {
@@ -255,7 +309,7 @@ class UserProfileContextTest {
         User result = context.createUser(mockGazePlay, choicePanel, "Add User",
             imagePattern, false, true, screenDimension);
         BorderPane content = (BorderPane) result.getChildren().get(0);
-        Rectangle picture = (Rectangle) content.getCenter();
+        Rectangle picture = pictureOf(content);
 
         assertEquals("Add User", result.getName());
         assertNotNull(picture.getFill());
@@ -279,15 +333,42 @@ class UserProfileContextTest {
     @Test
     void shouldCreateExitButton() {
         UserProfileContext context = new UserProfileContext(mockGazePlay);
-        BorderPane topPane = (BorderPane) context.getRoot().getTop();
-        HBox topRightPane = (HBox) topPane.getRight();
+        HBox topBar = (HBox) context.getRoot().getTop();
 
-        // After the button changing the mode
-        CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(1);
+        // After the space and the button changing the mode
+        Button exitButton = (Button) topBar.getChildren().get(2);
+        assertTrue(exitButton.getStyleClass().contains("gp-quit"));
 
-        exitButton.fireEvent(TestingUtils.clickOnTarget(exitButton));
+        exitButton.fire();
 
         verify(mockGazePlay).quit();
+    }
+
+    @Test
+    void shouldGoBackToTheChoiceOfTheMode() {
+        UserProfileContext context = new UserProfileContext(mockGazePlay);
+        HBox topBar = (HBox) context.getRoot().getTop();
+
+        ((Button) topBar.getChildren().get(1)).fire();
+
+        verify(mockGazePlay).goToModePage();
+    }
+
+    /**
+     * Without picture, a profile shows a colored disc (a color class on the circle) with an icon.
+     */
+    @Test
+    void shouldShowAColoredDiscWithoutPicture() {
+        UserProfileContext context = new UserProfileContext(mockGazePlay);
+        FlowPane choicePanel = new FlowPane();
+
+        User result = context.createUser(mockGazePlay, choicePanel, "Test User", null, true, false, screenDimension);
+        BorderPane content = (BorderPane) result.getChildren().get(0);
+        StackPane avatar = (StackPane) content.getCenter();
+
+        assertEquals(2, avatar.getChildren().size());
+        assertTrue(pictureOf(content).getStyleClass().stream().anyMatch(c -> c.startsWith("gp-avatar-")
+            && !c.equals("gp-avatar-shape")));
     }
 
     @Test
@@ -305,7 +386,7 @@ class UserProfileContextTest {
 
         Platform.runLater(() -> {
             Stage result = context.createRemoveDialog(mockStage, choicePanel, user, () -> screenDimension);
-            ScrollPane scroller = (ScrollPane) result.getScene().getRoot();
+            ScrollPane scroller = contentOf(result);
             HBox choicePane = (HBox) scroller.getContent();
             assertEquals(2, choicePane.getChildren().size());
 
@@ -338,7 +419,7 @@ class UserProfileContextTest {
 
         Platform.runLater(() -> {
             Stage result = context.createDialog(mockGazePlay, mockStage, choicePanel, user, false, screenDimension);
-            ScrollPane scroller = (ScrollPane) result.getScene().getRoot();
+            ScrollPane scroller = contentOf(result);
             VBox choicePane = (VBox) scroller.getContent();
             HBox imageField = (HBox) choicePane.getChildren().get(0);
 
@@ -368,7 +449,7 @@ class UserProfileContextTest {
 
         Platform.runLater(() -> {
             Stage result = context.createDialog(mockGazePlay, mockStage, choicePanel, user, true, screenDimension);
-            ScrollPane scroller = (ScrollPane) result.getScene().getRoot();
+            ScrollPane scroller = contentOf(result);
             VBox choicePane = (VBox) scroller.getContent();
             HBox imageField = (HBox) choicePane.getChildren().get(0);
             HBox nameField = (HBox) choicePane.getChildren().get(1);
@@ -415,7 +496,7 @@ class UserProfileContextTest {
 
         Platform.runLater(() -> {
             Stage result = context.createDialog(mockGazePlay, mockStage, choicePanel, user, true, screenDimension);
-            ScrollPane scroller = (ScrollPane) result.getScene().getRoot();
+            ScrollPane scroller = contentOf(result);
             VBox choicePane = (VBox) scroller.getContent();
             HBox imageField = (HBox) choicePane.getChildren().get(0);
             HBox nameField = (HBox) choicePane.getChildren().get(1);
