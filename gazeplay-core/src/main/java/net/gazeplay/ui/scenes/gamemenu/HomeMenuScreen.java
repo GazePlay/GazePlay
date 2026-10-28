@@ -1,21 +1,20 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.animation.*;
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,15 +26,16 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
-import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.ui.I18NText;
-import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.menus.MenuDialog;
+import net.gazeplay.ui.menus.MenuIcon;
+import net.gazeplay.ui.menus.MenuStyle;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,33 +45,64 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * The menu of the games: the cards of the games (favorites first), the search bar and the category filters, the buttons
- * to quit, change the user, open the settings and replay a game, and the music controls.
+ * The menu of the games (look of the menus, menus.css, REFONTE_GRAPHIQUE.md 4.3):
+ * <ul>
+ *     <li>a top bar: the logo, the search bar, then the profile (a click goes back to the profiles), replay, settings,
+ *     full screen and quit;</li>
+ *     <li>the categories as switches (chips), saved in the HIDDEN_CATEGORIES setting, after a "Favorites" switch
+ *     showing only the favorite games;</li>
+ *     <li>the cards of the games; arrows above and below scroll the list while the pointer is on them;</li>
+ *     <li>a bottom bar: the music controls, the number of games and the version (opening the licence).</li>
+ * </ul>
  */
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
+
+    private static final double LOGO_HEIGHT = 64;
+
+    /**
+     * Below this width of the window, the top bar has no logo.
+     */
+    private static final double NARROW_WIDTH = 1100;
+
+    /**
+     * Below this height of the window, no scroll arrows nor statistics and version.
+     */
+    private static final double LOW_HEIGHT = 720;
 
     private final SoundManager soundManager;
 
     private final GameMenuFactory gameMenuFactory;
 
-    private FlowPane choicePanel;
+    private final ThumbnailImage thumbnailImage;
 
-    private List<Node> gameCardsList;
-    private List<Node> favGameCardsList;
+    /**
+     * The cards of all the games, in the order of the catalog.
+     */
+    private List<GameButtonPane> gameCardsList;
+
+    private FlowPane allGamesPanel;
+    private Label noGameLabel;
+    private TextField searchBar;
+
+    /**
+     * Whether the "Favorites" switch shows only the favorite games.
+     */
+    private boolean onlyFavorites;
+
+    /**
+     * Kept here: the setting holds it weakly.
+     */
+    private InvalidationListener favoritesListener;
 
     public GamesStatisticsPane gamesStatisticsPane;
-    public CheckBox checkBox;
     private ScrollPane choicePanelScroller;
-    private CustomButton MiddleUpArrowButton;
-    private CustomButton MiddleDownArrowButton;
     @Getter
     private Label errorMessageLabel;
     @Getter
     private StackPane errorMessage;
     @Getter
     private VBox centerPanel;
-    private ThumbnailImage thumbnailImage;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -85,143 +116,58 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.thumbnailImage = new ThumbnailImage();
 
         gazeplayHomeMenuScreen(gazePlay, gamesLocator);
-
     }
 
     /**
      * Builds the menu.
      */
     public void gazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
-
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        CustomButton exitButton = createExitButton(screenDimension);
-        CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
-
-        ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        HBox leftControlPane = QuickControlPanel.getInstance().createQuickControlPanel(gazePlay, getMusicControl(), configurationButton, config);
-
-        I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
-
-        HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
-        rightControlPane.setAlignment(Pos.CENTER);
-        rightControlPane.getChildren().add(toggleFullScreenButton);
+        MenuStyle.applyTo(root);
+        final Translator translator = gazePlay.getTranslator();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         // The evaluations have their own menu (mode "Evaluations"); a replay may concern any entry of the catalog
-        final List<GameSpec> allGames = gamesLocator.listGames(gazePlay.getTranslator());
+        final List<GameSpec> allGames = gamesLocator.listGames(translator);
         final List<GameSpec> games = AppMode.GAMES.filter(allGames);
 
-        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, allGames);
+        searchBar = buildSearchBar(config, translator);
+        final Node gamePickerChoicePane = createGamePickerChoicePane(games, config, translator);
 
-        I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
-        I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
-        I18NTooltip tooltipLogoutOptions = new I18NTooltip(gazePlay.getTranslator(), "Options");
-        I18NTooltip tooltipReplay = new I18NTooltip(gazePlay.getTranslator(), "Replay");
-
-        I18NTooltip.install(exitButton, tooltipExit);
-        I18NTooltip.install(logoutButton, tooltipLogout);
-        I18NTooltip.install(configurationButton, tooltipLogoutOptions);
-        I18NTooltip.install(replayGameButton, tooltipReplay);
-
-        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isDarkThemeEnabled());
-
-        MiddleDownArrowButton = createDownArrowButton(screenDimension);
-        VBox downArrowPane = new VBox();
-        downArrowPane.setAlignment(Pos.CENTER);
-        downArrowPane.getChildren().add(MiddleDownArrowButton);
-        AnimationTimer scrollDownTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
-            }
-        };
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-
-        BorderPane bottomPane = new BorderPane();
-        bottomPane.setLeft(leftControlPane);
-        bottomPane.setCenter(gamesStatisticsPane);
-        bottomPane.setRight(rightControlPane);
-        bottomPane.setTop(downArrowPane);
-
-        Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
-
-        StackPane topLogoPane = new StackPane();
-        topLogoPane.setPadding(new Insets(15, 15, 15, 15));
-        topLogoPane.getChildren().add(logo);
-
-        HBox topRightPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
-        topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
-
-        ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
-        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
-
-        centerPanel = new VBox();
-        centerPanel.setSpacing(40);
+        final Node upArrow = createArrow(MenuIcon.ARROW_UP, -0.002);
+        final Node downArrow = createArrow(MenuIcon.ARROW_DOWN, 0.002);
+        centerPanel = new VBox(upArrow, gamePickerChoicePane, downArrow);
         centerPanel.setAlignment(Pos.TOP_CENTER);
-        centerPanel.getChildren().add(gamePickerChoicePane);
+        VBox.setVgrow(gamePickerChoicePane, Priority.ALWAYS);
 
-        final MenuBar menuBar = MenuUtils.buildMenuBar();
+        final Node logo = LogoFactory.getInstance().createLogoStatic(LOGO_HEIGHT);
+        final VBox top = new VBox(createTopBar(gazePlay, translator, allGames, logo),
+            buildCategoryFilters(config, translator));
 
-        MiddleUpArrowButton = createUpArrowButton(screenDimension);
-        VBox upArrowPane = new VBox();
-        upArrowPane.setAlignment(Pos.CENTER);
-        upArrowPane.getChildren().add(MiddleUpArrowButton);
-        AnimationTimer scrollUpTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
-            }
-        };
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        final StackPane centerStackPane = new StackPane(centerPanel, createErrorMessage());
 
-        VBox topBotPane = new VBox();
-        topBotPane.setAlignment(Pos.CENTER);
-        topBotPane.getChildren().add(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
-        topBotPane.getChildren().add(upArrowPane);
+        final String userName = ActiveConfigurationContext.getInstance().getUserName();
+        gamesStatisticsPane = new GamesStatisticsPane(translator, games,
+            userName == null || userName.isEmpty() ? translator.translate("DefaultUser") : userName);
+        final Node bottomInfo = createBottomInfo(gazePlay, translator);
 
-        BorderPane topPane = new BorderPane();
-        topPane.setTop(menuBar);
-        topPane.setRight(topRightPane);
-        topPane.setCenter(topLogoPane);
-        topPane.setBottom(topBotPane);
-
-        StackPane centerStackPane = new StackPane();
-        errorMessage = new StackPane();
-        Rectangle errorBackground = new Rectangle();
-        errorBackground.setFill(new Color(1, 0, 0, 0.75));
-        errorMessageLabel = new Label("Error message goes here");
-        errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
-        errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
-        errorMessage.getChildren().addAll(errorBackground, errorMessageLabel);
-        centerStackPane.getChildren().add(centerPanel);
-        centerStackPane.getChildren().add(errorMessage);
-
-        errorMessage.setOnMouseClicked((event) -> {
-            final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
-            opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
-            this.centerPanel.setEffect(null);
-            opacityTimeline.play();
-        });
-
-        errorMessage.setOpacity(0);
-        errorMessage.setMouseTransparent(true);
-
-        root.setTop(topPane);
-        root.setBottom(bottomPane);
+        root.setTop(top);
         root.setCenter(centerStackPane);
+        root.setBottom(createBottomBar(translator, config, bottomInfo));
+        adaptToSmallWindows(logo, upArrow, downArrow, bottomInfo);
+    }
+
+    /**
+     * Keeps the menu usable down to 800 x 600: the logo of the top bar is hidden on a narrow window, the arrows and the
+     * information of the bottom bar on a low one (the music stays).
+     */
+    private void adaptToSmallWindows(final Node logo, final Node... hiddenWhenLow) {
+        root.widthProperty().addListener((observable, oldValue, newValue) ->
+            setShown(logo, newValue.doubleValue() >= NARROW_WIDTH));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+            for (final Node node : hiddenWhenLow) {
+                setShown(node, newValue.doubleValue() >= LOW_HEIGHT);
+            }
+        });
     }
 
     @Override
@@ -230,85 +176,130 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the scrolling pane of the cards of the games
+     * @return the top bar: logo, search bar, profile, replay, settings, full screen, quit
+     */
+    private HBox createTopBar(final GazePlay gazePlay, final Translator translator, final List<GameSpec> allGames,
+                              final Node logo) {
+        final StackPane searchIcon = MenuIcon.SEARCH.create(24);
+        final HBox search = new HBox(8, searchIcon, searchBar);
+        search.getStyleClass().add("gp-search");
+        search.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(searchBar, Priority.ALWAYS);
+        search.setMaxWidth(420);
+        HBox.setHgrow(search, Priority.SOMETIMES);
+
+        final Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        // Filled round buttons in color, like quit, with their tooltip (maintainer's feedback of 28/10/2026); the
+        // logout goes back to the profiles, the current profile being shown at the bottom right
+        final Button replayButton = MenuStyle.roundButton(MenuIcon.REPLAY, "teal", translator.translate("Replay"),
+            () -> replayGame(gazePlay, allGames));
+        final Button settingsButton = MenuStyle.roundButton(MenuIcon.SETTINGS, "sky", translator.translate("Options"),
+            gazePlay::onDisplayConfigurationManagement);
+        final Button fullScreenButton = createFullScreenButton(gazePlay, translator);
+        final Button logoutButton = MenuStyle.roundButton(MenuIcon.LOGOUT, "accent", translator.translate("Logout"),
+            gazePlay::goToUserPage);
+        final Button exitButton = MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit);
+
+        final HBox topBar = new HBox(logo, search, spacer, replayButton, settingsButton, fullScreenButton,
+            logoutButton, exitButton);
+        topBar.getStyleClass().add("gp-top-bar");
+        return topBar;
+    }
+
+    /**
+     * @return the button switching the full screen, its icon and tooltip following the state of the window
+     */
+    private static Button createFullScreenButton(final GazePlay gazePlay, final Translator translator) {
+        final Button button = MenuStyle.roundButton(MenuIcon.FULLSCREEN, "violet", "", gazePlay::toggleFullScreen);
+        final Runnable update = () -> {
+            final boolean fullScreen = gazePlay.isFullScreen();
+            button.setGraphic((fullScreen ? MenuIcon.FULLSCREEN_EXIT : MenuIcon.FULLSCREEN).create(40));
+            final String text = translator.translate(fullScreen ? "Exit FullScreen" : "Enter FullScreen");
+            button.setText(text);
+            button.getTooltip().setText(text);
+        };
+        update.run();
+        gazePlay.getFullScreenProperty().addListener((observable, oldValue, newValue) -> update.run());
+        return button;
+    }
+
+    /**
+     * @return an arrow scrolling the games while the pointer (or the gaze) is on it, and by a page on a click
+     */
+    private Node createArrow(final MenuIcon icon, final double step) {
+        final Button arrow = MenuStyle.iconButton(icon, "", () -> choicePanelScroller.setVvalue(
+            choicePanelScroller.getVvalue() + Math.signum(step) * pageStep()));
+        arrow.getStyleClass().add("gp-scroll-arrow");
+        arrow.setFocusTraversable(false);
+        arrow.setTooltip(null);
+        final AnimationTimer scrollTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + step);
+            }
+        };
+        arrow.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollTimer.start());
+        arrow.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollTimer.stop());
+        arrow.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollTimer.start());
+        arrow.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollTimer.stop());
+        final StackPane pane = new StackPane(arrow);
+        pane.setPadding(new Insets(4));
+        return pane;
+    }
+
+    /**
+     * @return the part of the list scrolled by a click on an arrow: the height of the visible part
+     */
+    private double pageStep() {
+        final double content = choicePanelScroller.getContent().getBoundsInLocal().getHeight();
+        final double viewport = choicePanelScroller.getViewportBounds().getHeight();
+        return content <= viewport ? 0 : viewport / (content - viewport) * 0.8;
+    }
+
+    /**
+     * @return the scrolling pane of the cards of the games, with a message when none is shown
      */
     private ScrollPane createGamePickerChoicePane(
-        List<GameSpec> games,
+        final List<GameSpec> games,
         final Configuration config,
-        final ProgressIndicator dwellTimeIndicator
+        final Translator translator
     ) {
-        gameCardsList = createGameCardsList(games, config, dwellTimeIndicator);
-        favGameCardsList = createFavGameCardsList(games, config, dwellTimeIndicator);
+        final GameButtonOrientation orientation = GameButtonOrientation.fromConfig(config);
+        gameCardsList = new ArrayList<>();
+        for (final GameSpec gameSpec : games) {
+            gameCardsList.add(createGameCard(config, gameSpec, translator, orientation));
+        }
 
-        final int flowpaneGap = 20;
-        choicePanel = new FlowPane();
-        choicePanel.setAlignment(Pos.CENTER);
-        choicePanel.setHgap(flowpaneGap);
-        choicePanel.setVgap(flowpaneGap);
-        choicePanel.setPadding(new Insets(20, 60, 20, 60));
+        allGamesPanel = new FlowPane(20, 20);
+        allGamesPanel.setAlignment(Pos.TOP_CENTER);
+        noGameLabel = new Label(translator.translate("NoGameFound"));
+        noGameLabel.getStyleClass().add("gp-subtitle");
+        noGameLabel.setWrapText(true);
 
-        choicePanel.getChildren().addAll(gameCardsList);
+        final VBox content = new VBox(12, allGamesPanel, noGameLabel);
+        content.setAlignment(Pos.TOP_CENTER);
+        content.setPadding(new Insets(16, 48, 32, 48));
 
-        choicePanelScroller = new ScrollPane(choicePanel);
+        choicePanelScroller = new ScrollPane(content);
         choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
+        choicePanelScroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, new GameCardVisiblePredicate(config));
+        // With the "Favorites" switch, a game whose heart is clicked appears or disappears at once
+        favoritesListener = observable -> filterGames(config, translator);
+        config.getFavoriteGamesProperty().addListener(new WeakInvalidationListener(favoritesListener));
 
+        filterGames(config, translator);
         return choicePanelScroller;
-    }
-
-    /**
-     * @return the cards of all the games
-     */
-    private List<Node> createGameCardsList(
-        List<GameSpec> games,
-        final Configuration config,
-        final ProgressIndicator dwellTimeIndicator
-    ) {
-        final Translator translator = getGazePlay().getTranslator();
-        final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
-
-        final List<Node> gameCardsList = new ArrayList<>();
-
-        for (GameSpec gameSpec : games) {
-            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
-            gameCardsList.add(gameCard);
-        }
-        return gameCardsList;
-    }
-
-    /**
-     * @return the cards of the favorite games
-     */
-    private List<Node> createFavGameCardsList(
-        List<GameSpec> games,
-        final Configuration config,
-        final ProgressIndicator dwellTimeIndicator
-    ) {
-        final Translator translator = getGazePlay().getTranslator();
-        final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
-
-        List<GameSpec> filteredFavList = games.stream()
-            .filter(gameSpec -> (isFavorite(gameSpec, config)))
-            .collect(Collectors.toList());
-
-        final List<Node> favGameCardsList = new ArrayList<>();
-
-        for (GameSpec gameSpec : filteredFavList) {
-            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
-            favGameCardsList.add(gameCard);
-        }
-
-        return favGameCardsList;
     }
 
     /**
      * @return the card of a game
      */
-    private GameButtonPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator, GameButtonOrientation gameButtonOrientation, final ProgressIndicator dwellTimeIndicator) {
-
-        GameButtonPane gameCard = gameMenuFactory.createGameButton(
+    private GameButtonPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator,
+                                          GameButtonOrientation gameButtonOrientation) {
+        return gameMenuFactory.createGameButton(
             getGazePlay(),
             root,
             config,
@@ -316,79 +307,168 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             gameSpec,
             gameButtonOrientation,
             thumbnailImage);
-
-        return gameCard;
     }
 
     /**
-     * Shows the cards of the games of the visible categories (favorites first) that match the search bar.
+     * Shows the cards of the games of the visible categories that match the search bar; with the "Favorites" switch,
+     * only the favorite games (no row of their own: maintainer's decision of 28/10/2026).
      */
-    private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, List<Node> completeFavGameCardsList, Configuration config, ProgressIndicator dwellTimeIndicator, Predicate<Node> gameCardPredicate) {
-        List<Node> filteredList = completeGameCardsList
-            .stream()
-            .filter(gameCardPredicate)
+    private void filterGames(final Configuration config, final Translator translator) {
+        final Predicate<GameButtonPane> visible = new GameCardVisiblePredicate(config).and(card ->
+            translator.translate(card.getGameSpec().getGameSummary().getNameCode()).toLowerCase()
+                .contains(searchBar.getText().toLowerCase()));
+
+        final List<GameButtonPane> shownGames = gameCardsList.stream().filter(visible)
+            .filter(card -> !onlyFavorites || isFavorite(card.getGameSpec(), config))
             .collect(Collectors.toList());
 
-        List<Node> filteredFavList = completeFavGameCardsList
-            .stream()
-            .filter(gameCardPredicate)
-            .collect(Collectors.toList());
+        allGamesPanel.getChildren().setAll(shownGames);
+        noGameLabel.setText(translator.translate(onlyFavorites ? "NoFavoriteGame" : "NoGameFound"));
+        setShown(noGameLabel, shownGames.isEmpty());
+    }
 
-        choicePanel.getChildren().clear();
-
-        Separator s = new Separator();
-        s.minWidthProperty().bind(choicePanel.widthProperty().multiply(0.9));
-
-        choicePanel.getChildren().addAll(filteredFavList);
-        choicePanel.getChildren().add(s);
-        choicePanel.getChildren().addAll(filteredList);
+    private static void setShown(final Node node, final boolean shown) {
+        node.setVisible(shown);
+        node.setManaged(shown);
     }
 
     /**
      * @return the search bar, filtering the games by their translated name as it is typed
      */
-    private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
+    private TextField buildSearchBar(Configuration config, Translator translator) {
         TextField gameSearchBar = new TextField();
         Utils.addTextLimiter(gameSearchBar, 32);
-
+        gameSearchBar.setPromptText(translator.translate("SearchGame"));
         gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             log.debug(newValue);
-            filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, node -> {
-                GameButtonPane gameButtonPane = (GameButtonPane) node;
-                return (new GameCardVisiblePredicate(config)).test(node) &&
-                    translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(newValue.toLowerCase());
-            });
+            filterGames(config, translator);
         });
-
         return gameSearchBar;
     }
 
     /**
-     * @return the search bar and one check box per category, saved in the HIDDEN_CATEGORIES setting
+     * @return one switch (chip) per category, with its icon; the hidden categories are saved in the HIDDEN_CATEGORIES
+     * setting
      */
-    private HBox buildFilterByCategory(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
-
-
-        TextField searchBar = buildSearchBar(config, translator, dwellTimeIndicator);
-        searchBar.maxWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
-        searchBar.prefWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
-        searchBar.minWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
-
-        List<CheckBox> allCheckBoxes = new ArrayList<>();
-        for (GameCategories.Category category : GameCategories.Category.values()) {
-            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList, searchBar, dwellTimeIndicator);
-            allCheckBoxes.add(checkBox);
-
-        }
-
-
-        HBox categoryFilters = new HBox(10);
+    private FlowPane buildCategoryFilters(Configuration config, Translator translator) {
+        final FlowPane categoryFilters = new FlowPane(10, 10);
+        categoryFilters.getStyleClass().add("gp-chips");
         categoryFilters.setAlignment(Pos.CENTER);
-        categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-        categoryFilters.getChildren().add(searchBar);
-        categoryFilters.getChildren().addAll(allCheckBoxes);
-
+        categoryFilters.getChildren().add(buildFavoritesChip(config, translator));
+        for (GameCategories.Category category : GameCategories.Category.values()) {
+            categoryFilters.getChildren().add(buildCategoryChip(category, config, translator));
+        }
         return categoryFilters;
+    }
+
+    /**
+     * @return the switch showing only the favorite games (maintainer's feedback of 28/10/2026), off at each start of
+     * the menu: not saved, unlike the categories
+     */
+    private ToggleButton buildFavoritesChip(Configuration config, Translator translator) {
+        final ToggleButton chip = new ToggleButton(translator.translate("FavoriteGames"),
+            MenuIcon.FAVORITE_FILLED.create(20));
+        chip.getStyleClass().addAll("gp-chip", "gp-chip-favorites");
+        chip.setTooltip(MenuStyle.tooltip(translator.translate("FavoriteOnly")));
+        chip.selectedProperty().addListener((o) -> {
+            onlyFavorites = chip.isSelected();
+            filterGames(config, translator);
+        });
+        return chip;
+    }
+
+    /**
+     * @return the switch showing or hiding the games of a category
+     */
+    private ToggleButton buildCategoryChip(GameCategories.Category category, Configuration config, Translator translator) {
+        final ToggleButton chip = new ToggleButton(translator.translate(category.getGameCategory()),
+            GameMenuFactory.categoryIcon(category).create(20));
+        chip.getStyleClass().addAll("gp-chip", GameMenuFactory.categoryStyleClass(category));
+        chip.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
+        chip.selectedProperty().addListener((o) -> {
+            if (chip.isSelected()) {
+                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
+            } else {
+                config.getHiddenCategoriesProperty().add(category.getGameCategory());
+            }
+            filterGames(config, translator);
+        });
+        return chip;
+    }
+
+    /**
+     * @return the number of games and the version (opening the licence)
+     */
+    private VBox createBottomInfo(final GazePlay gazePlay, final Translator translator) {
+        final Button versionButton = new Button(MenuUtils.versionText(), MenuIcon.INFO.create(20));
+        versionButton.getStyleClass().add("gp-link");
+        versionButton.setTooltip(MenuStyle.tooltip(translator.translate("License")));
+        versionButton.setOnAction(e -> showLicense(gazePlay, translator));
+
+        final VBox info = new VBox(6, gamesStatisticsPane, versionButton);
+        info.setAlignment(Pos.BOTTOM_RIGHT);
+        return info;
+    }
+
+    /**
+     * @return the bottom bar: music and volumes on the left, information on the right
+     */
+    private HBox createBottomBar(final Translator translator, final Configuration config, final Node info) {
+        final Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        final HBox bottomBar = new HBox(16,
+            getMusicControl().createMusicControlPane(),
+            getMusicControl().createVolumeLevelControlPane(config, translator),
+            spacer, info);
+        bottomBar.getStyleClass().add("gp-bottom-bar");
+        return bottomBar;
+    }
+
+    /**
+     * Shows the licence of GazePlay Learning in a window of the menus.
+     */
+    private void showLicense(final GazePlay gazePlay, final Translator translator) {
+        final TextArea text = new TextArea(MenuUtils.licenseText());
+        text.setEditable(false);
+        text.setWrapText(true);
+        text.setPrefSize(720, 480);
+        text.getStyleClass().add("gp-license");
+        final VBox content = new VBox(text);
+        content.setPadding(new Insets(16, 24, 24, 24));
+
+        final Stage dialog = new Stage();
+        dialog.initOwner(gazePlay.getPrimaryStage());
+        MenuDialog.undecorate(dialog);
+        dialog.setTitle(translator.translate("License"));
+        dialog.setScene(MenuDialog.createScene(dialog, content, translator.translate("Close"), dialog::close));
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), dialog.getScene(),
+            gazePlay.getCurrentScreenDimensionSupplier());
+        dialog.show();
+    }
+
+    /**
+     * @return the message shown over the games when a replay is not possible; a click hides it
+     */
+    private StackPane createErrorMessage() {
+        errorMessageLabel = new Label("Error message goes here");
+        errorMessageLabel.setWrapText(true);
+        errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
+        final StackPane card = new StackPane(errorMessageLabel);
+        card.getStyleClass().add("gp-error-card");
+        card.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+        errorMessage = new StackPane(card);
+        errorMessage.setOnMouseClicked((event) -> {
+            final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
+            opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
+            this.centerPanel.setEffect(null);
+            opacityTimeline.play();
+        });
+        errorMessage.setOpacity(0);
+        errorMessage.setMouseTransparent(true);
+        return errorMessage;
     }
 
     /**
@@ -399,137 +479,46 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the button quitting GazePlay
+     * Asks for a replayData.json file and replays its game, if replayable (see {@code ReplayingGameFromJson});
+     * otherwise shows a message over the games.
      */
-    private CustomButton createExitButton(Dimension2D screenDimension) {
-        CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> getGazePlay().quit());
-        return exitButton;
-    }
-
-    /**
-     * @return the button going back to the user selection page
-     */
-    private CustomButton createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
-        CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
-        logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
-        return logoutButton;
-    }
-
-    /**
-     * @return the button scrolling the games up
-     */
-    private CustomButton createUpArrowButton(Dimension2D screenDimension){
-        CustomButton upArrowButton = new CustomButton("data/common/images/arrow-up.png", screenDimension);
-        return upArrowButton;
-    }
-
-    /**
-     * @return the button scrolling the games down
-     */
-    private CustomButton createDownArrowButton(Dimension2D screenDimension){
-        CustomButton downArrowButton = new CustomButton("data/common/images/arrow-down.png", screenDimension);
-        return downArrowButton;
-    }
-
-    /**
-     * @return the button asking for a replayData.json file and replaying its game, if replayable (see
-     *   {@code ReplayingGameFromJson})
-     */
-    private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
-        CustomButton replayButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
-        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            try {
-                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getGameMenuController().getGameContextFactory(), games);
-                replayingGame.pickJSONFile(replayingGame.getFileName());
-                if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
-                    replayingGame.replayGame();
-                } else if (replayingGame.getCurrentGameNameCode() != null) {
-                    Translator translator = gazePlay.getTranslator();
-                    this.errorMessageLabel.setText(
-                        translator.translate("SorryButReplayInvalid")
-                            .replace("{}", translator.translate(replayingGame.getCurrentGameNameCode()))
-                            .replace("\\n", "\n"));
-                    this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
-                    ColorAdjust colorAdjust = new ColorAdjust();
-                    colorAdjust.setBrightness(-0.8);
-                    this.centerPanel.setEffect(colorAdjust);
-                    errorMessage.setOpacity(1);
-                    errorMessage.setMouseTransparent(false);
-                }
-            } catch (IOException ex) {
-                log.warn("Cannot open the folder", ex);
+    private void replayGame(final GazePlay gazePlay, final List<GameSpec> games) {
+        try {
+            ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getGameMenuController().getGameContextFactory(), games);
+            replayingGame.pickJSONFile(replayingGame.getFileName());
+            if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
+                replayingGame.replayGame();
+            } else if (replayingGame.getCurrentGameNameCode() != null) {
+                Translator translator = gazePlay.getTranslator();
+                this.errorMessageLabel.setText(
+                    translator.translate("SorryButReplayInvalid")
+                        .replace("{}", translator.translate(replayingGame.getCurrentGameNameCode()))
+                        .replace("\\n", "\n"));
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setBrightness(-0.6);
+                this.centerPanel.setEffect(colorAdjust);
+                errorMessage.setOpacity(1);
+                errorMessage.setMouseTransparent(false);
             }
-        });
-        return replayButton;
-    }
-
-    /**
-     * @return the check box showing or hiding the games of a category
-     */
-    private CheckBox buildCategoryCheckBox(
-        GameCategories.Category category,
-        Configuration config,
-        Translator translator,
-        FlowPane choicePanel,
-        List<Node> gameCardsList,
-        TextField searchBar,
-        ProgressIndicator dwellTimeIndicator
-    ) {
-        I18NText label = new I18NText(translator, category.getGameCategory());
-        CheckBox categoryCheckbox = new CheckBox(label.getText());
-
-        categoryCheckbox.setTextFill(Color.GRAY);
-        categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
-        categoryCheckbox.selectedProperty().addListener((o) -> {
-            if (categoryCheckbox.isSelected()) {
-                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
-            } else {
-                config.getHiddenCategoriesProperty().add(category.getGameCategory());
-            }
-            filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, node -> {
-                GameButtonPane gameButtonPane = (GameButtonPane) node;
-                return (new GameCardVisiblePredicate(config)).test(node) &&
-                    translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(searchBar.getText().toLowerCase());
-            });
-        });
-        return categoryCheckbox;
+        } catch (IOException ex) {
+            log.warn("Cannot open the folder", ex);
+        }
     }
 
     /**
      * Keeps the cards of the games having at least one visible category.
      */
     @AllArgsConstructor
-    private static class GameCardVisiblePredicate implements Predicate<Node> {
+    private static class GameCardVisiblePredicate implements Predicate<GameButtonPane> {
 
         private final Configuration config;
 
         @Override
-        public boolean test(Node node) {
-            GameButtonPane gameButtonPane = (GameButtonPane) node;
+        public boolean test(GameButtonPane gameButtonPane) {
             SortedSet<GameCategories.Category> gameCategories = gameButtonPane.getGameSpec().getGameSummary().getCategories();
             List<@NonNull String> gameCategoriesNames = gameCategories.stream().map(GameCategories.Category::getGameCategory).collect(Collectors.toList());
             return !config.getHiddenCategoriesProperty().containsAll(gameCategoriesNames);
         }
 
-    }
-
-    @Override
-    public void setUpOnStage(final Scene scene) {
-        super.setUpOnStage(scene);
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        if (config.isDarkThemeEnabled()) {
-            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-            gamesStatisticsPane.setAllLabelsStyleDark();
-        } else {
-            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: black;");
-            gamesStatisticsPane.setAllLabelsStyleLight();
-        }
     }
 }

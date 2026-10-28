@@ -220,6 +220,325 @@
     -fx-fill: -gp-text-muted;
 }
 
+/* Menu of the games (HomeMenuScreen, GameMenuFactory) */
+
+.gp-menu .gp-search {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 4 16 4 14;
+    -fx-min-width: 160;
+}
+
+.gp-menu .gp-search .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+/* The field inside the rounded box: no box of its own */
+.gp-menu .gp-search .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 0 6 0;
+}
+
+.gp-menu .gp-chips {
+    -fx-padding: 0 24 8 24;
+}
+
+/* A color per category (chips and icons of the cards): -gp-category-color, set by gp-cat-* below */
+
+.gp-menu .gp-cat-action_reaction { -gp-category-color: -gp-accent; }
+.gp-menu .gp-cat-selection { -gp-category-color: -gp-sky; }
+.gp-menu .gp-cat-memorization { -gp-category-color: -gp-violet; }
+.gp-menu .gp-cat-logic_maths { -gp-category-color: -gp-teal; }
+.gp-menu .gp-cat-literacy { -gp-category-color: -gp-danger; }
+.gp-menu .gp-cat-multimedia { -gp-category-color: -gp-gold; }
+.gp-menu .gp-chip-favorites { -gp-category-color: -gp-danger; }
+
+/* Category switch: shown (selected), the color of its category; hidden, greyed */
+.gp-menu .gp-chip {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 6 16 6 12;
+    -fx-text-fill: -gp-text-muted;
+    -fx-font-size: 13pt;
+    -fx-graphic-text-gap: 8;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-chip .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-chip:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-chip:selected {
+    -fx-background-color: -gp-surface;
+    -fx-border-color: -gp-category-color;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-chip:selected .gp-icon-shape {
+    -fx-fill: -gp-category-color;
+}
+
+.gp-menu .gp-chip:focus-visible {
+    -fx-border-color: -gp-text;
+}
+
+.gp-menu .gp-icon-button.gp-scroll-arrow {
+    -fx-padding: 2 24 2 24;
+}
+
+.gp-menu .gp-icon-button.gp-scroll-arrow .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-game-card {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 20;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 16, 0, 0, 4);
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-game-card:hover {
+    -fx-background-color: -gp-surface-hover;
+    -fx-border-color: -gp-accent;
+    -fx-translate-y: -4;
+}
+
+.gp-menu .gp-game-card:focus-visible {
+    -fx-border-color: -gp-accent;
+    -fx-border-width: 4;
+}
+
+.gp-menu .gp-game-thumbnail {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-game-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 14pt;
+    -fx-max-height: 50;
+}
+
+/* Room on the right for the heart, in the top right corner */
+.gp-menu .gp-game-card-horizontal .gp-game-title {
+    -fx-padding: 0 40 0 0;
+}
+
+/* Two lines at most, then an ellipsis */
+.gp-menu .gp-game-description {
+    -fx-font-size: 11pt;
+    -fx-text-fill: -gp-text-muted;
+    -fx-max-height: 42;
+}
+
+.gp-menu .gp-game-category .gp-icon-shape {
+    -fx-fill: -gp-category-color;
+}
+
+.gp-menu .gp-replay-dot.gp-replay-yes {
+    -fx-fill: -gp-teal;
+}
+
+.gp-menu .gp-replay-dot.gp-replay-no {
+    -fx-fill: -gp-border;
+}
+
+/* The heart of a card, always shown (maintainer's feedback of 28/10/2026): grey, red for a favorite */
+.gp-menu .gp-favorite {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-padding: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 8, 0, 0, 2);
+}
+
+.gp-menu .gp-favorite .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-favorite:hover .gp-icon-shape,
+.gp-menu .gp-favorite .gp-favorite-filled .gp-icon-shape {
+    -fx-fill: -gp-danger;
+}
+
+.gp-menu .gp-bottom-bar {
+    -fx-padding: 8 24 16 24;
+    -fx-alignment: bottom-left;
+}
+
+.gp-menu .gp-stats .label {
+    -fx-text-fill: -gp-text-muted;
+    -fx-font-size: 12pt;
+}
+
+.gp-menu .gp-stats .gp-stats-value {
+    -fx-text-fill: -gp-text;
+    -fx-font-family: "Fredoka SemiBold";
+}
+
+/* A button looking like a link (version and licence) */
+.gp-menu .gp-link {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 2 4 2 4;
+    -fx-text-fill: -gp-text-muted;
+    -fx-font-size: 11pt;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-link .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-link:hover {
+    -fx-underline: true;
+}
+
+.gp-menu .gp-error-card {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 20;
+    -fx-border-color: -gp-danger;
+    -fx-border-width: 3;
+    -fx-border-radius: 20;
+    -fx-padding: 24 32 24 32;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 24, 0, 0, 6);
+}
+
+/* Music and volumes (MusicControl, also used in the games: styled here for the menus only) */
+
+.gp-menu .titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0 0 4 4;
+}
+
+.gp-menu .titled-pane > .title > .text {
+    -fx-fill: -gp-text-muted;
+}
+
+.gp-menu .titled-pane > .title .label {
+    -fx-text-fill: -gp-text-muted;
+    -fx-font-size: 11pt;
+}
+
+.gp-menu .titled-pane > .content {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 16;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 16;
+    -fx-padding: 8 12 8 12;
+}
+
+/* Light in both themes: the images of these buttons are dark drawings */
+.gp-menu .titled-pane > .content .button {
+    -fx-background-color: -gp-media-button;
+    -fx-background-insets: 0;
+    -fx-background-radius: 999;
+    -fx-cursor: hand;
+}
+
+.gp-menu .titled-pane > .content .button:hover {
+    -fx-background-color: derive(-gp-media-button, -8%);
+}
+
+/* The title of the music (MarqueeText): a Text without style class */
+.gp-menu .titled-pane > .content Text {
+    -fx-fill: -gp-text;
+}
+
+.gp-menu .gp-license {
+    -fx-font-size: 11pt;
+}
+
+.gp-menu .text-area,
+.gp-menu .text-area .content {
+    -fx-background-color: -gp-surface;
+    -fx-text-fill: -gp-text;
+}
+
+/* Window of the variants (GameVariantDialog) */
+
+.gp-menu .gp-dialog-prompt {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 20pt;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.gp-menu .gp-variant {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 16;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 16;
+    -fx-padding: 8 12 8 12;
+    -fx-text-fill: -gp-text;
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 13pt;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 10, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-variant:hover {
+    -fx-background-color: -gp-surface-hover;
+    -fx-border-color: -gp-accent;
+}
+
+.gp-menu .gp-variant:focus-visible {
+    -fx-border-color: -gp-accent;
+    -fx-border-width: 4;
+}
+
+/* The groups of variants: radio buttons drawn as switches */
+.gp-menu .gp-variant-groups .radio-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 6 16 6 16;
+    -fx-text-fill: -gp-text-muted;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-variant-groups .radio-button > .radio {
+    -fx-padding: 0;
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+}
+
+.gp-menu .gp-variant-groups .radio-button:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-variant-groups .radio-button:selected {
+    -fx-background-color: -gp-accent;
+    -fx-border-color: -gp-accent;
+    -fx-text-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-variant-groups .radio-button:focus-visible {
+    -fx-border-color: -gp-text;
+}
+
 /* Edit and delete buttons next to a profile */
 
 .gp-menu .gp-icon-button.gp-profile-action {
@@ -292,6 +611,46 @@
 
 .gp-menu .gp-icon-button.gp-danger .gp-icon-shape {
     -fx-fill: -gp-danger;
+}
+
+/* Filled round buttons (MenuStyle.roundButton), next to quit: a color each */
+
+.gp-menu .gp-round-teal { -gp-round-color: -gp-teal; }
+.gp-menu .gp-round-sky { -gp-round-color: -gp-sky; }
+.gp-menu .gp-round-violet { -gp-round-color: -gp-violet; }
+.gp-menu .gp-round-accent { -gp-round-color: -gp-accent; }
+
+.gp-menu .gp-icon-button.gp-round {
+    -fx-background-color: -gp-round-color;
+    -fx-padding: 14;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 16, 0, 0, 4);
+}
+
+.gp-menu .gp-icon-button.gp-round .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-icon-button.gp-round:hover {
+    -fx-background-color: derive(-gp-round-color, -12%);
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
+}
+
+.gp-menu .gp-icon-button.gp-round:pressed {
+    -fx-background-color: derive(-gp-round-color, -24%);
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+/* Tooltips of the menus: the popup takes the styles of its control */
+.gp-menu .tooltip {
+    -fx-background-color: -gp-text;
+    -fx-background-radius: 10;
+    -fx-text-fill: -gp-bg;
+    -fx-font-family: "Andika";
+    -fx-font-size: 13pt;
+    -fx-padding: 8 12 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
 }
 
 /* Quit GazePlay (MenuStyle.quitButton): a filled red disc, to be seen at once */

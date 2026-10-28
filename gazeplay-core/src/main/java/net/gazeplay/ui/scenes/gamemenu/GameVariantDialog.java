@@ -12,11 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
@@ -26,15 +24,16 @@ import net.gazeplay.commons.gamevariants.*;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.menus.MenuDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import java.util.HashMap;
 
-import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
-
 /**
  * Window of the variants of a game, opened from the menu: one button per variant. For some games the variants are
- * grouped (sizes, difficulties, modes...), radio buttons choosing the group shown; Train Switches also asks for its
- * number of trains.
+ * grouped (sizes, difficulties, modes...), switches above the variants choosing the group shown; Train Switches also
+ * asks for its number of trains.
+ * <p>
+ * Look of the menus ({@link MenuDialog}): the name of the game and a close button at the top, no frame of the system.
  */
 @Slf4j
 public class GameVariantDialog extends Stage {
@@ -53,7 +52,12 @@ public class GameVariantDialog extends Stage {
     ) {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
-        initStyle(StageStyle.UTILITY);
+        MenuDialog.undecorate(this);
+        final Runnable cancel = () -> {
+            close();
+            primaryStage.getScene().getRoot().setEffect(null);
+            root.setDisable(false);
+        };
         setOnCloseRequest(windowEvent -> {
             primaryStage.getScene().getRoot().setEffect(null);
             root.setDisable(false);
@@ -85,37 +89,35 @@ public class GameVariantDialog extends Stage {
             numberBox.getChildren().add(numberField);
         }
 
-        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 36; -fx-text-fill: black; -fx-padding: 60 0 0 0";
-
         I18NLabel chooseVariantPromptLabel = new I18NLabel(gazePlay.getTranslator(), chooseVariantPromptLabelTextKey);
-        chooseVariantPromptLabel.setStyle(labelStyle);
+        chooseVariantPromptLabel.getStyleClass().add("gp-dialog-prompt");
 
-        VBox topPane = new VBox();
+        VBox topPane = new VBox(16);
         topPane.setAlignment(Pos.CENTER);
+        topPane.setPadding(new Insets(8, 24, 16, 24));
         topPane.getChildren().add(chooseVariantPromptLabel);
 
         BorderPane sceneContentPane = new BorderPane();
         sceneContentPane.setTop(topPane);
         sceneContentPane.setCenter(centerPane);
+        sceneContentPane.setPadding(new Insets(0, 8, 24, 8));
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final Translator translator = gazePlay.getTranslator();
 
-        HBox bottom = new HBox();
-        bottom.prefWidthProperty().bind(sceneContentPane.widthProperty());
-        bottom.setAlignment(Pos.CENTER);
-        bottom.setSpacing(50);
-        bottom.setPadding(new Insets(0, 0, 50, 0));
+        // The groups of variants, if any: switches above the variants
+        FlowPane groups = new FlowPane(10, 10);
+        groups.getStyleClass().add("gp-variant-groups");
+        groups.setAlignment(Pos.CENTER);
 
         for (IGameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
 
             Button button = new Button(variant.getLabel(translator));
-            button.getStyleClass().add("gameChooserButton");
-            button.getStyleClass().add("gameVariation");
-            button.getStyleClass().add("button");
+            button.getStyleClass().add("gp-variant");
 
             button.wrapTextProperty().setValue(true);
+            button.setTextAlignment(TextAlignment.CENTER);
 
             button.setMinWidth(primaryStage.getWidth() / 15);
             button.setMinHeight(primaryStage.getHeight() / 15);
@@ -385,7 +387,7 @@ public class GameVariantDialog extends Stage {
                 for (int i = 0; i < categories.length; i++) {
                     int index = i;
                     categories[i].setToggleGroup(group);
-                    bottom.getChildren().add(categories[i]);
+                    groups.getChildren().add(categories[i]);
                     categories[i].setOnAction(actionEvent -> {
                         if (easyMode != index) {
                             easyMode = index;
@@ -395,7 +397,9 @@ public class GameVariantDialog extends Stage {
                 }
 
                 categories[0].setSelected(true);
-                sceneContentPane.setBottom(bottom);
+                if (!topPane.getChildren().contains(groups)) {
+                    topPane.getChildren().add(groups);
+                }
             }
 
 
@@ -415,16 +419,17 @@ public class GameVariantDialog extends Stage {
                     gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
                 }
             };
-            button.addEventHandler(MOUSE_CLICKED, event);
+            // A click, Enter or Space
+            button.setOnAction(event::handle);
         }
 
-        Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
+        Scene scene = MenuDialog.createScene(this, sceneContentPane, translator.translate("Close"), cancel);
 
         CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
 
         setScene(scene);
-        setWidth(primaryStage.getWidth() / 2);
-        setHeight(primaryStage.getHeight() / 2);
+        setWidth(primaryStage.getWidth() * 0.6);
+        setHeight(primaryStage.getHeight() * 0.65);
     }
 
     /**

@@ -36,6 +36,17 @@ ModeGames,,,,,,,GazePlay Learning Games,,GazePlay Learning Games,,,,,,,,,,,,
 ModeEvaluations,,,,,,,GazePlay Learning Eval,,GazePlay Learning Eval,,,,,,,,,,,,
 ModeChange,,,,,,,Change mode,,Changer de mode,,,,,,,,,,,,
 ProfileChoose,,,,,,,Choose a profile,,Choisissez un profil,,,,,,,,,,,,
+CurrentProfile,,,,,,,Profile,,Profil,,,,,,,,,,,,
+SearchGame,,,,,,,Search for a game,,Rechercher un jeu,,,,,,,,,,,,
+FavoriteGames,,,,,,,Favorites,,Favoris,,,,,,,,,,,,
+FavoriteAdd,,,,,,,Add to favorites,,Ajouter aux favoris,,,,,,,,,,,,
+FavoriteRemove,,,,,,,Remove from favorites,,Retirer des favoris,,,,,,,,,,,,
+ReplayAvailable,,,,,,,Can be replayed,,Peut être rejoué,,,,,,,,,,,,
+ReplayUnavailable,,,,,,,Cannot be replayed yet,,Ne peut pas encore être rejoué,,,,,,,,,,,,
+NoGameFound,,,,,,,No game found,,Aucun jeu trouvé,,,,,,,,,,,,
+FavoriteOnly,,,,,,,Show only the favorite games,,Afficher seulement les jeux favoris,,,,,,,,,,,,
+NoFavoriteGame,,,,,,,No favorite game yet: click on the heart of a game to add it,,Pas encore de jeu favori : cliquez sur le cœur d'un jeu pour l'ajouter,,,,,,,,,,,,
+License,,,,,,,License,,Licence,,,,,,,,,,,,
 EvalLaunch,,,,,,,Launch an evaluation,,Lancer une évaluation,,,,,,,,,,,,
 EvalChoose,,,,,,,Choose the evaluation,,Choisissez l'évaluation,,,,,,,,,,,,
 EvalCount,,,,,,,{0} evaluation(s) imported,,{0} évaluation(s) importée(s),,,,,,,,,,,,
@@ -301,7 +312,7 @@ games variants count,Numri i varianteve të lojës,عدد متغيرات الل�
 Options,Cilësimet,إعدادات,Налады,设置,Einstellungen,Ρυθμίσεις,Options,asetukset,Réglages,समायोजन,postavke,Pengaturan,Impostazioni,設定,Instellingen,Ustawienia,Definições,Настройки,Ajustes,Cài đặt,tetapan
 BackToMenu,Kthehu në menunë kryesore,العودة إلى القائمة الرئيسية,Назад у галоўнае меню,返回主菜单,Zurück zum Home-Menü,Επιστροφή στο αρχικό μενού,Back to home menu,Takaisin kotivalikkoon,Retour au menu principal,होम मेनू पर वापस जाएं,Povratak na početni izbornik,Kembali ke menu rumah,Torna al menu principale,ホームメニューに戻る,Terug naar hoofdmenu,Powrót do menu głównego,Voltar ao menu inicial,Назад в главное меню,Volver al menú de inicio,Quay lại menu chính,Kembali ke menu utama
 Replay,Përsëritje,اعادتها,Паўтор,重播,Wiederholung,Επανάληψη,Replay,Uusinta,Rejouer,फिर से खेलना,Replay,Memutar ulang,Rigiocare,リプレイ,Herhaling,Powtórna rozgrywka,Repetir,Повтор,Repetición,phát lại,Main semula
-Logout,Shkyç,تسجيل خروج,Выйсці з сістэмы,登出,Ausloggen,Αποσύνδεση,Logout,Kirjautua ulos,Déconnection,लॉग आउट,Odjavite se,Keluar,Disconnettersi,ログアウト,Uitloggen,Wyloguj,Sair,Выйти,Cerrar sesión,Đăng xuất,Log keluar
+Logout,Shkyç,تسجيل خروج,Выйсці з сістэмы,登出,Ausloggen,Αποσύνδεση,Logout,Kirjautua ulos,Déconnexion,लॉग आउट,Odjavite se,Keluar,Disconnettersi,ログアウト,Uitloggen,Wyloguj,Sair,Выйти,Cerrar sesión,Đăng xuất,Log keluar
 Exit,Dilni,مخرج,Выхад,出口,Ausgang,Εξοδος,Exit,Poistu,Quitter,बाहर निकलना,Izlaz,Keluar,Uscita,出口,Uitgang,Wyjście,Saída,Выход,Salida,Lối ra,Keluar
 Loading...,,,Загрузка,,,,Loading...,,Chargement...,,,,,,,,,Загрузка,,,
 

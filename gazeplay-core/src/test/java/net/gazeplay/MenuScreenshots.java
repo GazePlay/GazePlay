@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -17,6 +18,7 @@ import javafx.stage.Window;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.scenes.gamemenu.GameButtonPane;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -59,8 +61,10 @@ public final class MenuScreenshots {
         if (!gazePlayFolder.isDirectory() && !gazePlayFolder.mkdirs()) {
             throw new IOException("Cannot create " + gazePlayFolder);
         }
+        // Two favorite games, so that the menu shows its favorites row
         Files.writeString(new File(gazePlayFolder, "GazePlay.properties").toPath(),
-            "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n",
+            "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n"
+                + "FAVORITE_GAMES=Ninja,Simon\n",
             StandardCharsets.UTF_8);
         // Two more profiles, without and with a picture, besides the default one and "Add"
         final String settings = "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n";
@@ -121,6 +125,37 @@ public final class MenuScreenshots {
                 return null;
             });
             capture(gazePlay, output, "3-menu-" + suffix);
+            if (mode == AppMode.GAMES) {
+                // Only the favorite games ("Favorites" switch)
+                onFx(() -> {
+                    ((ToggleButton) gazePlay.getPrimaryScene().getRoot().lookup(".gp-chip-favorites")).setSelected(true);
+                    return null;
+                });
+                capture(gazePlay, output, "3c-menu-jeux-favoris");
+                onFx(() -> {
+                    ((ToggleButton) gazePlay.getPrimaryScene().getRoot().lookup(".gp-chip-favorites")).setSelected(false);
+                    return null;
+                });
+                // The window of the variants of a game with groups of variants (Enter on its card)
+                captureDialog(gazePlay, output, "3a-variantes-ninja", () -> {
+                    final Node card = gazePlay.getPrimaryScene().getRoot().lookupAll(".gp-game-card").stream()
+                        .filter(node -> "Ninja".equals(((GameButtonPane) node).getGameSpec().getGameSummary()
+                            .getNameCode()))
+                        .findFirst().orElseThrow();
+                    card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
+                        false, false));
+                });
+                // The other orientation of the cards: the menu is built again when the mode is chosen again
+                onFx(() -> {
+                    gazePlay.chooseMode(mode);
+                    ActiveConfigurationContext.switchToDefaultUser();
+                    ActiveConfigurationContext.getInstance().setMenuButtonsOrientation("VERTICAL");
+                    gazePlay.onReturnToMenu();
+                    ActiveConfigurationContext.getInstance().setMenuButtonsOrientation("HORIZONTAL");
+                    return null;
+                });
+                capture(gazePlay, output, "3b-menu-jeux-vertical");
+            }
             onFx(() -> {
                 gazePlay.onDisplayConfigurationManagement();
                 return null;
@@ -159,6 +194,7 @@ public final class MenuScreenshots {
             final WritableImage snapshot = dialog.getScene().snapshot(null);
             dialog.close();
             gazePlay.getPrimaryScene().getRoot().setEffect(null);
+            gazePlay.getPrimaryScene().getRoot().setDisable(false);
             return snapshot;
         });
         final File file = new File(output, name + ".png");

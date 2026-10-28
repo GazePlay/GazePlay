@@ -5,94 +5,101 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.transform.Scale;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * The icons of the menus: Material Symbols Rounded (Apache License 2.0, see data/icons/MaterialSymbols-LICENSE.txt),
  * drawn as vectors, so sharp at any size and colored by the stylesheet (style class {@code gp-icon-shape}). The games
  * keep their PNG images.
  * <p>
- * Each path is the one of the "24px" SVG file of the icon, in a 960 x 960 box ({@code viewBox="0 -960 960 960"}).
+ * Each icon is the unchanged "24px" SVG file of Material Symbols in data/icons ({@code _fill1}: the filled variant), a
+ * single path in a 960 x 960 box ({@code viewBox="0 -960 960 960"}), read once.
  */
 public enum MenuIcon {
 
-    POWER("M440-480v-320q0-17 11.5-28.5T480-840q17 0 28.5 11.5T520-800v320q0 17-11.5 28.5T480-440q-17 0-28.5-11.5"
-        + "T440-480Zm40 360q-74 0-139.5-28.5T226-226q-49-49-77.5-114.5T120-480q0-69 25.5-132.5T217-726q11-12 28-12t29 12q11"
-        + " 11 10 27.5T272-669q-34 38-53 86.5T200-480q0 116 82 198t198 82q117 0 198.5-82T760-480q0-54-19-103.5T687-671q-11"
-        + "-12-11.5-28t10.5-27q12-12 29-12t28 12q47 50 72 113.5T840-480q0 74-28.5 139.5t-77 114.5q-48.5 49-114 77.5T480-120Z"),
-
+    POWER("power_settings_new"),
     /**
-     * A game controller (filled): the mode of the games.
+     * A game controller: the mode of the games.
      */
-    GAMES("M182-200q-51 0-79-35.5T82-322l42-300q9-60 53.5-99T282-760h396q60 0 104.5 39t53.5 99l42 300q7 51-21 86.5T778"
-        + "-200q-21 0-39-7.5T706-230l-90-90H344l-90 90q-15 15-33 22.5t-39 7.5Zm498-240q17 0 28.5-11.5T720-480q0-17-11.5"
-        + "-28.5T680-520q-17 0-28.5 11.5T640-480q0 17 11.5 28.5T680-440Zm-80-120q17 0 28.5-11.5T640-600q0-17-11.5-28.5T600"
-        + "-640q-17 0-28.5 11.5T560-600q0 17 11.5 28.5T600-560Zm-290 50v40q0 13 8.5 21.5T340-440q13 0 21.5-8.5T370-470v-40h40"
-        + "q13 0 21.5-8.5T440-540q0-13-8.5-21.5T410-570h-40v-40q0-13-8.5-21.5T340-640q-13 0-21.5 8.5T310-610v40h-40q-13 0"
-        + "-21.5 8.5T240-540q0 13 8.5 21.5T270-510h40Z"),
-
+    GAMES("sports_esports_fill1"),
     /**
-     * A clipboard with a check mark (filled): the mode of the evaluations.
+     * A clipboard with a check mark: the mode of the evaluations.
      */
-    EVALUATIONS("m424-430-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l114 114q12 12 28 12t28-12l226-226q11-11 11-28t-11"
-        + "-28q-11-11-28-11t-28 11L424-430ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t"
-        + "68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm280-670q13 0 21.5-8.5T510"
-        + "-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790Z"),
-
-    SWAP("m233-320 75 75q11 11 11 27.5T308-189q-12 12-28.5 12T251-189L108-332q-6-6-8.5-13T97-360q0-8 2.5-15t8.5-13l144"
-        + "-144q12-12 28-11.5t28 12.5q11 12 11.5 28T308-475l-75 75h247q17 0 28.5 11.5T520-360q0 17-11.5 28.5T480-320H233Zm494"
-        + "-240H480q-17 0-28.5-11.5T440-600q0-17 11.5-28.5T480-640h247l-75-75q-11-11-11-27.5t11-28.5q12-12 28.5-12t28.5 12l143"
-        + " 143q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L708-428q-12 12-28 11.5T652-429q-11-12-11.5-28t11.5-28l75-75Z"),
-
-    EDIT("M200-200h57l391-391-57-57-391 391v57Zm-40 80q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11"
-        + " 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h"
-        + "-97Zm600-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"),
-
-    DELETE("M280-120q-33 0-56.5-23.5T200-200v-520q-17 0-28.5-11.5T160-760q0-17 11.5-28.5T200-800h160q0-17 11.5-28.5T400"
-        + "-840h160q17 0 28.5 11.5T600-800h160q17 0 28.5 11.5T800-760q0 17-11.5 28.5T760-720v520q0 33-23.5 56.5T680-120H280Z"
-        + "m400-600H280v520h400v-520ZM400-280q17 0 28.5-11.5T440-320v-280q0-17-11.5-28.5T400-640q-17 0-28.5 11.5T360-600v280"
-        + "q0 17 11.5 28.5T400-280Zm160 0q17 0 28.5-11.5T600-320v-280q0-17-11.5-28.5T560-640q-17 0-28.5 11.5T520-600v280q0 17"
-        + " 11.5 28.5T560-280ZM280-720v520-520Z"),
-
-    ADD_PERSON("M720-520h-80q-17 0-28.5-11.5T600-560q0-17 11.5-28.5T640-600h80v-80q0-17 11.5-28.5T760-720q17 0 28.5 11.5"
-        + "T800-680v80h80q17 0 28.5 11.5T920-560q0 17-11.5 28.5T880-520h-80v80q0 17-11.5 28.5T760-400q-17 0-28.5-11.5T720"
-        + "-440v-80Zm-360 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-240v-32q0-34"
-        + " 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v32q0 33-23.5 56.5T600-160H"
-        + "120q-33 0-56.5-23.5T40-240Zm80 0h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5"
-        + "-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5"
-        + "T360-560Zm0-80Zm0 400Z"),
-
+    EVALUATIONS("assignment_turned_in_fill1"),
+    SWAP("swap_horiz"),
+    EDIT("edit"),
+    DELETE("delete"),
     /**
-     * A person (filled): the avatar of a profile without picture.
+     * A person: the avatar of a profile without picture.
      */
-    PERSON("M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34"
-        + " 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720"
-        + "-160H240q-33 0-56.5-23.5T160-240Z"),
-
+    PERSON("person_fill1"),
     /**
-     * A person with a gear (filled): the default profile, whose settings are those of GazePlay.
+     * A person with a gear: the default profile, whose settings are those of GazePlay.
      */
-    MANAGE_ACCOUNTS("M80-240v-32q0-34 17-62.5t47-43.5q57-29 118.5-46T388-441q14 0 22 12.5t3 26.5q-6 21-9 42t-3 43q0 29 6"
-        + " 56t17 53q8 17-1.5 32.5T396-160H160q-33 0-56.5-23.5T80-240Zm600 0q33 0 56.5-23.5T760-320q0-33-23.5-56.5T680"
-        + "-400q-33 0-56.5 23.5T600-320q0 33 23.5 56.5T680-240ZM400-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47"
-        + "t47 113q0 66-47 113t-113 47Zm234 328-6-28q-12-5-22.5-10.5T584-204l-29 9q-13 4-25.5-1T510-212l-8-14q-7-12-5-26t13"
-        + "-23l22-19q-2-14-2-26t2-26l-22-19q-11-9-13-22.5t5-25.5l9-15q7-11 19-16t25-1l29 9q11-8 21.5-13.5T628-460l6-29q3-14"
-        + " 13.5-22.5T672-520h16q14 0 24.5 9t13.5 23l6 28q12 5 22.5 11t21.5 15l27-9q14-5 27 0t20 17l8 14q7 12 5 26t-13 23l"
-        + "-22 19q2 12 2 25t-2 25l22 19q11 9 13 22.5t-5 25.5l-9 15q-7 11-19 16t-25 1l-29-9q-11 8-21.5 13.5T732-180l-6 29q-3"
-        + " 14-13.5 22.5T688-120h-16q-14 0-24.5-9T634-152Z"),
-
-    ADD("M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520"
-        + "-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440"
-        + "-240v-200Z"),
-
-    CLOSE("M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28"
-        + " 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28"
-        + "-11L480-424Z");
+    MANAGE_ACCOUNTS("manage_accounts_fill1"),
+    ADD("add"),
+    CLOSE("close"),
+    SEARCH("search"),
+    SETTINGS("settings"),
+    FULLSCREEN("fullscreen"),
+    FULLSCREEN_EXIT("fullscreen_exit"),
+    REPLAY("replay"),
+    /**
+     * Logout: back to the profiles.
+     */
+    LOGOUT("logout"),
+    FAVORITE("favorite"),
+    FAVORITE_FILLED("favorite_fill1"),
+    ARROW_UP("keyboard_arrow_up"),
+    ARROW_DOWN("keyboard_arrow_down"),
+    INFO("info"),
+    /**
+     * Categories of the games (GameCategories.Category).
+     */
+    CATEGORY_ACTION_REACTION("bolt_fill1"),
+    CATEGORY_SELECTION("ads_click"),
+    CATEGORY_MEMORIZATION("psychology_fill1"),
+    CATEGORY_LOGIC_MATHS("calculate_fill1"),
+    CATEGORY_LITERACY("menu_book_fill1"),
+    CATEGORY_MULTIMEDIA("perm_media_fill1");
 
     private static final double VIEW_BOX = 960;
 
-    private final String path;
+    private static final Pattern PATH = Pattern.compile(" d=\"([^\"]+)\"");
 
-    MenuIcon(final String path) {
-        this.path = path;
+    private final String file;
+
+    private String path;
+
+    MenuIcon(final String file) {
+        this.file = file;
+    }
+
+    /**
+     * @return the path of the icon, read from its SVG file at the first call
+     */
+    String getPath() {
+        if (path == null) {
+            final String resource = "data/icons/" + file + ".svg";
+            try (InputStream svg = MenuIcon.class.getClassLoader().getResourceAsStream(resource)) {
+                if (svg == null) {
+                    throw new IllegalStateException("Missing icon " + resource);
+                }
+                final Matcher matcher = PATH.matcher(new String(svg.readAllBytes(), StandardCharsets.UTF_8));
+                if (!matcher.find()) {
+                    throw new IllegalStateException("No path in " + resource);
+                }
+                path = matcher.group(1);
+            } catch (final IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return path;
     }
 
     /**
@@ -101,7 +108,7 @@ public enum MenuIcon {
      */
     public StackPane create(final double size) {
         final SVGPath shape = new SVGPath();
-        shape.setContent(path);
+        shape.setContent(getPath());
         shape.getStyleClass().add("gp-icon-shape");
         final double scale = size / VIEW_BOX;
         shape.getTransforms().add(new Scale(scale, scale));

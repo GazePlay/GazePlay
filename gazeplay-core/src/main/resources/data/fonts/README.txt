@@ -11,4 +11,5 @@ SIL Open Font License 1.1: free to use, modify and redistribute, the license bei
   JavaFX only uses the default instance (Regular) of a variable font, hence a fixed one.
 
 The icons of the menus (net.gazeplay.ui.menus.MenuIcon) are Material Symbols Rounded by Google, Apache License 2.0:
-see ../icons/MaterialSymbols-LICENSE.txt. Source: https://github.com/google/material-design-icons (symbols/web).
+the unchanged "24px" SVG files in ../icons ("_fill1": filled variant), license in ../icons/MaterialSymbols-LICENSE.txt.
+Source: https://github.com/google/material-design-icons, symbols/web/<name>/materialsymbolsrounded/<name>_24px.svg.

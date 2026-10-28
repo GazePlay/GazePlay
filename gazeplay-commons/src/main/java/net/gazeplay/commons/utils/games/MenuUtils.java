@@ -21,14 +21,9 @@ public class MenuUtils {
      * @return a menu bar with the version of GazePlay Learning (opening the licence) and the current profile
      */
     public static MenuBar buildMenuBar() {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        String licenseFileAsString = loadLicenseFileAsString(classLoader);
+        MenuItem licenseMenuItem = new MenuItem(licenseText());
 
-        Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId);
-
-        MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
-
-        Menu versionMenu = new Menu(versionNumber.map(value -> "GazePlay Learning " + value).orElse("GazePlay Learning unreleased version"));
+        Menu versionMenu = new Menu(versionText());
         versionMenu.getItems().add(licenseMenuItem);
 
         String username = ActiveConfigurationContext.getInstance().getUserName();
@@ -40,6 +35,21 @@ public class MenuUtils {
         menuBar.setPrefWidth(80);
 
         return menuBar;
+    }
+
+    /**
+     * @return the name and version of the application, e.g. "GazePlay Learning 1.11.10"
+     */
+    public static String versionText() {
+        Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId);
+        return versionNumber.map(value -> "GazePlay Learning " + value).orElse("GazePlay Learning unreleased version");
+    }
+
+    /**
+     * @return the licence of GazePlay Learning (data/common/licence.txt), or a message when it cannot be read
+     */
+    public static String licenseText() {
+        return loadLicenseFileAsString(ClassLoader.getSystemClassLoader());
     }
 
     private static String loadLicenseFileAsString(ClassLoader classLoader) {

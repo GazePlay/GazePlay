@@ -282,7 +282,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         userNameLabel.setMinWidth(nameWidth);
         userNameLabel.setPrefWidth(nameWidth);
         userNameLabel.setMaxWidth(nameWidth);
-        final Tooltip userNameTooltip = new Tooltip(user.getName());
+        final Tooltip userNameTooltip = MenuStyle.tooltip(user.getName());
         BorderPane.setAlignment(userNameLabel, Pos.CENTER);
 
         final BorderPane content = new BorderPane();

@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 
 /**
  * The shared look of the menus (REFONTE_GRAPHIQUE.md): their styles are in data/stylesheets/menus.css, under the
@@ -17,6 +18,11 @@ public final class MenuStyle {
      * Style class of the root of a menu screen or dialog.
      */
     public static final String MENU = "gp-menu";
+
+    /**
+     * Delay before a tooltip is shown (JavaFX: 1 second).
+     */
+    private static final Duration TOOLTIP_DELAY = Duration.millis(300);
 
     private MenuStyle() {
     }
@@ -58,11 +64,34 @@ public final class MenuStyle {
         return button;
     }
 
+    /**
+     * A filled round button of the size of the quit button, in a color of the menus, so that it is seen at once
+     * (maintainer's feedback of 28/10/2026: the buttons next to quit).
+     *
+     * @param color the color: {@code teal}, {@code sky}, {@code violet} or {@code accent} (style class
+     *              {@code gp-round-<color>}, menus.css)
+     */
+    public static Button roundButton(final MenuIcon icon, final String color, final String tooltip,
+                                     final Runnable action) {
+        final Button button = iconButton(icon, 40, tooltip, action);
+        button.getStyleClass().addAll("gp-round", "gp-round-" + color);
+        return button;
+    }
+
+    /**
+     * @return the information shown when the pointer stays on a control: quickly, in the look of the menus
+     */
+    public static Tooltip tooltip(final String text) {
+        final Tooltip tooltip = new Tooltip(text);
+        tooltip.setShowDelay(TOOLTIP_DELAY);
+        return tooltip;
+    }
+
     private static Button iconButton(final MenuIcon icon, final double size, final String tooltip,
                                      final Runnable action) {
         final Button button = new Button(tooltip, icon.create(size));
         button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        button.setTooltip(new Tooltip(tooltip));
+        button.setTooltip(tooltip(tooltip));
         button.getStyleClass().add("gp-icon-button");
         button.setOnAction(e -> action.run());
         return button;

@@ -378,6 +378,85 @@ titre de Windows, style `UTILITY`, croix rouge) « fait tâche ».
 - `build` et `smokeTest` réussis : **469 tests, 0 échec**. Captures `etape3b` regardées (clair 1366, sombre 1920).
 - **À vérifier sur la vraie machine** : fenêtre transparente sous Windows (ombre, coins), déplacement par le titre.
 
+Étape 3 (profils et fenêtres des profils) : commit `db6d117b0` (28/10/2026, à la demande du mainteneur).
+
+### 8.3 ter Étape 4 — menu des jeux et fenêtre des variantes (28/10/2026)
+
+- **Icônes** : `MenuIcon` lit maintenant les fichiers SVG de Material Symbols, livrés tels quels dans `data/icons`
+  (27 fichiers, Apache-2.0), au lieu de tracés recopiés à la main dans le code : plus de risque d'erreur de copie.
+  Test : chaque icône a son fichier et son tracé (`MenuIconTest`).
+- **Barre du haut** : petit logo (64 px), recherche arrondie avec loupe et texte d'invite « Rechercher un jeu », puis
+  le profil en cours (bouton avec son nom ; un clic revient aux profils, comme l'ancien bouton « Déconnection »),
+  rejouer, réglages, plein écran (icône et infobulle selon l'état) et quitter (disque rouge). La barre de menus de
+  l'ancien menu (version et profil) n'y est plus : la version est en bas.
+- **Filtres** : les cases à cocher deviennent des **puces à bascule** avec l'icône de la catégorie ; **une couleur par
+  catégorie** (action : orange, sélection : bleu ciel, mémorisation : violet, maths et logique : turquoise,
+  littératie : rouge, multimédia : or, nouveau jeton `-gp-gold`) : puce affichée = contour et icône de sa couleur,
+  puce masquée = grisée. Même réglage enregistré (`HIDDEN_CATEGORIES`).
+- **Cartes** (`GameMenuFactory`, réécrit) : miniature aux coins arrondis qui remplit son cadre (recadrée au centre,
+  chargée au double de sa taille : nette sur un écran à 200 %), nom en Fredoka sur deux lignes au plus, description
+  (seuls 6 jeux en ont une ; masquée sans), icônes des catégories en couleur, point « peut être rejoué » (turquoise)
+  ou non (gris) avec infobulle, cœur dans l'angle : visible au survol, toujours visible et rouge pour un favori.
+  Taille selon la largeur de l'écran (verticale : 1/6,2 de la largeur, entre 210 et 300 px ; horizontale : 1/3,4,
+  entre 340 et 520 px) : les feuilles `base-max-width-*` ne servent plus à ces cartes. Une carte se choisit aussi au
+  clavier (Entrée, Espace).
+- **Favoris** : une rangée « Favoris » (titre et cartes, masquée sans favori) puis « Tous les jeux ». La rangée suit
+  le réglage aussitôt : un clic sur un cœur ajoute ou retire la carte des favoris, et les deux cœurs d'un même jeu
+  restent d'accord (écouteurs faibles : pas de fuite à la reconstruction du menu). Avant, la rangée n'était mise à
+  jour qu'au rechargement du menu. Message « Aucun jeu trouvé » si la recherche ne donne rien.
+- **Correction en passant** : un clic sur le cœur mettait la musique en pause (elle n'est mise en pause qu'au
+  lancement d'un jeu).
+- **Défilement** : flèches haut et bas gardées (défilement au survol, comme avant, et d'une page au clic), en icônes.
+- **Barre du bas** : musique et volumes (mêmes contrôles `MusicControl`, partagés avec les jeux : seul leur style
+  sous `.gp-menu` change ; fond clair des boutons de lecture dans les deux thèmes, leurs images étant sombres), nombre
+  de jeux et de variantes (`GamesStatisticsPane`, plus de styles écrits dans le code), version cliquable qui ouvre la
+  licence dans une fenêtre des menus (`MenuUtils.versionText`, `licenseText`).
+- **Message « pas rejouable »** : carte au contour rouge au centre, l'écran assombri derrière, comme avant.
+- **Petits écrans** : sous 1100 px de large, pas de logo dans la barre ; sous 720 px de haut, pas de flèches ni
+  d'informations en bas (la musique reste). Vérifié en 800 × 600.
+- **Fenêtre des variantes** : cadre `MenuDialog` (nom du jeu en titre, bouton fermer, Échap), question « Choisissez une
+  variante de jeu » en Fredoka, groupes de variantes en puces **au-dessus** des variantes (avant : en bas), boutons des
+  variantes arrondis, choisis aussi au clavier ; taille 60 % × 65 % de la fenêtre (avant : la moitié, une rangée
+  sortait). La logique des groupes n'a pas changé.
+- **Nouveaux textes** (anglais, français) : `ProfileChange`, `SearchGame`, `FavoriteGames`, `AllGames`, `FavoriteAdd`,
+  `FavoriteRemove`, `ReplayAvailable`, `ReplayUnavailable`, `NoGameFound`, `License`.
+- **Plus utilisé** (à retirer à l'étape 7) : `QuickControlPanel`, et dans le menu des jeux les images PNG des boutons
+  (`power-off.png`, `logout.png`, `arrow-up.png`, `replay_button.png`…), du cœur et des catégories (à vérifier : elles
+  peuvent servir ailleurs).
+- **Captures** : deux favoris (Ninja, Simon), le menu en orientation verticale (`3b-menu-jeux-vertical`) et la fenêtre
+  des variantes de Ninja (`3a-variantes-ninja`). Regardées en clair 1366 et 800, sombre 1920.
+- **Vérifications** : `build` et `smokeTest` réussis, **496 tests, 0 échec** (dont 27 tests d'icônes) ;
+  `allGamesTest` réussi : **les 76 jeux se lancent, 0 échec** (nouveaux jetons des feuilles de base chargés par les
+  jeux).
+
+**Retours du mainteneur (28/10/2026) et changements :**
+
+| Retour | Changement |
+|---|---|
+| Les boutons à côté de quitter : ronds et en couleur, pour bien les voir | `MenuStyle.roundButton` : disques pleins de la taille de quitter ; rejouer en turquoise, réglages en bleu ciel, plein écran en violet. |
+| Une zone d'information au survol de ces boutons | Infobulles des menus (`MenuStyle.tooltip`) : au bout de 0,3 s (1 s par défaut dans JavaFX), au style des menus (`.gp-menu .tooltip` : la bulle prend les styles de son contrôle, les jeux ne sont pas touchés). Utilisées partout dans les menus refaits. |
+| Remettre le cœur | Le cœur est de nouveau **toujours visible** sur chaque carte (gris, rouge pour un favori), plus seulement au survol. |
+| Une catégorie « Favoris » pour retrouver ses jeux préférés | Puce « Favoris » (cœur, rouge quand elle est active) en tête des filtres : n'affiche que les jeux favoris ; message « Pas encore de jeu favori : cliquez sur le cœur d'un jeu pour l'ajouter » s'il n'y en a pas. Inactive à chaque ouverture du menu (non enregistrée, contrairement aux catégories). |
+| À quoi sert la pastille verte des cartes ? | Réponse donnée au mainteneur (ci-dessous) ; rien changé en attendant sa décision. |
+
+- **La pastille** : elle dit si le jeu peut être **rejoué** avec le bouton « Rejouer » (fichier `replayData.json` d'une
+  partie enregistrée, `ReplayingGameFromJson.replayIsAllowed`) : turquoise (vert avant) si oui, grise sinon.
+  **Décision du mainteneur** : on la laisse comme ça.
+- **Décision du mainteneur : pas de rangée « Favoris »** en plus des jeux. Les favoris ne sont montrés à part que
+  par la puce « Favoris » ; sans elle, tous les jeux dans l'ordre du catalogue, sans titre de section (« Tous les
+  jeux » retiré, clé `AllGames` aussi). Avec la puce, retirer un cœur fait disparaître le jeu aussitôt.
+- **Cœur en haut à droite** des cartes horizontales (il était en haut à gauche, sur l'image : retour du mainteneur) ;
+  le nom du jeu garde une marge à droite pour lui. Les cartes verticales l'avaient déjà en haut à droite.
+- **Déconnexion** (retour du mainteneur) : le bouton du profil (nom du profil, retour aux profils) devient un bouton
+  rond orange corail « Déconnexion » (icône Material « logout »), entre plein écran et quitter ; même action (retour
+  à l'écran des profils). Le **profil en cours** est affiché en bas à droite, au-dessus du nombre de jeux et de
+  variantes (`GamesStatisticsPane`, nouvelle clé `CurrentProfile` : « Profil »). Clé `ProfileChange` et icône
+  `switch_account` retirées (plus utilisées). Orthographe corrigée : « Déconnection » → « Déconnexion » (clé
+  `Logout`, français ; aussi dans le menu des évaluations).
+- Nouveaux textes : `FavoriteOnly`, `NoFavoriteGame` (anglais, français).
+- Captures `etape4c` (dont `3c-menu-jeux-favoris`) regardées ; `build` et `smokeTest` réussis : **496 tests,
+  0 échec**.
+
 ### 8.4 Vérifications
 
 - `./gradlew build` : réussi, **462 tests, 0 échec**, SpotBugs sans remarque (un `synchronized` statique de

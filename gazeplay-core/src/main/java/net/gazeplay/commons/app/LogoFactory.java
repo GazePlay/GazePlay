@@ -94,6 +94,17 @@ public class LogoFactory {
     }
 
     /**
+     * @return the static logo at a fixed height, e.g. in the top bar of a menu
+     */
+    public Node createLogoStatic(double height) {
+        final ImageView logoView = new ImageView(new Image(staticLogoImagePath));
+        logoView.setPreserveRatio(true);
+        logoView.setSmooth(true);
+        logoView.setFitHeight(height);
+        return logoView;
+    }
+
+    /**
      * Fits the logo in half of the width and a tenth of the height of the window.
      */
     private static void fitStaticLogo(ImageView logoView, Stage stage) {
