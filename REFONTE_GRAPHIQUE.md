@@ -491,6 +491,75 @@ du mainteneur).
 - Captures `etape5` (dont `3a-evaluations-choix`) regardées en clair 1366 et 800, sombre 1920 ; `build` et
   `smokeTest` réussis : **499 tests, 0 échec**.
 
+Étape 5 (menu des évaluations, GazePlay Eval Test) : commit `bb4e5154d` (28/10/2026, à la demande du mainteneur).
+
+### 8.3 quinquies Étape 6 — paramètres (28/10/2026)
+
+- **Mise en page** (proposition de 4.5, à valider par le mainteneur) : en haut, un bouton rond de retour au menu
+  (orange corail, infobulle « Retour au menu ») et le titre « Réglages » (le mot des infobulles des menus ; avant :
+  « Configuration ») ; à gauche, les **rubriques** avec leur icône : Langue, Jeux, Oculomètre, Apparence, Dossiers,
+  Évaluations, Statistiques (celles du mode en cours, comme avant) ; à droite, la rubrique choisie : son titre puis
+  ses réglages en **cartes** (une carte par groupe : en Statistiques, le dossier des résultats, puis cartes de
+  chaleur, zones d'intérêt et autres statistiques), **une ligne par réglage** (nom à gauche, contrôle à droite, un
+  trait entre les lignes).
+- **Contrôles modernisés par la feuille de style** (sous `.gp-menu .gp-settings-card`) : listes déroulantes et
+  boutons arrondis, champs numériques arrondis, **interrupteurs** pour les oui/non (les `CheckBox` dessinées comme un
+  interrupteur : rail, rond qui glisse, orange quand activé). Les chemins de dossier longs gardent leur fin (le
+  dossier) et sont entiers dans une infobulle ; un dossier vide affiche « Sélectionner » au lieu d'un bouton vide.
+- **Rien ne change dans les réglages** : mêmes contrôles, mêmes liaisons aux propriétés de `Configuration`, mêmes
+  clés ; un changement s'applique toujours aussitôt. Les rubriques et leurs réglages par mode sont les mêmes
+  qu'avant, dans le même ordre.
+- **Code** : la mise en page est sortie dans `SettingsPage` (199 lignes : rubriques, groupes, lignes) ;
+  `ConfigurationContext` (1 416 → 1 084 lignes) déclare les rubriques, **une méthode par rubrique**
+  (`languageSection`, `gamesSection`…), et garde les constructeurs de contrôles (déjà testés). La grille, les
+  fonctions d'ajout ligne par ligne (`addToGrid`…), les styles écrits dans le code (`changeConstrutorCss`,
+  `changeGridCss`) et l'alignement à droite case par case pour l'arabe sont retirés. **Écart avec le plan** : pas une
+  classe par rubrique ; les constructeurs de contrôles restent dans `ConfigurationContext` (ils utilisent son état
+  et sont couverts par les tests tels quels). À découper davantage si le mainteneur le souhaite.
+- **Arabe** : toute la page est mise en miroir (`NodeOrientation.RIGHT_TO_LEFT`), rubriques à droite.
+- **Petits écrans** : sous 1 000 px de large, les rubriques n'affichent que leur icône (nom en infobulle). Vérifié en
+  800 × 600.
+- **Nouveaux textes** (anglais, français) : `SettingsLanguage`, `SettingsGames`, `SettingsEyeTracker`,
+  `SettingsAppearance`, `SettingsFolders`, `SettingsEvaluations`, `SettingsStatistics` (noms courts des rubriques ;
+  les anciens titres « Paramètres de … » ne sont plus utilisés : à retirer à l'étape 7, avec `ConfigTitle`).
+  Correction : « Répertoire du jeu « Où est-ce ? > » → « … ? » ».
+- **Tests réécrits** (`ConfigurationContextTest`) : les réglages sont cherchés **par leur clé**, plus par leur
+  position dans la grille (rubriques et réglages de chaque mode, réglages absents d'un mode) ; nouveaux : retour au
+  menu, page non mise en miroir en français et en miroir en arabe, choix d'une rubrique. Les 6 tests des fonctions de
+  grille retirés. Le test des choix de dossier attend « Sélectionner » pour un dossier vide.
+- **Captures** : une par rubrique (`4-parametres-<mode>-<n>`). Regardées en clair 1366 et 800, sombre 1920.
+- **Vérifications** : `build` et `smokeTest` réussis : **503 tests, 0 échec**.
+- **Pas encore fait** (étape 7) : le choix « Fichier de style » (les 7 thèmes) est toujours là, tel quel ; il
+  deviendra la couleur principale.
+
+**Retours du mainteneur (28/10/2026) :**
+
+1. **« L'orientation du menu ne change rien après un redémarrage. »** Vérifié par un test qui suit le parcours réel
+   (`MenuOrientationTest` : application complète, profil par défaut, réglages, rubrique Apparence, retour au menu,
+   puis redémarrage) : **le réglage est bien enregistré et appliqué au redémarrage** ; le défaut n'est pas reproduit.
+   **Ce qui pouvait tromper** (faits) : (a) le menu n'était construit qu'une fois par session, le changement ne se
+   voyait donc pas en revenant au menu (d'où « nécessite de relancer le jeu ») ; (b) le réglage est **propre à chaque
+   profil** ; (c) les choix s'affichaient en anglais brut (« HORIZONTAL », « VERTICAL »). **Corrigé** : le menu est
+   reconstruit dès qu'on y revient après un changement (`GazePlay.refreshMenu`) ; choix traduits « Image à côté du
+   nom » / « Image au-dessus du nom » ; libellé « Orientation des cartes des jeux » (anglais et français ; les autres
+   langues gardent leur ancien libellé, avec la mention du redémarrage, devenue inexacte). **Question** : si le
+   mainteneur voit encore le défaut, dans quel profil change-t-il le réglage, et quel profil choisit-il ensuite ?
+2. **« Un bouton de thème sur chaque page hors jeux, et plus de thème dans les paramètres. »** Compris comme le
+   choix clair/sombre. `MenuButtons.themeButton` : bouton rond doré (nouvelle couleur `gp-round-gold`) qui montre
+   **le thème actif** (demande du mainteneur, d'abord fait à l'inverse) : un **soleil** en thème clair, une **lune** en
+   thème sombre ; infobulle de l'action : « Passer au thème sombre » / « Passer au thème clair ».
+   Un clic enregistre le réglage `DARK_THEME_ENABLED` **du profil en cours** (même clé qu'avant) et réapplique
+   aussitôt les feuilles de style de la page. Sur : choix du mode, profils, menu des jeux, menu des évaluations,
+   paramètres (en haut à droite, avant déconnexion et quitter). La ligne « Thème sombre » est retirée des
+   paramètres. Le choix « Fichier de style » (thèmes de couleur) reste pour l'étape 7. **À noter** : le thème étant
+   propre à chaque profil, l'écran du choix du mode et la page des profils suivent le profil par défaut.
+- Tests : `MenuOrientationTest` (le menu montre l'orientation choisie sans redémarrer, puis après redémarrage),
+  `MenuButtonsTest` (le bouton bascule et enregistre le thème, applique la feuille sombre puis claire), test du
+  réglage enregistré et relu (`ConfigurationContextTest.shouldSaveTheOrientationOfTheMenu`), tests des rubriques
+  adaptés (plus de « Thème sombre »), test du bouton quitter des profils (une place plus loin). `build` et
+  `smokeTest` réussis : **508 tests, 0 échec** ; `allGamesTest` : **77/77** (nouveaux jetons `-gp-knob`, `-gp-gold`
+  des feuilles de base chargées par les jeux).
+
 ### 8.4 Vérifications
 
 - `./gradlew build` : réussi, **462 tests, 0 échec**, SpotBugs sans remarque (un `synchronized` statique de

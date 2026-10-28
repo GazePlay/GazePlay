@@ -68,7 +68,7 @@ public final class MenuStyle {
      * A filled round button of the size of the quit button, in a color of the menus, so that it is seen at once
      * (maintainer's feedback of 28/10/2026: the buttons next to quit).
      *
-     * @param color the color: {@code teal}, {@code sky}, {@code violet} or {@code accent} (style class
+     * @param color the color: {@code teal}, {@code sky}, {@code violet}, {@code accent} or {@code gold} (style class
      *              {@code gp-round-<color>}, menus.css)
      */
     public static Button roundButton(final MenuIcon icon, final String color, final String tooltip,

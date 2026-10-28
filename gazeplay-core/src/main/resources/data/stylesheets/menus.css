@@ -523,6 +523,200 @@
     -fx-opacity: 0.5;
 }
 
+/* Settings page (ConfigurationContext, SettingsPage): sections on the left, settings in cards on the right */
+
+.gp-menu .gp-settings-nav {
+    -fx-padding: 8 16 24 24;
+    -fx-min-width: 250;
+    -fx-pref-width: 270;
+    -fx-max-width: 300;
+}
+
+.gp-menu .gp-settings-nav.gp-settings-nav-compact {
+    -fx-padding: 8 8 24 16;
+    -fx-min-width: 72;
+    -fx-pref-width: 72;
+    -fx-max-width: 72;
+}
+
+.gp-menu .gp-settings-nav-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 16;
+    -fx-background-insets: 0;
+    -fx-padding: 12 16 12 14;
+    -fx-graphic-text-gap: 14;
+    -fx-text-fill: -gp-text;
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 15pt;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-settings-nav-item .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-settings-nav-item:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-settings-nav-item:selected {
+    -fx-background-color: -gp-accent;
+    -fx-text-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-settings-nav-item:selected .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-settings-nav-item:focus-visible {
+    -fx-border-color: -gp-text;
+    -fx-border-width: 2;
+    -fx-border-radius: 16;
+}
+
+.gp-menu .gp-settings-section {
+    -fx-padding: 8 32 32 16;
+    -fx-max-width: 980;
+}
+
+.gp-menu .gp-settings-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 22pt;
+}
+
+.gp-menu .gp-settings-card {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 20;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-padding: 8 24 8 24;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 16, 0, 0, 4);
+}
+
+.gp-menu .gp-settings-group-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 15pt;
+    -fx-text-fill: -gp-text-muted;
+    -fx-padding: 12 0 4 0;
+}
+
+/* A line between the settings of a card */
+.gp-menu .gp-setting-row {
+    -fx-padding: 14 0 14 0;
+    -fx-border-color: transparent transparent -gp-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gp-menu .gp-setting-row.gp-setting-row-last {
+    -fx-border-width: 0;
+}
+
+.gp-menu .gp-setting-name {
+    -fx-font-size: 14pt;
+}
+
+.gp-menu .gp-setting-text {
+    -fx-fill: -gp-text;
+}
+
+/* Controls of the settings: rounded, in the colors of the menus */
+
+.gp-menu .gp-settings-card .button,
+.gp-menu .gp-settings-card .menu-button,
+.gp-menu .gp-settings-card .choice-box,
+.gp-menu .gp-settings-card .color-picker {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 6 14 6 14;
+    -fx-text-fill: -gp-text;
+    -fx-font-size: 12pt;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-settings-card .button:hover,
+.gp-menu .gp-settings-card .menu-button:hover,
+.gp-menu .gp-settings-card .choice-box:hover,
+.gp-menu .gp-settings-card .color-picker:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-settings-card .button:disabled {
+    -fx-opacity: 0.5;
+}
+
+.gp-menu .gp-settings-card .choice-box > .label,
+.gp-menu .gp-settings-card .menu-button > .label,
+.gp-menu .gp-settings-card .color-picker > .color-picker-label > .text {
+    -fx-text-fill: -gp-text;
+    -fx-fill: -gp-text;
+    -fx-font-weight: normal;
+}
+
+.gp-menu .gp-settings-card .choice-box > .open-button > .arrow,
+.gp-menu .gp-settings-card .menu-button > .arrow-button > .arrow {
+    -fx-background-color: -gp-text-muted;
+}
+
+.gp-menu .gp-settings-card .spinner {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.gp-menu .gp-settings-card .spinner > .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-settings-card .spinner > .increment-arrow-button,
+.gp-menu .gp-settings-card .spinner > .decrement-arrow-button {
+    -fx-background-color: transparent;
+}
+
+.gp-menu .gp-settings-card .spinner > .increment-arrow-button > .increment-arrow,
+.gp-menu .gp-settings-card .spinner > .decrement-arrow-button > .decrement-arrow {
+    -fx-background-color: -gp-text-muted;
+}
+
+/* Yes/no settings: switches (a check box drawn as a track with a knob) */
+.gp-menu .gp-settings-card .check-box {
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-settings-card .check-box > .box {
+    -fx-background-color: -gp-border;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-padding: 4 24 4 4;
+}
+
+.gp-menu .gp-settings-card .check-box:selected > .box {
+    -fx-background-color: -gp-accent;
+    -fx-padding: 4 4 4 24;
+}
+
+.gp-menu .gp-settings-card .check-box > .box > .mark {
+    -fx-background-color: -gp-knob;
+    -fx-shape: "M 0 5 A 5 5 0 1 0 10 5 A 5 5 0 1 0 0 5 Z";
+    -fx-padding: 9;
+}
+
+.gp-menu .gp-settings-card .check-box:focus-visible > .box {
+    -fx-border-color: -gp-text;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+}
+
 /* Window of the variants (GameVariantDialog) */
 
 .gp-menu .gp-dialog-prompt {
@@ -670,6 +864,7 @@
 .gp-menu .gp-round-sky { -gp-round-color: -gp-sky; }
 .gp-menu .gp-round-violet { -gp-round-color: -gp-violet; }
 .gp-menu .gp-round-accent { -gp-round-color: -gp-accent; }
+.gp-menu .gp-round-gold { -gp-round-color: -gp-gold; }
 
 .gp-menu .gp-icon-button.gp-round {
     -fx-background-color: -gp-round-color;

@@ -23,6 +23,7 @@ import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.menus.CardButton;
+import net.gazeplay.ui.menus.MenuButtons;
 import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
 
@@ -61,7 +62,7 @@ public class ModeSelectionContext extends GraphicalContext<BorderPane> {
         final Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         final Button exitButton = MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit);
-        final HBox topBar = new HBox(spacer, exitButton);
+        final HBox topBar = new HBox(spacer, MenuButtons.themeButton(gazePlay, translator), exitButton);
         topBar.getStyleClass().add("gp-top-bar");
 
         final Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());

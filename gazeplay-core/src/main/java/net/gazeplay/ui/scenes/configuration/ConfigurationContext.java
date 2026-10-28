@@ -4,11 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -17,13 +13,12 @@ import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -39,8 +34,6 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.*;
-import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
@@ -49,6 +42,9 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.menus.MenuButtons;
+import net.gazeplay.ui.menus.MenuIcon;
+import net.gazeplay.ui.menus.MenuStyle;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 
 import java.io.File;
@@ -59,17 +55,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The settings page: one row per setting of {@link Configuration}, grouped by category (language, games, eye tracking,
- * graphics, folders, statistics...), each control bound to its property so that a change is saved at once. Arabic is
- * laid out from right to left.
+ * The settings page (look of the menus, REFONTE_GRAPHIQUE.md 4.5): a top bar with the return to the menu and the
+ * title; the sections on the left (language, games, eye tracker, appearance, folders, evaluations, statistics: those
+ * of the mode of the session); the settings of the chosen section on the right, in cards (see {@link SettingsPage}).
+ * Each control is bound to its property of {@link Configuration}, so that a change is saved at once. Arabic is laid
+ * out from right to left.
  */
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
-
-    private static final String COLON = "Colon";
 
     private static final double PREF_WIDTH = 200;
 
@@ -80,107 +75,49 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private IGameVariant currentSelectedVariant;
     private GameSpec currentSelectedGame;
 
-    private GridPane gridPane;
-
     Configuration config = ActiveConfigurationContext.getInstance();
 
     /**
-     * Builds the page for the active profile, with a home button and the music controls.
+     * Builds the page for the active profile and the mode of the session.
      */
     public ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
+        MenuStyle.applyTo(root);
 
         Translator translator = gazePlay.getTranslator();
 
         Locale currentLocale = translator.currentLocale();
         LanguageDetails languageDetails = Languages.getLocale(currentLocale);
         currentLanguageAlignmentIsLeftAligned = languageDetails.isLeftAligned();
-
-        // Bottom Pane
-        HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
-
-        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
-        I18NTooltip.install(homeButton, tooltipBackToMenu);
-
-        HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
-        rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        if (currentLanguageAlignmentIsLeftAligned) {
-            rightControlPane.getChildren().add(homeButton);
-        }
-
-        HBox leftControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane);
-        leftControlPane.setAlignment(Pos.CENTER_LEFT);
-        // HomeButton on the Left for Arabic Language
+        // Arabic: the whole page mirrored (sections on the right, names of the settings on the right)
         if (!currentLanguageAlignmentIsLeftAligned) {
-            leftControlPane.getChildren().add(homeButton);
+            root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         }
 
-        BorderPane bottomControlPane = new BorderPane();
-        bottomControlPane.setLeft(leftControlPane);
-        bottomControlPane.setRight(rightControlPane);
+        // Top: back to the menu, then the title
+        // "Settings", as the tooltip of the button of the menus opening this page
+        final Label title = new I18NLabel(translator, "Options");
+        title.getStyleClass().add("gp-title");
+        final Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        // The theme is switched by its button, as on the other pages (no longer a setting of this page)
+        final HBox topBar = new HBox(16, createBackButton(gazePlay), title, spacer,
+            MenuButtons.themeButton(gazePlay, translator));
+        topBar.getStyleClass().add("gp-top-bar");
 
-        root.setBottom(bottomControlPane);
-
-        // Top Pane
-        I18NText configTitleText = new I18NText(translator, "ConfigTitle");
-        configTitleText.setId("title");
-        configTitleText.setTextAlignment(TextAlignment.CENTER);
-
-        // Arabic title alignment
-        if (!currentLanguageAlignmentIsLeftAligned) {
-            BorderPane.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
-        }
-
-        root.setTop(configTitleText);
-
-        // Center Pane
-
-        GridPane gridPane = buildConfigGridPane(this, translator);
-
-        ScrollPane settingsPanelScroller = new ScrollPane(gridPane);
-
-        settingsPanelScroller.setFitToWidth(true);
-        settingsPanelScroller.setFitToHeight(true);
-
-        gridPane.setAlignment(Pos.CENTER);
-        VBox centerCenterPane = new VBox();
-        centerCenterPane.setSpacing(40);
-        centerCenterPane.setAlignment(Pos.TOP_CENTER);
-        // Arabic title alignment
-        if (!currentLanguageAlignmentIsLeftAligned) {
-            gridPane.setAlignment(Pos.TOP_RIGHT);
-        } else {
-            gridPane.setAlignment(Pos.TOP_LEFT);
-        }
-
-        gridPane.setPadding(new Insets(20));
-        centerCenterPane.getChildren().add(settingsPanelScroller);
-
-        root.setCenter(centerCenterPane);
-
-        this.changeConstrutorCss(config);
+        root.setTop(topBar);
+        root.setCenter(SettingsPage.create(translator, buildSections(translator)));
     }
 
     /**
-     * @return the home button, which applies the theme and goes back to the menu
+     * @return the round button going back to the menu, at the top left
      */
-    HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-        HomeButton homeButton = new HomeButton(screenDimension);
-
-        EventHandler<Event> homeEvent = e -> {
-            gazePlay.onDisplayConfigurationManagement();
-            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                root.setCursor(Cursor.WAIT); // Change cursor to wait style
-                gazePlay.onReturnToMenu();
-                root.setCursor(Cursor.DEFAULT); // Change cursor to default style
-            }
-        };
-
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        return homeButton;
+    Button createBackButton(@NonNull GazePlay gazePlay) {
+        return MenuStyle.roundButton(MenuIcon.BACK, "accent", gazePlay.getTranslator().translate("BackToMenu"), () -> {
+            root.setCursor(Cursor.WAIT);
+            gazePlay.onReturnToMenu();
+            root.setCursor(Cursor.DEFAULT);
+        });
     }
 
     @Override
@@ -189,11 +126,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the grid of the settings of the mode of the session: in the "Evaluations" mode, only the settings used by
-     *   the evaluations (language, quit key, eye tracker, theme, heatmaps, evaluations); in the "Games" mode, all the
-     *   others, without the evaluations
+     * @return the sections of the settings of the mode of the session, in the order of the former single page: in the
+     *   "Evaluations" mode, only the settings used by the evaluations (language, eye tracker, appearance, evaluations
+     *   with the quit key, heatmaps); in the "Games" mode, all the others, without the evaluations
      */
-    GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
+    List<SettingsPage.Section> buildSections(Translator translator) {
         final boolean evaluations = getGazePlay().getMode() == AppMode.EVALUATIONS;
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -205,373 +142,128 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         config = ActiveConfigurationContext.getInstance();
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(50);
-        grid.setVgap(50);
-
-        grid.getStyleClass().add("item");
-
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "LanguageSettings", COLON));
-        // Language settings
-        {
-            I18NText label = new I18NText(translator, "Lang", COLON);
-
-            MenuButton input = buildLanguageChooser(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        if (Utils.isWindows() && !evaluations) {
-            {
-                I18NText label = new I18NText(translator, "CreateShortcut", COLON);
-
-                VBox input = buildVariantShortcutMaker(config, configurationContext);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-        }
-
+        final List<SettingsPage.Section> sections = new ArrayList<>();
+        sections.add(languageSection(config, translator, evaluations));
         if (!evaluations) {
-            addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
-            // Games settings
-            addQuitKey(grid, currentFormRow, translator, config);
-            {
-                I18NText label = new I18NText(translator, "QuestionLength", COLON);
-
-                Spinner<Double> input = buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
-                    0.5, config.getQuestionLengthProperty());
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
-
-                CheckBox input = buildCheckBox(config.getQuestionReaskedOnFailProperty());
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
-
-                CheckBox input = buildCheckBox(config.getRewardSoundEnabledProperty());
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "Limiter Time", COLON);
-
-                HBox input = buildLimiterTime(config, translator);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "Limiter Score", COLON);
-
-                HBox input = buildLimiterScore(config, translator);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "PianoTileColors", COLON);
-
-                HBox input = chooseColorHBox(config.getTileColorsProperty());
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
+            sections.add(gamesSection(config, translator));
         }
-
-
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
-        // Eye Tracking settings
-        {
-            I18NText label = new I18NText(translator, "EyeTracker", COLON);
-
-            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config, translator);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "FixationLength", COLON);
-
-            Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
-                0.1, config.getFixationLengthProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
-        // Graphics settings
-        {
-            I18NText label = new I18NText(translator, "LayoutFile", COLON);
-
-            ChoiceBox<BuiltInUiTheme> input = buildStyleThemeChooser(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "BackgroundColor", COLON);
-
-            HBox input = chooseColorHBox(config.getBackgroundColorProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        if (!evaluations) {
-            {
-                I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-                ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
-                CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-        }
-        {
-            I18NText label = new I18NText(translator, "DarkTh", COLON);
-            HBox darkTheme = buildDarktheme(config, configurationContext);
-            addToGrid(grid, currentFormRow, label, darkTheme);
-        }
-
-        if (!evaluations) {
-            addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
-            // Folders settings
-            {
-                I18NText label = new I18NText(translator, "FileDir", COLON);
-
-                Node input = buildImageChooser(config, configurationContext, translator);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "MusicFolder", COLON);
-                final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
-
-                Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-        }
-
+        sections.add(eyeTrackerSection(config, translator));
+        sections.add(appearanceSection(config, translator, evaluations));
         if (evaluations) {
-            addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EvalSettings", COLON));
-            // Evaluations of GazePlay Eval (the quit key also quits an evaluation)
-            addQuitKey(grid, currentFormRow, translator, config);
-            {
-                I18NText label = new I18NText(translator, "EvalImported", COLON);
-                Node input = EvalSettings.buildLibrary(translator, getGazePlay().getPrimaryStage());
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "EvalOptions", COLON);
-                ChoiceBox<EvalOptions> input = EvalSettings.buildOptionsChooser(config, translator);
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "EvalDelayBeforeSelection", COLON);
-                Spinner<Double> input = buildSpinner(0, 5, (double) config.getDelayBeforeSelectionTime() / 1000,
-                    0.1, config.getDelayBeforeSelectionTimeProperty());
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "EvalSoundBlocksSelection", COLON);
-                CheckBox input = buildCheckBox(config.getEvalSoundBlocksSelectionProperty());
-                addToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "EvalResults", COLON);
-                Node input = EvalSettings.buildResultsFolderButton(translator);
-                addToGrid(grid, currentFormRow, label, input);
-            }
+            sections.add(evaluationsSection(config, translator));
+        } else {
+            sections.add(foldersSection(config, translator));
         }
+        sections.add(statisticsSection(config, translator, evaluations));
+        return sections;
+    }
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
-        // Stats settings (the evaluations use only the heatmap settings)
+    /**
+     * @return the language, and the shortcuts to the games (Windows, games only)
+     */
+    private SettingsPage.Section languageSection(Configuration config, Translator translator, boolean evaluations) {
+        final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsLanguage", MenuIcon.LANGUAGE)
+            .add("Lang", buildLanguageChooser(config, this));
+        if (Utils.isWindows() && !evaluations) {
+            section.add("CreateShortcut", buildVariantShortcutMaker(config, this));
+        }
+        return section.build();
+    }
+
+    /**
+     * @return the settings of the games
+     */
+    private SettingsPage.Section gamesSection(Configuration config, Translator translator) {
+        return new SettingsPage.SectionBuilder("SettingsGames", MenuIcon.GAMES)
+            .add("QuitKey", buildQuitKeyChooser(config))
+            .add("QuestionLength", buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
+                0.5, config.getQuestionLengthProperty()))
+            .add("ReaskQuestionOnFail", buildCheckBox(config.getQuestionReaskedOnFailProperty()))
+            .add("EnableRewardSound", buildCheckBox(config.getRewardSoundEnabledProperty()))
+            .add("Limiter Time", buildLimiterTime(config, translator))
+            .add("Limiter Score", buildLimiterScore(config, translator))
+            .add("PianoTileColors", chooseColorHBox(config.getTileColorsProperty()))
+            .build();
+    }
+
+    /**
+     * @return the input (mouse, Tobii) and the duration of a fixation
+     */
+    private SettingsPage.Section eyeTrackerSection(Configuration config, Translator translator) {
+        return new SettingsPage.SectionBuilder("SettingsEyeTracker", MenuIcon.TEST)
+            .add("EyeTracker", buildEyeTrackerConfigChooser(config, translator))
+            .add("FixationLength", buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
+                0.1, config.getFixationLengthProperty()))
+            .build();
+    }
+
+    /**
+     * @return the theme, the colors and the orientation of the cards of the menu (the dark theme is switched by its
+     * button on every page, see {@link MenuButtons#themeButton})
+     */
+    private SettingsPage.Section appearanceSection(Configuration config, Translator translator, boolean evaluations) {
+        final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsAppearance",
+            MenuIcon.APPEARANCE)
+            .add("LayoutFile", buildStyleThemeChooser(config, this))
+            .add("BackgroundColor", chooseColorHBox(config.getBackgroundColorProperty()));
         if (!evaluations) {
-            // Opens the folder of the results
-            I18NText label = new I18NText(translator, "ResultDir", COLON);
-
-            Node input = buildResultFolder(config, configurationContext, translator);
-
-            addToGrid(grid, currentFormRow, label, input);
+            final ChoiceBox<GameButtonOrientation> orientation = buildGameButtonOrientationChooser(config, translator);
+            // The menu is built again when it is shown next: the new orientation is seen without restarting
+            orientation.valueProperty().addListener((observable, oldValue, newValue) -> getGazePlay().refreshMenu());
+            section.add("MenuOrientation", orientation)
+                .add("BackgroundEnabled", buildCheckBox(config.getBackgroundEnabledProperty()));
         }
-        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "HeatMapSettings", COLON));
-        // HeatMap settings
-        {
-            I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
+        return section.build();
+    }
 
-            CheckBox input = buildCheckBox(config.getHeatMapDisabledProperty());
+    /**
+     * @return the folders of the images, of the music and of "Where is it?"
+     */
+    private SettingsPage.Section foldersSection(Configuration config, Translator translator) {
+        return new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
+            .add("FileDir", buildImageChooser(config, this, translator))
+            .add("MusicFolder", buildDirectoryChooser(config, this, translator, DirectoryType.MUSIC))
+            .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT))
+            .build();
+    }
 
-            addSubToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
-            ChoiceBox<Double> input = buildHeatMapOpacityChoiceBox(config);
+    /**
+     * @return the evaluations of GazePlay Eval (the quit key also quits an evaluation)
+     */
+    private SettingsPage.Section evaluationsSection(Configuration config, Translator translator) {
+        return new SettingsPage.SectionBuilder("SettingsEvaluations", MenuIcon.EVALUATIONS)
+            .add("QuitKey", buildQuitKeyChooser(config))
+            .add("EvalImported", EvalSettings.buildLibrary(translator, getGazePlay().getPrimaryStage()))
+            .add("EvalOptions", EvalSettings.buildOptionsChooser(config, translator))
+            .add("EvalDelayBeforeSelection", buildSpinner(0, 5,
+                (double) config.getDelayBeforeSelectionTime() / 1000, 0.1, config.getDelayBeforeSelectionTimeProperty()))
+            .add("EvalSoundBlocksSelection", buildCheckBox(config.getEvalSoundBlocksSelectionProperty()))
+            .add("EvalResults", EvalSettings.buildResultsFolderButton(translator))
+            .build();
+    }
 
-            addSubToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "HeatMapColors", COLON);
-            HBox input = buildHeatMapColorHBox(config, translator);
-
-            addSubToGrid(grid, currentFormRow, label, input);
-        }
-
+    /**
+     * @return the statistics: the results folder, then the heatmaps, the areas of interest and the other recordings in
+     * their own cards (the evaluations use only the heatmaps)
+     */
+    private SettingsPage.Section statisticsSection(Configuration config, Translator translator, boolean evaluations) {
+        final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsStatistics",
+            MenuIcon.STATISTICS);
         if (!evaluations) {
-            addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
-            // AOI settings
-            {
-                I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
-
-                CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
-
-                addSubToGrid(grid, currentFormRow, label, input);
-            }
-            addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
-            // More Stats settings
-            {
-                I18NText label = new I18NText(translator, "DisableSequence", COLON);
-
-                CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
-
-                addSubToGrid(grid, currentFormRow, label, input);
-            }
-            {
-                I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
-
-                CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
-
-                addSubToGrid(grid, currentFormRow, label, input);
-            }
+            section.add("ResultDir", buildResultFolder(config, this, translator));
         }
-
-        this.changeGridCss(config);
-        return grid;
-    }
-
-    /**
-     * Adds the choice of the key quitting a game or an evaluation.
-     */
-    private void addQuitKey(GridPane grid, AtomicInteger currentFormRow, Translator translator, Configuration config) {
-        I18NText label = new I18NText(translator, "QuitKey", COLON);
-
-        ChoiceBox<String> input = buildQuitKeyChooser(config);
-
-        addToGrid(grid, currentFormRow, label, input);
-    }
-
-    /**
-     * Adds the title of a category on a new row of the grid (on the right side for a right-to-left language).
-     */
-    void addCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
-        int columnIndexLabelLeft = 0;
-        int columnIndexLabelRight = 2;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        label.setId("item");
-
-        Separator s = new Separator();
-        grid.add(s, 0, currentRowIndex, 4, 1);
-        GridPane.setHalignment(s, HPos.CENTER);
-
-        int newCurrentRowIndex = currentFormRow.incrementAndGet();
-        if (currentLanguageAlignmentIsLeftAligned) {
-            grid.add(label, columnIndexLabelLeft, newCurrentRowIndex);
-            GridPane.setHalignment(label, HPos.LEFT);
-        } else {
-            grid.add(label, columnIndexLabelRight, newCurrentRowIndex);
-            GridPane.setHalignment(label, HPos.RIGHT);
+        section.group("HeatMapSettings")
+            .add("DisableHeatMap", buildCheckBox(config.getHeatMapDisabledProperty()))
+            .add("HeatMapOpacity", buildHeatMapOpacityChoiceBox(config))
+            .add("HeatMapColors", buildHeatMapColorHBox(config, translator));
+        if (!evaluations) {
+            section.group("AOISettings")
+                .add("EnableAreaOfInterest", buildCheckBox(config.getAreaOfInterestDisabledProperty()))
+                .group("MoreStatsSettings")
+                .add("DisableSequence", buildCheckBox(config.getFixationSequenceDisabledProperty()))
+                .add("EnableVideoRecording", buildCheckBox(config.getVideoRecordingEnabledProperty()));
         }
-    }
-
-    /**
-     * Adds the title of a subcategory on a new row of the grid.
-     */
-    void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
-        int columnIndexLabelLeft = 1;
-        int columnIndexLabelRight = 2;
-        int columnIndexInputLeft = 1;
-        int columnIndexInputRight = 0;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        label.setId("item");
-
-        Separator s = new Separator();
-
-        if (currentLanguageAlignmentIsLeftAligned) {
-            grid.add(label, columnIndexLabelLeft, currentRowIndex);
-            GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(s, columnIndexInputLeft + 1, currentRowIndex, 2, 1);
-            GridPane.setHalignment(s, HPos.LEFT);
-        } else {
-            grid.add(label, columnIndexLabelRight, currentRowIndex);
-            GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(s, columnIndexInputRight + 1, currentRowIndex, 2, 1);
-            GridPane.setHalignment(s, HPos.RIGHT);
-        }
-    }
-
-    /**
-     * Adds a setting (its label and its control) on a new row of the grid.
-     */
-    void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
-        int columnIndexLabelLeft = 1;
-        int columnIndexInputLeft = 2;
-        int columnIndexLabelRight = 1;
-        int columnIndexInputRight = 0;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        label.setId("item");
-
-        if (currentLanguageAlignmentIsLeftAligned) {
-            grid.add(label, columnIndexLabelLeft, currentRowIndex);
-            GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(input, columnIndexInputLeft, currentRowIndex);
-            GridPane.setHalignment(input, HPos.LEFT);
-        } else {
-            grid.add(label, columnIndexLabelRight, currentRowIndex);
-            GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(input, columnIndexInputRight, currentRowIndex);
-            GridPane.setHalignment(input, HPos.RIGHT);
-        }
-    }
-
-    /**
-     * Adds a setting of a subcategory, indented, on a new row of the grid.
-     */
-    void addSubToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
-        int columnIndexLabelLeft = 2;
-        int columnIndexInputLeft = 3;
-        int columnIndexLabelRight = 2;
-        int columnIndexInputRight = 1;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        label.setId("item");
-
-        if (currentLanguageAlignmentIsLeftAligned) {
-            grid.add(label, columnIndexLabelLeft, currentRowIndex);
-            GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(input, columnIndexInputLeft, currentRowIndex);
-            GridPane.setHalignment(input, HPos.LEFT);
-        } else {
-            grid.add(label, columnIndexLabelRight, currentRowIndex);
-            GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(input, columnIndexInputRight, currentRowIndex);
-            GridPane.setHalignment(input, HPos.RIGHT);
-        }
+        return section.build();
     }
 
     /**
@@ -702,14 +394,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Translator translator,
         DirectoryType type
     ) {
-        final HBox pane = new HBox(5);
+        final HBox pane = new HBox(8);
+        pane.setAlignment(Pos.CENTER_LEFT);
         final String fileDir;
         Button buttonLoad;
-
-        // Arabic Alignment
-        if (!currentLanguageAlignmentIsLeftAligned) {
-            pane.setAlignment(Pos.BASELINE_RIGHT);
-        }
 
         switch (type) {
             case WHERE_IS_IT:
@@ -727,6 +415,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         buttonLoad = new Button(fileDir);
+        // No folder chosen (e.g. "Where is it?"): "Select" instead of an empty button
+        final Runnable showSelectWhenEmpty = () -> {
+            if (buttonLoad.getText() == null || buttonLoad.getText().isBlank()) {
+                buttonLoad.setText(translator.translate("Select"));
+            }
+        };
+        showSelectWhenEmpty.run();
+        buttonLoad.textProperty().addListener((observable, oldValue, newValue) -> showSelectWhenEmpty.run());
+        // A long path keeps its end (the folder) and is whole in the tooltip: the card keeps its width
+        buttonLoad.setMaxWidth(380);
+        buttonLoad.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
+        final Tooltip pathTooltip = MenuStyle.tooltip(fileDir);
+        pathTooltip.textProperty().bind(buttonLoad.textProperty());
+        buttonLoad.setTooltip(pathTooltip);
 
         buttonLoad.setOnAction(arg0 -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -1073,6 +775,33 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
+     * @return the choice of the orientation of the cards of the menu, with readable names ("image beside the name",
+     * "image above the name") instead of the values of the setting
+     */
+    static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
+        Configuration configuration, Translator translator
+    ) {
+        final ChoiceBox<GameButtonOrientation> choiceBox = buildGameButtonOrientationChooser(configuration);
+        choiceBox.setPrefWidth(280);
+        choiceBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(GameButtonOrientation orientation) {
+                if (orientation == null) {
+                    return "";
+                }
+                return translator.translate(orientation == GameButtonOrientation.VERTICAL
+                    ? "OrientationVertical" : "OrientationHorizontal");
+            }
+
+            @Override
+            public GameButtonOrientation fromString(String string) {
+                return null;
+            }
+        });
+        return choiceBox;
+    }
+
+    /**
      * Sets the music folder and loads its music into the playlist; a blank folder gives the "music" folder of the
      * GazePlay folder, created with the default music.
      */
@@ -1271,7 +1000,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         CheckBox limitTime = buildCheckBox(config.getLimiterTimeEnabledProperty());
 
         I18NText time = new I18NText(translator, "Time", "Colon");
-        time.setFill(Color.WHITE);
+        time.getStyleClass().add("gp-setting-text");
 
         Spinner<Integer> spinnerT = new Spinner<>(3, 180, config.getLimiterTime(), 1);
         spinnerT.setEditable(true);
@@ -1282,6 +1011,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final int newPropertyValue = spinnerT.getValue();
             config.setLimiterTime(newPropertyValue);
         });
+        // Hidden, they take no room: the switch stays on the right of the row
+        time.managedProperty().bind(time.visibleProperty());
+        spinnerT.managedProperty().bind(spinnerT.visibleProperty());
 
         if (limitTime.isSelected()) {
             time.setVisible(true);
@@ -1317,7 +1049,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         CheckBox limitScore = buildCheckBox(config.getLimiterScoreEnabledProperty());
 
         I18NText score = new I18NText(translator, "Score", "Colon");
-        score.setFill(Color.WHITE);
+        score.getStyleClass().add("gp-setting-text");
 
         Spinner<Integer> spinnerS = new Spinner<>(3, 180, config.getLimiterScore(), 1);
         spinnerS.setEditable(true);
@@ -1328,6 +1060,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final int newPropertyValue = spinnerS.getValue();
             config.setLimiterScore(newPropertyValue);
         });
+        // Hidden, they take no room: the switch stays on the right of the row
+        score.managedProperty().bind(score.visibleProperty());
+        spinnerS.managedProperty().bind(spinnerS.visibleProperty());
 
         if (limitScore.isSelected(
         )) {
@@ -1354,25 +1089,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the check box of the dark theme, which restyles the page at once
-     */
-    private HBox buildDarktheme(Configuration config, ConfigurationContext configurationContext) {
-
-        HBox hbox = new HBox();
-        hbox.setSpacing(5);
-        CheckBox darkTheme = buildCheckBox(config.getDarkThemeEnabledProperty());
-        final GazePlay gazePlay = configurationContext.getGazePlay();
-        darkTheme.setOnAction(e -> {
-            config.setDarkThemeEnabled(config.isDarkThemeEnabled());
-            CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
-            this.changeConstrutorCss(config);
-            this.changeGridCss(config);
-        });
-        hbox.getChildren().addAll(darkTheme);
-        return hbox;
-    }
-
-    /**
      * Saves the colors of the color pickers as the colors of the heatmaps.
      */
     private void updateHeatMapColorProperty(HBox hbox, Configuration config) {
@@ -1384,33 +1100,5 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         log.info(stringBuilder.toString());
         config.setHeatMapColors(stringBuilder.toString());
-    }
-
-    /**
-     * Styles the page for the light or dark theme.
-     */
-    public void changeConstrutorCss(Configuration config){
-        if (!config.isDarkThemeEnabled()) {
-            root.setStyle(
-                "-fx-background-color: #fffaf0; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-        } else {
-            root.setStyle(
-                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-        }
-    }
-
-    /**
-     * Styles the grid of the settings for the light or dark theme.
-     */
-    public void changeGridCss(Configuration config){
-        if (config.isDarkThemeEnabled()) {
-            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-        } else {
-            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-        }
     }
 }

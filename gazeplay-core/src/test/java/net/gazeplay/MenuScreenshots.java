@@ -166,6 +166,18 @@ public final class MenuScreenshots {
                 return null;
             });
             capture(gazePlay, output, "4-parametres-" + suffix);
+            // The other sections of the settings, one capture each
+            final int sections = onFx(() -> gazePlay.getPrimaryScene().getRoot()
+                .lookupAll(".gp-settings-nav-item").size());
+            for (int i = 1; i < sections; i++) {
+                final int index = i;
+                onFx(() -> {
+                    ((ToggleButton) List.copyOf(gazePlay.getPrimaryScene().getRoot()
+                        .lookupAll(".gp-settings-nav-item")).get(index)).fire();
+                    return null;
+                });
+                capture(gazePlay, output, "4-parametres-" + suffix + "-" + (i + 1));
+            }
         }
         System.exit(0);
     }

@@ -335,8 +335,8 @@ class UserProfileContextTest {
         UserProfileContext context = new UserProfileContext(mockGazePlay);
         HBox topBar = (HBox) context.getRoot().getTop();
 
-        // After the space and the button changing the mode
-        Button exitButton = (Button) topBar.getChildren().get(2);
+        // After the space, the button changing the mode and the one of the theme
+        Button exitButton = (Button) topBar.getChildren().get(3);
         assertTrue(exitButton.getStyleClass().contains("gp-quit"));
 
         exitButton.fire();

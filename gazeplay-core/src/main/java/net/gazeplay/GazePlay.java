@@ -240,6 +240,13 @@ public class GazePlay {
     }
 
     /**
+     * Builds the menu again when it is shown next, e.g. after a change of the orientation of its cards in the settings.
+     */
+    public void refreshMenu() {
+        this.loadedHomePage = false;
+    }
+
+    /**
      * Creates the settings page at the first call.
      */
     public void loadSettingsPage() {

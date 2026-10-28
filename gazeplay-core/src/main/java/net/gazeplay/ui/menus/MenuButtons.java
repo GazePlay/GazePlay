@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.components.CssUtil;
@@ -34,6 +35,33 @@ public final class MenuButtons {
         };
         update.run();
         gazePlay.getFullScreenProperty().addListener((observable, oldValue, newValue) -> update.run());
+        return button;
+    }
+
+    /**
+     * @return the round button switching between the light and the dark theme (gold), on every page out of the games
+     * (maintainer's request of 28/10/2026: no longer in the settings). It shows the active theme (a sun on the light
+     * theme, a moon on the dark one, maintainer's choice), its tooltip the theme it switches to; the DARK_THEME_ENABLED
+     * setting of the current profile is saved, and the stylesheets of the page are applied again at once
+     */
+    public static Button themeButton(final GazePlay gazePlay, final Translator translator) {
+        final Button button = MenuStyle.roundButton(MenuIcon.LIGHT_THEME, "gold", "", () -> {
+        });
+        final Runnable update = () -> {
+            final boolean dark = ActiveConfigurationContext.getInstance().isDarkThemeEnabled();
+            button.setGraphic((dark ? MenuIcon.DARK_THEME : MenuIcon.LIGHT_THEME).create(40));
+            final String text = translator.translate(dark ? "ThemeLight" : "ThemeDark");
+            button.setText(text);
+            button.getTooltip().setText(text);
+        };
+        button.setOnAction(e -> {
+            final Configuration config = ActiveConfigurationContext.getInstance();
+            config.setDarkThemeEnabled(!config.isDarkThemeEnabled());
+            CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(),
+                gazePlay.getCurrentScreenDimensionSupplier());
+            update.run();
+        });
+        update.run();
         return button;
     }
 

@@ -39,6 +39,17 @@ ModeGames,,,,,,,GazePlay Learning Games,,GazePlay Learning Games,,,,,,,,,,,,
 ModeEvaluations,,,,,,,GazePlay Learning Eval,,GazePlay Learning Eval,,,,,,,,,,,,
 ModeChange,,,,,,,Change mode,,Changer de mode,,,,,,,,,,,,
 ProfileChoose,,,,,,,Choose a profile,,Choisissez un profil,,,,,,,,,,,,
+SettingsLanguage,,,,,,,Language,,Langue,,,,,,,,,,,,
+OrientationHorizontal,,,,,,,Image beside the name,,Image à côté du nom,,,,,,,,,,,,
+OrientationVertical,,,,,,,Image above the name,,Image au-dessus du nom,,,,,,,,,,,,
+ThemeDark,,,,,,,Switch to the dark theme,,Passer au thème sombre,,,,,,,,,,,,
+ThemeLight,,,,,,,Switch to the light theme,,Passer au thème clair,,,,,,,,,,,,
+SettingsGames,,,,,,,Games,,Jeux,,,,,,,,,,,,
+SettingsEyeTracker,,,,,,,Eye tracker,,Oculomètre,,,,,,,,,,,,
+SettingsAppearance,,,,,,,Appearance,,Apparence,,,,,,,,,,,,
+SettingsFolders,,,,,,,Folders,,Dossiers,,,,,,,,,,,,
+SettingsEvaluations,,,,,,,Evaluations,,Évaluations,,,,,,,,,,,,
+SettingsStatistics,,,,,,,Statistics,,Statistiques,,,,,,,,,,,,
 CurrentProfile,,,,,,,Profile,,Profil,,,,,,,,,,,,
 SearchGame,,,,,,,Search for a game,,Rechercher un jeu,,,,,,,,,,,,
 FavoriteGames,,,,,,,Favorites,,Favoris,,,,,,,,,,,,
@@ -368,7 +379,7 @@ FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني
 # GRAPHICS SETTINGS
 LayoutFile,Stilet,ملف نموذجي,Табліца стыляў,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Fichier de style,,Raspored datoteka,Helaian Gaya,Fogli di stile,,Stijlen,Arkusze stylów,Diretório do jogo « Onde é »,Таблица стилей,Hojas de estilo,Tập tin Định dạng,Helaian Gaya
 BackgroundStyle,,,Стыль фону,,,,Background style,,Style de fond,,,,,,,,,Стиль фона,,,
-MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,Становішча меню (перазапусціце гульню для актывацыі),菜单方向,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),,Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Richting menu (herstart nodig voor activering),Orientacja menu (uruchom ponownie grę),orientacaõ domens,Положение меню (перезапустите игру для активации),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa)
+MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,Становішча меню (перазапусціце гульню для актывацыі),菜单方向,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Orientation of the game cards,valikon suunta,Orientation des cartes des jeux,,Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Richting menu (herstart nodig voor activering),Orientacja menu (uruchom ponownie grę),orientacaõ domens,Положение меню (перезапустите игру для активации),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa)
 BackgroundEnabled,,,Актываваць карцінкі на фоне,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,Активировать картинки на фоне,,,
 DarkTh,,,,,,,Dark Theme,,Thème sombre,,,,,,,,,,,,
 BackgroundColor,,,,,,,Background Color,,Couleur de fond,,,,,,,,,,,,
@@ -380,7 +391,7 @@ Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 FileDir,Direktoria,دليل الملف,Каталог файлаў,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory,tallennuspaikka,Répertoire des fichiers,,Datoteka,Direktori Fail,Cartella,,Bestands locatie,Katalog plików,Diretório de Arquivos,Каталог файлов,Directorio,Thư mục,Direktori Fail
 ImportEval,,,,,,,Import eval,,Importer une eval,,,,,,,,,,,,
 MusicFolder,Direktoria e muzikës,ملف الموسيقى,Тэчка Музыка,音乐目录,Musikmappe,φάκελος μουσικής,music folder,musiikkikansio,Dossier musiques,,Datoteka Muzika,folder muzik,Cartella musica,,Muziek folder,folder muzyczny,*pasta de musica,Папка Музыка,Carpeta de música,Thư mục âm nhạc,Folder muzik
-WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,Дзе гэта? папка гульні,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,« Waar is het » Spel bestandslocatie,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,Где это? папка игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game,« Di mana? » Arahan permainan
+WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,Дзе гэта? папка гульні,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? »,,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,« Waar is het » Spel bestandslocatie,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,Где это? папка игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game,« Di mana? » Arahan permainan
 
 # STATS SETTINGS
 DisableHeatMap,Çaktivizo Heat Map,الغاء خريطة الحرارة,Адключыць цеплавую карту,关闭眼动追踪地图,Deaktivieren Sie die Heat Map,Απενεργοποιήστε το χάρτη θερμότητας,Disable Heat Map,estää lämpökartta,Désactiver la carte de chaleur,,Deaktiviraj mapu za toplinu,Lumpuhkan Peta Haba,Disattiva mappa di calore,,Deactiveer Heat Map,Wyłącz mapę ciepła,Desactivar heatmap,Отключить тепловую карту,Desactivar mapa de calor,Tắt,Lumpuhkan Peta Haba

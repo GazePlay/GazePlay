@@ -44,6 +44,7 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.ui.menus.MenuButtons;
 import net.gazeplay.ui.menus.MenuDialog;
 import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
@@ -103,7 +104,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         final Button exitButton = MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit);
-        final HBox topBar = new HBox(spacer, createChangeModeButton(gazePlay), exitButton);
+        final HBox topBar = new HBox(spacer, createChangeModeButton(gazePlay),
+            MenuButtons.themeButton(gazePlay, translator), exitButton);
         topBar.getStyleClass().add("gp-top-bar");
 
         final Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());

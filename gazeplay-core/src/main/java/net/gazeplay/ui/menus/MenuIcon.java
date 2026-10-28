@@ -65,6 +65,18 @@ public enum MenuIcon {
     ARROW_UP("keyboard_arrow_up"),
     ARROW_DOWN("keyboard_arrow_down"),
     INFO("info"),
+    BACK("arrow_back"),
+    /**
+     * The active theme on its button: dark (a moon), light (a sun).
+     */
+    DARK_THEME("dark_mode_fill1"),
+    LIGHT_THEME("light_mode_fill1"),
+    /**
+     * Sections of the settings page.
+     */
+    LANGUAGE("translate"),
+    APPEARANCE("palette"),
+    STATISTICS("bar_chart"),
     /**
      * Categories of the games (GameCategories.Category).
      */

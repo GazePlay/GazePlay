@@ -199,7 +199,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         // Settings first, as in the menu of the evaluations (maintainer's feedback of 28/10/2026)
         final HBox topBar = new HBox(logo, search, spacer, settingsButton, replayButton, fullScreenButton,
-            logoutButton, exitButton);
+            MenuButtons.themeButton(gazePlay, translator), logoutButton, exitButton);
         topBar.getStyleClass().add("gp-top-bar");
         return topBar;
     }

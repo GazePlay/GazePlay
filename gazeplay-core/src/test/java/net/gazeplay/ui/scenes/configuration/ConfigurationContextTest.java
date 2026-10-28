@@ -5,12 +5,11 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.HPos;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -47,7 +46,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -95,234 +93,180 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldReturnToMenuOnHomeButtonPress() throws InterruptedException {
-        Platform.runLater(() -> {
+    void shouldReturnToMenuWithTheBackButton() throws Exception {
+        WaitForAsyncUtils.asyncFx(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
 
-            HomeButton button = context.createHomeButtonInConfigurationManagementScreen(mockGazePlay);
-            button.fireEvent(TestingUtils.clickOnTarget(button));
+            context.createBackButton(mockGazePlay).fire();
 
             verify(mockGazePlay).onReturnToMenu();
-        });
-        TestingUtils.waitForRunLater();
+        }).get();
+    }
+
+    /**
+     * @return the control of a setting, found by the translation key of its name in the sections
+     */
+    private static Node control(List<SettingsPage.Section> sections, String key) {
+        return sections.stream().map(section -> section.find(key)).flatMap(java.util.Optional::stream)
+            .findFirst().orElseThrow(() -> new AssertionError("No setting " + key));
+    }
+
+    private static boolean has(List<SettingsPage.Section> sections, String key) {
+        return sections.stream().anyMatch(section -> section.find(key).isPresent());
     }
 
     @Test
-    void shouldBuildTheConfigGridPaneOfTheEvaluations() throws Exception {
+    void shouldBuildTheSectionsOfTheEvaluations() throws Exception {
         when(mockGazePlay.getMode()).thenReturn(AppMode.EVALUATIONS);
         // asyncFx(...).get(): a failed assertion fails the test (not in Platform.runLater)
         WaitForAsyncUtils.asyncFx(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
 
-            GridPane pane = context.buildConfigGridPane(context, mockTranslator);
-
-            ObservableList<Node> children = pane.getChildren();
+            List<SettingsPage.Section> sections = context.buildSections(mockTranslator);
 
             // Only the settings used by the evaluations: no shortcut, no games, folders, AOI nor more statistics
-            assertEquals(42, children.size());
-            // Language
-            assertTrue(children.get(3) instanceof MenuButton);
-            // Eye-tracker settings: eye-tracker, fixation length
-            assertTrue(children.get(7) instanceof ChoiceBox);
-            assertTrue(children.get(9) instanceof Spinner);
-            // Graphics settings: theme, background color, dark theme
-            assertTrue(children.get(13) instanceof ChoiceBox);
-            assertTrue(children.get(15) instanceof HBox);
-            assertTrue(children.get(17) instanceof HBox);
+            assertEquals(List.of("SettingsLanguage", "SettingsEyeTracker", "SettingsAppearance", "SettingsEvaluations",
+                "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
+            assertInstanceOf(MenuButton.class, control(sections, "Lang"));
+            // Eye tracker, fixation length
+            assertInstanceOf(ChoiceBox.class, control(sections, "EyeTracker"));
+            assertInstanceOf(Spinner.class, control(sections, "FixationLength"));
+            // Appearance: theme, background color (the dark theme has its button on every page)
+            assertInstanceOf(ChoiceBox.class, control(sections, "LayoutFile"));
+            assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
+            assertFalse(has(sections, "DarkTh"));
             // Evaluations: quit key, imported evaluations and import, way of taking them, delay before selection,
             // sound blocking the selection, results folder
-            assertTrue(children.get(21) instanceof ChoiceBox);
-            assertTrue(children.get(23) instanceof VBox);
-            assertTrue(children.get(25) instanceof ChoiceBox);
-            assertTrue(children.get(27) instanceof Spinner);
-            assertTrue(children.get(29) instanceof CheckBox);
-            assertTrue(children.get(31) instanceof Button);
-            // Heatmaps of the screens: disabled, opacity, colors
-            assertTrue(children.get(37) instanceof CheckBox);
-            assertTrue(children.get(39) instanceof ChoiceBox);
-            assertTrue(children.get(41) instanceof HBox);
+            assertInstanceOf(ChoiceBox.class, control(sections, "QuitKey"));
+            assertInstanceOf(VBox.class, control(sections, "EvalImported"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "EvalOptions"));
+            assertInstanceOf(Spinner.class, control(sections, "EvalDelayBeforeSelection"));
+            assertInstanceOf(CheckBox.class, control(sections, "EvalSoundBlocksSelection"));
+            assertInstanceOf(Button.class, control(sections, "EvalResults"));
+            // Heatmaps of the screens: disabled, opacity, colors, in their own card
+            assertInstanceOf(CheckBox.class, control(sections, "DisableHeatMap"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "HeatMapOpacity"));
+            assertInstanceOf(HBox.class, control(sections, "HeatMapColors"));
+            assertEquals(List.of("HeatMapSettings"),
+                sections.getLast().groups().stream().map(SettingsPage.Group::titleKey).toList());
+            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation", "FileDir",
+                "ResultDir", "EnableAreaOfInterest", "EnableVideoRecording")) {
+                assertFalse(has(sections, gamesOnly), gamesOnly);
+            }
         }).get();
     }
 
     @Test
-    void shouldBuildConfigGridPane() throws Exception {
+    void shouldBuildTheSectionsOfTheGames() throws Exception {
         // asyncFx(...).get(): a failed assertion fails the test (not in Platform.runLater)
         WaitForAsyncUtils.asyncFx(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
 
-            GridPane pane = context.buildConfigGridPane(context, mockTranslator);
-
-            ObservableList<Node> children = pane.getChildren();
-
-            int notDisplayedElts = 0;
-            if (!Utils.isWindows()) {
-                notDisplayedElts = 2;
-            }
-
             // Layout of the "Games" mode (the mode of a mocked GazePlay is null: the games), without the evaluations
-            assertEquals(70 - notDisplayedElts, children.size());
-            // Language settings
-            assertTrue(children.get(3) instanceof MenuButton);
-            // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
-            assertTrue(children.get(9 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(11 - notDisplayedElts) instanceof Spinner);
-            assertTrue(children.get(13 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(15 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(17 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(19 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(21 - notDisplayedElts) instanceof HBox);
-            // Eye-tracker settings: eye-tracker, fixation length
-            assertTrue(children.get(25 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(27 - notDisplayedElts) instanceof Spinner);
-            // Graphics settings: theme, background color, menu orientation, background enabled, dark theme
-            assertTrue(children.get(31 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(33 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(35 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(37 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(39 - notDisplayedElts) instanceof HBox);
-            // Folders settings: files, music, where is it
-            assertTrue(children.get(43 - notDisplayedElts) instanceof Button);
-            assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
-            // Stats settings: results folder, heatmap (disabled, opacity, colors), AOI (enabled),
-            // sequence, video
-            assertTrue(children.get(51 - notDisplayedElts) instanceof Button);
-            assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
-            // The "convex hulls" setting, which did nothing, was removed (October 2026): one row (2 nodes) less
-            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
+            List<SettingsPage.Section> sections = context.buildSections(mockTranslator);
+
+            assertEquals(List.of("SettingsLanguage", "SettingsGames", "SettingsEyeTracker", "SettingsAppearance",
+                "SettingsFolders", "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
+            assertInstanceOf(MenuButton.class, control(sections, "Lang"));
+            assertEquals(Utils.isWindows(), has(sections, "CreateShortcut"));
+            // Games: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
+            assertInstanceOf(ChoiceBox.class, control(sections, "QuitKey"));
+            assertInstanceOf(Spinner.class, control(sections, "QuestionLength"));
+            assertInstanceOf(CheckBox.class, control(sections, "ReaskQuestionOnFail"));
+            assertInstanceOf(CheckBox.class, control(sections, "EnableRewardSound"));
+            assertInstanceOf(HBox.class, control(sections, "Limiter Time"));
+            assertInstanceOf(HBox.class, control(sections, "Limiter Score"));
+            assertInstanceOf(HBox.class, control(sections, "PianoTileColors"));
+            // Eye tracker, fixation length
+            assertInstanceOf(ChoiceBox.class, control(sections, "EyeTracker"));
+            assertInstanceOf(Spinner.class, control(sections, "FixationLength"));
+            // Appearance: theme, background color, orientation of the cards, background enabled (the dark theme has its
+            // button on every page)
+            assertInstanceOf(ChoiceBox.class, control(sections, "LayoutFile"));
+            assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "MenuOrientation"));
+            assertInstanceOf(CheckBox.class, control(sections, "BackgroundEnabled"));
+            assertFalse(has(sections, "DarkTh"));
+            // Folders: files, music, where is it
+            assertInstanceOf(Button.class, control(sections, "FileDir"));
+            assertInstanceOf(HBox.class, control(sections, "MusicFolder"));
+            assertInstanceOf(HBox.class, control(sections, "WhereIsItDirectory"));
+            // Statistics: results folder, then heatmap (disabled, opacity, colors), AOI (enabled), sequence and
+            // video, each group in its own card
+            assertInstanceOf(Button.class, control(sections, "ResultDir"));
+            assertInstanceOf(CheckBox.class, control(sections, "DisableHeatMap"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "HeatMapOpacity"));
+            assertInstanceOf(HBox.class, control(sections, "HeatMapColors"));
+            assertInstanceOf(CheckBox.class, control(sections, "EnableAreaOfInterest"));
+            assertInstanceOf(CheckBox.class, control(sections, "DisableSequence"));
+            assertInstanceOf(CheckBox.class, control(sections, "EnableVideoRecording"));
+            assertEquals(java.util.Arrays.asList(null, "HeatMapSettings", "AOISettings", "MoreStatsSettings"),
+                sections.getLast().groups().stream().map(SettingsPage.Group::titleKey).toList());
+            assertFalse(has(sections, "EvalImported"));
         }).get();
     }
 
+    /**
+     * A left-to-right language: the page is not mirrored (sections on the left, names of the settings on the left).
+     */
     @Test
-    void shouldAddCategoryTitleLeftAligned() throws InterruptedException {
+    void shouldLayOutTheSettingsFromLeftToRight() throws Exception {
         when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
-        when(mockTranslator.translate(anyString())).thenReturn("category");
 
-        GridPane grid = new GridPane();
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        I18NText label = new I18NText(mockTranslator, "category");
+        ConfigurationContext context = WaitForAsyncUtils.asyncFx(() -> new ConfigurationContext(mockGazePlay)).get();
 
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            context.addCategoryTitle(grid, currentFormRow, label);
-        });
-        TestingUtils.waitForRunLater();
-
-        assertTrue(grid.getChildren().get(0) instanceof Separator);
-        assertEquals(HPos.CENTER, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
-        assertTrue(grid.getChildren().contains(label));
-        assertEquals(HPos.LEFT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+        assertNotEquals(NodeOrientation.RIGHT_TO_LEFT, context.getRoot().getNodeOrientation());
     }
 
+    /**
+     * Arabic: the whole page is mirrored (it used to align each row of the grid to the right).
+     */
     @Test
-    void shouldAddCategoryTitleRightAligned() throws InterruptedException {
+    void shouldMirrorTheSettingsForArabic() throws Exception {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        when(mockTranslator.translate(anyString())).thenReturn("category");
 
-        GridPane grid = new GridPane();
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        I18NText label = new I18NText(mockTranslator, "category");
+        ConfigurationContext context = WaitForAsyncUtils.asyncFx(() -> new ConfigurationContext(mockGazePlay)).get();
 
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            context.addCategoryTitle(grid, currentFormRow, label);
-        });
-        TestingUtils.waitForRunLater();
-
-        assertTrue(grid.getChildren().get(0) instanceof Separator);
-        assertEquals(HPos.CENTER, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
-        assertTrue(grid.getChildren().contains(label));
-        assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+        assertEquals(NodeOrientation.RIGHT_TO_LEFT, context.getRoot().getNodeOrientation());
     }
 
+    /**
+     * The sections on the left, the first one shown; choosing another one shows its settings, one row per setting.
+     */
     @Test
-    void shouldAddSubcategoryTitleLeftAligned() throws InterruptedException {
-        when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
-        when(mockTranslator.translate(anyString())).thenReturn("category");
+    void shouldShowTheChosenSection() throws Exception {
+        when(mockTranslator.translate(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+        CheckBox first = new CheckBox();
+        CheckBox second = new CheckBox();
+        List<SettingsPage.Section> sections = List.of(
+            new SettingsPage.SectionBuilder("One", net.gazeplay.ui.menus.MenuIcon.GAMES).add("A", first).build(),
+            new SettingsPage.SectionBuilder("Two", net.gazeplay.ui.menus.MenuIcon.FOLDER).group("Group")
+                .add("B", second).build());
 
-        GridPane grid = new GridPane();
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        I18NText label = new I18NText(mockTranslator, "category");
+        WaitForAsyncUtils.asyncFx(() -> {
+            HBox page = SettingsPage.create(mockTranslator, sections);
+            VBox navigation = (VBox) page.getChildren().get(0);
+            ScrollPane content = (ScrollPane) page.getChildren().get(1);
 
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            context.addSubCategoryTitle(grid, currentFormRow, label);
-        });
-        TestingUtils.waitForRunLater();
+            assertEquals(2, navigation.getChildren().size());
+            assertTrue(((ToggleButton) navigation.getChildren().get(0)).isSelected());
+            assertEquals(List.of("A"), settingKeys(content.getContent()));
 
-        assertTrue(grid.getChildren().contains(label));
-        assertEquals(HPos.LEFT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
-        assertTrue(grid.getChildren().get(1) instanceof Separator);
-        assertEquals(HPos.LEFT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+            ((ToggleButton) navigation.getChildren().get(1)).fire();
+
+            assertTrue(((ToggleButton) navigation.getChildren().get(1)).isSelected());
+            assertEquals(List.of("B"), settingKeys(content.getContent()));
+            assertTrue(content.getContent().lookupAll(".gp-setting-row").iterator().next()
+                .lookupAll(".check-box").contains(second));
+        }).get();
     }
 
-    @Test
-    void shouldAddSubcategoryTitleRightAligned() throws InterruptedException {
-        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        when(mockTranslator.translate(anyString())).thenReturn("category");
-
-        GridPane grid = new GridPane();
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        I18NText label = new I18NText(mockTranslator, "category");
-
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            context.addSubCategoryTitle(grid, currentFormRow, label);
-        });
-        TestingUtils.waitForRunLater();
-
-        assertTrue(grid.getChildren().contains(label));
-        assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
-        assertTrue(grid.getChildren().get(1) instanceof Separator);
-        assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
-    }
-
-    @Test
-    void shouldAddNodeToGridTitleLeftAligned() throws InterruptedException {
-        when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
-        when(mockTranslator.translate(anyString())).thenReturn("category");
-
-        GridPane grid = new GridPane();
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        I18NText label = new I18NText(mockTranslator, "category");
-        CheckBox input = new CheckBox();
-
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            context.addToGrid(grid, currentFormRow, label, input);
-        });
-        TestingUtils.waitForRunLater();
-
-        assertTrue(grid.getChildren().contains(label));
-        assertEquals(HPos.LEFT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
-        assertTrue(grid.getChildren().contains(input));
-        assertEquals(HPos.LEFT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
-    }
-
-    @Test
-    void shouldAddNodeToGridRightAligned() throws InterruptedException {
-        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        when(mockTranslator.translate(anyString())).thenReturn("category");
-
-        GridPane grid = new GridPane();
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        I18NText label = new I18NText(mockTranslator, "category");
-        CheckBox input = new CheckBox();
-
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            context.addToGrid(grid, currentFormRow, label, input);
-        });
-        TestingUtils.waitForRunLater();
-
-        assertTrue(grid.getChildren().contains(label));
-        assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
-        assertTrue(grid.getChildren().contains(input));
-        assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+    /**
+     * @return the keys of the settings shown in a section, in their order
+     */
+    private static List<String> settingKeys(Node section) {
+        return section.lookupAll(".gp-setting-row").stream()
+            .map(row -> (String) row.getProperties().get(SettingsPage.SETTING_KEY)).toList();
     }
 
     @Test
@@ -442,6 +386,7 @@ class ConfigurationContextTest {
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getWindow()).thenReturn(mockWindow);
+        when(mockTranslator.translate("Select")).thenReturn("Select");
 
         if (type != ConfigurationContext.DirectoryType.SHORTCUT) {
             Platform.runLater(() -> {
@@ -454,7 +399,9 @@ class ConfigurationContextTest {
 
                 resetButton.fire();
                 assertEquals(answers.get(type), fileDirProperty.getValue());
-                assertEquals(answers.get(type), loadButton.textProperty().getValue());
+                // No folder (the default of "Where is it?"): the button says "Select" instead of being empty
+                String shown = answers.get(type).isBlank() ? "Select" : answers.get(type);
+                assertEquals(shown, loadButton.textProperty().getValue());
             });
             TestingUtils.waitForRunLater();
         }
@@ -523,6 +470,24 @@ class ConfigurationContextTest {
         TestingUtils.waitForRunLater();
 
         assertFalse(testProperty.getValue());
+    }
+
+    /**
+     * The orientation chosen in the settings is saved and read again at the next start (a new configuration read
+     * from the file, as after a restart).
+     */
+    @Test
+    void shouldSaveTheOrientationOfTheMenu() {
+        ActiveConfigurationContext.switchToDefaultUser();
+        Configuration configuration = ActiveConfigurationContext.getInstance();
+        ChoiceBox<GameButtonOrientation> chooser = ConfigurationContext.buildGameButtonOrientationChooser(configuration);
+
+        chooser.setValue(GameButtonOrientation.VERTICAL);
+        ActiveConfigurationContext.switchToDefaultUser();
+
+        assertEquals(GameButtonOrientation.VERTICAL,
+            GameButtonOrientation.fromConfig(ActiveConfigurationContext.getInstance()));
+        chooser.setValue(GameButtonOrientation.HORIZONTAL);
     }
 
     @Test
