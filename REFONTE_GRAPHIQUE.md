@@ -457,6 +457,40 @@ titre de Windows, style `UTILITY`, croix rouge) « fait tâche ».
 - Captures `etape4c` (dont `3c-menu-jeux-favoris`) regardées ; `build` et `smokeTest` réussis : **496 tests,
   0 échec**.
 
+Étape 4 (menu des jeux, fenêtre des variantes, retours du mainteneur) : commit `14b30eba3` (28/10/2026, à la demande
+du mainteneur).
+
+### 8.3 quater Étape 5 — menu des évaluations et fenêtre de choix (28/10/2026)
+
+- **Barre du haut** : comme le menu des jeux (sans recherche ni rejouer) : petit logo, puis réglages (bleu ciel),
+  plein écran (violet), déconnexion (orange corail) et quitter (rouge), ronds avec infobulles. Le bouton plein écran,
+  le lien de version (licence) et le nom du profil en cours sont partagés par les deux menus (`MenuButtons`, sortis
+  de `HomeMenuScreen`).
+- **Centre** : titre « GazePlay Learning Eval » (Fredoka), puis une **grande carte « Lancer une évaluation »**
+  (pastille turquoise, couleur du mode, avec une icône « lecture »), avec le nombre d'évaluations importées dessous ;
+  dessous, deux cartes : « Importer une évaluation (.zip de GazePlay Eval) » (icône fichier) et « Résultats des
+  évaluations » (icône dossier). Contour turquoise au survol. Carte de lancement grisée sans GazePlay Eval au
+  catalogue (comme avant : désactivée). Défilement si la fenêtre est trop petite (vérifié en 800 × 600).
+- **Bas à droite** : profil en cours et version (licence), comme le menu des jeux. Les anciens boutons du bas
+  (réglages, plein écran) sont montés dans la barre du haut.
+- **Fenêtre de choix** (`EvalChooserDialog`) : cadre `MenuDialog`, « Choisissez l'évaluation » en titre (la grande
+  question dans la fenêtre est retirée : elle doublait le titre), une carte par évaluation (style des variantes),
+  « Aucune évaluation importée » sinon, Annuler (bouton secondaire, aussi avec Échap). Taille 60 % × 60 % de la
+  fenêtre.
+- **Retours du mainteneur (28/10/2026)** : plus de phrase « Aucune évaluation importée » ni de nombre d'évaluations
+  dans la carte de lancement (la fenêtre de choix le dit déjà) : compteur, `updateCount` et clé `EvalCount` retirés.
+  Dans le menu des jeux, **réglages en premier** (à gauche des autres boutons), comme dans le menu des évaluations.
+- Fonctionnement et accesseurs inchangés (`EvalMenuScreensTest` passe sans modification ; l'accesseur du compteur,
+  inutilisé par les tests, est retiré).
+- **GazePlay Eval Test** (demande du mainteneur, détail dans `GazePlayEval.md` 16) : troisième carte « Tester une
+  évaluation (rien n'est enregistré) » (icône Material « visibility », un œil), à côté d'« Importer » et
+  « Résultats » ; les trois cartes passent l'une sous l'autre sur un écran étroit.
+- **Profils** (retour du mainteneur) : plus d'infobulle sur les cartes des profils (le nom est écrit dessus).
+- **Plus utilisé** (étape 7) : `ConfigurationButton` et `ConfigurationButtonFactory` (et son test).
+- Icônes ajoutées : `play_arrow` (pleine), `upload_file`, `folder_open`.
+- Captures `etape5` (dont `3a-evaluations-choix`) regardées en clair 1366 et 800, sombre 1920 ; `build` et
+  `smokeTest` réussis : **499 tests, 0 échec**.
+
 ### 8.4 Vérifications
 
 - `./gradlew build` : réussi, **462 tests, 0 échec**, SpotBugs sans remarque (un `synchronized` statique de

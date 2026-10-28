@@ -55,9 +55,9 @@ public class StatDisplayUtils {
     }
 
     /**
-     * Ends the JVM of the game.
+     * Ends the JVM of the game (the menu, in its own JVM, is shown again).
      */
-    static void closeStatsWindow() {
+    public static void closeStatsWindow() {
         Platform.exit();
         System.exit(0);
     }

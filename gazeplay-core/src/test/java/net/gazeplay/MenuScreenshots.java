@@ -125,6 +125,11 @@ public final class MenuScreenshots {
                 return null;
             });
             capture(gazePlay, output, "3-menu-" + suffix);
+            if (mode == AppMode.EVALUATIONS) {
+                // The window choosing an evaluation (none imported here)
+                captureDialog(gazePlay, output, "3a-evaluations-choix", () ->
+                    ((Button) gazePlay.getPrimaryScene().getRoot().lookup(".gp-eval-launch")).fire());
+            }
             if (mode == AppMode.GAMES) {
                 // Only the favorite games ("Favorites" switch)
                 onFx(() -> {

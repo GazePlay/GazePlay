@@ -15,14 +15,31 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Launcher of GazePlay Eval: the variant is the imported evaluation to play (null when none is imported: the game then
- * says how to import one).
+ * Launcher of GazePlay Eval, and of GazePlay Eval Test: the variant is the imported evaluation to play (null when none
+ * is imported: the game then says how to import one).
  */
 public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEvalGameVariant> {
 
+    /**
+     * GazePlay Eval Test: no participant form, nothing recorded (see {@link GazeplayEval#test}).
+     */
+    private final boolean test;
+
+    public GazeplayEvalGameLauncher() {
+        this(false);
+    }
+
+    public GazeplayEvalGameLauncher(final boolean test) {
+        this.test = test;
+    }
+
     @Override
     public Stats createNewStats(Scene scene) {
-        return new GazeplayEvalGameStats(scene);
+        final Stats stats = new GazeplayEvalGameStats(scene);
+        if (test) {
+            stats.disableSaving();
+        }
+        return stats;
     }
 
     @Override
@@ -32,7 +49,8 @@ public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEv
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant, Stats stats) {
-        return new GazeplayEval(gameContext, gameVariant, stats);
+        return test ? GazeplayEval.test(gameContext, gameVariant, stats)
+            : new GazeplayEval(gameContext, gameVariant, stats);
     }
 
     @Override

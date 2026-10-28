@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Each mode shows its part of the catalog: the games without GazePlay Eval, or GazePlay Eval only.
+ * Each mode shows its part of the catalog: the games without GazePlay Eval and GazePlay Eval Test, or these two only.
  */
 class AppModeTest {
 
@@ -32,15 +32,15 @@ class AppModeTest {
     void shouldShowTheGamesWithoutTheEvaluations() {
         List<GameSpec> games = AppMode.GAMES.filter(catalog);
 
-        assertEquals(catalog.size() - 1, games.size());
-        assertTrue(games.stream().noneMatch(game -> game.getGameSummary().getNameCode().equals("GazePlayEval")));
+        assertEquals(catalog.size() - 2, games.size());
+        assertTrue(games.stream().noneMatch(game -> game.getGameSummary().getNameCode().startsWith("GazePlayEval")));
     }
 
     @Test
     void shouldShowOnlyTheEvaluations() {
         List<GameSpec> evaluations = AppMode.EVALUATIONS.filter(catalog);
 
-        assertEquals(1, evaluations.size());
-        assertEquals("GazePlayEval", evaluations.getFirst().getGameSummary().getNameCode());
+        assertEquals(List.of("GazePlayEval", "GazePlayEvalTest"),
+            evaluations.stream().map(game -> game.getGameSummary().getNameCode()).sorted().toList());
     }
 }

@@ -472,6 +472,57 @@
     -fx-text-fill: -gp-text;
 }
 
+/* Menu of the evaluations (EvalMenuScreen): the color of the mode, turquoise */
+
+.gp-menu .gp-eval-badge {
+    -fx-background-color: -gp-teal;
+    -fx-background-radius: 999;
+}
+
+.gp-menu .gp-eval-badge .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-eval-launch-badge {
+    -fx-min-width: 128;
+    -fx-min-height: 128;
+    -fx-max-width: 128;
+    -fx-max-height: 128;
+}
+
+.gp-menu .gp-eval-small-badge {
+    -fx-min-width: 56;
+    -fx-min-height: 56;
+    -fx-max-width: 56;
+    -fx-max-height: 56;
+}
+
+.gp-menu .gp-eval-launch-name {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 24pt;
+}
+
+.gp-menu .button.gp-eval-launch:hover,
+.gp-menu .button.gp-eval-launch:focus-visible,
+.gp-menu .button.gp-eval-card:hover,
+.gp-menu .button.gp-eval-card:focus-visible {
+    -fx-border-color: -gp-teal;
+}
+
+.gp-menu .button.gp-eval-card {
+    -fx-padding: 20 24 20 20;
+}
+
+.gp-menu .button.gp-eval-card .label {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 15pt;
+}
+
+/* Disabled (GazePlay Eval missing from the catalog) */
+.gp-menu .button.gp-card:disabled {
+    -fx-opacity: 0.5;
+}
+
 /* Window of the variants (GameVariantDialog) */
 
 .gp-menu .gp-dialog-prompt {

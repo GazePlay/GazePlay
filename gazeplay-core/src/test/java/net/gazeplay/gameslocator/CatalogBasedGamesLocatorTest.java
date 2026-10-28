@@ -9,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The catalog of the games lists GazePlay Eval with the other games (the BERA edition, which listed the former
- * evaluations instead, was removed in October 2026), and no longer the former test of the BERA evaluations.
+ * evaluations instead, was removed in October 2026), and GazePlay Eval Test (added on 28/10/2026 at the request of
+ * the maintainer: the evaluation without form nor results), not the former test of the BERA evaluations.
  */
 class CatalogBasedGamesLocatorTest {
 
@@ -18,6 +19,8 @@ class CatalogBasedGamesLocatorTest {
         List<Class> games = new CatalogBasedGamesLocator().findGameSpecSourceClasses();
 
         assertTrue(games.size() > 2);
-        assertEquals(1, games.stream().filter(game -> game.getName().contains("gazeplayEval")).count(), games.toString());
+        assertEquals(List.of("GazeplayEvalGameSpecSource", "GazeplayEvalTestGameSpecSource"), games.stream()
+            .filter(game -> game.getName().contains("gazeplayEval")).map(Class::getSimpleName).sorted().toList(),
+            games.toString());
     }
 }

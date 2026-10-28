@@ -118,6 +118,11 @@ public class GazeplayEval implements GameLifeCycle {
     private final List<EvalProblem> loadProblems;
     private final boolean noEvaluation;
 
+    /**
+     * GazePlay Eval Test ({@link #test}): no form, nothing written.
+     */
+    private final boolean test;
+
     private Phase phase = Phase.MESSAGE;
     private EvalSessionRecorder recorder;
     private Path sessionFolder;
@@ -166,19 +171,30 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public GazeplayEval(final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
-        this(gameContext, gameVariant, stats, new ReplayablePseudoRandom());
+        this(gameContext, gameVariant, stats, new ReplayablePseudoRandom(), false);
     }
 
     public GazeplayEval(final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats,
                         final double gameSeed) {
-        this(gameContext, gameVariant, stats, new ReplayablePseudoRandom(gameSeed));
+        this(gameContext, gameVariant, stats, new ReplayablePseudoRandom(gameSeed), false);
+    }
+
+    /**
+     * @return GazePlay Eval Test: the evaluation is played as in GazePlay Eval, without the participant form and
+     * without writing anything (no session folder, no heatmaps, no results; the statistics of GazePlay are not saved
+     * either, see {@link Stats#disableSaving()}). Used to check the calibration of the eye tracker.
+     */
+    public static GazeplayEval test(final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant,
+                                    final Stats stats) {
+        return new GazeplayEval(gameContext, gameVariant, stats, new ReplayablePseudoRandom(), true);
     }
 
     private GazeplayEval(final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats,
-                         final ReplayablePseudoRandom random) {
+                         final ReplayablePseudoRandom random, final boolean test) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.random = random;
+        this.test = test;
         this.stats.setGameSeed(random.getSeed());
         if (gameVariant == null) {
             noEvaluation = true;
@@ -211,7 +227,7 @@ public class GazeplayEval implements GameLifeCycle {
         attempts.clear();
         layouts.clear();
         installHandlers();
-        if (definition.participantFields().isEmpty()) {
+        if (test || definition.participantFields().isEmpty()) {
             startSession(new LinkedHashMap<>());
         } else {
             showForm();
@@ -314,6 +330,14 @@ public class GazeplayEval implements GameLifeCycle {
         context.put("largeurZoneJeu", Math.round(dimension.getWidth()));
         context.put("hauteurZoneJeu", Math.round(dimension.getHeight()));
 
+        screenIndex = 0;
+        if (test) {
+            // The recorder stays in memory only (it keeps the screens and the samples the game needs): no session folder,
+            // so no heatmaps (saveHeatmaps), and no results (finishSession)
+            log.info("Test of the evaluation {} started: nothing is recorded", definition.name());
+            showScreen();
+            return;
+        }
         try {
             sessionFolder = createSessionFolder(GazePlayDirectories.getEvaluationResultsFolder().toPath(),
                 LocalDate.now());
@@ -331,7 +355,6 @@ public class GazeplayEval implements GameLifeCycle {
         });
         log.info("Session of the evaluation {} started, results in {}", definition.name(), sessionFolder);
 
-        screenIndex = 0;
         showScreen();
     }
 
@@ -356,7 +379,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     private void finishSession(boolean completed) {
-        if (recorder == null || resultsWritten) {
+        if (recorder == null || resultsWritten || test) {
             return;
         }
         if (phase == Phase.SCREEN && recorder.getCurrentScreen() != null && recorder.getCurrentScreen().getEnd() < 0) {
@@ -390,7 +413,8 @@ public class GazeplayEval implements GameLifeCycle {
     private void showEnd() {
         phase = Phase.END;
         finishSession(true);
-        gameContext.getChildren().add(centeredText(translate("EvalFinished"), 40));
+        // In a test, the game then ends without statistics screen (nothing saved: GameContext.showRoundStats)
+        gameContext.getChildren().add(centeredText(translate(test ? "EvalTestFinished" : "EvalFinished"), 40));
         PauseTransition pause = new PauseTransition(Duration.seconds(2));
         pause.setOnFinished(e -> gameContext.showRoundStats(stats, this));
         pause.play();

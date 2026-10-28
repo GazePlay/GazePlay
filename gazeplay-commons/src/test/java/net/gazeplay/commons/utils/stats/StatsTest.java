@@ -277,6 +277,25 @@ class StatsTest {
             fixationSequence.get(1).getAsJsonArray().get(0).getAsJsonObject().keySet());
     }
 
+    /**
+     * A session saving nothing (GazePlay Eval Test): saveStats writes no file and gives no saved files.
+     */
+    @Test
+    void shouldSaveNothingWhenTheSavingIsDisabled() throws IOException {
+        when(stats.gameContextScene.getRoot()).thenReturn(new Pane());
+        stats.disableSaving();
+        stats.start();
+        stats.gazeMoved(new Point2D(30, 40));
+        File directory = stats.getGameStatsOfTheDayDirectory();
+        String[] before = directory.list();
+
+        assertNull(stats.saveStats());
+
+        assertTrue(stats.isSavingDisabled());
+        assertNull(stats.getSavedStatsInfo());
+        assertEquals(before == null ? 0 : before.length, directory.list() == null ? 0 : directory.list().length);
+    }
+
     @Test
     void shouldIncrementNumberOfGoalsToReachByOne() {
         int initial = stats.getNbGoalsToReach();

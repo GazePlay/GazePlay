@@ -277,6 +277,38 @@ class GazeplayEvalTest {
         WaitForAsyncUtils.waitForFxEvents();
     }
 
+    /**
+     * GazePlay Eval Test: the same evaluation, with a participant field, is played to its end without the form, and
+     * nothing is written (no session folder).
+     */
+    @Test
+    void shouldPlayATestWithoutFormNorResults() throws Exception {
+        createEvaluation("[\"Prénom\"]", """
+            [{"Type": "stimuli", "Nombre de lignes": 1, "Nombre de colonnes": 2,
+              "Mettre un temps avant passage à l'écran suivant": false, "Combien de temps": 10,
+              "Combien de temps de fixation": 0.2, "Choix de sélection": "Tout", "Combien à sélectionner": 1,
+              "Position stimuli aléatoire": false, "Caché stimuli après selection": false, "Mettre un son": false,
+              "Nom du fichier": "",
+              "Liste des stimuli": {"0": {"imageName": "rouge.png", "soundName": "", "goodAnswer": false},
+                                    "1": {"imageName": "bleu.png", "soundName": "", "goodAnswer": true}}}]
+            """);
+        GazeplayEval eval = GazeplayEval.test(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        // The grid at once: no participant form
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> imageTargets().size() == 2);
+        assertTrue(find(TextField.class).isEmpty());
+        Rectangle blue = imageTargets().get(1);
+        Platform.runLater(() -> blue.fireEvent(mouse(MouseEvent.MOUSE_ENTERED)));
+
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        assertTrue(find(Text.class).stream().anyMatch(text -> text.getText().equals("EvalTestFinished")));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(List.of(), newSessions());
+    }
+
     @Test
     void shouldSayHowToImportWhenThereIsNoEvaluation() throws Exception {
         GazeplayEval eval = new GazeplayEval(gameContext, null, stats);

@@ -890,3 +890,38 @@ du **choix du mode**. Ce qui suit est un état des lieux et une méthode ; **rie
 3. Paramètres : une seule longue page comme aujourd'hui, ou des onglets/rubriques ?
 4. Menu des jeux : garder les cartes et l'orientation horizontale/verticale, les filtres par catégorie, les favoris ?
 5. Page des profils : garder la grille d'images, l'ajout et la modification d'un profil au même endroit ?
+
+## 16. GazePlay Eval Test (28/10/2026)
+
+**Demande du mainteneur** : un jeu « GazePlay Eval Test » qui joue une évaluation comme GazePlay Eval, **sans rien
+enregistrer et sans demander d'informations**, surtout pour **tester la calibration** de l'oculomètre. (L'ancien
+`gazeplayEvalTest` de la branche `GazePlayLearning`, retiré le 27/10/2026, était autre chose ; c'est le « Eval Test »
+laissé « pour plus tard » en 15.1.)
+
+- **Catalogue** : nouvelle entrée `GazeplayEvalTestGameSpecSource` (nom de code `GazePlayEvalTest`, nom affiché
+  « GazePlay Eval Test »), marquée `evaluation` : dans le mode Évaluations seulement, comme GazePlay Eval. Mêmes
+  variantes (les évaluations importées). Le catalogue a maintenant 77 entrées.
+- **Menu des évaluations** : une carte « Tester une évaluation (rien n'est enregistré) » (icône œil), à côté
+  d'« Importer » et « Résultats » ; elle ouvre la même fenêtre de choix, puis lance GazePlay Eval Test. Les deux jeux
+  sont retrouvés par leur nom de code (avant : la première évaluation du catalogue).
+- **Le jeu** (`GazeplayEval.test`, lanceur `GazeplayEvalGameLauncher(true)`) : même déroulement, mêmes écrans, mêmes
+  modes de passation et touches de l'examinateur ; **pas de formulaire** du participant ; **aucun dossier de session**
+  dans `GazePlayLearning_Eval` (donc ni cartes de chaleur, ni `session.json`, ni CSV/XLSX) ; à la fin, « Fin du test :
+  rien n'a été enregistré ».
+- **Statistiques de GazePlay** : elles aussi ne sont pas enregistrées (`Stats.disableSaving`, nouveau) : ni fichiers
+  dans `statistics`, ni vidéo de l'écran si elle est activée. Une partie sans enregistrement se termine **sans l'écran
+  des statistiques** (il montre les fichiers écrits) : à la fin du test, ou en quittant (bouton d'accueil, touche de
+  sortie), la JVM de la partie s'arrête et le menu revient, comme avec le bouton d'accueil de cet écran
+  (`GameContext.exitGame` et `showRoundStats`, `StatDisplayUtils.closeStatsWindow`).
+- **Constat pendant le travail** : la première version du réglage (« enregistrement actif », vrai par défaut) faisait
+  quitter la JVM des tests, dont des `Stats` simulés (Mockito) répondent faux. Réglage inversé
+  (`isSavingDisabled`, faux par défaut) : un `Stats` simulé suit le chemin habituel.
+- **Tests** : `GazeplayEvalTest.shouldPlayATestWithoutFormNorResults` (une évaluation avec un champ participant, jouée
+  jusqu'au bout sans formulaire, aucun dossier de session créé), `StatsTest.shouldSaveNothingWhenTheSavingIsDisabled`,
+  `AppModeTest` et `CatalogBasedGamesLocatorTest` adaptés aux deux entrées d'évaluation.
+- **Vérifications** : `build` (502 tests, 0 échec, SpotBugs) et `smokeTest` réussis ; `allGamesTest` : 77/77 à la
+  seconde exécution. À la première, **Connect4** s'est arrêté en code natif (code de sortie -1073741819, 0xC0000005,
+  violation d'accès) juste après son lancement, sans exception Java : plantage occasionnel, non reproduit, sans lien
+  avec ces changements (Connect4 n'est pas touché). À surveiller s'il revient.
+- **À vérifier en vrai** : un test avec le Tobii et une vraie évaluation, puis vérifier qu'aucun dossier n'apparaît
+  dans `Documents\GazePlayLearning_Eval` ni dans `statistics`.

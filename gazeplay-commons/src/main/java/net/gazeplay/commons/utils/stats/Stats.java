@@ -145,6 +145,14 @@ public class Stats {
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
+    /**
+     * True for a session that must leave no file (GazePlay Eval Test, a check of the calibration): no screen video,
+     * nothing written by {@link #saveStats()}, and no statistics screen at the end (GameContext). False by default,
+     * also for a mocked Stats: the usual path.
+     */
+    @Getter
+    private boolean savingDisabled;
+
     @Getter
     private WritableImage gameScreenShot;
 
@@ -436,7 +444,7 @@ public class Stats {
     public void start() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isVideoRecordingEnabled()) {
+        if (!savingDisabled && config.isVideoRecordingEnabled()) {
             startVideoRecording();
         }
         lifeCycle.start(() -> {
@@ -555,7 +563,7 @@ public class Stats {
      */
     public void stop() {
         final Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isVideoRecordingEnabled()) {
+        if (!savingDisabled && config.isVideoRecordingEnabled()) {
             endVideoRecording();
         }
         lifeCycle.stop(this::removeRecordingFilters);
@@ -655,13 +663,24 @@ public class Stats {
     }
 
     /**
+     * Disables the saving of the session: no screen video, nothing written, no statistics screen (see
+     * {@link #isSavingDisabled()}). To be called before the start of the game.
+     */
+    public void disableSaving() {
+        savingDisabled = true;
+    }
+
+    /**
      * Writes the files of the round in the statistics folder of the day, all named after the current time: the
      * screenshot, replayData.json, the heatmaps as CSV (heatmap, heatmapGaze, heatmapMouse) and the metrics images
      * (metricsMouse, metricsGaze, metricsMouseAndGaze).
      *
-     * @return the files written
+     * @return the files written; null when the saving is disabled ({@link #disableSaving()}): nothing is written
      */
     public SavedStatsInfo saveStats() throws IOException {
+        if (savingDisabled) {
+            return null;
+        }
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final File todayDirectory = getGameStatsOfTheDayDirectory();

@@ -39,6 +39,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
 import net.gazeplay.ui.*;
@@ -413,6 +414,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         soundManager.clear();
         soundManager.destroy();
 
+        if (stats.isSavingDisabled()) {
+            // Nothing saved (GazePlay Eval Test): no statistics screen, which shows the files written; the JVM of the
+            // game ends, as with the home button of that screen
+            StatDisplayUtils.closeStatsWindow();
+            return;
+        }
         saveStats(stats);
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
@@ -509,6 +516,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void showRoundStats(Stats stats, GameLifeCycle currentGame) {
         stats.stop();
 
+        if (stats.isSavingDisabled()) {
+            StatDisplayUtils.closeStatsWindow();
+            return;
+        }
         saveStats(stats);
 
         Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();

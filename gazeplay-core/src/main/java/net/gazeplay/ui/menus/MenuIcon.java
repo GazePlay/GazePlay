@@ -53,6 +53,13 @@ public enum MenuIcon {
      * Logout: back to the profiles.
      */
     LOGOUT("logout"),
+    PLAY("play_arrow_fill1"),
+    /**
+     * An eye: GazePlay Eval Test, a check of the calibration.
+     */
+    TEST("visibility"),
+    UPLOAD_FILE("upload_file"),
+    FOLDER("folder_open"),
     FAVORITE("favorite"),
     FAVORITE_FILLED("favorite_fill1"),
     ARROW_UP("keyboard_arrow_up"),

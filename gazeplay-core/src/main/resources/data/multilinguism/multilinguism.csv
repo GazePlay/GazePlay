@@ -13,6 +13,9 @@ Multimedia,Multimedia,الوسائط المتعددة,Мультымедыя,多
 
 # GAMES
 GazePlayEval,,,,,,,Launch an evaluation,,Lancer une évaluation,,,,,,,,,,,,
+GazePlayEvalTest,,,,,,,GazePlay Eval Test,,GazePlay Eval Test,,,,,,,,,,,,
+EvalTestLaunch,,,,,,,Test an evaluation (nothing recorded),,Tester une évaluation (rien n'est enregistré),,,,,,,,,,,,
+EvalTestFinished,,,,,,,End of the test: nothing was recorded,,Fin du test : rien n'a été enregistré,,,,,,,,,,,,
 EvalSettings,,,,,,,Evaluations (GazePlay Eval),,Évaluations (GazePlay Eval),,,,,,,,,,,,
 EvalImported,,,,,,,Imported evaluations,,Évaluations importées,,,,,,,,,,,,
 EvalNone,,,,,,,No evaluation imported yet,,Aucune évaluation importée,,,,,,,,,,,,
@@ -49,7 +52,6 @@ NoFavoriteGame,,,,,,,No favorite game yet: click on the heart of a game to add i
 License,,,,,,,License,,Licence,,,,,,,,,,,,
 EvalLaunch,,,,,,,Launch an evaluation,,Lancer une évaluation,,,,,,,,,,,,
 EvalChoose,,,,,,,Choose the evaluation,,Choisissez l'évaluation,,,,,,,,,,,,
-EvalCount,,,,,,,{0} evaluation(s) imported,,{0} évaluation(s) importée(s),,,,,,,,,,,,
 Cancel,,,,,,,Cancel,,Annuler,,,,,,,,,,,,
 Close,,,,,,,Close,,Fermer,,,,,,,,,,,,
 EvalNoEvaluation,,,,,,,No evaluation is imported. Import the .zip exported by the GazePlay Eval website with the button Import an evaluation of the menu of the evaluations.,,Aucune évaluation n'est importée. Importez le .zip exporté par le site GazePlay Eval avec le bouton « Importer une évaluation » du menu des évaluations.,,,,,,,,,,,,

@@ -282,7 +282,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         userNameLabel.setMinWidth(nameWidth);
         userNameLabel.setPrefWidth(nameWidth);
         userNameLabel.setMaxWidth(nameWidth);
-        final Tooltip userNameTooltip = MenuStyle.tooltip(user.getName());
         BorderPane.setAlignment(userNameLabel, Pos.CENTER);
 
         final BorderPane content = new BorderPane();
@@ -291,7 +290,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         content.setBottom(userNameLabel);
         content.setFocusTraversable(true);
 
-        Tooltip.install(content, userNameTooltip);
+        // No tooltip on the card: the name is written on it (maintainer's feedback of 28/10/2026)
 
         user.setAlignment(Pos.TOP_LEFT);
         user.setSpacing(8);

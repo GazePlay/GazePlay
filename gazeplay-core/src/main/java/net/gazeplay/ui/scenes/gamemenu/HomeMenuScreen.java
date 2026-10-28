@@ -14,7 +14,6 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,12 +27,10 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
-import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
-import net.gazeplay.ui.menus.MenuDialog;
+import net.gazeplay.ui.menus.MenuButtons;
 import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
 
@@ -145,9 +142,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final StackPane centerStackPane = new StackPane(centerPanel, createErrorMessage());
 
-        final String userName = ActiveConfigurationContext.getInstance().getUserName();
-        gamesStatisticsPane = new GamesStatisticsPane(translator, games,
-            userName == null || userName.isEmpty() ? translator.translate("DefaultUser") : userName);
+        gamesStatisticsPane = new GamesStatisticsPane(translator, games, MenuButtons.currentProfileName(translator));
         final Node bottomInfo = createBottomInfo(gazePlay, translator);
 
         root.setTop(top);
@@ -197,32 +192,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             () -> replayGame(gazePlay, allGames));
         final Button settingsButton = MenuStyle.roundButton(MenuIcon.SETTINGS, "sky", translator.translate("Options"),
             gazePlay::onDisplayConfigurationManagement);
-        final Button fullScreenButton = createFullScreenButton(gazePlay, translator);
+        final Button fullScreenButton = MenuButtons.fullScreenButton(gazePlay, translator);
         final Button logoutButton = MenuStyle.roundButton(MenuIcon.LOGOUT, "accent", translator.translate("Logout"),
             gazePlay::goToUserPage);
         final Button exitButton = MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit);
 
-        final HBox topBar = new HBox(logo, search, spacer, replayButton, settingsButton, fullScreenButton,
+        // Settings first, as in the menu of the evaluations (maintainer's feedback of 28/10/2026)
+        final HBox topBar = new HBox(logo, search, spacer, settingsButton, replayButton, fullScreenButton,
             logoutButton, exitButton);
         topBar.getStyleClass().add("gp-top-bar");
         return topBar;
-    }
-
-    /**
-     * @return the button switching the full screen, its icon and tooltip following the state of the window
-     */
-    private static Button createFullScreenButton(final GazePlay gazePlay, final Translator translator) {
-        final Button button = MenuStyle.roundButton(MenuIcon.FULLSCREEN, "violet", "", gazePlay::toggleFullScreen);
-        final Runnable update = () -> {
-            final boolean fullScreen = gazePlay.isFullScreen();
-            button.setGraphic((fullScreen ? MenuIcon.FULLSCREEN_EXIT : MenuIcon.FULLSCREEN).create(40));
-            final String text = translator.translate(fullScreen ? "Exit FullScreen" : "Enter FullScreen");
-            button.setText(text);
-            button.getTooltip().setText(text);
-        };
-        update.run();
-        gazePlay.getFullScreenProperty().addListener((observable, oldValue, newValue) -> update.run());
-        return button;
     }
 
     /**
@@ -400,12 +379,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
      * @return the number of games and the version (opening the licence)
      */
     private VBox createBottomInfo(final GazePlay gazePlay, final Translator translator) {
-        final Button versionButton = new Button(MenuUtils.versionText(), MenuIcon.INFO.create(20));
-        versionButton.getStyleClass().add("gp-link");
-        versionButton.setTooltip(MenuStyle.tooltip(translator.translate("License")));
-        versionButton.setOnAction(e -> showLicense(gazePlay, translator));
-
-        final VBox info = new VBox(6, gamesStatisticsPane, versionButton);
+        final VBox info = new VBox(6, gamesStatisticsPane, MenuButtons.versionButton(gazePlay, translator));
         info.setAlignment(Pos.BOTTOM_RIGHT);
         return info;
     }
@@ -423,28 +397,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             spacer, info);
         bottomBar.getStyleClass().add("gp-bottom-bar");
         return bottomBar;
-    }
-
-    /**
-     * Shows the licence of GazePlay Learning in a window of the menus.
-     */
-    private void showLicense(final GazePlay gazePlay, final Translator translator) {
-        final TextArea text = new TextArea(MenuUtils.licenseText());
-        text.setEditable(false);
-        text.setWrapText(true);
-        text.setPrefSize(720, 480);
-        text.getStyleClass().add("gp-license");
-        final VBox content = new VBox(text);
-        content.setPadding(new Insets(16, 24, 24, 24));
-
-        final Stage dialog = new Stage();
-        dialog.initOwner(gazePlay.getPrimaryStage());
-        MenuDialog.undecorate(dialog);
-        dialog.setTitle(translator.translate("License"));
-        dialog.setScene(MenuDialog.createScene(dialog, content, translator.translate("Close"), dialog::close));
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), dialog.getScene(),
-            gazePlay.getCurrentScreenDimensionSupplier());
-        dialog.show();
     }
 
     /**
