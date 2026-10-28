@@ -4,6 +4,23 @@
     -fx-font-family: 'sans-serif';
     -fx-base: rgb(32, 45, 47);
     -fx-background: white;
+
+    /* Colors of the menus (menus.css, dark), see REFONTE_GRAPHIQUE.md 3.2. Only used under .gp-menu */
+    -gp-bg: #1B1612;
+    -gp-surface: #2A221C;
+    -gp-surface-hover: #362C24;
+    -gp-border: #45382D;
+    -gp-text: #FFF4E8;
+    -gp-text-muted: #C8B8A8;
+    -gp-accent: #FF7E57;
+    -gp-on-accent: #1B1612;
+    -gp-yellow: #FFCF5C;
+    -gp-teal: #3CCFC1;
+    -gp-violet: #A988EA;
+    -gp-sky: #63B3F5;
+    -gp-danger: #FF6B6B;
+    -gp-on-danger: #1B1612;
+    -gp-shadow: rgba(0, 0, 0, 0.45);
 }
 
 .choice-box {

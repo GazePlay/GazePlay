@@ -14,12 +14,17 @@ import java.util.function.Supplier;
 
 /**
  * Stylesheets of the scenes: the light or dark base, one adapted to the width of the screen, the color theme of the
- * settings, then the user's own stylesheets of the "styles" folder of the GazePlay folder.
+ * settings, the look of the menus, then the user's own stylesheets of the "styles" folder of the GazePlay folder.
  */
 @Slf4j
 public class CssUtil {
 
     private static final int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
+
+    /**
+     * The look of the menus (REFONTE_GRAPHIQUE.md).
+     */
+    static final String MENUS_STYLESHEET = "data/stylesheets/menus.css";
 
     /**
      * Replaces the stylesheets of a scene by those of the current settings. A theme that is neither built in nor an
@@ -56,6 +61,8 @@ public class CssUtil {
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);
         }
+        // Rules under .gp-menu only, which the games never carry: after the theme, so that they win over it
+        stylesheets.add(MENUS_STYLESHEET);
 
         addStylesheets(stylesheets);
         log.info(stylesheets.toString());

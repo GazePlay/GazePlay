@@ -100,4 +100,24 @@ class GazePlayModeTest {
         // The settings page is built again for the new mode
         verify(screens, times(2)).newConfigurationContext();
     }
+
+    /**
+     * A window in full screen is never centered: centerOnScreen would move it up in the screen without the taskbar
+     * (top cut, taskbar seen below). Leaving the full screen centers the window.
+     */
+    @Test
+    void shouldCenterTheWindowOnlyWhenLeavingTheFullScreen() {
+        Stage window = mock(Stage.class);
+        gazePlay.setPrimaryStage(window);
+
+        when(window.isFullScreen()).thenReturn(false);
+        gazePlay.toggleFullScreen();
+        verify(window).setFullScreen(true);
+        verify(window, never()).centerOnScreen();
+
+        when(window.isFullScreen()).thenReturn(true);
+        gazePlay.toggleFullScreen();
+        verify(window).setFullScreen(false);
+        verify(window).centerOnScreen();
+    }
 }

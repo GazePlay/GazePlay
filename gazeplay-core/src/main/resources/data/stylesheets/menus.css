@@ -1,0 +1,184 @@
+/*
+ * Look of the menus of GazePlay Learning (REFONTE_GRAPHIQUE.md): mode selection, profiles, menus, settings.
+ * Everything is under .gp-menu, put on the root of the menu screens and dialogs (MenuStyle.applyTo): the games never
+ * carry this class, so these rules do not change them. The colors (-gp-*) are defined in base-light.css and
+ * base-dark.css. Fonts: Andika (texts) and Fredoka (titles), loaded by MenuFonts.
+ */
+
+.gp-menu {
+    -fx-background-color: -gp-bg;
+    -fx-font-family: "Andika";
+    -fx-font-size: 14pt;
+    -fx-focus-color: -gp-accent;
+    -fx-faint-focus-color: transparent;
+}
+
+.gp-menu .label {
+    -fx-text-fill: -gp-text;
+}
+
+/* Scrolling areas show the background of the screen */
+
+.gp-menu .scroll-pane,
+.gp-menu .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.gp-menu .scroll-bar .thumb {
+    -fx-background-color: -gp-border;
+    -fx-background-radius: 999;
+}
+
+.gp-menu .scroll-bar .thumb:hover,
+.gp-menu .scroll-bar .thumb:pressed {
+    -fx-background-color: -gp-text-muted;
+}
+
+/* Titles */
+
+.gp-menu .gp-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 30pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-subtitle {
+    -fx-text-fill: -gp-text-muted;
+}
+
+/* Icons (MenuIcon) */
+
+.gp-menu .gp-icon-shape {
+    -fx-fill: -gp-text;
+}
+
+/* Round buttons showing only an icon (MenuStyle.iconButton) */
+
+.gp-menu .gp-icon-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-border-color: transparent;
+    -fx-border-width: 3;
+    -fx-border-radius: 999;
+    -fx-padding: 10;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-icon-button:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-icon-button:pressed {
+    -fx-background-color: -gp-border;
+}
+
+/* :focus-visible: the ring shows when moving with the keyboard, not after a click or on the first control of a page */
+.gp-menu .gp-icon-button:focus-visible {
+    -fx-border-color: -gp-accent;
+}
+
+.gp-menu .gp-icon-button.gp-danger .gp-icon-shape {
+    -fx-fill: -gp-danger;
+}
+
+/* Quit GazePlay (MenuStyle.quitButton): a filled red disc, to be seen at once */
+
+.gp-menu .gp-icon-button.gp-quit {
+    -fx-background-color: -gp-danger;
+    -fx-padding: 14;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 16, 0, 0, 4);
+}
+
+.gp-menu .gp-icon-button.gp-quit .gp-icon-shape {
+    -fx-fill: -gp-on-danger;
+}
+
+.gp-menu .gp-icon-button.gp-quit:hover {
+    -fx-background-color: derive(-gp-danger, -12%);
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
+}
+
+.gp-menu .gp-icon-button.gp-quit:pressed {
+    -fx-background-color: derive(-gp-danger, -24%);
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+/* Top bar of the screens: logo, then actions on the right */
+
+.gp-menu .gp-top-bar {
+    -fx-padding: 16 24 16 24;
+    -fx-spacing: 8;
+    -fx-alignment: center-left;
+}
+
+/* Cards: plain surface, rounded corners, light shadow; the clickable ones rise on hover */
+
+.gp-menu .gp-card {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
+    -fx-padding: 32;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 24, 0, 0, 6);
+}
+
+.gp-menu .button.gp-card {
+    -fx-cursor: hand;
+}
+
+.gp-menu .button.gp-card:hover {
+    -fx-background-color: -gp-surface-hover;
+    -fx-translate-y: -4;
+}
+
+.gp-menu .button.gp-card:pressed {
+    -fx-translate-y: 0;
+}
+
+.gp-menu .button.gp-card:focus-visible {
+    -fx-border-color: -gp-accent;
+    -fx-border-width: 4;
+}
+
+/* Mode selection (ModeSelectionContext): one color per mode */
+
+.gp-menu .gp-mode-badge {
+    -fx-background-radius: 999;
+    -fx-min-width: 144;
+    -fx-min-height: 144;
+    -fx-pref-width: 144;
+    -fx-pref-height: 144;
+    -fx-max-width: 144;
+    -fx-max-height: 144;
+}
+
+.gp-menu .gp-mode-badge .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-mode-games .gp-mode-badge {
+    -fx-background-color: -gp-accent;
+}
+
+.gp-menu .gp-mode-evaluations .gp-mode-badge {
+    -fx-background-color: -gp-teal;
+}
+
+.gp-menu .button.gp-mode-games:hover,
+.gp-menu .button.gp-mode-games:focus-visible {
+    -fx-border-color: -gp-accent;
+}
+
+.gp-menu .button.gp-mode-evaluations:hover,
+.gp-menu .button.gp-mode-evaluations:focus-visible {
+    -fx-border-color: -gp-teal;
+}
+
+.gp-menu .gp-mode-name {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 24pt;
+}
+

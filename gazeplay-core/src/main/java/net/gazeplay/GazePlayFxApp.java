@@ -224,9 +224,16 @@ public class GazePlayFxApp extends Application {
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
         if (displayStageAtTheEnd) {
-            primaryStage.centerOnScreen();
+            // Not in full screen: the window is already shown in full screen by the first page, and centerOnScreen
+            // would move it up, in the screen without the taskbar (top cut, taskbar seen below; see
+            // GazePlay.toggleFullScreen)
+            if (!primaryStage.isFullScreen()) {
+                primaryStage.centerOnScreen();
+            }
             primaryStage.show();
         }
+        log.info("Window: x = {}, y = {}, {} x {}, full screen = {}", primaryStage.getX(), primaryStage.getY(),
+            primaryStage.getWidth(), primaryStage.getHeight(), primaryStage.isFullScreen());
     }
 
     /**

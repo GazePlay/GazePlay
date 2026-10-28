@@ -1,7 +1,8 @@
 # Refonte graphique des menus — état des lieux et plan
 
-Rédigé le 27/10/2026, branche `addClaudeCode`. **Rien n'est codé** : le travail commence le 28/10/2026, à la
-demande du mainteneur. Ce document sert de référence à chaque étape et sera complété au fur et à mesure.
+Rédigé le 27/10/2026, branche `addClaudeCode`. Travail commencé le 28/10/2026 : étapes 0, 1 et 2 faites (section 8),
+en attente du retour du mainteneur sur l'écran du choix du mode. Ce document sert de référence à chaque étape et sera
+complété au fur et à mesure.
 
 Écrans concernés : **choix du mode**, **choix de l'utilisateur** (profils), **menu principal** (jeux et évaluations),
 **paramètres**.
@@ -243,3 +244,97 @@ l'étape suivante. Commit et push sur demande, sur `addClaudeCode` seulement.
 
 Les quatre questions du 27/10/2026 ont leur réponse (section 1). Il n'y a plus de question bloquante pour commencer :
 les retours viendront sur les captures de chaque étape, en commençant par l'écran du choix du mode.
+
+Consigne du mainteneur (28/10/2026) : **uniquement des ressources libres et open source, libres de droits**, comme le
+projet (GPL-3.0).
+
+## 8. Avancement
+
+### 8.1 Étape 0 — captures « avant » (28/10/2026)
+
+- **Outil** : `MenuScreenshots` (sources de test de `gazeplay-core`), lancé par
+  `./gradlew :gazeplay-core:menuScreenshots -Plabel=<nom>`. Une JVM par thème (clair, sombre) et par taille
+  (800 × 600, 1366 × 768, 1920 × 1080), sans fenêtre (Monocle, `headless.geometry`), avec un dossier GazePlay
+  temporaire (`build/menu-screenshots-home`), un profil « Camille » en plus du profil par défaut, en français et en
+  mode souris. Sept captures par configuration : choix du mode ; profils, menu et paramètres de chacun des deux modes.
+  Résultat dans `gazeplay-core/build/menu-screenshots/<nom>/<thème>-<largeur>/` (non versionné).
+- **Fait** : captures « avant » faites en 1366 et 1920 (`-Plabel=avant`, 28 images), avant toute modification. Le
+  800 × 600 a été ajouté ensuite : il n'a pas de capture « avant ».
+- **Limite** : le rendu de Monocle (logiciel) est proche de celui de l'écran, sans être identique ; le survol et
+  l'animation ne se voient pas. Les essais réels restent nécessaires.
+
+### 8.2 Étape 1 — socle (28/10/2026)
+
+- **Couleurs** : les jetons `-gp-*` de 3.2 sont définis dans `.root` de `base-light.css` et `base-dark.css` (plus
+  `-gp-shadow`). Écart : `-gp-teal` clair passe de `#22B3A6` à **`#15978B`**, pour qu'une icône blanche sur le
+  turquoise atteigne le contraste 3:1 (formule WCAG : 2,6:1 avant, 3,6:1 après). Sur l'orange corail clair, le
+  blanc fait 3,15:1 : à réserver aux icônes et aux textes en gros caractères (WCAG AA, 3:1). Les autres paires
+  vérifiées passent 4,5:1 : texte sur fond 14,9 (clair) et 16,5 (sombre), texte secondaire 5,2 (clair) et 9,3
+  (sombre), pastilles sombres 7,2 (orange) et 9,3 (turquoise).
+- **`menus.css`** : toutes les règles sont sous `.gp-menu`. La feuille est ajoutée par `CssUtil` à toutes les scènes,
+  après le thème (pour l'emporter sur lui) et avant les feuilles de l'utilisateur. Les jeux ne portent jamais
+  `.gp-menu` : rien ne change pour eux (vérifié par `allGamesTest`, 8.4).
+- **Polices** (`data/fonts`, `MenuFonts`) : **Andika** Regular et Bold (SIL, OFL 1.1, fichiers inchangés, environ
+  670 Ko chacun) et **Fredoka SemiBold** (OFL 1.1, 50 Ko), version fixe tirée de la police variable de google/fonts avec
+  fontTools (JavaFX n'utilise que l'instance par défaut d'une police variable : pas de gras). Chargées une fois, à la
+  première mise en style d'un écran des menus ; familles vérifiées dans le journal : « Andika » et « Fredoka
+  SemiBold ». Origine, commande et licences : `data/fonts/README.txt`.
+- **Icônes** (`MenuIcon`) : **Material Symbols Rounded** (Google, Apache-2.0, licence dans `data/icons`), un seul
+  tracé par icône, copié du fichier SVG 24 px (comparaison automatique avec les fichiers téléchargés : identiques).
+  Dessinées en `SVGPath`, colorées par la feuille de style (`gp-icon-shape`). Pour l'instant : quitter, manette,
+  presse-papiers coché, changer, modifier, supprimer, ajouter un profil. Les PNG des jeux ne changent pas.
+- **Composants** : `MenuStyle` (classe racine, titre, bouton-icône rond avec infobulle), `CardButton` (carte
+  cliquable : un bouton qui garde son nom pour les lecteurs d'écran). `CardButton` mesure sa hauteur à sa propre
+  largeur : sinon JavaFX mesure le texte sur plusieurs lignes avec une largeur négative, un mot par ligne, et la carte
+  devient plusieurs fois trop haute (constaté sur capture). Barre du haut (`gp-top-bar`), fond, défilement, focus.
+- **Focus clavier** : anneau d'accent avec `:focus-visible` (JavaFX 19 et plus) : visible quand on navigue au
+  clavier, pas sur le premier bouton à l'ouverture ni après un clic.
+- **Pas encore fait** : le fond écrit dans le code Java des autres écrans (profils, menus, paramètres) sera retiré à
+  leur étape.
+
+### 8.3 Étape 2 — choix du mode (28/10/2026)
+
+- `ModeSelectionContext` refait : logo statique (un dixième de la hauteur) et quitter (icône) en haut ; titre
+  « Choisissez un mode » en Fredoka ; deux cartes de même taille (`TilePane`), côte à côte, ou l'une sous l'autre sur un
+  écran étroit, avec défilement si besoin (vérifié en 800 × 600). Chaque carte : pastille ronde de 144 px avec
+  l'icône (manette sur orange corail, presse-papiers coché sur turquoise), nom, description. Plus aucun `setStyle`.
+- **Noms des modes** : `ModeGames` = « GazePlay Learning Games », `ModeEvaluations` = « GazePlay Learning Eval »
+  (anglais et français ; les autres langues reprennent l'anglais). Ils apparaissent aussi sur la page des profils et
+  en titre du menu des évaluations (4.1).
+- Le logo animé n'est plus sur cet écran (il reste sur la page des profils pour l'instant).
+- Clic, Entrée et Espace inchangés (`getGamesButton().fire()` dans `EvalMenuScreensTest`).
+
+**Retours du mainteneur (28/10/2026) et changements :**
+
+| Retour | Changement |
+|---|---|
+| Le bouton quitter est moins visible et moins marquant qu'avant | `MenuStyle.quitButton` : disque rouge plein (`-gp-danger`), icône de 40 px, ombre, grossit au survol. Nouveau jeton `-gp-on-danger` (blanc en clair, 4,4:1 ; brun foncé en sombre, 6,5:1). Servira sur tous les écrans. |
+| Le logo devrait être au milieu, au-dessus de « Choisissez un mode » | Logo centré au-dessus du titre ; la barre du haut ne garde que quitter, à droite. |
+| Retirer les phrases sous les noms des modes | Descriptions retirées des cartes ; clés `ModeGamesDescription` et `ModeEvaluationsDescription` retirées de `multilinguism.csv` (plus utilisées ailleurs). |
+
+Captures `etape2b` (clair et sombre ; 800, 1366, 1920) regardées ; `./gradlew build` réussi (462 tests, 0 échec).
+Écran validé par le mainteneur (« nickel »).
+
+**Plein écran (signalé par le mainteneur le 28/10/2026)** : la barre des tâches de Windows restait visible en bas et le
+haut de la fenêtre était un peu coupé.
+- **Cause (lue dans le code)** : la première page affiche la fenêtre, déjà en plein écran (`goToModePage` appelle
+  `show()`), puis `GazePlayFxApp.start` appelait `centerOnScreen()`. Cette méthode place la fenêtre dans la zone utile
+  de l'écran (sans la barre des tâches), au tiers de la hauteur : une fenêtre de la taille de l'écran remontait de
+  quelques pixels, le haut coupé et la barre des tâches visible dessous. Même chose avec le bouton plein écran des
+  menus (`GazePlay.toggleFullScreen`) au retour en plein écran. Défaut antérieur à la refonte (même ordre d'appels
+  avec la page des profils). Les parties, lancées par la même méthode `start`, étaient aussi concernées.
+- **Correction** : la fenêtre n'est centrée que si elle n'est pas en plein écran (démarrage et bouton). La position et
+  la taille de la fenêtre sont écrites dans le journal au démarrage (`Window: x = …`). Test ajouté
+  (`GazePlayModeTest.shouldCenterTheWindowOnlyWhenLeavingTheFullScreen`) ; `build` réussi, **463 tests, 0 échec**.
+- **Hypothèse à confirmer par un essai réel** : Monocle n'a pas de vrai plein écran, la correction n'est vérifiée que
+  par le test et la lecture du code.
+
+### 8.4 Vérifications
+
+- `./gradlew build` : réussi, **462 tests, 0 échec**, SpotBugs sans remarque (un `synchronized` statique de
+  `MenuFonts` signalé puis retiré : la méthode n'est appelée que sur le thread JavaFX).
+- Captures `etape2` (clair et sombre ; 800, 1366, 1920) : regardées.
+- `smokeTest` et `allGamesTest` : réussis, **79 lancements, 0 échec** (les 76 jeux et les 3 essais de démarrage),
+  avec `menus.css` et les nouveaux jetons chargés dans la JVM de chaque partie.
+- **À faire par le mainteneur** : essai réel (survol, clavier, plein écran, écran du laboratoire), et retour sur le
+  style avant l'étape 3.

@@ -93,6 +93,14 @@ The Windows installer is built with Inno Setup 6 (`./gradlew generateWindowsInst
 The logo images (`logos/gazeplay-learning-top-logo.png`, `GazePlayLetters/learning.png`) are built by
 `gradle/logo/make_logo.py`, with the Fredoka font (SIL Open Font License 1.1, see `gradle/logo/Fredoka-OFL.txt`).
 
+The menus ship two fonts, Andika and Fredoka (SIL Open Font License 1.1), and draw Material Symbols icons (Apache
+License 2.0). Their licenses and origin are in `gazeplay-core/src/main/resources/data/fonts` (`README.txt`) and
+`data/icons`, inside the jar of the distributions.
+
+Captures of the menus without window, in light and dark, at 800, 1366 and 1920 pixels wide, to compare their look
+before and after a change: `./gradlew :gazeplay-core:menuScreenshots -Plabel=<name>` (into
+`gazeplay-core/build/menu-screenshots/<name>`).
+
 ## Release
 
 ```

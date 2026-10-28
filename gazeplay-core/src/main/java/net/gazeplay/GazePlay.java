@@ -199,14 +199,18 @@ public class GazePlay {
     }
 
     /**
-     * Switches the window between full screen and windowed.
+     * Switches the window between full screen and windowed. Only a windowed window is centered: centerOnScreen places
+     * a window in the visual bounds of the screen (without the taskbar), a third of the way down, so a window of the size
+     * of the screen moved up, its top cut and the taskbar seen below it.
      */
     public void toggleFullScreen() {
 
         boolean fullScreen = !primaryStage.isFullScreen();
         log.info("fullScreen = {}", fullScreen);
         primaryStage.setFullScreen(fullScreen);
-        primaryStage.centerOnScreen();
+        if (!fullScreen) {
+            primaryStage.centerOnScreen();
+        }
         primaryStage.show();
     }
 
