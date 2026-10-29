@@ -14,3 +14,10 @@ JavaFx -> 25 dans le runtime livré, API 21 à la compilation
 Gradle -> 9.8.2
 Configurer le projet dans IntelliJ IDEA : [INTELLIJ.md](INTELLIJ.md)
 
+
+## Licence
+GazePlay Learning est un logiciel libre, sous [licence publique générale GNU version 3 ou toute version
+ultérieure](LICENSE) (GPL-3.0-or-later). Les polices (SIL Open Font License 1.1), les icônes des menus (Apache License
+2.0) et certaines images (OpenMoji, CC BY-SA 4.0) gardent leur propre licence : voir la licence affichée par
+l'application ([gradle/templates/licence.txt](gradle/templates/licence.txt)) et le dossier `dependency-license` des
+distributions pour les bibliothèques.

@@ -179,7 +179,7 @@ public class GazePlay {
 
         translator.notifyLanguageChanged();
 
-        CssUtil.setPreferredStylesheets(config, getPrimaryScene(), getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(config, getPrimaryScene());
 
         BackgroundMusicManager.onConfigurationChanged();
 

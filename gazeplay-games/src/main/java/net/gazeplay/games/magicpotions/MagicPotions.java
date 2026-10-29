@@ -24,7 +24,8 @@ import java.util.List;
  * Game "Potions": a client asks for a potion of a color; the player mixes the right potions among red, yellow and blue,
  * chosen by fixations. A wrong potion makes the mix explode.
  * <p>
- * The graphics are kindly provided by 0melapics, macrovector, vectorpouch / Freepik.
+ * The graphics (potions, mixing pot, speech bubble, background) are drawn by gradle/images/make_potions_images.py
+ * (October 2026, replacing images of Freepik, which were not free); the explosion comes from OpenMoji (CC BY-SA 4.0).
  *
  * @author Johana MARKU
  */

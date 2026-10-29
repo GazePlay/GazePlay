@@ -48,32 +48,40 @@ class AllGamesLaunchTest {
 
     @TestFactory
     List<DynamicTest> eachGameShouldStartAndKeepRunning() throws Exception {
-        List<GameSpec> gameSpecs = loadCatalog();
-        assertFalse(gameSpecs.isEmpty(), "Empty game catalog");
+        // allGames.only (a name code) and allGames.repeat: one game launched several times, for an occasional failure
+        String only = System.getProperty("allGames.only", "");
+        int repeat = Integer.parseInt(System.getProperty("allGames.repeat", "1"));
+        List<GameSpec> gameSpecs = loadCatalog().stream()
+            .filter(gameSpec -> only.isEmpty() || only.equals(gameSpec.getGameSummary().getNameCode()))
+            .toList();
+        assertFalse(gameSpecs.isEmpty(), "Empty game catalog, or no game " + only);
 
         ExecutorService executor = Executors.newFixedThreadPool(PARALLEL_LAUNCHES);
         try {
             Map<String, Future<Launch>> launches = new LinkedHashMap<>();
-            for (GameSpec gameSpec : gameSpecs) {
-                String nameCode = gameSpec.getGameSummary().getNameCode();
-                String variant = firstVariant(gameSpec);
-                List<String> arguments = new ArrayList<>(List.of("--default-user", "--game", nameCode));
-                if (variant != null) {
-                    arguments.addAll(List.of("--variant", variant));
+            for (int run = 1; run <= repeat; run++) {
+                for (GameSpec gameSpec : gameSpecs) {
+                    String nameCode = gameSpec.getGameSummary().getNameCode();
+                    String variant = firstVariant(gameSpec);
+                    List<String> arguments = new ArrayList<>(List.of("--default-user", "--game", nameCode));
+                    if (variant != null) {
+                        arguments.addAll(List.of("--variant", variant));
+                    }
+                    // Folder recreated by the allGamesTest task at each run (see LaunchSmokeTest). Numbered: some
+                    // name codes are no valid folder names (e.g. "Math101: Addition")
+                    File home = new File(System.getProperty("smoke.home"), "game-" + launches.size());
+                    assertTrue(home.mkdirs(), "Cannot create " + home);
+                    launches.put(repeat == 1 ? nameCode : nameCode + " #" + run, executor.submit(
+                        () -> new Launch(variant, GazePlayProcess.run(home, arguments, RUNNING_DELAY_SECONDS, true))));
                 }
-                // Folder recreated by the allGamesTest task at each run (see LaunchSmokeTest). Numbered: some name
-                // codes are no valid folder names (e.g. "Math101: Addition")
-                File home = new File(System.getProperty("smoke.home"), "game-" + launches.size());
-                assertTrue(home.mkdirs(), "Cannot create " + home);
-                launches.put(nameCode, executor.submit(
-                    () -> new Launch(variant, GazePlayProcess.run(home, arguments, RUNNING_DELAY_SECONDS, true))));
             }
 
             List<DynamicTest> tests = new ArrayList<>();
             for (Map.Entry<String, Future<Launch>> entry : launches.entrySet()) {
-                String nameCode = entry.getKey();
+                String testName = entry.getKey();
+                String nameCode = testName.replaceFirst(" #\\d+$", "");
                 Launch launch = entry.getValue().get();
-                tests.add(dynamicTest(nameCode + " (" + launch.variant() + ")", () -> check(nameCode, launch)));
+                tests.add(dynamicTest(testName + " (" + launch.variant() + ")", () -> check(nameCode, launch)));
             }
             return tests;
         } finally {

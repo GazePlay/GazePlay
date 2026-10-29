@@ -1,7 +1,6 @@
 package net.gazeplay.components;
 
 import javafx.collections.ObservableList;
-import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
@@ -9,17 +8,18 @@ import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
- * Stylesheets of the scenes: the light or dark base, one adapted to the width of the screen, the color theme of the
- * settings, the look of the menus, then the user's own stylesheets of the "styles" folder of the GazePlay folder.
+ * Stylesheets of the scenes: the light or dark base, the main color of the menus, the former stylesheet of the main
+ * color (still used by the controls of the games), the look of the menus, then the user's own stylesheets of the
+ * "styles" folder of the GazePlay folder. The stylesheets by width of screen (base-max-width-*.css) were removed with
+ * the former cards of the menu (October 2026).
  */
 @Slf4j
 public class CssUtil {
-
-    private static final int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
 
     /**
      * The look of the menus (REFONTE_GRAPHIQUE.md).
@@ -30,7 +30,7 @@ public class CssUtil {
      * Replaces the stylesheets of a scene by those of the current settings. A theme that is neither built in nor an
      * existing file gives the default theme.
      */
-    public static void setPreferredStylesheets(final Configuration config, final Scene scene, final Supplier<Dimension2D> screenDimensionSupplier) {
+    public static void setPreferredStylesheets(final Configuration config, final Scene scene) {
         final ObservableList<String> stylesheets = scene.getStylesheets();
 
         final String cssfile = config.getCssFile();
@@ -49,14 +49,17 @@ public class CssUtil {
                 styleSheetPath = cssfile;
             }
         }
+        final boolean dark = config.isDarkThemeEnabled();
         stylesheets.clear();
-        if (config.isDarkThemeEnabled()) {
+        if (dark) {
            stylesheets.add("data/stylesheets/base-dark.css");
         }
         else {
             stylesheets.add("data/stylesheets/base-light.css");
         }
-        addMediaWidthStylesheet(stylesheets, screenDimensionSupplier);
+        // The main color of the menus, after the base, whose -gp-accent it replaces (the coral of a stylesheet file)
+        stylesheets.add(accentStylesheet(configuredBuiltInUiTheme.orElse(BuiltInUiTheme.DEFAULT_THEME)
+            .getAccentColor(dark)));
 
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);
@@ -69,20 +72,12 @@ public class CssUtil {
     }
 
     /**
-     * Adds the stylesheet of the largest supported width not wider than the screen (none below 800 pixels).
+     * @return a stylesheet setting the accent color of the menus (-gp-accent), as a data URI (read by JavaFX since
+     * its version 17): one stylesheet for any color, without a file per color and per theme
      */
-    private static void addMediaWidthStylesheet(final ObservableList<String> stylesheets, final Supplier<Dimension2D> screenDimensionSupplier) {
-        final int actualScreenWidth = (int) screenDimensionSupplier.get().getWidth();
-        log.info("actualScreenWidth = {}", actualScreenWidth);
-
-        for (final int width : supportedWidth) {
-            if (width <= actualScreenWidth) {
-                final String stylesheet = "data/stylesheets/base-max-width-" + String.format("%04d", width) + ".css";
-                stylesheets.add(stylesheet);
-                log.info("Added : {}", stylesheet);
-                return;
-            }
-        }
+    static String accentStylesheet(final String color) {
+        final String css = ".root { -gp-accent: " + color + "; }";
+        return "data:text/css;base64," + Base64.getEncoder().encodeToString(css.getBytes(StandardCharsets.UTF_8));
     }
 
     /**

@@ -219,7 +219,7 @@ class UserProfileContextTest {
 
         // asyncFx(...).get(): a failed assertion fails the test (not with Platform.runLater)
         WaitForAsyncUtils.asyncFx(() -> {
-            Stage result = context.createRemoveDialog(mockStage, choicePanel, user, () -> screenDimension);
+            Stage result = context.createRemoveDialog(mockStage, choicePanel, user);
             assertEquals(StageStyle.TRANSPARENT, result.getStyle());
             result.show();
 
@@ -385,7 +385,7 @@ class UserProfileContextTest {
         choicePanel.getChildren().add(user);
 
         Platform.runLater(() -> {
-            Stage result = context.createRemoveDialog(mockStage, choicePanel, user, () -> screenDimension);
+            Stage result = context.createRemoveDialog(mockStage, choicePanel, user);
             ScrollPane scroller = contentOf(result);
             HBox choicePane = (HBox) scroller.getContent();
             assertEquals(2, choicePane.getChildren().size());

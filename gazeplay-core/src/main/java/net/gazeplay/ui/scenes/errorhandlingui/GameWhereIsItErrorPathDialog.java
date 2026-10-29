@@ -107,7 +107,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
-        CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(config, scene);
 
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);

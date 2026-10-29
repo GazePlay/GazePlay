@@ -79,6 +79,7 @@ public class GazePlayLauncher {
             printStartupInfo();
 
             initGazePlayDirectory(gazePlayFolderMessages);
+            keepTheWindowsAudioLibraryLoaded();
 
             System.exit(run(args));
         };
@@ -111,6 +112,34 @@ public class GazePlayLauncher {
         if (!gazePlayDirectory.exists()) {
             boolean gazePlayDirectoryCreated = gazePlayDirectory.mkdirs();
             log().debug("gazePlayDirectoryCreated = " + gazePlayDirectoryCreated);
+        }
+    }
+
+    /**
+     * Keeps the audio library of Windows (MMDevAPI.dll) loaded until the end of the process, before any sound.
+     * <p>
+     * The sounds of JavaFX Media (DirectSound) load it; it can be unloaded again while a thread of Windows (RPC) still
+     * calls back into it: the process then stops with an access violation (0xC0000005) in rpcrt4.dll, without
+     * a crash report of the JVM. Seen in October 2026 in the dumps of Windows (CrashDumps) of Connect4, which plays a
+     * sound in its first seconds (3 launches out of 40 in a row). Loaded once more by Java, the library is never
+     * unloaded. Nothing is done on the other systems, nor when the library is missing or cannot be loaded (the sound
+     * then works as before).
+     */
+    static void keepTheWindowsAudioLibraryLoaded() {
+        if (!System.getProperty("os.name", "").startsWith("Windows")) {
+            return;
+        }
+        final String systemRoot = System.getenv("SystemRoot");
+        final File library = new File(systemRoot == null ? "C:\\Windows" : systemRoot, "System32\\MMDevAPI.dll");
+        if (!library.isFile()) {
+            log().warn("Audio library of Windows not found: {}", library);
+            return;
+        }
+        try {
+            System.load(library.getAbsolutePath());
+            log().info("Audio library of Windows kept loaded: {}", library);
+        } catch (final UnsatisfiedLinkError | SecurityException e) {
+            log().warn("Audio library of Windows not kept loaded: {}", library, e);
         }
     }
 

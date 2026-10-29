@@ -57,8 +57,7 @@ public final class MenuButtons {
         button.setOnAction(e -> {
             final Configuration config = ActiveConfigurationContext.getInstance();
             config.setDarkThemeEnabled(!config.isDarkThemeEnabled());
-            CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(),
-                gazePlay.getCurrentScreenDimensionSupplier());
+            CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
             update.run();
         });
         update.run();
@@ -101,8 +100,7 @@ public final class MenuButtons {
         MenuDialog.undecorate(dialog);
         dialog.setTitle(translator.translate("License"));
         dialog.setScene(MenuDialog.createScene(dialog, content, translator.translate("Close"), dialog::close));
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), dialog.getScene(),
-            gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), dialog.getScene());
         dialog.show();
     }
 }

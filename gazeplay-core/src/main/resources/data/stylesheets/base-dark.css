@@ -94,30 +94,6 @@
     -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.8), 10, 0, 0, 0);
 }
 
-.gameChooserButton.gameVariation {
-}
-
-.gameChooserButtonThumbnail {
-    -fx-background-color: rgba(0, 0, 0, 1);
-    -fx-background-radius: 8px;
-    -fx-border-color: rgba(60, 63, 65, 0.7);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
-}
-
-.gameChooserButtonGameTypeIndicator {
-    -fx-background-color: rgba(0, 0, 0, 1);
-    -fx-background-radius: 8px;
-    -fx-border-color: rgba(60, 63, 65, 0.7);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
-}
-
-.gameChooserButtonTitle {
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-    -fx-font-smoothing-type: lcd;
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-}
-
 .scroll-pane {
     -fx-background-color: black;
 }

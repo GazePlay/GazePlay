@@ -26,3 +26,10 @@ You can find the file in .github/workflow/project-check-reminder.yml
 ## Release
 To make a release, this happens manually in the Actions tab on the Restity Github of the project.<br>
 Just throw it and choose the number to modify for the release (major, minor or patch)
+
+## License
+GazePlay Learning is free software, under the [GNU General Public License version 3 or any later version](LICENSE)
+(GPL-3.0-or-later). The fonts (SIL Open Font License 1.1), the icons of the menus (Apache License 2.0) and some images
+(OpenMoji, CC BY-SA 4.0) keep their own license: see the licence shown by the application
+([gradle/templates/licence.txt](gradle/templates/licence.txt)) and the `dependency-license` folder of the
+distributions for the libraries.

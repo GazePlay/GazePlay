@@ -61,13 +61,17 @@ public final class MenuScreenshots {
         if (!gazePlayFolder.isDirectory() && !gazePlayFolder.mkdirs()) {
             throw new IOException("Cannot create " + gazePlayFolder);
         }
+        // menu.color: another main color than the default one, for every profile
+        final String color = System.getProperty("menu.color", "");
+        final String colorSetting = color.isEmpty() ? "" : "CSS_FILE=builtin:" + color + "\n";
         // Two favorite games, so that the menu shows its favorites row
         Files.writeString(new File(gazePlayFolder, "GazePlay.properties").toPath(),
             "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n"
-                + "FAVORITE_GAMES=Ninja,Simon\n",
+                + "FAVORITE_GAMES=Ninja,Simon\n" + colorSetting,
             StandardCharsets.UTF_8);
         // Two more profiles, without and with a picture, besides the default one and "Add"
-        final String settings = "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n";
+        final String settings = "EYE_TRACKER=mouse_control\nLANGUAGE=fra\nCOUNTRY=FR\nDARK_THEME_ENABLED=" + dark + "\n"
+            + colorSetting;
         createProfile("Camille", settings);
         // A name without accent: the settings are written here in UTF-8, GazePlay writes them escaped
         final File picture = new File(createProfile("Leo", settings), "bear.jpg");
@@ -88,8 +92,7 @@ public final class MenuScreenshots {
             final Stage stage = new Stage();
             final Rectangle2D bounds = Screen.getPrimary().getBounds();
             final Scene scene = new Scene(new Pane(), bounds.getWidth(), bounds.getHeight(), Color.BLACK);
-            CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene,
-                gazePlay.getCurrentScreenDimensionSupplier());
+            CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene);
             stage.setScene(scene);
             gazePlay.setPrimaryScene(scene);
             gazePlay.setPrimaryStage(stage);

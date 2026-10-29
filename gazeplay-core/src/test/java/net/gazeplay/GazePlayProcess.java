@@ -101,7 +101,27 @@ final class GazePlayProcess {
             }
         }
 
-        List<String> lines = Files.readAllLines(output.toPath(), StandardCharsets.UTF_8);
+        List<String> lines = new ArrayList<>(Files.readAllLines(output.toPath(), StandardCharsets.UTF_8));
+        if (exited) {
+            addCrashReports(home, lines);
+        }
         return new Result(exited, exited ? process.exitValue() : 0, lines);
+    }
+
+    /**
+     * Adds the beginning of the crash reports of the JVM (hs_err_pid*.log, written in its working folder after a
+     * crash in native code) to the output, so that a failed test shows where the crash happened.
+     */
+    private static void addCrashReports(File home, List<String> lines) throws IOException {
+        File[] reports = home.listFiles((folder, name) -> name.startsWith("hs_err_pid") && name.endsWith(".log"));
+        if (reports == null) {
+            return;
+        }
+        for (File report : reports) {
+            lines.add("----- " + report.getAbsolutePath());
+            // Latin-1: the report may hold bytes of any encoding (paths, native messages)
+            List<String> reportLines = Files.readAllLines(report.toPath(), StandardCharsets.ISO_8859_1);
+            lines.addAll(reportLines.subList(0, Math.min(80, reportLines.size())));
+        }
     }
 }

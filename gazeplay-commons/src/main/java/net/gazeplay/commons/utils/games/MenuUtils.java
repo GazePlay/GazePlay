@@ -1,10 +1,6 @@
 package net.gazeplay.commons.utils.games;
 
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import net.gazeplay.commons.VersionInfo;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -13,29 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
- * Menu bar shown at the top of the main screens.
+ * The version and the licence of GazePlay Learning, shown by the menus.
  */
 public class MenuUtils {
-
-    /**
-     * @return a menu bar with the version of GazePlay Learning (opening the licence) and the current profile
-     */
-    public static MenuBar buildMenuBar() {
-        MenuItem licenseMenuItem = new MenuItem(licenseText());
-
-        Menu versionMenu = new Menu(versionText());
-        versionMenu.getItems().add(licenseMenuItem);
-
-        String username = ActiveConfigurationContext.getInstance().getUserName();
-        Menu profileMenu = new Menu("Current Profile: " + (username.isEmpty() ? "Default" : username));
-
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(versionMenu, profileMenu);
-        menuBar.setPrefHeight(40);
-        menuBar.setPrefWidth(80);
-
-        return menuBar;
-    }
 
     /**
      * @return the name and version of the application, e.g. "GazePlay Learning 1.11.10"

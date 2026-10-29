@@ -34,6 +34,22 @@ Versions of all libraries and plugins: `gradle/libs.versions.toml`.
    the eye tracker.
 4. Each game started from the menu runs **in its own JVM** (`GameMenuController.createBuilder`), launched with
    `--user`/`--default-user`, `--game` and `--variant`.
+5. On Windows, every JVM keeps the audio library of Windows (`MMDevAPI.dll`) loaded until it ends
+   (`GazePlayLauncher.keepTheWindowsAudioLibraryLoaded`): unloaded while a sound of JavaFX Media started, it made a
+   game stop in native code (see REFONTE_GRAPHIQUE.md 8.3 sexies).
+
+## Look of the menus
+
+The screens out of the games (choice of the mode, profiles, menus of the games and of the evaluations, settings and
+their windows) share the package `net.gazeplay.ui.menus`: `MenuStyle` (style class `gp-menu` on the root of a screen,
+title, round buttons), `MenuIcon` (Material Symbols Rounded, Apache-2.0, unchanged SVG files of `data/icons`),
+`MenuFonts` (Andika and Fredoka, OFL, in `data/fonts`), `CardButton`, `MenuDialog` (windows without the frame of the
+system) and `MenuButtons` (full screen, theme, version). Their rules are in `data/stylesheets/menus.css`, all under
+`.gp-menu`, which the games never carry; the colors are looked-up colors (`-gp-*`) of `base-light.css` and
+`base-dark.css`. `CssUtil.setPreferredStylesheets` applies, in order: the light or dark base, the main color
+(`-gp-accent`, chosen in the settings: `BuiltInUiTheme`, key `CSS_FILE`), the former stylesheet of that color (still
+used by the controls of the games), `menus.css`, then the user's stylesheets of the `styles` folder. The plan and the
+decisions are in [REFONTE_GRAPHIQUE.md](REFONTE_GRAPHIQUE.md).
 
 ## Games
 

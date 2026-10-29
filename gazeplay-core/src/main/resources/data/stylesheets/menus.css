@@ -625,6 +625,7 @@
 .gp-menu .gp-settings-card .button,
 .gp-menu .gp-settings-card .menu-button,
 .gp-menu .gp-settings-card .choice-box,
+.gp-menu .gp-settings-card .combo-box,
 .gp-menu .gp-settings-card .color-picker {
     -fx-background-color: -gp-surface;
     -fx-background-radius: 999;
@@ -641,6 +642,7 @@
 .gp-menu .gp-settings-card .button:hover,
 .gp-menu .gp-settings-card .menu-button:hover,
 .gp-menu .gp-settings-card .choice-box:hover,
+.gp-menu .gp-settings-card .combo-box:hover,
 .gp-menu .gp-settings-card .color-picker:hover {
     -fx-background-color: -gp-surface-hover;
 }
@@ -658,8 +660,77 @@
 }
 
 .gp-menu .gp-settings-card .choice-box > .open-button > .arrow,
+.gp-menu .gp-settings-card .combo-box > .arrow-button > .arrow,
 .gp-menu .gp-settings-card .menu-button > .arrow-button > .arrow {
     -fx-background-color: -gp-text-muted;
+}
+
+/* The main color: its swatch and its name, in the box and in its list */
+.gp-menu .gp-settings-card .combo-box > .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.gp-menu .gp-settings-card .combo-box > .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -gp-text;
+    -fx-padding: 0 4 0 0;
+    -fx-graphic-text-gap: 10;
+}
+
+.gp-menu .gp-color-swatch {
+    -fx-stroke: -gp-border;
+    -fx-stroke-width: 1;
+}
+
+/* The lists opened by the controls of the settings (popups: they take the styles of their control). The base
+   stylesheets and those of the main colors color them otherwise, with a large font on the focused item */
+.gp-menu .gp-settings-card .choice-box .context-menu,
+.gp-menu .gp-settings-card .menu-button .context-menu,
+.gp-menu .gp-settings-card .combo-box-popup > .list-view {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 6;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 12, 0, 0, 3);
+}
+
+.gp-menu .gp-settings-card .choice-box .menu-item,
+.gp-menu .gp-settings-card .menu-button .menu-item,
+.gp-menu .gp-settings-card .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12 6 12;
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text;
+    -fx-graphic-text-gap: 10;
+}
+
+.gp-menu .gp-settings-card .choice-box .menu-item > .label,
+.gp-menu .gp-settings-card .menu-button .menu-item > .label {
+    -fx-text-fill: -gp-text;
+    -fx-font-weight: normal;
+}
+
+.gp-menu .gp-settings-card .choice-box .menu-item:focused,
+.gp-menu .gp-settings-card .menu-button .menu-item:focused,
+.gp-menu .gp-settings-card .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:hover,
+.gp-menu .gp-settings-card .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:selected {
+    -fx-background-color: -gp-surface-hover;
+    -fx-font-size: 12pt;
+}
+
+.gp-menu .gp-settings-card .choice-box .menu-item:focused > .label,
+.gp-menu .gp-settings-card .menu-button .menu-item:focused > .label {
+    -fx-text-fill: -gp-text;
+}
+
+/* The check mark of the chosen item */
+.gp-menu .gp-settings-card .choice-box .menu-item > .left-container > .check,
+.gp-menu .gp-settings-card .choice-box .menu-item:focused > .left-container > .check {
+    -fx-background-color: -gp-accent;
 }
 
 .gp-menu .gp-settings-card .spinner {

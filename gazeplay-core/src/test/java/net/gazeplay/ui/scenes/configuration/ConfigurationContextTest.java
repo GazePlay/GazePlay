@@ -132,7 +132,7 @@ class ConfigurationContextTest {
             assertInstanceOf(ChoiceBox.class, control(sections, "EyeTracker"));
             assertInstanceOf(Spinner.class, control(sections, "FixationLength"));
             // Appearance: theme, background color (the dark theme has its button on every page)
-            assertInstanceOf(ChoiceBox.class, control(sections, "LayoutFile"));
+            assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
             assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
             assertFalse(has(sections, "DarkTh"));
             // Evaluations: quit key, imported evaluations and import, way of taking them, delay before selection,
@@ -182,7 +182,7 @@ class ConfigurationContextTest {
             assertInstanceOf(Spinner.class, control(sections, "FixationLength"));
             // Appearance: theme, background color, orientation of the cards, background enabled (the dark theme has its
             // button on every page)
-            assertInstanceOf(ChoiceBox.class, control(sections, "LayoutFile"));
+            assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
             assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
             assertInstanceOf(ChoiceBox.class, control(sections, "MenuOrientation"));
             assertInstanceOf(CheckBox.class, control(sections, "BackgroundEnabled"));
@@ -310,7 +310,7 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldCreateThemeChooserNonDefault() {
+    void shouldCreateMainColorChooserNonDefault() {
         StringProperty cssFileProperty = new SimpleStringProperty("builtin:BLUE");
         ObservableList<String> stylesheets = FXCollections.observableArrayList();
         Scene mockScene = mock(Scene.class);
@@ -322,9 +322,9 @@ class ConfigurationContextTest {
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getStylesheets()).thenReturn(stylesheets);
 
-        ChoiceBox<BuiltInUiTheme> result = ConfigurationContext.buildStyleThemeChooser(mockConfig, mockContext);
+        ComboBox<BuiltInUiTheme> result = ConfigurationContext.buildMainColorChooser(mockConfig, mockContext, mockTranslator);
 
-        assertEquals(BuiltInUiTheme.values().length, result.getItems().size());
+        assertEquals(BuiltInUiTheme.offeredColors(), result.getItems());
         assertEquals(BuiltInUiTheme.BLUE, result.getValue());
         assertEquals(cssFileProperty.getValue(), "builtin:BLUE");
 
@@ -335,7 +335,7 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldCreateThemeChooserDefault() {
+    void shouldCreateMainColorChooserDefault() {
         StringProperty cssFileProperty = new SimpleStringProperty("builtin:WRONG");
         ObservableList<String> stylesheets = FXCollections.observableArrayList();
         Scene mockScene = mock(Scene.class);
@@ -347,9 +347,9 @@ class ConfigurationContextTest {
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getStylesheets()).thenReturn(stylesheets);
 
-        ChoiceBox<BuiltInUiTheme> result = ConfigurationContext.buildStyleThemeChooser(mockConfig, mockContext);
+        ComboBox<BuiltInUiTheme> result = ConfigurationContext.buildMainColorChooser(mockConfig, mockContext, mockTranslator);
 
-        assertEquals(BuiltInUiTheme.values().length, result.getItems().size());
+        assertEquals(BuiltInUiTheme.offeredColors(), result.getItems());
         assertEquals(BuiltInUiTheme.SILVER_AND_GOLD, result.getValue());
 
         result.setValue(BuiltInUiTheme.GREEN);

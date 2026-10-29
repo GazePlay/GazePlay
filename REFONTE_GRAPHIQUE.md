@@ -560,6 +560,82 @@ du mainteneur).
   `smokeTest` réussis : **508 tests, 0 échec** ; `allGamesTest` : **77/77** (nouveaux jetons `-gp-knob`, `-gp-gold`
   des feuilles de base chargées par les jeux).
 
+### 8.3 sexies Étape 7 — couleur principale, ménage, plantage de Puissance 4 (28/10/2026)
+
+**Couleur principale** (choix du mainteneur : une couleur au choix plutôt que la suppression du réglage).
+
+- Le réglage « Fichier de style » devient **« Couleur principale »** (rubrique Apparence) : une liste avec la pastille
+  de chaque couleur, appliquée aussitôt. Sept couleurs : **corail** (par défaut), orange, vert, bleu ciel, bleu, rose,
+  violet. Chacune a une teinte pour le thème clair et une pour le sombre (`BuiltInUiTheme.getAccentColor`) ; elle
+  remplace `-gp-accent` (boutons principaux, survol et focus des cartes, rubrique choisie, cases cochées, choix des
+  variantes, champ en cours de saisie, avatar et catégorie de cette couleur). Les pastilles suivent le thème.
+- **Contraste** (calculé, formule WCAG) : texte blanc sur la teinte claire de 3,15 (corail, inchangé) à 5,66 (bleu) ;
+  texte foncé sur la teinte sombre de 7,16 à 9,50. Aucune couleur n'est moins lisible que le corail d'avant.
+- **Format des réglages** (persistant, rien n'est réécrit) : la clé `CSS_FILE` et ses valeurs sont gardées.
+  `builtin:SILVER_AND_GOLD` (ancien défaut) est le corail ; `builtin:PINK_AND_PURPLE` est le rose ;
+  `builtin:ORANGE`, `GREEN`, `LIGHT_BLUE`, `BLUE` gardent leur couleur ; **`builtin:VIOLET` est nouveau** (une
+  version précédente le lit comme son thème par défaut). `builtin:SYSTEM`, un ancien thème retiré ou un fichier de
+  style donnent le corail, et restent enregistrés tant qu'on ne choisit pas une autre couleur. Un ancien chemin
+  `data/stylesheets/main-pink-purple.css` est lu comme le rose.
+- **Les jeux** : les feuilles `main-*.css` restent chargées (elles stylent les boutons, listes et compteurs des jeux),
+  chaque couleur gardant celle de son ancien thème (le violet prend celle du rose). Les menus, sous `.gp-menu`, ne
+  les voient plus, sauf les **listes déroulantes** des réglages, qui gardaient les dégradés des anciens thèmes et une
+  police de 25 pt sur l'élément survolé : elles ont maintenant le style des menus (`menus.css`).
+- **Mécanisme** : `CssUtil` ajoute après la feuille de base une petite feuille `.root { -gp-accent: … }` sous forme de
+  **data URI** (lue par JavaFX depuis la version 17) : pas de fichier par couleur et par thème.
+
+**Ménage** (chaque élément cherché dans tout le dépôt, jeux compris, avant d'être retiré).
+
+- Classes : `QuickControlPanel`, `ConfigurationButton`, `ConfigurationButtonFactory` (et son test),
+  `MenuUtils.buildMenuBar` (et ses tests ; `versionText` et `licenseText` restent, testés), la vignette des catégories
+  (`GameCategories.Category.thumbnail`).
+- Feuilles de style : les 8 `base-max-width-*.css` (elles ne contenaient que des règles d'anciennes classes de cartes,
+  plus utilisées nulle part) et leur choix selon la largeur de l'écran ; `CssUtil.setPreferredStylesheets` ne prend
+  plus la taille de l'écran. Dans `base-light.css` et `base-dark.css`, les règles des anciennes cartes
+  (`.gameChooserButtonThumbnail`, `…GameTypeIndicator`, `…Title`, `.gameChooserButton.gameVariation`) ;
+  `.gameChooserButton` reste (fenêtre de choix de fichiers, erreur « Où est-ce ? »).
+- Images (`data/common/images`, aucune référence dans le code) : 24 PNG (`AddUser`, `ConfigUser`, `DefaultUser`,
+  `power-off`, `logout`, `heart_empty`, `heart_filled`, `arrow-up`, `arrow-down`, `configuration-button` et ses
+  variantes `alt`, `alt2`, `alt3`, `license`, `eval`, `bi`, `blackCircle`, `bravo`, `bravo2`, `excelButton`,
+  `redFrame`, `whiteCross`, `whiteSquare`, `youtube-logo-128`) et le dossier `categoriesThumbnails` (6 images).
+  `configuration-button-alt4.png` reste (barre des jeux).
+- Traductions : `LanguageSettings`, `GamesSettings`, `EyeTrackerSettings`, `GraphicsSettings`, `FoldersSettings`,
+  `EvalSettings`, `StatsSettings`, `ConfigTitle`, `DarkTh`, `LayoutFile` ; dans les autres langues, la mention du
+  redémarrage est retirée du libellé de l'orientation du menu (devenue inexacte).
+- **Question / risque** : `data/common/images/License free.txt` est une licence **Freepik** (attribution obligatoire,
+  revente et inclusion dans une archive interdites), qui ne dit pas à quelles images elle s'applique. Elle n'est pas
+  « libre » au sens du projet. Gardée telle quelle ; à voir avec le mainteneur (quelles images, remplacement ?).
+
+**Plantage de Puissance 4** (0xC0000005, vu une fois dans `allGamesTest` le 28/10/2026).
+
+- **Reproduit** : `allGamesTest -PallGamesOnly=Connect4 -PallGamesRepeat=40` (nouvelles options, qui lancent un seul
+  jeu plusieurs fois) : **3 lancements sur 40** arrêtés avec le code -1073741819, juste après l'affichage de la
+  fenêtre, sans rapport de la JVM (`hs_err_pid*.log`, désormais joint au message d'un test en échec s'il existe).
+- **Cause** (faits, lus dans les vidages de Windows, `%LOCALAPPDATA%\CrashDumps`, avec un petit lecteur de minidump) :
+  dans les trois vidages, et dans celui du plantage d'origine, un fil de Windows (RPC, `rpcrt4.dll`) appelle
+  `MMDevAPI.dll`, la bibliothèque audio de Windows, **alors qu'elle vient d'être déchargée** (elle figure dans la
+  liste des modules déchargés, et l'adresse lue est dans son ancien emplacement). Puissance 4 est touché parce que sa
+  variante « l'ordinateur commence » joue un son dès les premières secondes (son de JavaFX Media, DirectSound).
+  **Hypothèse** : une course dans Windows ou dans le lecteur audio de JavaFX au démarrage du premier son ; tout jeu
+  qui joue un son au démarrage peut être touché, aussi hors des tests.
+- **Correction** : `GazePlayLauncher.keepTheWindowsAudioLibraryLoaded` charge une fois de plus `MMDevAPI.dll` au
+  démarrage (Windows seulement) : elle n'est plus jamais déchargée. Sans effet ailleurs ; si la bibliothèque manque ou
+  ne se charge pas, un avertissement est écrit et le son marche comme avant.
+- **Vérifié** : avec la correction, **80 lancements sur 80** de Puissance 4 (correction active dans les 80 journaux,
+  aucun nouveau vidage). Avec le taux d'avant (3 sur 40), 80 réussites de suite avaient environ 0,2 % de chances
+  d'arriver par hasard (0,925⁸⁰) : forte indication, pas une preuve. À surveiller sur les postes du laboratoire.
+
+**Tests et vérifications**
+
+- Nouveaux : `CssUtilTest` (couleur appliquée en clair et en sombre, anciennes valeurs → corail, feuille de la couleur
+  gardée pour les jeux), `BuiltInUiThemeTest` (7 couleurs proposées, teintes distinctes, ancien chemin du rose) ;
+  adaptés : `ConfigurationContextTest` (choix de la couleur), `MenuUtilsTest`, `UserProfileContextTest`.
+- `build` (SpotBugs compris) : **509 tests, 0 échec** ; `smokeTest` 3/3 ; `allGamesTest` **77/77** (correction audio
+  active dans les 77 JVM).
+- Captures avec une autre couleur : `menuScreenshots… -Pcolor=BLUE` (nouvelle option), regardées en clair et en
+  sombre à 1366 (`build/menu-screenshots/etape7-bleu`). **Pas vu en capture** : la liste déroulante ouverte (fenêtre
+  à part, non capturée), à regarder lors de l'essai réel.
+
 ### 8.4 Vérifications
 
 - `./gradlew build` : réussi, **462 tests, 0 échec**, SpotBugs sans remarque (un `synchronized` statique de

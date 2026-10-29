@@ -100,8 +100,7 @@ public class EvalChooserDialog extends Stage {
         });
 
         final Scene scene = MenuDialog.createScene(this, content, translator.translate("Close"), this::close);
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene,
-            gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene);
         setScene(scene);
         setWidth(primaryStage.getWidth() * 0.6);
         setHeight(primaryStage.getHeight() * 0.6);

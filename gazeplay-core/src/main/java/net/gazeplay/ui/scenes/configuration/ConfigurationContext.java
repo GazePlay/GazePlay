@@ -1,9 +1,11 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -19,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -78,6 +81,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     Configuration config = ActiveConfigurationContext.getInstance();
 
     /**
+     * The choice of the main color, in the appearance section.
+     */
+    private ComboBox<BuiltInUiTheme> mainColorChooser;
+
+    /**
      * Builds the page for the active profile and the mode of the session.
      */
     public ConfigurationContext(GazePlay gazePlay) {
@@ -101,12 +109,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         // The theme is switched by its button, as on the other pages (no longer a setting of this page)
-        final HBox topBar = new HBox(16, createBackButton(gazePlay), title, spacer,
-            MenuButtons.themeButton(gazePlay, translator));
+        final Button themeButton = MenuButtons.themeButton(gazePlay, translator);
+        final HBox topBar = new HBox(16, createBackButton(gazePlay), title, spacer, themeButton);
         topBar.getStyleClass().add("gp-top-bar");
 
         root.setTop(topBar);
         root.setCenter(SettingsPage.create(translator, buildSections(translator)));
+        // The swatches of the main colors follow the theme. Added handlers run before onAction, which switches it
+        themeButton.addEventHandler(ActionEvent.ACTION, e -> Platform.runLater(() ->
+            showMainColors(mainColorChooser, ActiveConfigurationContext.getInstance(), translator)));
     }
 
     /**
@@ -202,9 +213,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * button on every page, see {@link MenuButtons#themeButton})
      */
     private SettingsPage.Section appearanceSection(Configuration config, Translator translator, boolean evaluations) {
+        mainColorChooser = buildMainColorChooser(config, this, translator);
         final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsAppearance",
             MenuIcon.APPEARANCE)
-            .add("LayoutFile", buildStyleThemeChooser(config, this))
+            .add("AccentColor", mainColorChooser)
             .add("BackgroundColor", chooseColorHBox(config.getBackgroundColorProperty()));
         if (!evaluations) {
             final ChoiceBox<GameButtonOrientation> orientation = buildGameButtonOrientationChooser(config, translator);
@@ -298,41 +310,64 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Function to use to permit to user to select between several theme
+     * @return the choice of the main color of the menus (CSS_FILE setting, REFONTE_GRAPHIQUE.md 3.3), each color with
+     * its swatch, applied at once. A value no longer offered (the system theme, a removed theme, a stylesheet file)
+     * shows the default color, and stays saved until another color is chosen
      */
-    static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration, ConfigurationContext configurationContext) {
-        ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
+    static ComboBox<BuiltInUiTheme> buildMainColorChooser(Configuration configuration,
+                                                          ConfigurationContext configurationContext,
+                                                          Translator translator) {
+        final ComboBox<BuiltInUiTheme> colors = new ComboBox<>();
+        colors.getItems().addAll(BuiltInUiTheme.offeredColors());
+        colors.getSelectionModel().select(BuiltInUiTheme.findFromConfigPropertyValue(configuration.getCssFile())
+            .filter(theme -> theme.getLabelKey() != null)
+            .orElse(BuiltInUiTheme.DEFAULT_THEME));
+        showMainColors(colors, configuration, translator);
 
-        final String cssFile = configuration.getCssFile();
-        themesBox.getItems().addAll(BuiltInUiTheme.values());
-        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssFile);
-        BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
-
-        themesBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(BuiltInUiTheme object) {
-                return object.getLabel();
-            }
-
-            @Override
-            public BuiltInUiTheme fromString(String string) {
-                return null;
-            }
-        });
-
-        themesBox.getSelectionModel().select(selected);
-        themesBox.setPrefWidth(PREF_WIDTH);
-        themesBox.setPrefHeight(PREF_HEIGHT);
-
-        themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            String newPropertyValue = newValue.getPreferredConfigPropertyValue();
-            configuration.setCssFile(newPropertyValue);
+        colors.valueProperty().addListener((observable, oldValue, newValue) -> {
+            configuration.setCssFile(newValue.getPreferredConfigPropertyValue());
             final GazePlay gazePlay = configurationContext.getGazePlay();
-
-            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
         });
+        return colors;
+    }
 
-        return themesBox;
+    /**
+     * Shows the colors with the swatches of the current theme, light or dark (again after a change of theme).
+     */
+    static void showMainColors(ComboBox<BuiltInUiTheme> colors, Configuration configuration, Translator translator) {
+        final boolean dark = configuration.isDarkThemeEnabled();
+        colors.setCellFactory(list -> new MainColorCell(translator, dark));
+        colors.setButtonCell(new MainColorCell(translator, dark));
+    }
+
+    /**
+     * A main color: its swatch, then its name.
+     */
+    private static final class MainColorCell extends ListCell<BuiltInUiTheme> {
+
+        private final Translator translator;
+
+        private final boolean dark;
+
+        MainColorCell(Translator translator, boolean dark) {
+            this.translator = translator;
+            this.dark = dark;
+        }
+
+        @Override
+        protected void updateItem(BuiltInUiTheme color, boolean empty) {
+            super.updateItem(color, empty);
+            if (empty || color == null) {
+                setText(null);
+                setGraphic(null);
+                return;
+            }
+            setText(translator.translate(color.getLabelKey()));
+            final Circle swatch = new Circle(9, Color.web(color.getAccentColor(dark)));
+            swatch.getStyleClass().add("gp-color-swatch");
+            setGraphic(swatch);
+        }
     }
 
     /**

@@ -1,6 +1,10 @@
-GAZEPLAY Copyright (C) 2016-2020 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
+GAZEPLAY LEARNING (anciennement GazePlay)
+Copyright (C) 2016-2026 Univ. Grenoble Alpes, CNRS, LIG UMR 5217, et les contributeurs de GazePlay
 
 Version : ${version} (${date})
+
+Licence : GNU General Public License version 3 ou toute version ultérieure (GPL-3.0-or-later),
+texte complet à la fin de ce document. Code source : https://github.com/GazePlay/GazePlay
 
 contact : didier.schwab@univ-grenoble-alpes.fr
 
@@ -30,6 +34,9 @@ Johana MARKU (Grenoble INP), Peter BARDAWIL (Grenoble INP), Wafaa EL HUSSEINI (G
  Christophe EL ZEINATY (Univ. Grenoble Alpes), Vera FILIPOVICH (Univ. Grenoble Alpes), Louis LAMBERT (Univ. Grenoble Alpes),
 Geoffrey LACOTTE (Univ. Grenoble Alpes), Aurane MALASSAGNE (Univ. Grenoble Alpes), Oriana ORLANDI (Univ. Grenoble Alpes),
 Alban PERRIER (École nationale supérieure de cognitique)
+
+Ont aussi contribué au code depuis 2021 : Karine BENHAIMI, Hugolin BOUHINEAU-CHEVIGNY, Yanis HARKATI,
+Rachel PERETTI, Yucheng XIAO
 
 Merci aux Ingénieurs dédiés : Sébastien RIOU (depuis 09/2019), Jordan ARRIGO (depuis 09/2021) et Vincent ARNONE (depuis 10/2021).
 
@@ -75,12 +82,30 @@ Malais (LIM Lian Tze, Nur HUSSEIN)
 Indonésien (Awatrawika Dharmmesti ATMYANEGORO)
 Vietnamien ()
 
-Images :
+Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre licence :
 
-Les images par défaut (gazeplay/src/main/resources/data/common/default/images) proviennent des sources suivantes
+- Polices des menus (gazeplay-core/src/main/resources/data/fonts) : Andika (SIL International) et Fredoka
+  (The Fredoka Project Authors), SIL Open Font License 1.1, licences livrées avec les polices.
+- Icônes des menus (data/icons) : Material Symbols de Google, Apache License 2.0
+  (data/icons/MaterialSymbols-LICENSE.txt).
+- Oculomètre : TobiiStreamEngineForJava (https://github.com/GazePlay/TobiiStreamEngineForJava), GPL-3.0.
+- Bibliothèques Java : la liste et la licence de chacune sont dans le dossier dependency-license des
+  distributions.
+- Images : les animaux par défaut (data/common/default/images : bear, dog, elephant, elephant2, fox, giraffe,
+  hippo, lion, snake, turtle), leurs versions sans fond du labyrinthe et l'explosion de Magic Potions
+  (data/common/images/explosion.gif) :
+  All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji and icon project.
+  License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
+  Images redimensionnées, mises sur fond blanc, explosion animée (gradle/images/make_default_images.py).
+- Icônes de la musique (data/common/images : previous, skip, pause, play-button, speaker, mute) et du jeu
+  Colors (error, add-button-inside-black-circle) : Icons made by Smashicons and Google from www.flaticon.com,
+  licensed by Creative Commons BY 3.0 (https://creativecommons.org/licenses/by/3.0/).
+- Ciel étoilé du jeu Room (stars.jpg) : ESA/Hubble, Creative Commons BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/).
+- Images de Magic Potions (fioles, chaudron, bulle, décor) : dessinées pour GazePlay Learning
+  (gradle/images/make_potions_images.py), sous la licence du projet.
+  Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
 
-<a href="https://www.freepik.com/free-photos-vectors/dog">Dog vector created by ddraw - www.freepik.com</a> https://www.freepik.com/free-vector/fun-pack-smiley-wild-animals_1229176.htm#position=19&page=1&query=animals hippo.jpg, lion.jpg, elephant.jpg, giraffe.jpg
-<a href="https://www.freepik.com/free-photos-vectors/design">Design vector created by freepik - www.freepik.com</a> https://www.freepik.com/free-vector/coloured-animals-collection_955964.htm#position=24&page=1&query=animals fox.jpg, turtle.jpg, bear.jpg
  -------------------------------------------------------------------
 
 This program is free software: you can redistribute it and/or modify
@@ -94,12 +119,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 

@@ -16,7 +16,6 @@ GazePlayEval,,,,,,,Launch an evaluation,,Lancer une évaluation,,,,,,,,,,,,
 GazePlayEvalTest,,,,,,,GazePlay Eval Test,,GazePlay Eval Test,,,,,,,,,,,,
 EvalTestLaunch,,,,,,,Test an evaluation (nothing recorded),,Tester une évaluation (rien n'est enregistré),,,,,,,,,,,,
 EvalTestFinished,,,,,,,End of the test: nothing was recorded,,Fin du test : rien n'a été enregistré,,,,,,,,,,,,
-EvalSettings,,,,,,,Evaluations (GazePlay Eval),,Évaluations (GazePlay Eval),,,,,,,,,,,,
 EvalImported,,,,,,,Imported evaluations,,Évaluations importées,,,,,,,,,,,,
 EvalNone,,,,,,,No evaluation imported yet,,Aucune évaluation importée,,,,,,,,,,,,
 EvalImportButton,,,,,,,Import an evaluation (.zip of GazePlay Eval),,Importer une évaluation (.zip de GazePlay Eval),,,,,,,,,,,,
@@ -303,7 +302,6 @@ Map1,,,,,,,Map 1,,Carte 1,,,,,,,,,,,,
 Map2,,,,,,,Map 2,,Carte 2,,,,,,,,,,,,
 
 # CONTEXT TITLES
-ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi
 StatsTitle,Statistika,احصائيات,Статыстыка,游戏数据,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,विन्यास,Statistika,Statistik,Statistiche,統計,Statistieken,Statystyka,Estatística,Статистика,Estadísticas,Số liệu thống kê,Statistik
 AreaOfInterest,Zona e Interesit,Area Of Interest,Зона цікавасці,关键注视区,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Zone d'Intérêt,,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Rustpunt blikrichting,Area Of Interest,Area Of Interest,Зона интереса,Area Of Interest,,Area Of Interest
 
@@ -330,12 +328,6 @@ Exit,Dilni,مخرج,Выхад,出口,Ausgang,Εξοδος,Exit,Poistu,Quitter,�
 Loading...,,,Загрузка,,,,Loading...,,Chargement...,,,,,,,,,Загрузка,,,
 
 # SETTING SECTIONS
-LanguageSettings,,,Налады мовы,,,,Language Settings,,Paramètres de Langage,,,,,,,,,Настройки языка,,,
-GamesSettings,,,Наладкі гульні,游戏设置,,,Games Settings,,Paramètres de Jeux,,,,,,,,,Настройки игры,,,
-EyeTrackerSettings,,,Наладкі Айтрэкеру,眼动追踪设置,,,Eye-Tracker Settings,,Paramètres de l'Oculomètre,,,,,,,,,Настройки АйТрекера,,,
-GraphicsSettings,,,Графічныя налады,图像设置,,,Graphics Settings,,Paramètres Graphiques,,,,,,,,,Графические настройки,,,
-FoldersSettings,,,Налады тэчак,文件夹设置,,,Folder Settings,,Paramètres des Dossiers,,,,,,,,,Настройки папок,,,
-StatsSettings,,,Налады статыстык,统计设置,,,Stats Settings,,Paramètres des Statistiques,,,,,,,,,Настройки статистик,,,
 HeatMapSettings,,,Налады цеплавой карты,眼动追踪地图设置,,,HeatMap Settings,,Paramètres de la Carte de Chaleur,,,,,,,,,Настройки тепловой карты,,,
 AOISettings,,,Налады зоны цікавасці,关键注视区设置,,,A.O.I Settings,,Paramètres des Zones d'Intérêt (AOI),,,,,,,,,Настройки зоны интереса,,,
 MoreStatsSettings,,,Дадатковыя налады статыстык,更多统计设置,,,More Stats Settings,,Plus de Paramètres de Statistiques,,,,,,,,,Дополнительные настройки статистик,,,
@@ -377,11 +369,17 @@ InputTobiiAndMouse,,,,,,,Tobii and mouse,,Tobii et souris,,,,,,,,,,,,
 FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني),Час фіксацыі (у секундах),注视时长（秒）,Dauer der Fixierung (Sekunden),Μήκος σταθεροποίησης (δευτερόλεπτα),Fixation Length (seconds),kiinnittämisen pituus,Durée de la fixation (secondes),,Dužina fiksiranog pogleda (u sekundama),Panjang Penekanan (saat),Durata fissazione (secondi),,Fixatietijd (seconden),Czas poprawki (sekundy),Duracaõ de fixação,Длина фиксации (в секундах),Duración de la fijación,Độ dài cố định (giây),Panjang Penekanan (saat)
 
 # GRAPHICS SETTINGS
-LayoutFile,Stilet,ملف نموذجي,Табліца стыляў,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Fichier de style,,Raspored datoteka,Helaian Gaya,Fogli di stile,,Stijlen,Arkusze stylów,Diretório do jogo « Onde é »,Таблица стилей,Hojas de estilo,Tập tin Định dạng,Helaian Gaya
+AccentColor,,,,,,,Main color,,Couleur principale,,,,,,,,,,,,
+AccentCoral,,,,,,,Coral,,Corail,,,,,,,,,,,,
+AccentOrange,,,,,,,Orange,,Orange,,,,,,,,,,,,
+AccentGreen,,,,,,,Green,,Vert,,,,,,,,,,,,
+AccentSky,,,,,,,Sky blue,,Bleu ciel,,,,,,,,,,,,
+AccentBlue,,,,,,,Blue,,Bleu,,,,,,,,,,,,
+AccentPink,,,,,,,Pink,,Rose,,,,,,,,,,,,
+AccentViolet,,,,,,,Violet,,Violet,,,,,,,,,,,,
 BackgroundStyle,,,Стыль фону,,,,Background style,,Style de fond,,,,,,,,,Стиль фона,,,
-MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,Становішча меню (перазапусціце гульню для актывацыі),菜单方向,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Orientation of the game cards,valikon suunta,Orientation des cartes des jeux,,Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Richting menu (herstart nodig voor activering),Orientacja menu (uruchom ponownie grę),orientacaõ domens,Положение меню (перезапустите игру для активации),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa)
+MenuOrientation,Orientimi i menusë,إتجاه القائمة,Становішча меню,菜单方向,Menüorientierung,Μενού προσανατολισμού,Orientation of the game cards,valikon suunta,Orientation des cartes des jeux,,Orjentacijski meni,Orientasi Menu,Orientazione del menù,,Richting menu,Orientacja menu,orientacaõ domens,Положение меню,Orientación del menú,Phương ngang/dọc của menu,Orientasi Menu
 BackgroundEnabled,,,Актываваць карцінкі на фоне,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,Активировать картинки на фоне,,,
-DarkTh,,,,,,,Dark Theme,,Thème sombre,,,,,,,,,,,,
 BackgroundColor,,,,,,,Background Color,,Couleur de fond,,,,,,,,,,,,
 Color,,,,,,,Color,,Couleur,,,,,,,,,,,,
 Dark,,,Цёмны,,,,Dark,,Sombre,,,,,,,,,Тёмный,Oscuro,,

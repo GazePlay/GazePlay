@@ -31,6 +31,15 @@ without error:
 ./gradlew :gazeplay-core:smokeTest
 ```
 
+Every game of the catalog, each in its own JVM, with its first variant (about 7 minutes, 4 games at a time). For an
+occasional failure, one game can be launched several times; a crash report of the JVM (`hs_err_pid*.log`) is shown in
+the message of a failed launch:
+
+```
+./gradlew :gazeplay-core:allGamesTest
+./gradlew :gazeplay-core:allGamesTest -PallGamesOnly=Connect4 -PallGamesRepeat=40
+```
+
 Faster repeated builds while developing: add `--configuration-cache` (supported by compilation and tests; not by the
 packaging tasks, because of the license report plugin).
 

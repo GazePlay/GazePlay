@@ -57,7 +57,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -329,7 +328,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 gazePlay.getTranslator().notifyLanguageChanged();
 
                 final Configuration config = ActiveConfigurationContext.getInstance();
-                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
 
                 BackgroundMusicManager.onConfigurationChanged();
 
@@ -393,7 +392,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     ) {
         final Button button = MenuStyle.iconButton(MenuIcon.DELETE, getGazePlay().getTranslator().translate("Remove"),
             () -> {
-                final Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
+                final Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user);
 
                 final String dialogTitle = getGazePlay().getTranslator().translate("Remove");
                 dialog.setTitle(dialogTitle);
@@ -453,14 +452,13 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
      * @return the scene of a window of the page: its content in a card with the title of the window and a close
      * button; closing it removes the blur of the page
      */
-    private Scene createDialogScene(final Stage dialog, final Stage primaryStage, final ScrollPane content,
-                                    final Supplier<Dimension2D> currentScreenDimensionSupplier) {
+    private Scene createDialogScene(final Stage dialog, final Stage primaryStage, final ScrollPane content) {
         final Scene scene = MenuDialog.createScene(dialog, content, getGazePlay().getTranslator().translate("Close"),
             () -> {
                 dialog.close();
                 primaryStage.getScene().getRoot().setEffect(null);
             });
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene, currentScreenDimensionSupplier);
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene);
         return scene;
     }
 
@@ -480,12 +478,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     /**
      * @return the window confirming the deletion of a profile; confirming deletes its folder with all its content
      */
-    Stage createRemoveDialog(
-        final Stage primaryStage,
-        final FlowPane choicePanel,
-        final User user,
-        final Supplier<Dimension2D> currentScreenDimensionSupplier
-    ) {
+    Stage createRemoveDialog(final Stage primaryStage, final FlowPane choicePanel, final User user) {
         final Stage dialog = initializeDialog(primaryStage);
 
         final HBox choicePane = new HBox();
@@ -510,7 +503,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         choicePane.getChildren().add(yes);
         choicePane.getChildren().add(no);
 
-        dialog.setScene(createDialogScene(dialog, primaryStage, choicePanelScroller, currentScreenDimensionSupplier));
+        dialog.setScene(createDialogScene(dialog, primaryStage, choicePanelScroller));
         return dialog;
     }
 
@@ -653,8 +646,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
         okButton.setOnMouseClicked(event);
 
-        dialog.setScene(createDialogScene(dialog, primaryStage, choicePanelScroller,
-            gazePlay.getCurrentScreenDimensionSupplier()));
+        dialog.setScene(createDialogScene(dialog, primaryStage, choicePanelScroller));
 
         return dialog;
     }

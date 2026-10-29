@@ -604,7 +604,7 @@ public class ColorToolBox extends Pane {
         final Scene scene = new Scene(customColorPicker, Color.TRANSPARENT);
 
         final Configuration config = gameContext.getConfiguration();
-        CssUtil.setPreferredStylesheets(config, scene, gameContext.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);
 

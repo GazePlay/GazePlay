@@ -130,7 +130,9 @@ tasks.register('smokeTest', Test) {
 // Captures of the menus without window (MenuScreenshots), in light and dark, from the smallest supported width to a
 // large one, to compare their look before and after a change:
 // ./gradlew :gazeplay-core:menuScreenshots -Plabel=avant (build/menu-screenshots/avant)
+// -Pcolor=BLUE: another main color than the default one (a value of BuiltInUiTheme)
 def screenshotsLabel = providers.gradleProperty('label').orElse('captures')
+def screenshotsColor = providers.gradleProperty('color').orElse('')
 def menuScreenshotTasks = []
 ['light', 'dark'].each { theme ->
     [[800, 600], [1366, 768], [1920, 1080]].each { size ->
@@ -151,7 +153,8 @@ def menuScreenshotTasks = []
                 'glass.platform'           : 'Monocle',
                 'monocle.platform'         : 'Headless',
                 'headless.geometry'        : "${size[0]}x${size[1]}-32",
-                'prism.order'              : 'sw'
+                'prism.order'              : 'sw',
+                'menu.color'               : screenshotsColor.get()
             ]
             if (ModuleLayer.boot().findModule('javafx.graphics').isPresent()) {
                 jvmArgs '--add-exports', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
@@ -182,6 +185,9 @@ tasks.register('allGamesTest', Test) {
     }
     def allGamesHome = layout.buildDirectory.dir('all-games-home').get().asFile
     systemProperty 'smoke.home', allGamesHome.absolutePath
+    // To launch one game several times (an occasional failure): -PallGamesOnly=Connect4 -PallGamesRepeat=20
+    systemProperty 'allGames.only', providers.gradleProperty('allGamesOnly').getOrElse('')
+    systemProperty 'allGames.repeat', providers.gradleProperty('allGamesRepeat').getOrElse('1')
     doFirst {
         allGamesHome.deleteDir()
         allGamesHome.mkdirs()

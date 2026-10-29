@@ -862,7 +862,8 @@ du **choix du mode**. Ce qui suit est un état des lieux et une méthode ; **rie
 - **Styles** : `gazeplay-core/src/main/resources/data/stylesheets/`. `base-light.css` / `base-dark.css` (fond clair ou
   sombre), un fichier par thème de couleur (`main-*.css`, 7 thèmes dans `BuiltInUiTheme`, **Argent et or** par
   défaut), et des tailles par largeur d'écran (`base-max-width-0800.css` à `2560`). `CssUtil.setPreferredStylesheets`
-  les applique (12 appels).
+  les applique (12 appels). *Depuis l'étape 7 de la refonte (28/10/2026, `REFONTE_GRAPHIQUE.md` 8.3 sexies) : les
+  thèmes sont devenus la « Couleur principale » des menus, et les feuilles par largeur d'écran ont été retirées.*
 - Réglages liés à l'apparence, à garder (clés persistantes) : thème (`CSS_FILE`), fond clair/sombre, couleur de fond,
   orientation du menu, fond activé.
 

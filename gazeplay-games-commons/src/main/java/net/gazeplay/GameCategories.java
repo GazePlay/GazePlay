@@ -8,30 +8,23 @@ import lombok.NonNull;
  */
 public class GameCategories {
 
-    private static final String categoryThumbnailsPath = "data/common/images/categoriesThumbnails/";
-
     /**
-     * A category: its translation key and its thumbnail. The order of the values is the order of the games in the menu.
+     * A category: its translation key. The order of the values is the order of the games in the menu.
      */
     public enum Category {
-        ACTION_REACTION("Action-Reaction games", categoryThumbnailsPath + "action_reaction.png"),
-        SELECTION("Selection games", categoryThumbnailsPath + "target.png"),
-        MEMORIZATION("Memorization games", categoryThumbnailsPath + "male-brain.png"),
-        LOGIC_MATHS("Logic and Maths games", categoryThumbnailsPath + "logic_icon.png"),
-        LITERACY("Literacy games", categoryThumbnailsPath + "literacy_icon.png"),
-        MULTIMEDIA("Multimedia", categoryThumbnailsPath + "utility-icon.png");
+        ACTION_REACTION("Action-Reaction games"),
+        SELECTION("Selection games"),
+        MEMORIZATION("Memorization games"),
+        LOGIC_MATHS("Logic and Maths games"),
+        LITERACY("Literacy games"),
+        MULTIMEDIA("Multimedia");
 
         @NonNull
         @Getter
         private final String gameCategory;
 
-        @Getter
-        @NonNull
-        private final String thumbnail;
-
-        Category(final String category, final String thumbnailResource) {
+        Category(final String category) {
             this.gameCategory = category;
-            this.thumbnail = thumbnailResource;
         }
     }
 }

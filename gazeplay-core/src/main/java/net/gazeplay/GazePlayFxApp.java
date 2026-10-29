@@ -221,7 +221,7 @@ public class GazePlayFxApp extends Application {
             }
         }
 
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene());
 
         if (displayStageAtTheEnd) {
             // Not in full screen: the window is already shown in full screen by the first page, and centerOnScreen
@@ -251,7 +251,7 @@ public class GazePlayFxApp extends Application {
     private Scene createPrimaryScene(final Stage primaryStage) {
         final Pane rootPane = new Pane();
         final Scene primaryScene = new Scene(rootPane, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene);
         primaryStage.setScene(primaryScene);
         return primaryScene;
     }
@@ -263,7 +263,7 @@ public class GazePlayFxApp extends Application {
     private Scene createPrimaryScene(final Stage primaryStage, final double width, final double height) {
         final Pane rootPane = new Pane();
         final Scene primaryScene = new Scene(rootPane, width, height, Color.BLACK);
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene);
         primaryStage.setScene(primaryScene);
         return primaryScene;
     }

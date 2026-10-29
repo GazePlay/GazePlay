@@ -425,7 +425,7 @@ public class GameVariantDialog extends Stage {
 
         Scene scene = MenuDialog.createScene(this, sceneContentPane, translator.translate("Close"), cancel);
 
-        CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(config, scene);
 
         setScene(scene);
         setWidth(primaryStage.getWidth() * 0.6);
