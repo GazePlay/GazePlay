@@ -43,7 +43,7 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
             case "Dynamic" -> WhereIsItGameType.ANIMALS_DYNAMIC;
             default -> WhereIsItGameType.ANIMALS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
             case "Dynamic" -> WhereIsItGameType.ANIMALS_DYNAMIC;
             default -> WhereIsItGameType.ANIMALS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats, gameSeed);
     }
 
 }

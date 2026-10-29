@@ -1,0 +1,95 @@
+Photos of the game (data/whereIsTheSound/images), from Wikimedia Commons, under licences compatible with
+the GPL version 3 of GazePlay Learning (CC0, public domain, CC BY, CC BY-SA 4.0). They were resized to
+1280 pixels at most and saved as JPEG (October 2026); they replace photos whose source was unknown
+or whose licence was not free. See REVUE_DES_JEUX.md.
+
+File | Title on Wikimedia Commons | Author | Licence | Page
+
+accordion/accordion_1.jpg | Accordion MET DP105215.jpg | Creator:Alexandre Pere & Fils | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Accordion_MET_DP105215.jpg
+accordion/accordion_2.jpg | 2023-07-30 Vogtsbauernhof Akkordeonorchester 008.jpg | Ahmet Düz, Dreiländer- & Oberrheinfotograf | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:2023-07-30_Vogtsbauernhof_Akkordeonorchester_008.jpg
+accordion/accordion_3.jpg | Nordest music in Avenida Paulista, São Paulo, Brazil.jpg | Wilfredor | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Nordest_music_in_Avenida_Paulista,_S%C3%A3o_Paulo,_Brazil.jpg
+applause/applause_1.jpg | Clapping hand.jpg | Mona Hassan Abo-Abda | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Clapping_hand.jpg
+bird/bird_1.jpg | European robin Créteil 2.jpg | Alexis Lours | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:European_robin_Cr%C3%A9teil_2.jpg
+bird/bird_2.jpg | Erithacus rubecula 2026-01-02.jpg | Chme82 | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Erithacus_rubecula_2026-01-02.jpg
+bird/bird_3.jpg | European robin (Erithacus rubecula) singing 3.jpg | Charles J. Sharp | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:European_robin_(Erithacus_rubecula)_singing_3.jpg
+car/car_1.jpg | AvMalecon-LaHabanaCuba-04735.jpg | Ezarate This is a retouched picture, which means that it has been digitally altered from its original version. Modifications: rebuild from raw fixing light compensation in shadows and lights, White balance, tonemaping balance, fix lens distortion, fix vertical distortions, remove dust spots, noise reduction and chromatic aberration fix, cut element distracting and remove oil spot and finally export in full jpeg quality by The Photographer 13:39, 12 February 2017 (UTC). | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:AvMalecon-LaHabanaCuba-04735.jpg
+car/car_2.jpg | Safety Car side 2015 Malaysia.jpg | Morio | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Safety_Car_side_2015_Malaysia.jpg
+car/car_3.jpg | Avenue Roosevelt à Bruxelles, Zen Car en recharge.jpg | Benoît Prieur | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Avenue_Roosevelt_%C3%A0_Bruxelles,_Zen_Car_en_recharge.jpg
+cat/cat_1.jpg | Felis silvestris catus lying on rice straw.jpg | Basile Morin | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Felis_silvestris_catus_lying_on_rice_straw.jpg
+cat/cat_2.jpg | Cat playing with a lizard.jpg | Basile Morin | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Cat_playing_with_a_lizard.jpg
+cat/cat_3.jpg | Felis silvestris catus.007 - A Coruña.jpg | Fernando Losada Rodríguez | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Felis_silvestris_catus.007_-_A_Coru%C3%B1a.jpg
+chicken/chicken_1.jpg | Feral rooster on Kauaʻi.jpg | Frank Schulenburg | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Feral_rooster_on_Kaua%CA%BBi.jpg
+chicken/chicken_2.jpg | Kogut na ulicy w Chintown w Singapurze, 20240122 0853 2966.jpg | Jakub Hałun | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Kogut_na_ulicy_w_Chintown_w_Singapurze,_20240122_0853_2966.jpg
+chicken/chicken_3.jpg | Feder 004 2023 04 24.jpg | Friedrich Haag | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Feder_004_2023_04_24.jpg
+cow/cow_1.jpg | Bos taurus.004 - San Emiliano (Leon).jpg | Fernando Losada Rodríguez | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Bos_taurus.004_-_San_Emiliano_(Leon).jpg
+cow/cow_2.jpg | Bos taurus, Wipperfürth (DE) -- 2022 -- 0258.jpg | Anil Öztas | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Bos_taurus,_Wipperf%C3%BCrth_(DE)_--_2022_--_0258.jpg
+cow/cow_3.jpg | Grazing cows near Ales Stenar.jpg | OleNeitzel | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Grazing_cows_near_Ales_Stenar.jpg
+dog/dog_1.jpg | Zazu the dog on Lion's Head mountain 34.jpg | Discott | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Zazu_the_dog_on_Lion%27s_Head_mountain_34.jpg
+dog/dog_2.jpg | Chinese crested dog on the beach (13200).jpg | Rhododendrites | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Chinese_crested_dog_on_the_beach_(13200).jpg
+dog/dog_3.jpg | 20110425 German Shepherd Dog 8505.jpg | Jakub Hałun | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:20110425_German_Shepherd_Dog_8505.jpg
+drums/drums_1.jpg | EmanuelHarrold.JPG | Eric Magnan | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:EmanuelHarrold.JPG
+drums/drums_2.jpg | Pearl senｓitone classic 2 brass 002.jpg | Ocdp | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Pearl_sen%EF%BD%93itone_classic_2_brass_002.jpg
+drums/drums_3.jpg | Pearl senｓitone classic 2 brass 003.jpg | Ocdp | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Pearl_sen%EF%BD%93itone_classic_2_brass_003.jpg
+duck/duck_1.jpg | Male mallard duck 2.jpg | Acarpentier | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Male_mallard_duck_2.jpg
+duck/duck_2.jpg | 2015 Kaczka krzyżowka w wodzie (samiec).jpg | Jacek Halicki | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:2015_Kaczka_krzy%C5%BCowka_w_wodzie_(samiec).jpg
+duck/duck_3.jpg | Mallard (Anas platyrhynchos) 02.jpg | Nrik kiran | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Mallard_(Anas_platyrhynchos)_02.jpg
+elephant/elephant_1.jpg | Desert elephant (Loxodonta africana) spraying sand.jpg | Charles J. Sharp | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Desert_elephant_(Loxodonta_africana)_spraying_sand.jpg
+elephant/elephant_2.jpg | Elefantes africanos de sabana (Loxodonta africana), parque nacional de Chobe, Botsuana, 2018-07-28, DD 25.jpg | Diego Delso | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Elefantes_africanos_de_sabana_(Loxodonta_africana),_parque_nacional_de_Chobe,_Botsuana,_2018-07-28,_DD_25.jpg
+elephant/elephant_3.jpg | Elephant (Loxodonta Africana) 05.jpg | Godot13 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Elephant_(Loxodonta_Africana)_05.jpg
+flute/flute_1.jpg | Flute with musicial notes.jpg | Petar Milošević | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Flute_with_musicial_notes.jpg
+flute/flute_2.jpg | Flûte 11-o.lau-F153.LA1103.jpg | Simon Pierre Barrette (Cephas (talk)) | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Fl%C3%BBte_11-o.lau-F153.LA1103.jpg
+guitar/guitar_1.jpg | Sam Amidon-1160199.jpg | Harald Krichel | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Sam_Amidon-1160199.jpg
+guitar/guitar_2.jpg | ART DANS LA RUE ALGER 2.jpg | BRAHIM DJELLOUL Mustapha | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:ART_DANS_LA_RUE_ALGER_2.jpg
+guitar/guitar_3.jpg | KonzertDobson.jpg | Friedrich Haag | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:KonzertDobson.jpg
+harp/harp_2.jpg | Musikinstrumenten-Museum Berlin - Einfachpedalharfe - 1106351.jpg | Knud Peter Petersen | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Musikinstrumenten-Museum_Berlin_-_Einfachpedalharfe_-_1106351.jpg
+harp/harp_3.jpg | Pedal Harp MET MI18.jpg | Creator:Lyon & Healy | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Pedal_Harp_MET_MI18.jpg
+lion/lion_1.jpg | Lion (Panthera leo) old male Chobe.jpg | Charles J. Sharp | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Lion_(Panthera_leo)_old_male_Chobe.jpg
+lion/lion_2.jpg | Lion male.jpg | Byrdyak | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Lion_male.jpg
+lion/lion_3.jpg | Lion d'Afrique.jpg | Clément Bardot | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Lion_d%27Afrique.jpg
+piano/piano_1.jpg | Kissingen Steinway & Sons piano 0417RM0613.jpg | Ermell | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Kissingen_Steinway_%26_Sons_piano_0417RM0613.jpg
+piano/piano_2.jpg | Piano A74009720250525.jpg | Rjcastillo | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Piano_A74009720250525.jpg
+piano/piano_3.jpg | Piano en el Salón Palacio García Ñuñoa A74006720250525.jpg | Rjcastillo | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Piano_en_el_Sal%C3%B3n_Palacio_Garc%C3%ADa_%C3%91u%C3%B1oa_A74006720250525.jpg
+pig/pig_1.jpg | Pot-bellied pigs in Lisbon Zoo 2008.jpg | Alvesgaspar | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Pot-bellied_pigs_in_Lisbon_Zoo_2008.jpg
+pig/pig_2.jpg | Domesticated farm pig lying in the mud head covered in dry earth under the sun in Don Det Laos.jpg | Basile Morin | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Domesticated_farm_pig_lying_in_the_mud_head_covered_in_dry_earth_under_the_sun_in_Don_Det_Laos.jpg
+pig/pig_3.jpg | Nabburg Freilandmuseum Schweinestall-20190823-RM-112124.jpg | Ermell | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Nabburg_Freilandmuseum_Schweinestall-20190823-RM-112124.jpg
+river/river_1.jpg | Confluence of East Hawdon Stream with Hawdon River, Arthur's Pass National Park, New Zealand.jpg | Michal Klajban | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Confluence_of_East_Hawdon_Stream_with_Hawdon_River,_Arthur%27s_Pass_National_Park,_New_Zealand.jpg
+river/river_2.jpg | Dobson Stream by Wharfedale hut with the moon, Mt Oxford area, Canterbury, New Zealand.jpg | Michal Klajban | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Dobson_Stream_by_Wharfedale_hut_with_the_moon,_Mt_Oxford_area,_Canterbury,_New_Zealand.jpg
+river/river_3.jpg | Stream intake for a river south of Storelvvatnan in Sulitjelma.jpg | Frankemann | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Stream_intake_for_a_river_south_of_Storelvvatnan_in_Sulitjelma.jpg
+sheep/sheep_1.jpg | Toftenäs Naturreservat Tjörn 2019 08 07 Ovis aries 4.jpg | Manfred Werner (Tsui) | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Toften%C3%A4s_Naturreservat_Tj%C3%B6rn_2019_08_07_Ovis_aries_4.jpg
+sheep/sheep_2.jpg | Sheep lounging in the shade of a tree at Röe Castle.jpg | W.carter | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Sheep_lounging_in_the_shade_of_a_tree_at_R%C3%B6e_Castle.jpg
+sheep/sheep_3.jpg | Jibea mouton noir muiden 2017 02.jpg | Jiel | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Jibea_mouton_noir_muiden_2017_02.jpg
+snake/snake_1.jpg | Viperine water snake (Natrix maura).jpg | Charles J. Sharp | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Viperine_water_snake_(Natrix_maura).jpg
+snake/snake_2.jpg | Cobra-papagaio - Bothrops bilineatus - Ilhéus - Bahia.jpg | Renato Augusto Martins | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Cobra-papagaio_-_Bothrops_bilineatus_-_Ilh%C3%A9us_-_Bahia.jpg
+snake/snake_3.jpg | Mamba Dendroaspis angusticeps.jpg | Holger Krisp | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Mamba_Dendroaspis_angusticeps.jpg
+storm/storm_1.jpg | 2013-08-07 04-23-26-foudre-belfort.jpg | Thomas Bresson | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:2013-08-07_04-23-26-foudre-belfort.jpg
+storm/storm_2.jpg | 003 2018 05 14 Dunkelheit.jpg | Friedrich Haag | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:003_2018_05_14_Dunkelheit.jpg
+storm/storm_3.jpg | Lightning, Friedrichshafen (OW1A0402).jpg | Matti Blume | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Lightning,_Friedrichshafen_(OW1A0402).jpg
+trumpet/trumpet_1.jpg | Trompette - corps.JPG | Eusebius | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Trompette_-_corps.JPG
+trumpet/trumpet_2.jpg | 5K HD Stream Festival Linz 2018 11.jpg | Manfred Werner (Tsui) | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:5K_HD_Stream_Festival_Linz_2018_11.jpg
+violin/violin_1.jpg | Alina Pogostkina-20130225-RM-194336.jpg | Ermell | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Alina_Pogostkina-20130225-RM-194336.jpg
+violin/violin_2.jpg | Bardentreffen 2014 Sa 0991.JPG | Rs-foto | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Bardentreffen_2014_Sa_0991.JPG
+
+harp/harp_1.jpg: The Metropolitan Museum of Art, Open Access (CC0).
+
+triangle/triangle_1.jpg: drawn for GazePlay Learning by gradle/images/make_triangle_image.py, under the license of
+the project (GPL-3.0-or-later); no photo of Wikimedia Commons under a compatible licence showed the instrument well.
+
+Sounds (data/whereIsTheSound/sounds):
+
+From Wikimedia Commons, shortened to 8 seconds at most, normalized and made mono (October 2026):
+File | Title on Wikimedia Commons | Author | Licence | Page
+
+accordion.mp3 | Accordion registers.ogg | Necz0r | Public domain | https://commons.wikimedia.org/wiki/File:Accordion_registers.ogg
+drums.mp3 | Kevin MacLeod assorted rimshots - 4-second roll.wav | Kevin MacLeod | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Kevin_MacLeod_assorted_rimshots_-_4-second_roll.wav
+elephant.mp3 | Elephant voice - trumpeting.ogg | தகவலுழவன் | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg
+flute.mp3 | Flute 2.ogg | hokuspokus | Public domain | https://commons.wikimedia.org/wiki/File:Flute_2.ogg
+harp.mp3 | Harp Curtain 01.ogg | Miguel Ángel Zaragozá de León | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Harp_Curtain_01.ogg
+piano.mp3 | Satie Gymnopedie No. 3 for piano solo 01.wav | Satie | Public domain | https://commons.wikimedia.org/wiki/File:Satie_Gymnopedie_No._3_for_piano_solo_01.wav
+sheep.mp3 | Sheep bleating.ogg | earthcalling | Public domain | https://commons.wikimedia.org/wiki/File:Sheep_bleating.ogg
+snake.mp3 | Rattlesnake.ogg | unknown | Public domain | https://commons.wikimedia.org/wiki/File:Rattlesnake.ogg
+triangle.mp3 | LatinTriangle.ogg | http://en.wikipedia.org/wiki/User:Freddythehat | Public domain | https://commons.wikimedia.org/wiki/File:LatinTriangle.ogg
+trumpet.mp3 | Natural trumpet B-flat.ogg | ПростоУчастник | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Natural_trumpet_B-flat.ogg
+violin.mp3 | 00 Jazz Violin Solo.ogg | VWD | Public domain | https://commons.wikimedia.org/wiki/File:00_Jazz_Violin_Solo.ogg
+
+applause.mp3, bird.mp3, car.mp3, cat.mp3, chicken.mp3, cow.mp3, dog.mp3, duck.mp3, guitar.mp3, lion.mp3,
+pig.mp3, river.mp3, storm.mp3: La Sonothèque (https://lasonotheque.org), licence CC0 1.0.

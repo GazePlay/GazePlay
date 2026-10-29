@@ -38,7 +38,7 @@ public class WhereIsTheSoundGameLauncher implements IGameLauncher<Stats,Dimensio
             case "Instruments" -> WhereIsItGameType.SOUNDS_INSTRUMENTS;
             default -> WhereIsItGameType.SOUNDS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class WhereIsTheSoundGameLauncher implements IGameLauncher<Stats,Dimensio
             case "Instruments" -> WhereIsItGameType.SOUNDS_INSTRUMENTS;
             default -> WhereIsItGameType.SOUNDS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats, gameSeed);
     }
 }
 

@@ -82,11 +82,11 @@ Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le m
 
 | Jeu (nameCode) | Images (inventaire du 28/10/2026) | Graphisme | Gameplay |
 |---|---|---|---|
-| **Where Is The Animal** (`WhereIsTheAnimal`) | **Risque** : 149 photos d'animaux sans source ; **non libre** : `beaver/beaver_1.jpg` (CC BY-NC-SA). Le dossier `whereIsTheAnimalDynamic` (80 photos Pixabay d'avant 2019) est libre probable | | |
-| **Where Is The Sound** (`WhereIsTheSound`) | **Non libre** : 5 photos iStock/Getty (`chicken_1..3`, `lion_1`, `sheep_1`) ; **risque** : 59 photos d'animaux et d'instruments ; OK : `harp_1` (Met, CC0) | | |
-| Where Is The Color, Flag, Letter, Number, Shape | OK (couleurs unies, drapeaux, lettres, chiffres, formes) | | |
-| Find The Odd One Out (`FindTheOddOneOut`) | Libre probable : 48 photos Pixabay d'avant 2019 | | |
-| Where Is It (`WhereIsIt`, images de l'utilisateur) | Pas d'image propre | | |
+| **Where Is The Animal** (`WhereIsTheAnimal`) | **Remplacées le 29/10** : 144 photos Wikimedia Commons (CREDITS.txt). Le dossier `whereIsTheAnimalDynamic` (80 photos Pixabay d'avant 2019) est libre probable | ✔ 29/10 (cartes, anneau, bandeau) | ✔ 29/10 (variantes exactes, Réécouter, pas de répétition) |
+| **Where Is The Sound** (`WhereIsTheSound`) | **Remplacées le 29/10** : 64 photos Commons, triangle dessiné, harpe du Met ; 11 sons remplacés, 13 de La Sonothèque (CC0) | ✔ 29/10 | ✔ 29/10 (son dans toutes les langues) |
+| Where Is The Color, Flag, Letter, Number, Shape | OK (couleurs unies, drapeaux, lettres, chiffres, formes) | ✔ 29/10 | ✔ 29/10 (Voyelles, Consonnes justes) |
+| Find The Odd One Out (`FindTheOddOneOut`) | Libre probable : 48 photos Pixabay d'avant 2019 | ✔ 29/10 | ✔ 29/10 (consigne dite, pas de doublon) |
+| Where Is It (`WhereIsIt`, images de l'utilisateur) | Pas d'image propre | ✔ 29/10 (et fenêtre du dossier) | ✔ 29/10 |
 | **Coloring** (`Coloring`) | **Non libre** : `draw-hellokitty.jpg` (personnage Sanrio) ; **risque** : 19 coloriages sans source ; OK : 2 icônes Flaticon (CC BY 3.0, créditées) | | |
 | **Sounds Of Life** (`SoundsOfLife`) | **Risque** : 32 cliparts et décors (un décor signé Danilo Sanino, illustrateur de banques d'images) | | |
 | **Spot The Differences** (`SpotDifference`) | **Risque** : 15 scènes dessinées sans source | | |
@@ -139,3 +139,178 @@ Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le m
 ## Fiches
 
 Une fiche par jeu ou par famille, remplie pendant la revue (modèle plus haut).
+
+### Famille Where Is It (9 entrées, code `whereisit`) — 29/10/2026
+
+**Étape 1 (état des lieux) faite le 29/10/2026.** Captures « avant » : `build/game-screenshots/avant/whereisit/`
+(40 images, 1366×768, mode souris, français ; 4 temps par essai : question, images, fixation sur l'image en haut à
+gauche, 2 s après). Elles ont été prises avec le script `build/game-screenshots/captures.ps1` (vraie fenêtre, dossier
+GazePlay isolé). Pas d'essai avec le Tobii.
+
+- **Ce qu'il fait** : une question est écrite au centre et dite (voix d'homme ou de femme au hasard) pendant 5 s
+  (`QUESTION_LENGTH`), puis descend en bas de l'écran ; les images apparaissent en grille ; une fixation
+  (`FIXATION_LENGTH`) choisit une image. Si c'est la bonne : les autres disparaissent, elle grandit jusqu'à remplir
+  l'écran, puis l'animation de victoire (confettis, Biboule) et une nouvelle manche. Sinon : l'image pâlit et une croix
+  apparaît ; la question est redite si le réglage le demande. Code commun : `WhereIsIt` (794 lignes), `PictureCard`
+  (384), `GameSizingComputer` ; une énumération `WhereIsItGameType` (28 valeurs) ; un lanceur, un générateur de
+  variantes et une spec par entrée.
+- **Variantes** (grilles 1×2, 2×2, 2×3, 3×2, 3×3) :
+  - Where Is The Animal : Ferme, Forêt, Savane, Oiseaux, Mer, Tous (50 animaux, 150 photos), et Dynamique (1×2
+    seulement : toujours « Où est le chat ? », les autres animaux par niveau 1 à 5, niveau ajusté tous les 8 points
+    par un test du χ²) ;
+  - Where Is The Sound : Animaux, Instruments, Tous (24 sons, 65 photos) ;
+  - Color (Facile, Normal, Difficile ; 16 couleurs), Flag (Les plus connus, Afrique, Amérique, Asie, Europe, Tous ;
+    44 drapeaux), Letter (Voyelles, Consonnes, Toutes ; 26), Number (10 chiffres), Shape (Facile, Normal, Difficile ;
+    20 formes) ;
+  - Find The Odd One Out (6 thèmes, 48 photos ; 2×2 à 3×3) ; Where Is It (dossier d'images de l'utilisateur, avec
+    `questions.csv`, sons et pictogrammes facultatifs).
+- **Défauts vus** :
+  - **Fait (vu en capture)** : le filtre des variantes compare des **sous-chaînes du chemin entier**
+    (`WhereIsIt.java:382`, `s::contains`). La variante **Voyelles** montre des consonnes : `I`, `T` et `L` sont dans
+    « data/where**I**s**T**he**L**etter/… », donc tous les dossiers passent ; Consonnes laisse passer aussi toutes les
+    lettres. Dans **Ferme**, `pig` laisse passer `pigeon` (vu : une tourterelle dans « Où est la poule ? ») et `horse`
+    laisse passer `seahorse` (déduit du code, pas vu).
+  - **Fait (code)** : hors français, anglais et chinois, **aucun son** n'est joué (`WhereIsIt.java:624`), y compris
+    dans **Where Is The Sound**, dont le son ne dépend pourtant pas de la langue : ce jeu est injouable dans les
+    19 autres langues. Sa consigne « listen » n'est traduite qu'en anglais et en français.
+  - **Fait (code)** : dans Where Is The Sound, le son n'est rejoué qu'après une erreur, et seulement si le réglage
+    « redire la question » est actif ; aucun moyen de le réentendre autrement.
+  - **Fait (code)** : Find The Odd One Out ne dit jamais sa consigne, alors que `findTheOddOneOut/sound/` contient
+    `odd.m.fra.mp3`, `odd.w.fra.mp3` (et l'anglais), jamais lus. Traduction chinoise fausse (« 找出奇数 » : « trouvez
+    le nombre impair »).
+  - **Fait (vu)** : Where Is It lancé sans dossier d'images : écran noir, le message d'erreur (`WII-error`) n'est pas
+    visible. **Hypothèse** : depuis le menu, `GameWhereIsItErrorPathDialog` empêche ce cas ; à vérifier.
+  - **Fait (vu)** : à la victoire, l'image agrandie n'est pas centrée (drapeau de l'Argentine collé à gauche, bande
+    noire à droite) : le calcul ne tient pas compte du recadrage de l'image dans sa case.
+  - **Fait (vu)** : aucun espace ni contour entre les images (les fonds blancs des formes et des lettres se touchent ;
+    les cases de Color se touchent et la case **noire** se confond avec le fond noir du jeu). Le bouton des réglages
+    (roue en bas à gauche) recouvre le coin de l'image en bas à gauche.
+  - **Fait (vu)** : style d'origine, sans lien avec les menus refaits : fond noir, texte blanc en police système, croix
+    rose (`error.png`), indicateur de progression gris à 50 % d'opacité au centre de l'image.
+  - **Fait (code)** : les photos sont chargées à leur taille d'origine (`new Image(imagePath)`), jusqu'à 5760×3840
+    (`accordion_1.jpg`), soit environ 88 Mo en mémoire pour une seule image. Le dossier `whereIsTheAnimal` pèse 97 Mo
+    (26 photos de plus de 1 Mo). **Risque** : lenteur à l'apparition des images et mémoire, surtout en 3×3. Rien n'a été
+    mesuré.
+  - **Fait (code)** : dans Find The Odd One Out et Dynamique, les images d'une même manche sont tirées avec remise : la
+    même photo peut apparaître deux fois.
+  - **Fait (code)** : du code mort : le paramètre `fourThree` vaut toujours `false`, `whereIsTheAnimalDynamic/levels.json`
+    n'est pas lu (et contient des fautes : « turtules », « pigeaons », « tires »).
+  - **Fait** : tests existants : `WhereIsItTest` (2 tests), `PictureCardTest` (3), `WhereIsItValidatorTest`. Rien ne
+    vérifie les variantes ni les sons.
+- **Images et sons** : voir le tableau plus haut (Animal : 149 photos à risque et `beaver_1` non libre ; Sound :
+  5 photos iStock/Getty non libres et 59 à risque). **Sons pas encore inventoriés** : voix des questions (Animal,
+  Color, Flag, Letter, Number, Shape, Dynamique, Odd), 24 sons de Where Is The Sound sans source connue.
+- **Propositions (étape 2, 29/10/2026)**, en attente de validation (✔ / ✘). Aucune ne change le format des résultats
+  (fichiers, colonnes, `formatVersion`) ni ce qui est compté (points, erreurs, χ²). **Risque commun à A1, A6 et C2** :
+  le rejeu d'une partie déjà enregistrée refait les tirages à partir de sa graine ; si l'ensemble des images ou la
+  façon de tirer change, le rejeu d'une ancienne partie de ces jeux montre d'autres images que celles vues à
+  l'époque (les fichiers enregistrés ne changent pas).
+  - **A. Corrections** (sans choix de style, à faire en premier) :
+    - A1. Variantes : comparer le **nom exact du dossier** au lieu d'un morceau du chemin (Voyelles, Consonnes, Ferme
+      redeviennent justes). Test ajouté : chaque variante ne contient que ses dossiers.
+    - A2. Where Is The Sound : jouer le son **dans toutes les langues** (il ne dépend pas de la langue), et traduire
+      « listen » dans les langues du fichier.
+    - A3. Find The Odd One Out : dire la consigne (`odd.m/w.fra/eng.mp3`, déjà livrés) ; corriger la traduction
+      chinoise.
+    - A4. Victoire : image agrandie **centrée**.
+    - A5. Charger les images **à la taille de leur case** (même aspect, moins de mémoire).
+    - A6. Pas deux fois la même photo dans une manche (Odd, Dynamique).
+    - A7. Where Is It sans dossier : message d'erreur lisible.
+    - A8. Retirer le code mort (`fourThree`, `levels.json`).
+  - **B. Graphisme** (style des menus : couleur principale, polices Andika et Fredoka, coins arrondis) :
+    - B1. **Cartes** : un espace entre les images, coins arrondis, fond et contour discrets (la case noire de Color
+      et les fonds blancs des formes et lettres se distinguent du fond) ; suit le réglage clair / sombre.
+    - B2. **Fixation** plus visible au regard : un anneau ou un contour de la couleur principale qui se remplit
+      autour de la carte, et un léger grossissement, à la place de l'indicateur gris au centre de l'image.
+    - B3. **Question** en Fredoka, dans un bandeau arrondi en bas, qui ne chevauche ni les images ni la roue des
+      réglages ; la grille laisse libre la place de la roue.
+    - B4. **Réponses** : bonne réponse entourée de vert avant l'agrandissement ; mauvaise réponse : croix dessinée
+      (couleur « danger » du thème) à la place de `error.png`, image grisée.
+  - **C. Gameplay** :
+    - C1. Bouton **« Réécouter »** (grande cible, activée par fixation) dans le bandeau, pour les jeux qui ont un son
+      (indispensable dans Where Is The Sound, utile partout).
+    - C2. La bonne réponse ne revient pas **deux manches de suite**.
+    - C3. Where Is The Sound : un haut-parleur animé pendant l'écoute, en plus de « Écoute le son ».
+  - **D. Images et sons** :
+    - D1. Remplacer tout de suite les **6 images non libres** (5 iStock/Getty de Where Is The Sound, `beaver_1`),
+      en gardant les noms de fichiers.
+    - D2. Source des remplacements : **photos de Wikimedia Commons** sous CC0, CC BY ou CC BY-SA, avec un crédit
+      par fichier (recommandé : le jeu fait reconnaître de vrais animaux et objets), ou dessins OpenMoji comme pour les
+      images par défaut (homogène, mais moins réaliste). **Hypothèse à vérifier** : les photos Pixabay publiées
+      depuis 2019 (licence Pixabay, non libre au sens de la GPL) ne conviennent pas ; celles d'avant 2019 (CC0)
+      conviennent.
+    - D3. Les **208 photos à risque** (149 Animal, 59 Sound) : les remplacer toutes maintenant (gros travail, script
+      de téléchargement et crédits), ou par lots plus tard.
+    - D4. Réduire les photos livrées à 1280 px au plus (le dossier Animal pèse 97 Mo ; gain non mesuré).
+    - D5. **Sons** : inventaire de la famille (voix des questions : chercher l'auteur dans l'historique git ; 24 sons
+      de Where Is The Sound : remplacer par des sons CC0 ou CC BY si la source reste inconnue).
+  **Validées le 29/10/2026 : toutes (A, B, C, D) ✔** ; D2 : photos de Wikimedia Commons ; D3 : tout de suite.
+- **Défauts trouvés en chemin (29/10/2026)** : la variante Oiseaux et « Tous » ne montraient jamais le flamant rose
+  (`"greater flamingo"` dans `variants.json`, dossier `greaterflamingo`) ; la question du serpent avait la clé
+  `snakev` (jamais trouvée) ; « Où est le chat? » sans espace. Corrigés.
+- **Défaut du menu signalé par le mainteneur (29/10/2026)** : après une partie lancée par la fenêtre des variantes, le
+  menu revenait flou (navigable). Cause : choisir une variante fermait la fenêtre sans retirer le flou du menu (seule
+  la croix le retirait), et le menu est gardé en mémoire. Ancien (avant la refonte), pour tout jeu à plusieurs
+  variantes ; même oubli dans la fenêtre du dossier de Where Is It. Corrigé : le flou est retiré à la fermeture de la
+  fenêtre, quoi qui la ferme (`setOnHidden`, comme `EvalChooserDialog`) ; test `GameVariantDialogTest`.
+- **Fenêtre « dossier de Where Is It » (signalée par le mainteneur le 29/10/2026)** : restée à l'ancien style (cadre du
+  système, texte rouge, boutons gris) ; son message principal était une clé absente des traductions
+  (`WhereIsItNot Config Directory`, affichée telle quelle) et son titre « error ». Refaite au style des menus
+  (`MenuDialog` : carte arrondie, titre « Où est-ce ? », boutons arrondis, couleur « danger » pour un mauvais dossier,
+  Valider au clavier aussi) ; message `WhereIsItDirNotConfig` ; « Réinitialiser » avec une majuscule (aussi dans les
+  réglages). Test `GameWhereIsItErrorPathDialogTest` ; capture `3d-ou-est-ce-dossier` ajoutée à `menuScreenshots`.
+- **Images et sons remplacés** :
+  - Photos de Where Is The Animal (150) et Where Is The Sound (71, la harpe du Met gardée) : Wikimedia Commons,
+    « Quality images » d'abord, licences CC0, domaine public, CC BY (toutes versions) ou CC BY-SA 4.0 seulement (les
+    CC BY-SA 2.0 à 3.0 ne sont pas compatibles avec la GPL 3) ; choisies une par une sur planches (pas d'œufs, de
+    squelettes, de personnes reconnaissables pour les instruments) ; 3 par dossier, nommées `<dossier>_1..3.jpg`,
+    1280 px au plus. Crédits : `data/whereIsTheAnimal/CREDITS.txt`, `data/whereIsTheSound/CREDITS.txt`, licence
+    affichée.
+  - Sons de Where Is The Sound : 13 de La Sonothèque (CC0, vérifié sur leur site) gardés ; 11 remplacés par des sons
+    de Commons (accordéon, batterie, éléphant, flûte, harpe, piano, mouton, serpent, triangle, trompette, violon),
+    raccourcis à 8 s, normalisés (ffmpeg, loudnorm), mono. Remplacés parce que sans source (8), sous licence
+    propriétaire Sound Fishing (mouton, serpent) ou SoundJay (harpe). **Choisis d'après leur titre, sans écoute** :
+    à écouter pendant l'essai.
+  - Voix des questions (toute la famille) : ajoutées par Didier Schwab (2017) et Sakraft (2022), sans source notée ;
+    probablement de la synthèse vocale (**hypothèse**). **Question** : à confirmer auprès d'eux ; gardées.
+  - **Deuxième tri (29/10/2026, demande du mainteneur : des images plus faciles à comprendre pour des enfants ; les
+    pictogrammes ARASAAC, sous CC BY-NC-SA 4.0, ne sont pas compatibles avec la GPL 3)** : règle stricte, l'animal
+    entier et bien visible, sans gros plan de la tête, sans camouflage ni animal minuscule. 30 photos remplacées
+    (girafe, aigle, chouette, paon, perroquet, pigeon, zèbre, hippopotame, dauphin, crocodile, pieuvre, hippocampe,
+    vautour, loup, renard, chat, ours, raton laveur, mouton, serpent, chien, poule…), 5 retirées sans remplaçant
+    (castor : 1 photo ; abeille, chouette, zèbre, vautour : 2). Where Is The Animal : 144 photos.
+  - Triangle de Where Is The Sound : aucune photo libre utilisable, dessiné par `gradle/images/make_triangle_image.py`.
+    Castor, poule, applaudissements, flûte, harpe, trompette, violon : 1 ou 2 photos seulement (rien de mieux sur
+    Commons) ; les animaux sont gardés (un animal nouveau n'aurait pas de voix pour sa question). Scripts et choix :
+    `gradle/images/commons/`.
+- **Fait (graphisme, gameplay), 29/10/2026** :
+  - A1 filtre exact (`WhereIsIt.filterFolders`) ; A2 son de Where Is The Sound dans toutes les langues, « listen »
+    traduit ; A3 consigne de l'intrus dite, traduction chinoise corrigée ; A4 victoire centrée (la carte entière) ;
+    A5 images chargées au plus à la taille de la zone de jeu ; A6 pas de doublon dans une manche (Odd, Dynamique) ;
+    A7 message d'erreur dans un bandeau ; A8 `fourThree` et `levels.json` retirés.
+  - B : `GameSizingComputer` (grille avec espaces au-dessus d'un bandeau qui laisse la roue libre), `PictureCard`
+    (carte arrondie aux couleurs du thème, anneau de fixation de la couleur principale qui fait le tour de la carte,
+    grossissement léger, cadre vert, croix « danger » dessinée, contour des échantillons de Color), question en
+    Fredoka dans un bandeau arrondi (`GameStyle`, nouveau, dans `gazeplay-games-commons`, réutilisable par les
+    autres jeux).
+  - C1 bouton « Réécouter » (`ReplayQuestionButton`, fixation, icône Material Symbols `volume_up`) ; C2 pas deux fois
+    la même réponse (échange de places, sans tirage en plus) ; C3 haut-parleur animé pendant l'écoute.
+  - Rejeu : les tirages gardent l'ordre des versions précédentes (dossier, image, voix) ; seules les manches touchées
+    par A1, A6 ou C2 se rejouent autrement.
+  - **Changé sans être demandé** : le réglage « couleur de la barre de progression » ne s'applique plus à ces jeux
+    (l'anneau prend la couleur principale, comme validé en B2) ; les zones d'intérêt (écran des statistiques, rien sur
+    disque) sont maintenant le centre de chaque carte.
+- **Vérifications (29/10/2026)** : `build` réussi, **539 tests, 0 échec** (509 avant ; nouveaux tests dans
+  `WhereIsItTest` : variantes exactes, sons par langue, consigne de l'intrus, pas de doublon, pas deux fois la même
+  réponse, disposition) ; `allGamesTest` complet réussi (77 entrées) ; les 9 entrées de la famille lancées 5 fois
+  chacune (`-PallGamesRepeat=5`) sans échec. Captures « après » : `build/game-screenshots/apres/whereisit/` et
+  `essai1/whereisit/`. **Reste** : l'essai réel du mainteneur (souris et Tobii ; écouter les 11 sons remplacés),
+  puis l'étape 7 (nouvelles vignettes du menu).
+- **Essai réel du mainteneur (29/10/2026)** : validé (« tout est bon »), après les corrections du flou du menu et de
+  la fenêtre du dossier de Where Is It.
+- **Étape 7 (finitions), 29/10/2026** : 9 vignettes du menu refaites (`common/Thumbnails`, mêmes noms) à partir de
+  captures des jeux, roue des réglages masquée, 960 × 540 (format des cartes du menu) ; Where Is It montré avec un
+  dossier d'exemple (4 photos de Where Is The Animal). Crédits : `gradle/images/README.txt` (les vignettes montrent les
+  photos créditées dans les `CREDITS.txt`), inventaire mis à jour. Traductions : « listen » dans les 21 langues, pas
+  d'autre texte nouveau (le bouton « Réécouter » n'a pas de texte). `build` : **543 tests, 0 échec**.
+- Commit : pas encore (sur demande).

@@ -56,10 +56,10 @@ class PictureCardTest {
     }
 
     @Test
-    void shouldCreateErrorImageRectangle() {
+    void shouldCreateErrorMark() {
         String resource = "images/blue/blue.jpg";
         PictureCard pictureCard = new PictureCard(2, 2, 2, 2, mockGameContext, true,
             resource, mockStats, mockWhereIsIt);
-        assert pictureCard.getErrorImageRectangle() != null;
+        assert pictureCard.getErrorMark() != null;
     }
 }

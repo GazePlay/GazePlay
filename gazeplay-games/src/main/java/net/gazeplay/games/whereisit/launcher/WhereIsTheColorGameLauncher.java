@@ -40,7 +40,7 @@ public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, Dimensi
             case "Hard" -> WhereIsItGameType.COLORS_HARD;
             default -> WhereIsItGameType.COLORS_NORMAL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats);
     }
 
     @Override
@@ -50,6 +50,6 @@ public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, Dimensi
             case "Hard" -> WhereIsItGameType.COLORS_HARD;
             default -> WhereIsItGameType.COLORS_NORMAL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats, gameSeed);
     }
 }

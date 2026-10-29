@@ -36,13 +36,13 @@ public class FindTheOddOneOutGameLauncher implements IGameLauncher<Stats, Dimens
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionGameVariant gameVariant, Stats stats) {
         return new WhereIsIt(WhereIsItGameType.FIND_ODD, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+            gameVariant.getHeight(), gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
                                     DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.FIND_ODD, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+            gameVariant.getHeight(), gameContext, stats, gameSeed);
     }
 }

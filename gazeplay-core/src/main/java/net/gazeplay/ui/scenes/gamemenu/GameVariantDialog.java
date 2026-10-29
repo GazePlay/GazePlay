@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -53,13 +54,11 @@ public class GameVariantDialog extends Stage {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
         MenuDialog.undecorate(this);
-        final Runnable cancel = () -> {
-            close();
-            primaryStage.getScene().getRoot().setEffect(null);
-            root.setDisable(false);
-        };
-        setOnCloseRequest(windowEvent -> {
-            primaryStage.getScene().getRoot().setEffect(null);
+        final Runnable cancel = this::close;
+        // The menu comes back, without its blur, when the window closes, whatever closes it: a variant chosen used to
+        // leave the menu blurred, seen when coming back from the game (the menu is kept, not built again)
+        setOnHidden(windowEvent -> {
+            root.setEffect(null);
             root.setDisable(false);
         });
 
@@ -405,7 +404,6 @@ public class GameVariantDialog extends Stage {
 
             EventHandler<Event> event = mouseEvent -> {
                 close();
-                root.setDisable(false);
                 if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
                 } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
@@ -436,9 +434,13 @@ public class GameVariantDialog extends Stage {
      * Asks for the folder of the custom images of "Where is it?" before starting it.
      */
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        String whereIsItPromptLabel = "WhereIsItNot Config Directory";
+        // The menu stays blurred and disabled behind this window, until it closes
+        root.setEffect(new BoxBlur());
+        root.setDisable(true);
+        // "WhereIsItNot Config Directory" used to be asked: a key missing from the translations, shown as it was
+        String whereIsItPromptLabel = "WhereIsItDirNotConfig";
         GameWhereIsItErrorPathDialog errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
-        errorDialog.setTitle("error");
+        errorDialog.setTitle(gazePlay.getTranslator().translate("WhereIsIt"));
         errorDialog.show();
         errorDialog.toFront();
     }

@@ -1,0 +1,73 @@
+animal-bear 1 2 6
+animal-beaver 2
+animal-bee 2 3
+animal-boar 2 7 8
+animal-cat 1 5 7
+animal-chicken 1 c5 c6
+animal-cow 1 2 4
+animal-crab 1 2 5
+animal-crocodile 4 d3 d4
+animal-deer 3 4 7
+animal-dog 3 8 c2
+animal-dolphin 1 4 5
+animal-donkey 1 2 6
+animal-eagle 1 2 4
+animal-elephant 2 4 5
+animal-fish 1 2 6
+animal-fox 1 2 7
+animal-giraffe 2 5 6
+animal-greaterflamingo 1 3 4
+animal-hedgehog 1 3 4
+animal-hippopotamus 1 c2 c6
+animal-horse 1 4 6
+animal-hyena 1 2 5
+animal-jellyfish 1 3 7
+animal-lion 1 2 5
+animal-monkey 3 5 8
+animal-octopus c4 c5 c6
+animal-owl 2 7
+animal-parrot 1 5 6
+animal-peafowl 2 6 8
+animal-pig 1 4 5
+animal-pigeon 1 6 8
+animal-rabbit 2 6 8
+animal-raccoon 1 3 5
+animal-raven 3 4 7
+animal-rhinoceros 1 2 5
+animal-roe 3 5 6
+animal-seahorse 1 b6 b7
+animal-shark 1 2 4
+animal-sheep 6 7 8
+animal-shellfish 1 3 7
+animal-snake 3 4 6
+animal-sparrow 1 3 8
+animal-squirrel 1 3 5
+animal-tiger 1 3 4
+animal-turtle 1 2 8
+animal-vulture 5 6
+animal-whale 1 2 4
+animal-wolf 3 4 7
+animal-zebra 1 3
+sound-accordion 8 b2 b4
+sound-bird 2 5 8
+sound-car 3 5 8
+sound-cat 3 4 6
+sound-chicken 5 6 7
+sound-cow 1 4 8
+sound-duck 1 4 8
+sound-elephant 1 3 8
+sound-flute 1 b5
+sound-lion 1 6 7
+sound-piano 3 6 8
+sound-pig 2 3 8
+sound-river 2 5 6
+sound-sheep 4 5 6
+sound-snake 3 4 6
+sound-storm 1 3 6
+sound-trumpet 1 b8
+sound-applause b4
+sound-dog b6 b7 b8
+sound-drums b5 b9 b10
+sound-guitar b2 b4 b6
+sound-harp b3 b4
+sound-violin b1 b5

@@ -18,6 +18,7 @@ import javafx.stage.Window;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonPane;
 
 import javax.imageio.ImageIO;
@@ -152,6 +153,14 @@ public final class MenuScreenshots {
                         .findFirst().orElseThrow();
                     card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
                         false, false));
+                });
+                // The window asking for the folder of "Where is it?" (no folder in the settings of the captures)
+                captureDialog(gazePlay, output, "3d-ou-est-ce-dossier", () -> {
+                    final GameWhereIsItErrorPathDialog dialog = new GameWhereIsItErrorPathDialog(gazePlay, null,
+                        gazePlay.getPrimaryStage(), null, gazePlay.getPrimaryScene().getRoot(),
+                        "WhereIsItDirNotConfig", null);
+                    dialog.setTitle(gazePlay.getTranslator().translate("WhereIsIt"));
+                    dialog.show();
                 });
                 // The other orientation of the cards: the menu is built again when the mode is chosen again
                 onFx(() -> {

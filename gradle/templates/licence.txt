@@ -86,7 +86,7 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 
 - Polices des menus (gazeplay-core/src/main/resources/data/fonts) : Andika (SIL International) et Fredoka
   (The Fredoka Project Authors), SIL Open Font License 1.1, licences livrées avec les polices.
-- Icônes des menus (data/icons) : Material Symbols de Google, Apache License 2.0
+- Icônes des menus et des jeux (data/icons) : Material Symbols de Google, Apache License 2.0
   (data/icons/MaterialSymbols-LICENSE.txt).
 - Oculomètre : TobiiStreamEngineForJava (https://github.com/GazePlay/TobiiStreamEngineForJava), GPL-3.0.
 - Bibliothèques Java : la liste et la licence de chacune sont dans le dossier dependency-license des
@@ -105,6 +105,12 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images de Magic Potions (fioles, chaudron, bulle, décor) : dessinées pour GazePlay Learning
   (gradle/images/make_potions_images.py), sous la licence du projet.
   Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
+- Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
+  data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
+  public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier
+  CREDITS.txt de chaque jeu (data/whereIsTheAnimal/CREDITS.txt, data/whereIsTheSound/CREDITS.txt).
+  Photos redimensionnées, sons raccourcis et normalisés (octobre 2026).
+- Autres sons de « Où est le son ? » : La Sonothèque (https://lasonotheque.org), licence CC0 1.0.
 
  -------------------------------------------------------------------
 

@@ -14,3 +14,17 @@ Images of Magic Potions (gazeplay-games: data/potions/images): potionRed.png, po
 mixingPot.png, background-potions.jpg and the speech bubble of Biboule-Client.png are drawn by make_potions_images.py
 (this folder), under the license of GazePlay Learning (GPL-3.0-or-later); Biboule is the one of Biboule Jump. They
 replace images of Freepik (October 2026). The script keeps the sizes and the transparent areas the game expects.
+
+Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
+data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
+or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the
+CREDITS.txt file of each game (data/whereIsTheAnimal/CREDITS.txt, data/whereIsTheSound/CREDITS.txt), shipped with
+the game. The photos were resized to 1280 pixels at most; the sounds shortened to 8 seconds, normalized and made mono.
+The triangle of Where Is The Sound (data/whereIsTheSound/images/triangle/triangle_1.jpg) is drawn by
+make_triangle_image.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later).
+
+Thumbnails of the menu of the Where Is It family (gazeplay-core: data/common/Thumbnails: findTheOddOneOut.jpg,
+whereIsIt.png, whereIsTheAnimal.png, whereIsTheColor.png, whereIsTheFlag.png, whereIsTheLetter.png,
+whereIsTheNumber.png, whereIsTheShape.png, whereIsTheSound.png): captures of the games (October 2026), configuration
+button hidden, 960 x 540. The photos they show are those of the games, credited in data/whereIsTheAnimal/CREDITS.txt
+(whereIsIt.png shows 4 of them) and data/whereIsTheSound/CREDITS.txt; under their licences (CC BY-SA 4.0 for some).

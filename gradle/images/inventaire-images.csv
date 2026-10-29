@@ -75,7 +75,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/dice.png,oui,source inco
 gazeplay-core/src/main/resources/data/common/Thumbnails/divisor.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
 gazeplay-core/src/main/resources/data/common/Thumbnails/dottodot.png,oui,source inconnue,,2021-07-12,verafili,created preview
 gazeplay-core/src/main/resources/data/common/Thumbnails/egg.png,oui,source inconnue,,2020-01-13,kuhlkrein,reformat code eggGame + remove useless timeline
-gazeplay-core/src/main/resources/data/common/Thumbnails/findTheOddOneOut.jpg,oui,source inconnue,,2019-04-11,Peter Bardawil,Added new Game Find the Odd one out
+gazeplay-core/src/main/resources/data/common/Thumbnails/findTheOddOneOut.jpg,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/flowerOfNumbers.png,oui,source inconnue,,2022-07-18,Sakraft,Finished game Finished full petal checks and their actions (enable/disable objects). Added pistil numbers label. Added win animation and finish round actions (score/rounds/stats). Changed size and locate parameters of numbers objects. Relocated all number objects. Correction in launcher to saved stats data. Changed ProgressButton class to avoid resizing problems. Improved the flower image.
 gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,source inconnue,,2021-06-10,Iluvrog,add thumbnail picture
 gazeplay-core/src/main/resources/data/common/Thumbnails/frogsrace.png,oui,source inconnue,,2019-03-16,sannara,Added menu photo for frogRace
@@ -119,14 +119,14 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/sprintToTheFinish.png,ou
 gazeplay-core/src/main/resources/data/common/Thumbnails/surviveAgainstRobots.png,oui,source inconnue,,2023-05-17,iwa,Ajout d'un background et changement de la miniature
 gazeplay-core/src/main/resources/data/common/Thumbnails/ticTacToe.png,oui,source inconnue,,2021-08-25,Iluvrog,translation + thumbnail
 gazeplay-core/src/main/resources/data/common/Thumbnails/trainSwitches.png,oui,source inconnue,,2023-04-27,HugolinBouhineau,TrainSwitches game skeleton
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsIt.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheAnimal.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheColor.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheFlag.png,oui,source inconnue,,2019-02-22,johzz-o2,added game Thumbnail - Fun with Flags
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheLetter.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheNumber.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheShape.png,oui,source inconnue,,2021-12-06,Sacha,Add game variant Where is the shape ?
-gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheSound.png,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsIt.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheAnimal.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheColor.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheFlag.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheLetter.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheNumber.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheShape.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheSound.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/default/images/bear.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
 gazeplay-core/src/main/resources/data/common/default/images/chouette.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding free of right Free Fundation images
 gazeplay-core/src/main/resources/data/common/default/images/crabe.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
@@ -820,156 +820,150 @@ gazeplay-games/src/main/resources/data/trainSwitches/images/yellowStation.png,ou
 gazeplay-games/src/main/resources/data/whackmole/images/bibouleMole.png,oui,source inconnue,,2018-05-15,MelanieCarriere,End of Whack a mole
 gazeplay-games/src/main/resources/data/whackmole/images/molesGround.jpg,oui,source inconnue,,2018-05-15,MelanieCarriere,End of Whack a mole
 gazeplay-games/src/main/resources/data/whackmole/images/molesGroundTransparent.png,oui,source inconnue,,2018-05-15,MelanieCarriere,End of Whack a mole
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/polar_bear_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/beaver/beaver_1.jpg,oui,non libre,CC BY-NC-SA 4.0 (usage non commercial : incompatible avec la GPL),2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/beaver/beaver_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/beaver/beaver_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bee/bee_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bee/bee_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bee/bee_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/boar/boar_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/boar/boar_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/boar/boar_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cat/cat_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cat/cat_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cat/cat_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/chicken/hen_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/chicken/hen_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/chicken/rooster_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cow/cow_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cow/cow_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cow/cow_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/puppy_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/puppy_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/donkey/donkey_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/donkey/donkey_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/donkey/donkey_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/eagle/eagle_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/eagle/eagle_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/eagle/eagle_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_6.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/giraffe/giraffe_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/giraffe/giraffe_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/giraffe/giraffe_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/greaterflamingo/greater_flamingo_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/greaterflamingo/greater_flamingo_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/greaterflamingo/greater_flamingo_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hedgehog/hedgehog_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hedgehog/hedgehog_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hedgehog/hedgehog_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hippopotamus/hippopotamus_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hippopotamus/hippopotamus_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hippopotamus/hippopotamus_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/horse/horse_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/horse/horse_3jpg.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/horse/mare.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hyena/hyena_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hyena/hyena_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hyena/hyena_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/jellyfish/jellyfish_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/jellyfish/jellyfish_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/jellyfish/jellyfish_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/lion/lion_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/lion/lion_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/lion/lion_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/monkey/monkey_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/monkey/monkey_2.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/monkey/monkey_3.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/octopus/octopus_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/octopus/octopus_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/octopus/octopus_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/owl/owl_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/owl/owl_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/owl/owl_5.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/parrot/parrot_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/parrot/parrot_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/parrot/parrot_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/peafowl/peafowl_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/peafowl/peafowl_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/peafowl/peafowl_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pig/pig_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pig/pig_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pig/piglet.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pigeon/pigeon_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pigeon/pigeon_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pigeon/pigeon_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rabbit/rabbit_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rabbit/rabbit_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rabbit/rabbit_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raccoon/raccoon_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raccoon/raccoon_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raccoon/raccoon_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raven/raven_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raven/raven_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raven/raven_4.jpg,oui,source inconnue,"auteur dans les métadonnées : xmpRights:WebStatement=""http://www.ingridtaylar.com"", Iptc4xmpCore:CreatorContac",2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rhinoceros/rhinoceros_1.jpg,oui,source inconnue,,2022-09-02,PillouMatou,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rhinoceros/rhinoceros_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rhinoceros/rhinoceros_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/roe/roe_5.jpg,oui,source inconnue,auteur dans les métadonnées : Pap_aH,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/roe/roe_6.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/roe/roe_7.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/seahorse/seahorse_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/seahorse/seahorse_2.jpg,oui,source inconnue,,2022-09-02,Noars,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/seahorse/seahorse_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shark/hammerhead_shark.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shark/shark_1.jpg,oui,source inconnue,,2022-09-02,Noars,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shark/shark_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sheep/lamb.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sheep/sheep_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sheep/sheep_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shellfish/shellfish_1.jpg,oui,source inconnue,,2022-09-02,Noars,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shellfish/shellfish_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shellfish/shellfish_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/snake/snake_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/snake/snake_2.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/snake/snake_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sparrow/sparrow_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sparrow/sparrow_3.jpeg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sparrow/sparrow_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/squirrel/squirrel_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/squirrel/squirrel_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/squirrel/squirrel_7.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_1.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_6.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/tortle_2.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_3.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_4.jpg,oui,source inconnue,,2021-05-25,verafili,wip new selection for dynamic WhereIstheAnimal
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_1.jpg,oui,source inconnue,,2022-09-02,Noars,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_2.jpg,oui,source inconnue,,2022-09-02,Noars,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/beluga.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/wolf/wolf_3.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/wolf/wolf_4.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/wolf/wolf_5.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/zebra/zebra_1.jpg,oui,source inconnue,,2022-07-29,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/zebra/zebra_2.jpg,oui,source inconnue,,2022-09-02,Noars,add images
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/zebra/zebra_3.jpg,oui,source inconnue,,2022-09-02,Noars,add images
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_2.jpg,oui,libre,"Wikimedia Commons, Malene Thyssen, CC BY 2.5",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_3.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/beaver/beaver_1.jpg,oui,libre,"Wikimedia Commons, Stephan Sprinz, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bee/bee_1.jpg,oui,libre,"Wikimedia Commons, Tisha Mukherjee, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bee/bee_2.jpg,oui,libre,"Wikimedia Commons, Wilfredor, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/boar/boar_1.jpg,oui,libre,"Wikimedia Commons, Daniele Napolitano, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/boar/boar_2.jpg,oui,libre,"Wikimedia Commons, Byrdyak, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/boar/boar_3.jpg,oui,libre,"Wikimedia Commons, Michael Gäbler, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cat/cat_1.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cat/cat_2.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cat/cat_3.jpg,oui,libre,"Wikimedia Commons, George Chernilevsky, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/chicken/chicken_1.jpg,oui,libre,"Wikimedia Commons, Yann (talk), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/chicken/chicken_2.jpg,oui,libre,"Wikimedia Commons, safaritravelplus, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/chicken/chicken_3.jpg,oui,libre,"Wikimedia Commons, Chic portfolios, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cow/cow_1.jpg,oui,libre,"Wikimedia Commons, Fernando Losada Rodríguez, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cow/cow_2.jpg,oui,libre,"Wikimedia Commons, Fernando Losada Rodríguez, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/cow/cow_3.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_1.jpg,oui,libre,"Wikimedia Commons, Hans Hillewaert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_2.jpg,oui,libre,"Wikimedia Commons, Hans Hillewaert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_3.jpg,oui,libre,"Wikimedia Commons, George Chernilevsky, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_1.jpg,oui,libre,"Wikimedia Commons, Carlos Valenzuela, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_2.jpg,oui,libre,"Wikimedia Commons, Fabian Roudra Baroi, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_3.jpg,oui,libre,"Wikimedia Commons, Fabian Roudra Baroi, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_1.jpg,oui,libre,"Wikimedia Commons, Isiwal, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_2.jpg,oui,libre,"Wikimedia Commons, Reinhold Möller Ermell, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_1.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_2.jpg,oui,libre,"Wikimedia Commons, Discott, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_3.jpg,oui,libre,"Wikimedia Commons, Barras, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_1.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_3.jpg,oui,libre,"Wikimedia Commons, Martin Falbisoner, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/donkey/donkey_1.jpg,oui,libre,"Wikimedia Commons, Zeynel Cebeci, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/donkey/donkey_2.jpg,oui,libre,"Wikimedia Commons, Jules Verne Times Two, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/donkey/donkey_3.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/eagle/eagle_1.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/eagle/eagle_2.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/eagle/eagle_3.jpg,oui,libre,"Wikimedia Commons, Juan lacruz, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_1.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_3.jpg,oui,libre,"Wikimedia Commons, George Chernilevsky, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_1.jpg,oui,libre,"Wikimedia Commons, Uoaei1, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_2.jpg,oui,libre,"Wikimedia Commons, Alexis Lours, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_3.jpg,oui,libre,"Wikimedia Commons, El Golli Mohamed, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/giraffe/giraffe_1.jpg,oui,libre,"Wikimedia Commons, Hans Hillewaert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/giraffe/giraffe_2.jpg,oui,libre,"Wikimedia Commons, Another one of my pictures: This photograph was taken by Medium69 (William Crochot) and released under the license stated below. You are free to use it for any purpose as long as you credit the author (William Crochot), the Source (Wikimedia Commons) and the license (CC-BY-SA 4.0) in close relation to the image. Please do not upload an updated image here without consultation with the Author. The author would like to make corrections only at his own source RAW. This ensures that the changes are preserved.Please if you think that any changes should be required, please inform the author.Otherwise you can upload a new image with a new name. Please use one of the templates derivative or extract., CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/giraffe/giraffe_3.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/greaterflamingo/greaterflamingo_1.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/greaterflamingo/greaterflamingo_2.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/greaterflamingo/greaterflamingo_3.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hedgehog/hedgehog_1.jpg,oui,libre,"Wikimedia Commons, George Chernilevsky, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hedgehog/hedgehog_2.jpg,oui,libre,"Wikimedia Commons, PetroKaterynych, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hedgehog/hedgehog_3.jpg,oui,libre,"Wikimedia Commons, Fischer.H, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hippopotamus/hippopotamus_1.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hippopotamus/hippopotamus_2.jpg,oui,libre,"Wikimedia Commons, Prof Chen Hualin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hippopotamus/hippopotamus_3.jpg,oui,libre,"Wikimedia Commons, No machine-readable author provided. Radomil assumed (based on copyright claims)., CC BY 2.5",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/horse/horse_1.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/horse/horse_2.jpg,oui,libre,"Wikimedia Commons, Shadow Ayush, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/horse/horse_3.jpg,oui,libre,"Wikimedia Commons, Trougnouf, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hyena/hyena_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hyena/hyena_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/hyena/hyena_3.jpg,oui,libre,"Wikimedia Commons, Yathin S Krishnappa, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/jellyfish/jellyfish_1.jpg,oui,libre,"Wikimedia Commons, Hans Hillewaert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/jellyfish/jellyfish_2.jpg,oui,libre,"Wikimedia Commons, Miguel Angel Omaña Rojas, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/jellyfish/jellyfish_3.jpg,oui,libre,"Wikimedia Commons, Hans Hillewaert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/lion/lion_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/lion/lion_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/lion/lion_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/monkey/monkey_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/monkey/monkey_2.jpg,oui,libre,"Wikimedia Commons, Frank Schulenburg, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/monkey/monkey_3.jpg,oui,libre,"Wikimedia Commons, Another one of my pictures: This photograph was taken by Medium69 (William Crochot) and released under the license stated below. You are free to use it for any purpose as long as you credit the author (William Crochot), the Source (Wikimedia Commons) and the license (CC-BY-SA 4.0) in close relation to the image. Please do not upload an updated image here without consultation with the Author. The author would like to make corrections only at his own source RAW. This ensures that the changes are preserved.Please if you think that any changes should be required, please inform the author.Otherwise you can upload a new image with a new name. Please use one of the templates derivative or extract., CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/octopus/octopus_1.jpg,oui,libre,"Wikimedia Commons, Ahmed Abdul Rahman, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/octopus/octopus_2.jpg,oui,libre,"Wikimedia Commons, Pauline Walsh Jacobson, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/octopus/octopus_3.jpg,oui,libre,"Wikimedia Commons, Pauline Walsh Jacobson, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/owl/owl_1.jpg,oui,libre,"Wikimedia Commons, Alvesgaspar, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/owl/owl_2.jpg,oui,libre,"Wikimedia Commons, Tokumi, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/parrot/parrot_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/parrot/parrot_2.jpg,oui,libre,"Wikimedia Commons, Satdeep Gill, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/parrot/parrot_3.jpg,oui,libre,"Wikimedia Commons, Luc Viatour, CC BY 2.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/peafowl/peafowl_1.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/peafowl/peafowl_2.jpg,oui,libre,"Wikimedia Commons, NorbertNagel, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/peafowl/peafowl_3.jpg,oui,libre,"Wikimedia Commons, Senthi Aathavan Senthilverl, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pig/pig_1.jpg,oui,libre,"Wikimedia Commons, Gzen92, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pig/pig_2.jpg,oui,libre,"Wikimedia Commons, kallerna, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pig/pig_3.jpg,oui,libre,"Wikimedia Commons, Alexandr frolov, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pigeon/pigeon_1.jpg,oui,libre,"Wikimedia Commons, Satdeep Gill, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pigeon/pigeon_2.jpg,oui,libre,"Wikimedia Commons, Lewis Hulbert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/pigeon/pigeon_3.jpg,oui,libre,"Wikimedia Commons, Trougnouf, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rabbit/rabbit_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rabbit/rabbit_2.jpg,oui,libre,"Wikimedia Commons, Alexis Lours, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rabbit/rabbit_3.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raccoon/raccoon_1.jpg,oui,libre,"Wikimedia Commons, Rhododendrites, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raccoon/raccoon_2.jpg,oui,libre,"Wikimedia Commons, Clément Bardot, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raccoon/raccoon_3.jpg,oui,libre,"Wikimedia Commons, Korall, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raven/raven_1.jpg,oui,libre,"Wikimedia Commons, Alexis Lours, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raven/raven_2.jpg,oui,libre,"Wikimedia Commons, Marie-Lan Taÿ Pamart, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/raven/raven_3.jpg,oui,libre,"Wikimedia Commons, Frank Schulenburg, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rhinoceros/rhinoceros_1.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rhinoceros/rhinoceros_2.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/rhinoceros/rhinoceros_3.jpg,oui,libre,"Wikimedia Commons, Vauxford, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/roe/roe_1.jpg,oui,libre,"Wikimedia Commons, Uoaei1, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/roe/roe_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/roe/roe_3.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/seahorse/seahorse_1.jpg,oui,libre,"Wikimedia Commons, Hans Hillewaert, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/seahorse/seahorse_2.jpg,oui,libre,"Wikimedia Commons, Emőke Dénes, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/seahorse/seahorse_3.jpg,oui,libre,"Wikimedia Commons, Emőke Dénes, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shark/shark_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shark/shark_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shark/shark_3.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sheep/sheep_1.jpg,oui,libre,"Wikimedia Commons, kallerna, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sheep/sheep_2.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sheep/sheep_3.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shellfish/shellfish_1.jpg,oui,libre,"Wikimedia Commons, George Chernilevsky, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shellfish/shellfish_2.jpg,oui,libre,"Wikimedia Commons, Didier Descouens, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/shellfish/shellfish_3.jpg,oui,libre,"Wikimedia Commons, Vyacheslav Argenberg, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/snake/snake_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/snake/snake_2.jpg,oui,libre,"Wikimedia Commons, Renato Augusto Martins, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/snake/snake_3.jpg,oui,libre,"Wikimedia Commons, Holger Krisp, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sparrow/sparrow_1.jpg,oui,libre,"Wikimedia Commons, Rhododendrites, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sparrow/sparrow_2.jpg,oui,libre,"Wikimedia Commons, Terragio67, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/sparrow/sparrow_3.jpg,oui,libre,"Wikimedia Commons, Zeynel Cebeci, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/squirrel/squirrel_1.jpg,oui,libre,"Wikimedia Commons, Rhododendrites, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/squirrel/squirrel_2.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/squirrel/squirrel_3.jpg,oui,libre,"Wikimedia Commons, Manfred Werner (Tsui), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_1.jpg,oui,libre,"Wikimedia Commons, Dave Pape, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_2.jpg,oui,libre,"Wikimedia Commons, Tisha Mukherjee, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_3.jpg,oui,libre,"Wikimedia Commons, Tisha Mukherjee, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_3.jpg,oui,libre,"Wikimedia Commons, Andrew Mercer (www.baldwhiteguy.co.nz), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_1.jpg,oui,libre,"Wikimedia Commons, Prasan Shrestha, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/wolf/wolf_1.jpg,oui,libre,"Wikimedia Commons, Carlos Delgado, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/wolf/wolf_2.jpg,oui,libre,"Wikimedia Commons, Musicaline, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/wolf/wolf_3.jpg,oui,libre,"Wikimedia Commons, Gzen92, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/zebra/zebra_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/zebra/zebra_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimalDynamic/images/cats/cat-1192026_1280.jpg,oui,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2021-06-01,verafili,[wip]tested last version of dynamic WhereIsTheAnimal
 gazeplay-games/src/main/resources/data/whereIsTheAnimalDynamic/images/cats/cat-1337527_1280.jpg,oui,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2017-11-18,schwab,work on animals games (addition of lots of images and sounds)
 gazeplay-games/src/main/resources/data/whereIsTheAnimalDynamic/images/cats/cat-2068462_1280.jpg,oui,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2021-06-01,verafili,[wip]tested last version of dynamic WhereIsTheAnimal
@@ -1180,71 +1174,71 @@ gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_4.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_5.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_6.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_1.jpg,oui,source inconnue,auteur dans les métadonnées : Marko Milivojevic,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_2.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/applause/spectators.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions Ajout de quelques images/ sons
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/jay.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_1.png,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions Ajout de quelques images/ sons
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_2.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions Ajout de quelques images/ sons
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_1.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_2.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_3.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_4.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_5.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_6.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/kitty.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_1.jpg,oui,non libre,"iStock / Getty Images (licence payante, dans les métadonnées)",2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_2.jpg,oui,non libre,"iStock / Getty Images (licence payante, dans les métadonnées)",2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_3.jpg,oui,non libre,"iStock / Getty Images (licence payante, dans les métadonnées)",2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_4.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cow/cow_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cow/cow_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/puppy_1.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/puppy_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_2.png,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_3.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/mallard_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/mallard_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant.jpg,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions Ajout de quelques images/ sons
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/music_3.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_1.jpg,oui,libre,"Metropolitan Museum of Art, CC0 (métadonnées)",2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_2.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_1.jpg,oui,non libre,"iStock / Getty Images (licence payante, dans les métadonnées)",2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_3.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_4.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_5.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_6.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_7.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_8.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/piano/piano_1.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/piano/piano_2.jpg,oui,source inconnue,"auteur dans les métadonnées : Dalb ra, Jean-Pierre",2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/piano/piano_3.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/pig/pig.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/river/river_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/river/river_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/sheep/sheep_1.jpg,oui,non libre,"iStock / Getty Images (licence payante, dans les métadonnées)",2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/sheep/sheep_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/snake/snake_1.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/snake/snake_2.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/flash.jpg,oui,source inconnue,,2022-07-04,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 Version 1
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/orage.png,oui,source inconnue,,2022-07-06,Karine BENHAIMI,New Game : Which image corresponds to this sound #1441 2 versions Ajout de quelques images/ sons
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/triangle/triangle_1.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/triangle/triangle_2.jpg,oui,source inconnue,auteur dans les métadonnées : Hannes Grobe,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_louis_amstrong.jpg,oui,source inconnue,"auteur dans les métadonnées : Donald E. Hurlbert, photoshop:Credit=""Donald E. Hurlbert: National Mus"", photosh",2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_silver.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_1.jpg,oui,source inconnue,auteur dans les métadonnées : Marko Milivojevic,2022-07-26,Sakraft,Improve Where is it? games
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_2.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_1.jpg,oui,libre,"Wikimedia Commons, Creator:Alexandre Pere & Fils, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_2.jpg,oui,libre,"Wikimedia Commons, Ahmet Düz, Dreiländer- & Oberrheinfotograf, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_3.jpg,oui,libre,"Wikimedia Commons, Wilfredor, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/applause/applause_1.jpg,oui,libre,"Wikimedia Commons, Mona Hassan Abo-Abda, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_1.jpg,oui,libre,"Wikimedia Commons, Alexis Lours, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_2.jpg,oui,libre,"Wikimedia Commons, Chme82, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_3.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_1.jpg,oui,libre,"Wikimedia Commons, Ezarate This is a retouched picture, which means that it has been digitally altered from its original version. Modifications: rebuild from raw fixing light compensation in shadows and lights, White balance, tonemaping balance, fix lens distortion, fix vertical distortions, remove dust spots, noise reduction and chromatic aberration fix, cut element distracting and remove oil spot and finally export in full jpeg quality by The Photographer 13:39, 12 February 2017 (UTC)., CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_2.jpg,oui,libre,"Wikimedia Commons, Morio, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_3.jpg,oui,libre,"Wikimedia Commons, Benoît Prieur, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_1.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_2.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_3.jpg,oui,libre,"Wikimedia Commons, Fernando Losada Rodríguez, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_1.jpg,oui,libre,"Wikimedia Commons, Frank Schulenburg, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_2.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_3.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cow/cow_1.jpg,oui,libre,"Wikimedia Commons, Fernando Losada Rodríguez, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cow/cow_2.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cow/cow_3.jpg,oui,libre,"Wikimedia Commons, OleNeitzel, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_1.jpg,oui,libre,"Wikimedia Commons, Discott, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_2.jpg,oui,libre,"Wikimedia Commons, Rhododendrites, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_3.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_1.jpg,oui,libre,"Wikimedia Commons, Eric Magnan, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_2.jpg,oui,libre,"Wikimedia Commons, Ocdp, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_3.jpg,oui,libre,"Wikimedia Commons, Ocdp, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck_1.jpg,oui,libre,"Wikimedia Commons, Acarpentier, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck_2.jpg,oui,libre,"Wikimedia Commons, Jacek Halicki, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck_3.jpg,oui,libre,"Wikimedia Commons, Nrik kiran, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant_3.jpg,oui,libre,"Wikimedia Commons, Godot13, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_1.jpg,oui,libre,"Wikimedia Commons, Petar Milošević, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_2.jpg,oui,libre,"Wikimedia Commons, Simon Pierre Barrette (Cephas (talk)), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_1.jpg,oui,libre,"Wikimedia Commons, Harald Krichel, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_2.jpg,oui,libre,"Wikimedia Commons, BRAHIM DJELLOUL Mustapha, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_3.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_1.jpg,oui,libre,"Metropolitan Museum of Art, Open Access, CC0",2022-07-26,Sakraft,Improve Where is it? games
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_2.jpg,oui,libre,"Wikimedia Commons, Knud Peter Petersen, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_3.jpg,oui,libre,"Wikimedia Commons, Creator:Lyon & Healy, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_2.jpg,oui,libre,"Wikimedia Commons, Byrdyak, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/lion/lion_3.jpg,oui,libre,"Wikimedia Commons, Clément Bardot, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/piano/piano_1.jpg,oui,libre,"Wikimedia Commons, Ermell, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/piano/piano_2.jpg,oui,libre,"Wikimedia Commons, Rjcastillo, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/piano/piano_3.jpg,oui,libre,"Wikimedia Commons, Rjcastillo, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/pig/pig_1.jpg,oui,libre,"Wikimedia Commons, Alvesgaspar, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/pig/pig_2.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/pig/pig_3.jpg,oui,libre,"Wikimedia Commons, Ermell, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/river/river_1.jpg,oui,libre,"Wikimedia Commons, Michal Klajban, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/river/river_2.jpg,oui,libre,"Wikimedia Commons, Michal Klajban, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/river/river_3.jpg,oui,libre,"Wikimedia Commons, Frankemann, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/sheep/sheep_1.jpg,oui,libre,"Wikimedia Commons, Manfred Werner (Tsui), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/sheep/sheep_2.jpg,oui,libre,"Wikimedia Commons, W.carter, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/sheep/sheep_3.jpg,oui,libre,"Wikimedia Commons, Jiel, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/snake/snake_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/snake/snake_2.jpg,oui,libre,"Wikimedia Commons, Renato Augusto Martins, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/snake/snake_3.jpg,oui,libre,"Wikimedia Commons, Holger Krisp, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/storm_1.jpg,oui,libre,"Wikimedia Commons, Thomas Bresson, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/storm_2.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/storm_3.jpg,oui,libre,"Wikimedia Commons, Matti Blume, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/triangle/triangle_1.jpg,oui,libre,"dessiné pour le projet (gradle/images/make_triangle_image.py), GPL-3.0-or-later",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_1.jpg,oui,libre,"Wikimedia Commons, Eusebius, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_2.jpg,oui,libre,"Wikimedia Commons, Manfred Werner (Tsui), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_1.jpg,oui,libre,"Wikimedia Commons, Ermell, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_2.jpg,oui,libre,"Wikimedia Commons, Rs-foto, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/test/resources/images/black/black.jpg,non,source inconnue,,2017-11-25,schwab,"work on ""where is the it"" games (now two games: animals and colors)"
 gazeplay-games/src/test/resources/images/blue/blue.jpg,non,source inconnue,,2017-11-25,schwab,"work on ""where is the it"" games (now two games: animals and colors)"
 gazeplay-games/src/test/resources/images/brown/brown.jpg,non,source inconnue,,2017-11-25,schwab,"work on ""where is the it"" games (now two games: animals and colors)"

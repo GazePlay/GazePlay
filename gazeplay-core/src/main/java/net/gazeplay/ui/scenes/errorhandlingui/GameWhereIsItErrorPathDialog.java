@@ -1,47 +1,64 @@
 package net.gazeplay.ui.scenes.errorhandlingui;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import lombok.Getter;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.menus.MenuDialog;
+import net.gazeplay.ui.menus.MenuStyle;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
 import java.io.File;
 import java.util.LinkedList;
-import java.util.List;
-
-import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
-
 
 /**
  * Window shown when "Where is it?" is started with custom images but without a valid folder: it asks for the folder
  * (see {@code WhereIsItVaildator}), then starts the game.
+ * <p>
+ * Look of the menus ({@link MenuDialog}): the name of the game and a close button at the top, rounded buttons.
  */
 public class GameWhereIsItErrorPathDialog extends Stage {
+
+    /**
+     * Inline style of the message when the folder chosen holds no valid folder of images.
+     */
+    private static final String ERROR_STYLE = "-fx-text-fill: -gp-danger;";
+
+    @Getter
+    private final Label promptLabel;
+
+    @Getter
+    private final Button folderButton;
+
+    @Getter
+    private final Button resetButton;
+
+    @Getter
+    private final Button doneButton;
+
+    /**
+     * The message shown when the window opens, shown again once a valid folder is chosen.
+     */
+    private final String initialMessage;
 
     public GameWhereIsItErrorPathDialog(
         final GazePlay gazePlay,
@@ -54,151 +71,108 @@ public class GameWhereIsItErrorPathDialog extends Stage {
     ) {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
-        initStyle(StageStyle.UTILITY);
-        setOnCloseRequest(windowEvent -> {
-            primaryStage.getScene().getRoot().setEffect(null);
+        MenuDialog.undecorate(this);
+        // The menu comes back, without its blur, when the window closes, whatever closes it (the game started too)
+        setOnHidden(windowEvent -> {
+            root.setEffect(null);
             root.setDisable(false);
         });
 
-        FlowPane choicePane = new FlowPane();
-        choicePane.setAlignment(Pos.CENTER);
-        choicePane.setHgap(10);
-        choicePane.setVgap(10);
-
-        ScrollPane choicePanelScroller = new ScrollPane();
-        choicePanelScroller.setContent(choicePane);
-        choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
-        choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-        I18NLabel promptLabel = new I18NLabel(gazePlay.getTranslator(), whereIsItPromptLabelTextKey);
-        promptLabel.setStyle(labelStyle);
-
-        VBox topPane = new VBox();
-        topPane.setAlignment(Pos.CENTER);
-        topPane.getChildren().add(promptLabel);
-
-        BorderPane sceneContentPane = new BorderPane();
-        sceneContentPane.setTop(topPane);
-        sceneContentPane.setCenter(choicePanelScroller);
-
         final Configuration config = ActiveConfigurationContext.getInstance();
-
         final Translator translator = gazePlay.getTranslator();
 
-        Button doneButton = new Button(translator.translate("Done"));
-        doneButton.getStyleClass().add("gameChooserButton");
-        doneButton.getStyleClass().add("gameVariation");
-        doneButton.getStyleClass().add("button");
-        doneButton.wrapTextProperty().setValue(true);
-        doneButton.setAlignment(Pos.CENTER_RIGHT);
+        initialMessage = translator.translate(whereIsItPromptLabelTextKey);
+        promptLabel = new Label(initialMessage);
+        promptLabel.getStyleClass().add("gp-dialog-prompt");
+
+        final Label folderLabel = new Label(translator.translate("WhereIsItDirectory"));
+        folderLabel.getStyleClass().add("gp-setting-name");
+
+        folderButton = new Button();
+        folderButton.getStyleClass().addAll("gp-button", "gp-button-secondary");
+        // A long path keeps its end (the folder) and is whole in the tooltip
+        folderButton.setMaxWidth(420);
+        folderButton.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
+        final Tooltip pathTooltip = MenuStyle.tooltip("");
+        pathTooltip.textProperty().bind(folderButton.textProperty());
+        folderButton.setTooltip(pathTooltip);
+        showFolder(config.getWhereIsItDir(), translator);
+
+        resetButton = new Button(translator.translate("Reset"));
+        resetButton.getStyleClass().addAll("gp-button", "gp-button-secondary");
+
+        doneButton = new Button(translator.translate("Done"));
+        doneButton.getStyleClass().addAll("gp-button", "gp-button-primary");
         doneButton.setDisable(true);
 
-        Node input = buildDirectoryChooser(config, gazePlay, translator, doneButton, promptLabel);
-        choicePane.getChildren().add(input);
+        folderButton.setOnAction(event -> {
+            final DirectoryChooser directoryChooser = new DirectoryChooser();
+            final File currentFolder = new File(config.getWhereIsItDir());
+            if (currentFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentFolder);
+            }
+            final File dirFile = directoryChooser.showDialog(this);
+            if (dirFile != null) {
+                chooseFolder(dirFile.getAbsolutePath(), config, translator);
+            }
+        });
 
-        EventHandler<Event> event = mouseEvent -> {
+        resetButton.setOnAction(event -> {
+            config.setWhereIsItDir(Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR);
+            showFolder(Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR, translator);
+            showMessage(initialMessage, false);
+            doneButton.setDisable(true);
+        });
+
+        // A click, Enter or Space
+        doneButton.setOnAction(event -> {
             close();
-            root.setDisable(false);
             gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, finalVariant);
-        };
-        doneButton.addEventHandler(MOUSE_CLICKED, event);
+        });
 
-        Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
+        final HBox folderRow = new HBox(10, folderButton, resetButton);
+        folderRow.setAlignment(Pos.CENTER);
 
+        final VBox content = new VBox(18, promptLabel, folderLabel, folderRow, doneButton);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(8, 28, 28, 28));
+
+        final Scene scene = MenuDialog.createScene(this, content, translator.translate("Close"), this::close);
         CssUtil.setPreferredStylesheets(config, scene);
-
         setScene(scene);
-        setWidth(primaryStage.getWidth() / 2);
-        setHeight(primaryStage.getHeight() / 2);
+        setWidth(Math.max(560, primaryStage.getWidth() * 0.5));
+        setHeight(Math.max(360, primaryStage.getHeight() * 0.45));
     }
 
     /**
-     * @return the chooser of the folder of the images; the "done" button is enabled once a valid folder is chosen
+     * Keeps a folder chosen if it holds at least one valid folder of images (then the game can start), otherwise says
+     * that it is the wrong folder.
      */
-    Node buildDirectoryChooser(
-        Configuration configuration,
-        GazePlay gazePlay,
-        Translator translator,
-        Button doneButton,
-        I18NLabel whereIsItPromptLabel
-
-    ) {
-        final HBox pane = new HBox(5);
-        final String fileDir;
-        List<File> imagesFolders = new LinkedList<>();
-        Button buttonLoad;
-
-        fileDir = configuration.getWhereIsItDir();
-
-
-        buttonLoad = new Button(fileDir);
-
-        buttonLoad.setOnAction(arg0 -> {
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                final File currentFolder;
-                currentFolder = new File(configuration.getWhereIsItDir());
-
-
-                if (currentFolder.isDirectory()) {
-                    directoryChooser.setInitialDirectory(currentFolder);
-                }
-                final Scene scene = gazePlay.getPrimaryScene();
-                File dirFile = directoryChooser.showDialog(scene.getWindow());
-                if (dirFile == null) {
-                    return;
-                }
-
-                String newPropertyValue = dirFile.getAbsolutePath();
-
-                if (Utils.isWindows()) {
-                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-                }
-
-                buttonLoad.textProperty().setValue(newPropertyValue);
-
-                if (WhereIsItVaildator.getNumberOfValidDirectories(newPropertyValue, imagesFolders) != 0) {
-                    doneButton.setDisable(false);
-                    configuration.setWhereIsItDir(newPropertyValue);
-                } else {
-                    final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                    whereIsItPromptLabel.setText(translator.translate("PickedWrongDir"));
-                    whereIsItPromptLabel.setStyle(labelStyle);
-                }
-            }
-        );
-
-        final I18NButton resetButton = new I18NButton(translator, "Reset");
-
-        resetButton.setOnAction(
-            e -> {
-                String defaultValue = Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR;
-                configuration.setWhereIsItDir(defaultValue);
-                final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                whereIsItPromptLabel.setText(translator.translate("WhereIsItDirNotConfig"));
-                whereIsItPromptLabel.setStyle(labelStyle);
-                doneButton.setDisable(true);
-                buttonLoad.textProperty().setValue(defaultValue);
-            });
-
-
-        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
-        I18NLabel label = new I18NLabel(translator, "ConfigWhereIsItDir", "Colon");
-        label.setStyle(whereIsItLabelStyle);
-
-
-        buttonLoad.minWidthProperty().bind(label.widthProperty());
-
-        pane.getChildren().addAll(buttonLoad, resetButton);
-        HBox doneButtonBox = new HBox(doneButton);
-        doneButton.setAlignment(Pos.CENTER);
-        doneButtonBox.setAlignment(Pos.CENTER);
-
-        VBox finalPane = new VBox(label, pane, doneButtonBox);
-        finalPane.setSpacing(20);
-        finalPane.setTranslateY(20);
-        return finalPane;
+    void chooseFolder(final String path, final Configuration config, final Translator translator) {
+        final String folder = Utils.isWindows() ? Utils.convertWindowsPath(path) : path;
+        showFolder(folder, translator);
+        if (WhereIsItVaildator.getNumberOfValidDirectories(folder, new LinkedList<>()) != 0) {
+            config.setWhereIsItDir(folder);
+            showMessage(initialMessage, false);
+            doneButton.setDisable(false);
+        } else {
+            showMessage(translator.translate("PickedWrongDir"), true);
+            doneButton.setDisable(true);
+        }
     }
 
+    /**
+     * Shows a folder on its button; "Select" when there is none.
+     */
+    private void showFolder(final String folder, final Translator translator) {
+        folderButton.setText(folder == null || folder.isBlank() ? translator.translate("Select") : folder);
+    }
+
+    /**
+     * Shows the message at the top of the window, in the color "danger" of the theme for an error.
+     */
+    private void showMessage(final String message, final boolean error) {
+        promptLabel.setText(message);
+        promptLabel.setStyle(error ? ERROR_STYLE : "");
+    }
 }

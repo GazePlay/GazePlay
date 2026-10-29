@@ -39,7 +39,7 @@ public class WhereIsTheLetterGameLauncher implements IGameLauncher<Stats, Dimens
             case "Consonants" -> WhereIsItGameType.LETTERS_CONSONANTS;
             default -> WhereIsItGameType.LETTERS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class WhereIsTheLetterGameLauncher implements IGameLauncher<Stats, Dimens
             case "Consonants" -> WhereIsItGameType.LETTERS_CONSONANTS;
             default -> WhereIsItGameType.LETTERS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats, gameSeed);
     }
 
 }
