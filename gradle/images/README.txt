@@ -23,8 +23,18 @@ the game. The photos were resized to 1280 pixels at most; the sounds shortened t
 The triangle of Where Is The Sound (data/whereIsTheSound/images/triangle/triangle_1.jpg) is drawn by
 make_triangle_image.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later).
 
-Thumbnails of the menu of the Where Is It family (gazeplay-core: data/common/Thumbnails: findTheOddOneOut.jpg,
+Thumbnails of the menu of the Where Is It family and of Coloring (gazeplay-core: data/common/Thumbnails: colors.png,
+findTheOddOneOut.jpg,
 whereIsIt.png, whereIsTheAnimal.png, whereIsTheColor.png, whereIsTheFlag.png, whereIsTheLetter.png,
 whereIsTheNumber.png, whereIsTheShape.png, whereIsTheSound.png): captures of the games (October 2026), configuration
 button hidden, 960 x 540. The photos they show are those of the games, credited in data/whereIsTheAnimal/CREDITS.txt
 (whereIsIt.png shows 4 of them) and data/whereIsTheSound/CREDITS.txt; under their licences (CC BY-SA 4.0 for some).
+colors.png shows a coloring page of OpenMoji (CC BY-SA 4.0).
+
+Coloring pages of the game Coloring (gazeplay-games: data/colors/images/<level>/draw-*.png, 8 per level): the black outlines of OpenMoji
+(https://openmoji.org/, black/618x618), CC BY-SA 4.0, put on a white background, enlarged and with thicker lines by
+make_coloring_images.py (this folder); only emojis whose zones are closed are kept, put in a level folder (easy,
+normal, hard) by their number of closed zones (October 2026). They replace 16
+drawings of unknown source and a Hello Kitty drawing (not free). The former arrows, palette and buttons of the game
+(next.png, prev.png, palette.png, error.png, add-button-inside-black-circle.png) were removed: the game uses the icons
+of data/icons (Material Symbols, Apache License 2.0).

@@ -16,6 +16,30 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   change d'aspect.
 - Vérifier : le jeu en vrai (souris, et Tobii si possible), `allGamesTest -PallGamesOnly=<nameCode>`, et `build`.
 - Ne jamais changer le format des résultats sans versionnage (`formatVersion`).
+- **Images données par l'utilisateur (décision du mainteneur, 29/10/2026)** : elles sont **toujours une variante** du
+  jeu, jamais un remplacement silencieux des images du jeu. Pour un jeu qui en lit (voir la liste ci-dessous) :
+  1. ajouter une valeur de variante qui implémente `UserImagesVariant` (`gazeplay-games-commons`), avec pour dossier
+     le name code du jeu : le jeu reçoit alors **sans autre code** son dossier `files/images/<NameCode>` du profil, sa
+     ligne dans les réglages (Dossiers, « Images des jeux ») et la fenêtre d'erreur du menu quand la variante est
+     choisie sans image (`UserImagesDialog`) ; exemple : `ColoringVariant.CUSTOM` ;
+  2. dans le jeu, lire les images avec `UserImagesVariant.images(dossier)`, et afficher un message si la liste est vide
+     (jeu lancé sans passer par le menu) ;
+  3. ne plus lire l'ancien dossier partagé ; ne pas reprendre les images qu'il contient : **pas de migration** (passage
+     à GazePlay Learning 2.0, les utilisateurs remettent leurs images ; à dire dans les notes de version) ;
+  4. ajouter les tests (variante, dossier vide) et vérifier la fenêtre d'erreur en vrai.
+
+  Anciens dossiers partagés de `files/images` encore lus (à retirer au fil de la revue ; quand plus aucun jeu ne les
+  lit, retirer aussi l'ancien réglage « Répertoire des fichiers » et sa fenêtre à 4 sections, `CustomFileChooser`) :
+
+  | Ancien dossier | Jeux qui le lisent encore |
+  |---|---|
+  | `magiccards` | Magic Cards, Memory |
+  | `default` | Memory |
+  | `portraits` | Colored/Portrait Bubbles, Cream Pie, Ladder, Whac-A-Mole (moles), Ninja, Divisor |
+  | `blocs` | Blocks, Egg Game, Letters |
+  | `opinions` | Opinions, Casse-Brique |
+
+  Fait : Coloring (`files/images/Coloring`, variante « Palette personnalisée », 29/10/2026).
 
 ## Marche à suivre pour chaque jeu
 
@@ -87,7 +111,7 @@ Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le m
 | Where Is The Color, Flag, Letter, Number, Shape | OK (couleurs unies, drapeaux, lettres, chiffres, formes) | ✔ 29/10 | ✔ 29/10 (Voyelles, Consonnes justes) |
 | Find The Odd One Out (`FindTheOddOneOut`) | Libre probable : 48 photos Pixabay d'avant 2019 | ✔ 29/10 | ✔ 29/10 (consigne dite, pas de doublon) |
 | Where Is It (`WhereIsIt`, images de l'utilisateur) | Pas d'image propre | ✔ 29/10 (et fenêtre du dossier) | ✔ 29/10 |
-| **Coloring** (`Coloring`) | **Non libre** : `draw-hellokitty.jpg` (personnage Sanrio) ; **risque** : 19 coloriages sans source ; OK : 2 icônes Flaticon (CC BY 3.0, créditées) | | |
+| **Coloring** (`Coloring`) | **Remplacés le 29/10** : 24 contours OpenMoji (CC BY-SA 4.0) ; Hello Kitty et les anciens coloriages retirés | ✔ 29/10 (boîte à outils, anneau, carte) | ✔ 29/10 (3 palettes + palette personnalisée, annuler, recommencer) |
 | **Sounds Of Life** (`SoundsOfLife`) | **Risque** : 32 cliparts et décors (un décor signé Danilo Sanino, illustrateur de banques d'images) | | |
 | **Spot The Differences** (`SpotDifference`) | **Risque** : 15 scènes dessinées sans source | | |
 | **Pet** (`Pet`) | **Risque** : 21 images (photos de pièces et d'objets, pictogrammes) | | |
@@ -313,4 +337,121 @@ GazePlay isolé). Pas d'essai avec le Tobii.
   dossier d'exemple (4 photos de Where Is The Animal). Crédits : `gradle/images/README.txt` (les vignettes montrent les
   photos créditées dans les `CREDITS.txt`), inventaire mis à jour. Traductions : « listen » dans les 21 langues, pas
   d'autre texte nouveau (le bouton « Réécouter » n'a pas de texte). `build` : **543 tests, 0 échec**.
-- Commit : pas encore (sur demande).
+- **Commit** : `c3c67bb5e` (29/10/2026), `feat(whereisit): revue de la famille Where Is It`.
+
+### Coloring (`Coloring`, code `colors`) — 29/10/2026
+
+**Étape 1 (état des lieux) faite le 29/10/2026.** Captures « avant » : `build/game-screenshots/avant/coloring/` (mode
+souris, 1366×768). Pas d'essai avec le Tobii.
+
+- **Ce qu'il fait** : un dessin noir et blanc à gauche, une boîte à outils à droite (palette de 5 couleurs plus une
+  couleur choisie, boutons Charger, Sauvegarder, Imprimer) ; une fixation sur une zone du dessin la remplit de la couleur
+  choisie (remplissage par zones, un point compté par remplissage) ; flèches « précédent » et « suivant » pour changer de
+  dessin parmi 17. Pas de variante. Code : `ColorsGame` (765 lignes), `ColorToolBox` (617), `ColorBox`,
+  `CustomColorPicker` ; aucun test.
+- **Défauts vus** :
+  - **Fait (vu, journal)** : la flèche « suivant » (et « précédent ») lève `IllegalArgumentException: duplicate children
+    added` (`ColorsGame.launch`, ligne 204) : elle relance tout le jeu, qui rajoute des nœuds déjà présents. Le dessin
+    change quand même (le changement est fait avant), mais le reste du lancement est interrompu à chaque fois.
+  - **Fait (code)** : chaque changement de dessin ajoute un gestionnaire de coloriage et deux écouteurs de taille sans
+    retirer les anciens. **Hypothèse** : après plusieurs dessins, un clic de souris colorie (et compte un point) autant
+    de fois qu'il y a de gestionnaires ; à vérifier. `dispose()` est vide.
+  - **Fait (vu)** : palette pauvre : rouge, bleu, vert, blanc, ocre (+ une case « couleur personnalisée » blanche au
+    départ, d'où deux cases blanches) ; ni jaune, orange, rose, violet, marron, gris. Boutons du bas tronqués
+    (« Char… », « Sauvegar… », « Impri… »). Style d'origine (fond doré, cases rectangulaires, flèches vertes).
+  - **Fait (journal)** : traductions absentes : `imgChooserTitle`, `customColorDialogTitle`.
+  - **Fait (code)** : `draw-leaf.png` fait 6000×7500 pixels, converti pixel par pixel en noir et blanc : lent et lourd
+    en mémoire (non mesuré). Le remplissage n'atteint jamais la dernière colonne de pixels.
+  - Pas d'annulation : un coloriage raté au regard ne peut pas être défait (seulement recouvert).
+- **Images** : **non libre** : `draw-hellokitty.jpg` (Sanrio). **Source inconnue** : les 16 autres coloriages
+  (ajoutés par Karine Benhaimi en 2022 et Yaniissou en 2024, style de cliparts du web), `next.png`, `prev.png`,
+  `palette.png` (2018). `add-button-inside-black-circle.png` et `error.png` : Flaticon CC BY 3.0, crédités.
+
+**Étape 2 (propositions), 29/10/2026**, en attente de validation (✔ / ✘). Aucune ne change le format des résultats ni
+ce qui est compté (un point par zone remplie).
+
+- **A. Corrections** :
+  - A1. Flèches précédent / suivant : changer seulement le dessin, sans relancer le jeu (plus d'exception) ; retirer les
+    anciens gestionnaires et écouteurs ; `dispose()` qui nettoie. Tests ajoutés.
+  - A2. Dessins réduits au chargement (2000 px au plus) : plus de lenteur avec les grands fichiers.
+  - A3. Traductions manquantes (français, anglais) ; remplissage jusqu'au bord.
+- **B. Graphisme** (style des menus) :
+  - B1. Boîte à outils : panneau arrondi aux couleurs du thème, grandes pastilles de couleur, la couleur choisie
+    entourée de la couleur principale ; boutons Charger / Sauvegarder / Imprimer avec icônes (Material Symbols), sans
+    texte tronqué.
+  - B2. Flèches précédent / suivant rondes au style des menus, avec l'anneau de fixation ; « 3 / 17 » entre les deux.
+  - B3. Dessin sur une carte blanche arrondie, avec une marge ; indicateur de fixation sur le dessin de la couleur
+    principale.
+- **C. Gameplay** :
+  - C1. Palette de 12 couleurs, toutes visibles sans pages (rouge, orange, jaune, vert clair, vert, bleu clair, bleu,
+    violet, rose, marron, gris, blanc pour gommer), plus la couleur personnalisée.
+  - C2. Bouton « Annuler » (le dernier remplissage), activé par fixation. Le point déjà compté reste compté.
+  - C3. Bouton « Recommencer » (le dessin redevient blanc).
+- **D. Images** :
+  - D1. Retirer Hello Kitty tout de suite.
+  - D2. Remplacer les 16 coloriages de source inconnue par les contours noirs d'OpenMoji (CC BY-SA 4.0, déjà utilisé
+    pour les animaux par défaut) : dessins simples, zones fermées, faciles à colorier au regard ; une vingtaine de sujets
+    (pomme, poisson, papillon, gâteau, dauphin, tulipe, raisin, maison, arc-en-ciel, lapin, soleil, lune, tortue, chat,
+    voiture, étoile…), à choisir sur planche. Autre choix : demander aux deux auteurs d'où viennent leurs dessins.
+  - D3. Flèches et boutons : icônes Material Symbols (déjà livrées) à la place de `next.png`, `prev.png`, `palette.png`.
+- **Validées le 29/10/2026 : toutes (A, B, C, D) ✔** ; D2 : contours d'OpenMoji.
+- **Images remplacées** : 17 coloriages (dont Hello Kitty) → 20 contours noirs d'OpenMoji (CC BY-SA 4.0 ; pomme,
+  ballon, papillon, gâteau, poussin, poisson, fleur, grenouille, cadeau, raisin, maison, glace, coccinelle, étoile,
+  fraise, soleil, ourson, train, arbre, tortue), générés par `gradle/images/make_coloring_images.py` : agrandis, traits
+  épaissis ; **zones fermées vérifiées une à une** (le chat, le chien, la voiture, le lapin entier, l'éléphant,
+  l'arc-en-ciel d'OpenMoji ont des traits ouverts : la couleur aurait coulé sur tout le fond, non retenus). Images des
+  flèches, de la palette et des boutons retirées (icônes Material Symbols : `arrow_forward`, `undo`, `restart_alt`,
+  `save`, `print` ajoutées à `data/icons`). Crédits : licence affichée, `gradle/images/README.txt`, inventaire.
+- **Fait (29/10/2026)** :
+  - A1 flèches : changent seulement le dessin (`changeDrawing`) ; plus de relance du jeu ni d'exception ; nœuds et
+    écouteurs créés une fois, retirés par `dispose()`. A2 dessins chargés à 1600 px au plus ; pixels traités dans un
+    tableau (plus rapide que la lecture pixel par pixel). A3 traductions (français, anglais) ; remplissage jusqu'au bord.
+  - B : `ColorToolBox` refaite (panneau arrondi, pastilles rondes, couleur choisie entourée de la couleur principale,
+    outils et fichiers en boutons ronds à icône avec info-bulle) ; `GazeRoundButton` (nouveau, `gazeplay-games-commons`,
+    fixation ou clic, réutilisable) ; flèches rondes et « n / 20 » dans un bandeau ; dessin sur une carte blanche
+    arrondie ; anneau de fixation qui suit le regard (`FixationRing`, à la place de l'indicateur gris et de son
+    triangle) ; fenêtre « Autres couleurs » au style des menus (15 couleurs, le coloriage en pause pendant ce temps).
+  - C1 palette de 12 couleurs, toutes visibles, + couleur personnalisée ; C2 « Annuler » (10 niveaux ; le point compté
+    reste compté) ; C3 « Recommencer » (lui-même annulable).
+  - `CustomColorBox` et `CustomColorPicker` retirés (remplacés).
+- **Vérifications** : `ColorsGameTest` (6 tests : noir et blanc, remplissage jusqu'au bord, 20 dessins, flèches sans
+  relance, annuler et recommencer, niveaux d'annulation) ; `build` : **549 tests, 0 échec** ; `allGamesTest
+  -PallGamesOnly=Coloring -PallGamesRepeat=5` réussi. Captures : `build/game-screenshots/essai2/coloring/`.
+  **Reste** : l'essai réel du mainteneur (souris et Tobii), puis l'étape 7 (vignette).
+- **Demandes du mainteneur après l'essai (29/10/2026)** :
+  - Le jeu commençait à « 7 / 20 » : il démarrait sur le dessin du réglage `COLORS_DEFAULT_IMAGE` (par défaut
+    `draw-flower.png`, 7e par ordre alphabétique). Il démarre maintenant sur le premier dessin de la variante ; le
+    réglage ne sert plus qu'à retrouver la dernière image chargée, dans « Mes images ».
+  - **4 variantes** (fenêtre des variantes avant le jeu, `ColoringVariant`) : **Facile** (1 ou 2 zones à colorier),
+    **Normal** (3 à 6), **Difficile** (7 et plus), 8 dessins chacune, et **Mes images** (seulement les images chargées
+    par l'utilisateur, copiées dans le dossier `colors` du profil ; message s'il n'y en a pas encore). Zones comptées par
+    calcul sur la page telle que le jeu la voit (zones fermées d'au moins 0,05 % de la page). 24 dessins OpenMoji
+    (ajoutés : hibou, fusée, tournesol, château, grande roue, diamant) dans `data/colors/images/easy|normal|hard`.
+    Une partie enregistrée avant les variantes se rejoue en Facile.
+  - Les images sont chargées au plus à 1600 px, sans être agrandies (une petite image restait floue) ; flèches grisées
+    quand il n'y a qu'un dessin.
+  - Vérifications : `ColorsGameTest` (10 tests), `build` réussi, `allGamesTest -PallGamesOnly=Coloring
+    -PallGamesRepeat=3` réussi ; captures `build/game-screenshots/essai3/coloring/`.
+- **Décision du mainteneur (29/10/2026)** : variante « Mes images » retirée (des images non adaptées seraient trop
+  difficiles à colorier) ; les trois autres renommées **Petite palette** (1 ou 2 zones), **Moyenne palette** (3 à 6)
+  et **Grande palette** (7 et plus). Les valeurs internes (`EASY`, `NORMAL`, `HARD`) sont gardées, car elles sont
+  écrites dans les parties enregistrées. Le bouton « Charger une image » de la boîte à outils reste (il existait avant
+  la revue). `build` réussi ; `allGamesTest -PallGamesOnly=Coloring -PallGamesRepeat=3` réussi.
+- **Décision du mainteneur (29/10/2026) : les images de l'utilisateur sont toujours une variante.** Bouton « Charger une
+  image » retiré de Coloring ; variante **Palette personnalisée** ajoutée : elle joue les images du dossier
+  `files/images/Coloring` du profil (par défaut `Documents\GazePlay_Learning\files\images\Coloring`).
+  - Mécanisme commun (`UserImagesVariant`, `gazeplay-games-commons`) : une valeur de variante qui l'implémente donne son
+    dossier ; sans autre code, le jeu a alors un réglage (réglages, Dossiers, « Images des jeux », une ligne par jeu,
+    trouvée dans le catalogue), une fenêtre d'images (`UserImagesDialog` : vignettes, suppression, « Ajouter des
+    images », copiées dans le dossier) et, dans le menu, la même fenêtre en rouge quand la variante est choisie sans
+    image (comme pour « Où est-ce ? ») : « Valider » lance le jeu dès qu'il y a une image.
+  - Tests : `UserImagesDialogTest` (2), `ColorsGameTest` (11) ; capture `3e-images-utilisateur` de `menuScreenshots`.
+  - **Reste (à décider, voir la réponse au mainteneur)** : les autres jeux qui lisent les anciens dossiers partagés de
+    `files/images` (`magiccards` : Magic Cards, Memory ; `default` : Memory ; `portraits` : bulles, tartes à la crème,
+    échelle, taupes, Ninja, Divisor ; `blocs` : Blocs, Egg, Letters ; `opinions` : Opinions, Casse-briques), sans
+    variante (les images de l'utilisateur remplacent celles du jeu sans le dire).
+- **Essai réel du mainteneur (29/10/2026)** : validé (« tout est ok »), avec la palette personnalisée.
+- **Étape 7 (finitions), 29/10/2026** : vignette du menu refaite (`common/Thumbnails/colors.png`, même nom) : capture
+  de la Moyenne palette, papillon à moitié colorié, roue des réglages masquée, 960 × 540. Crédits :
+  `gradle/images/README.txt`, inventaire. Traductions des textes nouveaux : français et anglais. `build` : **556
+  tests, 0 échec**.

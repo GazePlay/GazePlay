@@ -68,7 +68,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,sour
 gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,source inconnue,,2021-07-30,Iluvrog,picture
 gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,source inconnue,,2024-04-24,Yaniissou,setup ColorBlendGame
-gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
+gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,libre,capture du jeu (octobre 2026) ; coloriage OpenMoji CC BY-SA 4.0,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/connect4.png,oui,source inconnue,,2023-03-09,HugolinBouhineau,Create Connect4 Skeleton
 gazeplay-core/src/main/resources/data/common/Thumbnails/creamPie.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/dice.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
@@ -347,28 +347,30 @@ gazeplay-games/src/main/resources/data/cake/images/return.png,oui,source inconnu
 gazeplay-games/src/main/resources/data/cake/images/validate.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
 gazeplay-games/src/main/resources/data/colorblend/images/glass.png,oui,source inconnue,,2024-04-30,Yaniissou,replaced glass image
 gazeplay-games/src/main/resources/data/colorblend/images/park.png,oui,source inconnue,,2024-04-24,Yaniissou,started colorblend game
-gazeplay-games/src/main/resources/data/colors/images/add-button-inside-black-circle.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-15,Thomas MEDARD,added images to buttons + added and fixed custom colors
-gazeplay-games/src/main/resources/data/colors/images/draw-apple.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-aqua.png,oui,source inconnue,,2022-07-28,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-butterfly.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-cake.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-cupcake.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-dolphin.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-flower.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-grape.jpg,oui,source inconnue,,2024-05-21,Yaniissou,Added drawings
-gazeplay-games/src/main/resources/data/colors/images/draw-hellokitty.jpg,oui,non libre,"personnage Hello Kitty (Sanrio), protégé",2024-05-21,Yaniissou,Added drawings
-gazeplay-games/src/main/resources/data/colors/images/draw-home.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-leaf.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-manuel.png,oui,source inconnue,,2024-05-21,Yaniissou,Added drawings
-gazeplay-games/src/main/resources/data/colors/images/draw-nature.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-rabbit.png,oui,source inconnue,,2022-07-28,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-sun.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/draw-sunmoon.jpg,oui,source inconnue,,2024-05-21,Yaniissou,Added drawings
-gazeplay-games/src/main/resources/data/colors/images/draw-turtle.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/error.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-15,Thomas MEDARD,added images to buttons + added and fixed custom colors
-gazeplay-games/src/main/resources/data/colors/images/next.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
-gazeplay-games/src/main/resources/data/colors/images/palette.png,oui,source inconnue,,2018-03-28,Thomas MEDARD,Added image to colorize button + fix progress indicators on color selectors
-gazeplay-games/src/main/resources/data/colors/images/prev.png,oui,source inconnue,,2022-07-27,Karine BENHAIMI,fix #1235
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-balloon.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-chick.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-fish.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-frog.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-star.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-strawberry.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-sun.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/easy/draw-tree.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-castle.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-ferriswheel.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-gem.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-grapes.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-sunflower.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-teddy.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-train.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/hard/draw-turtle.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-butterfly.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-cake.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-flower.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-gift.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-house.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-icecream.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-owl.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/colors/images/normal/draw-rocket.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/bear.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/chouette.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/crabe.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction

@@ -1,198 +1,137 @@
 package net.gazeplay.games.colors;
 
-import javafx.event.ActionEvent;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.util.Duration;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.components.GazeIndicator;
+
+import java.util.function.Consumer;
 
 /**
- * A color of the tool box of the "Coloring" game, selected by a fixation (or a click).
+ * A color of the tool box of the "Coloring" game: a round swatch, chosen by a fixation (a ring of the main color goes
+ * round it meanwhile) or a click. The chosen color is circled in the main color. Its top left corner is at (0, 0).
  */
-@Slf4j
-public class ColorBox extends StackPane {
+public class ColorBox extends Group {
 
-    private final ColorToolBox toolBox;
+    private final IGameContext gameContext;
 
-    private final ToggleButton button;
+    private final Circle swatch;
 
-    private final Rectangle graphic;
+    private final Circle selectionRing;
 
-    private final double colorizeButtonsSizePx;
-    private final double colorBoxPadding;
+    private final Arc progressArc;
+
+    private final Consumer<ColorBox> onChosen;
 
     @Getter
     private Color color;
 
-    @Setter
-    private GazeIndicator progressIndicator;
+    @Getter
+    private boolean selected;
 
-    public ColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group, final double colorizeButtonsSizePx) {
-        super();
-        this.colorizeButtonsSizePx = colorizeButtonsSizePx;
-        this.toolBox = toolBox;
+    private Timeline fixationTimeline;
 
-        progressIndicator = toolBox.getProgressIndicator();
-
-        double initialTotalWidth = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth() / 5;
-        double initialColorBoxWidth = (99.d * initialTotalWidth) / 100;
-        colorBoxPadding = initialTotalWidth / 100.d;
-
-        button = new ToggleButton();
-        button.setPadding(new Insets(colorBoxPadding, colorBoxPadding, colorBoxPadding, colorBoxPadding));
-
-
-        graphic = new Rectangle(initialColorBoxWidth, computeHeight(), color);
-        graphic.widthProperty().bind(toolBox.widthProperty().multiply(99.d / 100d));
-        graphic.widthProperty().addListener((obj, oldval, newval) -> {
-            double newClorBoxPadding = toolBox.widthProperty().doubleValue() / 100.d;
-            button.setPadding(new Insets(newClorBoxPadding, newClorBoxPadding, newClorBoxPadding, newClorBoxPadding));
-        });
-        button.setGraphic(graphic);
-        button.setOpacity(1);
-
-        gameContext.getGazeDeviceManager().addEventFilter(button);
-
+    /**
+     * @param size     diameter of the swatch and its ring
+     * @param onChosen what choosing this color does (e.g. making it the color of the coloring)
+     */
+    public ColorBox(final IGameContext gameContext, final Color color, final double size,
+                    final Consumer<ColorBox> onChosen) {
+        this.gameContext = gameContext;
         this.color = color;
+        this.onChosen = onChosen;
 
-        toolBox.heightProperty().addListener((observable) -> {
+        final double ringWidth = Math.max(4, size * 0.08);
+        selectionRing = new Circle(size / 2, size / 2, size / 2 - ringWidth / 2);
+        selectionRing.setFill(null);
+        selectionRing.setStrokeWidth(ringWidth);
+        selectionRing.setStyle("-fx-stroke: -gp-accent;");
+        selectionRing.setVisible(false);
+        selectionRing.setMouseTransparent(true);
 
-            double newHeight = this.computeHeight();
-            graphic.setHeight(newHeight);
-        });
+        swatch = new Circle(size / 2, size / 2, size / 2 - ringWidth * 1.6);
+        swatch.setFill(color);
+        // An outline, so that white and the light colors stay visible on a light background
+        swatch.setStyle("-fx-stroke: -gp-text-muted; -fx-stroke-width: 1.5;");
 
-        ColorEventHandler eventHandler = new ColorEventHandler(this);
+        progressArc = new Arc(size / 2, size / 2, size / 2 - ringWidth / 2, size / 2 - ringWidth / 2, 90, 0);
+        progressArc.setType(ArcType.OPEN);
+        progressArc.setFill(null);
+        progressArc.setStrokeWidth(ringWidth);
+        progressArc.setStrokeLineCap(StrokeLineCap.BUTT);
+        progressArc.setStyle("-fx-stroke: -gp-accent;");
+        progressArc.setMouseTransparent(true);
 
-        button.addEventHandler(MouseEvent.ANY, eventHandler);
-        button.addEventHandler(GazeEvent.ANY, eventHandler);
+        getChildren().addAll(swatch, selectionRing, progressArc);
 
-        this.getChildren().add(button);
+        gameContext.getGazeDeviceManager().addEventFilter(swatch);
+        addEventFilter(MouseEvent.ANY, this::handle);
+        addEventFilter(GazeEvent.ANY, this::handle);
+    }
 
-        toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
+    private void handle(final Event e) {
+        if (selected) {
+            return;
+        }
+        if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+            stopFixation();
+            onChosen.accept(this);
+        } else if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            stopFixation();
+            fixationTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(progressArc.lengthProperty(), 0)),
+                new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressArc.lengthProperty(), -360)));
+            fixationTimeline.setOnFinished(actionEvent -> {
+                progressArc.setLength(0);
+                onChosen.accept(this);
+            });
+            fixationTimeline.playFromStart();
+        } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            stopFixation();
+        }
+    }
+
+    private void stopFixation() {
+        if (fixationTimeline != null) {
+            fixationTimeline.stop();
+        }
+        progressArc.setLength(0);
     }
 
     /**
-     * Resizes the box for the size of the tool box.
+     * Marks the swatch as the chosen color, or not.
      */
-    public void updateHeight() {
-        graphic.setHeight(computeHeight());
+    public void setSelected(final boolean selected) {
+        this.selected = selected;
+        selectionRing.setVisible(selected);
+        stopFixation();
     }
 
     /**
-     * Automatically compute free space in the tool box.
-     *
-     * @return The computed height that every color box should have
-     */
-    private double computeHeight() {
-
-        javafx.geometry.Dimension2D dimension2D = toolBox.getColorsGame().getGameContext()
-            .getGamePanelDimensionProvider().getDimension2D();
-
-        double totalHeight = dimension2D.getHeight();
-
-        // Compute free space taking into account every elements in the tool box
-        double freeSpace = totalHeight - ((2 * colorBoxPadding) * (ColorToolBox.NB_COLORS_DISPLAYED)
-            + 3 * colorizeButtonsSizePx);
-
-
-        // + 1 for the curstom color box
-        return freeSpace / (ColorToolBox.NB_COLORS_DISPLAYED + 1);
-    }
-
-    /**
-     * Marks the box as the selected one.
-     */
-    public void select() {
-
-        this.button.setSelected(true);
-        this.button.getStyleClass().add("selectedColorBox");
-    }
-
-    /**
-     * Removes the mark of the selected box.
-     */
-    public void unselect() {
-
-        progressIndicator.stop();
-        this.button.setSelected(false);
-        this.button.getStyleClass().remove("selectedColorBox");
-    }
-
-    /**
-     * Changes the color of the box.
+     * Changes the color of the swatch.
      */
     public void setColor(final Color color) {
         this.color = color;
-        this.graphic.setFill(color);
+        swatch.setFill(color);
     }
 
     /**
-     * Makes this color the one used to color the drawing.
+     * Stops the swatch following the gaze, at the end of the game.
      */
-    protected void action() {
-
-        toolBox.getSelectedColorBox().unselect();
-
-        this.select();
-
-        toolBox.setSelectedColorBox(this);
-    }
-
-    /**
-     * Selects the color after a fixation on the box, or at once on a click.
-     */
-    private class ColorEventHandler implements EventHandler<Event> {
-
-        private final ColorBox colorBox;
-
-        public ColorEventHandler(final ColorBox colorBox) {
-            this.colorBox = colorBox;
-
-        }
-
-        @Override
-        public void handle(Event event) {
-
-            ColorBox selectedColorBox = toolBox.getSelectedColorBox();
-
-            // If already selected, then do nothing
-            if (selectedColorBox.equals(colorBox)) {
-                return;
-            }
-
-            if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                action();
-
-            } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
-                || event.getEventType() == GazeEvent.GAZE_ENTERED) {
-                if (!getChildren().contains(progressIndicator)) {
-                    getChildren().add(progressIndicator);
-                }
-                progressIndicator.setMinSize(colorBox.button.getHeight() / 1.5, colorBox.button.getHeight() / 1.5);
-                progressIndicator.setOnFinish((ActionEvent event1) -> action());
-                progressIndicator.toFront();
-                progressIndicator.start();
-
-            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
-                || event.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                getChildren().remove(progressIndicator);
-                progressIndicator.stop();
-
-            }
-        }
+    public void dispose() {
+        stopFixation();
+        gameContext.getGazeDeviceManager().removeEventFilter(swatch);
     }
 }

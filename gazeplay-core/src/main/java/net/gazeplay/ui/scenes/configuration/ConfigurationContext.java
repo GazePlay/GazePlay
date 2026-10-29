@@ -10,6 +10,7 @@ import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
@@ -34,6 +35,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.commons.configuration.*;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.*;
@@ -232,11 +234,54 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * @return the folders of the images, of the music and of "Where is it?"
      */
     private SettingsPage.Section foldersSection(Configuration config, Translator translator) {
-        return new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
+        final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
             .add("FileDir", buildImageChooser(config, this, translator))
             .add("MusicFolder", buildDirectoryChooser(config, this, translator, DirectoryType.MUSIC))
-            .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT))
-            .build();
+            .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT));
+        // The images of the games having a variant played with images of the user: one setting per game
+        final Map<String, String> userImageGames = userImageGames();
+        if (!userImageGames.isEmpty()) {
+            section.group("SettingsGameImages");
+            userImageGames.forEach((nameCode, folder) -> section.add(nameCode, buildUserImagesButton(translator,
+                nameCode, folder)));
+        }
+        return section.build();
+    }
+
+    /**
+     * @return the games of the catalog having a variant played with images of the user (UserImagesVariant), in the
+     * order of the menu: name code of the game, folder of its images
+     */
+    Map<String, String> userImageGames() {
+        final Map<String, String> result = new LinkedHashMap<>();
+        final GamesLocator gamesLocator = getGazePlay().getGamesLocator();
+        if (gamesLocator == null) {
+            return result;
+        }
+        for (final GameSpec game : AppMode.GAMES.filter(gamesLocator.listGames(getGazePlay().getTranslator()))) {
+            for (final IGameVariant variant : game.getGameVariantGenerator().getVariants()) {
+                final String folder = UserImagesVariant.folderOf(variant);
+                if (folder != null) {
+                    result.put(game.getGameSummary().getNameCode(), folder);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @return the button opening the window of the images of the user of a game
+     */
+    private Node buildUserImagesButton(final Translator translator, final String nameCode, final String folder) {
+        final Button button = new Button(translator.translate("ManageImages"));
+        button.setOnAction(event -> {
+            final Parent root = getGazePlay().getPrimaryScene().getRoot();
+            root.setEffect(new GaussianBlur());
+            new UserImagesDialog(getGazePlay().getPrimaryStage(), root, translator, folder,
+                translator.translate(nameCode), null).show();
+        });
+        return button;
     }
 
     /**

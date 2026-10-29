@@ -97,8 +97,11 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji and icon project.
   License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
   Images redimensionnées, mises sur fond blanc, explosion animée (gradle/images/make_default_images.py).
-- Icônes de la musique (data/common/images : previous, skip, pause, play-button, speaker, mute) et du jeu
-  Colors (error, add-button-inside-black-circle) : Icons made by Smashicons and Google from www.flaticon.com,
+- Coloriages du jeu « Coloriage » (data/colors/images/<niveau>/draw-*.png) : contours noirs d'OpenMoji
+  (https://openmoji.org/), CC BY-SA 4.0 ; agrandis, traits épaissis (gradle/images/make_coloring_images.py).
+  Ils remplacent depuis octobre 2026 des dessins de source inconnue et un dessin Hello Kitty (non libre).
+- Icônes de la musique (data/common/images : previous, skip, pause, play-button, speaker, mute) : Icons made
+  by Smashicons and Google from www.flaticon.com,
   licensed by Creative Commons BY 3.0 (https://creativecommons.org/licenses/by/3.0/).
 - Ciel étoilé du jeu Room (stars.jpg) : ESA/Hubble, Creative Commons BY 4.0
   (https://creativecommons.org/licenses/by/4.0/).

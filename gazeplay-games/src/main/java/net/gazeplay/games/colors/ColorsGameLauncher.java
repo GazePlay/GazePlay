@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
@@ -18,7 +18,7 @@ import java.util.LinkedList;
  * Creates the game "Coloring" and its statistics, for a new game or for the replay of a saved one (see
  * {@code IGameLauncher}).
  */
-public class ColorsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class ColorsGameLauncher implements IGameLauncher<Stats, EnumGameVariant<ColoringVariant>> {
 
     private ColorsGamesStats gameStat;
 
@@ -36,14 +36,21 @@ public class ColorsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<ColoringVariant> gameVariant,
                                        Stats stats) {
-        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
+        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator(), variantOf(gameVariant));
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
+    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<ColoringVariant> gameVariant,
                                        Stats stats, double gameSeed) {
-        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
+        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator(), variantOf(gameVariant));
+    }
+
+    /**
+     * @return the variant of a game; the easy coloring pages for a game saved before the variants (none)
+     */
+    static ColoringVariant variantOf(final EnumGameVariant<ColoringVariant> gameVariant) {
+        return gameVariant == null ? ColoringVariant.EASY : gameVariant.getEnumValue();
     }
 }

@@ -26,6 +26,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.menus.MenuDialog;
+import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import java.util.HashMap;
 
@@ -404,8 +405,11 @@ public class GameVariantDialog extends Stage {
 
             EventHandler<Event> event = mouseEvent -> {
                 close();
+                final String userImages = UserImagesVariant.folderOf(variant);
                 if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
+                } else if (userImages != null && UserImagesVariant.images(userImages).isEmpty()) {
+                    userImagesErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant, userImages);
                 } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
                     IntStringGameVariant v = (IntStringGameVariant) variant;
                     int numberOfTrains = 10;
@@ -443,6 +447,21 @@ public class GameVariantDialog extends Stage {
         errorDialog.setTitle(gazePlay.getTranslator().translate("WhereIsIt"));
         errorDialog.show();
         errorDialog.toFront();
+    }
+
+    /**
+     * Asks for the images of the user of a variant playing with them, when it has none, before starting it.
+     */
+    private void userImagesErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec,
+                                         Parent root, IGameVariant variant, String folder) {
+        // The menu stays blurred and disabled behind this window, until it closes
+        root.setEffect(new BoxBlur());
+        root.setDisable(true);
+        final UserImagesDialog dialog = new UserImagesDialog(gazePlay.getPrimaryStage(), root, gazePlay.getTranslator(),
+            folder, gazePlay.getTranslator().translate(gameSpec.getGameSummary().getNameCode()),
+            () -> gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant));
+        dialog.show();
+        dialog.toFront();
     }
 
     /**

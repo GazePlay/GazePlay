@@ -1,44 +1,57 @@
 package net.gazeplay.games.colors;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.event.Event;
 import javafx.geometry.Dimension2D;
-import javafx.scene.image.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.Group;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.components.GazeIndicator;
-import net.gazeplay.components.GazeFollowerIndicator;
-import net.gazeplay.components.ProgressButton;
+import net.gazeplay.commons.utils.games.ResourceFileManager;
+import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.GazeRoundButton;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Deque;
+import java.util.List;
 
 /**
- * Game where you select a color in order to colorize a white and black draw.
+ * Game where you select a color in order to colorize a white and black draw: a fixation on a zone of the drawing (or a
+ * click) fills it with the chosen color, one goal counted per filled zone. The drawings, browsed with the previous and
+ * next buttons, are those of the variant: the coloring pages of a level (data/colors/images/&lt;level&gt;/draw-*.png), or
+ * the images given by the user in the settings (custom palette, images/Coloring of the files folder).
+ * <p>
+ * The pixels are kept in an array (ARGB): the drawing turned into black and white, the fillings, and the copies kept to
+ * undo them.
  *
  * @author Thomas MEDARD
  */
 @Slf4j
 public class ColorsGame implements GameLifeCycle {
-
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
@@ -52,172 +65,126 @@ public class ColorsGame implements GameLifeCycle {
     private static final double GAZE_MOVING_THRESHOLD = 25;
 
     /**
-     * The game context provided.
+     * The drawings are loaded at most at this size: a large file (e.g. 6000 x 7500 pixels) used to make the game slow.
      */
+    static final double MAX_DRAWING_SIZE = 1600;
+
+    /**
+     * Number of fillings that can be undone.
+     */
+    static final int UNDO_LEVELS = 10;
+
+    static final String DRAWINGS_FOLDER = "data/colors/images";
+
+    private static final int BLACK = 0xFF000000;
+
+    private static final int WHITE = 0xFFFFFFFF;
+
     @Getter
     private final IGameContext gameContext;
 
-    /**
-     * The root where to draw everything
-     */
     private final Pane root;
 
     /**
-     * Should we enableColorization.
+     * Whether a fixation on the drawing colors it.
      */
     @Getter
     private final BooleanProperty drawingEnable = new SimpleBooleanProperty(this, "isDrawingEnable", true);
 
     private final ColorsGamesStats stats;
 
-    private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
+    private final Translator translator;
+
+    @Getter
+    private final ColoringVariant variant;
 
     /**
-     * The tool box object.
+     * The drawings of the variant, in the order of their names: resources of the coloring pages of the level, or URLs of
+     * the files of the user.
      */
-    private ColorToolBox colorToolBox;
+    @Getter
+    private List<String> drawings;
 
-    /**
-     * The gaze progress indicator to show time before colorization.
-     */
-    private GazeIndicator gazeProgressIndicator;
+    @Getter
+    private int index;
 
-    /**
-     * The pixel writer to into wich we modify pixels
-     */
-    private PixelWriter pixelWriter;
-
-    /**
-     * The pixel reader into wich we read pixels
-     */
-    private PixelReader pixelReader;
-
-    /**
-     * The image linked to the pixelReader and pixelWriter
-     */
     @Getter
     private WritableImage writableImg;
 
-    /**
-     * The rectangle in which the writableImg is painted
-     */
-    private Rectangle rectangle;
+    private int imageWidth;
+
+    private int imageHeight;
+
+    private int[] pixels;
+
+    private int[] blackAndWhite;
+
+    private final Deque<int[]> undoStack = new ArrayDeque<>();
+
+    private ColorToolBox colorToolBox;
+
+    private GazeRoundButton previousButton;
+
+    private GazeRoundButton nextButton;
 
     /**
-     * The colorization event handler
+     * The number of the drawing, on a rounded label between the previous and next buttons.
      */
-    private CustomEventHandler colorizationEventHandler;
-    private String imageToColor [] ={"draw-flower.png",
-        "draw-cupcake.png",
-        "draw-dolphin.png",
-        "draw-apple.png",
-        "draw-home.png",
-        "draw-leaf.png",
-        "draw-sun.png",
-        "draw-turtle.png",
-        "draw-nature.png",
-        "draw-butterfly.png",
-        "draw-cake.png",
-        "draw-rabbit.png",
-        "draw-aqua.png",
-        "draw-grape.jpg",
-        "draw-manuel.png",
-        "draw-sunmoon.jpg",
-        "draw-hellokitty.jpg"};
-    private int index;
-    private boolean defaultImg;
-    private final ProgressButton nextButton;
-    private final ProgressButton prevButton;
+    private Group counter;
 
-    ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
+    /**
+     * Shown instead of a drawing when the custom palette has no image (game started without the menu, which asks
+     * for images first).
+     */
+    private Group noDrawingMessage;
+
+    private double counterCenterX;
+
+    private double counterCenterY;
+
+    private double counterFontSize;
+
+    private Rectangle card;
+
+    private Rectangle drawing;
+
+    private FixationRing fixationRing;
+
+    private final InvalidationListener resizeListener = observable -> layout();
+
+    private double gazeXOrigin;
+    private double gazeYOrigin;
+    private double currentX;
+    private double currentY;
+
+    /**
+     * Whether a fixation has filled a zone, and the gaze has not moved since: no other filling until it moves.
+     */
+    private boolean filledAtThisPoint;
+
+    ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator,
+               final ColoringVariant variant) {
         this.gameContext = gameContext;
         this.stats = stats;
-        index = 0;
-
-        defaultImg=true;
-        final Dimension2D dimensions=gameContext.getGamePanelDimensionProvider().getDimension2D();
-        nextButton = new ProgressButton();
-
-        final ImageView nextImage = new ImageView("data/colors/images/next.png");
-        nextImage.setFitHeight(dimensions.getHeight() / 8);
-        nextImage.setFitWidth(dimensions.getHeight() / 8);
-        nextButton.setLayoutX(dimensions.getWidth() -4.5*nextImage.getFitWidth());
-        nextButton.setLayoutY(0.2 * nextImage.getFitHeight());
-        nextButton.setImage(nextImage);
-        nextButton.assignIndicatorUpdatable(event -> {changeImageNext();launch();}, gameContext);
-        this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
-        nextButton.active();
-
-        prevButton= new ProgressButton();
-
-        final ImageView prevImage = new ImageView("data/colors/images/prev.png");
-        prevImage.setFitHeight(dimensions.getHeight() / 8);
-        prevImage.setFitWidth(dimensions.getHeight() / 8);
-        prevButton.setLayoutX(0.6 *prevImage.getFitWidth());
-        prevButton.setLayoutY( 0.2 * prevImage.getFitHeight());
-        prevButton.setImage(prevImage);
-        prevButton.assignIndicatorUpdatable(event -> {changeImagePrev();launch();}, gameContext);
-        this.gameContext.getGazeDeviceManager().addEventFilter(prevButton);
-        prevButton.active();
-
-
-
-
-        root = gameContext.getRoot();
+        this.translator = translator;
+        this.variant = variant;
+        this.root = gameContext.getRoot();
+        this.drawings = findDrawings();
 
         drawingEnable.addListener((observable, oldValue, newValue) -> {
-            // If we want to stop colorization
-            if (!newValue) {
-                // Hide away the gazeProgressIndicator
-                gazeProgressIndicator.stop();
-
-                // Stop registering colorization events
-                rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
-                rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
-
-            } else {
-                rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
-                rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
+            if (!newValue && fixationRing != null) {
+                fixationRing.stop();
             }
         });
     }
 
-    /**
-     * Detect if a color is close enough to another one to be considered the same.
-     *
-     * @param color1 The first color to compare
-     * @param color2 The second color to compare
-     * @return true if considered same, false otherwise.
-     */
-    private static boolean isEqualColors(final Color color1, final Color color2) {
-        // Scalar distance calculation
-        final double dist = Math.sqrt(
-            Math.pow(color1.getRed() - color2.getRed(), 2) + Math.pow(color1.getGreen() - color2.getGreen(), 2)
-                + Math.pow(color1.getBlue() - color2.getBlue(), 2));
-
-        return dist <= COLOR_EQUALITY_THRESHOLD;
-    }
-
     @Override
     public void launch() {
+        buildScreen();
+        showFirstDrawing();
 
-        gameContext.getChildren().add(nextButton);
-        gameContext.getChildren().add(prevButton);
-        this.gazeProgressIndicator = new GazeFollowerIndicator(gameContext, root, root);
-
-        this.root.getChildren().add(gazeProgressIndicator);
-
-        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        final double width = dimension2D.getWidth();
-        final double height = dimension2D.getHeight();
-
-
-        buildToolBox(width, height);
-
-        buildDraw(gameContext.getConfiguration().getColorsDefaultImage(), width, height);
-
-        colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
+        root.widthProperty().addListener(resizeListener);
+        root.heightProperty().addListener(resizeListener);
 
         gameContext.onGameStarted(3000);
         stats.notifyNewRoundReady();
@@ -226,387 +193,355 @@ public class ColorsGame implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
-    }
-
-    /**
-     * Adds the tool box beside the drawing.
-     */
-    private void buildToolBox(final double width, final double height) {
-
-        this.colorToolBox = new ColorToolBox(this.root, this, gameContext, height/12);
-        this.root.getChildren().add(colorToolBox);
-
-        // Add it here so it appears on top of the tool box
-        final GazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
-        colorToolBox.getChildren().add(progressIndicator);
-        progressIndicator.toFront();
-
-
-        updateToolBox();
-
-        colorToolBox.maxHeightProperty().bind(gameContext.getRoot().heightProperty());
-        colorToolBox.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
-        colorToolBox.minHeightProperty().bind(gameContext.getRoot().heightProperty());
-    }
-
-    /**
-     * Shows a drawing, turned into black and white, in the area left by the tool box.
-     */
-    private void buildDraw(final String imgURL, final double width, final double height) {
-
-        rectangle = new Rectangle(width, height);
-
-        // When size will be calculated, update size of rectangle, but do this only
-        // once
-        final ChangeListener<Number> listener = new ChangeListener<>() {
-            @Override
-            public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-                updateRectangle();
-                updateToolBox();
-                colorToolBox.widthProperty().removeListener(this);
-            }
-        };
-
-        colorToolBox.widthProperty().addListener(listener);
-        final Image img = getDrawingImage(imgURL);
-
-
-        if (!img.isError()) {
-
-            javaFXEditing(img, imgURL);
+        root.widthProperty().removeListener(resizeListener);
+        root.heightProperty().removeListener(resizeListener);
+        if (colorToolBox != null) {
+            colorToolBox.dispose();
         }
-
-        root.getChildren().add(rectangle);
-
-        rectangle.toBack();
-    }
-
-    /**
-     * Shows the next drawing of the "colors" folder.
-     */
-    private void changeImageNext ()
-    {
-        String imgURL;
-
-        this.index++;
-        if(index>imageToColor.length-1){
-            index=0;
+        if (previousButton != null) {
+            previousButton.dispose();
+            nextButton.dispose();
         }
-        imgURL = imageToColor[index];
-
-        final Image img = getDrawingImage(imgURL);
-
-
-        if (!img.isError()) {
-
-            javaFXEditing(img,imgURL);
+        if (drawing != null) {
+            gameContext.getGazeDeviceManager().removeEventFilter(drawing);
         }
     }
 
     /**
-     * Shows the previous drawing of the "colors" folder.
+     * Creates the nodes of the screen once: the card of the drawing, the drawing, the previous and next buttons with the
+     * number of the drawing, the tool box and the ring following the gaze on the drawing.
      */
-    private void changeImagePrev ()
-    {
-        String imgURL;
+    private void buildScreen() {
+        card = new Rectangle();
+        card.setStyle("-fx-fill: white; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
 
-        this.index--;
-        if(index<0){
-            index=imageToColor.length-1;
-        }
-        imgURL = imageToColor[index];
+        drawing = new Rectangle();
+        // White until a drawing is shown (a rectangle is black by default)
+        drawing.setFill(javafx.scene.paint.Color.WHITE);
+        gameContext.getGazeDeviceManager().addEventFilter(drawing);
+        drawing.addEventFilter(MouseEvent.ANY, this::onDrawingEvent);
+        drawing.addEventFilter(GazeEvent.ANY, this::onDrawingEvent);
 
-        final Image img = getDrawingImage(imgURL);
+        counter = new Group();
+        noDrawingMessage = new Group();
+        fixationRing = new FixationRing();
 
-
-        if (!img.isError()) {
-
-            javaFXEditing(img,imgURL);
-        }
+        root.getChildren().addAll(card, drawing, noDrawingMessage, counter, fixationRing);
+        layout();
     }
 
     /**
-     * @return the drawing of a file, or of a resource when it is not a file
+     * Places the nodes for the size of the game area; the tool box and the buttons are built again for it.
      */
-    private Image getDrawingImage(String imgURL) {
-        Image img;
-        try {
-            img = new Image(Files.newInputStream(new File(imgURL).toPath()));
-        } catch (final IOException e) {
-
-            log.debug("Drawing image " + imgURL + " cannot be found");
-
-            getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
-            String defaultImgURL;
-            if(defaultImg) {
-                 defaultImgURL= Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;;
-                defaultImg=false;
-            }
-            else {defaultImgURL ="data/colors/images/" + imageToColor[index];}
-            img = new Image(defaultImgURL);
-        }
-        return img;
-    }
-
-    /**
-     * Makes a drawing editable and turns it into black and white.
-     */
-    private void javaFXEditing(final Image image, final String imageName) {
-
-        this.updateImage(image, imageName);
-
-        // Resizing is working but not immediatly
-        root.widthProperty().addListener((observable) -> {
-
-            updateRectangle();
-            updateToolBox();
-
-        });
-
-        root.heightProperty().addListener((observable) -> {
-
-            updateRectangle();
-            updateToolBox();
-
-        });
-
-        gameContext.getGazeDeviceManager().addEventFilter(rectangle);
-
-        colorizationEventHandler = new CustomEventHandler();
-
-        rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
-        rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
-
-    }
-
-    /**
-     * Resizes the drawing for the game area.
-     */
-    private void updateRectangle() {
-
-        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        final double width = dimension2D.getWidth() - colorToolBox.getWidth();
-        final double height = dimension2D.getHeight();
-
-        rectangle.setWidth(width);
-        rectangle.setHeight(height);
-
-        rectangle.setFill(this.createImagePattern(writableImg, rectangle));
-
-        final double ratio = writableImg.getHeight() / writableImg.getWidth();
-        rectangle.setWidth(rectangle.getHeight() / ratio);
-
-        rectangle.setX((width - rectangle.getHeight() / ratio) / 2);
-
-    }
-
-    /**
-     * Places the tool box for the game area.
-     */
-    private void updateToolBox() {
-
-        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        final double width = dimension2D.getWidth();
-
-        final double toolBoxWidth = colorToolBox.getWidth();
-        final double x = width - toolBoxWidth;
-        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, toolBoxWidth);
-        colorToolBox.setTranslateX(x);
-    }
-
-    /**
-     * Change the current image to display and update everything so it can be colorized.
-     *
-     * @param image     The new image to colorize.
-     * @param imageName The name of the image
-     */
-    public void updateImage(final Image image, final String imageName) {
-
-
-        final PixelReader tmpPixelReader = image.getPixelReader();
-
-        if (tmpPixelReader == null) {
-            log.error("Error in image loading : ");
-            log.error("Colors : unable to read pixels from image");
+    private void layout() {
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double width = dimension.getWidth();
+        final double height = dimension.getHeight();
+        if (width <= 0 || height <= 0) {
             return;
         }
+        final double gap = Math.max(10, Math.min(width, height) * 0.015);
 
-        rectangle.setFill(this.createImagePattern(image, rectangle));
+        // The tool box, on the right
+        final double toolBoxWidth = Math.max(220, width * 0.2);
+        final ColorToolBox previousToolBox = colorToolBox;
+        colorToolBox = new ColorToolBox(gameContext, this, toolBoxWidth, height - 2 * gap);
+        colorToolBox.setLayoutX(width - toolBoxWidth - gap);
+        colorToolBox.setLayoutY(gap);
+        if (previousToolBox != null) {
+            colorToolBox.select(colorToolBox.getColorBoxes().get(
+                Math.max(0, previousToolBox.getColorBoxes().indexOf(previousToolBox.getSelectedColorBox()))));
+            colorToolBox.getCustomBox().setColor(previousToolBox.getCustomBox().getColor());
+            previousToolBox.dispose();
+            root.getChildren().remove(previousToolBox);
+        }
+        root.getChildren().add(colorToolBox);
+        updateUndoButton();
 
-        writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(), (int) image.getHeight());
-        pixelWriter = writableImg.getPixelWriter();
-        pixelReader = writableImg.getPixelReader();
+        // The previous and next buttons, with the number of the drawing between them, above the drawing
+        final double areaWidth = width - toolBoxWidth - 3 * gap;
+        final double navigationHeight = height * 0.11;
+        final double buttonSize = navigationHeight * 0.85;
+        if (previousButton != null) {
+            previousButton.dispose();
+            nextButton.dispose();
+            root.getChildren().removeAll(previousButton, nextButton);
+        }
+        previousButton = new GazeRoundButton(gameContext, buttonSize, "arrow_back", translator.translate("Previous"),
+            () -> changeDrawing(-1));
+        nextButton = new GazeRoundButton(gameContext, buttonSize, "arrow_forward", translator.translate("Next"),
+            () -> changeDrawing(1));
+        final double fontSize = navigationHeight * 0.32;
+        final double counterWidth = fontSize * 5;
+        final double rowWidth = 2 * buttonSize + counterWidth;
+        final double rowX = gap + (areaWidth - rowWidth) / 2;
+        previousButton.setLayoutX(rowX);
+        nextButton.setLayoutX(rowX + buttonSize + counterWidth);
+        previousButton.setLayoutY(gap);
+        nextButton.setLayoutY(gap);
+        counterCenterX = rowX + buttonSize + counterWidth / 2;
+        counterCenterY = gap + buttonSize / 2;
+        counterFontSize = fontSize;
+        root.getChildren().addAll(previousButton, nextButton);
+        updateCounter();
 
-        toBlackAndWhite();
+        fixationRing.setSize(Math.max(50, height * 0.08));
+        placeDrawing();
     }
 
     /**
-     * @return the average gray level of the drawing, used as threshold of the black and white conversion
+     * Places the drawing, on a white card, below the buttons, as large as the area left by the tool box allows.
      */
-    private double getAvgThresholdValue() {
-        double sum = 0;
-        for (int i = 0; i < writableImg.getWidth(); ++i) {
-            for (int j = 0; j < writableImg.getHeight(); ++j) {
-                final Color pixCol = pixelReader.getColor(i, j);
-                sum = sum + (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
+    private void placeDrawing() {
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double width = dimension.getWidth();
+        final double height = dimension.getHeight();
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        final double gap = Math.max(10, Math.min(width, height) * 0.015);
+        final double toolBoxWidth = Math.max(220, width * 0.2);
+        final double areaWidth = width - toolBoxWidth - 3 * gap;
+        final double areaTop = gap + height * 0.11 + gap;
+        final double areaHeight = height - areaTop - gap;
+        final double ratio = imageWidth > 0 ? (double) imageHeight / imageWidth : 1;
+        final double cardWidth = Math.min(areaWidth, areaHeight / ratio);
+        final double cardHeight = cardWidth * ratio;
+        card.setWidth(cardWidth);
+        card.setHeight(cardHeight);
+        card.setX(gap + (areaWidth - cardWidth) / 2);
+        card.setY(areaTop + (areaHeight - cardHeight) / 2);
+        card.setArcWidth(Math.min(cardWidth, cardHeight) * 0.06);
+        card.setArcHeight(card.getArcWidth());
+        final double padding = Math.min(cardWidth, cardHeight) * 0.03;
+        drawing.setX(card.getX() + padding);
+        drawing.setY(card.getY() + padding);
+        drawing.setWidth(cardWidth - 2 * padding);
+        drawing.setHeight(cardHeight - 2 * padding);
+        if (!noDrawingMessage.getChildren().isEmpty()) {
+            showNoDrawing();
+        }
+        fixationRing.toFront();
+    }
+
+    /**
+     * @return the drawings of the variant, in the order of their names: the coloring pages of its level, or the images
+     * given by the user in the settings (custom palette)
+     */
+    private List<String> findDrawings() {
+        if (variant.getUserImagesFolder() != null) {
+            return UserImagesVariant.images(variant.getUserImagesFolder()).stream()
+                .map(file -> file.toURI().toString()).toList();
+        }
+        return ResourceFileManager.getResourcePaths(DRAWINGS_FOLDER + "/" + variant.getFolder()).stream()
+            .filter(path -> new File(path).getName().startsWith("draw-"))
+            .sorted()
+            .toList();
+    }
+
+    /**
+     * Shows the first drawing of the variant (it used to start on the drawing of the settings, the 7th one).
+     */
+    private void showFirstDrawing() {
+        if (drawings.isEmpty()) {
+            showNoDrawing();
+        } else {
+            showDrawing(0);
+        }
+    }
+
+    /**
+     * Shows, instead of a drawing, that the custom palette has no image yet.
+     */
+    private void showNoDrawing() {
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double fontSize = Math.max(16, dimension.getHeight() / 26);
+        final String text = translator.translate("NoUserImages");
+        Group message = GameStyle.pill(text, fontSize);
+        final double maxWidth = card.getWidth() * 0.9;
+        if (maxWidth > 0 && message.getLayoutBounds().getWidth() > maxWidth) {
+            message = GameStyle.pill(text, fontSize * maxWidth / message.getLayoutBounds().getWidth());
+        }
+        message.setLayoutX(card.getX() + (card.getWidth() - message.getLayoutBounds().getWidth()) / 2);
+        message.setLayoutY(card.getY() + (card.getHeight() - message.getLayoutBounds().getHeight()) / 2);
+        noDrawingMessage.getChildren().setAll(message);
+        updateCounter();
+    }
+
+    /**
+     * Shows the previous (-1) or next (+1) drawing.
+     */
+    void changeDrawing(final int step) {
+        if (!drawings.isEmpty()) {
+            showDrawing(Math.floorMod(index + step, drawings.size()));
+        }
+    }
+
+    /**
+     * Shows a coloring page.
+     */
+    void showDrawing(final int drawingIndex) {
+        if (drawings.isEmpty()) {
+            return;
+        }
+        index = drawingIndex;
+        setImage(loadImage(drawings.get(drawingIndex)));
+    }
+
+    /**
+     * @param url a resource of the classpath or the URL of a file
+     * @return the image, reduced to {@link #MAX_DRAWING_SIZE} if it is larger, never enlarged (JavaFX enlarges an image
+     * to the size asked for)
+     */
+    static Image loadImage(final String url) {
+        double largest = 0;
+        final URL location = url.contains(":") ? toUrl(url) : ColorsGame.class.getClassLoader().getResource(url);
+        if (location != null) {
+            try (InputStream input = location.openStream(); ImageInputStream stream = ImageIO.createImageInputStream(input)) {
+                final Iterator<ImageReader> readers = stream == null ? Collections.emptyIterator() : ImageIO.getImageReaders(stream);
+                if (readers.hasNext()) {
+                    final ImageReader reader = readers.next();
+                    reader.setInput(stream);
+                    largest = Math.max(reader.getWidth(0), reader.getHeight(0));
+                    reader.dispose();
+                }
+            } catch (final IOException e) {
+                log.debug("Cannot read the size of {}", url, e);
             }
         }
-        sum = sum / (writableImg.getWidth() * writableImg.getHeight());
-        return 3 * sum / 4;
+        final double size = largest > MAX_DRAWING_SIZE || largest == 0 ? MAX_DRAWING_SIZE : 0;
+        return new Image(url, size, size, true, true);
     }
 
-    /**
-     * Turns the drawing into black and white: darker pixels than the average become black, the others white.
-     */
-    private void toBlackAndWhite() {
-
-
-        final double avgThresholdValue = getAvgThresholdValue();
-
-        for (int i = 0; i < writableImg.getWidth(); ++i) {
-            for (int j = 0; j < writableImg.getHeight(); ++j) {
-
-                final Color pixCol = pixelReader.getColor(i, j);
-                final double avg = (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
-
-                final Color newCol = avg > avgThresholdValue ? Color.WHITE : Color.BLACK;
-                pixelWriter.setColor(i, j, newCol);
-            }
+    private static URL toUrl(final String url) {
+        try {
+            return URI.create(url).toURL();
+        } catch (final IllegalArgumentException | MalformedURLException e) {
+            return null;
         }
-
-        updateRectangle();
-
     }
 
     /**
-     * Fill a zone with the current selected color.
-     *
-     * @param x The x coordinates of the point to fill from.
-     * @param y The y coordinates of the point to fill from.
+     * Makes an image the drawing to color, turned into black and white.
      */
-    private void colorize(final double x, final double y) {
+    private void setImage(final Image image) {
+        if (image.isError() || image.getPixelReader() == null) {
+            log.error("Colors : unable to read pixels from image {}", image.getUrl());
+            return;
+        }
+        imageWidth = (int) image.getWidth();
+        imageHeight = (int) image.getHeight();
+        pixels = new int[imageWidth * imageHeight];
+        image.getPixelReader().getPixels(0, 0, imageWidth, imageHeight, PixelFormat.getIntArgbInstance(), pixels, 0,
+            imageWidth);
+        toBlackAndWhite(pixels);
+        blackAndWhite = pixels.clone();
+        undoStack.clear();
+        writableImg = new WritableImage(imageWidth, imageHeight);
+        showPixels();
+        updateUndoButton();
+        if (fixationRing != null) {
+            fixationRing.stop();
+        }
+        if (counter != null) {
+            updateCounter();
+        }
+        placeDrawing();
+    }
 
-        final int pixelX = (int) ((x - rectangle.getX()) * writableImg.getWidth() / rectangle.getWidth());
-        final int pixelY = (int) ((y - rectangle.getY()) * writableImg.getHeight() / rectangle.getHeight());
+    private void showPixels() {
+        writableImg.getPixelWriter().setPixels(0, 0, imageWidth, imageHeight, PixelFormat.getIntArgbInstance(), pixels,
+            0, imageWidth);
+        drawing.setFill(new ImagePattern(writableImg, 0, 0, 1, 1, true));
+    }
 
-        final Color color = pixelReader.getColor(pixelX, pixelY);
+    private void updateCounter() {
+        if (counterFontSize <= 0) {
+            return;
+        }
+        final String text = drawings.isEmpty() ? "0 / 0" : (index + 1) + " / " + drawings.size();
+        final Group pill = GameStyle.pill(text, counterFontSize);
+        if (previousButton != null) {
+            final boolean browsable = drawings.size() > 1;
+            previousButton.setEnabled(browsable);
+            nextButton.setEnabled(browsable);
+        }
+        pill.setLayoutX(counterCenterX - pill.getLayoutBounds().getWidth() / 2);
+        pill.setLayoutY(counterCenterY - pill.getLayoutBounds().getHeight() / 2);
+        counter.getChildren().setAll(pill);
+    }
 
-        /*
-         * Don't fill the zone if the pixel selected is already of the same color. Also don't fill black zones
-         */
-        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor()) && !isEqualColors(color, Color.BLACK)
-            && drawingEnable.getValue()) {
-            javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
-                (int) writableImg.getWidth(), (int) writableImg.getHeight());
-            rectangle.setFill(this.createImagePattern(writableImg, rectangle));
-            rectangle.toBack();
+    private void updateUndoButton() {
+        if (colorToolBox != null) {
+            colorToolBox.getUndoButton().setEnabled(!undoStack.isEmpty());
+        }
+    }
 
+    /**
+     * Fills the zone of a point of the drawing (coordinates of the game area) with the chosen color, if it is not a line
+     * and not already of this color; a goal is counted.
+     */
+    void colorize(final double x, final double y) {
+        if (!drawingEnable.get() || pixels == null) {
+            return;
+        }
+        final int pixelX = (int) ((x - drawing.getX()) * imageWidth / drawing.getWidth());
+        final int pixelY = (int) ((y - drawing.getY()) * imageHeight / drawing.getHeight());
+        final int color = toArgb(colorToolBox.getSelectedColorBox().getColor());
+        if (fill(pixelX, pixelY, color)) {
             stats.incrementNumberOfGoalsReached();
         }
     }
 
     /**
-     * Fills with a color the zone of the pixel at (x, y): its neighbours of the same color, up to other colors.
-     */
-    private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor, final int x,
-                                 final int y, final int width, final int height) {
-
-        final Color oldColor = pixelReader.getColor(x, y);
-
-        floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
-    }
-
-    /**
-     * @return a pattern filling a rectangle with an image
-     */
-    public ImagePattern createImagePattern(final Image img, final Rectangle r) {
-        return new ImagePattern(img, 0, 0, 1, 1, true);
-    }
-
-    /**
-     * Fills the line of a pixel to the left and right, then searches the zones above and below to fill (scan line flood
-     * fill, without recursion).
-     */
-    private void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader,
-                                      final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
-
-        final int leftX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
-        final int rightX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
-
-        final HorizontalZone firstZone = new HorizontalZone(leftX, rightX, y);
-        searchZone(firstZone, oldColor, pixelReader, pixelWriter, newColor, width, height);
-
-        while (horiZones.size() > 0) {
-
-            final HorizontalZone zone = horiZones.pop();
-            searchZone(zone, oldColor, pixelReader, pixelWriter, newColor, width, height);
-        }
-    }
-
-    /**
-     * Searches the horizontal zones of the old color above and below a filled zone, and fills them.
-     */
-    private void searchZone(final HorizontalZone zone, final Color oldColor, final PixelReader pixelReader,
-                            final PixelWriter pixelWriter, final Color newColor, final int width, final int height) {
-
-        // Search for left and right of the zone
-        final int leftX = floodInLine(pixelWriter, pixelReader, newColor, zone.leftX, zone.y, width, true, oldColor);
-        final int rightX = floodInLine(pixelWriter, pixelReader, newColor, zone.rightX, zone.y, width, false, oldColor);
-
-        for (int i = leftX; i <= rightX; ++i) {
-
-            // Search for available zone to colorize upward
-            if (zone.y > 0 && isEqualColors(pixelReader.getColor(i, zone.y - 1), oldColor)) {
-
-                final int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, true, oldColor);
-                final int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, false, oldColor);
-
-                horiZones.add(new HorizontalZone(newLeftX, newRightX, zone.y - 1));
-            }
-            // Search for available zone to colorize downward
-            if (zone.y < height - 1 && isEqualColors(pixelReader.getColor(i, zone.y + 1), oldColor)) {
-
-                final int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, true, oldColor);
-                final int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, false, oldColor);
-
-                horiZones.add(new HorizontalZone(newLeftX, newRightX, zone.y + 1));
-            }
-        }
-    }
-
-    /**
-     * Fills a line from a pixel to the left or the right, up to another color.
+     * Fills the zone of a pixel with a color, the previous pixels kept to undo it.
      *
-     * @return the last x filled
+     * @return whether a zone was filled (not a line, not already of this color, inside the drawing)
      */
-    private int floodInLine(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor,
-                            final int x, final int y, final int width, final boolean isLeftFIll, final Color oldColor) {
-
-        int currentX = x;
-
-        // fill
-        do {
-
-            pixelWriter.setColor(currentX, y, newColor);
-
-            if (isLeftFIll) {
-                currentX--;
-            } else {
-                currentX++;
-            }
-        } while (currentX >= 0 && currentX < width - 1 && isEqualColors(pixelReader.getColor(currentX, y), oldColor));
-
-        if (isLeftFIll) {
-            currentX++;
-        } else {
-
-            currentX--;
+    boolean fill(final int pixelX, final int pixelY, final int color) {
+        if (pixelX < 0 || pixelY < 0 || pixelX >= imageWidth || pixelY >= imageHeight) {
+            return false;
         }
+        final int old = pixels[pixelY * imageWidth + pixelX];
+        if (isEqualColors(old, color) || isEqualColors(old, BLACK)) {
+            return false;
+        }
+        pushUndo();
+        floodFill(pixels, imageWidth, imageHeight, pixelX, pixelY, color);
+        showPixels();
+        return true;
+    }
 
-        return currentX;
+    /**
+     * Cancels the last filling (or the last start again).
+     */
+    void undo() {
+        if (undoStack.isEmpty()) {
+            return;
+        }
+        pixels = undoStack.pop();
+        showPixels();
+        updateUndoButton();
+    }
+
+    /**
+     * Makes the drawing white again; it can be undone.
+     */
+    void restartDrawing() {
+        if (blackAndWhite == null) {
+            return;
+        }
+        pushUndo();
+        pixels = blackAndWhite.clone();
+        showPixels();
+    }
+
+    private void pushUndo() {
+        undoStack.push(pixels.clone());
+        while (undoStack.size() > UNDO_LEVELS) {
+            undoStack.removeLast();
+        }
+        updateUndoButton();
     }
 
     /**
@@ -617,149 +552,146 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     /**
-     * Objects used internally that represents a horizontal line of pixels
+     * Colors the zone of the drawing where the gaze stays during the fixation length of the settings: a ring follows
+     * the gaze and fills meanwhile; the mouse colors at once with a click.
      */
-    private static class HorizontalZone {
-        final int leftX;
-        final int rightX;
-        final int y;
-
-        /**
-         * A horizontal zone of pixels, from {@code lX} to {@code rX} on line {@code y}, waiting to be searched.
-         */
-        HorizontalZone(final int lX, final int rX, final int y) {
-            this.leftX = lX;
-            this.rightX = rX;
-            this.y = y;
+    private void onDrawingEvent(final Event event) {
+        if (!drawingEnable.get()) {
+            return;
+        }
+        final double x;
+        final double y;
+        if (event instanceof MouseEvent mouseEvent) {
+            if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                fixationRing.stop();
+                colorize(mouseEvent.getX(), mouseEvent.getY());
+                return;
+            }
+            x = mouseEvent.getX();
+            y = mouseEvent.getY();
+        } else if (event instanceof GazeEvent gazeEvent) {
+            x = gazeEvent.getX();
+            y = gazeEvent.getY();
+        } else {
+            return;
         }
 
-        @Override
-        public String toString() {
-            return "HorizontalZone{" + "leftX=" + leftX + ", rightX=" + rightX + ", y=" + y + '}';
+        if (event.getEventType() == MouseEvent.MOUSE_EXITED || event.getEventType() == GazeEvent.GAZE_EXITED) {
+            fixationRing.stop();
+        } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
+            startFixation(x, y);
+        } else if (event.getEventType() == MouseEvent.MOUSE_MOVED || event.getEventType() == GazeEvent.GAZE_MOVED) {
+            currentX = x;
+            currentY = y;
+            fixationRing.moveTo(x, y);
+            if (Math.abs(x - gazeXOrigin) >= GAZE_MOVING_THRESHOLD || Math.abs(y - gazeYOrigin) >= GAZE_MOVING_THRESHOLD) {
+                startFixation(x, y);
+            } else if (!filledAtThisPoint && !fixationRing.isRunning()) {
+                startFixation(x, y);
+            }
+        }
+    }
+
+    private void startFixation(final double x, final double y) {
+        gazeXOrigin = x;
+        gazeYOrigin = y;
+        currentX = x;
+        currentY = y;
+        filledAtThisPoint = false;
+        fixationRing.start(x, y, gameContext.getConfiguration().getFixationLength(), () -> {
+            filledAtThisPoint = true;
+            colorize(currentX, currentY);
+        });
+    }
+
+    /**
+     * Turns a drawing into black and white: pixels darker than three quarters of the average gray become black, the
+     * others white (transparent pixels count as white).
+     */
+    static void toBlackAndWhite(final int[] argb) {
+        double sum = 0;
+        for (int i = 0; i < argb.length; i++) {
+            argb[i] = onWhite(argb[i]);
+            sum += gray(argb[i]);
+        }
+        final double threshold = 3 * (sum / argb.length) / 4;
+        for (int i = 0; i < argb.length; i++) {
+            argb[i] = gray(argb[i]) > threshold ? WHITE : BLACK;
         }
     }
 
     /**
-     * Colors the zone of the drawing where the gaze stays during the fixation length of the settings (the mouse colors
-     * at a click).
+     * Fills with a color the zone of a pixel: its neighbours of the same color, up to other colors (scan line flood
+     * fill, without recursion), up to the borders of the drawing.
      */
-    private class CustomEventHandler {
-
-        private Double gazeXOrigin = 0.;
-        private Double gazeYOrigin = 0.;
-
-        private Double currentX = 0.;
-        private Double currentY = 0.;
-
-        @Getter
-        private final EventHandler<MouseEvent> mouseEventEventHandler = event -> {
-            if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                onMouseClicked(event);
-            } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                onMouseEntered(event);
-            } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-                onMouseMoved(event);
-            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
-                onMouseExited(event);
+    static void floodFill(final int[] argb, final int width, final int height, final int x, final int y,
+                          final int color) {
+        final int old = argb[y * width + x];
+        final Deque<int[]> stack = new ArrayDeque<>();
+        stack.push(new int[]{x, y});
+        while (!stack.isEmpty()) {
+            final int[] point = stack.pop();
+            final int py = point[1];
+            int left = point[0];
+            if (!isEqualColors(argb[py * width + left], old) || argb[py * width + left] == color) {
+                continue;
             }
-        };
-
-        @Getter
-        private final EventHandler<GazeEvent> gazeEventEventHandler = event -> {
-            if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
-                onGazeEntered(event);
-            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                onGazeMove(event);
-            } else if (event.getEventType() == GazeEvent.GAZE_EXITED) {
-                onGazeExited(event);
+            while (left > 0 && isEqualColors(argb[py * width + left - 1], old)) {
+                left--;
             }
-        };
-
-        private void onMouseExited(final MouseEvent event) {
-            gazeProgressIndicator.stop();
-        }
-
-        private void onMouseMoved(final MouseEvent event) {
-            currentX = event.getX();
-            currentY = event.getY();
-
-            // If mouse still around first point
-            if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
-                && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
-                && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
-
-                // Do nothin
+            int right = point[0];
+            while (right < width - 1 && isEqualColors(argb[py * width + right + 1], old)) {
+                right++;
             }
-            // If mouse move far away
-            else {
-
-                gazeXOrigin = currentX;
-                gazeYOrigin = currentY;
-
-                gazeProgressIndicator.stop();
-                gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-                gazeProgressIndicator.start();
+            boolean aboveOpen = false;
+            boolean belowOpen = false;
+            for (int px = left; px <= right; px++) {
+                argb[py * width + px] = color;
+                if (py > 0) {
+                    final boolean match = isEqualColors(argb[(py - 1) * width + px], old);
+                    if (match && !aboveOpen) {
+                        stack.push(new int[]{px, py - 1});
+                    }
+                    aboveOpen = match;
+                }
+                if (py < height - 1) {
+                    final boolean match = isEqualColors(argb[(py + 1) * width + px], old);
+                    if (match && !belowOpen) {
+                        stack.push(new int[]{px, py + 1});
+                    }
+                    belowOpen = match;
+                }
             }
         }
+    }
 
-        private void onMouseEntered(final MouseEvent event) {
-            gazeXOrigin = event.getX();
-            gazeYOrigin = event.getY();
-            currentX = gazeXOrigin;
-            currentY = gazeYOrigin;
+    /**
+     * @return whether two colors are close enough to be considered the same
+     */
+    static boolean isEqualColors(final int argb1, final int argb2) {
+        final double red = (((argb1 >> 16) & 0xFF) - ((argb2 >> 16) & 0xFF)) / 255d;
+        final double green = (((argb1 >> 8) & 0xFF) - ((argb2 >> 8) & 0xFF)) / 255d;
+        final double blue = ((argb1 & 0xFF) - (argb2 & 0xFF)) / 255d;
+        return Math.sqrt(red * red + green * green + blue * blue) <= COLOR_EQUALITY_THRESHOLD;
+    }
 
-            gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
+    static int toArgb(final javafx.scene.paint.Color color) {
+        return 0xFF000000 | ((int) Math.round(color.getRed() * 255) << 16)
+            | ((int) Math.round(color.getGreen() * 255) << 8) | (int) Math.round(color.getBlue() * 255);
+    }
 
-            gazeProgressIndicator.start();
-        }
+    private static double gray(final int argb) {
+        return (((argb >> 16) & 0xFF) + ((argb >> 8) & 0xFF) + (argb & 0xFF)) / 3d;
+    }
 
-        private void onGazeExited(final GazeEvent event) {
-            gazeProgressIndicator.stop();
-        }
-
-        private void onGazeMove(final GazeEvent event) {
-            currentX = event.getX();
-            currentY = event.getY();
-
-            // If gaze still around first point
-            if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
-                && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
-                && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
-
-                // Do nothing
-            }
-            // If gaze move far away
-            else {
-
-                gazeXOrigin = currentX;
-                gazeYOrigin = currentY;
-
-                gazeProgressIndicator.stop();
-                gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-                gazeProgressIndicator.start();
-            }
-        }
-
-        private void onGazeEntered(final GazeEvent event) {
-            currentX = event.getX();
-            currentY = event.getY();
-
-            gazeXOrigin = currentX;
-            gazeYOrigin = currentY;
-
-            gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-            gazeProgressIndicator.start();
-        }
-
-        /**
-         * Colors the zone at the position of the mouse.
-         */
-        private void onMouseClicked(final MouseEvent event) {
-            colorize(currentX, currentY);
-        }
-
+    /**
+     * @return the color of a pixel put on white, without transparency
+     */
+    private static int onWhite(final int argb) {
+        final double alpha = ((argb >>> 24) & 0xFF) / 255d;
+        final int red = (int) Math.round(((argb >> 16) & 0xFF) * alpha + 255 * (1 - alpha));
+        final int green = (int) Math.round(((argb >> 8) & 0xFF) * alpha + 255 * (1 - alpha));
+        final int blue = (int) Math.round((argb & 0xFF) * alpha + 255 * (1 - alpha));
+        return 0xFF000000 | (red << 16) | (green << 8) | blue;
     }
 }

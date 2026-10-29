@@ -16,6 +16,6 @@ public class ColorsGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("Coloring").gameThumbnail("colors")
                 .category(GameCategories.Category.MULTIMEDIA)
                 .category(GameCategories.Category.SELECTION).description("ColorDesc").build(),
-            new ColorsGameLauncher());
+            new ColorsGameVariantGenerator(), new ColorsGameLauncher());
     }
 }

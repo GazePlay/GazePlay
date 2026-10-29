@@ -18,6 +18,7 @@ import javafx.stage.Window;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonPane;
 
@@ -160,6 +161,13 @@ public final class MenuScreenshots {
                         gazePlay.getPrimaryStage(), null, gazePlay.getPrimaryScene().getRoot(),
                         "WhereIsItDirNotConfig", null);
                     dialog.setTitle(gazePlay.getTranslator().translate("WhereIsIt"));
+                    dialog.show();
+                });
+                // The window asking for the images of a variant played with images of the user (none in the captures)
+                captureDialog(gazePlay, output, "3e-images-utilisateur", () -> {
+                    final UserImagesDialog dialog = new UserImagesDialog(gazePlay.getPrimaryStage(),
+                        gazePlay.getPrimaryScene().getRoot(), gazePlay.getTranslator(), "Coloring",
+                        gazePlay.getTranslator().translate("Coloring"), () -> { });
                     dialog.show();
                 });
                 // The other orientation of the cards: the menu is built again when the mode is chosen again

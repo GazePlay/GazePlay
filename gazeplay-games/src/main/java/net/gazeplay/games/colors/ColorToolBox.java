@@ -1,311 +1,268 @@
 package net.gazeplay.games.colors;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageLayout;
 import javafx.print.PrinterJob;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
-import net.gazeplay.components.GazeFollowerIndicator;
-import net.gazeplay.components.GazeIndicator;
+import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.GazeRoundButton;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Tool box of the "Coloring" game, beside the drawing: the palettes of colors (with previous and next buttons), a
- * custom color, the switch enabling the coloring, and the management of the drawings (import, previous and next
- * drawing, save, print, black and white).
+ * Tool box of the "Coloring" game, beside the drawing, in the look of the menus: a rounded panel with the tools (coloring
+ * on or paused, undo, start again), the 12 colors of the palette, the custom color (chosen in a window of other colors),
+ * and the saving and printing of the drawing. Each button and color works with a fixation or a click.
  */
 @Slf4j
 public class ColorToolBox extends Pane {
 
     /**
-     * The size of the next and previous
+     * The colors of the palette, all shown: white erases.
      */
-    public static final double PAGE_MOVING_BUTTONS_SIZE_PIXEL = 20;
-
-    public static final Integer NB_COLORS_DISPLAYED = 5;
-
-    public final double colorizeButtonsSizePx;
-
-    public static final String COLORS_IMAGES_PATH = "data/colors/images/";
+    static final Color[] PALETTE = {
+        Color.web("#E53935"), Color.web("#FB8C00"), Color.web("#FDD835"),
+        Color.web("#9CCC65"), Color.web("#43A047"), Color.web("#4FC3F7"),
+        Color.web("#1E88E5"), Color.web("#8E24AA"), Color.web("#F06292"),
+        Color.web("#8D6E63"), Color.web("#9E9E9E"), Color.WHITE};
 
     /**
-     * Credits
-     * <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
-     * href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
-     * href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
-     * BY</a></div>
+     * Other colors, in the window of the custom color.
      */
-    public static final String CUSTOM_BUTTON_IMAGE_PATH = COLORS_IMAGES_PATH + "add-button-inside-black-circle.png";
+    static final Color[] CUSTOM_COLORS = {
+        Color.BURLYWOOD, Color.DARKCYAN, Color.BLUEVIOLET, Color.BROWN, Color.CADETBLUE,
+        Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE, Color.SIENNA,
+        Color.YELLOWGREEN, Color.PEACHPUFF, Color.LIGHTPINK, Color.NAVY, Color.DARKGREEN};
 
-    public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
-
-    public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
-
-    private final VBox mainPane;
-
-    private final GazeIndicator progressIndicator;
-
-    @Getter
-    @Setter
-    private boolean dialogOpen = false;
-
-    /**
-     * All the color boxes
-     */
-    @Getter
-    private final List<ColorBox> colorBoxes;
-
-    @Getter
-    private final ColorsGame colorsGame;
-
-    private final Pane root;
-
-    private final ColorBox customBox;
-
-    private final ColorPicker colorPicker;
-
-    private final Button customColorPickerButton;
-
-    @Getter
-    private final Pane imageManager;
-
-    @Getter
-    private final Pane colorziationPane;
-
-    private final Stage customColorDialog;
+    private static final int COLUMNS = 3;
 
     private final IGameContext gameContext;
 
-    /**
-     * The index of the first color displayed (then followed by the NB_COLORS_DISPLAYED next colors).
-     */
-    private int firstColorDisplayed;
+    private final ColorsGame colorsGame;
 
     @Getter
-    @Setter
+    private final List<ColorBox> colorBoxes = new ArrayList<>();
+
+    @Getter
+    private final ColorBox customBox;
+
+    @Getter
     private ColorBox selectedColorBox;
 
-    private EventHandler<ActionEvent> disableColorizeButton = null;
+    @Getter
+    private final GazeRoundButton coloringButton;
 
-    private boolean previousEnableColor;
+    @Getter
+    private final GazeRoundButton undoButton;
 
-    public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext, final double colorizeButtonsSizePx) {
-        super();
+    private final List<GazeRoundButton> buttons = new ArrayList<>();
+
+    private Stage customColorDialog;
+
+    private final javafx.beans.value.ChangeListener<Boolean> coloringListener;
+
+    /**
+     * @param width  width of the tool box
+     * @param height height of the tool box
+     */
+    public ColorToolBox(final IGameContext gameContext, final ColorsGame colorsGame, final double width,
+                        final double height) {
         this.gameContext = gameContext;
-        this.colorizeButtonsSizePx = colorizeButtonsSizePx;
-        progressIndicator = new GazeIndicator(gameContext);
-        progressIndicator.setMouseTransparent(true);
-        this.prefWidthProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(5));
-
-        this.selectedColorBox = null;
         this.colorsGame = colorsGame;
-        this.root = root;
+        final Translator translator = gameContext.getTranslator();
 
-        // the main pane for the tool box
-        final BorderPane thisRoot = new BorderPane();
-        this.getChildren().add(thisRoot);
+        final double gap = Math.max(6, width * 0.04);
+        final double buttonSize = Math.min((width - 4 * gap) / 3, height / 9);
+        // Rows: tools, 4 rows of colors, the custom color, the drawings
+        final double swatchSize = Math.min((width - (COLUMNS + 1) * gap) / COLUMNS,
+            (height - 2 * buttonSize - 9 * gap) / 5);
 
-        mainPane = new VBox();
-        thisRoot.setCenter(mainPane);
-        mainPane.setAlignment(Pos.CENTER);
-        thisRoot.prefWidthProperty().bind(this.widthProperty());
-        mainPane.prefWidthProperty().bind(thisRoot.widthProperty());
-        mainPane.setSpacing(0);
+        final Rectangle background = new Rectangle(width, height);
+        background.setArcWidth(Math.min(48, width * 0.15));
+        background.setArcHeight(background.getArcWidth());
+        background.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        getChildren().add(background);
 
-        imageManager = buildImageManager();
-        colorziationPane = buildColorizationPane();
+        double y = gap;
 
-        thisRoot.setBottom(imageManager);
-        thisRoot.setTop(colorziationPane);
+        // Tools
+        coloringButton = button("palette", translator.translate("ColoringOnOff"), buttonSize,
+            () -> colorsGame.setEnableColorization(!colorsGame.getDrawingEnable().get()));
+        coloringButton.setActive(colorsGame.getDrawingEnable().get());
+        coloringListener = (observable, oldValue, newValue) -> coloringButton.setActive(newValue);
+        colorsGame.getDrawingEnable().addListener(coloringListener);
+        undoButton = button("undo", translator.translate("Undo"), buttonSize, colorsGame::undo);
+        undoButton.setEnabled(false);
+        final GazeRoundButton restartButton = button("restart_alt", translator.translate("RestartDrawing"), buttonSize,
+            colorsGame::restartDrawing);
+        placeRow(List.of(coloringButton, undoButton, restartButton), buttonSize, width, y);
+        y += buttonSize + 2 * gap;
 
-        ColorBox colorBox;
-        EventHandler<Event> eventHandler;
-
-        // COLORS
-
-        final List<Color> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.WHITE);
-        colors.add(Color.DARKGOLDENROD);
-        // 5
-
-        // Build color boxes
-        colorBoxes = new ArrayList<>();
-        final ToggleGroup group = new ToggleGroup();
-        firstColorDisplayed = 0;
-        Color color;
-        for (int i = 0; i < colors.size(); ++i) {
-
-            color = colors.get(i);
-
-            colorBox = new ColorBox(gameContext, color, root, this, group, colorizeButtonsSizePx);
+        // The palette
+        final double gridWidth = COLUMNS * swatchSize + (COLUMNS - 1) * gap;
+        final double gridX = (width - gridWidth) / 2;
+        for (int i = 0; i < PALETTE.length; i++) {
+            final ColorBox colorBox = new ColorBox(gameContext, PALETTE[i], swatchSize, this::select);
+            final int column = i % COLUMNS;
+            final int line = i / COLUMNS;
+            colorBox.setLayoutX(gridX + column * (swatchSize + gap));
+            colorBox.setLayoutY(y + line * (swatchSize + gap));
             colorBoxes.add(colorBox);
-
-            if (i < NB_COLORS_DISPLAYED) {
-                mainPane.getChildren().add(colorBox);
-            }
-
-            if (this.selectedColorBox == null) {
-                colorBox.select();
-                selectedColorBox = colorBox;
-            }
+            getChildren().add(colorBox);
         }
+        final int lines = (PALETTE.length + COLUMNS - 1) / COLUMNS;
+        y += lines * (swatchSize + gap) + gap;
 
-        colorPicker = new ColorPicker(Color.WHITE);
+        // The custom color, and the button choosing it
+        customBox = new ColorBox(gameContext, CUSTOM_COLORS[0], swatchSize, this::select);
+        colorBoxes.add(customBox);
+        final GazeRoundButton customButton = button("add", translator.translate("customColorDialogTitle"),
+            swatchSize * 0.8, this::openCustomColorDialog);
+        customBox.setLayoutX(gridX);
+        customBox.setLayoutY(y);
+        customButton.setLayoutX(gridX + swatchSize + gap + swatchSize * 0.1);
+        customButton.setLayoutY(y + swatchSize * 0.1);
+        getChildren().add(customBox);
+        y += swatchSize + 2 * gap;
 
-        Image buttonImg = null;
-        try {
-            buttonImg = new Image(CUSTOM_BUTTON_IMAGE_PATH, colorizeButtonsSizePx, colorizeButtonsSizePx, false,
-                true);
-        } catch (final IllegalArgumentException e) {
-            log.warn(e.toString() + " : " + CUSTOM_BUTTON_IMAGE_PATH);
-        }
+        // The drawing: save, print
+        final GazeRoundButton saveButton = button("save", translator.translate("SaveImg"), buttonSize,
+            this::saveDrawing);
+        final GazeRoundButton printButton = button("print", translator.translate("PrintImg"), buttonSize,
+            () -> {
+                if (colorsGame.getWritableImg() != null) {
+                    printImage(colorsGame.getWritableImg());
+                }
+            });
+        placeRow(List.of(saveButton, printButton), buttonSize, width,
+            Math.max(y, height - gap - buttonSize));
 
-        if (buttonImg != null) {
-            customColorPickerButton = new Button("", new ImageView(buttonImg));
-            customColorPickerButton.setPrefHeight(buttonImg.getHeight());
-        } else {
-            customColorPickerButton = new Button("Custom colors");
-            customColorPickerButton.setPrefHeight(colorizeButtonsSizePx);
-            customColorPickerButton.setPrefWidth(colorizeButtonsSizePx);
-        }
-        customBox = new ColorBox(gameContext, Color.WHITE, root, this, group, colorizeButtonsSizePx);
+        select(colorBoxes.get(0));
+    }
 
-        customColorDialog = buildCustomColorDialog();
-
-        final EventHandler<ActionEvent> customColorButtonHandler = (ActionEvent event) -> {
-            customColorDialog.show();
-            customColorDialog.sizeToScene();
-
-            this.dialogOpen = true;
-
-            previousEnableColor = colorsGame.getDrawingEnable().getValue();
-            if (previousEnableColor) {
-                colorsGame.setEnableColorization(false);
-            }
-
-            customColorDialog.toFront();
-            customColorDialog.setAlwaysOnTop(true);
-            try {
-                TimeUnit.MILLISECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                log.warn("Interrupted while opening the color dialog", e);
-            }
-            customColorDialog.requestFocus();
-        };
-
-        final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root, customColorPickerButton);
-        customColorButtonIndic.setOnFinish(customColorButtonHandler);
-        customColorButtonIndic.addNodeToListen(customColorPickerButton,
-            colorsGame.getGameContext().getGazeDeviceManager());
-
-        customColorPickerButton.setOnAction(customColorButtonHandler);
-        customColorPickerButton.setOpacity(1);
-
-        customColorDialog.setOnCloseRequest((event) -> {
-            this.setDialogOpen(false);
-            colorsGame.setEnableColorization(previousEnableColor);
-        });
-
-        colorPicker.setOnAction((event) -> customBox.setColor(colorPicker.getValue()));
-        colorPicker.prefWidthProperty().bind(customBox.widthProperty());
-        customColorPickerButton.prefWidthProperty().bind(customBox.widthProperty());
-
-        final Button previousPallet = new Button("");
-        previousPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
-        previousPallet.setPrefWidth(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
-        final Button nextPallet = new Button("");
-        nextPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
-        nextPallet.setPrefWidth(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
-
-        nextPallet.setOnAction((event) -> {
-
-            firstColorDisplayed += NB_COLORS_DISPLAYED;
-
-            updatePallet(previousPallet, nextPallet);
-        });
-
-        if (firstColorDisplayed + NB_COLORS_DISPLAYED > colorBoxes.size()) {
-            nextPallet.setDisable(true);
-        }
-
-        previousPallet.setOnAction((event) -> {
-
-            firstColorDisplayed -= NB_COLORS_DISPLAYED;
-
-            updatePallet(previousPallet, nextPallet);
-        });
-
-        if (firstColorDisplayed - NB_COLORS_DISPLAYED < 0) {
-            previousPallet.setDisable(true);
-        }
-
-        this.updatePallet(previousPallet, nextPallet);
-
-        root.getChildren().add(customColorButtonIndic);
-
-        gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
-            @Override
-            public Void visitLight() {
-                return null;
-            }
-
-            @Override
-            public Void visitDark() {
-                getStyleClass().add("bg-colored");
-                return null;
-            }
-        });
-
-
+    private GazeRoundButton button(final String icon, final String tooltip, final double size, final Runnable action) {
+        final GazeRoundButton button = new GazeRoundButton(gameContext, size, icon, tooltip, action);
+        buttons.add(button);
+        getChildren().add(button);
+        return button;
     }
 
     /**
-     * Write an image to a File using Java Swing.
-     *
-     * @param image  The image to write.
-     * @param file   The file to write the image into.
-     * @param format The image format to use ("png" is the only one working correctly).
+     * Places buttons on a row, centered in the width of the tool box.
      */
-    private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
+    private static void placeRow(final List<GazeRoundButton> row, final double size, final double width, final double y) {
+        final double spacing = (width - row.size() * size) / (row.size() + 1);
+        for (int i = 0; i < row.size(); i++) {
+            row.get(i).setLayoutX(spacing + i * (size + spacing));
+            row.get(i).setLayoutY(y);
+        }
+    }
 
-        final BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
-        ImageIO.write(swingImg, format, file);
+    /**
+     * Makes a color the one of the coloring.
+     */
+    void select(final ColorBox colorBox) {
+        if (selectedColorBox != null) {
+            selectedColorBox.setSelected(false);
+        }
+        selectedColorBox = colorBox;
+        colorBox.setSelected(true);
+    }
+
+    /**
+     * Opens the window of the other colors; the coloring pauses while it is open.
+     */
+    private void openCustomColorDialog() {
+        if (customColorDialog != null && customColorDialog.isShowing()) {
+            return;
+        }
+        final boolean coloringWasEnabled = colorsGame.getDrawingEnable().get();
+        colorsGame.setEnableColorization(false);
+
+        final Stage dialog = new Stage();
+        dialog.initOwner(gameContext.getPrimaryStage());
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initStyle(StageStyle.TRANSPARENT);
+        dialog.setAlwaysOnTop(true);
+        dialog.setOnHidden(event -> colorsGame.setEnableColorization(coloringWasEnabled));
+
+        final double size = Math.max(60, gameContext.getGamePanelDimensionProvider().getDimension2D().getHeight() / 9);
+        final FlowPane grid = new FlowPane(size * 0.2, size * 0.2);
+        grid.setPrefWrapLength(5 * size + 4 * size * 0.2);
+        grid.setAlignment(Pos.CENTER);
+        for (final Color color : CUSTOM_COLORS) {
+            grid.getChildren().add(new ColorBox(gameContext, color, size, chosen -> {
+                customBox.setColor(chosen.getColor());
+                select(customBox);
+                dialog.close();
+            }));
+        }
+
+        final Label title = new Label(gameContext.getTranslator().translate("customColorDialogTitle"));
+        title.setStyle(GameStyle.titleFontStyle(size * 0.4) + " -fx-text-fill: -gp-text;");
+        final GazeRoundButton closeButton = new GazeRoundButton(gameContext, size * 0.8, "close",
+            gameContext.getTranslator().translate("Close"), dialog::close);
+
+        final VBox card = new VBox(size * 0.25, title, grid, closeButton);
+        card.setAlignment(Pos.CENTER);
+        card.setPadding(new Insets(size * 0.3));
+        card.setStyle("-fx-background-color: -gp-surface; -fx-background-radius: 24; -fx-border-color: -gp-border;"
+            + " -fx-border-width: 2; -fx-border-radius: 24;");
+
+        final Scene scene = new Scene(card, Color.TRANSPARENT);
+        CssUtil.setPreferredStylesheets(gameContext.getConfiguration(), scene);
+        dialog.setScene(scene);
+        customColorDialog = dialog;
+        dialog.show();
+        dialog.centerOnScreen();
+    }
+
+    /**
+     * Saves the drawing as a PNG file chosen by the user.
+     */
+    private void saveDrawing() {
+        if (colorsGame.getWritableImg() == null) {
+            return;
+        }
+        final FileChooser imageSaveChooser = new FileChooser();
+        imageSaveChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
+        imageSaveChooser.setTitle(gameContext.getTranslator().translate("imgSaveChooserTitle"));
+        File imageFile = imageSaveChooser.showSaveDialog(gameContext.getPrimaryStage());
+        if (imageFile == null) {
+            return;
+        }
+        if (!imageFile.getName().toLowerCase().endsWith(".png")) {
+            imageFile = new File(imageFile.getAbsolutePath() + ".png");
+        }
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(colorsGame.getWritableImg(), null), "png", imageFile);
+        } catch (final IOException ex) {
+            log.error("Error while saving image : " + ex);
+        }
     }
 
     /**
@@ -313,21 +270,20 @@ public class ColorToolBox extends Pane {
      */
     private void printImage(final Image image) {
         final PrinterJob printerJob = PrinterJob.createPrinterJob();
-        if (printerJob.showPrintDialog(gameContext.getPrimaryStage()) && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                log.warn("Interrupted while printing", e);
-            }
+        if (printerJob == null) {
+            log.info("No printer");
+            return;
+        }
+        if (printerJob.showPrintDialog(gameContext.getPrimaryStage())
+            && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
             gameContext.getPrimaryStage().requestFocus();
 
-            ImageView iv = new ImageView();
+            final ImageView iv = new ImageView(image);
             iv.setPreserveRatio(true);
-            iv.setImage(image);
-            PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
-            double scaleX = pageLayout.getPrintableWidth() / iv.getBoundsInParent().getWidth();
-            double scaleY = pageLayout.getPrintableHeight() / iv.getBoundsInParent().getHeight();
-            iv.getTransforms().add(new Scale(scaleX, scaleY));
+            final PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
+            final double scale = Math.min(pageLayout.getPrintableWidth() / image.getWidth(),
+                pageLayout.getPrintableHeight() / image.getHeight());
+            iv.getTransforms().add(new Scale(scale, scale));
             if (printerJob.printPage(iv)) {
                 printerJob.endJob();
             } else {
@@ -339,279 +295,14 @@ public class ColorToolBox extends Pane {
     }
 
     /**
-     * Lets the file chooser show all images, or only the JPG, PNG or GIF ones.
+     * Stops the buttons and colors following the gaze, at the end of the game.
      */
-    private static void configureImageFileChooser(final FileChooser imageFileChooser) {
-        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
-            new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"),
-            new FileChooser.ExtensionFilter("GIF", "*.gif"));
-    }
-
-    /**
-     * Lets the file chooser save PNG files only.
-     */
-    private static void configureImageFileSaver(final FileChooser imageFileChooser) {
-        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("png", "*.png"));
-    }
-
-    /**
-     * @return whether a format can be saved (PNG only)
-     */
-    private static boolean checkFormat(final String format) {
-        return "png".equals(format);
-    }
-
-    /**
-     * Copies an imported drawing into the "colors" folder of the data of the profile.
-     */
-    private void copyFile(final File imageFile) {
-        if (imageFile != null) {
-            final Path from = Paths.get(imageFile.toURI());
-            final File to = new File(this.getColorsDirectory(), imageFile.getName());
-            final CopyOption[] options = new CopyOption[]{
-                StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.COPY_ATTRIBUTES
-            };
-            try {
-                Files.copy(from, to.toPath(), options);
-                gameContext.getConfiguration().setColorsDefaultImage(to.getAbsolutePath());
-            } catch (final IOException e) {
-                log.debug("Impossible to copy file" + imageFile.getAbsolutePath() + " to " + to.getAbsolutePath());
-            }
+    void dispose() {
+        colorsGame.getDrawingEnable().removeListener(coloringListener);
+        buttons.forEach(GazeRoundButton::dispose);
+        colorBoxes.forEach(ColorBox::dispose);
+        if (customColorDialog != null) {
+            customColorDialog.close();
         }
-    }
-
-    /**
-     * @return the buttons managing the drawings: import, previous, next, save, print
-     */
-    private Pane buildImageManager() {
-        final Translator translator = gameContext.getTranslator();
-        final Stage primaryStage = gameContext.getPrimaryStage();
-
-        final HBox bottomBox = new HBox(7);
-        bottomBox.setPadding(new Insets(0, 5, 0, 5));
-
-        final FileChooser imageChooser = new FileChooser();
-        configureImageFileChooser(imageChooser);
-        imageChooser.setTitle(translator.translate("imgChooserTitle"));
-
-        final Button imageChooserButton = new Button(translator.translate("LoadImg"));
-        imageChooserButton.setPrefHeight(colorizeButtonsSizePx / 2);
-        imageChooserButton.setOnAction((event) -> {
-
-            final File imageFile = imageChooser.showOpenDialog(primaryStage);
-            if (imageFile != null) {
-
-                copyFile(imageFile);
-
-                final Image image = new Image(imageFile.toURI().toString());
-
-                this.colorsGame.updateImage(image, imageFile.getName());
-            }
-        });
-
-        final FileChooser imageSaveChooser = new FileChooser();
-        configureImageFileSaver(imageSaveChooser);
-        imageSaveChooser.setTitle(translator.translate("imgSaveChooserTitle"));
-        final Button imageSaverButton = new Button(translator.translate("SaveImg"));
-        imageSaverButton.setPrefHeight(colorizeButtonsSizePx / 2);
-        imageSaverButton.setOnAction((event) -> {
-
-            File imageFile = imageSaveChooser.showSaveDialog(primaryStage);
-            if (imageFile != null) {
-
-                try {
-                    final String name = imageFile.getName();
-                    String extension = name.substring(1 + name.lastIndexOf(".")).toLowerCase();
-
-                    if (!checkFormat(extension)) {
-                        extension = "png";
-                        imageFile = new File(imageFile.getAbsolutePath() + "." + extension);
-                    }
-
-                    saveImageToFile(colorsGame.getWritableImg(), imageFile, extension);
-                } catch (final IOException ex) {
-                    log.error("Error while saving image : " + ex.toString());
-                }
-            }
-        });
-
-        final Button pImageButton = new Button(translator.translate("PrintImg"));
-        pImageButton.setPrefHeight(colorizeButtonsSizePx / 2);
-        pImageButton.setOnAction((event) -> {
-            printImage(colorsGame.getWritableImg());
-        });
-
-        imageChooserButton.setOpacity(1);
-        imageSaverButton.setOpacity(1);
-        pImageButton.setOpacity(1);
-        bottomBox.getChildren().add(imageChooserButton);
-        bottomBox.getChildren().add(imageSaverButton);
-        bottomBox.getChildren().add(pImageButton);
-
-        return bottomBox;
-    }
-
-    /**
-     * @return the "colors" folder of the data of the profile, created if missing
-     */
-    private File getColorsDirectory() {
-        final Configuration config = gameContext.getConfiguration();
-        final String userName = config.getUserName();
-        final File colorsDirectory = new File(GazePlayDirectories.getUserDataFolder(userName), "colors");
-        final boolean mkDirSuccess = colorsDirectory.mkdirs();
-
-        if (!mkDirSuccess) {
-            log.debug(colorsDirectory.getAbsolutePath() + " can't be created");
-        }
-
-        return colorsDirectory;
-    }
-
-    /**
-     * Shows the current palette of colors.
-     */
-    private void updatePallet(final Button previousPallet, final Button nextPallet) {
-
-        mainPane.getChildren().clear();
-
-        this.buildAddCustomCostomColorButton();
-
-        for (int i = firstColorDisplayed; i < firstColorDisplayed + NB_COLORS_DISPLAYED && i < colorBoxes.size(); ++i) {
-            mainPane.getChildren().add(colorBoxes.get(i));
-        }
-
-        if (nextPallet.isDisable() && firstColorDisplayed + NB_COLORS_DISPLAYED < colorBoxes.size()) {
-            nextPallet.setDisable(false);
-        }
-
-        if (previousPallet.isDisable() && firstColorDisplayed - NB_COLORS_DISPLAYED >= 0) {
-
-            previousPallet.setDisable(false);
-        }
-
-        if (firstColorDisplayed + NB_COLORS_DISPLAYED >= colorBoxes.size()) {
-            nextPallet.setDisable(true);
-        } else if (firstColorDisplayed - NB_COLORS_DISPLAYED < 0) {
-            previousPallet.setDisable(true);
-        }
-    }
-
-    /**
-     * Adds the custom color and the button choosing it.
-     */
-    private void buildAddCustomCostomColorButton() {
-
-        final Pane customColorPane = new VBox(customColorPickerButton, customBox);
-        mainPane.getChildren().add(customColorPane);
-    }
-
-    /**
-     * @return the switch enabling or disabling the coloring by the gaze
-     */
-    private Pane buildColorizationPane() {
-
-        Image buttonImg = null;
-        try {
-            buttonImg = new Image(COLORIZE_BUTTON_IMAGE_NAME, colorizeButtonsSizePx, colorizeButtonsSizePx, false,
-                true);
-        } catch (final IllegalArgumentException e) {
-            log.warn(e.toString() + " : " + COLORIZE_BUTTON_IMAGE_NAME);
-        }
-
-        final Button colorize;
-        if (buttonImg != null) {
-            colorize = new Button("", new ImageView(buttonImg));
-            colorize.setPrefHeight(buttonImg.getHeight());
-        } else {
-            colorize = new Button("C");
-        }
-
-        buttonImg = null;
-        try {
-            buttonImg = new Image(STOP_COLORIZE_BUTTON_IMAGE_PATH, colorizeButtonsSizePx, colorizeButtonsSizePx,
-                false, true);
-        } catch (final IllegalArgumentException e) {
-            log.warn(e.toString() + " : " + STOP_COLORIZE_BUTTON_IMAGE_PATH);
-        }
-
-        final Button stopColorize;
-        if (buttonImg != null) {
-            stopColorize = new Button("", new ImageView(buttonImg));
-            stopColorize.setPrefHeight(stopColorize.getHeight());
-        } else {
-            stopColorize = new Button("S");
-        }
-
-        final GazeIndicator colorizeButtonIndicator = new GazeIndicator(gameContext);
-        colorizeButtonIndicator.setMouseTransparent(true);
-
-        colorize.setOpacity(1);
-        stopColorize.setOpacity(1);
-
-        final Pane colorizeButtonPane = new StackPane(colorize);
-        final Pane stopColorizeButtonPane = new StackPane(stopColorize);
-
-        final EventHandler<ActionEvent> enableColorizeButton = event1 -> colorsGame.setEnableColorization(false);
-
-        disableColorizeButton = event1 -> colorsGame.setEnableColorization(true);
-
-        colorsGame.getDrawingEnable().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                colorizeButtonPane.setVisible(false);
-                stopColorizeButtonPane.setVisible(true);
-                colorizeButtonIndicator.setOnFinish(disableColorizeButton);
-            } else {
-                stopColorizeButtonPane.setVisible(false);
-                colorizeButtonPane.setVisible(true);
-                colorizeButtonIndicator.setOnFinish(enableColorizeButton);
-            }
-        });
-
-        colorizeButtonIndicator.setOnFinish(enableColorizeButton);
-
-        colorizeButtonIndicator.addNodeToListen(stopColorizeButtonPane,
-            getColorsGame().getGameContext().getGazeDeviceManager());
-        colorizeButtonIndicator.addNodeToListen(colorizeButtonPane,
-            getColorsGame().getGameContext().getGazeDeviceManager());
-
-        stopColorizeButtonPane.setVisible(false);
-
-        return new StackPane(colorizeButtonPane, stopColorizeButtonPane, colorizeButtonIndicator);
-    }
-
-    /**
-     * @return the window choosing the custom color
-     */
-    private Stage buildCustomColorDialog() {
-        final Translator translator = gameContext.getTranslator();
-        final Stage primaryStage = gameContext.getPrimaryStage();
-
-        final Stage dialog = new Stage();
-
-        final net.gazeplay.games.colors.CustomColorPicker customColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog, colorizeButtonsSizePx);
-
-        dialog.initOwner(primaryStage);
-        dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(
-            windowEvent -> {
-                primaryStage.getScene().getRoot().setEffect(null);
-            });
-        dialog.setTitle(translator.translate("customColorDialogTitle"));
-        dialog.setAlwaysOnTop(true);
-
-        final Scene scene = new Scene(customColorPicker, Color.TRANSPARENT);
-
-        final Configuration config = gameContext.getConfiguration();
-        CssUtil.setPreferredStylesheets(config, scene);
-
-        dialog.setScene(scene);
-
-        return dialog;
-    }
-
-    public GazeIndicator getProgressIndicator() {
-        return progressIndicator;
     }
 }

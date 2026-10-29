@@ -455,6 +455,24 @@ confirmBWTitle,Dëshiron të transformosh në bardhë e zi ?,تحويل الى �
 confirmBWHeader,Dëshiron të tranformosh imazhin në bardhë e zi?,تحويل الصورة الى ابيض و اسود,Пераўтварыць карцінку ў чорнае і белае?,确认将图片黑白化？,Verwandle das Bild in Schwarz-Weiß?,Μετατροπή της εικόνας σε ασπρόμαυρη;,Transform the image in black and white ?,varmistaa BW otsikko,Transformer l'image en noir et blanc ?,,Pretvori sliku u crno-bijelo,Mengubah imej dalam hitam dan putih,Trasformare l'immagine in banco e nero?,,Beeld omzetten in zwart wit ?,Zmień obraz na czarno-biały,*Transforme a imagem em preto e branco?,Преобразовать картинку в черное и белое?,¿Transformar la imagen en blanco y negro?,Chuyển hình sang,Mengubah imej dalam hitam dan putih
 ColorDesc,Ngjyros imazhe!,قم بالتلوين باستخدام اي صورة و حفظها,Размалюйце які-небудзь малюнак і захавайце яго.,填填色！,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Χρωμάτισε εικόνες!,Color images !,väri desc,Coloriez des images !,,Oboji bilo koju sliku i sačuvaj,Gambar berwarna!,Colora usando qualsiasi immagine e salvala,,Kleur om het even welke plaat en bewaar.,Zrób trochę kolorowania na dowolnym obrazie,a następnie go zapisz.,Раскрасьте какое-либо изображение и сохраните его.,Coloree usando cualquier imagen y luego guárdela,Tô màu một hình bất kì và lưu lại,Gambar berwarna!
 PrintImg,,,Раздрукаваць малюнак,,,,Print image,,Imprimer image,,,,,,,,,Распечатать изображение,,,
+Previous,,,,,,,Previous,,Précédent,,,,,,,,,,,,
+Next,,,,,,,Next,,Suivant,,,,,,,,,,,,
+Undo,,,,,,,Undo,,Annuler,,,,,,,,,,,,
+imgChooserTitle,,,,,,,Choose an image,,Choisir une image,,,,,,,,,,,,
+customColorDialogTitle,,,,,,,Other colors,,Autres couleurs,,,,,,,,,,,,
+ColoringOnOff,,,,,,,Coloring on or paused,,Coloriage activé ou en pause,,,,,,,,,,,,
+RestartDrawing,,,,,,,Start the drawing again,,Recommencer le dessin,,,,,,,,,,,,
+SmallPalette,,,,,,,Small palette,,Petite palette,,,,,,,,,,,,
+MediumPalette,,,,,,,Medium palette,,Moyenne palette,,,,,,,,,,,,
+LargePalette,,,,,,,Large palette,,Grande palette,,,,,,,,,,,,
+CustomPalette,,,,,,,Custom palette,,Palette personnalisée,,,,,,,,,,,,
+SettingsGameImages,,,,,,,Images of the games,,Images des jeux,,,,,,,,,,,,
+ManageImages,,,,,,,Images…,,Images…,,,,,,,,,,,,
+AddImages,,,,,,,Add images,,Ajouter des images,,,,,,,,,,,,
+Images,,,,,,,Images,,Images,,,,,,,,,,,,
+Delete,,,,,,,Delete,,Supprimer,,,,,,,,,,,,
+NoUserImages,,,,,,,No image yet: add images to play this variant,,Pas encore d’image : ajoute des images pour jouer cette variante,,,,,,,,,,,,
+UserImagesOfTheGame,,,,,,,The images played in this variant,,Les images jouées dans cette variante,,,,,,,,,,,,
 
 # GOOSE GAME
 Player %d's turn,,,Чарга гульца %d,玩家 %d 的回合,,,Player %d's turn,,C'est au tour du joueur %d,,,,,,Beurt van speler %d,,,Очередь игрока %d,,,

@@ -21,15 +21,15 @@ Pour chacune des 1 256 images suivies par git (PNG, JPEG, GIF, SVG ; 1 186 livr�
 **Limites** (à garder en tête) : une image sans métadonnées ni nom parlant reste « source inconnue », même si elle est
 libre ; le contenu de l'image ne dit rien de sa licence. Les sons et musiques n'ont pas été inventoriés.
 
-## 2. Résultat pour les 1 186 images livrées (mis à jour le 29/10/2026 : 1 180)
+## 2. Résultat pour les 1 186 images livrées (mis à jour le 29/10/2026 : 1 182)
 
 | Catégorie | Nombre | Détail |
 |---|---|---|
-| **Libre, source connue** | 327 (110 le 28/10) | Photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) |
+| **Libre, source connue** | 350 (110 le 28/10) | Coloriages de Coloring (OpenMoji, CC BY-SA 4.0, 29/10/2026), photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) |
 | **Libre probable** | 153 | 128 photos Pixabay publiées avant 2019 (Find the Odd One Out, Where Is The Animal Dynamic), alors sous CC0 ; 25 drapeaux de Wikimedia Commons (domaine public en général) |
-| **Non libre, certain** | 1 (7 le 28/10) | 1 coloriage Hello Kitty (Colors) ; les 5 photos iStock / Getty (Where Is The Sound) et la photo CC BY-NC-SA (castor) ont été remplacées le 29/10/2026 |
+| **Non libre, certain** | 0 (7 le 28/10) | Le coloriage Hello Kitty (Colors) est retiré le 29/10/2026 ; les 5 photos iStock / Getty (Where Is The Sound) et la photo CC BY-NC-SA (castor) ont été remplacées le 29/10/2026 |
 | **Non libre, probable** | 1 | `race/images/Racer.png` : clipart de www.cutecolors.com (Grace Lee), site commercial |
-| **Source inconnue** | 707 (915 le 28/10) | Détail en section 3 |
+| **Source inconnue** | 687 (915 le 28/10) | Détail en section 3 |
 
 **Hypothèse** (Pixabay) : Pixabay a quitté la licence CC0 en janvier 2019. Une image publiée avant reste sous CC0 ; la
 date est estimée par le numéro de l'image (inférieur à 3 900 000 environ). Aucune image Pixabay plus récente n'a été
@@ -48,7 +48,7 @@ Images qui ressemblent à des photos ou des illustrations professionnelles, sans
 | Sounds of Life | 32 | Cliparts d'animaux, décors | Un décor porte « Danilo Sanino » (illustrateur de banques d'images) |
 | Pet | 21 | Photos (pièces, objets), pictogrammes | — |
 | Flower of Numbers | 21 | Billets et pièces en euros, mains, dés | Les euros ont des règles de reproduction propres (BCE, faces nationales des pièces) |
-| Colors | 19 | Coloriages (pomme, dauphin, papillon…) | Le coloriage Hello Kitty est déjà compté comme non libre |
+| ~~Colors~~ | ~~19~~ | Coloriages (pomme, dauphin, papillon…) | **Remplacés le 29/10/2026** (OpenMoji) ; flèches et palette retirées |
 | `common/images` (core) | 17 | Icônes diverses (smiley, dossier, maison…) | — |
 | Spot the Differences | 15 | Scènes dessinées | — |
 | Images par défaut (core) | 9 | Animaux dessinés (chouette, crabe, écureuil…) | Commit de 2021 « adding free of right Free Fundation images » : dites libres, source non indiquée |
@@ -65,7 +65,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 
 | Jeux | Images |
 |---|---|
-| Vignettes des jeux (`common/Thumbnails`) : captures d'écran des jeux (9 de la famille Where Is It refaites le 29/10/2026, comptées comme libres) | 59 |
+| Vignettes des jeux (`common/Thumbnails`) : captures d'écran des jeux (9 de la famille Where Is It et Coloring refaites le 29/10/2026, comptées comme libres) | 58 |
 | Train Switches | 43 |
 | Sliding Puzzle (dont la Joconde, domaine public) | 36 |
 | Cake | 24 |
@@ -107,6 +107,9 @@ assez d'originalité pour être protégés, ou domaine public (drapeaux) : **auc
   CSV mis à jour.
 - Sons de Where Is The Sound inventoriés : 13 de La Sonothèque (CC0) gardés, 11 remplacés (Wikimedia Commons). Voix
   des questions de la famille : source à confirmer auprès de leurs auteurs (voir `REVUE_DES_JEUX.md`).
+
+- Coloring : 17 coloriages (dont Hello Kitty) remplacés par 24 contours d'OpenMoji (CC BY-SA 4.0) ; 5 images de
+  boutons retirées (icônes Material Symbols).
 
 ## 5. Recommandations
 
