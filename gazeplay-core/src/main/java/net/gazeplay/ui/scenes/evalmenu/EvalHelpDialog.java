@@ -1,161 +1,37 @@
 package net.gazeplay.ui.scenes.evalmenu;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.components.CssUtil;
-import net.gazeplay.ui.menus.MenuDialog;
+import net.gazeplay.ui.menus.HelpDialog;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
 
 /**
- * The window of the help button of the menu of the evaluations (maintainer's request of 29/10/2026): how an evaluation
- * is prepared and taken, the keys of the examiner, the ways of taking it, the settings and what is recorded. Look of
- * the menus ({@link MenuDialog}).
- * <p>
- * The text is in {@code data/help/eval-help-<language>.txt} (French and English; English for the other languages), not
- * in multilinguism.csv, whose values can hold neither commas nor line breaks. A line starting with {@code "# "} is a
- * heading, a line starting with {@code "- "} an item of a list, any other line a paragraph; blank lines are ignored.
+ * The window of the help card of the menu of the evaluations (maintainer's request of 29/10/2026): how an evaluation
+ * is prepared and taken, the keys of the examiner, the ways of taking it, the settings and what is recorded (a
+ * {@link HelpDialog}, text in {@code data/help/eval-help-<language>.txt}).
  */
-@Slf4j
-public class EvalHelpDialog extends Stage {
+public class EvalHelpDialog extends HelpDialog {
 
-    static final String FALLBACK_LANGUAGE = "eng";
+    static final String FALLBACK_LANGUAGE = HelpDialog.FALLBACK_LANGUAGE;
 
-    /**
-     * The headings, items and paragraphs of the text, in their order.
-     */
-    @Getter
-    private final VBox textBox;
-
-    @Getter
-    private final Button closeButton;
+    private static final String TEXT = "data/help/eval-help-";
 
     public EvalHelpDialog(final Stage owner, final Translator translator, final Parent menuRoot) {
-        initModality(Modality.WINDOW_MODAL);
-        initOwner(owner);
-        MenuDialog.undecorate(this);
-        setTitle(translator.translate("EvalHelp"));
-
-        textBox = new VBox(10);
-        textBox.setPadding(new Insets(8, 28, 8, 28));
-        textBox.getChildren().addAll(build(read(language(translator.currentLocale()))));
-
-        final ScrollPane scroller = new ScrollPane(textBox);
-        scroller.setFitToWidth(true);
-        scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-        closeButton = new Button(translator.translate("Close"));
-        closeButton.getStyleClass().addAll("gp-button", "gp-button-primary");
-        closeButton.setDefaultButton(true);
-        closeButton.setOnAction(e -> close());
-        final HBox bottom = new HBox(closeButton);
-        bottom.setAlignment(Pos.CENTER_RIGHT);
-        bottom.setPadding(new Insets(12, 28, 24, 28));
-
-        final BorderPane content = new BorderPane();
-        content.setCenter(scroller);
-        content.setBottom(bottom);
-
+        super(owner, translator, translator.translate("EvalHelp"), read(language(translator.currentLocale())),
+            null, null);
         // The menu comes back when the window closes, whatever closes it
         setOnHidden(e -> {
             menuRoot.setEffect(null);
             menuRoot.setDisable(false);
         });
-
-        final Scene scene = MenuDialog.createScene(this, content, translator.translate("Close"), this::close);
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), scene);
-        setScene(scene);
-        setWidth(Math.max(640, owner.getWidth() * 0.6));
-        setHeight(Math.max(480, owner.getHeight() * 0.8));
-    }
-
-    /**
-     * @return the language of the help: the three letters of the LANGUAGE setting ("fra"), also for a locale of two
-     *   letters ("fr"); English when it is unknown
-     */
-    static String language(final Locale locale) {
-        try {
-            return locale == null ? FALLBACK_LANGUAGE : locale.getISO3Language();
-        } catch (final MissingResourceException e) {
-            return FALLBACK_LANGUAGE;
-        }
     }
 
     /**
      * @return the lines of the help in a language, or in English when there is none in that language
      */
     static List<String> read(final String language) {
-        final String text = resource(language);
-        return (text != null ? text : resource(FALLBACK_LANGUAGE)).lines().toList();
-    }
-
-    private static String resource(final String language) {
-        final String path = "data/help/eval-help-" + language + ".txt";
-        try (InputStream in = EvalHelpDialog.class.getClassLoader().getResourceAsStream(path)) {
-            return in == null ? null : new String(in.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (final IOException e) {
-            log.warn("Cannot read {}", path, e);
-            return null;
-        }
-    }
-
-    /**
-     * @return a label per heading and paragraph, a bullet and its text per item
-     */
-    static List<Node> build(final List<String> lines) {
-        final List<Node> nodes = new ArrayList<>();
-        for (final String line : lines) {
-            if (line.isBlank()) {
-                continue;
-            }
-            if (line.startsWith("# ")) {
-                final Label heading = text(line.substring(2), "gp-help-heading");
-                // Room above each section but the first
-                if (!nodes.isEmpty()) {
-                    VBox.setMargin(heading, new Insets(14, 0, 0, 0));
-                }
-                nodes.add(heading);
-            } else if (line.startsWith("- ")) {
-                final Label item = text(line.substring(2), "gp-help-text");
-                HBox.setHgrow(item, Priority.ALWAYS);
-                final HBox row = new HBox(10, text("•", "gp-help-text"), item);
-                row.getStyleClass().add("gp-help-item");
-                nodes.add(row);
-            } else {
-                nodes.add(text(line, "gp-help-text"));
-            }
-        }
-        return nodes;
-    }
-
-    private static Label text(final String text, final String styleClass) {
-        final Label label = new Label(text);
-        label.setWrapText(true);
-        label.setMinHeight(Region.USE_PREF_SIZE);
-        label.getStyleClass().add(styleClass);
-        return label;
+        return HelpDialog.read(TEXT, language);
     }
 }

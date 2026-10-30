@@ -502,13 +502,12 @@ gazeplay-games/src/main/resources/data/horses/biboules/BLUE.png,oui,source incon
 gazeplay-games/src/main/resources/data/horses/biboules/GREEN.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/RED.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/YELLOW.png,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/horses/horsiesBoardSimplified.png,oui,source inconnue,,2019-07-19,teo blachere,Simplified version
-gazeplay-games/src/main/resources/data/horses/horsiesboard.png,oui,source inconnue,,2019-07-16,teo blachere,"Horsies, movement?"
-gazeplay-games/src/main/resources/data/horses/rollImages/rollBLUE.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
-gazeplay-games/src/main/resources/data/horses/rollImages/rollGREEN.png,oui,source inconnue,,2019-07-22,teo blachere,Turn indication
-gazeplay-games/src/main/resources/data/horses/rollImages/rollRED.png,oui,source inconnue,,2019-07-22,teo blachere,Turn indication
-gazeplay-games/src/main/resources/data/horses/rollImages/rollYELLOW.png,oui,source inconnue,,2019-07-22,teo blachere,Turn indication
-gazeplay-games/src/main/resources/data/horses/selector.png,oui,source inconnue,,2019-07-18,teo blachere,Commit before merge
+gazeplay-games/src/main/resources/data/horses/horsiesBoardSimplified.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
+gazeplay-games/src/main/resources/data/horses/horsiesboard.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
+gazeplay-games/src/main/resources/data/horses/rollImages/rollBLUE.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
+gazeplay-games/src/main/resources/data/horses/rollImages/rollGREEN.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
+gazeplay-games/src/main/resources/data/horses/rollImages/rollRED.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
+gazeplay-games/src/main/resources/data/horses/rollImages/rollYELLOW.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
 gazeplay-games/src/main/resources/data/labyrinth/images/TransparentArrow.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
 gazeplay-games/src/main/resources/data/labyrinth/images/cheese.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"
 gazeplay-games/src/main/resources/data/labyrinth/images/downArrow.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"

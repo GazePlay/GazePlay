@@ -1,0 +1,16 @@
+# The principle
+Listen to a sound (the cry of an animal or a musical instrument) and find the picture of what makes it.
+
+# How to play
+- "Listen to the sound" is shown and a loudspeaker beats while the sound plays.
+- The pictures appear. Look at the right answer: a ring goes around the picture while you look at it, and the picture is chosen when it is full (fixation length of the settings).
+- To hear the sound again, look at the loudspeaker of the band.
+
+# How to win
+- Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
+- Wrong answer: the picture is crossed out and greyed; look again (the question is said again if the settings ask for it).
+- The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
+
+# The variants
+- At the top, the sounds: Animals, Instruments or All sounds.
+- The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.

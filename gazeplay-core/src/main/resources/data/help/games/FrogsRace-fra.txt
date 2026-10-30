@@ -1,0 +1,17 @@
+# Le principe
+Une course de grenouilles sur la mare : attrape des insectes pour faire avancer ta grenouille.
+
+# Comment jouer
+- Des insectes volent dans le ciel. Regarde un insecte : la grenouille de la rive tire la langue et l'attrape (pas besoin de fixer longtemps).
+- À chaque insecte attrapé, ta grenouille saute d'une case. C'est la grenouille verte, sur le couloir du haut marqué « Toi ».
+- Les trois autres grenouilles sautent toutes seules.
+
+# Comment gagner
+- Il faut 20 insectes pour arriver à la ligne d'arrivée à damier.
+- La première grenouille arrivée gagne. Le classement s'affiche, avec « Bravo » si tu as gagné, puis une nouvelle course commence.
+- Les courses s'enchaînent : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+- Facile : les autres grenouilles sont lentes.
+- Normal : elles vont plus vite.
+- Difficile : elles vont vite ; il faut attraper les insectes sans attendre.

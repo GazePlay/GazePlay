@@ -155,6 +155,18 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
 
   Fait : Coloring (`files/images/Coloring`, variante « Palette personnalisée », 29/10/2026).
 
+## Aide des jeux (demande du mainteneur du 30/10/2026, validée le 30/10/2026)
+
+Pour les jeux déjà revus (hors GazePlay Eval) : un « i » rond en bas à droite de la fenêtre des variantes ouvre
+l'aide du jeu (le principe, comment jouer, comment gagner, les variantes). Un jeu **sans variante** qui a une aide
+ouvre, au lieu de se lancer, une fenêtre avec son aide et un bouton « Lancer le jeu » (aucun des jeux revus n'est dans
+ce cas pour l'instant). Textes : `gazeplay-core/src/main/resources/data/help/games/<NameCode>-fra.txt` et `-eng.txt`
+(nom de code sans espaces ; `# ` titre, `- ` point, sinon paragraphe ; anglais pour les autres langues), fenêtre
+`HelpDialog` (commune avec l'aide des évaluations), `GameHelp`. Tests : `GameHelpTest` (chaque jeu revu : aide en
+français et en anglais, mêmes parties ; fenêtre « Lancer le jeu »), `GameVariantDialogTest`. Captures
+`3h-aide-petits-chevaux`, `3i-aide-sans-variante`. `build` : **602 tests, 0 échec**. **Validé** : l'aide fait partie de l'étape 7 de chaque
+jeu revu ensuite.
+
 ## Marche à suivre pour chaque jeu
 
 Chaque jeu passe par les mêmes 8 étapes. Les étapes 1 et 2 ne changent rien : elles finissent par une proposition que
@@ -168,7 +180,7 @@ le mainteneur valide avant tout changement.
 | **4. Graphisme** | Appliquer ce qui a été validé ; garder les noms de fichiers ou adapter le code | Jeu au nouveau style |
 | **5. Gameplay** | Appliquer ce qui a été validé ; ne pas changer ce que les statistiques enregistrent sans versionner le format | Règles améliorées |
 | **6. Tests** | Tests du jeu (en ajouter si le jeu n'en a pas), `build`, `allGamesTest -PallGamesOnly=<nameCode> -PallGamesRepeat=5`, essai réel du mainteneur | Tout vert, retours du mainteneur pris en compte |
-| **7. Finitions** | Nouvelle vignette du menu (`common/Thumbnails`), traductions (au moins français et anglais), mise à jour de ce document (colonnes et fiche) | Jeu terminé |
+| **7. Finitions** | Nouvelle vignette du menu (`common/Thumbnails`), traductions (au moins français et anglais), **aide du jeu** (`data/help/games/<NameCode>-fra.txt` et `-eng.txt` : le principe, comment jouer, comment gagner, les variantes ; ajouter le jeu à `GameHelpTest`), mise à jour de ce document (colonnes et fiche) | Jeu terminé |
 | **8. Commit** | Sur demande du mainteneur, un commit par jeu (`feat(<jeu>): …`) | Historique propre, un jeu à la fois |
 
 **Fiche à remplir pour chaque jeu** (en bas de ce document, section « Fiches ») :
@@ -206,7 +218,7 @@ urgent (images non libres, jeux très joués) au plus simple ; le mainteneur peu
 10. **GazePlay Eval et GazePlay Eval Test** : en dernier (contrat avec le site GazePlay Eval, format de résultats
     versionné).
 
-Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le mainteneur.
+Après chaque famille : `allGamesTest` complet (76 entrées depuis le 30/10/2026), et point avec le mainteneur.
 
 ## Légende des images
 
@@ -216,7 +228,7 @@ Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le m
 - **OK** : libre, ou sans originalité (lettres, formes, couleurs, drapeaux).
 - **Remplacé le 28/10** : images refaites (OpenMoji ou dessin par script), à regarder en vrai.
 
-## Jeux (77 entrées du catalogue)
+## Jeux (77 entrées du catalogue au 29/10/2026, 76 depuis : Horses Simplified est une variante de Horses)
 
 | Jeu (nameCode) | Images (inventaire du 28/10/2026) | Graphisme | Gameplay |
 |---|---|---|---|
@@ -248,7 +260,7 @@ Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le m
 | Space Game (`SpaceGame`) | À confirmer : 12 dessins (aliens, vaisseaux) | | |
 | Cakes (`Cakes`) | À confirmer : 24 dessins | | |
 | Follow (`Follow`) | À confirmer : 13 dessins | | |
-| Horses, Horses Simplified | À confirmer : 11 dessins (Biboule, plateaux, dés) | | |
+| **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
 | Divisor, Rabbits | À confirmer : 10 dessins (lapins) | | |
 | Biboule Jump (`BibJump`) | À confirmer : 9 dessins (Biboule) | | |
 | Rock Paper Scissors | À confirmer : 7 dessins (mains façon gant de dessin animé) | | |
@@ -739,4 +751,100 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   `allGamesTest -PallGamesOnly=FrogsRace -PallGamesRepeat=5` réussi ; photos du jeu sans fenêtre (couloirs,
   langue, classement). **Reste** : l'essai réel du mainteneur (souris et Tobii), en particulier la difficulté des
   trois variantes.
-- **Commit** : à faire sur demande.
+- **Commit** : `67f6b871b` (30/10/2026), `feat(race): revue de Frogs Race`.
+
+### Horses et Horses Simplified (`Horses`, `Horses Simplified`, code `horses`) — 30/10/2026
+
+- **Ce qu'il fait / variantes** (lecture du code, `Horses.java` 451 lignes, `Pawn`, `Square` et 4 sous-classes) :
+  les petits chevaux, de 2 à 4 équipes (variante : nombre de joueurs). On choisit les équipes en fixant les grands
+  ronds des écuries ; puis, à tour de rôle, on fixe le bouton du dé au centre, et l'on fixe le pion à déplacer. Un 6
+  sort un pion de l'écurie et fait rejouer ; un pion qui tombe sur un pion adverse le renvoie à l'écurie ; il faut
+  le chiffre exact pour chaque case de l'échelle finale ; **le premier pion arrivé gagne**. Horses : plateau de
+  15 cases de côté, 4 pions par équipe, échelle de 6 ; Simplified : plateau de 9, 1 pion par équipe, échelle de 3
+  (avec le même dé de 1 à 6).
+- **Défauts vus (faits, lecture du code)** :
+  - D1. Toutes les équipes sont jouées par la même personne (pas d'adversaire automatique) : seul devant
+    l'oculomètre, le joueur joue 2 à 4 équipes contre lui-même.
+  - D2. **Dé déséquilibré** (`DiceRoller`, commun à Horses, Dice et Goose Game) : la face dépend des angles
+    arrondis au quart de tour ; calcul : 3 et 4 sortent 1 fois sur 4 chacun, 1, 2, 5 et 6 une fois sur 8
+    (hypothèse : angles tirés uniformément ; à vérifier par un test). Un 6, nécessaire pour sortir, est donc plus
+    rare que prévu.
+  - D3. Un pion qui tombe sur un pion de **sa** équipe recule d'une case (`Square.pawnLands`) : le recul rappelle
+    `pawnLands`, donc `endOfTurn()` est appelé **deux fois** (une équipe saute son tour) ; la case quittée oublie le
+    premier pion.
+  - D4. On ne peut pas sortir un pion si un pion **adverse** est sur la case de départ (la règle habituelle le
+    renverrait à l'écurie).
+  - D5. Messages en gros texte blanc cerné de noir (un dixième de la hauteur) qui se superposent au plateau ;
+    clés en anglais traduites par `Multilinguism` ; **en biélorusse, « %s team's turn » est traduit avec `%d` :
+    `String.format` plante** au premier tour dans cette langue.
+  - D6. Statistiques : un but atteint par lancer de dé, aucun but à atteindre.
+  - D7. Fond noir, couleurs pures (bleu, jaune, rouge, vert saturés) ; le pion à choisir n'est montré que par
+    `selector.png` posé dessus ; l'équipe dont c'est le tour n'est dite que par un message de 4 s et la couleur du
+    bouton du dé. Vignettes du menu anciennes (fond noir).
+- **Images (licences)** : plateaux `horsiesboard.png`, `horsiesBoardSimplified.png`, `selector.png` et boutons du
+  dé `rollImages/roll*.png` : ajoutés par Teo Blachere en 2019, source non dite (« à confirmer » ; les deux dés
+  des boutons ressemblent à un clipart) ; Biboules : dessins du projet (gardées).
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur) :
+  - Images
+    - I1. Redessiner les deux plateaux par script **à partir de `positions.json`** (les cases tombent exactement
+      où le jeu les attend), dans des couleurs plus douces, au style des menus.
+    - I2. Remplacer les boutons du dé (`roll*.png`) par un dé dessiné (script) sur un rond de la couleur de
+      l'équipe ; remplacer `selector.png` par un anneau dessiné par le jeu.
+    - I3. Garder les Biboules (pions).
+  - Graphisme
+    - G1. Un bandeau en haut au style des menus : « Au tour de l'équipe bleue » avec sa Biboule, toujours visible ;
+      les autres messages dans une carte (`GameStyle.card`), plus petits, au lieu du gros texte sur le plateau.
+    - G2. Les pions jouables entourés d'un anneau de la couleur de l'équipe qui pulse ; l'écurie de l'équipe en
+      cours mise en avant.
+    - G3. Fond de la couleur de fond des menus (plus de noir) ; nouvelles vignettes.
+  - Gameplay
+    - P1. **Adversaires automatiques** : le joueur joue une équipe, l'ordinateur les autres (il lance le dé et
+      choisit un pion tout seul, avec une pause pour qu'on suive) ; variantes « 1 joueur contre 1, 2 ou 3
+      ordinateurs » en plus de « 2, 3 ou 4 joueurs » (à confirmer).
+    - P2. Corriger D3 : un pion ne peut pas s'arrêter sur un pion de son équipe (le mouvement n'est pas proposé).
+    - P3. Dé équilibré (D2), corrigé dans `DiceRoller` : profite aussi à Dice et Goose Game (à vérifier dans ces
+      jeux à leur revue).
+    - P4. Sortir un pion sur la case de départ occupée par un adversaire le renvoie à l'écurie (D4).
+    - P5. Messages par le traducteur du jeu, `%d` biélorusse corrigé (D5).
+    - P6. Statistiques : un but à atteindre par tour du joueur, atteint quand il a joué (à confirmer).
+- **Décisions du mainteneur (30/10/2026)** : tout validé ✔ ; garder les deux sortes de variantes (contre
+  l'ordinateur et à plusieurs) ; le premier pion arrivé gagne.
+- **Fait (30/10/2026)** :
+  - Images : `gradle/images/make_horses_images.py` dessine les deux plateaux d'après `positions.json` et
+    `positionsSimplified.json` (les cases tombent où le jeu pose les pions ; couleurs adoucies, numéros de
+    l'échelle, flèches de départ et de sortie) et les 4 boutons du dé ; `selector.png` retiré. Crédits :
+    `gradle/images/README.txt`, licence affichée, inventaire.
+  - Variantes (`HorsesVariant`, un seul générateur pour les deux jeux) : 1 joueur contre 1, 2 ou 3 ordinateurs ;
+    2, 3 ou 4 joueurs. Une partie enregistrée avant (variante « nombre de joueurs ») se rejoue en « 2 joueurs ».
+  - Ordinateur : il prend les équipes restantes après le choix des personnes, lance le dé et choisit un pion après
+    une pause de 1,2 s (priorité : renvoyer un pion adverse à l'écurie, avancer sur l'échelle, sortir un pion, puis
+    le pion le plus avancé) ; son pion choisi a l'anneau un instant.
+  - Règles : un déplacement qui finirait sur un pion de son équipe n'est pas proposé (`Pawn.destination`, calcul
+    sans effet qui suit exactement le déplacement réel, `Square.peekDestination`) ; plus de double fin de tour ;
+    sortir un pion sur un adversaire le renvoie à l'écurie ; l'action d'un pion est donnée une fois au bouton (les
+    écouteurs s'accumulaient à chaque tour).
+  - **Dé équilibré** (`DiceRoller`, commun à Horses, Dice et Goose Game) : la face est tirée d'abord (1 chance sur
+    6), puis les quarts de tour qui la montrent. **Impact** : le rejeu d'une partie de ces trois jeux enregistrée
+    avant le 30/10 ne retrouve plus les mêmes lancers (même graine, autre tirage) ; à dire dans les notes de
+    version. Les faces de Dice et Goose Game sont à regarder à leur revue.
+  - Graphisme : fond des menus ; à gauche, la Biboule et le nom de l'équipe en cours (« (ordinateur) » s'il y a
+    lieu), son écurie entourée ; messages dans une carte à droite ; pions jouables entourés d'un anneau de leur
+    couleur qui pulse. Vignettes refaites (photos du jeu sans fenêtre).
+  - Statistiques : un but à atteindre par tour d'une personne, atteint quand elle lance le dé (avant : un but
+    atteint par lancer, sans but à atteindre) ; colonnes des fichiers inchangées.
+  - Traductions : nouveaux messages `Horses*` (français, anglais) ; les anciens messages en anglais du jeu sont
+    retirés, dont celui traduit avec `%d` en biélorusse (plantage).
+- **Retour du mainteneur (30/10/2026) : une seule carte au menu**, la version dans la fenêtre des variantes.
+  Fait : « Horses Simplified » n'est plus une entrée du catalogue (76 entrées) ; `HorsesVariant` a 12 valeurs
+  (les 6 manières de jouer × plateau normal ou simplifié `SIMPLIFIED_…`) ; `GameVariantDialog` range les variantes
+  de Horses par plateau, avec **deux boutons radio en bas** (« Version normale », « Version simplifiée ») ;
+  libellés raccourcis (« Contre 1 ordinateur ») pour tenir dans les boutons. Statistiques des deux plateaux dans le
+  dossier `horses` (l'ancien dossier `horsesSimplified` reste tel quel). Rejeu : un fichier enregistré sous
+  « Horses Simplified » est rejoué comme Horses, plateau simplifié, 2 joueurs (`ReplayingGameFromJson`). Vignette
+  `horsesSimplified.png` retirée. Test : `GameVariantDialogTest.shouldChooseTheBoardOfHorsesUnderTheVariants` ;
+  capture `3a-variantes-petits-chevaux` de `menuScreenshots`.
+- **Vérifications** : `build` : **586 tests, 0 échec** (avant la fusion des deux cartes), **587** après ; `HorsesTest` (9), `DiceRollerTest` (2, dont 6 000
+  lancers : chaque face entre 880 et 1 120) ;
+  `allGamesTest` Horses et Horses Simplified, 5 fois chacun ; photos du jeu sans fenêtre. **Reste** : l'essai réel
+  du mainteneur (souris et Tobii), en particulier une partie contre l'ordinateur.
+- **Commit** : avec l'aide des jeux, le 30/10/2026 (`feat(horses)`), à la demande du mainteneur.

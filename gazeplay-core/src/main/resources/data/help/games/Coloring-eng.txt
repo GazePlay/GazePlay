@@ -1,0 +1,19 @@
+# The principle
+Color a black and white drawing, area by area, with your gaze.
+
+# How to play
+- Choose a color in the palette on the right by looking at it: it is circled with the main color.
+- Look at an area of the drawing: a ring fills, then the area takes the chosen color.
+- "Other colors" opens a window of 15 more colors.
+- "Undo" undoes the last coloring (up to 10 times); "Start the drawing again" makes it white again.
+- The arrows at the bottom change the drawing ("3 / 8" shows where you are).
+- The file buttons load one of your pictures, save or print the drawing.
+
+# How to win
+There is no end: color as you like, then go to the next drawing. Each area colored counts one point. Leave with the gear at the bottom left.
+
+# The variants
+- Small palette: simple drawings, with 1 or 2 areas to color (8 drawings).
+- Medium palette: 3 to 6 areas (8 drawings).
+- Large palette: 7 areas or more (8 drawings).
+- Custom palette: your own drawings, to put in the settings (Folders section, "Images of the games").

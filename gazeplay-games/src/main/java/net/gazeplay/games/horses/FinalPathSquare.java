@@ -32,6 +32,14 @@ public class FinalPathSquare extends Square {
     }
 
     @Override
+    public Square peekDestination(Pawn pawn, int nbMovementsLeft, int nbMovementsTotal, Square departure) {
+        if (nbMovementsLeft == nbMovementsTotal) {
+            return nbMovementsTotal == requiredNumber ? getNextSquare() : null;
+        }
+        return getPreviousSquare();
+    }
+
+    @Override
     public boolean canPawnMove(int diceOutcome) {
         return diceOutcome == requiredNumber && !getNextSquare().isOccupied();
     }

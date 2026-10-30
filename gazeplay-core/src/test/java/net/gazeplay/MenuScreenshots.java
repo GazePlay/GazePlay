@@ -22,6 +22,7 @@ import net.gazeplay.ui.menus.MenuMessageDialog;
 import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonPane;
+import net.gazeplay.ui.scenes.gamemenu.GameHelp;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -162,6 +163,22 @@ public final class MenuScreenshots {
                     card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
                         false, false));
                 });
+                // The window of the variants of Horses, with the choice of the board under the variants
+                captureDialog(gazePlay, output, "3a-variantes-petits-chevaux", () -> {
+                    final Node card = gazePlay.getPrimaryScene().getRoot().lookupAll(".gp-game-card").stream()
+                        .filter(node -> "Horses".equals(((GameButtonPane) node).getGameSpec().getGameSummary()
+                            .getNameCode()))
+                        .findFirst().orElseThrow();
+                    card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
+                        false, false));
+                });
+                // The help of a game (the "i" of the window of its variants), and the window of a game without variants
+                captureDialog(gazePlay, output, "3h-aide-petits-chevaux", () -> GameHelp.dialog(
+                    gazePlay.getPrimaryStage(), gazePlay.getTranslator(), "Horses",
+                    gazePlay.getTranslator().translate("Horses"), null).show());
+                captureDialog(gazePlay, output, "3i-aide-sans-variante", () -> GameHelp.dialog(
+                    gazePlay.getPrimaryStage(), gazePlay.getTranslator(), "FrogsRace",
+                    gazePlay.getTranslator().translate("FrogsRace"), () -> { }).show());
                 // The window asking for the folder of "Where is it?" (no folder in the settings of the captures)
                 captureDialog(gazePlay, output, "3d-ou-est-ce-dossier", () -> {
                     final GameWhereIsItErrorPathDialog dialog = new GameWhereIsItErrorPathDialog(gazePlay, null,

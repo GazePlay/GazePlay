@@ -1,0 +1,16 @@
+# The principle
+A shape is asked for ("Where is the triangle?"): find it among the others.
+
+# How to play
+- The question is written in the middle of the screen and said aloud, then it goes down to the band at the bottom.
+- The pictures appear. Look at the right answer: a ring goes around the picture while you look at it, and the picture is chosen when it is full (fixation length of the settings).
+- To hear the question again, look at the loudspeaker of the band.
+
+# How to win
+- Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
+- Wrong answer: the picture is crossed out and greyed; look again (the question is said again if the settings ask for it).
+- The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
+
+# The variants
+- At the top, the difficulty: Easy (6 shapes: oval, rectangle, rhombus, round, square, triangle), Normal (13 shapes, with arrow, crescent, cross, heart, star, trapeze, trefoil) or Hard (20 shapes, with the polygons: pentagon, hexagon, heptagon, octagon, nonagon, decagon, parallelogram).
+- The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.

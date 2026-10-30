@@ -86,18 +86,21 @@ public class DiceRoller extends MeshView {
         rotations.get(0).setAngle(0);
         rotations.get(1).setAngle(0);
 
-        // 2 full turns (nextInt(1) is always 0) plus a partial turn, on each axis
-        int angleX = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
-        int angleY = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
+        // The face first, each with a chance of 1 in 6 (30/10/2026: the face used to come from random angles rounded
+        // to a quarter turn, which gave 3 and 4 a chance of 1 in 4 each, and the other faces 1 in 8), then quarter turns
+        // showing it
+        final int face = 1 + random.nextInt(6);
+        final int[] quarterTurns = quarterTurnsShowing(face, random.nextInt(4));
+
+        // 2 full turns, the quarter turns, and a little more or less, on each axis; then the die squares up
+        final int angleX = 720 + quarterTurns[0] * 90;
+        final int angleY = 720 + quarterTurns[1] * 90;
+        final int jitterX = random.nextInt(81) - 40;
+        final int jitterY = random.nextInt(81) - 40;
 
         final Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(1),
-            new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9)),
-            new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9))));
-
-        final int modX = angleX % 90;
-        final int modY = angleY % 90;
-        angleX = angleX - modX + (modX > 45 ? 1 : 0) * 90;
-        angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;
+            new KeyValue(rotations.get(0).angleProperty(), angleX + jitterX, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9)),
+            new KeyValue(rotations.get(1).angleProperty(), angleY + jitterY, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9))));
 
         final Timeline squareUpTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
             new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
@@ -109,25 +112,45 @@ public class DiceRoller extends MeshView {
             squareUpTimeline.setOnFinished(onFinishedEventHandler);
         }
 
-        // Compute outcome of roll
-        final int finalX = angleX % 360;
-        final int finalY = angleY % 360;
-
         rollTimeline.play();
         soundManager.add("data/common/sounds/diceRollSound.wav");
+        return face;
+    }
 
-        if (finalX == 90) {
+    /**
+     * @return the face shown by the die turned by these angles (multiples of 90 degrees, from 0 to 270) around X then Y
+     */
+    static int faceShown(final int angleX, final int angleY) {
+        if (angleX == 90) {
             return 3;
-        } else if (finalX == 270) {
+        } else if (angleX == 270) {
             return 4;
-        } else if (finalX == finalY) {
+        } else if (angleX == angleY) {
             return 1;
-        } else if ((finalX == 180 && finalY == 0) || (finalX == 0 && finalY == 180)) {
+        } else if ((angleX == 180 && angleY == 0) || (angleX == 0 && angleY == 180)) {
             return 6;
-        } else if ((finalX == 0 && finalY == 270) || (finalX == 180 && finalY == 90)) {
+        } else if ((angleX == 0 && angleY == 270) || (angleX == 180 && angleY == 90)) {
             return 2;
         } else {
             return 5;
         }
+    }
+
+    /**
+     * @param face    the face to show, from 1 to 6
+     * @param variety a number from 0 to 3 choosing among the ways of showing it
+     * @return the quarter turns (from 0 to 3) around X and around Y showing the face (see {@link #faceShown})
+     */
+    static int[] quarterTurnsShowing(final int face, final int variety) {
+        final int half = (variety % 2) * 2;
+        return switch (face) {
+            case 1 -> new int[]{half, half};
+            case 2 -> new int[]{half, 3 - half};
+            case 3 -> new int[]{1, variety};
+            case 4 -> new int[]{3, variety};
+            case 5 -> new int[]{half, 1 + half};
+            case 6 -> new int[]{half, 2 - half};
+            default -> throw new IllegalArgumentException("No face " + face);
+        };
     }
 }

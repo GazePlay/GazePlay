@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
@@ -26,6 +27,8 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.menus.MenuDialog;
+import net.gazeplay.ui.menus.MenuIcon;
+import net.gazeplay.ui.menus.MenuStyle;
 import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import java.util.HashMap;
@@ -43,6 +46,17 @@ public class GameVariantDialog extends Stage {
     private TextField numberField;
 
     ToggleGroup group = new ToggleGroup();
+
+    /**
+     * Height of the row of the help button (a round button of the menus and its margin).
+     */
+    private static final double HELP_ROW_HEIGHT = 90;
+
+    /**
+     * The button opening the help of the game, null when the game has none.
+     */
+    @Getter
+    private Button helpButton;
 
     public GameVariantDialog(
         final GazePlay gazePlay,
@@ -153,6 +167,9 @@ public class GameVariantDialog extends Stage {
                 };
             } else if (variant.toString().contains("DYNAMIC") || variant.toString().contains("Dynamic")){
                 indexOfTheVariant = 1;
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Horses")) {
+                // The normal board, or the simplified one (HorsesVariant SIMPLIFIED_...), chosen at the bottom
+                indexOfTheVariant = variant.toString().contains(":SIMPLIFIED_") ? 1 : 0;
             } else if(gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")){
                 int variantNumber = ((IntStringGameVariant) variant).getNumber();
                 indexOfTheVariant = switch (variantNumber){
@@ -271,6 +288,7 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound") ||
+                gameSpec.getGameSummary().getNameCode().equals("Horses") ||
                 gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) &&
                 group.getToggles().size() < 2
             ) {
@@ -373,6 +391,10 @@ public class GameVariantDialog extends Stage {
                     categories[0] = new RadioButton(translator.translate("Animals"));
                     categories[1] = new RadioButton(translator.translate("Instruments"));
                     categories[2] = new RadioButton(translator.translate("AllSounds"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("Horses")) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("HorsesBoardNormal"));
+                    categories[1] = new RadioButton(translator.translate("HorsesBoardSimplified"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")){
                     categories = new RadioButton[3];
                     categories[0] = new RadioButton("3 "+translator.translate("Stations"));
@@ -397,7 +419,13 @@ public class GameVariantDialog extends Stage {
                 }
 
                 categories[0].setSelected(true);
-                if (!topPane.getChildren().contains(groups)) {
+                if (gameSpec.getGameSummary().getNameCode().equals("Horses")) {
+                    // The board under the variants (maintainer's request of 30/10/2026)
+                    if (!centerPane.getChildren().contains(groups)) {
+                        groups.setPadding(new Insets(16, 0, 0, 0));
+                        centerPane.getChildren().add(groups);
+                    }
+                } else if (!topPane.getChildren().contains(groups)) {
                     topPane.getChildren().add(groups);
                 }
             }
@@ -425,13 +453,25 @@ public class GameVariantDialog extends Stage {
             button.setOnAction(event::handle);
         }
 
+        // The help of the game, when it has one: a round "i" at the bottom right (maintainer's request of 30/10/2026)
+        final String nameCode = gameSpec.getGameSummary().getNameCode();
+        if (GameHelp.exists(nameCode)) {
+            helpButton = MenuStyle.roundButton(MenuIcon.INFO, "teal", translator.translate("GameHelp"),
+                () -> GameHelp.dialog(this, translator, nameCode, getTitle(), null).show());
+            final HBox bottom = new HBox(helpButton);
+            bottom.setAlignment(Pos.CENTER_RIGHT);
+            bottom.setPadding(new Insets(8, 16, 0, 16));
+            sceneContentPane.setBottom(bottom);
+        }
+
         Scene scene = MenuDialog.createScene(this, sceneContentPane, translator.translate("Close"), cancel);
 
         CssUtil.setPreferredStylesheets(config, scene);
 
         setScene(scene);
         setWidth(primaryStage.getWidth() * 0.6);
-        setHeight(primaryStage.getHeight() * 0.65);
+        // Taller by the row of the help button, so that the variants keep their room
+        setHeight(primaryStage.getHeight() * 0.65 + (helpButton == null ? 0 : HELP_ROW_HEIGHT));
     }
 
     /**

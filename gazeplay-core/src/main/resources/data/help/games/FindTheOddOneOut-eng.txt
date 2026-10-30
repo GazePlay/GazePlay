@@ -1,0 +1,15 @@
+# The principle
+All the pictures are alike but one, the odd one out: find it.
+
+# How to play
+- The instruction is written and said, then it goes down to the band at the bottom.
+- The pictures appear. Look at the odd one out: a ring goes around the picture while you look at it, and the picture is chosen when it is full (fixation length of the settings).
+- To hear the instruction again, look at the loudspeaker of the band.
+
+# How to win
+- Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
+- Wrong answer: the picture is crossed out and greyed; look again (the question is said again if the settings ask for it).
+- The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
+
+# The variants
+- The size of the grid: 4, 6 or 9 pictures. The more pictures, the harder.

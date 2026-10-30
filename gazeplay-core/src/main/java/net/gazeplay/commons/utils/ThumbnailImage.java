@@ -31,7 +31,6 @@ public class ThumbnailImage {
         new AbstractMap.SimpleEntry<>("gazeRace", "data/common/Thumbnails/gazeRace.png"),
         new AbstractMap.SimpleEntry<>("goosegame", "data/common/Thumbnails/goosegame.png"),
         new AbstractMap.SimpleEntry<>("horses", "data/common/Thumbnails/horses.png"),
-        new AbstractMap.SimpleEntry<>("horsesSimplified", "data/common/Thumbnails/horsesSimplified.png"),
         new AbstractMap.SimpleEntry<>("labyrinth", "data/common/Thumbnails/labyrinth.png"),
         new AbstractMap.SimpleEntry<>("ladder", "data/common/Thumbnails/ladder.png"),
         new AbstractMap.SimpleEntry<>("letters", "data/common/Thumbnails/letters.png"),

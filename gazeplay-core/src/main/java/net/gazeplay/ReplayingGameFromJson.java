@@ -66,6 +66,11 @@ public class ReplayingGameFromJson {
     private final LinkedList<Point2D> lastMouseCoordinates = new LinkedList<Point2D>();
     int numberOfelementToDisplay = 10;
 
+    /**
+     * Name of the simplified board of Horses when it was a game of its own, in the files saved before 30/10/2026.
+     */
+    static final String FORMER_HORSES_SIMPLIFIED = "Horses Simplified";
+
     private static final ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
             //OK: really small offsets problems
@@ -178,6 +183,12 @@ public class ReplayingGameFromJson {
         currentGameSeed = json.getGameSeed();
         currentGameNameCode = json.getGameName();
         currentGameVariant = json.getGameVariant();
+        // "Horses Simplified" became a variant of "Horses" (30/10/2026): its games are replayed on the simplified
+        // board, with 2 players (their variant, a number of players, is no longer offered)
+        if (FORMER_HORSES_SIMPLIFIED.equals(currentGameNameCode)) {
+            currentGameNameCode = "Horses";
+            currentGameVariant = "EnumGameVariant:net.gazeplay.games.horses.HorsesVariant:SIMPLIFIED_PLAYERS_2";
+        }
         coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
         // Files are read as written, whatever their version (they are never rewritten): version 2 stores the fixation
         // coordinates in the right fields, the memory keeps the convention of version 1

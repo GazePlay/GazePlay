@@ -36,17 +36,38 @@ public class Square {
     }
 
     /**
-     * A pawn stops on the square: a pawn of another team already there goes back to its stable; a pawn of the same team
-     * makes it step back.
+     * A pawn stops on the square: a pawn of another team already there goes back to its stable. A move ending on a
+     * pawn of the same team is not offered (see {@link Pawn#canMove}); it used to make the pawn step back, which ended
+     * the turn twice (a team missed its turn).
      */
     public void pawnLands(final Pawn pawn) {
         if (stationnedPawn != null && stationnedPawn != pawn && stationnedPawn.getTeam() != pawn.getTeam()) {
             stationnedPawn.moveBackToStart();
-        } else if (stationnedPawn != null) {
-            pawn.moveToSquare(getPreviousSquare());
         }
         stationnedPawn = pawn;
         game.endOfTurn();
+    }
+
+    /**
+     * @return the pawn on the square, null if none
+     */
+    public Pawn getStationnedPawn() {
+        return stationnedPawn;
+    }
+
+    /**
+     * The same as {@link #getDestination}, without changing anything: used to know where a move would end.
+     *
+     * @param departure the square the pawn leaves (counted as empty, as {@link #getDestination} empties it)
+     */
+    public Square peekDestination(final Pawn pawn, final int nbMovementsLeft, final int nbMovementsTotal,
+                                  final Square departure) {
+        final boolean occupied = this != departure && stationnedPawn != null;
+        if ((nbMovementsLeft > 0 && !occupied) || (nbMovementsLeft < 0 && occupied)) {
+            return getNextSquare(pawn);
+        } else {
+            return getPreviousSquare(pawn);
+        }
     }
 
     /**

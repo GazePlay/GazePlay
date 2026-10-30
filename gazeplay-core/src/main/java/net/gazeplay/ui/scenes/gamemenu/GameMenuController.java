@@ -17,6 +17,7 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.menus.HelpDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
 
@@ -41,7 +42,8 @@ public class GameMenuController {
     }
 
     /**
-     * Starts a game chosen in the menu: shows its variants when it has several, otherwise starts it directly.
+     * Starts a game chosen in the menu: shows its variants when it has several; otherwise shows its help with a button
+     * starting it, when it has a help (see {@link GameHelp}), or starts it directly.
      */
     public void onGameSelection(
         @NonNull GazePlay gazePlay,
@@ -50,7 +52,21 @@ public class GameMenuController {
         String gameName
     ) {
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
-        if (variants.size() > 1) {
+        final String nameCode = gameSpec.getGameSummary().getNameCode();
+        if (variants.size() <= 1 && GameHelp.exists(nameCode)) {
+            final IGameVariant onlyGameVariant = variants.isEmpty() ? null : variants.iterator().next();
+            root.setEffect(new BoxBlur());
+            root.setDisable(true);
+            final HelpDialog dialog = GameHelp.dialog(gazePlay.getPrimaryStage(), gazePlay.getTranslator(), nameCode,
+                gameName, () -> chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant));
+            // The menu comes back, without its blur, when the window closes, whatever closes it
+            dialog.setOnHidden(e -> {
+                root.setEffect(null);
+                root.setDisable(false);
+            });
+            dialog.show();
+            dialog.toFront();
+        } else if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);
             GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());

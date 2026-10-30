@@ -1,0 +1,15 @@
+# Le principe
+Toutes les images se ressemblent sauf une, l'intrus : trouve-le.
+
+# Comment jouer
+- La consigne est écrite et dite, puis elle descend dans le bandeau du bas.
+- Les images apparaissent. Regarde l'intrus : un anneau fait le tour de l'image pendant que tu la regardes, et l'image est choisie quand il est complet (durée de fixation des réglages).
+- Pour réentendre la consigne, regarde le haut-parleur du bandeau.
+
+# Comment gagner
+- Bonne réponse : l'image est entourée de vert, elle grandit, puis « Bravo » et une nouvelle question.
+- Mauvaise réponse : l'image est barrée et grisée ; cherche encore (la question est redite si le réglage le demande).
+- Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche, ou règle une limite de temps ou de score dans les réglages (section Jeux).
+
+# Les variantes
+- La taille de la grille : 4, 6 ou 9 images. Plus il y a d'images, plus c'est difficile.

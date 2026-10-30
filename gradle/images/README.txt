@@ -21,6 +21,12 @@ folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace
 landscape of unknown source; Racer.png (a clipart of a commercial site, not free) was not read by the game and is
 removed. The flying Biboules (Blue.png ... Red.png, Flash.png) are drawings of the project, kept.
 
+Images of Horses and Horses Simplified (gazeplay-games: data/horses): the boards (horsiesboard.png,
+horsiesBoardSimplified.png, drawn from positions.json and positionsSimplified.json, so that the squares are where the
+game puts the pawns) and the buttons of the die (rollImages/roll<TEAM>.png) are drawn by make_horses_images.py (this
+folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (October 2026) images of unknown
+source; selector.png is removed (the game draws a ring). The pawns (biboules/*.png) are drawings of the project, kept.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

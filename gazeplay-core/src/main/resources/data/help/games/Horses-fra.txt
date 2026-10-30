@@ -1,0 +1,20 @@
+# Le principe
+Le jeu des petits chevaux : sors tes pions de l'écurie, fais-leur faire le tour du plateau, puis monte l'échelle jusqu'au centre.
+
+# Comment jouer
+- Au début, choisis ton équipe en regardant son écurie (le grand rond de sa couleur).
+- À ton tour, regarde le dé au centre pour le lancer.
+- Puis regarde le pion à déplacer : les pions qui peuvent bouger sont entourés d'un anneau qui pulse.
+- Avec un 6, tu peux sortir un pion de l'écurie, et tu rejoues.
+- Si ton pion s'arrête sur un pion d'une autre équipe, celui-ci retourne à son écurie.
+- On ne peut pas s'arrêter sur un pion de son équipe. Un pion ne saute pas par-dessus un autre : s'il lui reste des cases à faire, il revient en arrière.
+- Sur l'échelle de ton équipe, il faut le chiffre exact de la case suivante : un 1 pour la première, puis un 2, et ainsi de suite.
+- À gauche, tu vois quelle équipe joue ; à droite, ce qu'il faut faire.
+
+# Comment gagner
+Le premier pion qui arrive au centre fait gagner son équipe.
+
+# Les variantes
+- Contre 1, 2 ou 3 ordinateurs : tu joues une équipe, l'ordinateur joue les autres (il fait une petite pause pour qu'on le suive).
+- 2, 3 ou 4 joueurs : chacun joue son équipe à son tour, devant le même écran.
+- En bas, la version : normale (4 pions par équipe, une échelle de 6 cases) ou simplifiée (1 pion par équipe, un plateau plus petit, une échelle de 3 cases).

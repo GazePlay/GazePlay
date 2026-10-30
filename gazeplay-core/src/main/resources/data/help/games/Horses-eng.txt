@@ -1,0 +1,20 @@
+# The principle
+The game of horses (petits chevaux): take your pawns out of the stable, make them go around the board, then climb the ladder up to the center.
+
+# How to play
+- At the start, choose your team by looking at its stable (the big circle of its color).
+- On your turn, look at the die in the middle to roll it.
+- Then look at the pawn to move: the pawns that can move have a pulsing ring around them.
+- With a 6, you can take a pawn out of the stable, and you play again.
+- If your pawn stops on a pawn of another team, that pawn goes back to its stable.
+- A pawn cannot stop on a pawn of its own team. A pawn does not jump over another one: if it has squares left to go, it comes back.
+- On the ladder of your team, you need the exact number of the next square: a 1 for the first one, then a 2, and so on.
+- On the left you see which team plays; on the right, what to do.
+
+# How to win
+The first pawn reaching the center makes its team win.
+
+# The variants
+- Against 1, 2 or 3 computers: you play a team, the computer plays the others (with a short pause so that you follow it).
+- 2, 3 or 4 players: each one plays a team in turn, in front of the same screen.
+- At the bottom, the board: normal (4 pawns per team, a ladder of 6 squares) or simplified (1 pawn per team, a smaller board, a ladder of 3 squares).
