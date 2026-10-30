@@ -1,209 +1,770 @@
 [
   {
-    "image1": "house1.png",
-    "image2": "house2.png",
-    "differences": [
-      {
-        "x": 400,
-        "y": 275,
-        "radius": 150
+    "scene": "house",
+    "image1": "house.png",
+    "levels": {
+      "EASY": {
+        "image2": "house-easy.png",
+        "differences": [
+          {
+            "x": 330,
+            "y": 640,
+            "radius": 180
+          },
+          {
+            "x": 780,
+            "y": 600,
+            "radius": 114
+          },
+          {
+            "x": 330,
+            "y": 270,
+            "radius": 114
+          }
+        ]
       },
-      {
-        "x": 1160,
-        "y": 385,
-        "radius": 150
+      "NORMAL": {
+        "image2": "house-normal.png",
+        "differences": [
+          {
+            "x": 780,
+            "y": 600,
+            "radius": 114
+          },
+          {
+            "x": 330,
+            "y": 270,
+            "radius": 114
+          },
+          {
+            "x": 900,
+            "y": 820,
+            "radius": 102
+          },
+          {
+            "x": 560,
+            "y": 860,
+            "radius": 96
+          },
+          {
+            "x": 120,
+            "y": 860,
+            "radius": 78
+          }
+        ]
       },
-      {
-        "x": 1500,
-        "y": 480,
-        "radius": 200
-      },
-      {
-        "x": 560,
-        "y": 980,
-        "radius": 150
+      "HARD": {
+        "image2": "house-hard.png",
+        "differences": [
+          {
+            "x": 900,
+            "y": 820,
+            "radius": 102
+          },
+          {
+            "x": 560,
+            "y": 860,
+            "radius": 96
+          },
+          {
+            "x": 780,
+            "y": 410,
+            "radius": 66
+          },
+          {
+            "x": 120,
+            "y": 860,
+            "radius": 78
+          },
+          {
+            "x": 650,
+            "y": 430,
+            "radius": 66
+          },
+          {
+            "x": 380,
+            "y": 900,
+            "radius": 60
+          },
+          {
+            "x": 900,
+            "y": 420,
+            "radius": 66
+          }
+        ]
       }
-    ]
+    }
   },
   {
-    "image1": "camp1.png",
-    "image2": "camp2.png",
-    "differences": [
-      {
-        "x": 140,
-        "y": 290,
-        "radius": 150
+    "scene": "camp",
+    "image1": "camp.png",
+    "levels": {
+      "EASY": {
+        "image2": "camp-easy.png",
+        "differences": [
+          {
+            "x": 330,
+            "y": 560,
+            "radius": 192
+          },
+          {
+            "x": 640,
+            "y": 740,
+            "radius": 120
+          },
+          {
+            "x": 860,
+            "y": 380,
+            "radius": 156
+          }
+        ]
       },
-      {
-        "x": 980,
-        "y": 165,
-        "radius": 150
+      "NORMAL": {
+        "image2": "camp-normal.png",
+        "differences": [
+          {
+            "x": 640,
+            "y": 740,
+            "radius": 120
+          },
+          {
+            "x": 860,
+            "y": 380,
+            "radius": 156
+          },
+          {
+            "x": 160,
+            "y": 800,
+            "radius": 90
+          },
+          {
+            "x": 860,
+            "y": 760,
+            "radius": 102
+          },
+          {
+            "x": 760,
+            "y": 560,
+            "radius": 66
+          }
+        ]
       },
-      {
-        "x": 790,
-        "y": 510,
-        "radius": 180
-      },
-      {
-        "x": 225,
-        "y": 1090,
-        "radius": 250
-      },
-      {
-        "x": 1025,
-        "y": 1250,
-        "radius": 150
-      },
-      {
-        "x": 1160,
-        "y": 910,
-        "radius": 250
+      "HARD": {
+        "image2": "camp-hard.png",
+        "differences": [
+          {
+            "x": 160,
+            "y": 800,
+            "radius": 90
+          },
+          {
+            "x": 860,
+            "y": 760,
+            "radius": 102
+          },
+          {
+            "x": 560,
+            "y": 300,
+            "radius": 60
+          },
+          {
+            "x": 760,
+            "y": 560,
+            "radius": 66
+          },
+          {
+            "x": 420,
+            "y": 860,
+            "radius": 60
+          },
+          {
+            "x": 160,
+            "y": 380,
+            "radius": 60
+          },
+          {
+            "x": 330,
+            "y": 900,
+            "radius": 60
+          }
+        ]
       }
-    ]
+    }
   },
   {
-    "image1": "sea1.png",
-    "image2": "sea2.png",
-    "differences": [
-      {
-        "x": 355,
-        "y": 190,
-        "radius": 150
+    "scene": "concert",
+    "image1": "concert.png",
+    "levels": {
+      "EASY": {
+        "image2": "concert-easy.png",
+        "differences": [
+          {
+            "x": 260,
+            "y": 430,
+            "radius": 156
+          },
+          {
+            "x": 720,
+            "y": 420,
+            "radius": 144
+          },
+          {
+            "x": 500,
+            "y": 400,
+            "radius": 120
+          }
+        ]
       },
-      {
-        "x": 1420,
-        "y": 375,
-        "radius": 150
+      "NORMAL": {
+        "image2": "concert-normal.png",
+        "differences": [
+          {
+            "x": 720,
+            "y": 420,
+            "radius": 144
+          },
+          {
+            "x": 500,
+            "y": 400,
+            "radius": 120
+          },
+          {
+            "x": 500,
+            "y": 720,
+            "radius": 102
+          },
+          {
+            "x": 130,
+            "y": 760,
+            "radius": 90
+          },
+          {
+            "x": 860,
+            "y": 760,
+            "radius": 90
+          }
+        ]
       },
-      {
-        "x": 260,
-        "y": 615,
-        "radius": 150
-      },
-      {
-        "x": 1530,
-        "y": 1450,
-        "radius": 200
+      "HARD": {
+        "image2": "concert-hard.png",
+        "differences": [
+          {
+            "x": 500,
+            "y": 720,
+            "radius": 102
+          },
+          {
+            "x": 130,
+            "y": 760,
+            "radius": 90
+          },
+          {
+            "x": 860,
+            "y": 760,
+            "radius": 90
+          },
+          {
+            "x": 300,
+            "y": 160,
+            "radius": 60
+          },
+          {
+            "x": 700,
+            "y": 150,
+            "radius": 60
+          },
+          {
+            "x": 300,
+            "y": 860,
+            "radius": 60
+          },
+          {
+            "x": 870,
+            "y": 160,
+            "radius": 60
+          }
+        ]
       }
-    ]
+    }
   },
   {
-    "image1": "oasis1.png",
-    "image2": "oasis2.png",
-    "differences": [
-      {
-        "x": 320,
-        "y": 285,
-        "radius": 200
+    "scene": "kitchen",
+    "image1": "kitchen.png",
+    "levels": {
+      "EASY": {
+        "image2": "kitchen-easy.png",
+        "differences": [
+          {
+            "x": 500,
+            "y": 560,
+            "radius": 132
+          },
+          {
+            "x": 220,
+            "y": 560,
+            "radius": 120
+          },
+          {
+            "x": 790,
+            "y": 560,
+            "radius": 102
+          }
+        ]
       },
-      {
-        "x": 1030,
-        "y": 450,
-        "radius": 150
+      "NORMAL": {
+        "image2": "kitchen-normal.png",
+        "differences": [
+          {
+            "x": 220,
+            "y": 560,
+            "radius": 120
+          },
+          {
+            "x": 790,
+            "y": 560,
+            "radius": 102
+          },
+          {
+            "x": 760,
+            "y": 280,
+            "radius": 102
+          },
+          {
+            "x": 180,
+            "y": 830,
+            "radius": 72
+          },
+          {
+            "x": 400,
+            "y": 840,
+            "radius": 72
+          }
+        ]
       },
-      {
-        "x": 1115,
-        "y": 910,
-        "radius": 150
-      },
-      {
-        "x": 500,
-        "y": 1175,
-        "radius": 150
-      },
-      {
-        "x": 1615,
-        "y": 980,
-        "radius": 150
-      },
-      {
-        "x": 1550,
-        "y": 1550,
-        "radius": 175
+      "HARD": {
+        "image2": "kitchen-hard.png",
+        "differences": [
+          {
+            "x": 760,
+            "y": 280,
+            "radius": 102
+          },
+          {
+            "x": 180,
+            "y": 830,
+            "radius": 72
+          },
+          {
+            "x": 400,
+            "y": 840,
+            "radius": 72
+          },
+          {
+            "x": 640,
+            "y": 830,
+            "radius": 66
+          },
+          {
+            "x": 860,
+            "y": 840,
+            "radius": 66
+          },
+          {
+            "x": 260,
+            "y": 290,
+            "radius": 66
+          },
+          {
+            "x": 480,
+            "y": 280,
+            "radius": 66
+          }
+        ]
       }
-    ]
+    }
   },
   {
-    "image1": "snow1.png",
-    "image2": "snow2.png",
-    "differences": [
-      {
-        "x": 275,
-        "y": 800,
-        "radius": 150
+    "scene": "oasis",
+    "image1": "oasis.png",
+    "levels": {
+      "EASY": {
+        "image2": "oasis-easy.png",
+        "differences": [
+          {
+            "x": 330,
+            "y": 450,
+            "radius": 192
+          },
+          {
+            "x": 700,
+            "y": 620,
+            "radius": 156
+          },
+          {
+            "x": 130,
+            "y": 720,
+            "radius": 102
+          }
+        ]
       },
-      {
-        "x": 1260,
-        "y": 410,
-        "radius": 150
+      "NORMAL": {
+        "image2": "oasis-normal.png",
+        "differences": [
+          {
+            "x": 700,
+            "y": 620,
+            "radius": 156
+          },
+          {
+            "x": 130,
+            "y": 720,
+            "radius": 102
+          },
+          {
+            "x": 820,
+            "y": 160,
+            "radius": 102
+          },
+          {
+            "x": 360,
+            "y": 850,
+            "radius": 84
+          },
+          {
+            "x": 900,
+            "y": 480,
+            "radius": 84
+          }
+        ]
       },
-      {
-        "x": 1555,
-        "y": 1020,
-        "radius": 150
-      },
-      {
-        "x": 1170,
-        "y": 1315,
-        "radius": 150
+      "HARD": {
+        "image2": "oasis-hard.png",
+        "differences": [
+          {
+            "x": 820,
+            "y": 160,
+            "radius": 102
+          },
+          {
+            "x": 360,
+            "y": 850,
+            "radius": 84
+          },
+          {
+            "x": 850,
+            "y": 870,
+            "radius": 66
+          },
+          {
+            "x": 560,
+            "y": 180,
+            "radius": 66
+          },
+          {
+            "x": 560,
+            "y": 860,
+            "radius": 60
+          },
+          {
+            "x": 900,
+            "y": 480,
+            "radius": 84
+          },
+          {
+            "x": 160,
+            "y": 880,
+            "radius": 60
+          }
+        ]
       }
-    ]
+    }
   },
   {
-    "image1": "concert1.png",
-    "image2": "concert2.png",
-    "differences": [
-      {
-        "x": 1330,
-        "y": 215,
-        "radius": 150
+    "scene": "sea",
+    "image1": "sea.png",
+    "levels": {
+      "EASY": {
+        "image2": "sea-easy.png",
+        "differences": [
+          {
+            "x": 520,
+            "y": 150,
+            "radius": 138
+          },
+          {
+            "x": 230,
+            "y": 380,
+            "radius": 138
+          },
+          {
+            "x": 760,
+            "y": 460,
+            "radius": 114
+          }
+        ]
       },
-      {
-        "x": 1620,
-        "y": 500,
-        "radius": 150
+      "NORMAL": {
+        "image2": "sea-normal.png",
+        "differences": [
+          {
+            "x": 230,
+            "y": 380,
+            "radius": 138
+          },
+          {
+            "x": 760,
+            "y": 460,
+            "radius": 114
+          },
+          {
+            "x": 340,
+            "y": 650,
+            "radius": 102
+          },
+          {
+            "x": 720,
+            "y": 690,
+            "radius": 84
+          },
+          {
+            "x": 150,
+            "y": 870,
+            "radius": 72
+          }
+        ]
       },
-      {
-        "x": 1350,
-        "y": 1200,
-        "radius": 150
-      },
-      {
-        "x": 630,
-        "y": 550,
-        "radius": 150
+      "HARD": {
+        "image2": "sea-hard.png",
+        "differences": [
+          {
+            "x": 340,
+            "y": 650,
+            "radius": 102
+          },
+          {
+            "x": 720,
+            "y": 690,
+            "radius": 84
+          },
+          {
+            "x": 150,
+            "y": 870,
+            "radius": 72
+          },
+          {
+            "x": 450,
+            "y": 900,
+            "radius": 60
+          },
+          {
+            "x": 640,
+            "y": 890,
+            "radius": 60
+          },
+          {
+            "x": 880,
+            "y": 230,
+            "radius": 60
+          },
+          {
+            "x": 860,
+            "y": 880,
+            "radius": 60
+          }
+        ]
       }
-    ]
+    }
   },
   {
-    "image1": "kitchen1.png",
-    "image2": "kitchen2.png",
-    "differences": [
-      {
-        "x": 355,
-        "y": 535,
-        "radius": 150
+    "scene": "snow",
+    "image1": "snow.png",
+    "levels": {
+      "EASY": {
+        "image2": "snow-easy.png",
+        "differences": [
+          {
+            "x": 300,
+            "y": 640,
+            "radius": 168
+          },
+          {
+            "x": 760,
+            "y": 500,
+            "radius": 156
+          },
+          {
+            "x": 560,
+            "y": 720,
+            "radius": 120
+          }
+        ]
       },
-      {
-        "x": 660,
-        "y": 230,
-        "radius": 150
+      "NORMAL": {
+        "image2": "snow-normal.png",
+        "differences": [
+          {
+            "x": 760,
+            "y": 500,
+            "radius": 156
+          },
+          {
+            "x": 560,
+            "y": 720,
+            "radius": 120
+          },
+          {
+            "x": 140,
+            "y": 880,
+            "radius": 84
+          },
+          {
+            "x": 800,
+            "y": 860,
+            "radius": 90
+          },
+          {
+            "x": 620,
+            "y": 170,
+            "radius": 78
+          }
+        ]
       },
-      {
-        "x": 1460,
-        "y": 650,
-        "radius": 150
-      },
-      {
-        "x": 1360,
-        "y": 1370,
-        "radius": 150
-      },
-      {
-        "x": 850,
-        "y": 1550,
-        "radius": 150
+      "HARD": {
+        "image2": "snow-hard.png",
+        "differences": [
+          {
+            "x": 140,
+            "y": 880,
+            "radius": 84
+          },
+          {
+            "x": 800,
+            "y": 860,
+            "radius": 90
+          },
+          {
+            "x": 220,
+            "y": 200,
+            "radius": 60
+          },
+          {
+            "x": 420,
+            "y": 880,
+            "radius": 60
+          },
+          {
+            "x": 620,
+            "y": 900,
+            "radius": 60
+          },
+          {
+            "x": 620,
+            "y": 170,
+            "radius": 78
+          },
+          {
+            "x": 880,
+            "y": 230,
+            "radius": 60
+          }
+        ]
       }
-    ]
+    }
+  },
+  {
+    "scene": "farm",
+    "image1": "farm.png",
+    "levels": {
+      "EASY": {
+        "image2": "farm-easy.png",
+        "differences": [
+          {
+            "x": 320,
+            "y": 650,
+            "radius": 156
+          },
+          {
+            "x": 760,
+            "y": 560,
+            "radius": 144
+          },
+          {
+            "x": 140,
+            "y": 450,
+            "radius": 108
+          }
+        ]
+      },
+      "NORMAL": {
+        "image2": "farm-normal.png",
+        "differences": [
+          {
+            "x": 760,
+            "y": 560,
+            "radius": 144
+          },
+          {
+            "x": 600,
+            "y": 800,
+            "radius": 102
+          },
+          {
+            "x": 150,
+            "y": 850,
+            "radius": 78
+          },
+          {
+            "x": 880,
+            "y": 820,
+            "radius": 84
+          },
+          {
+            "x": 140,
+            "y": 450,
+            "radius": 108
+          }
+        ]
+      },
+      "HARD": {
+        "image2": "farm-hard.png",
+        "differences": [
+          {
+            "x": 600,
+            "y": 800,
+            "radius": 102
+          },
+          {
+            "x": 150,
+            "y": 850,
+            "radius": 78
+          },
+          {
+            "x": 880,
+            "y": 820,
+            "radius": 84
+          },
+          {
+            "x": 380,
+            "y": 870,
+            "radius": 66
+          },
+          {
+            "x": 760,
+            "y": 890,
+            "radius": 60
+          },
+          {
+            "x": 240,
+            "y": 900,
+            "radius": 60
+          },
+          {
+            "x": 620,
+            "y": 240,
+            "radius": 60
+          }
+        ]
+      }
+    }
   }
 ]

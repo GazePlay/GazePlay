@@ -1,0 +1,18 @@
+# The principle
+Two pictures almost the same: find what changes between them.
+
+# How to play
+- Look at a place where the two pictures are not the same (on either picture), long enough (fixation length of the settings).
+- If it is a difference, it is circled in green on both pictures, with a sound.
+- At the top, "Differences" shows how many you found.
+- If you find nothing for 20 seconds, a difference blinks to help you.
+- The arrow at the bottom right goes to the next picture.
+
+# How to win
+When all the differences of a picture are found: "Bravo", then a new picture (8 scenes, in random order). The game does not stop by itself: leave with the gear at the bottom left.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Easy: 3 big differences per picture.
+- Normal: 5 differences.
+- Hard: 7 differences, some of them small (a color that changes, a small object).

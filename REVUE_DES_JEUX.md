@@ -251,7 +251,7 @@ Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026
 | Where Is It (`WhereIsIt`, images de l'utilisateur) | Pas d'image propre | ✔ 29/10 (et fenêtre du dossier) | ✔ 29/10 |
 | **Coloring** (`Coloring`) | **Remplacés le 29/10** : 24 contours OpenMoji (CC BY-SA 4.0) ; Hello Kitty et les anciens coloriages retirés | ✔ 29/10 (boîte à outils, anneau, carte) | ✔ 29/10 (3 palettes + palette personnalisée, annuler, recommencer) |
 | **Sounds Of Life** (`SoundsOfLife`) | **Remplacées le 30/10** : 4 décors dessinés, 21 animaux OpenMoji ; 21 sons (15 de Commons, 6 de Where Is The Sound), crédités | ✔ 30/10 (anneau, nom de l'animal) | ✔ 30/10 (rejeu, placement sans fond, exception) |
-| **Spot The Differences** (`SpotDifference`) | **Risque** : 15 scènes dessinées sans source | | |
+| **Spot The Differences** (`SpotDifference`) | **Remplacées le 30/10** : 8 scènes dessinées par script (décors du projet, objets OpenMoji), son synthétisé | ✔ 30/10 (grandes images, pastille, vert, flèche dans le coin) | ✔ 30/10 (fixation des réglages, images enchaînées, indice 20 s, 3 niveaux) |
 | **Pet** (`Pet`) | **Risque** : 21 images (photos de pièces et d'objets, pictogrammes) | | |
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Risque** : 21 images, dont billets et pièces en euros (règles de reproduction de la BCE), mains, dés | | |
 | **Opinions** (`Opinions`) | **Risque** : 9 images (photos d'aliments, icônes brillantes) | | |
@@ -1003,3 +1003,84 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   rejeu et nom affiché) ; `GameHelpTest` avec `SoundsOfLife` ; captures sans fenêtre de la ferme et de la mer
   (anneau et pastille vus) ; `allGamesTest -PallGamesOnly=SoundsOfLife -PallGamesRepeat=5` réussi ; `build` :
   **617 tests, 0 échec**, SpotBugs sans alerte. Reste à faire par le mainteneur : jouer, et écouter les sons.
+
+### Spot The Differences (`SpotDifference`, code `spotthedifferences`) — 30/10/2026
+
+- **Ce qu'il fait / variantes** (lecture du code, 367 lignes, et capture « avant » sans fenêtre) : deux images côte à
+  côte (7 paires carrées : maison, camping, concert, cuisine, oasis, mer, neige), avec 4 à 6 différences chacune,
+  décrites dans `instances.json` (centre et rayon). Regarder une différence 1 s l'entoure de rouge sur les deux images,
+  avec un son. Toutes trouvées : « Bravo », puis l'écran des statistiques (la partie s'arrête après une image). Un
+  bouton flèche passe à l'image suivante. Pas de variante.
+- **Défauts vus (faits)** :
+  - D1. **Détection** : la différence n'est trouvée que sur un événement de **mouvement** après 1 s. Une souris
+    immobile ne la trouve jamais ; avec le regard, depuis le format v4 une position identique n'est plus transmise,
+    donc un regard parfaitement fixe peut aussi bloquer. La durée (1 s) est fixe : la durée de fixation des réglages
+    n'est pas lue.
+  - D2. **Mise en page** (capture) : le bouton flèche cache le score (« 0/4 ») ; les images n'occupent que les 2/3 de
+    la hauteur ; trois lignes de texte blanc en grand (50 et 70 points) en bas ; police par défaut ; « trouvées: » sans
+    espace avant les deux-points.
+  - D3. **Toujours la même image en premier** (la maison) : la série recommence au début à chaque partie ; la partie
+    s'arrête après une seule image trouvée.
+  - D4. Les différences trouvées sont entourées de **rouge** (couleur de l'erreur dans les autres jeux revus).
+  - D5. Aucun retour pendant la fixation : on ne sait pas si l'on regarde assez longtemps (voir la proposition G2).
+  - D6. La liste des zones d'intérêt (`targetAOIList`) n'est jamais vidée entre deux images (hypothèse : les zones de
+    l'image précédente restent dans les statistiques, avec des coordonnées qui ne correspondent plus) ; une
+    différence sautée avec la flèche n'a pas d'heure de fin.
+- **Images et sons (licences)** : **à risque**. Les 14 images (1725 x 1725, 2019) sont des scènes faites d'icônes plates
+  assemblées et retouchées dans GIMP (métadonnées : GIMP 2.10, aucun auteur). Hypothèse : icônes d'une banque
+  (style Flaticon/Freepik), source non dite. `next.png` (GIMP, sans source) ; `ding.wav` (son, sans source). Deux PNG
+  (`camp2`, `snow2`) ont un profil de couleur abîmé (JavaFX les lit, Pillow les refuse).
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur) :
+  - Images et sons
+    - I1. **Scènes composées par script** (comme Sounds Of Life) : un décor dessiné et des objets OpenMoji (CC BY-SA
+      4.0). Le script fait lui-même les différences (objet en moins, objet remplacé, couleur changée) et écrit
+      `instances.json` : les cercles tombent toujours juste. 8 scènes : maison, camping, concert, cuisine, oasis, mer,
+      neige, ferme.
+    - I2. Flèche « suivant » : icône des menus (Material Symbols, Apache-2.0) dans un bouton rond de la couleur
+      principale. Son de réussite : synthétisé par script (clochette), sous la licence du projet.
+  - Graphisme
+    - G1. Images plus grandes (environ 85 % de la hauteur), côte à côte, avec un liseré. En haut, une seule pastille :
+      « Différences : 2/5 ». La flèche dans le coin en bas à droite, sans rien cacher.
+    - G2. Pendant la fixation, **rien ne s'affiche sur la différence** (un anneau dirait où elle est). La différence
+      trouvée est entourée de **vert** sur les deux images, avec un petit effet d'apparition.
+  - Gameplay
+    - P1. D1 : détection par minuterie dès l'entrée (souris ou regard), avec la **durée de fixation des réglages**.
+    - P2. **Enchaîner les images** : « Bravo », puis l'image suivante. Ordre tiré au hasard (avec la graine, pour le
+      rejeu) ; le jeu ne s'arrête pas tout seul, comme Memory.
+    - P3. **Indice** : après 20 s sans trouver, une différence restante clignote doucement sur les deux images.
+    - P4. Variantes **Facile / Normal / Difficile** : 3, 5 ou 7 différences par image, plus petites en Difficile
+      (faites par le script de I1 pour chaque scène).
+  - Corrections
+    - P5. D6 : zones d'intérêt rangées par image. Aucun changement du format des résultats : `info-game.csv` et le
+      JSON restent les mêmes.
+- **Questions au mainteneur** : I1 (scènes redessinées : d'accord avec 8 scènes ?) ; P3 (indice après 20 s, ou
+  autre durée, ou pas d'indice ?) ; P4 (les 3 niveaux de difficulté vous conviennent-ils ?)
+- **Réponses du mainteneur (30/10/2026)** : tout est validé ; 8 scènes ; indice après 20 s ; les 3 niveaux.
+- **Fait (30/10/2026)** :
+  - Images (I1) : `gradle/images/make_spotdifferences_images.py` dessine 8 décors (maison, camping, concert, cuisine,
+    oasis, mer, neige, ferme) et y pose des objets OpenMoji (CC BY-SA 4.0) ; il fait lui-même les différences de
+    chaque niveau (objet retiré, remplacé, ou d'une autre couleur : les plus grands objets en Facile, les plus petits
+    en Difficile) et écrit `instances.json` (nouvelle forme : une première image par scène, puis pour chaque niveau la
+    seconde image et ses différences). Images de 1000 x 1000 en palette : 32 images, 1,1 Mo en tout (contre 3,4 Mo
+    pour les 15 anciennes). Les anciennes images et `next.png` sont retirées.
+  - Son (I2) : `ding.wav` synthétisé par `gradle/images/make_spotdifferences_sound.py` (deux notes de clochette).
+    Flèche : bouton rond des jeux revus (`GazeRoundButton`, icône `arrow_forward`).
+  - G1 : images de 76 % de la hauteur, encadrées, côte à côte ; pastille « Différences : 2 / 5 » en haut (clé
+    `SpotDifferencesFound`) ; flèche sous l'image de droite, dans le coin, sans rien cacher.
+  - G2 : rien pendant la fixation ; une différence trouvée est entourée de vert sur les deux images (apparition).
+  - P1 : minuterie dès l'entrée de la souris ou du regard, durée de fixation des réglages, sans besoin de bouger.
+  - P2 : « Bravo », puis l'image suivante ; ordre tiré avec la graine de la partie (le rejeu montre les mêmes images),
+    chaque scène une fois avant de recommencer ; plus d'écran des statistiques après une image.
+  - P3 : après 20 s sans trouver, une différence restante clignote (couleur principale) sur les deux images.
+  - P4 : variantes Facile / Normal / Difficile (3, 5, 7 différences) ; une partie enregistrée avant les variantes
+    se rejoue en Normal.
+  - P5 : en quittant une image (flèche, fin, sortie du jeu), les zones d'intérêt des différences non trouvées
+    reçoivent une heure de fin. Rien n'est écrit sur disque pour ces zones : aucun changement de format.
+  - Aide (`SpotDifference-fra.txt`, `-eng.txt`), vignette (capture de l'oasis, 960 x 540), crédits
+    (`gradle/images/README.txt`, `gradle/templates/licence.txt`), inventaire à jour.
+- **Vérifications** : `SpotTheDifferencesTest` (9 tests : fichiers et nombre de différences de chaque niveau,
+  variantes, fixation sans bouger et sortie avant la fin, image suivante après « Bravo », indice, même ordre au rejeu,
+  zones d'intérêt terminées) ; `GameHelpTest` avec `SpotDifference` ; captures sans fenêtre des 3 niveaux ;
+  `allGamesTest -PallGamesOnly=SpotDifference -PallGamesRepeat=5` réussi ; `build` : **627 tests, 0 échec**,
+  SpotBugs sans alerte. Reste à faire par le mainteneur : jouer (souris et Tobii), et dire si les différences de
+  Difficile sont trop dures ou trop faciles.

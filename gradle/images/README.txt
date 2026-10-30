@@ -37,6 +37,13 @@ and 6 from Where Is The Sound. The author, licence and page of each file are in 
 shipped with the game. They replace (October 2026) images and sounds of unknown source (some from picture banks).
 The thumbnail (gazeplay-core: data/common/Thumbnails/soundsOfLife.png) is a capture of the farm, 960 x 540.
 
+Images and sound of Spot The Differences (gazeplay-games: data/spotthedifferences): the 8 scenes (<scene>.png and,
+for each level, <scene>-<level>.png) are drawn by make_spotdifferences_images.py (this folder), which also makes the
+differences and writes instances.json: backgrounds under the license of GazePlay Learning (GPL-3.0-or-later), objects
+of OpenMoji (CC BY-SA 4.0). The sound of a difference found (ding.wav) is made by make_spotdifferences_sound.py, under
+the license of GazePlay Learning. They replace (October 2026) scenes, an arrow and a sound of unknown source. The
+thumbnail (gazeplay-core: data/common/Thumbnails/spotthedifference.png) is a capture of the oasis, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

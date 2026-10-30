@@ -1,0 +1,18 @@
+# Le principe
+Deux images presque pareilles : trouve ce qui change entre les deux.
+
+# Comment jouer
+- Regarde un endroit où les deux images ne sont pas pareilles (sur l'une ou l'autre image), assez longtemps (durée de fixation des réglages).
+- Si c'est une différence, elle est entourée de vert sur les deux images, avec un son.
+- En haut, « Différences » montre combien tu en as trouvé.
+- Si tu ne trouves rien pendant 20 secondes, une différence clignote pour t'aider.
+- La flèche en bas à droite passe à l'image suivante.
+
+# Comment gagner
+Quand toutes les différences d'une image sont trouvées : « Bravo », puis une nouvelle image (8 scènes, dans le désordre). Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Facile : 3 grandes différences par image.
+- Normal : 5 différences.
+- Difficile : 7 différences, dont des petites (une couleur qui change, un petit objet).
