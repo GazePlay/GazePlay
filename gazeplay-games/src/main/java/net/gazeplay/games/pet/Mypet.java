@@ -1,479 +1,214 @@
 package net.gazeplay.games.pet;
 
-import javafx.animation.*;
-import javafx.geometry.Dimension2D;
-import javafx.scene.Cursor;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 /**
- * The pet of the Pet game (a biboule): its body, eyes, mouth and wings, and its moods (happy, smiling, eating, flying),
- * reacting to the gaze or the mouse on its parts.
+ * The pet of the Pet game (reviewed on 30/10/2026): a Biboule (the one of Biboule Jump) flapping its wings and blinking.
+ * Its mood: as usual, sad (a need of the pet is low), happy (eyes closed and smiling, when it is stroked, washed or
+ * plays) or eating. Its top left corner is at (0, 0); it does not follow the gaze itself (the game reads the place of
+ * the gaze on the room).
  */
-@Slf4j
-class Mypet extends Pane {
+class Mypet extends Group {
+
+    private static final String FOLDER = "data/pet/images/";
+
+    private final Image eyeOpen = new Image(FOLDER + "eye.png");
+    private final Image eyeClosed = new Image(FOLDER + "eyeclosed.png");
+    private final Image mouthImage = new Image(FOLDER + "mouth.png");
+    private final Image smileImage = new Image(FOLDER + "smile.png");
+    private final Image sadImage = new Image(FOLDER + "sad.png");
 
     @Getter
-    @Setter
-    private ImageView rightWing;
+    private final ImageView body;
 
     @Getter
-    @Setter
-    private ImageView leftWing;
+    private final ImageView mouth;
+
+    private final ImageView leftEye;
+    private final ImageView rightEye;
+    private final ImageView leftWing;
+    private final ImageView rightWing;
 
     @Getter
-    @Setter
-    private Rectangle body;
+    private final double petWidth;
 
     @Getter
-    @Setter
-    private Rectangle mouth;
-
-    @Getter
-    @Setter
-    private Rectangle rightEye;
-
-    @Getter
-    @Setter
-    private Rectangle leftEye;
-
-    private final double hRatio;
-    private final double wRatio;
-
-    private int eatingBool = 10;
-
-    private final boolean[] eyeTouched = {false, false};
-    private boolean bodyTouched = false;
-    private boolean mouthTouched = false;
-
-    @Getter
-    private double bibouleh;
-
-    @Getter
-    private double biboulew;
-
-    private ParallelTransition pt;
-    private Timeline t;
-    private final PetHouse ph;
-
-    @Getter
-    private boolean eyesAreOpen = true;
+    private final double petHeight;
 
     private final ReplayablePseudoRandom random;
-
-    Mypet(final double height, final double width, final PetHouse ph, ReplayablePseudoRandom randomGenerator) {
-        final Image tmp = new Image("data/pet/images/body.png");
-
-        this.random = randomGenerator;
-
-        hRatio = height / 4d / tmp.getHeight();
-        wRatio = width / 4d / tmp.getWidth();
-
-        init();
-        this.ph = ph;
-        this.getChildren().addAll(leftWing, rightWing, body, mouth, rightEye, leftEye);
-
-        setMovingWings(true);
-        setBlinking();
-
-        createHandlers();
-
-    }
+    private final ParallelTransition wings;
+    private final PauseTransition blink = new PauseTransition();
+    private Timeline eating;
 
     /**
-     * Draws the parts of the pet, sized for the game area.
+     * Whether a need of the pet is low: its usual face is then sad.
      */
-    private void init() {
-        final Image corps = new Image("data/pet/images/body.png");
-        setBody(new Rectangle(0, 0, corps.getWidth() * wRatio, corps.getHeight() * hRatio));
-
-        getBody().setFill(new ImagePattern(corps));
-
-        bibouleh = 3 * getBody().getHeight() / 2;
-        biboulew = 3 * getBody().getWidth() / 2;
-
-        getBody().setLayoutX(biboulew / 2 - getBody().getWidth() / 2);
-        getBody().setLayoutY(bibouleh - getBody().getHeight());
-
-        final Image wings = new Image("data/pet/images/wing.png");
-
-        setLeftWing((new ImageView(wings)));
-        getLeftWing().setPreserveRatio(true);
-        getLeftWing().setFitHeight(wings.getHeight() * hRatio);
-        getLeftWing().setLayoutX(biboulew / 2 - 2 * getBody().getWidth() / 3);
-        getLeftWing().setRotate(-30);
-
-        setRightWing((new ImageView(wings)));
-        getRightWing().setPreserveRatio(true);
-        getRightWing().setFitHeight(wings.getHeight() * hRatio);
-        getRightWing().setLayoutX(biboulew / 2 + getBody().getWidth() / 3);
-        getRightWing().setRotate(30);
-
-        final Image mouth = new Image("data/pet/images/mouth.png");
-        setMouth(new Rectangle(0, 0, mouth.getWidth() * wRatio, mouth.getHeight() * hRatio));
-        getMouth().setX(biboulew / 2 - getMouth().getWidth() / 2);
-        getMouth().setY(3 * bibouleh / 4);
-        getMouth().setFill(new ImagePattern(mouth));
-
-        final Image eyes = new Image("data/pet/images/eye.png");
-
-        setRightEye(new Rectangle(0, 0, eyes.getWidth() * wRatio, eyes.getHeight() * hRatio));
-        getRightEye().setLayoutX(biboulew / 2 - biboulew / 8 - getRightEye().getWidth() / 2);
-        getRightEye().setLayoutY(bibouleh / 2);
-        getRightEye().setFill(new ImagePattern(eyes));
-
-        setLeftEye(new Rectangle(0, 0, eyes.getWidth() * wRatio, eyes.getHeight() * hRatio));
-        getLeftEye().setLayoutX(biboulew / 2 + biboulew / 8 - getLeftEye().getWidth() / 2);
-        getLeftEye().setLayoutY(bibouleh / 2);
-        getLeftEye().setFill(new ImagePattern(eyes));
-
-    }
+    @Getter
+    private boolean sad;
 
     /**
-     * Puts the pet back in its normal mood.
+     * Whether it is happy or eating now (not its usual face).
      */
-    void setBasic() {
-        getBody().setFill(new ImagePattern(new Image("data/pet/images/body.png")));
-        getLeftWing().setImage(new Image("data/pet/images/wing.png"));
-        getRightWing().setImage(new Image("data/pet/images/wing.png"));
-        getMouth().setFill(new ImagePattern(new Image("data/pet/images/mouth.png")));
-        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-        eyesAreOpen = true;
+    private boolean busy;
 
+    /**
+     * @param size width of the body of the pet
+     */
+    Mypet(final double size, final ReplayablePseudoRandom random) {
+        this.random = random;
+        final Image bodyImage = new Image(FOLDER + "body.png");
+        final double ratio = size / bodyImage.getWidth();
+        final double bodyHeight = bodyImage.getHeight() * ratio;
+        petWidth = 1.5 * size;
+        petHeight = 1.5 * bodyHeight;
+
+        body = view(bodyImage, ratio);
+        body.setLayoutX(petWidth / 2 - size / 2);
+        body.setLayoutY(petHeight - bodyHeight);
+
+        final Image wing = new Image(FOLDER + "wing.png");
+        leftWing = view(wing, ratio);
+        leftWing.setLayoutX(petWidth / 2 - 2 * size / 3);
+        leftWing.setRotate(-30);
+        rightWing = view(wing, ratio);
+        rightWing.setLayoutX(petWidth / 2 + size / 3 - wing.getWidth() * ratio / 2);
+        rightWing.setRotate(30);
+
+        mouth = view(mouthImage, ratio);
+        mouth.setLayoutX(petWidth / 2 - mouth.getFitWidth() / 2);
+        mouth.setLayoutY(3 * petHeight / 4);
+
+        leftEye = view(eyeOpen, ratio);
+        leftEye.setLayoutX(petWidth / 2 - petWidth / 8 - leftEye.getFitWidth() / 2);
+        leftEye.setLayoutY(petHeight / 2);
+        rightEye = view(eyeOpen, ratio);
+        rightEye.setLayoutX(petWidth / 2 + petWidth / 8 - rightEye.getFitWidth() / 2);
+        rightEye.setLayoutY(petHeight / 2);
+
+        getChildren().addAll(leftWing, rightWing, body, mouth, leftEye, rightEye);
+        setMouseTransparent(true);
+
+        final RotateTransition left = new RotateTransition(Duration.millis(150), leftWing);
+        left.setToAngle(-60);
+        final RotateTransition right = new RotateTransition(Duration.millis(150), rightWing);
+        right.setToAngle(60);
+        wings = new ParallelTransition(left, right);
+        wings.setAutoReverse(true);
+        wings.setCycleCount(Animation.INDEFINITE);
+        wings.play();
+
+        blink.setOnFinished(event -> blinkOnce());
+        waitToBlink();
+    }
+
+    private static ImageView view(final Image image, final double ratio) {
+        final ImageView view = new ImageView(image);
+        view.setFitWidth(image.getWidth() * ratio);
+        view.setFitHeight(image.getHeight() * ratio);
+        return view;
+    }
+
+    private void waitToBlink() {
+        blink.setDuration(Duration.millis(2000 + random.nextDouble() * 6000));
+        blink.playFromStart();
+    }
+
+    private void blinkOnce() {
+        if (!busy) {
+            setEyes(eyeClosed);
+            final PauseTransition open = new PauseTransition(Duration.millis(180));
+            open.setOnFinished(event -> {
+                if (!busy) {
+                    setEyes(eyeOpen);
+                }
+            });
+            open.play();
+        }
+        waitToBlink();
+    }
+
+    private void setEyes(final Image image) {
+        leftEye.setImage(image);
+        rightEye.setImage(image);
     }
 
     /**
-     * Shows the pet happy (eyes closed).
+     * Sets whether a need is low: the usual face is then sad.
+     */
+    void setSad(final boolean sad) {
+        if (this.sad == sad) {
+            return;
+        }
+        this.sad = sad;
+        if (!busy) {
+            showUsualFace();
+        }
+    }
+
+    /**
+     * Back to the usual face (sad or not), after being happy.
+     */
+    void calm() {
+        busy = false;
+        stopEating();
+        showUsualFace();
+    }
+
+    private void showUsualFace() {
+        setEyes(eyeOpen);
+        mouth.setImage(sad ? sadImage : mouthImage);
+    }
+
+    /**
+     * Happy: eyes closed and smiling, until {@link #calm()}.
      */
     void setHappy() {
-        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-        getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
-        eyesAreOpen = false;
+        busy = true;
+        stopEating();
+        setEyes(eyeClosed);
+        mouth.setImage(smileImage);
     }
 
     /**
-     * Shows the pet smiling.
+     * Eats: the mouth opens and closes for 2 s, then back to the usual face.
      */
-    private void setSmiling() {
-        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-        getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
-        eyesAreOpen = true;
+    void eat() {
+        busy = true;
+        stopEating();
+        setEyes(eyeClosed);
+        eating = new Timeline();
+        for (int i = 0; i < 10; i++) {
+            final Image image = i % 2 == 0 ? smileImage : mouthImage;
+            eating.getKeyFrames().add(new KeyFrame(Duration.millis(200 * i), event -> mouth.setImage(image)));
+        }
+        eating.getKeyFrames().add(new KeyFrame(Duration.millis(2000), event -> calm()));
+        eating.play();
     }
 
-    /**
-     * Animates the pet eating.
-     */
-    private void setEating() {
-        eatingBool = 10;
-
-        ph.refill(1);
-        final Timeline eat = new Timeline();
-        eat.getKeyFrames().add(new KeyFrame(Duration.millis(200),
-            new KeyValue(getMouth().fillProperty(), new ImagePattern(new Image("data/pet/images/mouth.png")))));
-
-        eat.setOnFinished(e -> {
-            if (eatingBool > 0) {
-                final String imagePath;
-                if (eatingBool % 2 == 0) {
-                    imagePath = "data/pet/images/smile.png";
-                } else {
-                    imagePath = "data/pet/images/mouth.png";
-                }
-                eat.getKeyFrames().clear();
-                eat.getKeyFrames().add(
-                    new KeyFrame(
-                        Duration.millis(200),
-                        new KeyValue(
-                            getMouth().fillProperty(),
-                            new ImagePattern(new Image(imagePath))
-                        )
-                    )
-                );
-                eat.play();
-            } else {
-                setBasic();
-                setBlinkingEnabled(true);
-            }
-            eatingBool--;
-        });
-
-        eat.play();
-
-        eyesAreOpen = false;
-    }
-
-    /**
-     * Starts or stops the flapping of the wings.
-     */
-    private void setMovingWings(final Boolean isMoving) {
-        if (isMoving) {
-            final int duration = 150;
-
-            final TranslateTransition tt = new TranslateTransition(new Duration(duration), getLeftWing());
-            final TranslateTransition tt2 = new TranslateTransition(new Duration(duration), getRightWing());
-            tt.setAutoReverse(true);
-            tt2.setAutoReverse(true);
-            tt.setToY(getBody().getLayoutY());
-            tt2.setToY(getBody().getLayoutY());
-
-            final RotateTransition rt = new RotateTransition(new Duration(duration), getLeftWing());
-            final RotateTransition rt2 = new RotateTransition(new Duration(duration), getRightWing());
-            rt.setAutoReverse(true);
-            rt2.setAutoReverse(true);
-            rt.setToAngle(-120);
-            rt2.setToAngle(120);
-
-            pt = new ParallelTransition();
-            pt.getChildren().addAll(tt, tt2, rt, rt2);
-            pt.setCycleCount(Animation.INDEFINITE);
-            pt.setAutoReverse(true);
-            pt.play();
-        } else {
-            pt.stop();
+    private void stopEating() {
+        if (eating != null) {
+            eating.stop();
+            eating = null;
         }
     }
 
     /**
-     * Makes the pet blink from time to time.
+     * Stops the animations, at the end of the game.
      */
-    private void setBlinking() {
-        eyesAreOpen = true;
-        t = new Timeline();
-        t.getKeyFrames().add(new KeyFrame(Duration.millis(200),
-            new KeyValue(getLeftEye().fillProperty(), new ImagePattern(new Image("data/pet/images/eye.png")))));
-        t.getKeyFrames().add(new KeyFrame(Duration.millis(200),
-            new KeyValue(getRightEye().fillProperty(), new ImagePattern(new Image("data/pet/images/eye.png")))));
-
-        t.setOnFinished(e -> {
-            final double time = random.nextDouble() * 10000;
-            t.getKeyFrames().clear();
-            if (eyesAreOpen) {
-                t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
-                    new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-                t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getRightEye().fillProperty(),
-                    new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-            } else {
-                t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getLeftEye().fillProperty(),
-                    new ImagePattern(new Image("data/pet/images/eye.png")))));
-                t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getRightEye().fillProperty(),
-                    new ImagePattern(new Image("data/pet/images/eye.png")))));
-            }
-            eyesAreOpen = !eyesAreOpen;
-            t.play();
-
-        });
-
+    void stop() {
+        wings.stop();
+        blink.stop();
+        stopEating();
     }
-
-    /**
-     * Enables or disables the blinking.
-     */
-    void setBlinkingEnabled(final boolean b) {
-        if (b) {
-            t.play();
-        } else {
-            t.stop();
-        }
-
-    }
-
-    /**
-     * Makes the parts of the pet react to the gaze and the mouse.
-     */
-    private void createHandlers() {
-        createEyesHandlers();
-        createBodyHandlers();
-        createMouthHandlers();
-    }
-
-    /**
-     * Makes the mouth react in the eating mode: the full spoon (the hand) brought to the mouth is eaten.
-     */
-    private void createMouthHandlers() {
-
-        ph.getHand().xProperty().addListener((o) -> {
-            if (ph.getMode() == PetHouse.EAT_MODE) {
-                final Shape intersect = Shape.intersect(ph.getHand(), getMouth());
-                if ((intersect.getBoundsInLocal().getWidth() != -1) && !mouthTouched) {
-                    setBlinkingEnabled(false);
-                    setHappy();
-                    ph.getHand().setFill(new ImagePattern(new Image("data/pet/images/emptyspoon.png")));
-                    mouthTouched = true;
-                } else if ((intersect.getBoundsInLocal().getWidth() == -1) && mouthTouched && (ph.isSpoonFull())) {
-                    setEating();
-                    ph.setSpoonFull(false);
-                    mouthTouched = false;
-                }
-            }
-        });
-    }
-
-    /**
-     * Makes the body react to the hand: the pet is happy when it is stroked (home mode), and in the sport mode.
-     */
-    private void createBodyHandlers() {
-        getBody().setCursor(Cursor.OPEN_HAND);
-        ph.getHand().xProperty().addListener((o) -> {
-            if (ph.getMode() == PetHouse.INIT_MODE) {
-
-                final Shape intersect = Shape.intersect(ph.getHand(), getBody());
-                if ((intersect.getBoundsInLocal().getWidth() != -1) && !bodyTouched && !eyeTouched[0]
-                    && !eyeTouched[1]) {
-                    t.stop();
-                    setHappy();
-                    bodyTouched = true;
-                } else if ((intersect.getBoundsInLocal().getWidth() == -1) && bodyTouched) {
-                    setBasic();
-                    t.play();
-                    bodyTouched = false;
-                }
-            } else if ((ph.getMode() == PetHouse.SPORT_MODE)) {
-
-                final Shape intersect = Shape.intersect(ph.getHand(), getBody());
-                if (!ph.getBaloonGone() && (intersect.getBoundsInLocal().getWidth() != -1)) {
-                    log.debug("enter baloon");
-                    ph.setBaloonGone(true);
-                    ph.rd.stop();
-                    final ImageView baloon = new ImageView("data/pet/images/ball.png");
-                    baloon.setPreserveRatio(true);
-                    baloon.fitWidthProperty().bind(ph.getHand().widthProperty());
-                    ph.getGameContext().getChildren().add(baloon);
-                    final Dimension2D dimension2D = ph.getGameContext().getGamePanelDimensionProvider().getDimension2D();
-                    baloon.setX(0);
-
-                    final TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
-                    int nombreAleatoire = random.nextInt(4);
-                    switch (nombreAleatoire) {
-                        case 0:
-                            tt.setFromX(0);
-                            tt.setFromY(random.nextDouble() * dimension2D.getHeight());
-                            break;
-                        case 1:
-                            tt.setFromY(0);
-                            tt.setFromX(random.nextDouble() * dimension2D.getWidth());
-                            break;
-                        case 2:
-                            tt.setFromX(dimension2D.getWidth());
-                            tt.setFromY(random.nextDouble() * dimension2D.getHeight());
-                            break;
-                        case 3:
-                            tt.setFromY(dimension2D.getHeight());
-                            tt.setFromX(random.nextDouble() * dimension2D.getWidth());
-                            break;
-                        default:
-                            throw new UnsupportedOperationException("Unsupported value : " + nombreAleatoire);
-                    }
-
-                    // TODO random position of the baloon enter
-
-                    setBlinkingEnabled(false);
-                    setHappy();
-
-                    tt.setToX(getLayoutX() + (getWidth() / 3));
-                    tt.setToY(getLayoutY());
-
-                    final TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
-                    nombreAleatoire = random.nextInt(4);
-                    switch (nombreAleatoire) {
-                        case 0:
-                            t2.setToX(0);
-                            t2.setToY(random.nextDouble() * dimension2D.getHeight());
-                            break;
-                        case 1:
-                            t2.setToY(0);
-                            t2.setToX(random.nextDouble() * dimension2D.getWidth());
-                            break;
-                        case 2:
-                            t2.setToX(dimension2D.getWidth());
-                            t2.setToY(random.nextDouble() * dimension2D.getHeight());
-                            break;
-                        case 3:
-                            t2.setToY(dimension2D.getHeight());
-                            t2.setToX(random.nextDouble() * dimension2D.getWidth());
-                            break;
-                        default:
-                            throw new UnsupportedOperationException("Unsupported value : " + nombreAleatoire);
-                    }
-
-                    // TODO random position of the baloon exit
-
-                    final SequentialTransition st = new SequentialTransition();
-
-                    st.getChildren().addAll(tt, t2);
-
-                    tt.setOnFinished(e -> setSmiling());
-
-                    final RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
-                    rt.setByAngle(360);
-                    rt.setCycleCount(Animation.INDEFINITE);
-
-                    final ParallelTransition pt = new ParallelTransition();
-                    pt.getChildren().addAll(st, rt);
-                    st.setOnFinished(e -> {
-                        ph.rd.play();
-                        pt.stop();
-                        ph.getGameContext().getChildren().remove(baloon);
-                        ph.setBaloonGone(false);
-                        setBasic();
-                        setBlinkingEnabled(true);
-                        ph.refill(2);
-                    });
-                    pt.play();
-                }
-            }
-
-        });
-
-    }
-
-    /**
-     * Makes the eyes react to the hand.
-     */
-    private void createEyesHandlers() {
-        getLeftEye().setCursor(Cursor.HAND);
-        getRightEye().setCursor(Cursor.HAND);
-
-        ph.getHand().xProperty().addListener((o) -> {
-            if (ph.getMode() == PetHouse.INIT_MODE) {
-                final Shape intersect = Shape.intersect(ph.getHand(), getLeftEye());
-                final Shape intersect2 = Shape.intersect(ph.getHand(), getRightEye());
-
-                if ((intersect.getBoundsInLocal().getWidth() == -1) && (intersect2.getBoundsInLocal().getWidth() == -1)
-                    && (eyeTouched[0]) && (eyeTouched[1])) {
-                    getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                    getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                    t.play();
-                    eyeTouched[0] = false;
-                    eyeTouched[1] = false;
-                } else {
-                    if ((intersect.getBoundsInLocal().getWidth() != -1)) {
-                        t.stop();
-                        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                        eyeTouched[0] = true;
-                    }
-
-                    if ((intersect2.getBoundsInLocal().getWidth() != -1)) {
-                        t.stop();
-                        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                        eyeTouched[1] = true;
-                    }
-                }
-            }
-        });
-    }
-
 }

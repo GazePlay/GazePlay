@@ -21,15 +21,15 @@ Pour chacune des 1 256 images suivies par git (PNG, JPEG, GIF, SVG ; 1 186 livr�
 **Limites** (à garder en tête) : une image sans métadonnées ni nom parlant reste « source inconnue », même si elle est
 libre ; le contenu de l'image ne dit rien de sa licence. Les sons et musiques n'ont pas été inventoriés.
 
-## 2. Résultat pour les 1 186 images livrées (mis à jour le 30/10/2026 : 1 195, d'après `inventaire-images.csv`)
+## 2. Résultat pour les 1 186 images livrées (mis à jour le 30/10/2026 : 1 191, d'après `inventaire-images.csv`)
 
 | Catégorie | Nombre | Détail |
 |---|---|---|
-| **Libre, source connue** | 434 (110 le 28/10) | Images de Frogs Race et Horses, décors de Sounds Of Life et scènes de Spot The Differences (dessinés pour le projet, 30/10/2026), images par défaut (revue de Memory), animaux de Sounds Of Life et objets de Spot The Differences (OpenMoji, CC BY-SA 4.0, 30/10/2026), coloriages de Coloring (OpenMoji, CC BY-SA 4.0, 29/10/2026), photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) |
+| **Libre, source connue** | 452 (110 le 28/10) | Images de Frogs Race et Horses, décors de Sounds Of Life, scènes de Spot The Differences et pièces de Pet (dessinés pour le projet, 30/10/2026), Biboule de Pet (dessin du projet), images par défaut (revue de Memory), animaux de Sounds Of Life et objets de Spot The Differences et de Pet (OpenMoji, CC BY-SA 4.0, 30/10/2026), coloriages de Coloring (OpenMoji, CC BY-SA 4.0, 29/10/2026), photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) |
 | **Libre probable** | 153 | 128 photos Pixabay publiées avant 2019 (Find the Odd One Out, Where Is The Animal Dynamic), alors sous CC0 ; 25 drapeaux de Wikimedia Commons (domaine public en général) |
 | **Non libre, certain** | 0 (7 le 28/10) | Le coloriage Hello Kitty (Colors) est retiré le 29/10/2026 ; les 5 photos iStock / Getty (Where Is The Sound) et la photo CC BY-NC-SA (castor) ont été remplacées le 29/10/2026 |
 | **Non libre, probable** | 0 (1 le 28/10) | `race/images/Racer.png` (clipart de www.cutecolors.com, site commercial) : lu par aucun code, retiré le 30/10/2026 avec la revue de Frogs Race, dont la grenouille et le décor (source inconnue) sont redessinés |
-| **Source inconnue** | 608 (915 le 28/10) | Détail en section 3 |
+| **Source inconnue** | 586 (915 le 28/10) | Détail en section 3 |
 
 **Hypothèse** (Pixabay) : Pixabay a quitté la licence CC0 en janvier 2019. Une image publiée avant reste sous CC0 ; la
 date est estimée par le numéro de l'image (inférieur à 3 900 000 environ). Aucune image Pixabay plus récente n'a été
@@ -46,7 +46,7 @@ Images qui ressemblent à des photos ou des illustrations professionnelles, sans
 | ~~Where Is The Animal~~ | ~~149~~ | Photos d'animaux | **Remplacées le 29/10/2026** (Wikimedia Commons) |
 | ~~Where Is The Sound~~ | ~~59~~ | Photos d'animaux et d'instruments | **Remplacées le 29/10/2026** (Wikimedia Commons) |
 | ~~Sounds of Life~~ | ~~32~~ | Cliparts d'animaux, décors | **Remplacées le 30/10/2026** (décors dessinés pour le projet, animaux OpenMoji ; sons de Wikimedia Commons, voir `data/soundsoflife/CREDITS.txt`) |
-| Pet | 21 | Photos (pièces, objets), pictogrammes | — |
+| ~~Pet~~ | ~~21~~ | Photos (pièces, objets), pictogrammes | **Remplacées le 30/10/2026** (pièces dessinées, objets OpenMoji ; la Biboule, dessin du projet, gardée) |
 | Flower of Numbers | 21 | Billets et pièces en euros, mains, dés | Les euros ont des règles de reproduction propres (BCE, faces nationales des pièces) |
 | ~~Colors~~ | ~~19~~ | Coloriages (pomme, dauphin, papillon…) | **Remplacés le 29/10/2026** (OpenMoji) ; flèches et palette retirées |
 | `common/images` (core) | 17 | Icônes diverses (smiley, dossier, maison…) | — |

@@ -252,7 +252,7 @@ Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026
 | **Coloring** (`Coloring`) | **Remplacés le 29/10** : 24 contours OpenMoji (CC BY-SA 4.0) ; Hello Kitty et les anciens coloriages retirés | ✔ 29/10 (boîte à outils, anneau, carte) | ✔ 29/10 (3 palettes + palette personnalisée, annuler, recommencer) |
 | **Sounds Of Life** (`SoundsOfLife`) | **Remplacées le 30/10** : 4 décors dessinés, 21 animaux OpenMoji ; 21 sons (15 de Commons, 6 de Where Is The Sound), crédités | ✔ 30/10 (anneau, nom de l'animal) | ✔ 30/10 (rejeu, placement sans fond, exception) |
 | **Spot The Differences** (`SpotDifference`) | **Remplacées le 30/10** : 8 scènes dessinées par script (décors du projet, objets OpenMoji), son synthétisé | ✔ 30/10 (grandes images, pastille, vert, flèche dans le coin) | ✔ 30/10 (fixation des réglages, images enchaînées, indice 20 s, 3 niveaux) |
-| **Pet** (`Pet`) | **Risque** : 21 images (photos de pièces et d'objets, pictogrammes) | | |
+| **Pet** (`Pet`) | **Remplacées le 30/10** : 4 pièces dessinées, objets OpenMoji, bouche triste ; la Biboule du projet gardée | ✔ 30/10 (boutons ronds, jauges nommées, bulle) | ✔ 30/10 (2 min par jauge, Biboule triste, activités claires, plantage corrigé) |
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Risque** : 21 images, dont billets et pièces en euros (règles de reproduction de la BCE), mains, dés | | |
 | **Opinions** (`Opinions`) | **Risque** : 9 images (photos d'aliments, icônes brillantes) | | |
 | **Sprint Finish** (`SprintFinish`, `SprintFinishMouse`) | **Risque** : 6 images (chat et chien dessinés, boutons) | | |
@@ -1084,3 +1084,80 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   `allGamesTest -PallGamesOnly=SpotDifference -PallGamesRepeat=5` réussi ; `build` : **627 tests, 0 échec**,
   SpotBugs sans alerte. Reste à faire par le mainteneur : jouer (souris et Tobii), et dire si les différences de
   Difficile sont trop dures ou trop faciles.
+
+### Pet (`Pet`, code `pet`) — 30/10/2026
+
+- **Ce qu'il fait / variantes** (lecture du code, 1 243 lignes, et captures « avant » sans fenêtre des 4 écrans) :
+  on s'occupe d'une Biboule volante. Trois barres de besoins (bleue, rouge, verte, sans nom ni icône) se vident avec
+  le temps. Quatre boutons ronds (fixation) ouvrent une pièce : **lit** = maison (caresser la Biboule avec la main),
+  **couverts** = cuisine (regarder le bol remplit la cuillère, l'amener à la bouche nourrit : barre rouge),
+  **douche** = salle de bain (le pommeau suit le regard, l'eau sur la Biboule lave : barre bleue), **coureur** = parc
+  (la Biboule vole, la toucher avec le gant lance une balle : barre verte). Un objet (main, cuillère, pommeau, gant)
+  suit le regard ou la souris dans la pièce. Pas de fin, pas de variante.
+- **Défauts vus (faits, lecture du code et captures)** :
+  - D1. **Barres incompréhensibles** : aucune icône ni nom, couleurs sans lien avec les boutons ; le bouton de la
+    maison est un **lit**. Rien ne se passe quand une barre est vide : la Biboule n'est jamais triste.
+  - D2. **Vitesse** : la barre bleue perd une case toutes les 1,5 s environ (vide en une trentaine de secondes), la
+    rouge toutes les 2,5 s, la verte toutes les 4,5 s : le bain est à refaire sans arrêt.
+  - D3. **Plantage** : nourrir la Biboule quand la barre rouge (ou verte) est vide ou presque lit la case d'indice
+    -1 (`refill`) : exception dans le gestionnaire (hypothèse : la barre ne se remplit plus ensuite).
+  - D4. **Souris** : la position de la main est lue par AWT (`MouseInfo`), en coordonnées de l'écran moins la
+    position de la fenêtre, sans tenir compte de la place de la zone de jeu (hypothèse : décalage avec la mise à
+    l'échelle de Windows ou en plein écran sur un second écran).
+  - D5. Le bol de la cuisine ne suit pas les mouvements du regard (seulement l'entrée) ; la fin du jeu n'arrête pas
+    la douche (50 gouttes animées), le vol, le clignement ni les ailes.
+  - D6. Statistiques : des buts atteints (chaque remplissage) sans buts à atteindre.
+  - D7. Boutons gris de l'ancien style ; fond de la page d'une couleur différente à chaque pièce.
+- **Images (licences)** : **à risque**. 4 **photos de pièces** (salon, cuisine, salle de bain, parc : style banque
+  d'images), un **gant de baseball Rawlings** et des **céréales Froot Loops** (marques), une balle de baseball et un
+  pommeau de douche (photos de produits), une main, 4 pictogrammes (style banque d'icônes) : tous sans source. La
+  Biboule (corps, yeux, bouche, sourire, ailes) est un dessin du projet (celle de Biboule Jump) : gardée.
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur) :
+  - Images
+    - I1. **4 pièces dessinées par script** (salon, cuisine, salle de bain, jardin), dans le style des jeux revus.
+    - I2. Objets OpenMoji (CC BY-SA 4.0) : main, cuillère et bol, pommeau de douche, ballon ; boutons avec les
+      icônes des menus (Material Symbols, Apache-2.0) : maison, repas, douche, jeu.
+    - I3. Une **bouche triste** pour la Biboule, dessinée dans le même style (pour G2).
+  - Graphisme
+    - G1. Boutons ronds des jeux revus (anneau de fixation), en colonne à gauche ; le bouton de la pièce ouverte
+      entouré ; la pièce plus grande, le fond de la page aux couleurs des menus.
+    - G2. **Trois jauges nommées**, chacune avec l'icône de son bouton et la même couleur : Faim, Propreté, Jeu.
+      Quand une jauge passe sous le quart, elle clignote, la Biboule est **triste** et une **bulle** au-dessus d'elle
+      montre l'icône de ce qu'elle veut.
+  - Gameplay
+    - P1. Des jauges plus lentes et au même rythme : une jauge pleine se vide en 2 minutes environ ; chaque activité
+      réussie la remplit d'un quart.
+    - P2. Les 4 activités gardées, rendues plus claires : cuisine (regarder le bol remplit la cuillère, l'amener à la
+      bouche), salle de bain (l'eau sur la Biboule), jardin (la Biboule vole, la toucher lance le ballon), maison
+      (la caresser la rend heureuse). Jeu sans fin, comme avant (on prend soin d'elle).
+  - Corrections
+    - P3. D3 (plantage), D4 (position de la souris lue dans l'événement, comme le regard), D5 (bol, tout arrêter à
+      la fin), D6 (un but à atteindre par jauge à remplir, comptés comme Memory : rien ne change dans le format des
+      fichiers).
+- **Questions au mainteneur** : P1 (2 minutes pour vider une jauge vous conviennent-elles, ou une variante « Lent /
+  Normal » ?) ; G2 (la Biboule triste et la bulle : d'accord ?) ; I1 (jardin plutôt que parc : d'accord ?)
+- **Réponses du mainteneur (30/10/2026)** : tout est validé ; 2 minutes ; Biboule triste et bulle ; jardin.
+- **Fait (30/10/2026)** :
+  - Images (I1, I2, I3) : `gradle/images/make_pet_images.py` dessine le salon, la cuisine, la salle de bain et le
+    jardin (1200 x 900), la nourriture du bol et de la cuillère pleine et la bouche triste ; objets OpenMoji (main,
+    cuillère, bol, douche, ballon). Les 15 anciennes images (photos, marques, pictogrammes) sont retirées ; la
+    Biboule est gardée. Boutons : icônes Material Symbols ajoutées à `data/icons` (`home_fill1`, `restaurant`,
+    `shower_fill1`, `sports_soccer_fill1`).
+  - Code réécrit (`PetHouse`, `Mypet`) : boutons ronds des jeux revus en colonne à gauche (pièce ouverte entourée,
+    nom en infobulle) ; trois jauges nommées (Faim, Propreté, Jeu : icône et couleur de chacune) ; sous un quart, la
+    jauge clignote, la Biboule est triste et une bulle montre l'icône du besoin le plus bas.
+  - Gameplay (P1, P2) : une jauge pleine se vide en 2 minutes, au même rythme pour les trois ; chaque activité
+    remplit un quart. Salon : caresser rend heureux. Cuisine : le regard sur le bol remplit la cuillère, près de la
+    bouche (avec une marge pour le regard) la Biboule mange. Salle de bain : 3 s de douche au-dessus de la Biboule la
+    lavent. Jardin : la Biboule vole, le ballon qui la touche rebondit et elle joue.
+  - Corrections (P3) : plus de lecture de case -1 (les jauges sont des niveaux de 0 à 1) ; la position de la souris
+    et du regard est lue dans l'événement, sur la pièce seulement ; le bol réagit au regard ; tout s'arrête à la fin
+    (minuteries, vol, ailes, clignement, gouttes, filtres du regard). Statistiques : chaque quart perdu est un but à
+    atteindre, chaque activité réussie un but atteint (mêmes fichiers, aucun changement de format).
+  - Aide (`Pet-fra.txt`, `-eng.txt`) : jeu sans variante, la fenêtre d'aide s'ouvre avec « Lancer le jeu ».
+    Traductions (`PetHunger`... `PetGarden`). Vignette (salle de bain, 960 x 540). Crédits et inventaire à jour.
+- **Vérifications** : `PetHouseTest` (6 tests : images, jauges qui se vident en 2 minutes avec les buts à atteindre,
+  Biboule triste et bulle, cuisine, salle de bain, jardin, fin du jeu) ; `GameHelpTest` avec `Pet` ; captures sans
+  fenêtre des 4 pièces ; `allGamesTest -PallGamesOnly=Pet -PallGamesRepeat=5` réussi ; `build` : **634 tests, 0
+  échec**, SpotBugs sans alerte. Reste à faire par le mainteneur : jouer à la souris et au Tobii (la cuillère et la
+  douche au regard : marge de la bouche, durée du lavage).

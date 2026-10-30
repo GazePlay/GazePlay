@@ -126,6 +126,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (https://openmoji.org/), licence CC BY-SA 4.0 ; son fait pour le projet
   (gradle/images/make_spotdifferences_sound.py). Ils remplacent depuis octobre 2026 des scènes et un son de
   source inconnue.
+- Images de « Pet » (data/pet/images) : pièces, nourriture et bouche triste dessinées pour GazePlay Learning
+  (gradle/images/make_pet_images.py), sous la licence du projet ; main, cuillère, bol, douche et ballon
+  d'OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0. Elles remplacent depuis octobre 2026 des photos et
+  des images de source inconnue.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
   data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
   public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier

@@ -1,663 +1,625 @@
 package net.gazeplay.games.pet;
 
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.components.ProgressButton;
+import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.GazeRoundButton;
 
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Game "Pet": the player takes care of a pet, keeping its three needs (bath, food, sport) filled. Buttons chosen by
- * fixations open each activity: the shower, the meal, the sport; the bars of the needs empty with time and fill again
- * with the activities.
+ * Game "Pet" (reviewed on 30/10/2026): the player takes care of a Biboule. Three gauges (hunger, cleanliness, play)
+ * empty in {@link #EMPTYING}; under a quarter, the gauge blinks, the Biboule is sad and a bubble shows what it wants.
+ * The round buttons on the left open a room, where an object follows the gaze (or the mouse): the hand in the living
+ * room (stroking makes it happy), the spoon in the kitchen (look at the bowl to fill it, then bring it to the mouth),
+ * the shower in the bathroom (water on the Biboule washes it), the ball in the garden (the Biboule flies; touch it with
+ * the ball to play). Each activity done fills its gauge by a quarter. The game does not end.
  */
 @Slf4j
-public class PetHouse extends Parent implements GameLifeCycle {
+public class PetHouse implements GameLifeCycle {
 
-    final static int INIT_MODE = 1;
-    private final static int BATH_MODE = 3;
-    final static int EAT_MODE = 2;
-    final static int SPORT_MODE = 0;
+    /**
+     * How long a full gauge takes to empty.
+     */
+    static final Duration EMPTYING = Duration.minutes(2);
+
+    /**
+     * Under this level, a need is low.
+     */
+    static final double LOW = 0.25;
+
+    /**
+     * How much an activity fills its gauge.
+     */
+    static final double GAIN = 0.25;
+
+    /**
+     * How long the water must fall on the Biboule to wash it.
+     */
+    static final Duration WASHING = Duration.seconds(3);
+
+    private static final String FOLDER = "data/pet/images/";
+    private static final Duration TICK = Duration.millis(100);
+
+    /**
+     * The needs of the pet: name, icon, color of the gauge.
+     */
+    @RequiredArgsConstructor
+    enum Need {
+        HUNGER("PetHunger", "restaurant", "#F08A24"),
+        CLEANLINESS("PetCleanliness", "shower_fill1", "#2F8FDD"),
+        PLAY("PetPlay", "sports_soccer_fill1", GameStyle.SUCCESS_COLOR);
+
+        final String label;
+        final String icon;
+        final String color;
+    }
+
+    /**
+     * The rooms: name, icon of the button, picture, object following the gaze and where the gaze is on it (fraction of
+     * its size), need filled there.
+     */
+    @RequiredArgsConstructor
+    enum Room {
+        HOME("PetHome", "home_fill1", "room.png", "hand.png", 0.5, 0.5, null),
+        KITCHEN("PetKitchen", "restaurant", "kitchen.png", "spoon.png", 0.5, 0.135, Need.HUNGER),
+        BATHROOM("PetBathroom", "shower_fill1", "bathroom.png", "shower.png", 0.45, 0.45, Need.CLEANLINESS),
+        GARDEN("PetGarden", "sports_soccer_fill1", "garden.png", "ball.png", 0.5, 0.5, Need.PLAY);
+
+        final String label;
+        final String icon;
+        final String picture;
+        final String object;
+        final double hotX;
+        final double hotY;
+        final Need need;
+    }
 
     @Getter
     private final IGameContext gameContext;
 
     @Getter
     private final Stats stats;
-    private final static int LIFE_SIZE = 18;
-    private List<Circle> water;
 
-    private double handSize;
+    private final ReplayablePseudoRandom random;
 
+    /**
+     * The level of each need, from 0 (empty) to 1 (full).
+     */
+    @Getter
+    private final Map<Need, Double> levels = new EnumMap<>(Need.class);
+
+    private final Map<Need, Rectangle> gaugeFills = new EnumMap<>(Need.class);
+    private final Map<Need, FadeTransition> gaugeBlinks = new EnumMap<>(Need.class);
+    private final Map<Need, Double> barWidths = new EnumMap<>(Need.class);
+    private final Map<Room, GazeRoundButton> buttons = new EnumMap<>(Room.class);
+    private final List<Animation> animations = new ArrayList<>();
+
+    private Group layer;
+    private Rectangle roomView;
+
+    @Getter
     private Mypet pet;
-    private HBox barsHBox;
+
+    private ImageView cursor;
+    @Getter
     private ImageView bowl;
-
-    private Integer waterNeeded = 100;
-
-    public int[] it = new int[]{LIFE_SIZE, LIFE_SIZE, LIFE_SIZE};
-    private final Timeline[] timelines = {new Timeline(), new Timeline(), new Timeline()};
-    private final Color[] color = {Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER};
-    private final String[] screen = {"park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg"};
-    private final String[] cursor = {"glove.png", "hand.png", "emptyspoon.png", "pommeau.png"};
-    private final Color[] colorBar = {Color.BLUE, Color.RED, Color.GREEN};
-    private final double[] regressionTime = {1, 2, 4};
+    private Group bubble;
+    private SVGPath bubbleIcon;
+    private Timeline ticker;
+    private Timeline flight;
+    private double gaugeWidth;
+    private double objectSize;
 
     @Getter
-    @Setter
-    private Boolean baloonGone = false;
+    private Room room;
 
-    Timeline rd;
+    /**
+     * Where the gaze (or the mouse) is on the room, in the coordinates of the game; null when it is not on the room.
+     */
+    private Point2D pointer;
 
+    private boolean stroking;
     @Getter
-    @Setter
-    private int mode;
-
-    private boolean inside = false;
-
-    @Getter
-    @Setter
-    private boolean spoonFull = false;
-
-    @Getter
-    private Rectangle background;
-
-    @Getter
-    private Rectangle zone;
-
-    @Getter
-    private Rectangle hand;
-
-    private final ReplayablePseudoRandom randomGenerator;
+    private boolean spoonFull;
+    private double washed;
+    private boolean washing;
+    private boolean playing;
 
     PetHouse(final IGameContext gameContext, final Stats stats) {
-        this.gameContext = gameContext;
-        this.stats = stats;
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this(gameContext, stats, new ReplayablePseudoRandom());
+        this.stats.setGameSeed(random.getSeed());
     }
 
-    PetHouse(final IGameContext gameContext, final Stats stats, double gameSeed) {
+    PetHouse(final IGameContext gameContext, final Stats stats, final double gameSeed) {
+        this(gameContext, stats, new ReplayablePseudoRandom(gameSeed));
+    }
+
+    private PetHouse(final IGameContext gameContext, final Stats stats, final ReplayablePseudoRandom random) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.random = random;
     }
 
     @Override
     public void launch() {
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double width = dimension.getWidth();
+        final double height = dimension.getHeight();
+        for (final Need need : Need.values()) {
+            levels.put(need, 1.0);
+        }
 
-        gameContext.getChildren().clear();
+        final Rectangle background = new Rectangle(width, height);
+        background.setStyle("-fx-fill: -gp-bg;");
+        background.setMouseTransparent(true);
+        layer = new Group(background);
+        gameContext.getChildren().add(layer);
 
-        setMode(INIT_MODE);
+        // The buttons of the rooms, in a column on the left
+        final double margin = height * 0.03;
+        final double buttonSize = height * 0.14;
+        final double buttonGap = (height - 4 * buttonSize) / 5;
+        for (final Room each : Room.values()) {
+            final GazeRoundButton button = new GazeRoundButton(gameContext, buttonSize, each.icon,
+                gameContext.getTranslator().translate(each.label), () -> open(each));
+            button.setLayoutX(margin);
+            button.setLayoutY(buttonGap + each.ordinal() * (buttonSize + buttonGap));
+            buttons.put(each, button);
+            layer.getChildren().add(button);
+        }
 
-        this.it = new int[]{LIFE_SIZE, LIFE_SIZE, LIFE_SIZE};
-        this.waterNeeded = 100;
+        // The room, as big as the space left allows (4:3), under the gauges
+        final double gaugeBand = height * 0.12;
+        final double left = 2 * margin + buttonSize + margin;
+        final double availableWidth = width - left - margin;
+        final double availableHeight = height - gaugeBand - 2 * margin;
+        final double roomWidth = Math.min(availableWidth, availableHeight * 4 / 3);
+        final double roomHeight = roomWidth * 3 / 4;
+        final double roomX = left + (availableWidth - roomWidth) / 2;
+        final double roomY = margin + gaugeBand;
+        roomView = new Rectangle(roomX, roomY, roomWidth, roomHeight);
+        roomView.setArcWidth(2 * GameStyle.cardRadius(roomWidth, roomHeight));
+        roomView.setArcHeight(roomView.getArcWidth());
+        roomView.setStroke(Color.web("#00000033"));
+        roomView.setStrokeWidth(3);
+        layer.getChildren().add(roomView);
+        listenToThePointer();
 
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        this.background.setFill(Color.BEIGE);
-        gameContext.getChildren().add(this.background);
-        water = new ArrayList<>();
-        rd = new Timeline();
+        createGauges(roomX, margin, roomWidth, gaugeBand);
 
-        final double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
+        pet = new Mypet(roomWidth * 0.24, random);
+        layer.getChildren().add(pet);
+        createBubble();
 
-        zone = new Rectangle(0, 0, dimension2D.getWidth() / 1.7, facteur * dimension2D.getHeight());
+        objectSize = roomWidth * 0.16;
+        cursor = new ImageView();
+        cursor.setFitWidth(objectSize);
+        cursor.setFitHeight(objectSize);
+        cursor.setMouseTransparent(true);
+        cursor.setVisible(false);
 
-        zone.setFill(Color.WHITE);
-        zone.setX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / (1.7 * 2));
-        zone.setY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 2.5);
+        bowl = new ImageView(new Image(FOLDER + "bowl.png"));
+        bowl.setFitWidth(objectSize * 1.2);
+        bowl.setFitHeight(objectSize * 1.2);
+        bowl.setLayoutX(roomX + roomWidth * 0.06);
+        bowl.setLayoutY(roomY + roomHeight - bowl.getFitHeight() - roomHeight * 0.04);
+        bowl.setMouseTransparent(true);
+        layer.getChildren().addAll(bowl, cursor);
 
-        handSize = (zone.getWidth() > zone.getHeight()) ? zone.getHeight() / 10 : zone.getWidth() / 10;
+        ticker = new Timeline(new KeyFrame(TICK, event -> tick()));
+        ticker.setCycleCount(Animation.INDEFINITE);
+        ticker.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        ticker.play();
 
-        createHand();
-
-        createZoneEvents();
-
-        gameContext.getChildren().add(zone);
-        zone.toFront();
-
-        gameContext.getGazeDeviceManager().addEventFilter(zone);
-
-        gameContext.getChildren().add(this);
-
-        barsHBox = createBars();
-        gameContext.getChildren().add(barsHBox);
-
-        activateBars();
-
-        pet = new Mypet(zone.getHeight(), zone.getWidth(), this, randomGenerator);
-
-        pet.setLayoutX(zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2);
-        pet.setLayoutY(zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2);
-
-        final EventHandler<Event> handevent = e -> {
-            inside = true;
-            onEvent(e);
-        };
-
-        pet.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
-        pet.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
-
-        gameContext.getChildren().add(pet);
-        activateScreen(INIT_MODE);
-
-        createButtons();
+        open(Room.HOME);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+    }
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // Gauges and bubble
+
+    private void createGauges(final double x, final double y, final double width, final double band) {
+        final double gap = width * 0.04;
+        gaugeWidth = (width - 2 * gap) / 3;
+        final double iconSize = band * 0.42;
+        final double fontSize = band * 0.24;
+        final double barHeight = band * 0.24;
+        for (final Need need : Need.values()) {
+            final double gaugeX = x + need.ordinal() * (gaugeWidth + gap);
+            final SVGPath icon = GameStyle.icon(need.icon, iconSize);
+            icon.setStyle("-fx-fill: " + need.color + ";");
+            final Group iconGroup = new Group(icon);
+            iconGroup.setLayoutX(gaugeX);
+            iconGroup.setLayoutY(y + (band - iconSize) / 2);
+
+            final double barX = gaugeX + iconSize * 1.25;
+            final double barWidth = gaugeWidth - iconSize * 1.25;
+            final Text name = new Text(gameContext.getTranslator().translate(need.label));
+            name.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: -gp-text;");
+            name.setX(barX);
+            name.setY(y + band * 0.42);
+
+            final Rectangle bar = new Rectangle(barX, y + band * 0.55, barWidth, barHeight);
+            bar.setArcWidth(barHeight);
+            bar.setArcHeight(barHeight);
+            bar.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+            final Rectangle fill = new Rectangle(barX, y + band * 0.55, barWidth, barHeight);
+            fill.setArcWidth(barHeight);
+            fill.setArcHeight(barHeight);
+            fill.setFill(Color.web(need.color));
+            gaugeFills.put(need, fill);
+            barWidths.put(need, barWidth);
+
+            final FadeTransition blink = new FadeTransition(Duration.millis(500), fill);
+            blink.setFromValue(1);
+            blink.setToValue(0.3);
+            blink.setAutoReverse(true);
+            blink.setCycleCount(Animation.INDEFINITE);
+            gaugeBlinks.put(need, blink);
+
+            final Group gauge = new Group(iconGroup, name, bar, fill);
+            gauge.setMouseTransparent(true);
+            layer.getChildren().add(gauge);
+        }
+    }
+
+    private void createBubble() {
+        final double size = pet.getPetWidth() * 0.55;
+        final Ellipse cloud = new Ellipse(size / 2, size / 2, size / 2, size * 0.42);
+        final Circle small = new Circle(-size * 0.02, size * 0.95, size * 0.08);
+        final Circle smaller = new Circle(-size * 0.14, size * 1.08, size * 0.05);
+        for (final javafx.scene.shape.Shape shape : List.of(cloud, small, smaller)) {
+            shape.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        }
+        bubbleIcon = new SVGPath();
+        final Group iconGroup = new Group(bubbleIcon);
+        iconGroup.setLayoutX(size * 0.25);
+        iconGroup.setLayoutY(size * 0.25);
+        bubble = new Group(cloud, small, smaller, iconGroup);
+        bubble.setMouseTransparent(true);
+        bubble.setVisible(false);
+        layer.getChildren().add(bubble);
     }
 
     /**
-     * Moves the hand (sponge, food...) with the gaze or the mouse.
+     * Every tick: the gauges empty, the low needs are shown, the water washes, the bubble follows the pet.
      */
-    private void onEvent(final Event e) {
-        double offsetx = 0;
-        double offsety = 0;
-        if (mode == EAT_MODE) {
-            offsetx = hand.getWidth() / 4;
-            offsety = -hand.getHeight() / 4;
+    void tick() {
+        final double loss = TICK.toMillis() / EMPTYING.toMillis();
+        for (final Need need : Need.values()) {
+            final double before = levels.get(need);
+            final double after = Math.max(0, before - loss);
+            levels.put(need, after);
+            if (Math.ceil(after * 4) < Math.ceil(before * 4)) {
+                // A quarter lost: one more activity to do
+                stats.incrementNumberOfGoalsToReach();
+            }
         }
-        if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-            hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
-            hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-        } else if (e.getEventType() == GazeEvent.GAZE_MOVED && e.getSource() instanceof Node && hand.getParent() != null) {
-            // Position carried by the event: it used to be read again from the Tobii wrapper, so the hand stayed at
-            // the center of the screen with another eye tracker, or without eye tracker
-            final GazeEvent gazeEvent = (GazeEvent) e;
-            final Point2D scenePosition = ((Node) e.getSource()).localToScene(gazeEvent.getX(), gazeEvent.getY());
-            final Point2D handPosition = hand.getParent().sceneToLocal(scenePosition);
-
-            hand.setX(offsetx + handPosition.getX() - hand.getWidth() / 2);
-            hand.setY(offsety + handPosition.getY() - hand.getHeight() / 2);
+        updateGauges();
+        if (room == Room.BATHROOM) {
+            wash();
         }
+        placeBubble();
+    }
 
-        hand.toFront();
-        hand.setVisible(true);
+    private void updateGauges() {
+        Need lowest = null;
+        for (final Need need : Need.values()) {
+            final double level = levels.get(need);
+            final Rectangle fill = gaugeFills.get(need);
+            fill.setWidth(level * barWidths.get(need));
+            final FadeTransition blink = gaugeBlinks.get(need);
+            if (level < LOW) {
+                if (blink.getStatus() != Animation.Status.RUNNING) {
+                    blink.play();
+                }
+                if (lowest == null || level < levels.get(lowest)) {
+                    lowest = need;
+                }
+            } else if (blink.getStatus() == Animation.Status.RUNNING) {
+                blink.stop();
+                fill.setOpacity(1);
+            }
+        }
+        pet.setSad(lowest != null);
+        bubble.setVisible(lowest != null);
+        if (lowest != null) {
+            final SVGPath icon = GameStyle.icon(lowest.icon, pet.getPetWidth() * 0.55 * 0.5);
+            bubbleIcon.setContent(icon.getContent());
+            bubbleIcon.getTransforms().setAll(icon.getTransforms());
+            bubbleIcon.setStyle("-fx-fill: " + lowest.color + ";");
+        }
+    }
+
+    /**
+     * @return whether the bubble of a low need is shown
+     */
+    boolean isBubbleShown() {
+        return bubble.isVisible();
+    }
+
+    private void placeBubble() {
+        bubble.setLayoutX(pet.getLayoutX() + pet.getPetWidth() * 0.95);
+        bubble.setLayoutY(pet.getLayoutY() - pet.getPetWidth() * 0.35);
+    }
+
+    /**
+     * Fills a gauge by a quarter: an activity done.
+     */
+    void refill(final Need need) {
+        final double level = levels.get(need);
+        if (level < 1) {
+            levels.put(need, Math.min(1, level + GAIN));
+            stats.incrementNumberOfGoalsReached();
+        }
+        updateGauges();
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Rooms
+
+    /**
+     * Opens a room: its picture, its object following the gaze, its activity.
+     */
+    void open(final Room opened) {
+        stopActivity();
+        room = opened;
+        buttons.forEach((each, button) -> button.setActive(each == opened));
+        roomView.setFill(new ImagePattern(new Image(FOLDER + opened.picture)));
+        cursor.setImage(new Image(FOLDER + opened.object));
+        bowl.setVisible(opened == Room.KITCHEN);
+        placePetAtTheCenter();
+        if (opened == Room.GARDEN) {
+            fly();
+        }
+        if (pointer != null) {
+            pointerAt(pointer);
+        }
+    }
+
+    private void stopActivity() {
+        if (flight != null) {
+            flight.stop();
+            flight = null;
+        }
+        animations.forEach(Animation::stop);
+        animations.clear();
+        layer.getChildren().removeIf(node -> "drop".equals(node.getId()) || "thrown".equals(node.getId()));
+        stroking = false;
+        spoonFull = false;
+        washed = 0;
+        washing = false;
+        playing = false;
+        if (pet != null) {
+            pet.calm();
+        }
+        if (cursor != null) {
+            cursor.setVisible(pointer != null);
+        }
+    }
+
+    private void placePetAtTheCenter() {
+        pet.setLayoutX(roomView.getX() + (roomView.getWidth() - pet.getPetWidth()) / 2);
+        pet.setLayoutY(roomView.getY() + (roomView.getHeight() - pet.getPetHeight()) / 2);
+        placeBubble();
+    }
+
+    /**
+     * In the garden, the Biboule flies from place to place.
+     */
+    private void fly() {
+        flight = new Timeline();
+        flight.setOnFinished(event -> fly());
+        final double x = roomView.getX() + random.nextDouble() * (roomView.getWidth() - pet.getPetWidth());
+        final double y = roomView.getY() + random.nextDouble() * (roomView.getHeight() - pet.getPetHeight());
+        flight.getKeyFrames().add(new KeyFrame(Duration.millis(1500), new KeyValue(pet.layoutXProperty(), x),
+            new KeyValue(pet.layoutYProperty(), y)));
+        flight.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        flight.play();
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // The gaze on the room
+
+    private void listenToThePointer() {
+        gameContext.getGazeDeviceManager().addEventFilter(roomView);
+        roomView.addEventFilter(MouseEvent.ANY, this::onPointer);
+        roomView.addEventFilter(GazeEvent.ANY, this::onPointer);
+    }
+
+    private void onPointer(final Event e) {
+        if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            pointerLeft();
+        } else if (e instanceof MouseEvent mouse && (e.getEventType() == MouseEvent.MOUSE_MOVED
+            || e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_DRAGGED)) {
+            pointerAt(layer.sceneToLocal(mouse.getSceneX(), mouse.getSceneY()));
+        } else if (e instanceof GazeEvent gaze && (e.getEventType() == GazeEvent.GAZE_MOVED
+            || e.getEventType() == GazeEvent.GAZE_ENTERED) && e.getSource() instanceof Node node) {
+            // The position of a gaze event is in the coordinates of the node
+            pointerAt(layer.sceneToLocal(node.localToScene(gaze.getX(), gaze.getY())));
+        }
+    }
+
+    private void pointerLeft() {
+        pointer = null;
+        cursor.setVisible(false);
+        if (stroking) {
+            stroking = false;
+            pet.calm();
+        }
+    }
+
+    /**
+     * The gaze (or the mouse) is at this place of the room: the object follows it, and does what it does there.
+     */
+    void pointerAt(final Point2D position) {
+        pointer = position;
+        cursor.setVisible(!playing);
+        cursor.setLayoutX(position.getX() - room.hotX * objectSize);
+        cursor.setLayoutY(position.getY() - room.hotY * objectSize);
+        final boolean onPet = pet.getBoundsInParent().contains(position);
+        switch (room) {
+            case HOME -> {
+                if (onPet && !stroking) {
+                    stroking = true;
+                    pet.setHappy();
+                } else if (!onPet && stroking) {
+                    stroking = false;
+                    pet.calm();
+                }
+            }
+            case KITCHEN -> {
+                if (!spoonFull && bowl.getBoundsInParent().contains(position)) {
+                    spoonFull = true;
+                    cursor.setImage(new Image(FOLDER + "spoon-full.png"));
+                } else if (spoonFull && nearTheMouth(position)) {
+                    spoonFull = false;
+                    cursor.setImage(new Image(FOLDER + "spoon.png"));
+                    pet.eat();
+                    refill(Need.HUNGER);
+                }
+            }
+            case GARDEN -> {
+                if (onPet && !playing) {
+                    play(position);
+                }
+            }
+            default -> {
+                // The bathroom washes with time (see wash)
+            }
+        }
+    }
+
+    /**
+     * @return whether this place is on the mouth of the pet, or close to it (the gaze is not precise)
+     */
+    private boolean nearTheMouth(final Point2D position) {
+        final var mouth = pet.localToParent(pet.getMouth().getBoundsInParent());
+        final double margin = mouth.getWidth() * 0.5;
+        return position.getX() > mouth.getMinX() - margin && position.getX() < mouth.getMaxX() + margin
+            && position.getY() > mouth.getMinY() - margin && position.getY() < mouth.getMaxY() + margin;
+    }
+
+    /**
+     * In the bathroom, at every tick: drops fall from the shower; above the Biboule, they wash it.
+     */
+    private void wash() {
+        if (pointer == null) {
+            if (washing) {
+                washing = false;
+                pet.calm();
+            }
+            return;
+        }
+        final var petBounds = pet.getBoundsInParent();
+        final boolean above = pointer.getX() > petBounds.getMinX() && pointer.getX() < petBounds.getMaxX()
+            && pointer.getY() < petBounds.getMaxY();
+        final double fall = above ? Math.max(objectSize * 0.3, petBounds.getMinY() + petBounds.getHeight() * 0.3
+            - pointer.getY()) : roomView.getY() + roomView.getHeight() - pointer.getY();
+        final Circle drop = new Circle(pointer.getX() - objectSize * 0.15 + random.nextDouble() * objectSize * 0.3,
+            pointer.getY() + objectSize * 0.3, objectSize * 0.04, Color.web("#7CC8F2"));
+        drop.setId("drop");
+        drop.setMouseTransparent(true);
+        layer.getChildren().add(layer.getChildren().indexOf(cursor), drop);
+        final TranslateTransition down = new TranslateTransition(Duration.millis(500), drop);
+        down.setByY(Math.max(0, fall - objectSize * 0.3));
+        down.setOnFinished(event -> layer.getChildren().remove(drop));
+        down.play();
+        if (above) {
+            if (!washing) {
+                washing = true;
+                pet.setHappy();
+            }
+            washed += TICK.toMillis();
+            if (washed >= WASHING.toMillis()) {
+                washed = 0;
+                refill(Need.CLEANLINESS);
+            }
+        } else if (washing) {
+            washing = false;
+            pet.calm();
+        }
+    }
+
+    /**
+     * In the garden: the ball touches the Biboule, bounces up and comes back; then the gauge is filled.
+     */
+    private void play(final Point2D position) {
+        playing = true;
+        cursor.setVisible(false);
+        pet.setHappy();
+        final ImageView ball = new ImageView(cursor.getImage());
+        ball.setId("thrown");
+        ball.setFitWidth(objectSize);
+        ball.setFitHeight(objectSize);
+        ball.setLayoutX(position.getX() - objectSize / 2);
+        ball.setLayoutY(position.getY() - objectSize / 2);
+        ball.setMouseTransparent(true);
+        layer.getChildren().add(ball);
+        final TranslateTransition up = new TranslateTransition(Duration.millis(400), ball);
+        up.setByY(-roomView.getHeight() * 0.25);
+        final TranslateTransition back = new TranslateTransition(Duration.millis(400), ball);
+        back.setByY(roomView.getHeight() * 0.25);
+        final SequentialTransition bounce = new SequentialTransition(up, back);
+        bounce.setOnFinished(event -> {
+            layer.getChildren().remove(ball);
+            playing = false;
+            pet.calm();
+            cursor.setVisible(pointer != null);
+            refill(Need.PLAY);
+        });
+        animations.add(bounce);
+        bounce.play();
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-        for (int i = 0; i < 3; i++){
-            timelines[i].stop();
+        if (ticker != null) {
+            ticker.stop();
         }
-    }
-
-    /**
-     * Makes the area of the pet follow the gaze and the mouse with the hand.
-     */
-    private void createZoneEvents() {
-        final EventHandler<Event> handevent = e -> {
-            double offsetx = 0;
-            double offsety = 0;
-            if (mode == EAT_MODE) {
-                offsetx = hand.getWidth() / 4;
-                offsety = -hand.getHeight() / 4;
-            }
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                    - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                    - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-            } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                hand.setX(offsetx + ((GazeEvent) e).getX()
-                    - hand.getWidth() / 2);
-                hand.setY(offsety + ((GazeEvent) e).getY()
-                    - hand.getHeight() / 2);
-            }
-        };
-
-        zone.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
-        zone.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
-
-        final EventHandler<Event> enterevent = e -> {
-            inside = true;
-            hand.toFront();
-            hand.setVisible(true);
-            double offsetx = 0;
-            double offsety = 0;
-            if (mode == EAT_MODE) {
-                offsetx = hand.getWidth() / 4;
-                offsety = -hand.getHeight() / 4;
-            }
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                hand.setX(offsetx + ((MouseEvent) e).getX()
-                    - hand.getWidth() / 2);
-                hand.setY(offsety + ((MouseEvent) e).getY()
-                    - hand.getHeight() / 2);
-            } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                hand.setX(offsetx + ((GazeEvent) e).getX()
-                    - hand.getWidth() / 2);
-                hand.setY(offsety + ((GazeEvent) e).getY()
-                    - hand.getHeight() / 2);
-            }
-        };
-
-        zone.addEventFilter(MouseEvent.MOUSE_ENTERED, enterevent);
-        zone.addEventFilter(GazeEvent.GAZE_ENTERED, enterevent);
-
-        final EventHandler<Event> outhandevent = event -> {
-            inside = false;
-            hand.toBack();
-            hand.setVisible(false);
-        };
-
-        zone.addEventFilter(MouseEvent.MOUSE_EXITED, outhandevent);
-        zone.addEventFilter(GazeEvent.GAZE_EXITED, outhandevent);
-    }
-
-    /**
-     * @return the three bars of the needs of the pet
-     */
-    private HBox createBars() {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        final HBox newBarsHBox = new HBox();
-
-        newBarsHBox.widthProperty().addListener((observable, oldValue, newValue) -> newBarsHBox.setLayoutX(dimension2D.getWidth() / 2 - newValue.doubleValue() / 2));
-
-        newBarsHBox.heightProperty().addListener((observable, oldValue, newValue) -> newBarsHBox.setLayoutY(newValue.doubleValue() / 2));
-
-        final double offset = dimension2D.getHeight() / LIFE_SIZE;
-
-        newBarsHBox.setSpacing(offset);
-
-        newBarsHBox.getChildren().addAll(createColoredProgressBar(0), createColoredProgressBar(1),
-            createColoredProgressBar(2));
-
-        return newBarsHBox;
-    }
-
-    /**
-     * @return a bar of a need, made of colored squares
-     */
-    private HBox createColoredProgressBar(final int numero) {
-        final HBox progressBar = new HBox();
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double size = dimension2D.getHeight() / 20;
-
-        for (int i = 0; i < LIFE_SIZE; i++) {
-            final Rectangle r = new Rectangle(0, 0, (6 * size) / LIFE_SIZE, size);
-            r.setFill(colorBar[numero]);
-            progressBar.getChildren().add(r);
+        stopActivity();
+        gaugeBlinks.values().forEach(Animation::stop);
+        buttons.values().forEach(GazeRoundButton::dispose);
+        if (roomView != null) {
+            gameContext.getGazeDeviceManager().removeEventFilter(roomView);
         }
-
-        return progressBar;
-    }
-
-    /**
-     * Starts emptying the bars of the needs with time.
-     */
-    private void activateBars() {
-        for (int i = 0; i < 3; i++) {
-            final int index = getIt(i);
-            final HBox progressBar = (HBox) barsHBox.getChildren().get(i);
-
-            timelines[i] = new Timeline();
-            timelines[i].setDelay(Duration.seconds(regressionTime[i]));
-            timelines[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                new KeyValue(((Rectangle) progressBar.getChildren().get(index)).fillProperty(), Color.WHITE)));
-            timelines[i].rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-
-            final int number = i;
-            timelines[i].setOnFinished(e -> {
-                final int index1 = getIt(number);
-                if (index1 >= 0) {
-                    timelines[number].getKeyFrames().clear();
-                    timelines[number].setDelay(Duration
-                        .seconds(regressionTime[number]));
-                    timelines[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                        new KeyValue(((Rectangle) progressBar.getChildren().get(index1)).fillProperty(), Color.WHITE)));
-                    timelines[number].play();
-                } else {
-                    timelines[number].stop();
-                }
-            });
-            timelines[i].play();
+        if (pet != null) {
+            pet.stop();
         }
-    }
-
-    /**
-     * Creates the hand following the gaze in the activities.
-     */
-    private void createHand() {
-
-        hand = new Rectangle(0, 0, handSize, handSize);
-        hand.setMouseTransparent(true);
-        hand.toBack();
-        hand.setVisible(false);
-
-        gameContext.getChildren().add(hand);
-    }
-
-    /**
-     * @return the level of a need, after removing one square
-     */
-    private int getIt(final int i) {
-        it[i]--;
-        return it[i];
-    }
-
-    /**
-     * Creates the buttons of the activities, chosen by fixations.
-     */
-    private void createButtons() {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double buttonSize = dimension2D.getHeight() / 4;
-        for (int i = 0; i < 4; i++) {
-            final ProgressButton bt = new ProgressButton();
-            bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
-                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
-                + "-fx-max-height: " + buttonSize + "px;");
-            final ImageView iv = new ImageView(new Image("data/pet/images/menu" + i + ".png"));
-
-            iv.setFitWidth(2 * buttonSize / 3);
-            iv.setPreserveRatio(true);
-            bt.setImage(iv);
-            bt.getButton().setRadius(buttonSize / 2);
-            bt.setLayoutY((((i % 2) + 1) * (dimension2D.getHeight() / 2.5)) - (buttonSize * 1.5));
-
-            final EventHandler<Event> buttonHandler = createprogessButtonHandler(i);
-
-            if (i < 2) {
-                bt.setLayoutX(dimension2D.getWidth() - buttonSize * 1.2);
-            } else {
-                bt.setLayoutX(buttonSize * 0.2);
-            }
-
-            bt.assignIndicatorUpdatable(buttonHandler, gameContext);
-            bt.active();
-            this.getChildren().add(bt);
-            gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
-            bt.toFront();
-        }
-    }
-
-    /**
-     * @return the action of the button of an activity
-     */
-    private EventHandler<Event> createprogessButtonHandler(final int number) {
-        final EventHandler<Event> buttonHandler;
-        buttonHandler = e -> activateScreen(number);
-        return buttonHandler;
-    }
-
-    /**
-     * Switches to an activity (or back to the home of the pet).
-     */
-    private void activateScreen(final int number) {
-        turnOffShower();
-        stopSport();
-        gameContext.getChildren().remove(bowl);
-        pet.setBasic();
-        setMode(number);
-
-        background.setFill(color[number % 4]);
-        final int j;
-        switch (number) {
-            case INIT_MODE:
-                j = 2;
-                hand.setWidth(2 * handSize);
-                hand.setHeight(2 * handSize);
-                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-                break;
-            case BATH_MODE:
-                j = 1;
-                hand.setWidth(3 * handSize);
-                hand.setHeight(2 * handSize);
-                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-                turnOnShower();
-                break;
-            case EAT_MODE:
-                j = 1;
-                hand.setWidth(3 * handSize);
-                hand.setHeight(2 * handSize);
-                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-                letsEat();
-                break;
-            case SPORT_MODE:
-                j = 1;
-                hand.setWidth(2 * handSize);
-                hand.setHeight(2 * handSize);
-                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-                doSport();
-                break;
-            default:
-                j = 1;
-        }
-
-        final Timeline t = new Timeline();
-        t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(pet.scaleXProperty(), j)));
-        t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(pet.scaleYProperty(), j)));
-        t.play();
-
-        zone.setFill(new ImagePattern(new Image("data/pet/images/" + screen[number % 4]), 0, 0, 1, 1, true));
-
-    }
-
-    /**
-     * Fills a need by one square.
-     */
-    void refill(final int i) {
-        if (it[i] < LIFE_SIZE) {
-            if ((it[i] < LIFE_SIZE - 2) && (i == 1)) {
-                it[i] = it[i] + 3;
-            } else if (it[i] < LIFE_SIZE - 1) {
-                it[i] = it[i] + 2;
-            } else {
-                it[i] = it[i] + 1;
-            }
-            timelines[i].stop();
-            timelines[i].getKeyFrames().clear();
-            timelines[i].getKeyFrames()
-                .add(new KeyFrame(Duration.millis(500), new KeyValue(
-                    ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
-                    Color.WHITE)));
-
-            ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(it[i])).setFill(this.colorBar[i]);
-            if (it[i] > 0) {
-                ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
-            }
-            if ((i != 0) && (it[i] < LIFE_SIZE - 1 && it[i] >= 0)) {
-                ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(it[i] - 2)).setFill(this.colorBar[i]);
-            }
-            timelines[i].play();
-
-            stats.incrementNumberOfGoalsReached();
-        }
-    }
-
-    /**
-     * Removes the water of the shower.
-     */
-    private void turnOffShower() {
-        for (final Circle c : water) {
-            gameContext.getChildren().remove(c);
-        }
-        water.clear();
-
-    }
-
-    /**
-     * Starts the shower: drops of water falling on the pet.
-     */
-    private void turnOnShower() {
-        water = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            final Circle c = new Circle();
-            water.add(c);
-            c.toFront();
-            c.setMouseTransparent(true);
-            c.setOpacity(0);
-            c.setRadius(hand.getHeight() / 20);
-            c.setFill(Color.AQUA);
-
-            gameContext.getChildren().add(c);
-            final TranslateTransition t = new TranslateTransition(Duration.seconds(1 + randomGenerator.nextDouble() * 1), c);
-            c.translateYProperty().addListener((observable, oldValue, newValue) -> {
-                if (pet.localToParent(pet.getChildren().get(2).getBoundsInParent()).contains(c.getBoundsInParent())) {
-                    t.stop();
-                    if (inside && mode == BATH_MODE) {
-                        t.setFromX(hand.getX() + randomGenerator.nextDouble() * (hand.getWidth() / 2));
-                        t.setFromY(hand.getY() + hand.getHeight() / 2);
-                        t.setToY(zone.getHeight());
-                        t.play();
-
-                        pet.setBlinkingEnabled(false);
-                        if (pet.isEyesAreOpen()) {
-                            pet.setHappy();
-                        }
-
-                        synchronized (PetHouse.this) {
-                            waterNeeded--;
-                            if (waterNeeded <= 0) {
-                                refill(0);
-                                waterNeeded = 100;
-                            }
-                        }
-                    } else {
-                        c.setOpacity(0);
-                        t.play();
-                    }
-
-                }
-
-            });
-
-            t.setFromX(hand.getX() + randomGenerator.nextDouble() * (hand.getWidth() / 2));
-            t.setFromY(hand.getY() + hand.getHeight() / 2);
-            t.setToY(zone.getHeight());
-            t.setOnFinished(e -> {
-                if (inside && mode == BATH_MODE) {
-                    t.setFromX(hand.getX() + randomGenerator.nextDouble() * (hand.getWidth() / 2));
-                    t.setFromY(hand.getY() + hand.getHeight() / 2);
-                    t.setToY(zone.getHeight());
-                    c.setOpacity(1);
-                    t.play();
-                } else if (mode == BATH_MODE) {
-                    c.setOpacity(0);
-                    t.play();
-                } else {
-                    t.stop();
-                    c.setOpacity(0);
-                }
-
-            });
-            t.play();
-        }
-
-    }
-
-    /**
-     * Makes the pet fly around, for the sport.
-     */
-    private void doSport() {
-        final double coefx = (zone.getWidth() - zone.getWidth() / 3);
-        final double coefy = (zone.getHeight() - zone.getHeight() / 3);
-        final double xpos0 = zone.getX() + randomGenerator.nextDouble() * coefx;
-        final double ypos0 = zone.getY() + randomGenerator.nextDouble() * coefy;
-        rd = new Timeline();
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000),
-            new KeyValue(pet.layoutXProperty(), xpos0)));
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000),
-            new KeyValue(pet.layoutYProperty(), ypos0)));
-        rd.setOnFinished(e -> {
-            rd.getKeyFrames().clear();
-            final double xpos = zone.getX() + randomGenerator.nextDouble() * coefx;
-            final double ypos = zone.getY() + randomGenerator.nextDouble() * coefy;
-            rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(1000),
-                    new KeyValue(pet.layoutXProperty(), xpos)));
-            rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(1000),
-                    new KeyValue(pet.layoutYProperty(), ypos)));
-            rd.play();
-        });
-        rd.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-        rd.play();
-    }
-
-    /**
-     * Stops the sport.
-     */
-    private void stopSport() {
-        rd.stop();
-        rd.getKeyFrames().clear();
-        final double xpos = zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2;
-        final double ypos = zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2;
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutXProperty(), xpos)));
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutYProperty(), ypos)));
-        rd.setOnFinished(e -> {
-            // do nothing
-        });
-
-        rd.play();
-    }
-
-    /**
-     * Starts the meal: food is given to the pet with the gaze.
-     */
-    private void letsEat() {
-
-        bowl = new ImageView(new Image("data/pet/images/bowl.png"));
-        bowl.setPreserveRatio(true);
-        if (zone.getWidth() > zone.getHeight()) {
-            bowl.setFitHeight(zone.getHeight() / 5);
-        } else {
-            bowl.setFitWidth(zone.getWidth() / 4);
-        }
-
-        bowl.setY(zone.getY() + 4 * zone.getHeight() / 5);
-        bowl.setX(zone.getX());
-
-        final EventHandler<Event> handevent = this::onEvent;
-
-        final EventHandler<Event> handenter = e -> {
-            pet.setBasic();
-            pet.setBlinkingEnabled(true);
-            inside = true;
-            hand.setFill(new ImagePattern(new Image("data/pet/images/fullspoon.png")));
-            setSpoonFull(true);
-        };
-
-        bowl.addEventFilter(MouseEvent.MOUSE_ENTERED, handenter);
-        bowl.addEventFilter(GazeEvent.GAZE_ENTERED, handenter);
-
-        bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
-        gameContext.getGazeDeviceManager().addEventFilter(bowl);
-
-        gameContext.getChildren().add(bowl);
-
     }
 }

@@ -1,0 +1,18 @@
+# Le principe
+Occupe-toi de la Biboule : donne-lui à manger, lave-la et joue avec elle.
+
+# Comment jouer
+- En haut, trois jauges : Faim, Propreté et Jeu. Elles se vident doucement (une jauge pleine se vide en 2 minutes).
+- Quand une jauge est presque vide, elle clignote, la Biboule est triste et une bulle montre ce qu'elle veut.
+- Les boutons à gauche ouvrent une pièce (regarde un bouton jusqu'à ce que l'anneau soit complet) :
+- Salon : la main suit ton regard ; caresse la Biboule, elle est contente.
+- Cuisine : regarde le bol pour remplir la cuillère, puis amène la cuillère à la bouche de la Biboule.
+- Salle de bain : la douche suit ton regard ; garde-la au-dessus de la Biboule pour la laver.
+- Jardin : la Biboule vole ; touche-la avec le ballon pour jouer avec elle.
+- Chaque activité réussie remplit sa jauge d'un quart.
+
+# Comment gagner
+Il n'y a rien à gagner : il faut garder la Biboule heureuse, aussi longtemps qu'on veut. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+Ce jeu n'a pas de variante : appuie sur « Lancer le jeu ».

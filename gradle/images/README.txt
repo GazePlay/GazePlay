@@ -44,6 +44,13 @@ of OpenMoji (CC BY-SA 4.0). The sound of a difference found (ding.wav) is made b
 the license of GazePlay Learning. They replace (October 2026) scenes, an arrow and a sound of unknown source. The
 thumbnail (gazeplay-core: data/common/Thumbnails/spotthedifference.png) is a capture of the oasis, 960 x 540.
 
+Images of Pet (gazeplay-games: data/pet/images): the 4 rooms (room.png, kitchen.png, bathroom.png, garden.png),
+the food of bowl.png and spoon-full.png and the sad mouth of the Biboule (sad.png) are drawn by make_pet_images.py
+(this folder), under the license of GazePlay Learning (GPL-3.0-or-later); the hand, the spoon, the bowl, the shower
+and the ball are OpenMoji (CC BY-SA 4.0). They replace (October 2026) photos and pictures of unknown source (some
+with brands). The Biboule (body.png, eye.png, eyeclosed.png, mouth.png, smile.png, wing.png) is a drawing of the
+project, kept. The thumbnail (gazeplay-core: data/common/Thumbnails/pet.png) is a capture of the bathroom, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

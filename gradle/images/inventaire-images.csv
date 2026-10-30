@@ -101,7 +101,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,ou
 gazeplay-core/src/main/resources/data/common/Thumbnails/opinions.jpg,oui,source inconnue,,2020-05-27,PillouMatou,image for Thumbnails and launcher
 gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
-gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
+gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,libre,"capture du jeu (octobre 2026) ; pièce dessinée pour le projet, objets OpenMoji CC BY-SA 4.0, Biboule du projet",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/pianosight.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/potions.jpg,oui,source inconnue,,2019-06-18,johzz-o2,thumbnail update
 gazeplay-core/src/main/resources/data/common/Thumbnails/rabbits.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
@@ -551,27 +551,23 @@ gazeplay-games/src/main/resources/data/opinions/thumbs/thumbup.png,oui,source in
 gazeplay-games/src/main/resources/data/order/images/fail.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
 gazeplay-games/src/main/resources/data/order/images/success.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
 gazeplay-games/src/main/resources/data/order/images/target.png,oui,source inconnue,,2018-05-15,Skullhack,Changed target image and added a progress bar to select a target
-gazeplay-games/src/main/resources/data/pet/images/ball.png,oui,source inconnue,,2018-07-03,kuhlkrein,Preparation for the loading screen + creation of petstats class
-gazeplay-games/src/main/resources/data/pet/images/body.png,oui,source inconnue,,2018-06-20,kuhlkrein,Adding the screen with different background for pet game
-gazeplay-games/src/main/resources/data/pet/images/bowl.png,oui,source inconnue,,2018-06-25,kuhlkrein,Animations for the eating part of the pet game.
-gazeplay-games/src/main/resources/data/pet/images/emptyspoon.png,oui,source inconnue,,2018-06-25,kuhlkrein,Animations for the eating part of the pet game.
-gazeplay-games/src/main/resources/data/pet/images/eye.png,oui,source inconnue,,2018-06-21,kuhlkrein,New animations on the pet game !
-gazeplay-games/src/main/resources/data/pet/images/eyeclosed.png,oui,source inconnue,,2018-06-21,kuhlkrein,New animations on the pet game !
-gazeplay-games/src/main/resources/data/pet/images/fullspoon.png,oui,source inconnue,,2018-06-25,kuhlkrein,Animations for the eating part of the pet game.
-gazeplay-games/src/main/resources/data/pet/images/glove.png,oui,source inconnue,,2018-07-03,kuhlkrein,Preparation for the loading screen + creation of petstats class
-gazeplay-games/src/main/resources/data/pet/images/hand.png,oui,source inconnue,,2017-02-08,schwab,first commit
-gazeplay-games/src/main/resources/data/pet/images/kitchen.jpg,oui,source inconnue,,2018-06-20,kuhlkrein,Adding the screen with different background for pet game
-gazeplay-games/src/main/resources/data/pet/images/menu0.png,oui,source inconnue,,2018-06-22,kuhlkrein,Shower is working
-gazeplay-games/src/main/resources/data/pet/images/menu1.png,oui,source inconnue,,2018-06-22,kuhlkrein,Shower is working
-gazeplay-games/src/main/resources/data/pet/images/menu2.png,oui,source inconnue,,2018-06-22,kuhlkrein,Shower is working
-gazeplay-games/src/main/resources/data/pet/images/menu3.png,oui,source inconnue,,2018-06-22,kuhlkrein,Shower is working
-gazeplay-games/src/main/resources/data/pet/images/mouth.png,oui,source inconnue,,2018-06-21,kuhlkrein,New animations on the pet game !
-gazeplay-games/src/main/resources/data/pet/images/park.jpg,oui,source inconnue,,2018-06-20,kuhlkrein,Adding the screen with different background for pet game
-gazeplay-games/src/main/resources/data/pet/images/pommeau.png,oui,source inconnue,,2018-06-21,kuhlkrein,New animations on the pet game !
-gazeplay-games/src/main/resources/data/pet/images/room.jpg,oui,source inconnue,,2018-06-20,kuhlkrein,Adding the screen with different background for pet game
-gazeplay-games/src/main/resources/data/pet/images/shower.jpg,oui,source inconnue,,2018-06-20,kuhlkrein,Adding the screen with different background for pet game
-gazeplay-games/src/main/resources/data/pet/images/smile.png,oui,source inconnue,,2018-06-21,kuhlkrein,New animations on the pet game !
-gazeplay-games/src/main/resources/data/pet/images/wing.png,oui,source inconnue,,2018-06-20,kuhlkrein,Adding the screen with different background for pet game
+gazeplay-games/src/main/resources/data/pet/images/ball.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/bathroom.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/body.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-20,kuhlkrein,Adding the screen with different background for pet game
+gazeplay-games/src/main/resources/data/pet/images/bowl.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py) ; nourriture dessinée pour le projet",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/eye.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-21,kuhlkrein,New animations on the pet game !
+gazeplay-games/src/main/resources/data/pet/images/eyeclosed.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-21,kuhlkrein,New animations on the pet game !
+gazeplay-games/src/main/resources/data/pet/images/garden.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/hand.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/kitchen.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/mouth.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-21,kuhlkrein,New animations on the pet game !
+gazeplay-games/src/main/resources/data/pet/images/room.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/sad.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/shower.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/smile.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-21,kuhlkrein,New animations on the pet game !
+gazeplay-games/src/main/resources/data/pet/images/spoon-full.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py) ; nourriture dessinée pour le projet",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/spoon.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
+gazeplay-games/src/main/resources/data/pet/images/wing.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-20,kuhlkrein,Adding the screen with different background for pet game
 gazeplay-games/src/main/resources/data/pianosight/images/0.png,oui,source inconnue,,2018-04-05,kuhlkrein,Add open file directory in piano + notes
 gazeplay-games/src/main/resources/data/pianosight/images/1.png,oui,source inconnue,,2018-04-05,kuhlkrein,Add open file directory in piano + notes
 gazeplay-games/src/main/resources/data/pianosight/images/2.png,oui,source inconnue,,2018-04-05,kuhlkrein,Add open file directory in piano + notes

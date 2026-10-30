@@ -1,0 +1,18 @@
+# The principle
+Take care of the Biboule: feed it, wash it and play with it.
+
+# How to play
+- At the top, three gauges: Hunger, Cleanliness and Play. They empty slowly (a full gauge empties in 2 minutes).
+- When a gauge is almost empty, it blinks, the Biboule is sad and a bubble shows what it wants.
+- The buttons on the left open a room (look at a button until the ring is full):
+- Living room: the hand follows your gaze; stroke the Biboule, it is happy.
+- Kitchen: look at the bowl to fill the spoon, then bring the spoon to the mouth of the Biboule.
+- Bathroom: the shower follows your gaze; keep it above the Biboule to wash it.
+- Garden: the Biboule flies; touch it with the ball to play with it.
+- Each activity done fills its gauge by a quarter.
+
+# How to win
+There is nothing to win: keep the Biboule happy, as long as you like. The game does not stop by itself: leave with the gear at the bottom left.
+
+# The variants
+This game has no variant: press "Start the game".
