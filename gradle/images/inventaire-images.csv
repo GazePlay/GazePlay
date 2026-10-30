@@ -112,7 +112,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheBiboules.png,oui
 gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheRobots.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/simon.png,oui,source inconnue,,2023-06-07,iwa,Ajout du 3e mode multijoueur + miniature + traduction
 gazeplay-core/src/main/resources/data/common/Thumbnails/slidingpuzzle.png,oui,source inconnue,,2019-05-16,Peter Bardawil,Game step 2
-gazeplay-core/src/main/resources/data/common/Thumbnails/soundsOfLife.png,oui,source inconnue,,2019-08-18,schwab,split of sound of life
+gazeplay-core/src/main/resources/data/common/Thumbnails/soundsOfLife.png,oui,libre,"capture du jeu (octobre 2026) ; décor dessiné pour le projet, animaux OpenMoji CC BY-SA 4.0",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/space.png,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
 gazeplay-core/src/main/resources/data/common/Thumbnails/spotthedifference.png,oui,source inconnue,,2019-05-15,Teo Blachere,Spot the difference 1.0
 gazeplay-core/src/main/resources/data/common/Thumbnails/sprintToTheFinish.png,oui,source inconnue,,2023-05-22,iwa,Ajout du background et mise à jour de la miniature.
@@ -679,38 +679,31 @@ gazeplay-games/src/main/resources/data/sliding-puzzle/tiles/tile6.png,oui,source
 gazeplay-games/src/main/resources/data/sliding-puzzle/tiles/tile7.png,oui,source inconnue,,2019-05-15,Peter Bardawil,Sliding puzzle Game Step 1
 gazeplay-games/src/main/resources/data/sliding-puzzle/tiles/tile8.png,oui,source inconnue,,2019-05-15,Peter Bardawil,Sliding puzzle Game Step 1
 gazeplay-games/src/main/resources/data/sliding-puzzle/tiles/tile9.png,oui,source inconnue,,2019-05-15,Peter Bardawil,Sliding puzzle Game Step 1
-gazeplay-games/src/main/resources/data/soundsoflife/farm/background.jpg,oui,source inconnue,"auteur dans les métadonnées : Danilo Sanino, Danilo Sanino",2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/background.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/cow.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/hen.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/horse.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/pig.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/rooster.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/farm/sheep.png,oui,source inconnue,,2019-07-24,teo blachere,Sounds of life
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/background.png,oui,source inconnue,,2019-07-25,teo blachere,Start jungle
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/elephant.png,oui,source inconnue,,2019-07-25,Téo Blachère,"Jungle, more animals"
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/frog.png,oui,source inconnue,,2019-07-25,Téo Blachère,Frog
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/jaguar.png,oui,source inconnue,,2019-07-25,Téo Blachère,"Jungle, more animals"
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/monkey.png,oui,source inconnue,,2019-07-25,teo blachere,Start jungle
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/parrot.png,oui,source inconnue,,2019-07-25,teo blachere,Start jungle
-gazeplay-games/src/main/resources/data/soundsoflife/jungle/snake.png,oui,source inconnue,,2019-07-25,teo blachere,Start jungle
-gazeplay-games/src/main/resources/data/soundsoflife/savanna/background.png,oui,source inconnue,,2019-07-26,Téo Blachère,Savanna
-gazeplay-games/src/main/resources/data/soundsoflife/savanna/crocodile.png,oui,source inconnue,,2019-07-26,Téo Blachère,Savanna
-gazeplay-games/src/main/resources/data/soundsoflife/savanna/hyena.png,oui,source inconnue,,2019-07-26,Téo Blachère,Savanna
-gazeplay-games/src/main/resources/data/soundsoflife/savanna/lion.png,oui,source inconnue,,2019-07-26,Téo Blachère,Savanna
-gazeplay-games/src/main/resources/data/soundsoflife/savanna/ostrich.png,oui,source inconnue,,2019-07-26,Téo Blachère,Savanna
-gazeplay-games/src/main/resources/data/soundsoflife/sea/algue.png,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/algue.svg,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/bulles.png,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/bulles.svg,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/crabe.png,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/crabe.svg,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/fond.png,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/fond.svg,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/meduse.png,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/meduse.svg,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/poulpe.png,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
-gazeplay-games/src/main/resources/data/soundsoflife/sea/poulpe.svg,oui,source inconnue,,2021-06-15,Iluvrog,gamevariant sea pour les bruits j'ai fait ce que j'ai pu
+gazeplay-games/src/main/resources/data/soundsoflife/farm/background.png,oui,libre,"dessiné pour le projet (gradle/images/make_soundsoflife_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/farm/cow.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/farm/hen.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/farm/horse.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/farm/pig.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/farm/rooster.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/farm/sheep.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/background.png,oui,libre,"dessiné pour le projet (gradle/images/make_soundsoflife_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/elephant.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/frog.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/leopard.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/monkey.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/parrot.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/jungle/snake.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/savanna/background.png,oui,libre,"dessiné pour le projet (gradle/images/make_soundsoflife_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/savanna/crocodile.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/savanna/giraffe.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/savanna/lion.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/savanna/zebra.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/sea/background.png,oui,libre,"dessiné pour le projet (gradle/images/make_soundsoflife_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/sea/crab.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/sea/dolphin.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/sea/fish.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/sea/octopus.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
+gazeplay-games/src/main/resources/data/soundsoflife/sea/whale.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
 gazeplay-games/src/main/resources/data/space/alien/Blue.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
 gazeplay-games/src/main/resources/data/space/alien/Green.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
 gazeplay-games/src/main/resources/data/space/alien/Orange.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........

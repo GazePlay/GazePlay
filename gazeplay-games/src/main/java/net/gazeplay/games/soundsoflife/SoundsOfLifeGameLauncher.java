@@ -36,6 +36,7 @@ public class SoundsOfLifeGameLauncher implements IGameLauncher<Stats, EnumGameVa
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<SoundsOfLifeGameVariant> gameVariant, Stats stats, double gameSeed) {
-        return new SoundsOfLife(gameContext, stats, gameVariant.getEnumValue());
+        // With the seed of the saved game (30/10/2026: a new one used to be drawn, so the sounds changed)
+        return new SoundsOfLife(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
     }
 }

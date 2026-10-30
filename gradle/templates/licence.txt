@@ -115,6 +115,12 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images des petits chevaux (plateaux et boutons du dé) : dessinées pour GazePlay Learning
   (gradle/images/make_horses_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 des
   images de source inconnue.
+- Images et sons des « Sons de la vie » (data/soundsoflife) : décors dessinés pour GazePlay Learning
+  (gradle/images/make_soundsoflife_images.py), sous la licence du projet ; animaux d'OpenMoji
+  (https://openmoji.org/), licence CC BY-SA 4.0 ; 15 sons de Wikimedia Commons, sous CC0, domaine public,
+  CC BY ou CC BY-SA 4.0, et 6 sons repris de « Où est le son ? ». L'auteur, la licence et la page de chaque
+  fichier sont dans data/soundsoflife/CREDITS.txt. Ils remplacent depuis octobre 2026 des images et des sons
+  de source inconnue.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
   data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
   public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier

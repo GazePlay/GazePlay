@@ -1,0 +1,17 @@
+# The principle
+Listen to the animals: each animal you look at makes its sound, and its name is shown.
+
+# How to play
+- Look at an animal: a ring goes around the animal (fixation length of the settings).
+- When the ring is full, the animal makes its sound, swings, and its name is shown above it.
+- Look at another animal, or at the same one to hear it again.
+
+# How to win
+There is nothing to win: you discover the animals and their sounds, as long as you like. The game does not stop by itself: leave with the gear at the bottom left.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Farm: sheep, cow, horse, pig, rooster and hen.
+- Jungle: monkey, parrot, elephant, leopard, snake and frog.
+- Savanna: lion, zebra, giraffe and crocodile.
+- Sea: dolphin, whale, fish, octopus and crab.

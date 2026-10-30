@@ -30,6 +30,13 @@ game puts the pawns) and the buttons of the die (rollImages/roll<TEAM>.png) are 
 folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (October 2026) images of unknown
 source; selector.png is removed (the game draws a ring). The pawns (biboules/*.png) are drawings of the project, kept.
 
+Images and sounds of Sounds Of Life (gazeplay-games: data/soundsoflife): the 4 backgrounds are drawn by
+make_soundsoflife_images.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later); the animals are
+OpenMoji (CC BY-SA 4.0), resized; 15 sounds come from Wikimedia Commons (CC0, public domain, CC BY or CC BY-SA 4.0)
+and 6 from Where Is The Sound. The author, licence and page of each file are in data/soundsoflife/CREDITS.txt,
+shipped with the game. They replace (October 2026) images and sounds of unknown source (some from picture banks).
+The thumbnail (gazeplay-core: data/common/Thumbnails/soundsOfLife.png) is a capture of the farm, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

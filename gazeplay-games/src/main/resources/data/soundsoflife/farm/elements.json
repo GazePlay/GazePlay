@@ -2,77 +2,76 @@
   "background": "background.png",
   "elements": [
     {
-      "image": "horse.png",
-      "scale": 4.4,
+      "image": "sheep.png",
+      "scale": 0.55,
       "coords": {
-        "x": 4900,
-        "y": 3400
+        "x": 430,
+        "y": 720
       },
       "sounds": [
-        "horse.wav",
-        "horse2.wav"
-      ]
+        "sheep.mp3"
+      ],
+      "name": "SoundsOfLife_sheep"
     },
     {
       "image": "cow.png",
-      "scale": 4,
+      "scale": 0.6,
       "coords": {
-        "x": 3520,
-        "y": 2520
+        "x": 1330,
+        "y": 700
       },
       "sounds": [
-        "cow.wav"
-      ]
+        "cow.mp3"
+      ],
+      "name": "SoundsOfLife_cow"
     },
     {
-      "image": "hen.png",
-      "scale": 2.3,
+      "image": "horse.png",
+      "scale": 0.55,
       "coords": {
-        "x": 2018,
-        "y": 3370
+        "x": 1680,
+        "y": 600
       },
       "sounds": [
-        "hen.wav",
-        "hen2.wav"
-      ]
+        "horse.mp3"
+      ],
+      "name": "SoundsOfLife_horse"
     },
     {
       "image": "pig.png",
-      "scale": 3.3,
+      "scale": 0.5,
       "coords": {
-        "x": 3280,
-        "y": 3800
+        "x": 930,
+        "y": 880
       },
       "sounds": [
-        "pig.wav",
-        "pig1.wav",
-        "pig2.wav"
-      ]
+        "pig.mp3"
+      ],
+      "name": "SoundsOfLife_pig"
     },
     {
       "image": "rooster.png",
-      "scale": 3,
+      "scale": 0.42,
       "coords": {
-        "x": 1170,
-        "y": 3720
+        "x": 200,
+        "y": 900
       },
       "sounds": [
-        "rooster.wav",
-        "rooster2.wav"
-      ]
+        "rooster.mp3"
+      ],
+      "name": "SoundsOfLife_rooster"
     },
     {
-      "image": "sheep.png",
-      "scale": 2,
+      "image": "hen.png",
+      "scale": 0.42,
       "coords": {
-        "x": 1520,
-        "y": 2520
+        "x": 620,
+        "y": 930
       },
       "sounds": [
-        "sheep.wav",
-        "sheep2.wav",
-        "sheep3.wav"
-      ]
+        "hen.mp3"
+      ],
+      "name": "SoundsOfLife_hen"
     }
   ]
 }

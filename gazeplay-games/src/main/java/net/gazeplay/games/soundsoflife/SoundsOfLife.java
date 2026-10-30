@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.geometry.Dimension2D;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * Game "SoundsOfLife": a scene of the variant (farm, jungle, savanna, sea) shows pictures that play their sounds after
- * a fixation; there is nothing to win, the player explores.
+ * Game "SoundsOfLife" (reviewed on 30/10/2026, REVUE_DES_JEUX.md): a scene of the variant (farm, jungle, savanna,
+ * sea) shows animals that play their sound after a fixation, and show their name; there is nothing to win, the player
+ * explores. The scenes are described by data/soundsoflife/&lt;scene&gt;/elements.json (gradle/images/make_soundsoflife_images.py).
  */
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
@@ -53,9 +53,10 @@ public class SoundsOfLife implements GameLifeCycle {
     }
 
     /**
-     * Places the background picture of the scene, scaled for the game area.
+     * Places the background picture of the scene, scaled and centered in the game area (the animals are placed after
+     * it, also when it is not shown: 30/10/2026, they used to be shifted when the background was disabled).
      */
-    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
+    private void placeBackground(ImageView background, Dimension2D dimensions, double scaleRatio) {
         background.setFitWidth(background.getImage().getWidth() * scaleRatio);
         background.setFitHeight(background.getImage().getHeight() * scaleRatio);
 
@@ -64,8 +65,6 @@ public class SoundsOfLife implements GameLifeCycle {
 
         background.setX(offsetX);
         background.setY(offsetY);
-
-        gameContext.getChildren().add(background);
     }
 
     @Override
@@ -90,8 +89,9 @@ public class SoundsOfLife implements GameLifeCycle {
         double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
             dimensions.getHeight() / backgroundImage.getHeight());
 
+        placeBackground(background, dimensions, scaleRatio);
         if (config.isBackgroundEnabled()) {
-            createBackground(background, dimensions, scaleRatio, gameContext);
+            gameContext.getChildren().add(background);
         }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
@@ -114,14 +114,6 @@ public class SoundsOfLife implements GameLifeCycle {
             final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
-            // Creating progress indicator
-            ProgressIndicator progressIndicator = new ProgressIndicator(0);
-            double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2;
-            progressIndicator.setPrefSize(progIndicSize, progIndicSize);
-            progressIndicator.setLayoutX(x - progIndicSize / 2);
-            progressIndicator.setLayoutY(y - progIndicSize / 2);
-            progressIndicator.setOpacity(0);
-
             // Listing all the sound paths
             JsonArray soundPaths = elementObj.getAsJsonArray("sounds");
             ArrayList<String> sounds = new ArrayList<>();
@@ -129,8 +121,10 @@ public class SoundsOfLife implements GameLifeCycle {
                 sounds.add(path + sound.getAsString());
             }
 
-            SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                gameContext, gameContext.getSoundManager(), randomGenerator);
+            String name = elementObj.has("name") ? gameContext.getTranslator().translate(elementObj.get("name").getAsString())
+                : "";
+            SoundMakingEntity entity = new SoundMakingEntity(imageView, name, stats, sounds, gameContext,
+                gameContext.getSoundManager(), randomGenerator);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }

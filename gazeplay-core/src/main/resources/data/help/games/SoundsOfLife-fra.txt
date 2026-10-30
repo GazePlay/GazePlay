@@ -1,0 +1,17 @@
+# Le principe
+Écoute les cris des animaux : chaque animal regardé fait son cri, et son nom s'affiche.
+
+# Comment jouer
+- Regarde un animal : un anneau fait le tour de l'animal (durée de fixation des réglages).
+- Quand l'anneau est complet, l'animal fait son cri, se balance, et son nom s'affiche au-dessus de lui.
+- Regarde un autre animal, ou le même pour l'entendre encore.
+
+# Comment gagner
+Il n'y a rien à gagner : on découvre les animaux et leurs cris, aussi longtemps qu'on veut. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Ferme : mouton, vache, cheval, cochon, coq et poule.
+- Jungle : singe, perroquet, éléphant, léopard, serpent et grenouille.
+- Savane : lion, zèbre, girafe et crocodile.
+- Mer : dauphin, baleine, poisson, pieuvre et crabe.

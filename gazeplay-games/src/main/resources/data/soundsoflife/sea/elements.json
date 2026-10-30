@@ -1,60 +1,65 @@
 {
-  "background": "fond.png",
+  "background": "background.png",
   "elements": [
     {
-      "image": "bulles.png",
-      "scale": 0.3,
+      "image": "dolphin.png",
+      "scale": 0.55,
       "coords": {
-        "x": 800,
-        "y": 700
+        "x": 560,
+        "y": 300
       },
       "sounds": [
-        "bulle_temp.wav"
-      ]
+        "dolphin.mp3"
+      ],
+      "name": "SoundsOfLife_dolphin"
     },
     {
-      "image": "crabe.png",
-      "scale": 0.3,
+      "image": "whale.png",
+      "scale": 0.75,
       "coords": {
-        "x": 490,
-        "y": 350
+        "x": 1330,
+        "y": 320
       },
       "sounds": [
-        "plouf.wav"
-      ]
+        "whale.mp3"
+      ],
+      "name": "SoundsOfLife_whale"
     },
     {
-      "image": "algue.png",
-      "scale": 0.2,
+      "image": "fish.png",
+      "scale": 0.46,
       "coords": {
-        "x": 630,
-        "y": 305
+        "x": 960,
+        "y": 600
       },
       "sounds": [
-        "roseau_chine.wav"
-      ]
+        "fish.mp3"
+      ],
+      "name": "SoundsOfLife_fish"
     },
     {
-      "image": "meduse.png",
-      "scale": 0.5,
+      "image": "octopus.png",
+      "scale": 0.48,
       "coords": {
-        "x": 875,
-        "y": 350
+        "x": 400,
+        "y": 830
       },
       "sounds": [
-        "eau_écoulement.wav"
-      ]
+        "octopus.mp3"
+      ],
+      "name": "SoundsOfLife_octopus"
     },
     {
-      "image": "poulpe.png",
-      "scale": 0.4,
+      "image": "crab.png",
+      "scale": 0.46,
       "coords": {
-        "x": 325,
-        "y": 750
+        "x": 1460,
+        "y": 900
       },
       "sounds": [
-        "eau_remplissage.wav"
-      ]
+        "crab.mp3"
+      ],
+      "name": "SoundsOfLife_crab"
     }
   ]
 }

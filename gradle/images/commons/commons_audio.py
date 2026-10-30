@@ -23,8 +23,14 @@ TERMS = {
 def api(params):
     url = API + "?" + urllib.parse.urlencode(dict(params, format="json", formatversion="2"))
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+    # A few tries: the API sometimes answers with an error (too many requests)
+    for attempt in range(4):
+        with urllib.request.urlopen(req, timeout=60) as r:
+            answer = json.load(r)
+        if "query" in answer or "error" not in answer:
+            return answer
+        time.sleep(5 * (attempt + 1))
+    return answer
 
 
 def clean(text):
@@ -55,6 +61,9 @@ def candidates(term):
 
 
 if sys.argv[1] == "list":
+    # Other subjects than those of Where Is The Sound: list <out.json> name=term1;term2 ... (Sounds Of Life, 30/10/2026)
+    if len(sys.argv) > 3:
+        TERMS = {arg.split("=")[0]: arg.split("=")[1].split(";") for arg in sys.argv[3:]}
     result = {}
     for name, terms in TERMS.items():
         seen, found = set(), []

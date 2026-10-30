@@ -1,0 +1,29 @@
+Sounds Of Life (gazeplay-games: data/soundsoflife), October 2026.
+
+Backgrounds (<scene>/background.png): drawn for GazePlay Learning by gradle/images/make_soundsoflife_images.py,
+under the license of GazePlay Learning (GPL-3.0-or-later).
+Animals (<scene>/<animal>.png): All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji
+and icon project. License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Resized.
+
+Sounds from Wikimedia Commons (file | title | author | licence | source), shortened to 8 s at most, normalized,
+mono MP3 (ffmpeg); chosen after their title and description, without listening:
+farm/horse.mp3 | Wiehern.ogg | Hü. | Public domain | https://commons.wikimedia.org/wiki/File:Wiehern.ogg
+farm/rooster.mp3 | Medium rooster crowing.ogg | alys | Public domain | https://commons.wikimedia.org/wiki/File:Medium_rooster_crowing.ogg
+farm/hen.mp3 | Hen announcing shes lain an egg.ogg | alys | Public domain | https://commons.wikimedia.org/wiki/File:Hen_announcing_shes_lain_an_egg.ogg
+jungle/frog.mp3 | Single Frog Croak.oga | MichaeltheFox8621 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Single_Frog_Croak.oga
+jungle/leopard.mp3 | Jaguar saw.flac | About Zoos | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Jaguar_saw.flac
+jungle/monkey.mp3 | Howler monkey.ogg | David O'Hara | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Howler_monkey.ogg
+jungle/parrot.mp3 | Talking Parrot (Psittacula krameri).ogg | Amada44 | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Talking_Parrot_(Psittacula_krameri).ogg
+savanna/crocodile.mp3 | Size-does-matter-crocodile-mothers-react-more-to-the-voice-of-smaller-offspring-srep15547-s2.oga | Chabert T, Colin A, Aubin T, Shacks V, Bourquin S, Elsey R, Acosta J, Mathevon N | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Size-does-matter-crocodile-mothers-react-more-to-the-voice-of-smaller-offspring-srep15547-s2.oga
+savanna/zebra.mp3 | Grévys zebra (Sound Effects).ogg | DiegoC472 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Gr%C3%A9vys_zebra_(Sound_Effects).ogg
+savanna/giraffe.mp3 | Giraffe Hum.oga | Anton Baotic, Florian Sicks and Angela S. Stoeger | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Giraffe_Hum.oga
+sea/whale.mp3 | Humpbackwhale2.ogg | Spyrogumas | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Humpbackwhale2.ogg
+sea/dolphin.mp3 | Whistle 16×.ogg | National Oceanic Atmospheric Administration | Public domain | https://commons.wikimedia.org/wiki/File:Whistle_16%C3%97.ogg
+sea/fish.mp3 | Bubbles.wav | Gloria Mcilwain | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Bubbles.wav
+sea/octopus.mp3 | Water bubbles chortling.ogg | stephan | Public domain | https://commons.wikimedia.org/wiki/File:Water_bubbles_chortling.ogg
+sea/crab.mp3 | Bathtub water splashes.ogg | gradha | Public domain | https://commons.wikimedia.org/wiki/File:Bathtub_water_splashes.ogg
+
+Sounds taken from Where Is The Sound (see data/whereIsTheSound/CREDITS.txt):
+farm/cow.mp3, farm/pig.mp3, savanna/lion.mp3: La Sonothèque (https://lasonotheque.org), CC0 1.0;
+farm/sheep.mp3: Sheep bleating.ogg, earthcalling, public domain;
+jungle/elephant.mp3: Elephant voice - trumpeting.ogg, CC0; jungle/snake.mp3: Rattlesnake.ogg, public domain.

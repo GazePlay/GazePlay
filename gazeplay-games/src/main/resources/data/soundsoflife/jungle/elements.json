@@ -2,79 +2,76 @@
   "background": "background.png",
   "elements": [
     {
-      "image": "parrot.png",
-      "scale": 0.15,
-      "coords": {
-        "x": 620,
-        "y": 200
-      },
-      "sounds": [
-        "parrot.wav",
-        "parrot2.wav",
-        "parrot3.wav",
-        "parrot4.wav"
-      ]
-    },
-    {
-      "image": "snake.png",
-      "scale": 0.15,
-      "coords": {
-        "x": 250,
-        "y": 750
-      },
-      "sounds": [
-        "snake.wav",
-        "snake2.wav"
-      ]
-    },
-    {
       "image": "monkey.png",
-      "scale": 0.3,
+      "scale": 0.42,
       "coords": {
-        "x": 500,
-        "y": 650
+        "x": 420,
+        "y": 330
       },
       "sounds": [
-        "monkey.wav"
-      ]
+        "monkey.mp3"
+      ],
+      "name": "SoundsOfLife_monkey"
     },
     {
-      "image": "jaguar.png",
+      "image": "parrot.png",
       "scale": 0.4,
       "coords": {
-        "x": 1200,
-        "y": 720
+        "x": 1580,
+        "y": 270
       },
       "sounds": [
-        "jaguar.wav",
-        "jaguar2.wav",
-        "jaguar3.wav"
-      ]
+        "parrot.mp3"
+      ],
+      "name": "SoundsOfLife_parrot"
     },
     {
       "image": "elephant.png",
-      "scale": 0.4,
+      "scale": 0.7,
       "coords": {
-        "x": 820,
-        "y": 450
+        "x": 1480,
+        "y": 740
       },
       "sounds": [
-        "elephant.wav",
-        "elephant2.wav",
-        "elephant3.wav"
-      ]
+        "elephant.mp3"
+      ],
+      "name": "SoundsOfLife_elephant"
+    },
+    {
+      "image": "leopard.png",
+      "scale": 0.55,
+      "coords": {
+        "x": 860,
+        "y": 660
+      },
+      "sounds": [
+        "leopard.mp3"
+      ],
+      "name": "SoundsOfLife_leopard"
+    },
+    {
+      "image": "snake.png",
+      "scale": 0.45,
+      "coords": {
+        "x": 300,
+        "y": 860
+      },
+      "sounds": [
+        "snake.mp3"
+      ],
+      "name": "SoundsOfLife_snake"
     },
     {
       "image": "frog.png",
-      "scale": 0.3,
+      "scale": 0.4,
       "coords": {
-        "x": 750,
-        "y": 700
+        "x": 940,
+        "y": 930
       },
       "sounds": [
-        "frog.wav",
-        "frog2.wav"
-      ]
+        "frog.mp3"
+      ],
+      "name": "SoundsOfLife_frog"
     }
   ]
 }

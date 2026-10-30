@@ -250,7 +250,7 @@ Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026
 | Find The Odd One Out (`FindTheOddOneOut`) | Libre probable : 48 photos Pixabay d'avant 2019 | ✔ 29/10 | ✔ 29/10 (consigne dite, pas de doublon) |
 | Where Is It (`WhereIsIt`, images de l'utilisateur) | Pas d'image propre | ✔ 29/10 (et fenêtre du dossier) | ✔ 29/10 |
 | **Coloring** (`Coloring`) | **Remplacés le 29/10** : 24 contours OpenMoji (CC BY-SA 4.0) ; Hello Kitty et les anciens coloriages retirés | ✔ 29/10 (boîte à outils, anneau, carte) | ✔ 29/10 (3 palettes + palette personnalisée, annuler, recommencer) |
-| **Sounds Of Life** (`SoundsOfLife`) | **Risque** : 32 cliparts et décors (un décor signé Danilo Sanino, illustrateur de banques d'images) | | |
+| **Sounds Of Life** (`SoundsOfLife`) | **Remplacées le 30/10** : 4 décors dessinés, 21 animaux OpenMoji ; 21 sons (15 de Commons, 6 de Where Is The Sound), crédités | ✔ 30/10 (anneau, nom de l'animal) | ✔ 30/10 (rejeu, placement sans fond, exception) |
 | **Spot The Differences** (`SpotDifference`) | **Risque** : 15 scènes dessinées sans source | | |
 | **Pet** (`Pet`) | **Risque** : 21 images (photos de pièces et d'objets, pictogrammes) | | |
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Risque** : 21 images, dont billets et pièces en euros (règles de reproduction de la BCE), mains, dés | | |
@@ -939,3 +939,67 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   `allGamesTest -PallGamesOnly=Memory -PallGamesRepeat=5` réussi ; photos du jeu sans fenêtre.
   **Reste** : l'essai réel du mainteneur.
 - **Commit** : le 30/10/2026, avec la nouvelle fenêtre des variantes des jeux revus (`feat(memory)`), à la demande du mainteneur.
+
+### Sounds Of Life (`SoundsOfLife`, code `soundsoflife`) — 30/10/2026
+
+- **Ce qu'il fait / variantes** (lecture du code, 371 lignes) : une scène (Ferme, Jungle, Savane, Mer) avec des
+  animaux ou des objets ; une fixation sur l'un d'eux joue un de ses sons (à tour de rôle) et le fait se balancer.
+  Rien à gagner : on explore (un but atteint par son joué). Scènes décrites par `elements.json` (image, échelle,
+  position, sons).
+- **Défauts vus (faits, lecture du code)** :
+  - D1. **Rejeu** : `replayGame` n'utilise pas la graine enregistrée (nouveau tirage) : le premier son de chaque
+    élément change au rejeu.
+  - D2. **Fond désactivé dans les réglages** : les éléments sont placés d'après le fond, qui n'est alors jamais
+    placé ; ils sont décalés vers le haut et la gauche (sauf si l'image tient exactement la zone de jeu).
+  - D3. Une sortie du regard avant toute entrée lève une exception (`progressTimeline` nul) ; indicateur de
+    fixation gris au centre de l'image.
+  - D4. Pas de nom de l'animal : on entend le son sans savoir ce que c'est (pas d'aide à l'apprentissage).
+  - D5. `farm/background.jpg` n'est pas utilisé (le jeu lit `background.png`) ; les sources `.svg` de la mer sont
+    livrées avec les `.png`.
+- **Images et sons (licences)** : **à risque** : décors et animaux de la ferme, de la jungle et de la savane (Téo
+  Blachère, 2019, sans source ; style de banque d'images, le décor de la ferme porte le nom de Danilo Sanino,
+  illustrateur de Shutterstock, dans ses métadonnées). Mer (Iluvrog, 2021, avec ses `.svg`) : source non dite, peut-être
+  dessinée par l'auteur. **Sons non inventoriés** : 47 `.wav` sans source (la vache, le cochon, le mouton, l'éléphant, le
+  lion, le serpent, le coq ou la poule ont un équivalent libre déjà vérifié dans Where Is The Sound).
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur) :
+  - Images et sons
+    - I1. Animaux d'OpenMoji (CC BY-SA 4.0), comme Memory : vache, poule, cheval, cochon, coq, mouton ; éléphant,
+      grenouille, léopard (pour le jaguar), singe, perroquet, serpent ; crocodile, lion, et pour la hyène et
+      l'autruche (pas d'émoji) : zèbre et girafe, ou d'autres animaux de la savane qui ont un son libre.
+    - I2. Décors dessinés pour le projet (script, comme la mare de Frogs Race) : ferme, jungle, savane ; la mer
+      aussi, ou gardée si son auteur confirme qu'il l'a dessinée.
+    - I3. Sons : reprendre ceux de Where Is The Sound déjà vérifiés (vache, poule, cochon, mouton, éléphant, lion,
+      serpent) ; chercher les autres sur Commons ou La Sonothèque (CC0, CC BY), crédités ; inventaire des sons du jeu.
+  - Graphisme
+    - G1. Anneau de fixation de la couleur principale autour de l'animal, à la place de l'indicateur gris.
+    - G2. Quand le son joue, le **nom de l'animal** s'affiche dans une pastille au-dessus de lui (traduit).
+  - Corrections
+    - P1. D1 (graine du rejeu), D2 (placement sans fond), D3 (exception) ; retirer `farm/background.jpg` et les
+      `.svg` inutiles.
+- **Questions au mainteneur** : I1 (hyène et autruche : les remplacer par d'autres animaux ?) ; I2 (la mer :
+  redessiner, ou garder ?) ; G2 (le nom affiché vous convient-il ?)
+- **Réponses du mainteneur (30/10/2026)** : tout est validé ; zèbre et girafe ; la mer redessinée ; le nom affiché
+  convient.
+- **Fait (30/10/2026)** :
+  - Images (I1, I2) : les 4 décors dessinés par `gradle/images/make_soundsoflife_images.py` (ferme avec grange et
+    clôture, jungle, savane avec point d'eau, fond marin), qui place aussi les animaux et écrit `elements.json` ;
+    21 animaux OpenMoji (CC BY-SA 4.0). Scènes : Ferme (mouton, vache, cheval, cochon, coq, poule), Jungle (singe,
+    perroquet, éléphant, léopard, serpent, grenouille), Savane (lion, zèbre, girafe, crocodile), Mer (dauphin,
+    baleine, poisson, pieuvre, crabe). Tous les anciens fichiers retirés (images, `.wav`, `.svg`, `background.jpg`).
+  - Sons (I3) : un son MP3 par animal (raccourci à 8 s, normalisé, mono) : 15 de Wikimedia Commons (CC0, domaine
+    public, CC BY 3.0/4.0, CC BY-SA 4.0), 6 repris de Where Is The Sound (vache, cochon, mouton, éléphant, serpent,
+    lion). Auteur, licence et page de chacun dans `data/soundsoflife/CREDITS.txt`, livré avec le jeu ; crédits aussi
+    dans `gradle/images/README.txt` et `gradle/templates/licence.txt`. **Les 15 sons de Commons ont été choisis
+    d'après leur titre et leur description, sans écoute** : à écouter (le poisson, la pieuvre et le crabe sont des
+    bruits d'eau et de bulles, le dauphin un sifflement accéléré, la girafe un bourdonnement grave).
+  - G1 : anneau de la couleur principale autour de l'animal, qui se remplit pendant la fixation.
+  - G2 : le nom de l'animal (traduit, 21 clés `SoundsOfLife_<animal>` en français et en anglais) s'affiche 3 s dans
+    une pastille au-dessus de lui quand le son joue.
+  - P1 : le rejeu reprend la graine de la partie (D1) ; les animaux sont placés au même endroit avec ou sans fond (D2) ;
+    plus d'exception quand le regard sort avant d'être entré (D3).
+  - Aide (`SoundsOfLife-fra.txt`, `-eng.txt`) : principe, comment jouer, rien à gagner, les 4 scènes. Vignette du
+    menu : capture de la ferme (960 x 540). Inventaire : `inventaire-images.csv` et `INVENTAIRE_IMAGES.md` à jour.
+- **Vérifications** : `SoundsOfLifeTest` (6 tests : fichiers de chaque scène, placement sans fond, mêmes sons au
+  rejeu et nom affiché) ; `GameHelpTest` avec `SoundsOfLife` ; captures sans fenêtre de la ferme et de la mer
+  (anneau et pastille vus) ; `allGamesTest -PallGamesOnly=SoundsOfLife -PallGamesRepeat=5` réussi ; `build` :
+  **617 tests, 0 échec**, SpotBugs sans alerte. Reste à faire par le mainteneur : jouer, et écouter les sons.
