@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -70,6 +71,37 @@ public class ReplayingGameFromJson {
      * Name of the simplified board of Horses when it was a game of its own, in the files saved before 30/10/2026.
      */
     static final String FORMER_HORSES_SIMPLIFIED = "Horses Simplified";
+
+    /**
+     * The games of Memory saved before 30/10/2026, when it was 6 games: what their cards showed, and whether they were
+     * face up.
+     */
+    private static final Map<String, String[]> FORMER_MEMORY = Map.of(
+        "Memory", new String[]{"MemoryContentImages", "MemoryHidden"},
+        "MemoryLetters", new String[]{"MemoryContentLetters", "MemoryHidden"},
+        "MemoryNumbers", new String[]{"MemoryContentNumbers", "MemoryHidden"},
+        "OpenMemory", new String[]{"MemoryContentImages", "MemoryVisible"},
+        "OpenMemoryLetters", new String[]{"MemoryContentLetters", "MemoryVisible"},
+        "OpenMemoryNumbers", new String[]{"MemoryContentNumbers", "MemoryVisible"});
+
+    /**
+     * @return the game and the variant of today of a game saved before it became a variant of another game, null for
+     *   the other games: "Horses Simplified" (replayed on the simplified board of Horses, with 2 players, its variant
+     *   being no longer offered), and the 6 former games of Memory (their variant "DimensionDifficultyGameVariant",
+     *   lines x columns and Normal or Dynamic, becomes a "GroupedGameVariant")
+     */
+    static String[] formerGame(final String nameCode, final String variant) {
+        if (FORMER_HORSES_SIMPLIFIED.equals(nameCode)) {
+            return new String[]{"Horses", "EnumGameVariant:net.gazeplay.games.horses.HorsesVariant:SIMPLIFIED_PLAYERS_2"};
+        }
+        final String[] memory = FORMER_MEMORY.get(nameCode);
+        if (memory != null && variant != null && variant.startsWith("DimensionDifficultyGameVariant:")) {
+            final String[] parts = variant.split(":");
+            final String size = "Dynamic".equals(parts[3]) ? "Dynamic" : parts[1] + "x" + parts[2];
+            return new String[]{"Memory", "GroupedGameVariant:" + memory[0] + ":" + memory[1] + ":" + size + ":-"};
+        }
+        return null;
+    }
 
     private static final ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
@@ -183,11 +215,10 @@ public class ReplayingGameFromJson {
         currentGameSeed = json.getGameSeed();
         currentGameNameCode = json.getGameName();
         currentGameVariant = json.getGameVariant();
-        // "Horses Simplified" became a variant of "Horses" (30/10/2026): its games are replayed on the simplified
-        // board, with 2 players (their variant, a number of players, is no longer offered)
-        if (FORMER_HORSES_SIMPLIFIED.equals(currentGameNameCode)) {
-            currentGameNameCode = "Horses";
-            currentGameVariant = "EnumGameVariant:net.gazeplay.games.horses.HorsesVariant:SIMPLIFIED_PLAYERS_2";
+        final String[] current = formerGame(currentGameNameCode, currentGameVariant);
+        if (current != null) {
+            currentGameNameCode = current[0];
+            currentGameVariant = current[1];
         }
         coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
         // Files are read as written, whatever their version (they are never rewritten): version 2 stores the fixation

@@ -12,6 +12,7 @@ A race of frogs on the pond: catch bugs to make your frog move forward.
 - The races follow one another: leave with the gear at the bottom left.
 
 # The variants
+Choose a variant (it is framed), then press "Start".
 - Easy: the other frogs are slow.
 - Normal: they go faster.
 - Hard: they go fast; catch the bugs without waiting.

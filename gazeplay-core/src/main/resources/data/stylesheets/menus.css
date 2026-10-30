@@ -839,6 +839,13 @@
     -fx-border-width: 4;
 }
 
+/* The variant chosen (reviewed games: it is started by the "Start" button) */
+.gp-menu .gp-variant.gp-variant-selected {
+    -fx-background-color: -gp-surface-hover;
+    -fx-border-color: -gp-accent;
+    -fx-border-width: 4;
+}
+
 /* The groups of variants: radio buttons drawn as switches */
 .gp-menu .gp-variant-groups .radio-button {
     -fx-background-color: transparent;

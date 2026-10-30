@@ -15,6 +15,7 @@ The game of horses (petits chevaux): take your pawns out of the stable, make the
 The first pawn reaching the center makes its team win.
 
 # The variants
+Choose a variant (it is framed), then press "Start".
 - Against 1, 2 or 3 computers: you play a team, the computer plays the others (with a short pause so that you follow it).
 - 2, 3 or 4 players: each one plays a team in turn, in front of the same screen.
 - At the bottom, the board: normal (4 pawns per team, a ladder of 6 squares) or simplified (1 pawn per team, a smaller board, a ladder of 3 squares).

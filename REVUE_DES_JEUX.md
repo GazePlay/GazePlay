@@ -167,6 +167,18 @@ français et en anglais, mêmes parties ; fenêtre « Lancer le jeu »), `GameVa
 `3h-aide-petits-chevaux`, `3i-aide-sans-variante`. `build` : **602 tests, 0 échec**. **Validé** : l'aide fait partie de l'étape 7 de chaque
 jeu revu ensuite.
 
+## Fenêtre des variantes des jeux revus (demande du mainteneur du 30/10/2026)
+
+Pour tout jeu revu (il a une aide, `GameHelp.exists`) : les boutons des variantes **choisissent** la variante (elle est
+entourée de la couleur principale ; la première est choisie à l'ouverture) sans lancer le jeu ; un bouton
+**« Commencer »** tout en bas, au centre, lance le jeu avec les choix faits (Entrée aussi) ; le « i » de l'aide est à
+sa droite. **Tous les boutons radio sont en bas**, sous les variantes, au-dessus de « Commencer » (les groupes juste
+au-dessus des sous-groupes pour les variantes à deux niveaux, `GroupedGameVariant`). Entre deux rangées de boutons radio, un
+espace net (28 px), la fenêtre agrandie d'autant. En changeant de groupe, la
+variante à la même place reste choisie. Les jeux pas encore revus gardent l'ancien fonctionnement (un clic lance, les
+boutons radio en haut). Tests : `GameVariantDialogTest`. Captures `3a-variantes-memory`, `3a-variantes-ou-est-l-animal`,
+`3a-variantes-petits-chevaux`. Les aides disent « En bas » pour ces boutons et expliquent « Commencer ». `build` : **610 tests, 0 échec**.
+
 ## Marche à suivre pour chaque jeu
 
 Chaque jeu passe par les mêmes 8 étapes. Les étapes 1 et 2 ne changent rien : elles finissent par une proposition que
@@ -218,7 +230,7 @@ urgent (images non libres, jeux très joués) au plus simple ; le mainteneur peu
 10. **GazePlay Eval et GazePlay Eval Test** : en dernier (contrat avec le site GazePlay Eval, format de résultats
     versionné).
 
-Après chaque famille : `allGamesTest` complet (76 entrées depuis le 30/10/2026), et point avec le mainteneur.
+Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026), et point avec le mainteneur.
 
 ## Légende des images
 
@@ -228,7 +240,7 @@ Après chaque famille : `allGamesTest` complet (76 entrées depuis le 30/10/2026
 - **OK** : libre, ou sans originalité (lettres, formes, couleurs, drapeaux).
 - **Remplacé le 28/10** : images refaites (OpenMoji ou dessin par script), à regarder en vrai.
 
-## Jeux (77 entrées du catalogue au 29/10/2026, 76 depuis : Horses Simplified est une variante de Horses)
+## Jeux (77 entrées du catalogue au 29/10/2026, 71 depuis le 30/10 : Horses Simplified et les 5 autres Memory sont des variantes)
 
 | Jeu (nameCode) | Images (inventaire du 28/10/2026) | Graphisme | Gameplay |
 |---|---|---|---|
@@ -249,7 +261,7 @@ Après chaque famille : `allGamesTest` complet (76 entrées depuis le 30/10/2026
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
 | Labyrinth (`Labyrinth`) | **Remplacé le 28/10** : animaux sans fond (OpenMoji) ; à confirmer : 19 dessins (souris, flèches, fromage) et 9 du dossier `common` des jeux | | |
-| Memory, Memory Letters, Memory Numbers, Open Memory (×3) | Images par défaut : 10 animaux **remplacés le 28/10** (OpenMoji) ; **risque** : 9 animaux dessinés (chouette, crabe… « Free Fundation », source non dite) ; lettres et chiffres OK | | |
+| **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
 | Blocks, Casse-Brique, Ninja, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
 | Puzzle (`Puzzle`) | À confirmer : 36 images (Biboule, paysages) ; la Joconde est dans le domaine public | | |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
@@ -848,3 +860,82 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   `allGamesTest` Horses et Horses Simplified, 5 fois chacun ; photos du jeu sans fenêtre. **Reste** : l'essai réel
   du mainteneur (souris et Tobii), en particulier une partie contre l'ordinateur.
 - **Commit** : avec l'aide des jeux, le 30/10/2026 (`feat(horses)`), à la demande du mainteneur.
+
+### Famille Memory (6 entrées, code `memory`) — 30/10/2026
+
+- **Ce qu'il fait / variantes** (lecture du code : `Memory` 394 lignes, `MemoryCard` 383, 6 lanceurs, 6 specs, un seul
+  générateur de variantes) : des cartes face cachée (Memory, Memory Letters, Memory Numbers) ou face visible (Open
+  Memory, Open Memory Letters, Open Memory Numbers) ; une fixation retourne (ou choisit) une carte ; deux cartes
+  identiques sont retirées, sinon elles se retournent après 1 s. Quand il ne reste plus de carte : « Bravo », puis une
+  nouvelle manche (pas de fin). Variantes : Normal 2×2, 2×3, 3×2, 3×4, 4×3, et Dynamique (départ 2×2 ; la taille
+  change selon le nombre d'essais). Images : Memory lit les dossiers partagés `magiccards` puis `default` du profil,
+  sinon les images par défaut (`data/common/default`) ; lettres et chiffres : `data/common/letters`, `numbers`.
+- **Défauts vus (faits, lecture du code)** :
+  - D1. **Dynamique** : la règle « 3 manches de suite » compare 3 fois le **même** nombre d'essais (celui de la
+    manche qui vient de finir, `MemoryCard` lignes 173-178), au lieu des 3 dernières manches.
+  - D2. Une touche **Espace** sur une carte qui a le focus retire toutes les cartes et vide l'écran
+    (`gameInstance.dispose(); gameContext.clear()`), sans fin de partie ni retour au menu : écran vide.
+  - D3. Statistiques : un but atteint par paire trouvée, aucun but à atteindre (le nombre de paires n'est jamais
+    compté).
+  - D4. Le dos de carte (`red-card-game.png`) est rechargé depuis le disque à chaque carte retournée ou remise.
+  - D5. Aucun retour visible quand une paire est bonne (les cartes disparaissent) ou fausse (elles se retournent) ;
+    dans les versions visibles, une paire fausse ne se voit pas du tout.
+  - D6. Style d'origine : fond noir, cartes collées en hauteur, indicateur de fixation gris au centre de la carte.
+    Vignettes : 6 anciennes (celle de Memory montre une infirmière, sans rapport).
+  - D7. Images de l'utilisateur lues dans les anciens dossiers partagés `magiccards` et `default` (à remplacer par
+    une variante, règle du 29/10/2026).
+- **Images (licences)** : dos de carte `magiccards/images/red-card-game.png` : source inconnue (2017 ; aussi utilisé
+  par Magic Cards) ; images par défaut : 10 animaux OpenMoji (libres) et **9 à risque** (chouette, crabe, écureuil,
+  hérisson, lapin, méduse, poulpe, renard, tortue : « Free Fundation », source non dite ; aussi utilisées par Blocks,
+  Casse-Brique, Ninja, Scratch Card, Magic Cards, Cream Pie, Portrait Bubbles) ; lettres et chiffres : JPG noirs sur
+  blanc sans originalité (OK).
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur) :
+  - Images
+    - I1. Un dos de carte dessiné pour le projet (script), au style des menus, à la place de `red-card-game.png`
+      dans Memory (Magic Cards le garde jusqu'à sa revue).
+    - I2. Remplacer les 9 images par défaut à risque par des animaux OpenMoji (CC BY-SA 4.0, même méthode que les
+      10 déjà remplacés, `make_default_images.py`), mêmes noms de fichiers : profite aux 8 jeux qui les utilisent.
+    - I3. Lettres et chiffres dessinés par le jeu (police Fredoka, grande, centrée sur la carte) au lieu des JPG.
+    - I4. « Mes images » : une variante `UserImagesVariant` (dossier `files/images/Memory`), au lieu des dossiers
+      partagés `magiccards` et `default` (pas de migration).
+  - Graphisme
+    - G1. Fond des menus ; cartes arrondies avec un espace entre elles (`GameStyle.targetCard`), dos dessiné, face
+      sur carte blanche.
+    - G2. Anneau de fixation de la couleur principale autour de la carte (comme Where Is It), au lieu de
+      l'indicateur gris.
+    - G3. Retournement animé ; paire juste : contour vert, puis les deux cartes s'effacent ; paire fausse : contour
+      « danger » un instant, puis elles se retournent (et dans les versions visibles, le même contour).
+    - G4. Une pastille « Paires : 2 / 6 » ; nouvelles vignettes.
+  - Gameplay
+    - P1. **Une seule carte au menu « Memory » au lieu de 6** (comme les petits chevaux) : dans la fenêtre des
+      variantes, en haut le contenu (Images, Lettres, Chiffres, Mes images), les tailles et Dynamique au milieu, en
+      bas « Cartes cachées » ou « Cartes visibles ».
+    - P2. Corriger D1 (les 3 dernières manches) et D2 (plus de touche Espace).
+    - P3. Laisser la deuxième carte visible 1,5 s au lieu de 1 s avant qu'elle se retourne (à confirmer).
+    - P4. Statistiques : un but à atteindre par paire de la manche, atteint quand elle est trouvée (colonnes
+      inchangées).
+- **Décisions du mainteneur (30/10/2026)** : tout validé ✔ ; une seule carte ; 1,5 s ; lettres dessinées.
+- **Fait (30/10/2026)** :
+  - Une seule entrée « Memory » (les 5 autres retirées du catalogue : 71 entrées) ; variantes `GroupedGameVariant`
+    (nouvelle, `gazeplay-games-commons`, relue par `IGameVariant.toGameVariant`) : en haut Images, Lettres,
+    Chiffres, Mes images ; les tailles 2 × 2, 2 × 3, 3 × 2, 3 × 4, 4 × 3 et Dynamique ; en bas Cartes cachées,
+    Cartes visibles (48 variantes). `GameVariantDialog` range toute variante à deux groupes ainsi (boutons radio en
+    haut et en bas). « Mes images » : dossier `files/images/Memory` (`UserImagesVariant.folderOf` connaît la
+    nouvelle variante), ligne dans les réglages ; plus de lecture des dossiers partagés `magiccards` et `default`.
+  - `Memory` et `MemoryCard` réécrits : fond des menus, cartes arrondies espacées (jusqu'au carré quand il y a de
+    la place), dos dessiné par le jeu (couleur principale, cadre, « ? ») au lieu de `red-card-game.png` (gardé pour
+    Magic Cards), lettres et chiffres en Fredoka, anneau de fixation de la couleur principale, retournement animé,
+    cadre vert pour une paire, « danger » pour une paire fausse (aussi en cartes visibles), 1,5 s avant de se
+    retourner, pastille « Paires : n / N ». Plus de touche Espace. Dynamique : les 3 dernières manches.
+  - Statistiques : un but à atteindre par paire de la manche, atteint quand elle est trouvée (colonnes inchangées).
+  - Images par défaut : chouette, crabe, écureuil, hérisson, lapin, méduse, poulpe redessinés d'après OpenMoji
+    (mêmes noms) ; `renard.png` et `tortue.png` (un second renard, une seconde tortue) remplacés par `penguin.png`
+    et `frog.png` (`make_default_images.py`). Les versions sans fond du labyrinthe ne changent pas. Crédits : licence
+    affichée, `gradle/images/README.txt`, inventaire.
+  - Rejeu : les parties des 6 anciens jeux sont rejouées par Memory avec la variante correspondante
+    (`ReplayingGameFromJson.formerGame`) ; l'ordre des cartes d'une ancienne partie n'est pas retrouvé (autre tirage).
+  - Vignette refaite ; les 5 autres vignettes retirées. Aide du jeu (`data/help/games/Memory-*.txt`).
+- **Vérifications** : `build` : **607 tests, 0 échec** ; `MemoryTest` (7), `ReplayingGameFromJsonTest`, `GameHelpTest` ;
+  `allGamesTest -PallGamesOnly=Memory -PallGamesRepeat=5` réussi ; photos du jeu sans fenêtre.
+  **Reste** : l'essai réel du mainteneur.
+- **Commit** : le 30/10/2026, avec la nouvelle fenêtre des variantes des jeux revus (`feat(memory)`), à la demande du mainteneur.

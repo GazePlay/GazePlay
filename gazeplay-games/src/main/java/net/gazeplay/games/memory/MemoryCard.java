@@ -1,383 +1,272 @@
 package net.gazeplay.games.memory;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.Parent;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.stats.LevelsReport;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GameStyle;
 
 /**
- * A card of the Memory game; a fixation turns it over (face down cards) or selects it (face up cards).
+ * A card of Memory (reviewed on 30/10/2026): a rounded card of the colors of the menus showing a picture, a letter or a
+ * digit, face down (a back of the main color with a "?") or face up. During a fixation, a ring of the main color goes
+ * round the card; at its end, the card is chosen ({@link Memory#cardFixated}). It turns over with an animation, is
+ * framed in green with its pair, or in the color "danger" for a wrong pair.
  */
-@Slf4j
-public class MemoryCard extends Parent {
+public class MemoryCard extends Group {
 
-    private final double fixationlength;
+    private static final Duration TURN = Duration.millis(160);
 
-    private final Rectangle card;
+    @Getter
+    private final int pairId;
 
-    private final Image image;
-
-    private final int id;
+    private final Memory game;
 
     private final IGameContext gameContext;
 
-    private final Memory gameInstance;
+    /**
+     * The face (picture, letter or digit on a white card) and the back (face down cards only).
+     */
+    private final Group face;
+
+    private final Group back;
+
+    private final Rectangle ring;
+
+    private final double ringPerimeter;
+
+    private final DoubleProperty fixationProgress = new SimpleDoubleProperty(0);
+
+    private Timeline fixation;
 
     /**
-     * true if the card has been turned
+     * Chosen (turned over, or framed for the face up cards) and waiting for its pair.
      */
-    private boolean turned;
+    @Getter
+    private boolean selected;
 
-    private int cardAlreadyTurned;
+    /**
+     * Found with its pair, and removed.
+     */
+    @Getter
+    private boolean found;
 
-    private final ProgressIndicator progressIndicator;
-
-    private Timeline timelineProgressBar;
-
-    final Stats stats;
-
-    final EventHandler<Event> enterEvent;
-
-    final boolean isOpen;
-
-    private LevelsReport levelsReport;
-
-    private boolean mouseIsOverCard;
-
-
-    public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
-                      final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
-
-        this.isOpen = isOpen;
-
-        this.card = new Rectangle(positionX, positionY, width, height);
-
-        if (isOpen) {
-            this.card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-        } else {
-            this.card
-                .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
-        }
-
-        this.image = image;
-
-        this.id = idc;
-
+    /**
+     * @param image the picture of the face, or null for a text
+     * @param text  the letter or the digit of the face, when there is no picture
+     */
+    MemoryCard(final double x, final double y, final double width, final double height, final int pairId,
+               final Image image, final String text, final boolean faceUp, final Memory game,
+               final IGameContext gameContext) {
+        this.pairId = pairId;
+        this.game = game;
         this.gameContext = gameContext;
+        setLayoutX(x);
+        setLayoutY(y);
 
-        this.stats = stats;
+        final Rectangle surface = GameStyle.targetCard(0, 0, width, height);
+        final Node content;
+        if (image != null) {
+            final ImageView view = new ImageView(image);
+            view.setPreserveRatio(true);
+            view.setFitWidth(width * 0.84);
+            view.setFitHeight(height * 0.84);
+            final double shownWidth = Math.min(width * 0.84, height * 0.84 * image.getWidth() / image.getHeight());
+            final double shownHeight = Math.min(height * 0.84, width * 0.84 * image.getHeight() / image.getWidth());
+            view.setLayoutX((width - shownWidth) / 2);
+            view.setLayoutY((height - shownHeight) / 2);
+            content = view;
+        } else {
+            final double size = Math.min(width, height) * 0.62;
+            final Text glyph = new Text(text);
+            glyph.setFont(GameStyle.titleFont(size));
+            glyph.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: -gp-text;");
+            glyph.setX((width - glyph.getLayoutBounds().getWidth()) / 2 - glyph.getLayoutBounds().getMinX());
+            glyph.setY((height - glyph.getLayoutBounds().getHeight()) / 2 - glyph.getLayoutBounds().getMinY());
+            content = glyph;
+        }
+        face = new Group(surface, content);
 
-        this.turned = false;
+        back = createBack(width, height);
+        face.setVisible(faceUp);
+        back.setVisible(!faceUp);
 
-        this.cardAlreadyTurned = -1;
+        // The ring of the fixation, then the green or "danger" frame
+        final double radius = GameStyle.cardRadius(width, height);
+        ring = new Rectangle(0, 0, width, height);
+        ring.setArcWidth(2 * radius);
+        ring.setArcHeight(2 * radius);
+        ring.setFill(null);
+        ring.setStrokeType(StrokeType.INSIDE);
+        ring.setStrokeLineCap(StrokeLineCap.BUTT);
+        ring.setStrokeWidth(Math.max(5, Math.min(width, height) * 0.045));
+        ring.setVisible(false);
+        ring.setMouseTransparent(true);
+        ringPerimeter = 2 * (width + height) - (8 - 2 * Math.PI) * radius;
+        fixationProgress.addListener((observable, oldValue, newValue) ->
+            ring.getStrokeDashArray().setAll(newValue.doubleValue() * ringPerimeter, ringPerimeter));
 
-        this.fixationlength = fixationlength;
+        getChildren().addAll(face, back, ring);
 
-        this.gameInstance = gameInstance;
-
-        this.levelsReport = stats.getLevelsReport();
-
-        this.getChildren().add(card);
-
-        this.progressIndicator = createProgressIndicator(width, height);
-        this.getChildren().add(this.progressIndicator);
-
-        this.enterEvent = buildEvent();
-
-        gameContext.getGazeDeviceManager().addEventFilter(card);
-
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
-
-        // Escape Key to end game
-        this.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.SPACE) {
-                gameInstance.dispose();
-                gameContext.clear();
-                ke.consume();
-            }
-        });
-
-        this.mouseIsOverCard = false;
+        addEventFilter(MouseEvent.MOUSE_ENTERED, this::onEnter);
+        addEventFilter(GazeEvent.GAZE_ENTERED, this::onEnter);
+        addEventFilter(MouseEvent.MOUSE_EXITED, e -> stopFixation());
+        addEventFilter(GazeEvent.GAZE_EXITED, e -> stopFixation());
+        gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
     /**
-     * @return the progress indicator of a fixation on the card
+     * @return the back of a card face down: the main color, a lighter frame and a "?"
      */
-    private ProgressIndicator createProgressIndicator(final double width, final double height) {
-        final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(card.getX() + width * 0.05);
-        indicator.setTranslateY(card.getY() + height * 0.2);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
-        indicator.setOpacity(0);
-        return indicator;
+    private static Group createBack(final double width, final double height) {
+        final double radius = GameStyle.cardRadius(width, height);
+        final Rectangle card = new Rectangle(width, height);
+        card.setArcWidth(2 * radius);
+        card.setArcHeight(2 * radius);
+        card.setStyle("-fx-fill: -gp-accent; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        final double margin = Math.min(width, height) * 0.08;
+        final Rectangle frame = new Rectangle(margin, margin, width - 2 * margin, height - 2 * margin);
+        frame.setArcWidth(2 * radius * 0.7);
+        frame.setArcHeight(2 * radius * 0.7);
+        frame.setFill(null);
+        frame.setStyle("-fx-stroke: rgba(255, 255, 255, 0.55); -fx-stroke-width: " + Math.max(2, margin * 0.35) + ";");
+        final double size = Math.min(width, height) * 0.5;
+        final Text mark = new Text("?");
+        mark.setFont(GameStyle.titleFont(size));
+        mark.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: -gp-on-accent;");
+        mark.setX((width - mark.getLayoutBounds().getWidth()) / 2 - mark.getLayoutBounds().getMinX());
+        mark.setY((height - mark.getLayoutBounds().getHeight()) / 2 - mark.getLayoutBounds().getMinY());
+        return new Group(card, frame, mark);
     }
 
-    /**
-     * Turns the card over: the first card of a pair stays turned; with the second one, the pair is removed if both
-     * match, else both are turned back after a while. The round is won when no card is left.
-     */
-    private void onCorrectCardSelected() {
-
-        gameInstance.incNbCorrectCards();
-        log.debug("nbCorrect = {}", gameInstance.getNbCorrectCards());
-
-        stats.incrementNumberOfGoalsReached();
-
-        for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-            if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id == gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned) {
-                gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
-                gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
-                gameContext.getGazeDeviceManager()
-                    .removeEventFilter(gameInstance.currentRoundDetails.cardList.get(i).card);
-
-            } else if (gameInstance.currentRoundDetails.cardList.get(i).turned && !isOpen) {
-                gameInstance.currentRoundDetails.cardList.get(i).turned = false;
-                gameInstance.currentRoundDetails.cardList.get(i).card
-                    .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
-            }
-            gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
-        }
-        progressIndicator.setOpacity(0);
-
-        gameInstance.nbTurnedCards = 0;
-
-        gameInstance.removeSelectedCards();
-
-        /* No more cards to play : End of this game : Begin a new Game */
-        if (gameInstance.getNbRemainingPeers() == 0) {
-            if (gameInstance.getDifficulty().equals("Dynamic")) {
-                levelsReport.addRoundLevel(gameInstance.getLevel());
-                gameInstance.addRoundResult(gameInstance.totalNbOfTries());
-                int sizeOfList = gameInstance.getListOfResults().size();
-                int compare = 0;
-
-                log.debug("nbOfTries = {}", gameInstance.totalNbOfTries());
-                if (sizeOfList % 3 == 0 && sizeOfList != 0) {
-                    for (int i = 0; i < 3; i++) {
-                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
-                            compare++;
-                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
-                            compare--;
-                    }
-                    if (compare == 3) {
-                        if (gameInstance.getLevel() == 6)
-                            gameInstance.setLevel(gameInstance.getLevel() + 2);
-                        else
-                            gameInstance.setLevel(gameInstance.getLevel() + 1);
-                    }
-                    if (compare == -3) {
-                        if (gameInstance.getLevel() == 8)
-                            gameInstance.setLevel(gameInstance.getLevel() - 2);
-                        else
-                            gameInstance.setLevel(gameInstance.getLevel() - 1);
-                    }
-                    levelsReport.addRoundLevel(gameInstance.getLevel());
-                }
-
-                gameInstance.adaptLevel();
-            }
-
-            gameContext.updateScore(stats, gameInstance);
-
-            gameContext.playWinTransition(500, actionEvent -> {
-
-                gameInstance.resetNbCorrectCards();
-
-                gameInstance.resetNbWrongCards();
-
-                gameInstance.dispose();
-
-                gameContext.clear();
-
-                gameInstance.launch();
-            });
-        }
-    }
-
-    /* The 2 turned cards are not matching */
-    private void onWrongCardSelected() {
-
-        gameInstance.incNbWrongCards();
-        log.debug("nbWrong = {}", gameInstance.getNbWrongCards());
-
-        if (gameInstance.currentRoundDetails == null) {
+    private void onEnter(final Event event) {
+        if (!game.canChoose(this)) {
             return;
         }
+        stopFixation();
+        ring.setStyle("-fx-stroke: -gp-accent;");
+        ring.setVisible(true);
+        fixationProgress.set(0);
+        fixation = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
+            new KeyValue(fixationProgress, 1)));
+        fixation.setOnFinished(e -> {
+            ring.setVisible(false);
+            game.cardFixated(this);
+        });
+        fixation.playFromStart();
+    }
 
-        /* No cards are turned now */
-        for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-            if (gameInstance.currentRoundDetails.cardList.get(i).turned) {
-                gameInstance.currentRoundDetails.cardList.get(i).turned = false;
-                gameInstance.currentRoundDetails.cardList.get(i).progressIndicator.setOpacity(0);
-                if (!isOpen) {
-                    gameInstance.currentRoundDetails.cardList.get(i).card.setFill(
-                        new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
-                }
-            }
-            gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
+    private void stopFixation() {
+        if (fixation != null) {
+            fixation.stop();
+            fixation = null;
         }
-        gameInstance.nbTurnedCards = 0;
-
-        // Added, basically it runs a new timelineProgressBar when no cards are turned but the cursor is still on the card.
-        if(this.mouseIsOverCard){
-            if (timelineProgressBar != null) {
-                timelineProgressBar.stop();
-            }
-
-            progressIndicator.setOpacity(1);
-            progressIndicator.setProgress(0);
-
-            timelineProgressBar = new Timeline();
-
-            timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
-                new KeyValue(progressIndicator.progressProperty(), 1)));
-
-            timelineProgressBar.setOnFinished(actionEventInside -> {
-
-                gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
-                turned = true;
-                if (!isOpen) {
-                    card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                }
-
-                /* Update the cardAlreadyTurned for all other cards */
-                for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-                    gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
-                }
-                //Need to set progress to 1 manually because with fixationLength = 0 progress stays at 0
-                progressIndicator.setProgress(1);
-                progressIndicator.setOpacity(isOpen ? 0.5 : 0);
-            });
-
-
-            timelineProgressBar.play();
+        if (!selected) {
+            ring.setVisible(false);
         }
     }
 
     /**
-     * @return the handler turning the card over after a fixation of the length of the settings
+     * Chosen: a card face down turns over; a card face up is framed in the main color.
      */
-    private EventHandler<Event> buildEvent() {
-        return e -> {
-
-            if (turned) {
-                // If the cursor was on a card and then moved away while 2 cards are being turned, the mouse is no longer above the card.
-                if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    this.mouseIsOverCard = false;
-                }
-                return;
-            }
-            if (gameInstance.nbTurnedCards == 2) {
-                return;
-            }
-            /* First card */
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                this.mouseIsOverCard = true;
-                if (timelineProgressBar != null) {
-                    timelineProgressBar.stop();
-                }
-
-                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-                progressIndicator.setOpacity(1);
-                progressIndicator.setProgress(0);
-
-                timelineProgressBar = new Timeline();
-
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
-                    new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                timelineProgressBar.setOnFinished(actionEvent -> {
-
-                    if (cardAlreadyTurned == -1) { /* 1st card */
-                        gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
-                        turned = true;
-                        if (!isOpen) {
-                            card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                        }
-
-                        /* Update the cardAlreadyTurned for all other cards */
-                        for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-                            gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
-                        }
-                        //Need to set progress to 1 manually because with fixationLength = 0 progress stays at 0
-                        progressIndicator.setProgress(1);
-                        progressIndicator.setOpacity(isOpen ? 0.5 : 0);
-
-                    } else { /* 2nd card */
-                        gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
-                        turned = true;
-                        if (!isOpen) {
-                            card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                        }
-                        progressIndicator.setOpacity(0);
-
-                        if (isOpen) {
-                            if (id == cardAlreadyTurned) {
-                                onCorrectCardSelected();
-                            } else {
-                                onWrongCardSelected();
-                            }
-                        } else {
-                            /* Timeline : To see the 2nd card */
-                            final Timeline timelineCard = new Timeline();
-
-                            timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1000)));
-
-                            timelineCard.setOnFinished(actionEvent1 -> {
-
-                                if (timelineCard != null) {
-                                    timelineCard.stop();
-                                }
-
-                                if (id == cardAlreadyTurned) {
-                                    onCorrectCardSelected();
-                                } else {
-                                    onWrongCardSelected();
-                                }
-                            });
-                            timelineCard.play();
-                        }
-                    }
-
-                });
-
-                timelineProgressBar.play();
-
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                this.mouseIsOverCard = false;
-                if (timelineProgressBar != null) {
-                    timelineProgressBar.stop();
-                }
-                progressIndicator.setOpacity(0);
-                progressIndicator.setProgress(0);
-            }
-        };
+    void select() {
+        selected = true;
+        if (back.isVisible()) {
+            turn(true);
+        } else {
+            frame("-gp-accent");
+        }
     }
 
-
-    public boolean isTurned() {
-        return turned;
+    /**
+     * Framed in green: found with its pair.
+     */
+    void showRight() {
+        frame(GameStyle.SUCCESS_COLOR);
     }
 
-    public Rectangle getImageRectangle() {
-        return this.card;
+    /**
+     * Framed in the color "danger": not the pair of the other card.
+     */
+    void showWrong() {
+        frame("-gp-danger");
     }
 
+    /**
+     * No longer chosen: a card face down turns back.
+     */
+    void reset(final boolean faceDown) {
+        selected = false;
+        ring.setVisible(false);
+        if (faceDown) {
+            turn(false);
+        }
+    }
+
+    /**
+     * Found with its pair: it fades out, and can no longer be chosen.
+     */
+    void remove() {
+        found = true;
+        selected = false;
+        setMouseTransparent(true);
+        gameContext.getGazeDeviceManager().removeEventFilter(this);
+        final FadeTransition fade = new FadeTransition(Duration.millis(350), this);
+        fade.setToValue(0);
+        fade.play();
+    }
+
+    /**
+     * No longer listens to the gaze (end of the round).
+     */
+    void release() {
+        stopFixation();
+        gameContext.getGazeDeviceManager().removeEventFilter(this);
+    }
+
+    /**
+     * @return whether the face is shown
+     */
+    boolean isFaceShown() {
+        return face.isVisible();
+    }
+
+    private void frame(final String color) {
+        fixationProgress.set(1);
+        ring.getStrokeDashArray().clear();
+        ring.setStyle("-fx-stroke: " + color + ";");
+        ring.setVisible(true);
+    }
+
+    /**
+     * Turns the card over (to its face, or to its back): it gets narrower, changes side, then widens.
+     */
+    private void turn(final boolean toFace) {
+        final ScaleTransition close = new ScaleTransition(TURN, this);
+        close.setToX(0);
+        close.setOnFinished(e -> {
+            face.setVisible(toFace);
+            back.setVisible(!toFace);
+            final ScaleTransition open = new ScaleTransition(TURN, this);
+            open.setToX(1);
+            open.play();
+        });
+        close.play();
+    }
 }

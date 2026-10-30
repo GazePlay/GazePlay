@@ -172,6 +172,24 @@ public final class MenuScreenshots {
                     card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
                         false, false));
                 });
+                // The window of the variants of Where Is The Animal: the themes under the sizes, then "Start"
+                captureDialog(gazePlay, output, "3a-variantes-ou-est-l-animal", () -> {
+                    final Node card = gazePlay.getPrimaryScene().getRoot().lookupAll(".gp-game-card").stream()
+                        .filter(node -> "WhereIsTheAnimal".equals(((GameButtonPane) node).getGameSpec()
+                            .getGameSummary().getNameCode()))
+                        .findFirst().orElseThrow();
+                    card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
+                        false, false));
+                });
+                // The window of the variants of Memory: what the cards show, then hidden or visible, at the bottom
+                captureDialog(gazePlay, output, "3a-variantes-memory", () -> {
+                    final Node card = gazePlay.getPrimaryScene().getRoot().lookupAll(".gp-game-card").stream()
+                        .filter(node -> "Memory".equals(((GameButtonPane) node).getGameSpec().getGameSummary()
+                            .getNameCode()))
+                        .findFirst().orElseThrow();
+                    card.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
+                        false, false));
+                });
                 // The help of a game (the "i" of the window of its variants), and the window of a game without variants
                 captureDialog(gazePlay, output, "3h-aide-petits-chevaux", () -> GameHelp.dialog(
                     gazePlay.getPrimaryStage(), gazePlay.getTranslator(), "Horses",

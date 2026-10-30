@@ -1,0 +1,17 @@
+# The principle
+Find the pairs of identical cards.
+
+# How to play
+- Look at a card: a ring goes around the card, then it turns over (fixation length of the settings).
+- Look at a second card. If they are the same, they are circled in green, then they disappear.
+- Otherwise they are circled in red, stay shown for a moment, then turn back: remember where they are.
+- At the top, "Pairs" shows how many pairs you found.
+
+# How to win
+When all the pairs are found: "Bravo", then a new game starts. The game does not stop by itself: leave with the gear at the bottom left.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The buttons, the size: 4, 6 or 12 cards, or Dynamic: the number of cards changes every 3 games after your tries (more cards if you find them fast, fewer if it is hard).
+- At the bottom, what the cards show: Pictures, Letters, Digits or My pictures (your own pictures, to put in the settings, Folders section, "Images of the games").
+- At the very bottom: Hidden cards (you have to remember) or Visible cards (all the cards are face up: just find the pairs).

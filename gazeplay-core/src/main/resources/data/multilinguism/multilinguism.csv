@@ -36,6 +36,7 @@ EvalResults,,,,,,,Results of the evaluations,,Résultats des évaluations,,,,,,,
 EvalHelp,,,,,,,Help: how an evaluation works,,Aide : comment se passe une évaluation,,,,,,,,,,,,
 GameHelp,,,,,,,How to play,,Comment jouer,,,,,,,,,,,,
 GameLaunch,,,,,,,Start the game,,Lancer le jeu,,,,,,,,,,,,
+VariantStart,,,,,,,Start,,Commencer,,,,,,,,,,,,
 EvalWebsite,,,,,,,Create an evaluation (GazePlay Eval website),,Créer une évaluation (site GazePlay Eval),,,,,,,,,,,,
 EvalWebsiteFailed,,,,,,,The browser could not be opened. Address of the website to copy:,,Le navigateur n'a pas pu être ouvert. Adresse du site à recopier :,,,,,,,,,,,,
 ModeChoose,,,,,,,Choose a mode,,Choisissez un mode,,,,,,,,,,,,
@@ -152,6 +153,13 @@ Math101: Division,Matematika 101: Divizioni,الرياضيات 101: القسمة
 Math101: Multiplication,Matematika 101: Shumëzimi,رياضيات 101: الضرب,Вучымся лічыць: Множанне,数学101：乘法,Mathe 101: Multiplikation,Μαθηματικά 101: Πολλαπλασιασμός,Math 101: Multiplication,Matematiikka 101: Kertominen,Apprends les Maths : Multiplications,गणित 101: गुणन,Matematika 101: Množenje,Matematika 101: Perkalian,Matematica 101: Moltiplicazione,数学 101: かけ算,Wiskunde 101: Vermenigvuldiging,Matematyka 101: Mnożenie,Matemática 101: Multiplicação,Учимся считать: Умножение,Matemáticas 101: Multiplicación,Toán 101: Phép nhân,Matematik 101: Pendaraban
 Math101: Substraction,Matematika 101: Zbritja,رياضيات 101: الطرح,Вучымся лічыць: Адніманне,数学101：减法,Mathe 101: Subtraktion,Μαθηματικά 101: Αφαίρεση,Math 101: Substraction,Matematiikka 101: Vähennys,Apprends les Maths : Soustractions,गणित 101: घटाव,Matematika 101: Oduzimanje,Matematika 101: Pengurangan,Matematica 101: Sottrazione,数学 101: 引き算,Wiskunde 101: aftrekken,Matematyka 101: Odejmowanie,Matemática 101: Subtração,Учимся считать: Вычитание,Matemáticas 101: Resta,Toán 101: Phép trừ,Matematik 101: Tolak
 Memory,Kujtesa,الذاكرة,Памяць,记忆,Memory,Μνήμη,Memory,Muisti,Memory,मेमोरी,Memorija,Memori,Memoria,メモリー,Geheugenspel,Pamięć,Memória,Память,Memoria,Bộ nhớ,Memori
+MemoryContentImages,,,,,,,Pictures,,Images,,,,,,,,,,,,
+MemoryContentLetters,,,,,,,Letters,,Lettres,,,,,,,,,,,,
+MemoryContentNumbers,,,,,,,Digits,,Chiffres,,,,,,,,,,,,
+MemoryContentUserImages,,,,,,,My pictures,,Mes images,,,,,,,,,,,,
+MemoryHidden,,,,,,,Hidden cards,,Cartes cachées,,,,,,,,,,,,
+MemoryVisible,,,,,,,Visible cards,,Cartes visibles,,,,,,,,,,,,
+MemoryPairs,,,,,,,Pairs:,,Paires :,,,,,,,,,,,,
 MemoryLetters,Kujtesa (shkronjat),الذاكرة (بالحروف),Памяць (літары),记忆（字母）,Memory (Buchstaben),Μνήμη (γράμματα),Memory (letters),Muisti (kirjaimet),Memory (lettres),मेमोरी (अक्षर),Memorija (slova),Memori (huruf),Memoria (lettere),メモリー（文字）,Geheugenspel (brieven),Pamięć (litery),Memória (letras),Память (буквы),Memoria (letras),Bộ nhớ (chữ cái),Memori (huruf)
 MemoryNumbers,Kujtesa (numrat),الذاكرة (أرقام),Памяць (лічбы),记忆（数字）,Memory (Zahlen),Μνήμη (αριθμοί),Memory (numbers),Muisti (numerot),Memory (nombres),मेमोरी (संख्या),Memorija (brojevi),Memori (angka),Memoria (numeri),メモリー（数字）,Geheugenspel (cijfers),Pamięć (liczby),Memória (números),Память (числа),Memoria (números),Bộ nhớ (số),Memori (nombor)
 Ninja,Ninja!,نينجا!,Ніндзя!,忍者！,Ninja!,Νίντζα!,Ninja!,Ninja!,Ninja !,निंजा!,Ninja!,Ninja!,Ninja!,忍者！,Ninja !,Ninja!,Ninja!,Ниндзя!,¡Ninja!,Nhẫn giả!,Ninja!

@@ -13,6 +13,7 @@ Colorie un dessin en noir et blanc, zone par zone, avec le regard.
 Il n'y a pas de fin : colorie comme tu veux, puis passe au dessin suivant. Chaque zone coloriée compte un point. Quitte par l'engrenage en bas à gauche.
 
 # Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Petite palette : des dessins simples, de 1 ou 2 zones à colorier (8 dessins).
 - Moyenne palette : de 3 à 6 zones (8 dessins).
 - Grande palette : 7 zones ou plus (8 dessins).

@@ -92,7 +92,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Bibliothèques Java : la liste et la licence de chacune sont dans le dossier dependency-license des
   distributions.
 - Images : les animaux par défaut (data/common/default/images : bear, dog, elephant, elephant2, fox, giraffe,
-  hippo, lion, snake, turtle), leurs versions sans fond du labyrinthe et l'explosion de Magic Potions
+  hippo, lion, snake, turtle, et depuis le 30/10/2026 chouette, crabe, ecureuil, herisson, lapin, meduse,
+  poulpe, penguin, frog), leurs versions sans fond du labyrinthe et l'explosion de Magic Potions
   (data/common/images/explosion.gif) :
   All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji and icon project.
   License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).

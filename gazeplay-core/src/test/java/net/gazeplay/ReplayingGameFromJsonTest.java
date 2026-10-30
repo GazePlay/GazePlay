@@ -2,7 +2,9 @@ package net.gazeplay;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ReplayingGameFromJsonTest {
 
@@ -18,4 +20,19 @@ class ReplayingGameFromJsonTest {
         assertEquals(0, ReplayingGameFromJson.delayBeforeSample(990, 1000));
     }
 
+    /**
+     * The games saved before they became variants of another game (30/10/2026) are replayed with today's game.
+     */
+    @Test
+    void shouldReplayTheFormerGamesWithTheirNewGame() {
+        assertArrayEquals(new String[]{"Memory",
+                "GroupedGameVariant:MemoryContentLetters:MemoryVisible:2x3:-"},
+            ReplayingGameFromJson.formerGame("OpenMemoryLetters", "DimensionDifficultyGameVariant:2:3:Normal"));
+        assertArrayEquals(new String[]{"Memory", "GroupedGameVariant:MemoryContentImages:MemoryHidden:Dynamic:-"},
+            ReplayingGameFromJson.formerGame("Memory", "DimensionDifficultyGameVariant:2:2:Dynamic"));
+        assertEquals("Horses", ReplayingGameFromJson.formerGame("Horses Simplified", "IntGameVariant:3")[0]);
+        // A game of Memory saved today, and the other games: unchanged
+        assertNull(ReplayingGameFromJson.formerGame("Memory", "GroupedGameVariant:MemoryContentImages:MemoryHidden:2x2:-"));
+        assertNull(ReplayingGameFromJson.formerGame("Ninja", "DimensionDifficultyGameVariant:2:3:Normal"));
+    }
 }

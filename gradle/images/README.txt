@@ -1,7 +1,10 @@
 Default images of the games (gazeplay-core: data/common/default/images).
 
 bear.jpg, dog.jpg, elephant.jpg, elephant2.jpg (a mammoth), fox.jpg, giraffe.jpg, hippo.jpg, lion.jpg, snake.jpg,
-turtle.jpg, the same animals without background in gazeplay-games (data/common/default/images/noBackGround) and the
+turtle.jpg, and since 30/10/2026 (review of Memory) chouette.png (owl), crabe.png, ecureuil.png (chipmunk),
+herisson.png (hedgehog), lapin.png (rabbit), meduse.png (jellyfish), poulpe.png (octopus), penguin.png and frog.png
+(they replace 9 drawings of unknown source; renard.png and tortue.png, a second fox and a second turtle, are
+removed), the same animals without background in gazeplay-games (data/common/default/images/noBackGround) and the
 explosion of Magic Potions (data/common/images/explosion.gif):
 All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji and icon project.
 License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).

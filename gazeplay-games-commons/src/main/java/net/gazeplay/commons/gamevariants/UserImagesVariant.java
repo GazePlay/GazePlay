@@ -36,6 +36,9 @@ public interface UserImagesVariant {
             && enumVariant.getEnumValue() instanceof UserImagesVariant userImages) {
             return userImages.getUserImagesFolder();
         }
+        if (variant instanceof GroupedGameVariant grouped) {
+            return grouped.getUserImagesFolder();
+        }
         return null;
     }
 

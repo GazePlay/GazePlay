@@ -12,6 +12,7 @@ Une question demande un animal (« Où est le chat ? ») : trouve sa photo p
 - Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche, ou règle une limite de temps ou de score dans les réglages (section Jeux).
 
 # Les variantes
-- En haut, le thème : Ferme, Forêt, Savane, Oiseaux, Marins, Tous (tous les animaux) ou Dynamique.
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- En bas, le thème : Ferme, Forêt, Savane, Oiseaux, Marins, Tous (tous les animaux) ou Dynamique.
 - La taille de la grille : 2, 4, 6 ou 9 images. Plus il y a d'images, plus c'est difficile.
 - Dynamique : toujours deux images et la même question (« Où est le chat ? ») ; l'autre animal est choisi selon tes réponses, et le jeu devient plus ou moins difficile tout seul.

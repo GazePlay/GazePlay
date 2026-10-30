@@ -12,4 +12,5 @@ All the pictures are alike but one, the odd one out: find it.
 - The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
 
 # The variants
+Choose a variant (it is framed), then press "Start".
 - The size of the grid: 4, 6 or 9 pictures. The more pictures, the harder.

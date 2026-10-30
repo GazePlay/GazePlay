@@ -15,6 +15,7 @@ Le jeu des petits chevaux : sors tes pions de l'écurie, fais-leur faire le tou
 Le premier pion qui arrive au centre fait gagner son équipe.
 
 # Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Contre 1, 2 ou 3 ordinateurs : tu joues une équipe, l'ordinateur joue les autres (il fait une petite pause pour qu'on le suive).
 - 2, 3 ou 4 joueurs : chacun joue son équipe à son tour, devant le même écran.
 - En bas, la version : normale (4 pions par équipe, une échelle de 6 cases) ou simplifiée (1 pion par équipe, un plateau plus petit, une échelle de 3 cases).

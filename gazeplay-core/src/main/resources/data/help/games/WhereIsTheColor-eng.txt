@@ -12,5 +12,6 @@ A color is asked for ("Where is red?"): find it among the others.
 - The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
 
 # The variants
-- At the top, the difficulty: Easy (6 colors: black, blue, green, red, white, yellow), Normal (11 colors, with brown, grey, orange, pink, purple) or Hard (16 colors, with bronze, cyan, gold, magenta, silver).
+Choose a variant (it is framed), then press "Start".
+- At the bottom, the difficulty: Easy (6 colors: black, blue, green, red, white, yellow), Normal (11 colors, with brown, grey, orange, pink, purple) or Hard (16 colors, with bronze, cyan, gold, magenta, silver).
 - The size of the grid: 2, 4, 6 or 9 pictures (6 at most in Easy). The more pictures, the harder.

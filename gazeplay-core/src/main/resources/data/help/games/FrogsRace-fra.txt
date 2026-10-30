@@ -12,6 +12,7 @@ Une course de grenouilles sur la mare : attrape des insectes pour faire avancer
 - Les courses s'enchaînent : quitte par l'engrenage en bas à gauche.
 
 # Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Facile : les autres grenouilles sont lentes.
 - Normal : elles vont plus vite.
 - Difficile : elles vont vite ; il faut attraper les insectes sans attendre.

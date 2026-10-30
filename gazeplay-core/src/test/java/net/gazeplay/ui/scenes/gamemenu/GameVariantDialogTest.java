@@ -16,6 +16,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import net.gazeplay.commons.ui.Translator;
@@ -87,7 +88,11 @@ class GameVariantDialogTest {
         List<Button> buttons = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot().lookupAll(".gp-variant")
             .stream().map(Button.class::cast).toList()).get();
         assertEquals(2, buttons.size());
+        // A reviewed game (Where Is The Number): the variant is chosen, then started by "Start"
         WaitForAsyncUtils.asyncFx(() -> buttons.get(1).fire()).get();
+        verifyNoInteractions(gameMenuController);
+        assertTrue(dialog.isShowing());
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
 
         verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, second);
         assertFalse(dialog.isShowing());
@@ -168,9 +173,81 @@ class GameVariantDialogTest {
         List<Button> shown = WaitForAsyncUtils.asyncFx(() -> ((ScrollPane) column.getChildren().get(0)).getContent()
             .lookupAll(".gp-variant").stream().map(Button.class::cast).toList()).get();
         assertEquals(1, shown.size());
-        WaitForAsyncUtils.asyncFx(() -> shown.get(0).fire()).get();
+        // The variant at the same place is chosen when the switch shows other variants
+        assertSame(shown.get(0), dialog.getSelectedButton());
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
 
         verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, simplified);
+    }
+
+    /**
+     * A reviewed game: the first variant is chosen at the start, framed; a click chooses another one without starting
+     * the game; "Start", at the bottom, starts it (maintainer's request of 30/10/2026).
+     */
+    @Test
+    void shouldChooseAVariantThenStartTheGame() throws Exception {
+        GameVariantDialog dialog = openDialog(new BorderPane());
+        List<Button> buttons = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot().lookupAll(".gp-variant")
+            .stream().map(Button.class::cast).toList()).get();
+
+        assertSame(buttons.get(0), dialog.getSelectedButton());
+        assertTrue(buttons.get(0).getStyleClass().contains("gp-variant-selected"));
+        WaitForAsyncUtils.asyncFx(() -> buttons.get(1).fire()).get();
+        assertSame(buttons.get(1), dialog.getSelectedButton());
+        assertFalse(buttons.get(0).getStyleClass().contains("gp-variant-selected"));
+        assertTrue(dialog.getStartButton().isDefaultButton(), "Enter starts the game");
+        assertEquals("VariantStart", dialog.getStartButton().getText());
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+
+        verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, second);
+        assertFalse(dialog.isShowing());
+    }
+
+    /**
+     * A game not reviewed yet: as before, a variant button starts the game at once, without "Start".
+     */
+    @Test
+    void shouldStartAGameNotReviewedYetAtOnce() throws Exception {
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Ninja").gameThumbnail("ninja").build(),
+            gameSpec.getGameVariantGenerator(), mock(IGameLauncher.class));
+        GameVariantDialog dialog = openDialog(new BorderPane());
+        assertNull(dialog.getStartButton());
+        Button firstButton = WaitForAsyncUtils.asyncFx(() -> (Button) dialog.getScene().getRoot()
+            .lookup(".gp-variant")).get();
+
+        WaitForAsyncUtils.asyncFx(firstButton::fire).get();
+
+        verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, first);
+    }
+
+    /**
+     * Variants in two groups (Memory): the switches of both groups at the bottom, under the variants, the groups
+     * just above the sub-groups (maintainer's request of 30/10/2026).
+     */
+    @Test
+    void shouldPutBothRowsOfSwitchesUnderTheVariants() throws Exception {
+        IGameVariant lettersHidden = new GroupedGameVariant("Letters", "Hidden", "2x2", null);
+        IGameVariant lettersVisible = new GroupedGameVariant("Letters", "Visible", "2x2", null);
+        IGameVariant digitsHidden = new GroupedGameVariant("Digits", "Hidden", "2x2", null);
+        IGameVariantGenerator generator = mock(IGameVariantGenerator.class);
+        when(generator.getVariants()).thenReturn(new LinkedHashSet<>(List.of(lettersHidden, lettersVisible,
+            digitsHidden)));
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Memory").gameThumbnail("memory").build(), generator,
+            mock(IGameLauncher.class));
+        GameVariantDialog dialog = openDialog(new BorderPane());
+
+        List<RadioButton> switches = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot()
+            .lookupAll(".radio-button").stream().map(RadioButton.class::cast).toList()).get();
+        assertEquals(List.of("Letters", "Digits", "Hidden", "Visible"),
+            switches.stream().map(RadioButton::getText).toList());
+        VBox column = (VBox) switches.get(0).getParent().getParent();
+        assertInstanceOf(ScrollPane.class, column.getChildren().get(0));
+        assertEquals(1, column.getChildren().indexOf(switches.get(0).getParent()));
+        assertEquals(2, column.getChildren().indexOf(switches.get(2).getParent()));
+
+        WaitForAsyncUtils.asyncFx(() -> switches.get(3).fire()).get();
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+        verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, lettersVisible);
     }
 
     /**

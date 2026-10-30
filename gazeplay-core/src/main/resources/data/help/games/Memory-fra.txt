@@ -1,0 +1,17 @@
+# Le principe
+Retrouve les paires de cartes identiques.
+
+# Comment jouer
+- Regarde une carte : un anneau fait le tour de la carte, puis elle se retourne (durée de fixation des réglages).
+- Regarde une deuxième carte. Si elles sont pareilles, elles sont entourées de vert puis disparaissent.
+- Sinon, elles sont entourées de rouge, restent visibles un moment, puis se retournent : retiens où elles sont.
+- En haut, « Paires » montre combien de paires tu as trouvées.
+
+# Comment gagner
+Quand toutes les paires sont trouvées : « Bravo », puis une nouvelle partie commence. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Les boutons, la taille : 4, 6 ou 12 cartes, ou Dynamique : le nombre de cartes change toutes les 3 parties selon tes essais (plus de cartes si tu trouves vite, moins si c'est difficile).
+- En bas, ce que montrent les cartes : Images, Lettres, Chiffres ou Mes images (tes propres images, à mettre dans les réglages, section Dossiers, « Images des jeux »).
+- Tout en bas : Cartes cachées (il faut se souvenir) ou Cartes visibles (toutes les cartes sont retournées : il suffit de trouver les paires).

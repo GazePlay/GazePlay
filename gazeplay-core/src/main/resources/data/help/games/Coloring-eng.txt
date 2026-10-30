@@ -13,6 +13,7 @@ Color a black and white drawing, area by area, with your gaze.
 There is no end: color as you like, then go to the next drawing. Each area colored counts one point. Leave with the gear at the bottom left.
 
 # The variants
+Choose a variant (it is framed), then press "Start".
 - Small palette: simple drawings, with 1 or 2 areas to color (8 drawings).
 - Medium palette: 3 to 6 areas (8 drawings).
 - Large palette: 7 areas or more (8 drawings).

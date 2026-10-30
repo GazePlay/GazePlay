@@ -1,394 +1,418 @@
 package net.gazeplay.games.memory;
 
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GameStyle;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
- * Games "Memory" (pictures, letters or numbers): pairs of cards are face down, and the player turns them over two by
- * two by fixations to find the pairs. In the "Open" versions the cards are face up. With the dynamic difficulty, the
- * number of cards changes from round to round with the number of tries.
+ * Game "Memory" (reviewed on 30/10/2026, REVUE_DES_JEUX.md; one card in the menu instead of six): pairs of cards
+ * showing pictures, letters, digits or the pictures of the user, face down or face up. A fixation chooses a card; two
+ * cards of a pair are framed in green and removed; two cards of different pairs are framed in the color "danger", then
+ * turn back. When all the pairs are found: "Bravo", then a new round. With the dynamic difficulty, the size of the
+ * grid changes every 3 rounds with the number of tries.
+ * <p>
+ * Statistics: a goal to reach for each pair of a round, reached when the pair is found.
  */
 @Slf4j
 public class Memory implements GameLifeCycle {
 
-    private static final float cardRatio = 0.75f;
-
-    // Changed during the game (smaller for many cards): an instance field, it was a static shared by all instances
-    private int minHeight = 30;
+    /**
+     * How long two cards of different pairs stay shown before they turn back (maintainer's choice of 30/10/2026: it
+     * used to be 1 s).
+     */
+    static final Duration WRONG_PAIR_SHOWN = Duration.millis(1500);
 
     /**
-     * What the cards show.
+     * How long a pair found stays framed in green before it is removed.
      */
-    public enum MemoryGameType {
+    static final Duration RIGHT_PAIR_SHOWN = Duration.millis(700);
 
-        LETTERS, NUMBERS, DEFAULT
-    }
+    private static final double CARD_RATIO = 0.75;
 
-    /**
-     * The cards of a round.
-     */
-    @Data
-    @AllArgsConstructor
-    public static class RoundDetails {
-        public final List<MemoryCard> cardList;
-    }
-
-    @Getter
-    private int nbRemainingPeers;
+    private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
 
     private final IGameContext gameContext;
-
-    @Getter
-    @Setter
-    private int nbLines;
-    @Getter
-    @Setter
-    private int nbColumns;
-
-    private String difficulty;
-
     private final Stats stats;
-
-    private ImageLibrary imageLibrary;
-
-    /*
-     * HashMap of images selected for this game and their associated id The id is the same for the 2 same images
-     */
-    public HashMap<Integer, Image> images;
-
-    public RoundDetails currentRoundDetails;
+    private final ReplayablePseudoRandom random;
 
     @Getter
-    public int nbTurnedCards;
-
-    private final boolean isOpen;
-
-    private final ReplayablePseudoRandom randomGenerator;
-
-    @Getter
-    private int nbWrongCards;
-
-    @Getter
-    private int nbCorrectCards;
-
-    @Getter
-    private List<Integer> listOfResults = new ArrayList<>();
-
-    @Getter
-    @Setter
-    private int level = 2;
-
-
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
-                  final boolean isOpen) {
-        super();
-        this.isOpen = isOpen;
-        final int cardsCount = nbLines * nbColumns;
-        if ((cardsCount & 1) != 0) {
-            // nbLines * nbColumns must be a multiple of 2
-            throw new IllegalArgumentException("Cards count must be an even number in this game");
-        }
-        this.nbRemainingPeers = (nbLines * nbColumns) / 2;
-        this.gameContext = gameContext;
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
-        this.difficulty = difficulty;
-        this.stats = stats;
-        this.nbCorrectCards = 0;
-        this.nbWrongCards = 0;
-        this.gameContext.startTimeLimiter();
-
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
-
-        if (gameType == MemoryGameType.LETTERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
-
-        } else if (gameType == MemoryGameType.NUMBERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
-
-        } else {
-            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
-                Utils.getImagesSubdirectory("default"), randomGenerator);
-        }
-
-    }
-
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
-                  final boolean isOpen, double gameSeed) {
-        super();
-        this.isOpen = isOpen;
-        final int cardsCount = nbLines * nbColumns;
-        if ((cardsCount & 1) != 0) {
-            // nbLines * nbColumns must be a multiple of 2
-            throw new IllegalArgumentException("Cards count must be an even number in this game");
-        }
-        this.nbRemainingPeers = (nbLines * nbColumns) / 2;
-        this.gameContext = gameContext;
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
-        this.difficulty = difficulty;
-        this.stats = stats;
-        this.nbCorrectCards = 0;
-        this.nbWrongCards = 0;
-        this.gameContext.startTimeLimiter();
-
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
-        if (gameType == MemoryGameType.LETTERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
-
-        } else if (gameType == MemoryGameType.NUMBERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
-
-        } else {
-            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
-                Utils.getImagesSubdirectory("default"), randomGenerator);
-        }
-
-        gameContext.start();
-
-    }
+    private final MemoryContent content;
 
     /**
-     * @return the images of the pairs, drawn at random, by identifier of the pair
+     * Face up cards (the former "Open Memory").
      */
-    HashMap<Integer, Image> pickRandomImages() {
-        final int cardsCount = nbColumns * nbLines;
-        final HashMap<Integer, Image> res = new HashMap<>();
+    @Getter
+    private final boolean faceUp;
 
-        final Set<Image> images = imageLibrary.pickMultipleRandomDistinctImages(cardsCount / 2);
+    @Getter
+    private final boolean dynamic;
 
-        int i = 0;
-        for (final Image image : images) {
-            res.put(i, image);
-            i++;
+    @Getter
+    private int nbLines;
+
+    @Getter
+    private int nbColumns;
+
+    /**
+     * Level of the dynamic difficulty: the number of pairs (2 to 10).
+     */
+    @Getter
+    private int level = 2;
+
+    @Getter
+    private final List<MemoryCard> cards = new ArrayList<>();
+
+    /**
+     * Tries (pairs turned over) of each round, for the dynamic difficulty.
+     */
+    @Getter
+    private final List<Integer> roundTries = new ArrayList<>();
+
+    private final List<Animation> pauses = new ArrayList<>();
+
+    private Group layer;
+    private Group pairsPill;
+    private Dimension2D dimension;
+    private MemoryCard firstCard;
+
+    @Getter
+    private boolean comparing;
+
+    @Getter
+    private int pairs;
+
+    @Getter
+    private int pairsFound;
+
+    private int tries;
+
+    public Memory(final IGameContext gameContext, final Stats stats, final GroupedGameVariant variant) {
+        this(gameContext, stats, variant, new ReplayablePseudoRandom());
+        this.gameContext.startTimeLimiter();
+        this.stats.setGameSeed(random.getSeed());
+    }
+
+    public Memory(final IGameContext gameContext, final Stats stats, final GroupedGameVariant variant,
+                  final double gameSeed) {
+        this(gameContext, stats, variant, new ReplayablePseudoRandom(gameSeed));
+        this.gameContext.startTimeLimiter();
+    }
+
+    private Memory(final IGameContext gameContext, final Stats stats, final GroupedGameVariant variant,
+                   final ReplayablePseudoRandom random) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.random = random;
+        this.content = MemoryContent.ofKey(variant.getGroup());
+        this.faceUp = MemoryGameVariantGenerator.VISIBLE.equals(variant.getSubGroup());
+        this.dynamic = !variant.isSize();
+        if (dynamic) {
+            adaptLevel();
+        } else {
+            this.nbLines = variant.getLines();
+            this.nbColumns = variant.getColumns();
         }
-        return res;
+        if ((nbLines * nbColumns) % 2 != 0) {
+            throw new IllegalArgumentException("Cards count must be an even number in this game");
+        }
     }
 
     @Override
     public void launch() {
+        cards.clear();
+        pauses.clear();
+        firstCard = null;
+        comparing = false;
+        pairsFound = 0;
+        tries = 0;
         gameContext.setLimiterAvailable();
-        final Configuration config = gameContext.getConfiguration();
-        final int cardsCount = nbColumns * nbLines;
+        dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        images = pickRandomImages();
+        final Rectangle background = new Rectangle(dimension.getWidth(), dimension.getHeight());
+        background.setStyle("-fx-fill: -gp-bg;");
+        background.setMouseTransparent(true);
+        layer = new Group(background);
+        gameContext.getChildren().add(layer);
 
-        final List<MemoryCard> cardList = createCards(images, config);
+        pairs = nbLines * nbColumns / 2;
+        final List<Image> images = content == MemoryContent.LETTERS || content == MemoryContent.NUMBERS
+            ? null : pickImages(pairs);
+        if (images != null && images.isEmpty()) {
+            // The pictures of the user, none given (game started without the menu, which asks for them)
+            final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"),
+                dimension.getHeight() * 0.04, dimension.getWidth() * 0.6);
+            message.setLayoutX((dimension.getWidth() - message.getBoundsInLocal().getWidth()) / 2);
+            message.setLayoutY((dimension.getHeight() - message.getBoundsInLocal().getHeight()) / 2);
+            layer.getChildren().add(message);
+            return;
+        }
+        final List<String> texts = images == null
+            ? pickTexts(content == MemoryContent.LETTERS ? LETTERS : DIGITS, pairs) : null;
+        createCards(images, texts);
+        updatePairsPill();
 
-        nbRemainingPeers = cardsCount / 2;
-
-        currentRoundDetails = new RoundDetails(cardList);
-
-        gameContext.getChildren().addAll(cardList);
-
+        stats.incrementNumberOfGoalsToReach(pairs);
         stats.notifyNewRoundReady();
-
         gameContext.getGazeDeviceManager().addStats(stats);
-
         gameContext.onGameStarted(3000);
     }
 
     @Override
     public void dispose() {
-        if (currentRoundDetails != null) {
-            if (currentRoundDetails.cardList != null) {
-                gameContext.getChildren().removeAll(currentRoundDetails.cardList);
-            }
-            currentRoundDetails = null;
+        pauses.forEach(Animation::stop);
+        pauses.clear();
+        cards.forEach(MemoryCard::release);
+        if (layer != null) {
+            gameContext.getChildren().remove(layer);
+            layer = null;
         }
     }
 
-    /**
-     * Removes the cards of a pair found.
-     */
-    public void removeSelectedCards() {
-        if (this.currentRoundDetails == null) {
-            return;
-        }
-        final List<MemoryCard> cardsToHide = new ArrayList<>();
-        for (final MemoryCard pictureCard : this.currentRoundDetails.cardList) {
-            if (pictureCard.isTurned()) {
-                cardsToHide.add(pictureCard);
-            }
-        }
-        nbRemainingPeers = nbRemainingPeers - 1;
-        // remove all turned cards
-        gameContext.getChildren().removeAll(cardsToHide);
-    }
+    // ----------------------------------------------------------------------------------------------------------------
+    // Cards
 
     /**
-     * @return the cards of the grid, two per image, at random places
+     * @return the pictures of the pairs, drawn at random: the default pictures, or the pictures of the user (completed
+     *   with default pictures when there are not enough; empty when there are none)
      */
-    private List<MemoryCard> createCards(final HashMap<Integer, Image> im, final Configuration config) {
-        final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        log.debug("Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
-
-        final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
-        final double cardWidth = cardHeight * cardRatio;
-
-        log.debug("cardWidth {} ; cardHeight {}", cardWidth, cardHeight);
-
-        final double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
-
-        log.debug("width {} ", width);
-
-        final List<MemoryCard> result = new ArrayList<>();
-
-        // HashMap <index, number of times the index was used >
-        final HashMap<Integer, Integer> indUsed = new HashMap<>();
-        indUsed.clear();
-
-        final int fixationlength = config.getFixationLength();
-
-        if (getNbLines() > 2)
-            minHeight = 10;
-
-        for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
-            for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
-
-                final double positionX = width / 2d + (width + cardWidth) * currentColumnIndex;
-                final double positionY = minHeight / 2d + (minHeight + cardHeight) * currentLineIndex;
-
-                log.debug("positionX : {} ; positionY : {}", positionX, positionY);
-
-                final int id = getRandomValue(indUsed);
-
-                if (indUsed.containsKey(id)) {
-                    indUsed.replace(id, 1, 2);
-                } else {
-                    indUsed.put(id, 1);
-                }
-
-                final Image image = images.get(id);
-
-                final MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
-                    stats, this, fixationlength, isOpen);
-
-                result.add(card);
+    private List<Image> pickImages(final int count) {
+        final List<Image> result = new ArrayList<>();
+        if (content == MemoryContent.USER_IMAGES) {
+            final List<File> files = new ArrayList<>(UserImagesVariant.images(MemoryContent.USER_IMAGES_FOLDER));
+            if (files.isEmpty()) {
+                return result;
             }
+            while (!files.isEmpty() && result.size() < count) {
+                final File file = files.remove(random.nextInt(files.size()));
+                result.add(new Image(file.toURI().toString(), 600, 600, true, true));
+            }
+        }
+        if (result.size() < count) {
+            final ImageLibrary library = ImageUtils.createDefaultImageLibrary(null, random);
+            result.addAll(library.pickMultipleRandomDistinctImages(count - result.size()));
         }
         return result;
     }
 
     /**
-     * @return the height of a card for the number of lines
+     * @return letters or digits of the pairs, distinct, drawn at random
      */
-    private static double computeCardHeight(final Dimension2D gameDimension2D, final int nbLines) {
-        return gameDimension2D.getHeight() * 0.9 / nbLines;
+    private List<String> pickTexts(final String alphabet, final int count) {
+        final List<String> left = new ArrayList<>();
+        for (final char character : alphabet.toCharArray()) {
+            left.add(String.valueOf(character));
+        }
+        final List<String> result = new ArrayList<>();
+        while (result.size() < count && !left.isEmpty()) {
+            result.add(left.remove(random.nextInt(left.size())));
+        }
+        return result;
     }
 
     /**
-     * @return the width of a card for the number of columns
+     * The cards of the grid, two per picture (or text), at random places, with room for the label of the pairs at the
+     * top and for the button of the settings at the bottom.
      */
-    private static double computeCardWidth(final Dimension2D gameDimension2D, final int nbColumns) {
-        return gameDimension2D.getWidth() / nbColumns;
-    }
-
-    /**
-     * @return a place drawn at random among those not used yet
-     */
-    private int getRandomValue(final HashMap<Integer, Integer> indUsed) {
-        int value;
-        do {
-            value = randomGenerator.nextInt(images.size());
-        } while ((!images.containsKey(value)) || (indUsed.containsKey(value) && (indUsed.get(value) == 2)));
-        // While selected image is already used 2 times (if it appears )
-        return value;
-    }
-
-    /**
-     * Counts a wrong pair.
-     */
-    public void incNbWrongCards() {
-        nbWrongCards++;
-    }
-
-    /**
-     * Resets the count of the wrong pairs.
-     */
-    public void resetNbWrongCards() {
-        nbWrongCards = 0;
-    }
-
-    /**
-     * Counts a pair found.
-     */
-    public void incNbCorrectCards() {
-        nbCorrectCards++;
-    }
-
-    /**
-     * Resets the count of the pairs found.
-     */
-    public void resetNbCorrectCards() {
-        nbCorrectCards = 0;
-    }
-
-    /**
-     * @return the number of tries of the round
-     */
-    public int totalNbOfTries() {
-        return getNbCorrectCards() + getNbWrongCards();
-    }
-
-    /**
-     * Adds the number of tries of a round.
-     */
-    public void addRoundResult(int lastRoundResult) {
-        listOfResults.add(lastRoundResult);
-    }
-
-    /**
-     * Sets the size of the grid for the current level: 2 lines of {@code level} cards, or 4 x 3, 4 x 4, 6 x 3 and 5 x 4
-     * for the levels 6, 8, 9 and 10.
-     */
-    public void adaptLevel() {
-
-        if (level == 6) {
-            setNbColumns(4);
-            setNbLines(3);
-        } else if (level == 8) {
-            setNbColumns(4);
-            setNbLines(4);
-        } else if (level == 9) {
-            setNbColumns(6);
-            setNbLines(3);
-        } else if (level == 10) {
-            setNbColumns(5);
-            setNbLines(4);
-        } else {
-            setNbColumns(level);
-            setNbLines(2);
+    private void createCards(final List<Image> images, final List<String> texts) {
+        final List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < pairs; i++) {
+            ids.add(i);
+            ids.add(i);
+        }
+        // Shuffled with the generator of the game, for the replay
+        for (int i = ids.size() - 1; i > 0; i--) {
+            final int j = random.nextInt(i + 1);
+            final int swap = ids.get(i);
+            ids.set(i, ids.get(j));
+            ids.set(j, swap);
         }
 
+        final double top = dimension.getHeight() * 0.1;
+        final double bottom = dimension.getHeight() * 0.1;
+        final double cellWidth = dimension.getWidth() * 0.96 / nbColumns;
+        final double cellHeight = (dimension.getHeight() - top - bottom) / nbLines;
+        final double cardHeight = Math.min(cellHeight * 0.9, cellWidth * 0.9 / CARD_RATIO);
+        // At least 3/4 of the height wide, up to square when there is room (larger pictures)
+        final double cardWidth = Math.max(cardHeight * CARD_RATIO, Math.min(cardHeight, cellWidth * 0.88));
+        final double left = dimension.getWidth() * 0.02;
+        int index = 0;
+        for (int line = 0; line < nbLines; line++) {
+            for (int column = 0; column < nbColumns; column++) {
+                final int id = ids.get(index++);
+                final double x = left + column * cellWidth + (cellWidth - cardWidth) / 2;
+                final double y = top + line * cellHeight + (cellHeight - cardHeight) / 2;
+                final MemoryCard card = new MemoryCard(x, y, cardWidth, cardHeight, id,
+                    images == null ? null : images.get(id), texts == null ? null : texts.get(id), faceUp, this,
+                    gameContext);
+                cards.add(card);
+            }
+        }
+        layer.getChildren().addAll(cards);
     }
 
-    public String getDifficulty() {
-        return difficulty;
+    private void updatePairsPill() {
+        if (pairsPill != null && layer != null) {
+            layer.getChildren().remove(pairsPill);
+        }
+        pairsPill = GameStyle.pill(gameContext.getTranslator().translate("MemoryPairs") + " " + pairsFound + " / "
+            + pairs, dimension.getHeight() * 0.032);
+        pairsPill.setLayoutX((dimension.getWidth() - pairsPill.getBoundsInLocal().getWidth()) / 2);
+        pairsPill.setLayoutY(dimension.getHeight() * 0.02);
+        pairsPill.setMouseTransparent(true);
+        layer.getChildren().add(pairsPill);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Turns
+
+    /**
+     * @return whether a card can be chosen now: not while two cards are compared, nor a card chosen or found
+     */
+    boolean canChoose(final MemoryCard card) {
+        return !comparing && !card.isSelected() && !card.isFound();
+    }
+
+    /**
+     * A card chosen by a fixation: the first one of a try waits for the second one; then both are compared.
+     */
+    void cardFixated(final MemoryCard card) {
+        if (!canChoose(card)) {
+            return;
+        }
+        card.select();
+        if (firstCard == null) {
+            firstCard = card;
+            return;
+        }
+        final MemoryCard other = firstCard;
+        firstCard = null;
+        comparing = true;
+        tries++;
+        if (other.getPairId() == card.getPairId()) {
+            pairsFound++;
+            stats.incrementNumberOfGoalsReached();
+            updatePairsPill();
+            other.showRight();
+            card.showRight();
+            later(RIGHT_PAIR_SHOWN, () -> {
+                other.remove();
+                card.remove();
+                comparing = false;
+                if (pairsFound == pairs) {
+                    roundWon();
+                }
+            });
+        } else {
+            other.showWrong();
+            card.showWrong();
+            later(WRONG_PAIR_SHOWN, () -> {
+                other.reset(!faceUp);
+                card.reset(!faceUp);
+                comparing = false;
+            });
+        }
+    }
+
+    /**
+     * All the pairs are found: the dynamic difficulty is updated, then "Bravo" and a new round.
+     */
+    private void roundWon() {
+        if (dynamic) {
+            stats.getLevelsReport().addRoundLevel(level);
+            roundTries.add(tries);
+            if (roundTries.size() % 3 == 0) {
+                updateLevel();
+                stats.getLevelsReport().addRoundLevel(level);
+            }
+            adaptLevel();
+        }
+        gameContext.updateScore(stats, this);
+        gameContext.playWinTransition(500, event -> {
+            dispose();
+            gameContext.clear();
+            launch();
+        });
+    }
+
+    /**
+     * Changes the level after 3 rounds: up when the 3 rounds took at most 2 tries per pair, down when they took at
+     * least 2.5 (30/10/2026: the same round used to be counted 3 times).
+     */
+    void updateLevel() {
+        int compare = 0;
+        for (final int roundTry : roundTries.subList(roundTries.size() - 3, roundTries.size())) {
+            if (roundTry <= 2 * level && nbColumns <= 6) {
+                compare++;
+            }
+            if (roundTry >= 2.5 * level && nbColumns > 2) {
+                compare--;
+            }
+        }
+        if (compare == 3) {
+            level += level == 6 ? 2 : 1;
+        } else if (compare == -3) {
+            level -= level == 8 ? 2 : 1;
+        }
+        level = Math.max(2, Math.min(10, level));
+    }
+
+    /**
+     * Sets the size of the grid for the current level: 2 lines of {@code level} cards, or 4 x 3, 4 x 4, 6 x 3 and
+     * 5 x 4 for the levels 6, 8, 9 and 10.
+     */
+    void adaptLevel() {
+        if (level == 6) {
+            nbColumns = 4;
+            nbLines = 3;
+        } else if (level == 8) {
+            nbColumns = 4;
+            nbLines = 4;
+        } else if (level == 9) {
+            nbColumns = 6;
+            nbLines = 3;
+        } else if (level == 10) {
+            nbColumns = 5;
+            nbLines = 4;
+        } else {
+            nbColumns = level;
+            nbLines = 2;
+        }
+    }
+
+    /**
+     * For the tests: the level of the dynamic difficulty.
+     */
+    void setLevel(final int level) {
+        this.level = level;
+    }
+
+    private void later(final Duration delay, final Runnable action) {
+        final PauseTransition pause = new PauseTransition(delay);
+        pause.setOnFinished(e -> {
+            pauses.remove(pause);
+            action.run();
+        });
+        pauses.add(pause);
+        pause.play();
     }
 }

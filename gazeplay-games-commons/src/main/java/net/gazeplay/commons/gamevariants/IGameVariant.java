@@ -45,6 +45,8 @@ public interface IGameVariant {
                 return new DimensionGameVariant(Integer.parseInt(split[1]), Integer.parseInt(split[2]));
             case "MathGameVariant":
                 return new MathGameVariant(Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+            case GroupedGameVariant.TYPE:
+                return GroupedGameVariant.read(split);
             case "DimensionDifficultyGameVariant":
                 return new DimensionDifficultyGameVariant(Integer.parseInt(split[1]), Integer.parseInt(split[2]), split[3]);
             case "EnumGameVariant":

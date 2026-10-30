@@ -128,23 +128,23 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheNumber.png,oui
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheShape.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheSound.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/default/images/bear.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
-gazeplay-core/src/main/resources/data/common/default/images/chouette.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding free of right Free Fundation images
-gazeplay-core/src/main/resources/data/common/default/images/crabe.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
+gazeplay-core/src/main/resources/data/common/default/images/chouette.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
+gazeplay-core/src/main/resources/data/common/default/images/crabe.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
 gazeplay-core/src/main/resources/data/common/default/images/dog.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-24,schwab,new default images
-gazeplay-core/src/main/resources/data/common/default/images/ecureuil.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
+gazeplay-core/src/main/resources/data/common/default/images/ecureuil.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
 gazeplay-core/src/main/resources/data/common/default/images/elephant.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
 gazeplay-core/src/main/resources/data/common/default/images/elephant2.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-24,schwab,new default images
 gazeplay-core/src/main/resources/data/common/default/images/fox.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
+gazeplay-core/src/main/resources/data/common/default/images/frog.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
 gazeplay-core/src/main/resources/data/common/default/images/giraffe.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
-gazeplay-core/src/main/resources/data/common/default/images/herisson.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
+gazeplay-core/src/main/resources/data/common/default/images/herisson.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
 gazeplay-core/src/main/resources/data/common/default/images/hippo.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
-gazeplay-core/src/main/resources/data/common/default/images/lapin.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
+gazeplay-core/src/main/resources/data/common/default/images/lapin.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
 gazeplay-core/src/main/resources/data/common/default/images/lion.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
-gazeplay-core/src/main/resources/data/common/default/images/meduse.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
-gazeplay-core/src/main/resources/data/common/default/images/poulpe.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
-gazeplay-core/src/main/resources/data/common/default/images/renard.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
+gazeplay-core/src/main/resources/data/common/default/images/meduse.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
+gazeplay-core/src/main/resources/data/common/default/images/penguin.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
+gazeplay-core/src/main/resources/data/common/default/images/poulpe.png,oui,libre,"OpenMoji (CC BY-SA 4.0), gradle/images/make_default_images.py",2026-10-30,GazePlay Learning,revue de Memory
 gazeplay-core/src/main/resources/data/common/default/images/snake.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-24,schwab,new default images
-gazeplay-core/src/main/resources/data/common/default/images/tortue.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding free of right Free Fundation images
 gazeplay-core/src/main/resources/data/common/default/images/turtle.jpg,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
 gazeplay-core/src/main/resources/data/common/flags/800px-Flag_of_Albania.svg.png,oui,libre probable,"Wikimedia Commons (drapeaux, domaine public en général)",2019-02-15,johzz-o2,added Albanian Language
 gazeplay-core/src/main/resources/data/common/flags/800px-Flag_of_Austria.svg.png,oui,libre probable,"Wikimedia Commons (drapeaux, domaine public en général)",2018-07-29,schwab,work on issue #587 (A flag with the language as a pictogram) : images from Wikipedia (800 px)

@@ -17,4 +17,5 @@ The same game as "Where is the animal?", with your own pictures: a question asks
 - The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
 
 # The variants
+Choose a variant (it is framed), then press "Start".
 - The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.

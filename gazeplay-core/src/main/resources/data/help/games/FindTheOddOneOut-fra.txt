@@ -12,4 +12,5 @@ Toutes les images se ressemblent sauf une, l'intrus : trouve-le.
 - Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche, ou règle une limite de temps ou de score dans les réglages (section Jeux).
 
 # Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - La taille de la grille : 4, 6 ou 9 images. Plus il y a d'images, plus c'est difficile.

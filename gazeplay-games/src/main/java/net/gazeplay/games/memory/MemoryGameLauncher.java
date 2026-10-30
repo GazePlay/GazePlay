@@ -4,13 +4,13 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.magiccards.MagicCardsGamesStats;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,7 +19,8 @@ import java.util.LinkedList;
  * Creates the game "Memory" and its statistics, for a new game or for the replay of a saved one (see
  * {@code IGameLauncher}).
  */
-public class MemoryGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
+public class MemoryGameLauncher implements IGameLauncher<Stats, GroupedGameVariant> {
+
     @Override
     public Stats createNewStats(Scene scene) {
         return new MagicCardsGamesStats(scene);
@@ -31,16 +32,21 @@ public class MemoryGameLauncher implements IGameLauncher<Stats, DimensionDifficu
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), gameVariant.getVariant(), stats, false);
+    public GameLifeCycle createNewGame(IGameContext gameContext, GroupedGameVariant gameVariant, Stats stats) {
+        return new Memory(gameContext, stats, variantOf(gameVariant));
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext,
-                                    DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), gameVariant.getVariant(), stats, false, gameSeed);
+    public GameLifeCycle replayGame(IGameContext gameContext, GroupedGameVariant gameVariant, Stats stats,
+                                    double gameSeed) {
+        return new Memory(gameContext, stats, variantOf(gameVariant), gameSeed);
+    }
+
+    /**
+     * @return the variant chosen; pictures, hidden cards, 2 x 2, when there is none
+     */
+    static GroupedGameVariant variantOf(final GroupedGameVariant gameVariant) {
+        return gameVariant != null ? gameVariant : new GroupedGameVariant(MemoryContent.IMAGES.getKey(),
+            MemoryGameVariantGenerator.HIDDEN, "2x2", null);
     }
 }
