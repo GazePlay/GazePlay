@@ -1,0 +1,39 @@
+# Préparer une évaluation
+Les évaluations se créent sur le site GazePlay Eval, ouvert par la carte « Créer une évaluation (site GazePlay Eval) ». Téléchargez le fichier .zip de l'évaluation, puis importez-le avec « Importer une évaluation ».
+Avant une passation, « Tester une évaluation » permet de vérifier la calibration de l'oculomètre : l'évaluation est jouée sans formulaire, et rien n'est enregistré.
+
+# Faire passer une évaluation
+- « Lancer une évaluation », puis choisissez l'évaluation.
+- Remplissez le formulaire du participant, puis appuyez sur « Commencer ».
+- Le participant choisit une image en la regardant : un anneau se remplit autour d'elle pendant la fixation.
+- Pour quitter en cours de route : l'engrenage en bas à gauche, puis le bouton d'accueil. Les résultats déjà obtenus sont enregistrés, et la passation est notée comme non terminée. Pendant que le menu de l'engrenage est ouvert, l'évaluation est en pause.
+
+# Touches de l'examinateur
+Pendant un écran (consigne, grille, transition) :
+- Espace : passer à l'écran suivant.
+- P : rejouer la vidéo ou le son de la consigne, ou le son de la grille (s'il y en a un).
+Sur l'écran « Recommencer / Continuer » (après une grille, modes autres que Classique) :
+- R ou flèche gauche : recommencer la grille.
+- C ou flèche droite : continuer.
+- Entrée : valider le choix proposé par le participant (sinon : continuer).
+Pour quitter : l'engrenage en bas à gauche.
+
+# Modes de passation (réglages, section Évaluations)
+- Classique : les écrans s'enchaînent sans arrêt.
+- Autonomie Soutien Oral : après chaque grille, l'examinateur choisit de recommencer ou de continuer (à la souris ou au clavier). Le regard du participant sur les deux boutons est enregistré.
+- Autonomie Soutien Visuel : le participant désigne un bouton du regard, puis l'examinateur confirme avec Entrée.
+- Autonomie Totale : le participant choisit seul, du regard.
+
+# Autres réglages utiles
+- Délai avant de pouvoir sélectionner : au début de chaque écran, rien ne peut être choisi pendant ce délai (1 seconde par défaut).
+- Le son d'une case choisie bloque les autres sélections tant qu'il est joué.
+- La durée de fixation (section Oculomètre) est le temps qu'il faut regarder une image pour la choisir.
+
+# Ce qui est enregistré
+Chaque passation a son dossier dans Documents\GazePlayLearning_Eval (bouton « Résultats des évaluations ») :
+- session.json : le participant, l'évaluation et les réglages de la passation ;
+- resultats.csv ou .xlsx : les réponses, écran par écran ;
+- evenements.csv : chaque entrée et sortie du regard ou de la souris sur une image, chaque sélection, chaque touche ;
+- echantillons.csv : toutes les positions du regard et de la souris ;
+- heatmaps : la carte de chaleur de chaque écran.
+Les informations du participant sont écrites en clair : protégez ce dossier.

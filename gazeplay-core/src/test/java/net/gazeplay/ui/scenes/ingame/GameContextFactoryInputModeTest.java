@@ -5,6 +5,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.EyeTracker;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +39,33 @@ class GameContextFactoryInputModeTest {
     @Test
     void shouldStopTheMouseWhenOnlyTheEyeTrackerPlays() {
         assertEquals(List.of(), mouseEventsReceivedWith(EyeTracker.tobii));
+    }
+
+    /**
+     * A screen marked for the mouse (the participant form of GazePlay Eval, filled by the examiner) gets it, with its
+     * children, even with the eye tracker alone; the rest of the game area does not (maintainer's request of
+     * 30/10/2026).
+     */
+    @Test
+    void shouldLetTheMouseThroughAMarkedScreenWithTheEyeTrackerAlone() {
+        Pane gamingRoot = new Pane();
+        Pane form = new Pane();
+        form.getProperties().put(IGameContext.MOUSE_ALLOWED_PROPERTY, true);
+        Rectangle startButton = new Rectangle(10, 10);
+        form.getChildren().add(startButton);
+        Rectangle target = new Rectangle(10, 10);
+        gamingRoot.getChildren().addAll(form, target);
+        List<String> received = new ArrayList<>();
+        startButton.addEventHandler(MouseEvent.ANY, e -> received.add("button " + e.getEventType().getName()));
+        target.addEventHandler(MouseEvent.ANY, e -> received.add("target " + e.getEventType().getName()));
+
+        GameContextFactory.applyInputMode(gamingRoot, EyeTracker.tobii);
+
+        for (Rectangle node : List.of(startButton, target)) {
+            Event.fireEvent(node, new MouseEvent(MouseEvent.MOUSE_CLICKED, 5, 5, 5, 5, MouseButton.PRIMARY, 1,
+                false, false, false, false, true, false, false, false, false, false, null));
+        }
+        assertEquals(List.of("button MOUSE_CLICKED"), received);
     }
 
     @Test

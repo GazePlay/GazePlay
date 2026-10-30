@@ -3,15 +3,21 @@ package net.gazeplay.games.gazeplayEval;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.components.GameStyle;
 
 import java.util.function.BiConsumer;
 
@@ -20,8 +26,10 @@ import java.util.function.BiConsumer;
  * button of the choice screen), with the mouse too when the input mode accepts it.
  * <p>
  * The gaze and the mouse are followed separately: each entry and exit is recorded with its source. While at least one
- * of them is on the target and the target is active, an indicator fills in during the fixation time; the target is
- * selected when it is full. A target is inactive during the delay before selection, while a sound blocks the grid
+ * of them is on the target and the target is active, a ring of the main color goes round the target during the
+ * fixation time (on the edge of its card, or a circle around the fixation cross); the target is selected when it is
+ * full. The ring replaces the progress indicator in the middle of the target of the former versions; the zone of the
+ * target does not change. A target is inactive during the delay before selection, while a sound blocks the grid
  * and while the configuration menu is open.
  */
 final class EvalTarget {
@@ -42,7 +50,12 @@ final class EvalTarget {
     private final String name;
 
     private final Listener listener;
-    private final ProgressIndicator indicator;
+    /**
+     * The ring of the fixation, drawn on the edge of the target, and its progress (0 to 1).
+     */
+    private final Shape ring;
+    private final double ringPerimeter;
+    private final DoubleProperty progress = new SimpleDoubleProperty(0);
     private final double fixationMillis;
     private final IGameContext gameContext;
 
@@ -59,28 +72,46 @@ final class EvalTarget {
      * @param area           the shape looked at, already in the game area (its bounds are those of the target)
      * @param fixationMillis fixation time that selects the target, in ms (0: as soon as it is looked at; negative: the
      *                       target is never selected, its entries and exits are only recorded)
-     * @param indicatorLayer where the indicator is drawn, above the target
+     * @param indicatorLayer where the ring is drawn, above the target
+     * @param circleRing     a circle around the target (the fixation cross) instead of a ring on its edge
      */
     EvalTarget(IGameContext gameContext, Shape area, String name, double fixationMillis, Pane indicatorLayer,
-               Listener listener) {
+               boolean circleRing, Listener listener) {
         this.gameContext = gameContext;
         this.area = area;
         this.name = name;
         this.fixationMillis = fixationMillis;
         this.listener = listener;
 
-        indicator = new ProgressIndicator(0);
-        indicator.setMouseTransparent(true);
-        indicator.setVisible(false);
-        indicator.setOpacity(0.7);
-        double size = Math.max(40, 100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
-        indicator.setMinSize(size, size);
-        indicator.setPrefSize(size, size);
-        indicator.setStyle("-fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         Bounds bounds = area.getBoundsInParent();
-        indicator.setLayoutX(bounds.getMinX() + (bounds.getWidth() - size) / 2);
-        indicator.setLayoutY(bounds.getMinY() + (bounds.getHeight() - size) / 2);
-        indicatorLayer.getChildren().add(indicator);
+        double ringWidth = Math.max(5, Math.min(bounds.getWidth(), bounds.getHeight()) * 0.03);
+        if (circleRing) {
+            double radius = Math.min(bounds.getWidth(), bounds.getHeight()) / 2 - ringWidth / 2;
+            Circle circle = new Circle(bounds.getCenterX(), bounds.getCenterY(), radius);
+            circle.setRotate(-90);
+            ring = circle;
+            ringPerimeter = 2 * Math.PI * radius;
+        } else {
+            Rectangle rectangle = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(),
+                bounds.getHeight());
+            double arc = area instanceof Rectangle shape && shape.getArcWidth() > 0 ? shape.getArcWidth()
+                : 2 * GameStyle.cardRadius(bounds.getWidth(), bounds.getHeight());
+            rectangle.setArcWidth(arc);
+            rectangle.setArcHeight(arc);
+            rectangle.setStrokeType(StrokeType.INSIDE);
+            ring = rectangle;
+            double radius = arc / 2;
+            ringPerimeter = 2 * (bounds.getWidth() + bounds.getHeight()) - (8 - 2 * Math.PI) * radius;
+        }
+        ring.setFill(null);
+        ring.setStrokeWidth(ringWidth);
+        ring.setStrokeLineCap(StrokeLineCap.BUTT);
+        ring.setStyle("-fx-stroke: -gp-accent;");
+        ring.setMouseTransparent(true);
+        ring.setVisible(false);
+        progress.addListener((observable, before, value) ->
+            ring.getStrokeDashArray().setAll(Math.max(0.01, value.doubleValue() * ringPerimeter), ringPerimeter));
+        indicatorLayer.getChildren().add(ring);
 
         area.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> onEnter(EvalSessionRecorder.MOUSE, e.getX(), e.getY(), 0));
         area.addEventHandler(MouseEvent.MOUSE_EXITED, e -> onExit(EvalSessionRecorder.MOUSE, e.getX(), e.getY(), 0));
@@ -168,12 +199,12 @@ final class EvalTarget {
             return;
         }
         stopDwell();
-        indicator.setProgress(0);
-        indicator.setVisible(fixationMillis > 0);
+        progress.set(0);
+        ring.setVisible(fixationMillis > 0);
         dwell = new Timeline(new KeyFrame(Duration.millis(Math.max(1, fixationMillis)),
-            new KeyValue(indicator.progressProperty(), 1)));
+            new KeyValue(progress, 1)));
         dwell.setOnFinished(e -> {
-            indicator.setVisible(false);
+            ring.setVisible(false);
             if (active && !closed && isLookedAt()) {
                 listener.onSelected(this, dwellSource == null ? EvalSessionRecorder.MOUSE : dwellSource);
             }
@@ -186,8 +217,8 @@ final class EvalTarget {
             dwell.stop();
             dwell = null;
         }
-        indicator.setVisible(false);
-        indicator.setProgress(0);
+        ring.setVisible(false);
+        progress.set(0);
     }
 
     /**

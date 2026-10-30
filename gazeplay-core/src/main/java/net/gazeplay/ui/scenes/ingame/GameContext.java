@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -224,30 +223,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
      */
     private double time(double start, double end) {
         return (end - start) / 1000;
-    }
-
-    /**
-     * Makes the quit key of the settings (QUIT_KEY) end the game, as the home button does, when it is released.
-     */
-    public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        Configuration config = getConfiguration();
-        final Scene scene = gazePlay.getPrimaryScene();
-
-        EventHandler<KeyEvent> buttonHandler = new EventHandler<>() {
-
-            public void handle(KeyEvent event) {
-
-                exitGame(stats, gazePlay, currentGame);
-                scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
-            }
-        };
-
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            if (key.getCode().getChar().equals(config.getQuitKey())) {
-                scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
-            }
-        });
     }
 
     /**

@@ -181,9 +181,24 @@ class ConfigurationTest {
         assertEquals(properties.get("EYE_TRACKER"), configuration.getEyeTracker());
     }
 
+    /**
+     * The quit key setting was removed (30/10/2026: the gear button leaves a game or an evaluation). A file written
+     * before still has QUIT_KEY (as the test file does): it is read without error, its other settings are kept, and it
+     * is saved again; the unknown key stays in the file, unused.
+     */
     @Test
-    void shouldGetQuitKey() {
-        assertEquals(properties.get("QUIT_KEY"), configuration.getQuitKey());
+    void shouldReadAndSaveAFileWithTheRemovedQuitKey() throws IOException {
+        assertEquals("Q", properties.getProperty("QUIT_KEY"));
+        assertEquals(properties.get("FILE_DIR"), configuration.getFileDir());
+
+        configuration.setUserName("someone");
+
+        Properties saved = new Properties();
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
+            saved.load(is);
+        }
+        assertEquals("someone", saved.getProperty("USER_NAME"));
+        assertEquals(properties.getProperty("EYE_TRACKER"), saved.getProperty("EYE_TRACKER"));
     }
 
     @Test

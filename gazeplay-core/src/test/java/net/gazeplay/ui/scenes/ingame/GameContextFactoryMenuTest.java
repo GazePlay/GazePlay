@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * While the configuration menu of the game screen is open, the game receives neither the mouse nor the keyboard
- * (request of the maintainer, October 2026): only the menu, and the quit key, keep working.
+ * (request of the maintainer, October 2026): only the menu keeps working.
  */
 class GameContextFactoryMenuTest {
 
@@ -41,21 +41,22 @@ class GameContextFactoryMenuTest {
 
     @Test
     void shouldStopTheMouseOutsideOfTheMenuWhileItIsOpen() {
-        assertTrue(GameContextFactory.blocksGameInput(mouseMovedOn(gameNode), true, menu, "Q"));
-        assertFalse(GameContextFactory.blocksGameInput(mouseMovedOn(menuSlider), true, menu, "Q"));
+        assertTrue(GameContextFactory.blocksGameInput(mouseMovedOn(gameNode), true, menu));
+        assertFalse(GameContextFactory.blocksGameInput(mouseMovedOn(menuSlider), true, menu));
     }
 
     @Test
-    void shouldStopTheKeyboardExceptTheQuitKeyWhileTheMenuIsOpen() {
-        assertTrue(GameContextFactory.blocksGameInput(keyPressed(KeyCode.SPACE), true, menu, "Q"));
-        assertTrue(GameContextFactory.blocksGameInput(keyPressed(KeyCode.UP), true, menu, "Q"));
-        assertFalse(GameContextFactory.blocksGameInput(keyPressed(KeyCode.Q), true, menu, "Q"));
+    void shouldStopTheWholeKeyboardWhileTheMenuIsOpen() {
+        assertTrue(GameContextFactory.blocksGameInput(keyPressed(KeyCode.SPACE), true, menu));
+        assertTrue(GameContextFactory.blocksGameInput(keyPressed(KeyCode.UP), true, menu));
+        // Q was the default key leaving the game (QUIT_KEY setting, removed on 30/10/2026)
+        assertTrue(GameContextFactory.blocksGameInput(keyPressed(KeyCode.Q), true, menu));
     }
 
     @Test
     void shouldLetEverythingThroughWhenTheMenuIsClosed() {
-        assertFalse(GameContextFactory.blocksGameInput(mouseMovedOn(gameNode), false, menu, "Q"));
-        assertFalse(GameContextFactory.blocksGameInput(keyPressed(KeyCode.SPACE), false, menu, "Q"));
-        assertFalse(GameContextFactory.blocksGameInput(new Event(Event.ANY), true, menu, "Q"));
+        assertFalse(GameContextFactory.blocksGameInput(mouseMovedOn(gameNode), false, menu));
+        assertFalse(GameContextFactory.blocksGameInput(keyPressed(KeyCode.SPACE), false, menu));
+        assertFalse(GameContextFactory.blocksGameInput(new Event(Event.ANY), true, menu));
     }
 }

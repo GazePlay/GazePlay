@@ -273,6 +273,9 @@ public class GazePlayFxApp extends Application {
      */
     private void configurePrimaryStage(final Stage primaryStage) {
         primaryStage.setTitle("GazePlay Learning");
+        // No "Press Esc to exit full screen" message in the middle of the screen when the full screen starts (seen
+        // by the participant at the start of an evaluation); Esc still leaves the full screen
+        primaryStage.setFullScreenExitHint("");
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
         final String iconImagePath = "data/common/images/gazeplayicon.png";

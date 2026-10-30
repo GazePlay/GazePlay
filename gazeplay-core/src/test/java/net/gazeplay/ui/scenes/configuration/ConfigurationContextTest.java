@@ -135,14 +135,16 @@ class ConfigurationContextTest {
             assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
             assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
             assertFalse(has(sections, "DarkTh"));
-            // Evaluations: quit key, imported evaluations and import, way of taking them, delay before selection,
-            // sound blocking the selection, results folder
-            assertInstanceOf(ChoiceBox.class, control(sections, "QuitKey"));
-            assertInstanceOf(VBox.class, control(sections, "EvalImported"));
+            // Evaluations: imported evaluations, way of taking them, delay before selection, sound blocking the
+            // selection. No quit key (the gear button leaves an evaluation); the import and the results folder are on
+            // the menu of the evaluations only (maintainer's request of 29/10/2026)
+            assertFalse(has(sections, "QuitKey"));
+            VBox imported = assertInstanceOf(VBox.class, control(sections, "EvalImported"));
+            assertTrue(imported.getChildren().stream().noneMatch(Button.class::isInstance));
             assertInstanceOf(ChoiceBox.class, control(sections, "EvalOptions"));
             assertInstanceOf(Spinner.class, control(sections, "EvalDelayBeforeSelection"));
             assertInstanceOf(CheckBox.class, control(sections, "EvalSoundBlocksSelection"));
-            assertInstanceOf(Button.class, control(sections, "EvalResults"));
+            assertFalse(has(sections, "EvalResults"));
             // Heatmaps of the screens: disabled, opacity, colors, in their own card
             assertInstanceOf(CheckBox.class, control(sections, "DisableHeatMap"));
             assertInstanceOf(ChoiceBox.class, control(sections, "HeatMapOpacity"));
@@ -169,8 +171,9 @@ class ConfigurationContextTest {
                 "SettingsFolders", "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));
             assertEquals(Utils.isWindows(), has(sections, "CreateShortcut"));
-            // Games: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
-            assertInstanceOf(ChoiceBox.class, control(sections, "QuitKey"));
+            // Games: question length, reask on fail, reward sound, limiters, piano tile colors (no quit key: the gear
+            // button leaves a game)
+            assertFalse(has(sections, "QuitKey"));
             assertInstanceOf(Spinner.class, control(sections, "QuestionLength"));
             assertInstanceOf(CheckBox.class, control(sections, "ReaskQuestionOnFail"));
             assertInstanceOf(CheckBox.class, control(sections, "EnableRewardSound"));
@@ -580,25 +583,6 @@ class ConfigurationContextTest {
         assertFalse(expectedFile.exists());
 
         assertTrue(testFolder.delete());
-    }
-
-    @Test
-    void shouldBuildQuitKeyChooser() throws InterruptedException {
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            StringProperty quitProperty = new SimpleStringProperty("Y");
-
-            when(mockConfig.getQuitKeyProperty()).thenReturn(quitProperty);
-            writeInto(quitProperty).when(mockConfig).setQuitKey(anyString());
-
-            ChoiceBox<String> result = context.buildQuitKeyChooser(mockConfig);
-            // Only Q and E are offered since the quit key chooser was restricted
-            assertEquals(2, result.getItems().size());
-
-            result.setValue("Q");
-            assertEquals("Q", quitProperty.getValue());
-        });
-        TestingUtils.waitForRunLater();
     }
 
     @Test

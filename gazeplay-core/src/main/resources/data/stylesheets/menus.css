@@ -484,10 +484,10 @@
 }
 
 .gp-menu .gp-eval-launch-badge {
-    -fx-min-width: 128;
-    -fx-min-height: 128;
-    -fx-max-width: 128;
-    -fx-max-height: 128;
+    -fx-min-width: 96;
+    -fx-min-height: 96;
+    -fx-max-width: 96;
+    -fx-max-height: 96;
 }
 
 .gp-menu .gp-eval-small-badge {
@@ -510,7 +510,7 @@
 }
 
 .gp-menu .button.gp-eval-card {
-    -fx-padding: 20 24 20 20;
+    -fx-padding: 14 24 14 20;
 }
 
 .gp-menu .button.gp-eval-card .label {
@@ -786,6 +786,23 @@
     -fx-border-color: -gp-text;
     -fx-border-width: 2;
     -fx-border-radius: 999;
+}
+
+/* Window of the help of the evaluations (EvalHelpDialog): headings, then paragraphs and lists */
+
+.gp-menu .gp-help-heading {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 16pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-help-text {
+    -fx-font-size: 13pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-help-item {
+    -fx-padding: 0 0 0 12;
 }
 
 /* Window of the variants (GameVariantDialog) */

@@ -12,8 +12,10 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -23,14 +25,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -50,6 +56,7 @@ import net.gazeplay.commons.eval.EvalScreen.Cell;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.components.GameStyle;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.stats.HeatMapGrid;
@@ -89,7 +96,8 @@ import java.util.function.BiConsumer;
  * </ul>
  * In the modes of EVAL_OPTIONS other than the classic one, a screen after each grid offers to do it again or to
  * continue. Keys of the examiner: space (next screen), P (play the sound again), R or left arrow (do the grid again),
- * C or right arrow or enter (continue).
+ * C or right arrow (continue), enter (confirm the choice proposed by the participant, else continue). The form starts
+ * with its "Start" button, without any key.
  * <p>
  * Each screen has a number; a screen ends in one place only ({@link #endScreen}), which ignores the timers and
  * callbacks of the screens already ended. The timers, the media and the selection are paused while the configuration
@@ -163,6 +171,11 @@ public class GazeplayEval implements GameLifeCycle {
     private EventHandler<KeyEvent> keyHandler;
 
     private final List<TextField> participantFields = new ArrayList<>();
+
+    /**
+     * The button of the participant form starting the session; null before the form.
+     */
+    private Button startButton;
 
     /**
      * A cell of the grid on screen.
@@ -242,45 +255,48 @@ public class GazeplayEval implements GameLifeCycle {
         StringBuilder message = new StringBuilder(translate(noEvaluation ? "EvalNoEvaluation" : "EvalCannotBePlayed"));
         loadProblems.stream().filter(EvalProblem::error).limit(10)
             .forEach(problem -> message.append("\n• ").append(problem.format(gameContext.getTranslator())));
-        Text text = centeredText(message.toString(), 28);
-        gameContext.getChildren().add(text);
+        gameContext.getChildren().add(centeredCard(message.toString(), unit() * 3.6));
     }
 
     private void showForm() {
         phase = Phase.FORM;
         Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        VBox form = new VBox(20);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(30));
+        double fontSize = unit() * 3.2;
+        // A rounded card in the middle of the game area (look of the menus)
+        VBox card = new VBox(fontSize);
+        card.setAlignment(Pos.CENTER);
+        card.setPadding(new Insets(fontSize * 1.5));
+        card.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        card.setStyle("-fx-background-color: -gp-surface; -fx-background-radius: 28; -fx-border-color: -gp-border;"
+            + " -fx-border-width: 2; -fx-border-radius: 28;");
+        StackPane form = new StackPane(card);
         form.setPrefSize(dimension.getWidth(), dimension.getHeight());
+        // Filled by the examiner, not by the participant: the mouse works on the form even with the eye tracker alone,
+        // on this screen only (maintainer's request of 30/10/2026)
+        form.getProperties().put(IGameContext.MOUSE_ALLOWED_PROPERTY, true);
 
         Text title = new Text(definition.name());
-        title.setFont(Font.font(null, FontWeight.BOLD, 36));
-        title.setFill(foreground());
+        title.setFont(GameStyle.titleFont(fontSize * 1.6));
+        title.setStyle(GameStyle.titleFontStyle(fontSize * 1.6) + " -fx-fill: -gp-text;");
 
         GridPane fields = new GridPane();
-        fields.setHgap(20);
-        fields.setVgap(15);
+        fields.setHgap(fontSize);
+        fields.setVgap(fontSize * 0.7);
         fields.setAlignment(Pos.CENTER);
         participantFields.clear();
         int row = 0;
         for (String label : definition.participantFields()) {
             Label fieldLabel = new Label(label);
-            fieldLabel.setFont(Font.font(22));
-            fieldLabel.setTextFill(foreground());
+            fieldLabel.setStyle(GameStyle.textFontStyle(fontSize) + " -fx-text-fill: -gp-text;");
             TextField field = new TextField();
-            field.setPrefColumnCount(25);
-            field.setFont(Font.font(22));
-            // The letters typed must not reach the game screen (Q leaves the game)
-            EventHandler<KeyEvent> keepKeys = e -> {
-                if (e.getCode() != KeyCode.TAB && e.getCode() != KeyCode.ENTER) {
-                    e.consume();
-                }
-            };
-            field.addEventHandler(KeyEvent.KEY_PRESSED, keepKeys);
-            field.addEventHandler(KeyEvent.KEY_RELEASED, keepKeys);
-            field.setOnAction(e -> submitForm());
+            field.setPrefColumnCount(22);
+            field.setStyle(GameStyle.textFontStyle(fontSize) + " -fx-text-fill: -gp-text;"
+                + " -fx-background-color: -gp-bg; -fx-background-radius: 999; -fx-border-color: -gp-border;"
+                + " -fx-border-width: 2; -fx-border-radius: 999; -fx-padding: 0.35em 1em 0.35em 1em;");
+            // The field handles its keys (Backspace, arrows...): they used to be all consumed so that Q did not leave
+            // the game, Backspace included (the quit key was removed on 30/10/2026). Enter no longer starts: the
+            // "Start" button does, without any keyboard shortcut (maintainer's decision of 29/10/2026)
             fieldLabel.setLabelFor(field);
             fields.add(fieldLabel, 0, row);
             fields.add(field, 1, row);
@@ -288,11 +304,15 @@ public class GazeplayEval implements GameLifeCycle {
             row++;
         }
 
-        Text hint = new Text(translate("EvalFormHint"));
-        hint.setFont(Font.font(20));
-        hint.setFill(foreground());
+        // Look of the primary buttons of the menus: a pill in the main color. Clicked by the examiner (or Tab then
+        // Space)
+        startButton = new Button(translate("EvalStartButton"));
+        startButton.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-text-fill: -gp-on-accent;"
+            + " -fx-background-color: -gp-accent; -fx-background-radius: 999; -fx-cursor: hand;"
+            + " -fx-padding: 0.4em 1.6em 0.4em 1.6em;");
+        startButton.setOnAction(e -> submitForm());
 
-        form.getChildren().addAll(title, fields, hint);
+        card.getChildren().addAll(title, fields, startButton);
         gameContext.getChildren().add(form);
         if (!participantFields.isEmpty()) {
             Platform.runLater(() -> participantFields.get(0).requestFocus());
@@ -414,7 +434,7 @@ public class GazeplayEval implements GameLifeCycle {
         phase = Phase.END;
         finishSession(true);
         // In a test, the game then ends without statistics screen (nothing saved: GameContext.showRoundStats)
-        gameContext.getChildren().add(centeredText(translate(test ? "EvalTestFinished" : "EvalFinished"), 40));
+        gameContext.getChildren().add(centeredCard(translate(test ? "EvalTestFinished" : "EvalFinished"), unit() * 5));
         PauseTransition pause = new PauseTransition(Duration.seconds(2));
         pause.setOnFinished(e -> gameContext.showRoundStats(stats, this));
         pause.play();
@@ -485,7 +505,7 @@ public class GazeplayEval implements GameLifeCycle {
         if (transition.crossFixationSeconds() != null) {
             Rectangle area = transparentArea(centerX - size, centerY - size, 2 * size, 2 * size);
             gameContext.getChildren().add(area);
-            addTarget(area, "croix", transition.crossFixationSeconds() * 1000,
+            addTarget(area, "croix", transition.crossFixationSeconds() * 1000, true,
                 (target, source) -> {
                     recorder.event("fixation_validee", source, target.getName(), null, null, "");
                     endScreen(EndReason.FIXATION, token);
@@ -505,7 +525,9 @@ public class GazeplayEval implements GameLifeCycle {
             switch (instruction.mediaType()) {
                 case TEXT -> {
                     Text text = new Text(instruction.content());
-                    text.setFont(Font.font(40));
+                    double textSize = unit() * 5.5;
+                    text.setFont(Font.font(GameStyle.TEXT_FONT_FAMILY, textSize));
+                    text.setStyle(GameStyle.textFontStyle(textSize));
                     text.setFill(foreground());
                     text.setTextAlignment(TextAlignment.CENTER);
                     text.setWrappingWidth(mediaWidth);
@@ -543,8 +565,11 @@ public class GazeplayEval implements GameLifeCycle {
                     }
                 }
                 case SOUND -> {
-                    Text note = centeredText("♪", 120);
-                    gameContext.getChildren().add(note);
+                    double iconSize = Math.min(mediaWidth, mediaHeight) * 0.35;
+                    Group speaker = speakerIcon(iconSize);
+                    speaker.setLayoutX((dimension.getWidth() - iconSize) / 2);
+                    speaker.setLayoutY(mediaTop + (mediaHeight - iconSize) / 2);
+                    gameContext.getChildren().add(speaker);
                     replaySound = () -> play(MediaFolder.AUDIO, instruction.content(), "son", token, null);
                     replaySound.run();
                 }
@@ -556,19 +581,8 @@ public class GazeplayEval implements GameLifeCycle {
             double height = Math.min(dimension.getHeight() * 0.16, 160);
             double x = (dimension.getWidth() - width) / 2;
             double y = dimension.getHeight() * 0.8 - height / 2 + dimension.getHeight() * 0.05;
-            Rectangle button = new Rectangle(x, y, width, height);
-            button.setArcWidth(40);
-            button.setArcHeight(40);
-            button.setFill(Color.web(gameContext.getConfiguration().getProgressBarColor(), 0.35));
-            button.setStroke(foreground());
-            button.setStrokeWidth(4);
-            Text label = new Text("▶  " + translate("EvalStartButton"));
-            label.setFont(Font.font(null, FontWeight.BOLD, 34));
-            label.setFill(foreground());
-            label.setMouseTransparent(true);
-            Bounds bounds = label.getLayoutBounds();
-            label.setLayoutX(x + (width - bounds.getWidth()) / 2 - bounds.getMinX());
-            label.setLayoutY(y + (height - bounds.getHeight()) / 2 - bounds.getMinY());
+            Rectangle button = roundedButton(x, y, width, height);
+            Group label = buttonLabel("play_arrow_fill1", translate("EvalStartButton"), x, y, width, height);
             gameContext.getChildren().addAll(button, label);
             addTarget(button, "bouton", instruction.startButtonFixationSeconds() * 1000,
                 (target, source) -> {
@@ -615,25 +629,22 @@ public class GazeplayEval implements GameLifeCycle {
                 view.setLayoutY(y0 + (height - imageHeight) / 2);
                 view.setMouseTransparent(true);
                 visuals.add(view);
-                // The target is the image shown, with a small margin
+                // The target is the image shown, with a small margin; a light card is drawn exactly on it, so that the
+                // fixation ring goes round the picture
                 double pad = margin / 2;
                 area = transparentArea(view.getLayoutX() - pad, view.getLayoutY() - pad, imageWidth + 2 * pad,
                     imageHeight + 2 * pad);
+                visuals.add(0, GameStyle.targetCard(area.getX(), area.getY(), area.getWidth(), area.getHeight()));
             }
             if (area == null) {
-                // A cell with a sound only (or whose image cannot be read): a frame with a note
+                // A cell with a sound only (or whose image cannot be read): a card with a loudspeaker
                 area = transparentArea(x0, y0, width, height);
-                area.setStroke(foreground());
-                area.getStrokeDashArray().addAll(12d, 8d);
-                area.setStrokeWidth(3);
-                Text note = new Text("♪");
-                note.setFont(Font.font(Math.min(width, height) / 3));
-                note.setFill(foreground());
-                note.setMouseTransparent(true);
-                Bounds bounds = note.getLayoutBounds();
-                note.setLayoutX(x0 + (width - bounds.getWidth()) / 2 - bounds.getMinX());
-                note.setLayoutY(y0 + (height - bounds.getHeight()) / 2 - bounds.getMinY());
-                visuals.add(note);
+                visuals.add(GameStyle.targetCard(x0, y0, width, height));
+                double iconSize = Math.min(width, height) * 0.4;
+                Group speaker = speakerIcon(iconSize);
+                speaker.setLayoutX(x0 + (width - iconSize) / 2);
+                speaker.setLayoutY(y0 + (height - iconSize) / 2);
+                visuals.add(speaker);
             }
             gameContext.getChildren().addAll(visuals);
             gameContext.getChildren().add(area);
@@ -697,11 +708,11 @@ public class GazeplayEval implements GameLifeCycle {
         if (stimuli.hideAfterSelection()) {
             gridCell.visuals().forEach(node -> node.setVisible(false));
         } else {
-            Rectangle frame = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
-            frame.setFill(Color.TRANSPARENT);
-            frame.setStroke(Color.web(gameContext.getConfiguration().getProgressBarColor()));
-            frame.setStrokeWidth(6);
-            frame.setMouseTransparent(true);
+            // A selection kept on screen: framed in the main color (neutral: neither right nor wrong)
+            Rectangle frame = GameStyle.targetCard(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(),
+                bounds.getHeight());
+            frame.setStyle("-fx-fill: transparent; -fx-stroke: -gp-accent; -fx-stroke-width: "
+                + Math.max(5, Math.min(bounds.getWidth(), bounds.getHeight()) * 0.03) + ";");
             gameContext.getChildren().add(frame);
         }
 
@@ -743,28 +754,17 @@ public class GazeplayEval implements GameLifeCycle {
         double height = dimension.getHeight() * 0.4;
         double y = (dimension.getHeight() - height) / 2;
         double fixation = gameContext.getConfiguration().getFixationLength();
-        addChoiceButton(Choice.RESTART, "↺  " + translate("EvalRestart"), dimension.getWidth() * 0.12, y, width,
+        addChoiceButton(Choice.RESTART, "replay", translate("EvalRestart"), dimension.getWidth() * 0.12, y, width,
             height, mode, fixation, token);
-        addChoiceButton(Choice.CONTINUE, translate("EvalContinue") + "  →",
+        addChoiceButton(Choice.CONTINUE, "arrow_forward", translate("EvalContinue"),
             dimension.getWidth() * 0.88 - width, y, width, height, mode, fixation, token);
         activateAfterDelay(token);
     }
 
-    private void addChoiceButton(Choice choice, String text, double x, double y, double width, double height,
-                                 EvalOptions mode, double fixationMillis, int token) {
-        Rectangle button = new Rectangle(x, y, width, height);
-        button.setArcWidth(50);
-        button.setArcHeight(50);
-        button.setFill(Color.web(gameContext.getConfiguration().getProgressBarColor(), 0.3));
-        button.setStroke(foreground());
-        button.setStrokeWidth(4);
-        Text label = new Text(text);
-        label.setFont(Font.font(null, FontWeight.BOLD, 36));
-        label.setFill(foreground());
-        label.setMouseTransparent(true);
-        Bounds bounds = label.getLayoutBounds();
-        label.setLayoutX(x + (width - bounds.getWidth()) / 2 - bounds.getMinX());
-        label.setLayoutY(y + (height - bounds.getHeight()) / 2 - bounds.getMinY());
+    private void addChoiceButton(Choice choice, String icon, String text, double x, double y, double width,
+                                 double height, EvalOptions mode, double fixationMillis, int token) {
+        Rectangle button = roundedButton(x, y, width, height);
+        Group label = buttonLabel(icon, text, x, y, width, height);
         gameContext.getChildren().addAll(button, label);
         choiceButtons.put(choice, button);
 
@@ -787,10 +787,10 @@ public class GazeplayEval implements GameLifeCycle {
     private void propose(Choice choice, String source) {
         proposedChoice = choice;
         recorder.event("proposition", source, choice == Choice.RESTART ? "recommencer" : "continuer", null, null, "");
-        choiceButtons.forEach((buttonChoice, button) -> {
-            button.setStroke(buttonChoice == choice ? Color.RED : foreground());
-            button.setStrokeWidth(buttonChoice == choice ? 10 : 4);
-        });
+        // The proposed button: a thick border of the main color
+        choiceButtons.forEach((buttonChoice, button) -> button.setStyle(buttonChoice == choice
+            ? "-fx-fill: -gp-surface; -fx-stroke: -gp-accent; -fx-stroke-width: " + unit() * 1.4 + ";"
+            : ROUNDED_BUTTON_STYLE));
     }
 
     private void choose(Choice choice, String source, int token) {
@@ -814,8 +814,17 @@ public class GazeplayEval implements GameLifeCycle {
      */
     private EvalTarget addTarget(Rectangle area, String name, double fixationMillis,
                                  BiConsumer<EvalTarget, String> onSelected) {
+        return addTarget(area, name, fixationMillis, false, onSelected);
+    }
+
+    /**
+     * @param circleRing a circle ring around the target (the fixation cross) instead of a ring on its edge
+     */
+    private EvalTarget addTarget(Rectangle area, String name, double fixationMillis, boolean circleRing,
+                                 BiConsumer<EvalTarget, String> onSelected) {
         Pane indicators = indicatorLayer();
-        EvalTarget target = new EvalTarget(gameContext, area, name, fixationMillis, indicators, new EvalTarget.Listener() {
+        EvalTarget target = new EvalTarget(gameContext, area, name, fixationMillis, indicators, circleRing,
+            new EvalTarget.Listener() {
             @Override
             public void onCrossing(EvalTarget crossed, String event, String source, double x, double y, long sampleTime) {
                 if (recorder != null) {
@@ -955,18 +964,80 @@ public class GazeplayEval implements GameLifeCycle {
         return area;
     }
 
-    private Text centeredText(String content, double size) {
+    /**
+     * Style of the buttons of the screens (start, restart, continue): a rounded card of the surface color with a border
+     * of the main color.
+     */
+    private static final String ROUNDED_BUTTON_STYLE = "-fx-fill: -gp-surface; -fx-stroke: -gp-accent;"
+        + " -fx-stroke-width: 3;";
+
+    /**
+     * @return a hundredth of the smaller side of the game area: the sizes of the texts and buttons follow the screen
+     */
+    private double unit() {
         Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Text text = new Text(content);
-        text.setFont(Font.font(size));
-        text.setFill(foreground());
-        text.setTextAlignment(TextAlignment.CENTER);
-        text.setWrappingWidth(dimension.getWidth() * 0.8);
-        text.setMouseTransparent(true);
-        Bounds bounds = text.getLayoutBounds();
-        text.setLayoutX(dimension.getWidth() * 0.1 - bounds.getMinX());
-        text.setLayoutY((dimension.getHeight() - bounds.getHeight()) / 2 - bounds.getMinY());
-        return text;
+        return Math.min(dimension.getWidth(), dimension.getHeight()) / 100;
+    }
+
+    /**
+     * @return a message on a rounded card in the middle of the game area
+     */
+    private Group centeredCard(String content, double fontSize) {
+        Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Group card = GameStyle.card(content, fontSize, dimension.getWidth() * 0.8);
+        Bounds bounds = card.getLayoutBounds();
+        card.setLayoutX((dimension.getWidth() - bounds.getWidth()) / 2);
+        card.setLayoutY((dimension.getHeight() - bounds.getHeight()) / 2);
+        return card;
+    }
+
+    /**
+     * @return a button of the screens: a rounded card (its zone is the zone of the target)
+     */
+    private Rectangle roundedButton(double x, double y, double width, double height) {
+        Rectangle button = new Rectangle(x, y, width, height);
+        double arc = Math.min(width, height) * 0.4;
+        button.setArcWidth(arc);
+        button.setArcHeight(arc);
+        button.setStrokeType(StrokeType.INSIDE);
+        button.setStyle(ROUNDED_BUTTON_STYLE);
+        return button;
+    }
+
+    /**
+     * @return an icon (data/icons) and a text in the title font, centered in a button
+     */
+    private Group buttonLabel(String icon, String text, double x, double y, double width, double height) {
+        double fontSize = Math.min(unit() * 4.5, height * 0.3);
+        Text label = new Text(text);
+        label.setFont(GameStyle.titleFont(fontSize));
+        label.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: -gp-text;");
+        double iconSize = fontSize * 1.3;
+        SVGPath shape = GameStyle.icon(icon, iconSize);
+        shape.setStyle("-fx-fill: -gp-accent;");
+        Group iconGroup = new Group(shape);
+        double gap = fontSize * 0.4;
+        Bounds bounds = label.getLayoutBounds();
+        double total = iconSize + gap + bounds.getWidth();
+        double left = x + (width - total) / 2;
+        iconGroup.setLayoutX(left);
+        iconGroup.setLayoutY(y + (height - iconSize) / 2);
+        label.setX(left + iconSize + gap - bounds.getMinX());
+        label.setY(y + (height - bounds.getHeight()) / 2 - bounds.getMinY());
+        Group group = new Group(iconGroup, label);
+        group.setMouseTransparent(true);
+        return group;
+    }
+
+    /**
+     * @return a loudspeaker of the main color, its top left corner at (0, 0)
+     */
+    private static Group speakerIcon(double size) {
+        SVGPath shape = GameStyle.icon("volume_up_fill1", size);
+        shape.setStyle("-fx-fill: -gp-accent;");
+        Group icon = new Group(shape);
+        icon.setMouseTransparent(true);
+        return icon;
     }
 
     /**
@@ -1062,12 +1133,6 @@ public class GazeplayEval implements GameLifeCycle {
     private void onKey(KeyEvent event) {
         KeyCode code = event.getCode();
         switch (phase) {
-            case FORM -> {
-                if (code == KeyCode.ENTER) {
-                    event.consume();
-                    submitForm();
-                }
-            }
             case SCREEN -> {
                 if (code == KeyCode.SPACE) {
                     event.consume();

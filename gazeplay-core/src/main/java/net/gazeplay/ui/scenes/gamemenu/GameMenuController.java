@@ -186,8 +186,6 @@ public class GameMenuController {
 
         gameContext.createControlPanel(gazePlay, stats, currentGame, false);
 
-        gameContext.createQuitShortcut(gazePlay, stats, currentGame);
-
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
             playBackgroundMusic(gameContext, selectedGameSpec, musicManager);

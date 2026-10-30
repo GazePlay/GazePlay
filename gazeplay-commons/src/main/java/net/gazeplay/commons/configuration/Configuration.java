@@ -2,7 +2,6 @@ package net.gazeplay.commons.configuration;
 
 import com.google.common.collect.Sets;
 import javafx.beans.property.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,6 @@ public class Configuration {
     private static final String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
     private static final String PROPERTY_NAME_COUNTRY = "COUNTRY";
     /* Games settings */
-    private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTION_LENGTH";
     private static final String PROPERTY_NAME_QUESTION_REASKED_ON_FAIL = "QUESTION_REASKED_ON_FAIL";
     private static final String PROPERTY_NAME_REWARD_SOUND_ENABLED = "REWARD_SOUND_ENABLED";
@@ -100,7 +98,6 @@ public class Configuration {
 
     /* DEFAULT VALUES */
     /* Games settings */
-    private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_QUESTION_REASKED_ON_FAIL = true;
     private static final boolean DEFAULT_VALUE_REWARD_SOUND_ENABLED = true;
@@ -160,8 +157,6 @@ public class Configuration {
     @Getter
     private final StringProperty countryProperty;
     /* Games settings */
-    @Getter
-    private final StringProperty quitKeyProperty;
     @Getter
     private final LongProperty questionLengthProperty;
     @Getter
@@ -283,7 +278,6 @@ public class Configuration {
         countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, Locale.getDefault().getCountry(), propertyChangeListener);
 
         /* Games settings */
-        quitKeyProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString(), propertyChangeListener);
         questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
         questionReaskedOnFailProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_REASKED_ON_FAIL, DEFAULT_VALUE_QUESTION_REASKED_ON_FAIL, propertyChangeListener);
         rewardSoundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REWARD_SOUND_ENABLED, DEFAULT_VALUE_REWARD_SOUND_ENABLED, propertyChangeListener);
@@ -423,10 +417,6 @@ public class Configuration {
     }
 
     /* Games settings */
-
-    public String getQuitKey() {
-        return quitKeyProperty.getValue();
-    }
 
     public long getQuestionLength() {
         return questionLengthProperty.getValue();
@@ -652,10 +642,6 @@ public class Configuration {
     }
 
     /* Game settings */
-
-    public void setQuitKey(final String quitKey) {
-        quitKeyProperty.setValue(quitKey);
-    }
 
     public void setLimiterScore(final int limiterScore) {
         limiterScoreProperty.setValue(limiterScore);

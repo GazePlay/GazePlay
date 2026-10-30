@@ -26,6 +26,14 @@ import java.util.function.Supplier;
 public interface IGameContext {
 
     /**
+     * Key of {@link Node#getProperties()}: a node of the game area marked with it (value {@code true}) receives the
+     * mouse, with its children, even with the eye tracker alone (EYE_TRACKER=tobii), where the mouse is otherwise
+     * stopped. For a screen used by someone else than the player, e.g. the participant form of GazePlay Eval, filled
+     * by the examiner (maintainer's request of 30/10/2026).
+     */
+    String MOUSE_ALLOWED_PROPERTY = "gazeplay.mouseAllowed";
+
+    /**
      * @return the settings of the active profile
      */
     @NonNull

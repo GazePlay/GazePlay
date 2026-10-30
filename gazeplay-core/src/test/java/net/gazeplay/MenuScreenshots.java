@@ -18,6 +18,7 @@ import javafx.stage.Window;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.menus.MenuMessageDialog;
 import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonPane;
@@ -134,6 +135,12 @@ public final class MenuScreenshots {
                 // The window choosing an evaluation (none imported here)
                 captureDialog(gazePlay, output, "3a-evaluations-choix", () ->
                     ((Button) gazePlay.getPrimaryScene().getRoot().lookup(".gp-eval-launch")).fire());
+                // The help of the evaluations (the last small card)
+                captureDialog(gazePlay, output, "3g-evaluations-aide", () -> {
+                    final List<Node> cards = List.copyOf(gazePlay.getPrimaryScene().getRoot()
+                        .lookupAll(".gp-eval-card"));
+                    ((Button) cards.get(cards.size() - 1)).fire();
+                });
             }
             if (mode == AppMode.GAMES) {
                 // Only the favorite games ("Favorites" switch)
@@ -170,6 +177,12 @@ public final class MenuScreenshots {
                         gazePlay.getTranslator().translate("Coloring"), () -> { });
                     dialog.show();
                 });
+                // A message of the menus (e.g. an evaluation imported)
+                captureDialog(gazePlay, output, "3f-message", () -> new MenuMessageDialog(gazePlay.getPrimaryStage(),
+                    gazePlay.getTranslator().translate("EvalImportButton"),
+                    gazePlay.getTranslator().translate("EvalImportSuccess").replace("{0}", "Tests sons et vidéos"),
+                    false, gazePlay.getTranslator().translate("OkButton"), null,
+                    gazePlay.getTranslator().translate("Close")).show());
                 // The other orientation of the cards: the menu is built again when the mode is chosen again
                 onFx(() -> {
                     gazePlay.chooseMode(mode);

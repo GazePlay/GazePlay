@@ -19,6 +19,19 @@ class SystemFileManagerTest {
         assertEquals(List.of("xdg-open", path), SystemFileManager.openFolderCommand("Linux", folder));
     }
 
+    /**
+     * The address goes whole to the browser, its "#" included (the GazePlay Eval website).
+     */
+    @Test
+    void shouldOpenAWebPageWithTheBrowserOfEachSystem() {
+        String url = "https://lig-gazeplay.imag.fr/#/home";
+
+        assertEquals(List.of("rundll32", "url.dll,FileProtocolHandler", url),
+            SystemFileManager.openWebPageCommand("Windows 11", url));
+        assertEquals(List.of("open", url), SystemFileManager.openWebPageCommand("Mac OS X", url));
+        assertEquals(List.of("xdg-open", url), SystemFileManager.openWebPageCommand("Linux", url));
+    }
+
     @Test
     void shouldShowAFileInItsFolder() {
         File file = new File(new File("statistics"), "2026-10-22-14-23-34-replayData.json");

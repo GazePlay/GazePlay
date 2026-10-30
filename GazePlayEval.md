@@ -411,7 +411,7 @@ code modernisé ; la branche `GazePlayLearning` n'a pas été touchée.
 |---|---|---|
 | Format du site | `gazeplay-games-commons`, `net.gazeplay.commons.eval` : `EvalScreen`, `EvalDefinition`, `EvalReader`, `EvalProblem` | Lit `evalData.json` et `evalInfo.json`, sans JavaFX. Durées décimales, cases triées comme des nombres, cases manquantes ou sans média = emplacements vides, clés inconnues ignorées. Vérifie la présence et le format des médias, signale les écrans que seul l'examinateur peut terminer. Problèmes traduits (clé + arguments) |
 | Import | `EvalImporter`, `EvalLibrary` | Extrait le `.zip` dans un dossier temporaire, le lit, **puis seulement** le met en place (question avant de remplacer une évaluation du même nom). Chemins hors du dossier refusés, taille et nombre de fichiers limités, noms UTF-8 (repli IBM437), `__MACOSX` ignoré, archive avec ou sans dossier racine |
-| Réglages | `gazeplay-core`, `EvalSettings` + section « Évaluations (GazePlay Eval) » de `ConfigurationContext` | Liste des évaluations importées (suppression), import, mode de passation, délai avant sélection, blocage par le son, dossier des résultats |
+| Réglages | `gazeplay-core`, `EvalSettings` + section « Évaluations (GazePlay Eval) » de `ConfigurationContext` | Liste des évaluations importées (suppression), mode de passation, délai avant sélection, blocage par le son. L'import et le dossier des résultats sont sur le menu des évaluations seulement (depuis le 30/10/2026, demande du mainteneur) ; `EvalSettings.importEvaluation` et `openResultsFolder` y servent |
 | Jeu | `gazeplay-games`, `gazeplayEval` : `GazeplayEval`, `EvalTarget`, `EvalSessionRecorder`, `EvalResultsWriter` | Le lecteur, les cibles regard/souris, l'enregistrement de la passation et l'écriture des résultats |
 | Catalogue | `gazeplay-core/build.gradle` | GazePlay Eval est un jeu du catalogue normal ; `evals-catalog.txt` (plus lu) n'est plus généré |
 | Variante | `GazeplayEvalGameVariant` | Une variante par évaluation importée, forme persistante `GazeplayEvalGameVariant:<nom>` (aller-retour testé, accents et apostrophes compris) |
@@ -424,8 +424,12 @@ profils) ; résultats dans **`Documents\GazePlayLearning_Eval\Eval<n>_<aaaa-mm-j
 
 1. Menu → GazePlay Eval → choix de l'évaluation (une JVM par passation, comme les autres jeux). Sans évaluation
    importée, le jeu explique comment en importer une ; une évaluation devenue illisible affiche ses erreurs.
-2. **Formulaire participant** (champs de `evalInfo.json`), rempli par l'examinateur au clavier, `Entrée` pour
-   commencer. Les lettres tapées n'atteignent pas l'écran de jeu (la touche `Q` ne quitte pas pendant la saisie).
+2. **Formulaire participant** (champs de `evalInfo.json`), rempli par l'examinateur au clavier, bouton « Commencer »
+   pour commencer (depuis le 30/10/2026 : plus de touche `Entrée` ni de message d'aide, décision du mainteneur). En
+   mode « regard seul », la souris passe sur le formulaire, rempli par l'examinateur, et sur cet écran seulement
+   (`IGameContext.MOUSE_ALLOWED_PROPERTY`, demande du mainteneur du 30/10/2026).
+   Les lettres tapées n'atteignent pas l'écran de jeu. (Il n'y a plus de touche pour quitter depuis le
+   30/10/2026 : on quitte par l'engrenage.)
 3. **Écrans dans l'ordre** :
    - transition : croix de fixation éventuelle, qui peut devoir être fixée ;
    - instruction : texte, image, vidéo ou son ; **bouton « Commencer » à fixer pour tous les types** (le site
@@ -599,7 +603,7 @@ réglages, rejouer un `replayData.json`, flèches de défilement.
 |---|---|---|
 | Langue | oui | oui |
 | Créer un raccourci (Windows) | oui | non (des raccourcis vers une évaluation : plus tard, Q-M5) |
-| Touche pour quitter | oui | oui (elle quitte aussi une évaluation) |
+| Touche pour quitter | retirée le 30/10/2026 (l'engrenage quitte un jeu ou une évaluation) | retirée |
 | Durée des questions, question reposée, son de récompense, limites de temps et de score, couleurs du piano | oui | non (Eval ne les lit pas) |
 | Mode d'entrée (souris, Tobii, les deux) | oui | oui |
 | Durée de fixation | oui | oui (boutons « Recommencer / Continuer ») |
@@ -785,10 +789,10 @@ réglages du même jour. **Rien n'est commité.** « Eval Test » n'est pas cod�
 | `ModeSelectionContext` | `ui/scenes/modeselect` | Premier écran : « Jeux » ou « Évaluations », à la souris et au clavier ; bouton quitter. |
 | `GazePlay` | `gazeplay-core` | `goToModePage`, `chooseMode` (puis page des profils), `onReturnToMenu` montre le menu du mode ; menu et réglages reconstruits quand le mode change. |
 | Page des profils | `UserProfileContext` | Mode rappelé sous le logo, bouton « Changer de mode ». Profils communs aux deux modes. |
-| `EvalMenuScreen` | `ui/scenes/evalmenu` | Menu des évaluations : nombre d'évaluations importées, « Lancer une évaluation », « Importer une évaluation », « Résultats des évaluations » (dossier `GazePlayLearning_Eval`), réglages, profils, plein écran, quitter. |
+| `EvalMenuScreen` | `ui/scenes/evalmenu` | Menu des évaluations : nombre d'évaluations importées, « Lancer une évaluation », « Importer une évaluation », « Résultats des évaluations » (dossier `GazePlayLearning_Eval`), « Créer une évaluation (site GazePlay Eval) » (navigateur, depuis le 30/10/2026), réglages, aide (depuis le 30/10/2026), profils, plein écran, quitter. |
 | `EvalChooserDialog` | `ui/scenes/evalmenu` | Fenêtre ouverte par « Lancer une évaluation » : un bouton par évaluation importée (lance la passation dans sa JVM, comme un jeu) et « Annuler ». |
 | Menu des jeux | `HomeMenuScreen` | Sans GazePlay Eval (cartes et statistiques par catégorie). Le rejeu d'un `replayData.json` garde tout le catalogue. |
-| Réglages par mode | `ConfigurationContext` | Mode Jeux : la page d'avant, sans la rubrique Évaluations. Mode Évaluations : langue, oculomètre, thème (thème, couleur de fond, thème sombre), Évaluations (avec la touche pour quitter), cartes de chaleur. Raccourcis : jeux seulement. |
+| Réglages par mode | `ConfigurationContext` | Mode Jeux : la page d'avant, sans la rubrique Évaluations. Mode Évaluations : langue, oculomètre, thème (thème, couleur de fond, thème sombre), Évaluations, cartes de chaleur (la touche pour quitter a été retirée le 30/10/2026). Raccourcis : jeux seulement. |
 | Démarrage | `GazePlayFxApp` | Sans option : écran des modes. `--user` / `--default-user` : menu des jeux, comme avant (pas d'option `--mode`, Q-M4). `--game` : inchangé. |
 
 ### 14.3 Le regard dans les menus : essayé puis retiré (27/10/2026)
@@ -911,8 +915,8 @@ laissé « pour plus tard » en 15.1.)
   rien n'a été enregistré ».
 - **Statistiques de GazePlay** : elles aussi ne sont pas enregistrées (`Stats.disableSaving`, nouveau) : ni fichiers
   dans `statistics`, ni vidéo de l'écran si elle est activée. Une partie sans enregistrement se termine **sans l'écran
-  des statistiques** (il montre les fichiers écrits) : à la fin du test, ou en quittant (bouton d'accueil, touche de
-  sortie), la JVM de la partie s'arrête et le menu revient, comme avec le bouton d'accueil de cet écran
+  des statistiques** (il montre les fichiers écrits) : à la fin du test, ou en quittant (bouton d'accueil de
+  l'engrenage), la JVM de la partie s'arrête et le menu revient, comme avec le bouton d'accueil de cet écran
   (`GameContext.exitGame` et `showRoundStats`, `StatDisplayUtils.closeStatsWindow`).
 - **Constat pendant le travail** : la première version du réglage (« enregistrement actif », vrai par défaut) faisait
   quitter la JVM des tests, dont des `Stats` simulés (Mockito) répondent faux. Réglage inversé
@@ -926,3 +930,11 @@ laissé « pour plus tard » en 15.1.)
   avec ces changements (Connect4 n'est pas touché). À surveiller s'il revient.
 - **À vérifier en vrai** : un test avec le Tobii et une vraie évaluation, puis vérifier qu'aucun dossier n'apparaît
   dans `Documents\GazePlayLearning_Eval` ni dans `statistics`.
+## 17. Graphisme du lecteur (29/10/2026)
+
+Revue du lecteur dans le style des menus, comme les jeux (détail dans `REVUE_DES_JEUX.md`, fiche « GazePlay Eval et
+GazePlay Eval Test ») : formulaire, boutons et messages sur des cartes arrondies, tailles proportionnelles à l'écran,
+cartes claires sous les images de la grille, **anneau de fixation de la couleur principale** sur le bord de la cible
+(cercle autour de la croix) à la place du cercle de progression gris, haut-parleur au lieu de « ♪ ». **Les zones des
+cibles, les durées et les résultats (format 1) ne changent pas** ; aucun retour « bonne / mauvaise réponse » (couleur
+principale seulement). `data/gazeplayEvalTest` (ressources de l'ancien `gazeplayEvalTest`) retiré.

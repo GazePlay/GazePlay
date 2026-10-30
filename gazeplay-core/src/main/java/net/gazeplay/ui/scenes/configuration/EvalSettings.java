@@ -2,12 +2,9 @@ package net.gazeplay.ui.scenes.configuration;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -24,17 +21,17 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.ui.SystemFileManager;
+import net.gazeplay.ui.menus.MenuMessageDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * The controls of the settings page for GazePlay Eval: the imported evaluations (import of a .zip of the website,
- * deletion), the way the evaluations are taken (EVAL_OPTIONS) and the folder of their results. The import and the
- * folder of the results are also used by the menu of the evaluations.
+ * The controls of the settings page for GazePlay Eval: the imported evaluations (list, deletion) and the way the
+ * evaluations are taken (EVAL_OPTIONS). Also the import of a .zip of the website and the opening of the folder of the
+ * results, used by the menu of the evaluations.
  */
 @Slf4j
 public final class EvalSettings {
@@ -45,7 +42,8 @@ public final class EvalSettings {
     }
 
     /**
-     * @return the list of the imported evaluations, each with a delete button, and the import button
+     * @return the list of the imported evaluations, each with a delete button (they are imported from the menu of the
+     *   evaluations, which also opens the folder of their results)
      */
     static Node buildLibrary(Translator translator, Stage owner) {
         VBox box = new VBox(8);
@@ -63,18 +61,19 @@ public final class EvalSettings {
             box.getChildren().add(none);
         }
         for (String name : names) {
-            Label label = new Label(name);
+            // A bullet before each name, so that it reads as a list (maintainer's request of 30/10/2026)
+            Label label = new Label("•  " + name);
             label.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(label, Priority.ALWAYS);
             Button delete = new I18NButton(translator, "EvalDelete");
             delete.setOnAction(e -> {
-                if (confirm(owner, translator.translate("EvalDelete"),
-                    format(translator.translate("EvalDeleteConfirm"), name))) {
+                if (confirm(translator, owner, translator.translate("EvalDelete"),
+                    format(translator.translate("EvalDeleteConfirm"), name), "EvalDelete")) {
                     try {
                         EvalLibrary.delete(name);
                     } catch (IOException exception) {
                         log.error("Cannot delete the evaluation {}", name, exception);
-                        inform(owner, Alert.AlertType.ERROR, translator.translate("EvalDelete"), exception.getMessage());
+                        inform(translator, owner, true, translator.translate("EvalDelete"), exception.getMessage());
                     }
                     refreshLibrary(box, translator, owner);
                 }
@@ -83,12 +82,6 @@ public final class EvalSettings {
             row.setAlignment(Pos.CENTER_LEFT);
             box.getChildren().add(row);
         }
-        Button importButton = new I18NButton(translator, "EvalImportButton");
-        importButton.setOnAction(e -> {
-            importEvaluation(translator, owner);
-            refreshLibrary(box, translator, owner);
-        });
-        box.getChildren().add(importButton);
     }
 
     /**
@@ -112,17 +105,17 @@ public final class EvalSettings {
             prepared = EvalImporter.prepare(zip.toPath(), EvalLibrary.folder());
         } catch (IOException | RuntimeException e) {
             log.warn("Cannot import {}", zip, e);
-            inform(owner, Alert.AlertType.ERROR, title, translator.translate("EvalImportFailed") + "\n" + e.getMessage());
+            inform(translator, owner, true, title, translator.translate("EvalImportFailed") + "\n" + e.getMessage());
             return;
         }
         if (prepared.hasErrors()) {
             EvalImporter.discard(prepared);
-            inform(owner, Alert.AlertType.ERROR, title, translator.translate("EvalImportFailed") + "\n\n"
+            inform(translator, owner, true, title, translator.translate("EvalImportFailed") + "\n\n"
                 + problems(prepared.problems(), translator));
             return;
         }
-        if (prepared.replacesExisting() && !confirm(owner, title,
-            format(translator.translate("EvalReplaceConfirm"), prepared.name()))) {
+        if (prepared.replacesExisting() && !confirm(translator, owner, title,
+            format(translator.translate("EvalReplaceConfirm"), prepared.name()), "EvalReplace")) {
             EvalImporter.discard(prepared);
             return;
         }
@@ -131,7 +124,7 @@ public final class EvalSettings {
         } catch (IOException e) {
             log.error("Cannot put the evaluation {} in place", prepared.name(), e);
             EvalImporter.discard(prepared);
-            inform(owner, Alert.AlertType.ERROR, title, translator.translate("EvalImportFailed") + "\n" + e.getMessage());
+            inform(translator, owner, true, title, translator.translate("EvalImportFailed") + "\n" + e.getMessage());
             return;
         }
         log.info("Evaluation {} imported from {} ({} warnings)", prepared.name(), zip, prepared.problems().size());
@@ -139,7 +132,7 @@ public final class EvalSettings {
         if (!prepared.problems().isEmpty()) {
             message += "\n\n" + translator.translate("EvalWarnings") + "\n" + problems(prepared.problems(), translator);
         }
-        inform(owner, prepared.problems().isEmpty() ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING, title,
+        inform(translator, owner, false, title,
             message);
     }
 
@@ -171,15 +164,6 @@ public final class EvalSettings {
     }
 
     /**
-     * @return the button opening the folder of the results of the evaluations (GazePlayLearning_Eval in Documents)
-     */
-    static Node buildResultsFolderButton(Translator translator) {
-        Button button = new I18NButton(translator, "SeeFolder");
-        button.setOnAction(e -> openResultsFolder());
-        return button;
-    }
-
-    /**
      * Opens the folder of the results of the evaluations (GazePlayLearning_Eval in Documents), created if needed.
      */
     public static void openResultsFolder() {
@@ -199,27 +183,21 @@ public final class EvalSettings {
         return pattern.replace("{0}", argument);
     }
 
-    private static boolean confirm(Stage owner, String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK, ButtonType.CANCEL);
-        alert.initOwner(owner);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        Optional<ButtonType> answer = alert.showAndWait();
-        return answer.isPresent() && answer.get() == ButtonType.OK;
+    /**
+     * Asks a question in the look of the menus.
+     *
+     * @param okKey key of the translation of the button accepting it
+     */
+    private static boolean confirm(Translator translator, Stage owner, String title, String message, String okKey) {
+        return MenuMessageDialog.confirm(owner, title, message, translator.translate(okKey),
+            translator.translate("Cancel"), translator.translate("Close"));
     }
 
-    private static void inform(Stage owner, Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.initOwner(owner);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        // In a text area: the list of the problems can be long
-        TextArea text = new TextArea(message);
-        text.setEditable(false);
-        text.setWrapText(true);
-        text.setPrefRowCount(Math.min(20, message.split("\n").length + 1));
-        text.setPrefColumnCount(70);
-        alert.getDialogPane().setContent(text);
-        alert.showAndWait();
+    /**
+     * Shows a message in the look of the menus (an error in the color "danger" of the theme).
+     */
+    private static void inform(Translator translator, Stage owner, boolean error, String title, String message) {
+        MenuMessageDialog.inform(owner, title, message, error, translator.translate("OkButton"),
+            translator.translate("Close"));
     }
 }

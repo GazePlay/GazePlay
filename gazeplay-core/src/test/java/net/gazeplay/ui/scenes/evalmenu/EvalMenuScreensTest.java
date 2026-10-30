@@ -3,7 +3,9 @@ package net.gazeplay.ui.scenes.evalmenu;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import net.gazeplay.AppMode;
@@ -26,6 +28,7 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -147,6 +150,113 @@ class EvalMenuScreensTest {
             }
         }).get();
         assertFalse(menu.getRoot().isDisable());
+    }
+
+    /**
+     * The help button opens the help over the menu, in the language of the settings (maintainer's request of
+     * 29/10/2026); the menu comes back when it is closed.
+     */
+    @Test
+    void shouldOpenTheHelpFromTheMenu() throws Exception {
+        when(gamesLocator.listGames(any())).thenReturn(List.of(evalSpec));
+        when(gazePlay.getTranslator().currentLocale()).thenReturn(Locale.of("fra", "FR"));
+
+        EvalMenuScreen menu = WaitForAsyncUtils.asyncFx(
+            () -> new EvalMenuScreen(gazePlay, gameMenuController, gamesLocator)).get();
+        EvalHelpDialog help = WaitForAsyncUtils.asyncFx(() -> {
+            menu.getHelpButton().fire();
+            return javafx.stage.Window.getWindows().stream().filter(EvalHelpDialog.class::isInstance)
+                .map(EvalHelpDialog.class::cast).findFirst().orElseThrow();
+        }).get();
+
+        assertTrue(menu.getRoot().isDisable(), "the menu waits for the help");
+        assertEquals("EvalHelp", help.getTitle());
+        Label firstHeading = assertInstanceOf(Label.class, help.getTextBox().getChildren().getFirst());
+        assertEquals("Préparer une évaluation", firstHeading.getText());
+
+        WaitForAsyncUtils.asyncFx(() -> help.getCloseButton().fire()).get();
+        assertFalse(help.isShowing());
+        assertFalse(menu.getRoot().isDisable());
+    }
+
+    /**
+     * The website card opens the GazePlay Eval website, at its fixed address (maintainer's request of 30/10/2026).
+     */
+    @Test
+    void shouldOpenTheWebsiteFromTheMenu() throws Exception {
+        when(gamesLocator.listGames(any())).thenReturn(List.of(evalSpec));
+        List<String> opened = new java.util.ArrayList<>();
+
+        EvalMenuScreen menu = WaitForAsyncUtils.asyncFx(
+            () -> new EvalMenuScreen(gazePlay, gameMenuController, gamesLocator)).get();
+        menu.webPageOpener = url -> opened.add(url);
+        WaitForAsyncUtils.asyncFx(() -> menu.getWebsiteButton().fire()).get();
+
+        assertEquals(List.of("https://lig-gazeplay.imag.fr/#/home"), opened);
+        assertEquals("EvalWebsite", menu.getWebsiteButton().getText());
+        assertTrue(javafx.stage.Window.getWindows().stream().noneMatch(window -> window != stage
+            && window.isShowing()), "no message when the browser opens");
+    }
+
+    /**
+     * Without browser, a message gives the address of the website, to be copied.
+     */
+    @Test
+    void shouldGiveTheAddressOfTheWebsiteWhenTheBrowserCannotBeOpened() throws Exception {
+        when(gamesLocator.listGames(any())).thenReturn(List.of(evalSpec));
+
+        EvalMenuScreen menu = WaitForAsyncUtils.asyncFx(
+            () -> new EvalMenuScreen(gazePlay, gameMenuController, gamesLocator)).get();
+        menu.webPageOpener = url -> false;
+        // The message is shown and waited for: the button is pressed later on the JavaFX thread
+        javafx.application.Platform.runLater(() -> menu.getWebsiteButton().fire());
+        WaitForAsyncUtils.waitFor(5, java.util.concurrent.TimeUnit.SECONDS, () -> javafx.stage.Window.getWindows()
+            .stream().anyMatch(net.gazeplay.ui.menus.MenuMessageDialog.class::isInstance));
+
+        net.gazeplay.ui.menus.MenuMessageDialog message = WaitForAsyncUtils.asyncFx(() -> javafx.stage.Window
+            .getWindows().stream().filter(net.gazeplay.ui.menus.MenuMessageDialog.class::isInstance)
+            .map(net.gazeplay.ui.menus.MenuMessageDialog.class::cast).findFirst().orElseThrow()).get();
+        assertTrue(message.getMessageLabel().getText().endsWith("https://lig-gazeplay.imag.fr/#/home"),
+            message.getMessageLabel().getText());
+        WaitForAsyncUtils.asyncFx(() -> message.getOkButton().fire()).get();
+        assertFalse(message.isShowing());
+    }
+
+    /**
+     * The help exists in French and in English, with the same sections; the other languages get the English one.
+     */
+    @Test
+    void shouldHaveTheHelpInFrenchAndInEnglish() {
+        List<String> french = EvalHelpDialog.read("fra");
+        List<String> english = EvalHelpDialog.read("eng");
+
+        assertEquals("fra", EvalHelpDialog.language(Locale.of("fr")));
+        assertEquals("fra", EvalHelpDialog.language(Locale.of("fra", "FR")));
+        assertEquals("eng", EvalHelpDialog.language(null));
+        assertEquals(english, EvalHelpDialog.read("deu"));
+        assertEquals(6, french.stream().filter(line -> line.startsWith("# ")).count());
+        assertEquals(french.stream().map(EvalMenuScreensTest::kind).toList(),
+            english.stream().map(EvalMenuScreensTest::kind).toList(), "same headings, items and paragraphs");
+    }
+
+    private static char kind(String line) {
+        return line.isBlank() ? ' ' : line.startsWith("# ") ? '#' : line.startsWith("- ") ? '-' : 'p';
+    }
+
+    /**
+     * Headings, items of a list (a bullet and the text) and paragraphs.
+     */
+    @Test
+    void shouldBuildTheHeadingsTheItemsAndTheParagraphs() throws Exception {
+        List<javafx.scene.Node> nodes = WaitForAsyncUtils.asyncFx(() -> EvalHelpDialog.build(
+            List.of("# Titre", "Un paragraphe, avec une virgule.", "", "- Un point"))).get();
+
+        assertEquals(3, nodes.size());
+        assertTrue(nodes.get(0).getStyleClass().contains("gp-help-heading"));
+        assertEquals("Un paragraphe, avec une virgule.", ((Label) nodes.get(1)).getText());
+        HBox item = assertInstanceOf(HBox.class, nodes.get(2));
+        assertEquals("•", ((Label) item.getChildren().get(0)).getText());
+        assertEquals("Un point", ((Label) item.getChildren().get(1)).getText());
     }
 
     @Test

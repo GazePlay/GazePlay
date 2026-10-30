@@ -5,6 +5,113 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## À FAIRE EN PRIORITÉ à la prochaine séance (demandes du mainteneur du 29/10/2026 au soir, et point 5 du 30/10)
+
+**À faire avant de commencer la famille suivante (Frogs Race).** Rien n'est codé : chaque point passe par les étapes
+habituelles (vérifier, faire, tester, montrer, commit sur demande).
+
+**État laissé le 29/10/2026** : dernier commit `475853c04` (Coloring). **Non commité** : la revue du lecteur GazePlay
+Eval (fiche plus bas : graphisme, anneau de fixation, cartes), `MenuMessageDialog` (fenêtres de l'import et de la
+langue), la touche Retour arrière du formulaire, le message de plein écran retiré. Le mainteneur ne les a pas encore
+essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant** (décision du mainteneur du
+29/10/2026 : d'autres changements d'Eval vont venir) ; commit seulement quand il le demandera.
+
+1. **[Codé le 30/10/2026 ; essai du mainteneur le 30/10 : évaluation quittée par l'engrenage, `session.json` vérifié]** Retirés : les deux lignes des réglages et
+   `buildQuitKeyChooser`, `GameContext.createQuitShortcut` et `isTyping` (et leurs appels dans `GameMenuController`
+   et `ReplayingGameFromJson`), l'exception de `blocksGameInput` (tout le clavier est arrêté menu ouvert), la
+   traduction, la clé `QUIT_KEY` de `Configuration`. Fait vérifié : `ApplicationConfig` garde les clés inconnues ; un
+   ancien fichier avec `QUIT_KEY` se lit et s'enregistre, la clé y reste sans servir
+   (`ConfigurationTest.shouldReadAndSaveAFileWithTheRemovedQuitKey`). Aucun jeu ne lisait la clé.
+   **Retirer le réglage « Bouton pour quitter » (QuitKey) et son fonctionnement.** Raison : dans les jeux et les
+   évaluations, l'engrenage bleu en bas à gauche mène déjà à la page des statistiques puis au menu principal associé.
+   - Où : la ligne `QuitKey` des réglages, deux fois (`ConfigurationContext` : section Jeux vers la ligne 192, section
+     Évaluations vers la ligne 293) et `buildQuitKeyChooser` ; le raccourci `GameContext.createQuitShortcut` (et
+     `isTyping`, ajouté le 29/10 pour le formulaire d'Eval) ; l'exception de la touche « quitter » dans
+     `GameContextFactory.blocksGameInput` (le clavier sera entièrement bloqué pendant que le menu est ouvert) ; la
+     traduction `QuitKey` ; les tests qui en parlent ; la mention dans `GazePlayEval.md` (« la touche quitter
+     quitte aussi une évaluation »).
+   - **Retirer aussi la clé `QUIT_KEY` de `Configuration`** (décision du mainteneur du 29/10/2026 : elle ne sert plus) :
+     propriété, accesseurs, valeur par défaut. Vérifier avant qu'aucun jeu ne la lit pour autre chose, et qu'un fichier
+     `GazePlay.properties` existant qui contient encore `QUIT_KEY` se lit sans erreur (clé inconnue ignorée ; regarder
+     `ConfigurationSource`, `LegacyConfigurationKeys` et l'écriture atomique : la clé peut rester dans les fichiers déjà
+     écrits ou disparaître au prochain enregistrement, les deux conviennent). Ajouter un test de lecture d'un ancien
+     fichier avec `QUIT_KEY`.
+   - Vérifier en vrai qu'on sort bien de chaque partie et d'une évaluation par l'engrenage (et que les résultats d'une
+     évaluation quittée sont écrits, `terminee: false`).
+2. **[Codé le 30/10/2026, essai réel du mainteneur à faire]** Retirés : le bouton d'import de la liste
+   (`EvalSettings.refreshLibrary`), la ligne `EvalResults` et `EvalSettings.buildResultsFolderButton`. Gardés :
+   `importEvaluation`, `openResultsFolder` et les traductions `EvalImportButton`, `EvalResults` (menu des
+   évaluations). Test : `ConfigurationContextTest` (liste sans bouton, plus de ligne `EvalResults`).
+   **Réglages des évaluations** (section « Évaluations (GazePlay Eval) ») :
+   - dans « Évaluations importées », **retirer le bouton « Importer une évaluation »** (déjà sur le menu principal des
+     évaluations) ; garder la liste et la suppression (`EvalSettings.buildLibrary`, bouton `importButton`) ;
+   - **retirer la ligne « Résultats des évaluations »** (`EvalResults`, `EvalSettings.buildResultsFolderButton`), déjà
+     sur le menu principal des évaluations.
+   - Garder `EvalSettings.importEvaluation` (utilisé par `EvalMenuScreen`).
+3. **[Codé le 30/10/2026, essayé par le mainteneur]** D'abord un bouton rond « i » dans la barre du haut, puis
+   (retour du mainteneur du 30/10) **une carte comme celle du site** : 3 cartes (Tester, Importer, Résultats), puis 2
+   centrées dessous (Créer une évaluation, Aide), toutes de 92 px de haut ; page resserrée pour tenir en 1366 × 768
+   (écarts 20, pastille de « Lancer » 96 px, cartes 14 px de marge verticale). Partie « Touches de l'examinateur »
+   réécrite par moment (pendant un écran ; sur l'écran Recommencer / Continuer ; quitter), choix du mainteneur.
+   Fenêtre `EvalHelpDialog` (`MenuDialog`, défilante). Texte dans
+   `gazeplay-core/src/main/resources/data/help/eval-help-fra.txt` et `-eng.txt` (pas dans `multilinguism.csv`, qui
+   n'admet ni virgule ni retour à la ligne) : `# ` titre, `- ` point de liste, sinon paragraphe ; anglais pour les
+   autres langues. Styles `gp-help-*` (`menus.css`). Tests : `EvalMenuScreensTest` (ouverture et fermeture, mêmes
+   sections en français et en anglais, construction du texte). Capture `3g-evaluations-aide` de `menuScreenshots`.
+   Le texte parle déjà du bouton « Commencer » du point 4.
+   **Menu principal des évaluations (`EvalMenuScreen`) : ajouter un bouton d'aide** qui explique le fonctionnement
+   des évaluations, au style des menus (une carte secondaire comme « Importer », qui ouvre une fenêtre `MenuDialog`) :
+   les touches de l'examinateur pendant une évaluation (`Espace` écran suivant, `P` rejouer le son ou la vidéo, `R` ou
+   `←` recommencer, `C` ou `→` continuer, `Entrée` confirmer la proposition du participant ; l'engrenage pour quitter),
+   les modes de passation (classique, soutien oral, soutien visuel, autonomie totale), le délai avant sélection, ce
+   qui est enregistré et où, la différence avec « Tester une évaluation ». Source : `GazePlayEval.md` 12.3. Faire
+   relire le texte au mainteneur avant de le figer ; traductions français et anglais.
+4. **[Codé le 30/10/2026, essai réel du mainteneur à faire]** Bouton « Commencer » (`EvalStartButton`, pilule de la
+   couleur principale) sous les champs ; retirés : `EvalFormHint` (code et traduction), le `setOnAction` des champs,
+   le cas `FORM` de `onKey`. Fait : en mode « regard seul » (`tobii`), la zone de jeu bloque la souris
+   (`applyInputMode`), donc le bouton ne se clique pas ; il s'atteint avec Tab puis Espace (clavier standard de JavaFX,
+   pas un raccourci du jeu). Décision du mainteneur (30/10/2026) : le formulaire n'a pas à être utilisable au
+   regard, c'est l'examinateur qui le remplit et lance la passation ; **en mode « Tobii seul », la souris et le clic
+   passent sur le formulaire, et sur cet écran seulement**. Fait par une marque `IGameContext.MOUSE_ALLOWED_PROPERTY`
+   (propriété du nœud) que le filtre de `applyInputMode` respecte, avec ses enfants ; le formulaire est retiré au
+   démarrage, donc les écrans de l'évaluation restent au regard seul. Tests :
+   `GameContextFactoryInputModeTest.shouldLetTheMouseThroughAMarkedScreenWithTheEyeTrackerAlone`, et dans `GazeplayEvalTest.shouldStartTheFormWithItsButtonOnly` (Entrée ne démarre plus,
+   plus de message), passation interrompue démarrée par le bouton.
+   **Formulaire participant (avant l'évaluation) : un bouton « Commencer »** au lieu de devoir appuyer sur une touche,
+   et **retirer le message** d'aide (`EvalFormHint`, « Remplissez les champs puis appuyez sur Entrée pour
+   commencer » : c'est `Entrée`, pas `Espace`, mais le mainteneur ne veut plus de touche à expliquer). Bouton au style
+   des menus sous les champs, dans `GazeplayEval.showForm`. **Aucun raccourci clavier** (décision du mainteneur du
+   29/10/2026) : retirer `Entrée` (le `setOnAction` des champs et le cas `FORM` de `onKey`) ; adapter les tests
+   (`GazeplayEvalTest` envoie `Entrée` pour valider le formulaire : appuyer sur le bouton à la place).
+5. **[Codé le 30/10/2026, essai réel du mainteneur à faire]** 4ᵉ carte « Créer une évaluation (site GazePlay Eval) »
+   (`EvalWebsite`, icône globe `language` de Material Symbols Rounded, Apache-2.0, téléchargée du dépôt de Google ;
+   source vérifiée : `info` téléchargé est identique au fichier livré). Adresse fixe `EvalMenuScreen.EVAL_WEBSITE`.
+   `SystemFileManager.openWebPage` : `rundll32 url.dll,FileProtocolHandler` sous Windows (adresse transmise entière,
+   `#` compris), `open` sous macOS, `xdg-open` sous Linux, lancé sans attendre. Si la commande ne peut pas être
+   lancée : `MenuMessageDialog` avec l'adresse à recopier (`EvalWebsiteFailed`). Les 4 cartes sur une ligne en
+   1366 × 768 (texte 190 px au lieu de 220, écart 16, `TilePane` : même taille pour toutes). Texte d'aide complété.
+   Tests : `EvalMenuScreensTest` (adresse ouverte par un objet simulé, message sans navigateur),
+   `SystemFileManagerTest`. Limite : on ne sait pas si le navigateur a vraiment affiché la page (seul l'échec du
+   lancement est détecté).
+   **Menu principal des évaluations (`EvalMenuScreen`) : un bouton qui ouvre le site GazePlay Eval** (demande du
+   mainteneur du 30/10/2026), pour créer une évaluation. Adresse : `https://lig-gazeplay.imag.fr/#/home` (celle du
+   README du dépôt du site et de `GazePlayEval.md`). Ouvre le navigateur par défaut du système. Ce sera une carte
+   secondaire au style des menus, à côté de « Tester », « Importer » et « Résultats » (et de l'aide du point 3).
+   - À vérifier avant : comment `SystemFileManager.openFolder` ouvre un dossier, pour ouvrir une adresse de la même
+     façon et sous chaque système (Windows, Linux, macOS), sans bloquer le thread JavaFX. Il n'y a encore aucune
+     ouverture de page web dans le code.
+   - Un message si le navigateur ne s'ouvre pas (pas de navigateur, machine sans réseau), avec l'adresse à recopier
+     (`MenuMessageDialog`).
+   - Icône libre (Material, Apache-2.0, comme les autres), traductions français et anglais, test du bouton (adresse
+     ouverte par un objet simulé, jamais un vrai navigateur dans les tests), capture du menu.
+   - **Décisions du mainteneur (30/10/2026)** : libellé « Créer une évaluation (site GazePlay Eval) » ; adresse
+     **fixe dans le code** (pas de réglage).
+6. **Tâche de fin, après la revue de tous les jeux et leur acceptation** : refonte graphique **et fonctionnelle** de
+   l'engrenage bleu des jeux (bouton en bas à gauche et son panneau : musique, volume, durée de fixation, vitesse,
+   taille, barre de progression, couleur de fond ; `GameContextFactory`, `GameContext.createControlPanel`). À
+   préparer comme les autres étapes (état des lieux, propositions validées). Penser à la décision encore ouverte sur
+   le temps du menu compté dans les durées (`MODERNIZATION.md` 2an).
+
 ## Règles pour chaque jeu
 
 - Ressources **libres seulement** (GPL-3.0-or-later, ou compatible : CC0, CC BY, CC BY-SA, Apache-2.0, OFL), avec la
@@ -455,3 +562,91 @@ ce qui est compté (un point par zone remplie).
   de la Moyenne palette, papillon à moitié colorié, roue des réglages masquée, 960 × 540. Crédits :
   `gradle/images/README.txt`, inventaire. Traductions des textes nouveaux : français et anglais. `build` : **556
   tests, 0 échec**.
+- **Commit** : `475853c04` (29/10/2026), `feat(colors): revue du jeu Coloriage, et images de l'utilisateur en variante`.
+
+### GazePlay Eval et GazePlay Eval Test (`GazePlayEval`, `GazePlayEvalTest`, code `gazeplayEval`) — 29/10/2026
+
+Passée avant les autres familles (demande du mainteneur, 29/10/2026 : finir GazePlay Learning Eval, pour qu'il ne
+reste que les jeux).
+
+**Étape 1 (état des lieux) faite le 29/10/2026.** Captures « avant » : `build/game-screenshots/avant/eval/`
+(évaluation de référence « Tests sons et vidéos », installée dans un dossier GazePlay isolé ; une image par seconde
+pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. Les menus des évaluations
+(`EvalMenuScreen`, fenêtre de choix, réglages) ont déjà été refaits (`REFONTE_GRAPHIQUE.md`) : la revue porte sur le
+**lecteur** (`GazeplayEval`, 1 260 lignes ; `EvalTarget`).
+
+- **Écrans du lecteur** : message (aucune évaluation, évaluation illisible) ; formulaire participant ; transition
+  (croix de fixation) ; consigne (texte, image, vidéo, son, bouton « Commencer » à fixer) ; grille (images et sons,
+  sélection par fixation) ; écran « Recommencer / Continuer » (modes de passation) ; « Fin de l'évaluation ».
+- **Défauts vus** :
+  - **Fait (vu)** : style d'origine partout : police du système, tailles fixes en pixels (36, 40, 22…) qui ne suivent
+    pas la taille de l'écran (formulaire minuscule en 1366 × 768, champs blancs) ; boutons « Commencer »,
+    « Recommencer », « Continuer » en rectangles de la couleur de la barre de progression à 30 % (kaki sur fond noir),
+    flèches en caractères (« ↺ », « → », « ▶ ») ; proposition du participant en rouge vif.
+  - **Fait (code)** : indicateur de fixation = cercle de progression gris au centre de la cible (comme l'ancien Where
+    Is It) ; case sans image : cadre pointillé et « ♪ » ; consigne sonore : « ♪ » géant ; message d'erreur en texte
+    brut.
+  - **Fait (vu)** : la vidéo s'affiche bien (les premières captures, trop tôt ou trop tard, étaient noires).
+  - **Fait (code)** : dossier `data/gazeplayEvalTest` (4 photos et 2 sons de l'ancien `gazeplayEvalTest` retiré le
+    27/10/2026 : vélo, voiture, cerise, ours) lu par aucun code.
+- **Contraintes** : le format du site est un contrat (rien ne change dans la lecture) ; les résultats (format 1) ne
+  changent pas si les **zones des cibles** restent les mêmes (image + petite marge, E8) ; les cartes de chaleur
+  contiennent une capture de l'écran : elles montreront le nouvel aspect (format inchangé). Pour une évaluation, ce que
+  voit le participant doit rester **neutre** : aucun retour « bonne / mauvaise réponse ».
+
+**Étape 2 (propositions), 29/10/2026**, en attente de validation (✔ / ✘) :
+
+- **A. Corrections** :
+  - A1. Tailles proportionnelles à l'écran (textes, boutons, croix), au lieu de pixels fixes.
+  - A2. Retirer le dossier inutilisé `data/gazeplayEvalTest`.
+- **B. Graphisme** (style des menus, sans toucher aux zones des cibles) :
+  - B1. Formulaire participant : carte arrondie, titre en Fredoka, champs arrondis aux couleurs du thème, consigne
+    lisible.
+  - B2. Bouton « Commencer » et écran « Recommencer / Continuer » : grands boutons arrondis (couleur de surface,
+    icône Material Symbols : lecture, recommencer, flèche), contour de la couleur principale ; proposition du
+    participant (soutien visuel) : contour épais de la couleur principale au lieu du rouge.
+  - B3. Indicateur de fixation : anneau de la couleur principale qui fait le tour de la cible (comme Where Is It et
+    Coloring), à la place du cercle gris ; même durée de fixation.
+  - B4. Grille : cartes arrondies **dessinées exactement sur la zone de la cible** (aucun changement des résultats) ;
+    image sélectionnée et gardée : contour de la couleur principale (neutre, ni vert ni rouge). **Question** : cartes
+    claires autour des images, ou garder les images seules sur le fond (plus neutre pour une évaluation) ?
+  - B5. Cases et consignes sonores : icône haut-parleur (Material Symbols) au lieu de « ♪ ».
+  - B6. Messages (aucune évaluation, évaluation illisible, fin de l'évaluation) dans un bandeau arrondi ; consigne
+    texte en Andika, plus lisible.
+  - Croix de fixation : gardée telle quelle (forme standard), seulement à l'échelle.
+- **C. Fonctionnement** : aucun changement du protocole (défini par le site et les modes de passation).
+- **D. Images** : aucune (les images viennent des évaluations) ; vignettes des deux jeux : pas affichées dans les
+  menus (le menu des évaluations a ses cartes à icône), rien à refaire.
+- **Validées le 29/10/2026 : A et B ✔** ; B4 : cartes claires autour des images (le mainteneur veut voir l'anneau de
+  fixation faire le tour de l'image, comme dans Where Is It).
+- **Fait (29/10/2026)** :
+  - A1 tailles proportionnelles à l'écran (`unit()` : un centième du plus petit côté) ; A2 `data/gazeplayEvalTest`
+    retiré (4 photos, 2 sons).
+  - B1 formulaire sur une carte arrondie (titre Fredoka, champs arrondis, textes Andika) ; B2 boutons « Commencer »,
+    « Recommencer », « Continuer » arrondis à icône (Material Symbols `play_arrow`, `replay`, `arrow_forward`),
+    proposition du participant en contour épais de la couleur principale ; B3 anneau de fixation de la couleur
+    principale sur le bord de la cible (`EvalTarget`, cercle autour de la croix), à la place du cercle gris ; B4 carte
+    claire dessinée **exactement sur la zone de la cible** (image + marge, inchangée), sélection gardée entourée de la
+    couleur principale ; B5 haut-parleur au lieu de « ♪ » ; B6 messages et fin dans une carte arrondie.
+  - **Données** : zones des cibles, durées de fixation, événements et fichiers de résultats inchangés (format 1) ; les
+    cartes de chaleur montrent le nouvel aspect des écrans. Le réglage « taille de la barre de progression » ne
+    s'applique plus à Eval (l'anneau suit la taille de la cible).
+  - **Changé sans être demandé** : `GameStyle` (`gazeplay-games-commons`) gagne la police Andika, une carte de texte et
+    une carte de cible arrondie, réutilisables par les autres jeux.
+- **Vérifications** : tests Eval existants (passations complètes, résultats, cartes de chaleur) réussis sans
+  changement ; `build` : **556 tests, 0 échec** ; `allGamesTest` GazePlayEval et GazePlayEvalTest réussis ; captures
+  `build/game-screenshots/essai1/eval/` (formulaire, grille, anneau `eval-ring-t15/16`, choix). **Reste** : l'essai
+  réel du mainteneur (souris et Tobii), en particulier une consigne avec bouton « Commencer », une croix à fixer et
+  une case sonore, absentes de l'évaluation de référence.
+- **Retours du mainteneur après l'essai (29/10/2026)**, corrigés :
+  - La fenêtre « évaluation importée » (et toutes les fenêtres de l'import : erreurs, remplacement, suppression d'une
+    évaluation) était une alerte du système : remplacée par `MenuMessageDialog` (nouvelle, au style des menus, dans
+    `net.gazeplay.ui.menus`) ; son texte renvoie maintenant à « Lancer une évaluation » du menu des évaluations (il
+    parlait encore du jeu GazePlay Eval). Les deux messages du changement de langue utilisent aussi cette fenêtre.
+  - Formulaire participant : la touche Retour arrière ne marchait pas (toutes les touches du champ étaient consommées
+    pour que la touche « quitter » ne quitte pas le jeu). Le champ traite maintenant ses touches ; c'est le raccourci
+    « quitter » (`GameContext`) qui ignore les touches tapées dans un champ de saisie. Test
+    `GazeplayEvalTest.shouldEraseALetterOfTheForm`.
+  - Le message de JavaFX « Appuyez sur Échap pour quitter le mode plein écran » au début : retiré pour toute
+    l'application (`setFullScreenExitHint("")`, menu et parties) ; Échap quitte toujours le plein écran.
+  - Tests : `MenuMessageDialogTest` (3) ; capture `3f-message` de `menuScreenshots` ; `build` réussi.

@@ -9,10 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
@@ -26,19 +26,24 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.menus.CardButton;
 import net.gazeplay.ui.menus.MenuButtons;
+import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.ui.menus.MenuIcon;
+import net.gazeplay.ui.menus.MenuMessageDialog;
 import net.gazeplay.ui.menus.MenuStyle;
 import net.gazeplay.ui.scenes.configuration.EvalSettings;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * The menu of the "Evaluations" mode (look of the menus, menus.css, REFONTE_GRAPHIQUE.md 4.4): the same top bar as
- * the menu of the games (settings, full screen, logout, quit); in the middle a large card launching an evaluation (a
- * window then shows the imported evaluations, {@link EvalChooserDialog}, or says that there is none), then three cards:
- * the test of an evaluation (GazePlay Eval Test: no form, nothing recorded, to check the calibration), the import of a
- * .zip of the GazePlay Eval website, and the folder of the results; the current profile and
+ * the menu of the games (settings, full screen, theme, logout, quit); in the middle a large card launching an
+ * evaluation (a window then shows the imported evaluations, {@link EvalChooserDialog}, or says that there is none),
+ * then three cards: the test of an evaluation (GazePlay Eval Test: no form, nothing recorded, to check the
+ * calibration), the import of a .zip of the GazePlay Eval website, the folder of the results; and two cards below: the
+ * website itself, in the browser, to create an evaluation, and the help ({@link EvalHelpDialog}); the current profile
+ * and
  * the version at the bottom right. As many evaluations as wanted can be imported.
  */
 @Slf4j
@@ -47,10 +52,21 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
     private static final double LOGO_HEIGHT = 64;
 
     /**
+     * Height of the small cards: an icon and two lines of text.
+     */
+    private static final double CARD_HEIGHT = 92;
+
+    /**
      * Name codes of GazePlay Eval and of GazePlay Eval Test in the catalog.
      */
     static final String EVAL = "GazePlayEval";
     static final String EVAL_TEST = "GazePlayEvalTest";
+
+    /**
+     * The GazePlay Eval website, where the evaluations are created (address of its README; fixed, decision of the
+     * maintainer of 30/10/2026).
+     */
+    static final String EVAL_WEBSITE = "https://lig-gazeplay.imag.fr/#/home";
 
     private final GameMenuController gameMenuController;
 
@@ -77,6 +93,17 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
     @Getter
     private final Button resultsButton;
 
+    @Getter
+    private final Button helpButton;
+
+    @Getter
+    private final Button websiteButton;
+
+    /**
+     * Opens a web page, false when it could not be opened; replaced in the tests, which never open a browser.
+     */
+    Predicate<String> webPageOpener = SystemFileManager::openWebPage;
+
     public EvalMenuScreen(final GazePlay gazePlay, final GameMenuController gameMenuController,
                           final GamesLocator gamesLocator) {
         super(gazePlay, new BorderPane());
@@ -89,7 +116,7 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         evalSpec = find(evaluations, EVAL);
         testSpec = find(evaluations, EVAL_TEST);
 
-        // Top: logo, then settings, full screen, logout and quit, as in the menu of the games
+        // Top: logo, then settings, full screen, theme, logout and quit, as in the menu of the games
         final Node logo = LogoFactory.getInstance().createLogoStatic(LOGO_HEIGHT);
         final Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -110,7 +137,7 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         final String launchText = translator.translate("EvalLaunch");
         final Label launchLabel = new Label(launchText);
         launchLabel.getStyleClass().add("gp-eval-launch-name");
-        final VBox launchContent = new VBox(16, badge(MenuIcon.PLAY, 72, "gp-eval-launch-badge"), launchLabel);
+        final VBox launchContent = new VBox(12, badge(MenuIcon.PLAY, 56, "gp-eval-launch-badge"), launchLabel);
         launchContent.setAlignment(Pos.CENTER);
         launchButton = new CardButton(launchText, launchContent);
         launchButton.getStyleClass().add("gp-eval-launch");
@@ -128,13 +155,25 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         resultsButton = secondaryCard(MenuIcon.FOLDER, translator.translate("EvalResults"));
         resultsButton.setOnAction(e -> EvalSettings.openResultsFolder());
 
-        // Side by side, or below one another on a narrow window
-        final FlowPane secondaryButtons = new FlowPane(24, 24, testButton, importButton, resultsButton);
-        secondaryButtons.setAlignment(Pos.CENTER);
+        // The website where the evaluations are created, in the browser (maintainer's request of 30/10/2026)
+        websiteButton = secondaryCard(MenuIcon.WEBSITE, translator.translate("EvalWebsite"));
+        websiteButton.setOnAction(e -> openWebsite());
 
-        final VBox center = new VBox(32, titleLabel, launchButton, secondaryButtons);
+        // The help, a card like the website (maintainer's request of 30/10/2026)
+        helpButton = secondaryCard(MenuIcon.INFO, translator.translate("EvalHelp"));
+        helpButton.setOnAction(e -> openHelp());
+
+        // Three cards, then two centered below (maintainer's request of 30/10/2026); each row wraps on a narrow window
+        final FlowPane firstRow = new FlowPane(16, 16, testButton, importButton, resultsButton);
+        firstRow.setAlignment(Pos.CENTER);
+        final FlowPane secondRow = new FlowPane(16, 16, websiteButton, helpButton);
+        secondRow.setAlignment(Pos.CENTER);
+        final VBox secondaryButtons = new VBox(16, firstRow, secondRow);
+
+        // Tighter than the other menus, so that the five cards fit at 1366 x 768
+        final VBox center = new VBox(20, titleLabel, launchButton, secondaryButtons);
         center.setAlignment(Pos.CENTER);
-        center.setPadding(new Insets(16, 24, 32, 24));
+        center.setPadding(new Insets(4, 24, 16, 24));
 
         // Scrolls only when the window is too small
         final ScrollPane scrollPane = new ScrollPane(center);
@@ -180,6 +219,9 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         content.setAlignment(Pos.CENTER_LEFT);
         final Button card = new CardButton(text, content);
         card.getStyleClass().add("gp-eval-card");
+        // All of the same height (two lines of text at most), so that the rows are even
+        card.setMinHeight(CARD_HEIGHT);
+        card.setPrefHeight(CARD_HEIGHT);
         return card;
     }
 
@@ -208,6 +250,30 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         root.setEffect(new BoxBlur());
         root.setDisable(true);
         final EvalChooserDialog dialog = new EvalChooserDialog(getGazePlay(), gameMenuController, spec, root);
+        dialog.show();
+        dialog.toFront();
+    }
+
+    /**
+     * Opens the GazePlay Eval website in the browser; when it cannot, a message gives its address, to be copied.
+     */
+    void openWebsite() {
+        if (!webPageOpener.test(EVAL_WEBSITE)) {
+            final Translator translator = getGazePlay().getTranslator();
+            MenuMessageDialog.inform(getGazePlay().getPrimaryStage(), translator.translate("EvalWebsite"),
+                translator.translate("EvalWebsiteFailed") + "\n" + EVAL_WEBSITE, true,
+                translator.translate("OkButton"), translator.translate("Close"));
+        }
+    }
+
+    /**
+     * Opens the help of the evaluations, over the menu (blurred and disabled until it closes).
+     */
+    void openHelp() {
+        root.setEffect(new BoxBlur());
+        root.setDisable(true);
+        final EvalHelpDialog dialog = new EvalHelpDialog(getGazePlay().getPrimaryStage(),
+            getGazePlay().getTranslator(), root);
         dialog.show();
         dialog.toFront();
     }

@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
@@ -114,12 +115,32 @@ public class GameContextFactory implements Supplier<GameContext> {
      * Gaze only (EYE_TRACKER=tobii): the mouse no longer reaches the game, e.g. its progress indicators. The
      * configuration panel, next to the game area, still works with the mouse, and the statistics, recorded on the root
      * of the scene, still record the mouse movements. Three games listen to the mouse on the whole scene and check the
-     * setting themselves (CasseBrique, Follow, gazeRace.Player).
+     * setting themselves (CasseBrique, Follow, gazeRace.Player). A node marked with
+     * {@link IGameContext#MOUSE_ALLOWED_PROPERTY} (e.g. the participant form of GazePlay Eval) still gets the mouse.
      */
     static void applyInputMode(final Pane gamingRoot, final EyeTracker eyeTracker) {
         if (!eyeTracker.acceptsMouse()) {
-            gamingRoot.addEventFilter(MouseEvent.ANY, MouseEvent::consume);
+            gamingRoot.addEventFilter(MouseEvent.ANY, event -> {
+                if (!allowsMouse(event.getTarget(), gamingRoot)) {
+                    event.consume();
+                }
+            });
         }
+    }
+
+    /**
+     * @return whether the target of a mouse event, or one of its parents in the game area, is marked with
+     *   {@link IGameContext#MOUSE_ALLOWED_PROPERTY}
+     */
+    private static boolean allowsMouse(final Object target, final Pane gamingRoot) {
+        Node node = target instanceof Node targetNode ? targetNode : null;
+        while (node != null && node != gamingRoot) {
+            if (Boolean.TRUE.equals(node.getProperties().get(IGameContext.MOUSE_ALLOWED_PROPERTY))) {
+                return true;
+            }
+            node = node.getParent();
+        }
+        return false;
     }
 
     @Override
@@ -234,7 +255,7 @@ public class GameContextFactory implements Supplier<GameContext> {
 
         final Scene scene = gazePlay.getPrimaryScene();
         if (scene != null) {
-            blockGameInputWhileMenuOpen(scene, root, configPane, config);
+            blockGameInputWhileMenuOpen(scene, root, configPane);
         }
 
         log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
@@ -273,12 +294,11 @@ public class GameContextFactory implements Supplier<GameContext> {
      * the keyboard on the whole scene (GazeRace, SprintFinish, SurviveAgainstRobots), before any filter of the game
      * screen.
      */
-    private void blockGameInputWhileMenuOpen(final Scene scene, final Pane root, final Node menu,
-                                             final Configuration config) {
+    private void blockGameInputWhileMenuOpen(final Scene scene, final Pane root, final Node menu) {
         final EventDispatcher sceneDispatcher = scene.getEventDispatcher();
         scene.setEventDispatcher((event, tail) -> {
             // Only while this game screen is shown: the statistics screen, shown on the same scene, is not concerned
-            if (scene.getRoot() == root && blocksGameInput(event, menuOpen, menu, config.getQuitKey())) {
+            if (scene.getRoot() == root && blocksGameInput(event, menuOpen, menu)) {
                 return null;
             }
             return sceneDispatcher.dispatchEvent(event, tail);
@@ -288,16 +308,15 @@ public class GameContextFactory implements Supplier<GameContext> {
     /**
      * @param menuOpen whether the configuration menu is open
      * @param menu     the configuration menu (its button and panel)
-     * @param quitKey  the key leaving the game (QUIT_KEY setting), which keeps working
-     * @return whether an event must be stopped: while the menu is open, the mouse events outside of the menu and the
-     *   keyboard events other than the quit key
+     * @return whether an event must be stopped: while the menu is open, the mouse events outside of the menu and all
+     *   the keyboard events
      */
-    static boolean blocksGameInput(final Event event, final boolean menuOpen, final Node menu, final String quitKey) {
+    static boolean blocksGameInput(final Event event, final boolean menuOpen, final Node menu) {
         if (!menuOpen) {
             return false;
         }
-        if (event instanceof KeyEvent keyEvent) {
-            return !keyEvent.getCode().getChar().equals(quitKey);
+        if (event instanceof KeyEvent) {
+            return true;
         }
         if (event instanceof MouseEvent || event instanceof ScrollEvent) {
             Node node = event.getTarget() instanceof Node target ? target : null;

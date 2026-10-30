@@ -276,7 +276,6 @@ public class ReplayingGameFromJson {
         @SuppressWarnings("unchecked")
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
         gameContext.createControlPanel(gazePlay, statsSaved, currentGame, true);
-        gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
 
         EventHandler<Event> homeEvent = e -> {

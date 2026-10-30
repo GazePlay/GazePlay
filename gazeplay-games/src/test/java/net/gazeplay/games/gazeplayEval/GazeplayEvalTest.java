@@ -6,6 +6,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -204,7 +205,7 @@ class GazeplayEvalTest {
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
         Platform.runLater(() -> {
             find(TextField.class).get(0).setText("Léa");
-            key(KeyCode.ENTER);
+            startButton().fire();
         });
         // The instruction: its text and its start button
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS,
@@ -224,6 +225,80 @@ class GazeplayEvalTest {
         String json = Files.readString(session.resolve("session.json"));
         assertTrue(json.contains("\"Prénom\": \"Léa\""), json);
         assertTrue(json.contains("\"terminee\": false"), json);
+    }
+
+    /**
+     * The participant form starts with its "Start" button only (maintainer's decision of 29/10/2026): Enter, in a field
+     * or on the scene, no longer starts, and the hint about the key is gone.
+     */
+    @Test
+    void shouldStartTheFormWithItsButtonOnly() throws Exception {
+        createEvaluation("[\"Prénom\"]", """
+            [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": false, "Combien de temps": 0,
+              "Ajouter un media": true, "Type de media": "Texte", "Nom du fichier": "Regarde bien",
+              "Mettre un temps de fixation": false, "Combien de temps de fixation": 0}]
+            """);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
+        WaitForAsyncUtils.asyncFx(() -> {
+            TextField field = find(TextField.class).get(0);
+            field.setText("Léa");
+            field.requestFocus();
+            KeyEvent.fireEvent(field, new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false,
+                false, false));
+            key(KeyCode.ENTER);
+        }).get();
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertFalse(find(TextField.class).isEmpty(), "Enter does not start the session");
+        // The form gets the mouse of the examiner even with the eye tracker alone; the screens of the evaluation do not
+        assertEquals(Boolean.TRUE, gameArea.getChildren().get(0).getProperties()
+            .get(net.gazeplay.IGameContext.MOUSE_ALLOWED_PROPERTY));
+        assertEquals("EvalStartButton", startButton().getText());
+        assertTrue(find(Text.class).stream().noneMatch(text -> text.getText().equals("EvalFormHint")));
+
+        Platform.runLater(() -> startButton().fire());
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS,
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().equals("Regarde bien")));
+        assertTrue(gameArea.getChildren().stream()
+            .noneMatch(node -> node.getProperties().containsKey(net.gazeplay.IGameContext.MOUSE_ALLOWED_PROPERTY)));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    private Button startButton() {
+        return find(Button.class).get(0);
+    }
+
+    /**
+     * The fields of the participant form handle their keys: Backspace used to be consumed with the other keys (so that
+     * the quit key, removed since, did not leave the game), and could not erase a letter.
+     */
+    @Test
+    void shouldEraseALetterOfTheForm() throws Exception {
+        createEvaluation("[\"Prénom\"]", """
+            [{"Type": "transition", "Mettre un temps avant passage à l'écran suivant": false, "Combien de temps": 0,
+              "Mettre une croix de fixation": true, "Mettre un temps de fixation": false,
+              "Combien de temps de fixation": 0}]
+            """);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
+        TextField field = WaitForAsyncUtils.asyncFx(() -> {
+            TextField first = find(TextField.class).get(0);
+            first.setText("Léaa");
+            first.requestFocus();
+            first.end();
+            KeyEvent.fireEvent(first, new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.BACK_SPACE, false, false,
+                false, false));
+            return first;
+        }).get();
+        assertEquals("Léa", field.getText());
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
     }
 
     @Test

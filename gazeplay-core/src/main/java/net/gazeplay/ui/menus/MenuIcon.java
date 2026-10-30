@@ -60,6 +60,10 @@ public enum MenuIcon {
     TEST("visibility"),
     UPLOAD_FILE("upload_file"),
     FOLDER("folder_open"),
+    /**
+     * A globe: the GazePlay Eval website, where the evaluations are created.
+     */
+    WEBSITE("language"),
     FAVORITE("favorite"),
     FAVORITE_FILLED("favorite_fill1"),
     ARROW_UP("keyboard_arrow_up"),

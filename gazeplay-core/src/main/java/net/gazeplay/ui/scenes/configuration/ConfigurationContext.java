@@ -49,6 +49,7 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.menus.MenuButtons;
 import net.gazeplay.ui.menus.MenuIcon;
+import net.gazeplay.ui.menus.MenuMessageDialog;
 import net.gazeplay.ui.menus.MenuStyle;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 
@@ -140,8 +141,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     /**
      * @return the sections of the settings of the mode of the session, in the order of the former single page: in the
-     *   "Evaluations" mode, only the settings used by the evaluations (language, eye tracker, appearance, evaluations
-     *   with the quit key, heatmaps); in the "Games" mode, all the others, without the evaluations
+     *   "Evaluations" mode, only the settings used by the evaluations (language, eye tracker, appearance, evaluations,
+     *   heatmaps); in the "Games" mode, all the others, without the evaluations
      */
     List<SettingsPage.Section> buildSections(Translator translator) {
         final boolean evaluations = getGazePlay().getMode() == AppMode.EVALUATIONS;
@@ -188,7 +189,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      */
     private SettingsPage.Section gamesSection(Configuration config, Translator translator) {
         return new SettingsPage.SectionBuilder("SettingsGames", MenuIcon.GAMES)
-            .add("QuitKey", buildQuitKeyChooser(config))
             .add("QuestionLength", buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
                 0.5, config.getQuestionLengthProperty()))
             .add("ReaskQuestionOnFail", buildCheckBox(config.getQuestionReaskedOnFailProperty()))
@@ -285,17 +285,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the evaluations of GazePlay Eval (the quit key also quits an evaluation)
+     * @return the evaluations of GazePlay Eval
      */
     private SettingsPage.Section evaluationsSection(Configuration config, Translator translator) {
         return new SettingsPage.SectionBuilder("SettingsEvaluations", MenuIcon.EVALUATIONS)
-            .add("QuitKey", buildQuitKeyChooser(config))
             .add("EvalImported", EvalSettings.buildLibrary(translator, getGazePlay().getPrimaryStage()))
             .add("EvalOptions", EvalSettings.buildOptionsChooser(config, translator))
             .add("EvalDelayBeforeSelection", buildSpinner(0, 5,
                 (double) config.getDelayBeforeSelectionTime() / 1000, 0.1, config.getDelayBeforeSelectionTimeProperty()))
             .add("EvalSoundBlocksSelection", buildCheckBox(config.getEvalSoundBlocksSelectionProperty()))
-            .add("EvalResults", EvalSettings.buildResultsFolderButton(translator))
             .build();
     }
 
@@ -746,19 +744,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     newImage.setFitHeight(25);
                     languageBox.setGraphic(newImage);
 
+                    final Translator languageTranslator = configurationContext.getGazePlay().getTranslator();
+                    final Stage owner = configurationContext.getGazePlay().getPrimaryStage();
                     if (language.isLeftAligned() != currentLanguageAlignmentIsLeftAligned) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Language information");
-                        alert.setHeaderText(
-                            "Alignment settings have just changed for your language, please restart GazePlay for the new changes to take effect.");
-                        alert.show();
+                        MenuMessageDialog.inform(owner, "Language information",
+                            "Alignment settings have just changed for your language, please restart GazePlay for the new changes to take effect.",
+                            false, languageTranslator.translate("OkButton"), languageTranslator.translate("Close"));
                     }
                     if (!language.isStableTranslationAvailable()) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Language information");
-                        alert.setHeaderText(
-                            "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones at www.gazeplay.net and they will be in the next version.");
-                        alert.show();
+                        MenuMessageDialog.inform(owner, "Language information",
+                            "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones at www.gazeplay.net and they will be in the next version.",
+                            false, languageTranslator.translate("OkButton"), languageTranslator.translate("Close"));
                     }
                 });
 
@@ -950,22 +946,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
             return null;
         }
-    }
-
-    /**
-     * @return the choice of the key leaving a game, bound to the QUIT_KEY setting
-     */
-    ChoiceBox<String> buildQuitKeyChooser(
-        Configuration configuration
-    ) {
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-        choiceBox.getItems().addAll("Q", "E");
-        choiceBox.getSelectionModel().select(configuration.getQuitKey());
-        choiceBox.getSelectionModel().selectedItemProperty()
-            .addListener((observable, oldValue, newValue) -> configuration.setQuitKey(newValue));
-        return choiceBox;
     }
 
     /**
