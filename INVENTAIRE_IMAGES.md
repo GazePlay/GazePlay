@@ -28,7 +28,7 @@ libre ; le contenu de l'image ne dit rien de sa licence. Les sons et musiques n'
 | **Libre, source connue** | 350 (110 le 28/10) | Coloriages de Coloring (OpenMoji, CC BY-SA 4.0, 29/10/2026), photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) |
 | **Libre probable** | 153 | 128 photos Pixabay publiées avant 2019 (Find the Odd One Out, Where Is The Animal Dynamic), alors sous CC0 ; 25 drapeaux de Wikimedia Commons (domaine public en général) |
 | **Non libre, certain** | 0 (7 le 28/10) | Le coloriage Hello Kitty (Colors) est retiré le 29/10/2026 ; les 5 photos iStock / Getty (Where Is The Sound) et la photo CC BY-NC-SA (castor) ont été remplacées le 29/10/2026 |
-| **Non libre, probable** | 1 | `race/images/Racer.png` : clipart de www.cutecolors.com (Grace Lee), site commercial |
+| **Non libre, probable** | 0 (1 le 28/10) | `race/images/Racer.png` (clipart de www.cutecolors.com, site commercial) : lu par aucun code, retiré le 30/10/2026 avec la revue de Frogs Race, dont la grenouille et le décor (source inconnue) sont redessinés |
 | **Source inconnue** | 687 (915 le 28/10) | Détail en section 3 |
 
 **Hypothèse** (Pixabay) : Pixabay a quitté la licence CC0 en janvier 2019. Une image publiée avant reste sous CC0 ; la

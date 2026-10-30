@@ -1,23 +1,27 @@
 package net.gazeplay.games.race;
 
-import javafx.animation.*;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -25,710 +29,532 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GameStyle;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
- * Game "FrogsRace": bugs fly across the screen; each bug the gaze (or the mouse) enters is caught by the player's frog,
- * whose racer moves forward after a number of bugs. The other frogs move on their own; the round ends when the first
- * frog reaches the finish.
+ * Game "FrogsRace" (reviewed on 30/10/2026, REVUE_DES_JEUX.md): bugs (the flying Biboules) fly in the sky; each bug the
+ * gaze (or the mouse) enters is caught by the frog of the bank, which shoots its tongue at it, and the frog of the
+ * player hops forward on its lane (the first one, marked "You"). The three other frogs hop on their own, at the speed
+ * of the variant; when a frog reaches the finish, the ranking is shown, then a new race starts.
+ * <p>
+ * Statistics: a goal to reach for each bug that appears, a goal reached for each bug caught.
  */
 @Slf4j
 public class Race extends Parent implements GameLifeCycle {
 
-    private static final int MAX_TIME_LENGTH = 7;
-    private static final int MIN_TIME_LENGTH = 4;
+    /**
+     * Bugs to catch for the frog of the player to reach the finish: one hop each.
+     */
+    static final int HOPS_TO_FINISH = 20;
 
-    private static final int MAX_RACE_TIME_LENGTH = 30;
-    private static final int MIN_RACE_TIME_LENGTH = 15;
+    /**
+     * Bugs flying at the same time.
+     */
+    static final int BUGS = 8;
+
+    static final int LANES = 4;
+
+    /**
+     * The mouth of the catching frog, as fractions of the size of its picture (see gradle/images/make_race_images.py).
+     */
+    private static final double CATCHER_MOUTH_X = 0.5;
+    private static final double CATCHER_MOUTH_Y = 196.0 / 300;
+
+    private static final String IMAGES = "data/race/images/";
+    private static final String[] BUG_COLORS = {"Blue", "Green", "Yellow", "Orange", "Red"};
+    private static final String[] OPPONENT_COLORS = {"blue", "orange", "violet"};
+
+    private static final Duration HOP = Duration.millis(380);
 
     private final IGameContext gameContext;
-
-    private final Image blue;
-    private final Image green;
-    private final Image yellow;
-    private final Image orange;
-    private final Image red;
-    private final Image flash;
-    private final Image racer;
-
-    private final int bugsAmount = 14;
-    private final int movementPerBug = 2;
-
-    private Target playerRacer;
-    private int racerMovement = 0;
-
-    private Label text;
-    private int score;
-
-    private StackPane hand;
-    private final ImageView cage;
-
-    private final String gameType;
-
     private final Stats stats;
+    private final RaceVariant variant;
+    private final ReplayablePseudoRandom random;
 
-    private Point[] endPoints;
+    private final Image catcherImage = new Image(IMAGES + "frog-catcher.png");
+    private final Image flashImage = new Image(IMAGES + "Flash.png");
+    private final Image[] bugImages = new Image[BUG_COLORS.length];
 
-    private EventHandler<Event> enterEvent;
-    private EventHandler<GazeEvent> handEventGaze;
-    private Dimension2D dimension2D;
-    private Target[] racers;
+    /**
+     * Animations of the race in progress, stopped when it ends.
+     */
+    private final List<Animation> animations = new ArrayList<>();
 
-    private final ReplayablePseudoRandom randomGenerator;
+    @Getter
+    private final List<Bug> bugs = new ArrayList<>();
 
-    private int numberOfRacerFinished = 0;
+    @Getter
+    private final List<Racer> racers = new ArrayList<>();
 
-    // done
-    public Race(final IGameContext gameContext, final Stats stats, final String type) {
-        this.gameContext = gameContext;
-        this.stats = stats;
+    @Getter
+    private Racer player;
+
+    @Getter
+    private int caught;
+
+    @Getter
+    private boolean raceOver;
+
+    private Dimension2D dimension;
+    private ImageView catcher;
+    private Group scorePill;
+
+    public Race(final IGameContext gameContext, final Stats stats, final RaceVariant variant) {
+        this(gameContext, stats, variant, new ReplayablePseudoRandom());
         this.gameContext.startTimeLimiter();
-        score = 0;
-        gameType = type;
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
-
-        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        hand = new StackPane();
-
-        blue = new Image("data/" + gameType + "/images/Blue.png");
-        green = new Image("data/" + gameType + "/images/Green.png");
-        yellow = new Image("data/" + gameType + "/images/Yellow.png");
-        orange = new Image("data/" + gameType + "/images/Orange.png");
-        red = new Image("data/" + gameType + "/images/Red.png");
-        racer = new Image("data/" + gameType + "/images/frogJump.gif");
-        flash = new Image("data/" + gameType + "/images/Flash.png");
-        cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-
+        this.stats.setGameSeed(random.getSeed());
     }
 
-    public Race(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
+    public Race(final IGameContext gameContext, final Stats stats, final RaceVariant variant, final double gameSeed) {
+        this(gameContext, stats, variant, new ReplayablePseudoRandom(gameSeed));
+    }
+
+    private Race(final IGameContext gameContext, final Stats stats, final RaceVariant variant,
+                 final ReplayablePseudoRandom random) {
         this.gameContext = gameContext;
         this.stats = stats;
-        score = 0;
-        gameType = type;
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
-        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        hand = new StackPane();
-
-        blue = new Image("data/" + gameType + "/images/Blue.png");
-        green = new Image("data/" + gameType + "/images/Green.png");
-        yellow = new Image("data/" + gameType + "/images/Yellow.png");
-        orange = new Image("data/" + gameType + "/images/Orange.png");
-        red = new Image("data/" + gameType + "/images/Red.png");
-        racer = new Image("data/" + gameType + "/images/frogJump.gif");
-        flash = new Image("data/" + gameType + "/images/Flash.png");
-        cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-
-    }
-
-    /**
-     * @return the background picture
-     */
-    Rectangle createBackground() {
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
-
-        double backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
-            @Override
-            public Double visitLight() {
-                return 0.5;
-            }
-
-            @Override
-            public Double visitDark() {
-                return 1.d;
-            }
-        });
-        int backgroundEnabledCoef = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
-
-        imageRectangle.setOpacity(backgroundEnabledCoef * backgroundStyleCoef);
-
-        gameContext.getChildren().add(imageRectangle);
-
-        return imageRectangle;
-    }
-
-    /**
-     * Updates the positions used to aim at the bugs.
-     */
-    private void updatePoints(final Rectangle rectangle) {
-
-        endPoints[1].y = rectangle.getHeight();
-
-        endPoints[2].x = rectangle.getWidth() / 2;
-        endPoints[2].y = rectangle.getHeight();
-
-        endPoints[3].x = rectangle.getWidth() * 0.96;
-
-        endPoints[4].x = rectangle.getWidth() * 0.96;
-        endPoints[4].y = rectangle.getHeight() / 2;
-
-        endPoints[5].y = rectangle.getHeight() / 2;
-
-        endPoints[6].x = rectangle.getWidth() / 2;
-
-        endPoints[7].x = rectangle.getWidth() * 0.96;
-        endPoints[7].y = rectangle.getHeight();
-    }
-
-    /**
-     * @return the angle from the frog to a point, in degrees
-     */
-    public float getAngle(final Point target) {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        float angle = (float) Math
-            .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
-
-        if (angle < 0) {
-            angle += 360;
+        this.variant = variant;
+        this.random = random;
+        for (int i = 0; i < BUG_COLORS.length; i++) {
+            bugImages[i] = new Image(IMAGES + BUG_COLORS[i] + ".png");
         }
-
-        return angle;
-    }
-
-    /**
-     * Places the frog (catching the bugs) for the size of the game area.
-     */
-    public void updateHand() {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double x = dimension2D.getHeight();
-        for (final Node child : hand.getChildren()) {
-            ((ImageView) child).setPreserveRatio(true);
-            ((ImageView) child).setFitHeight(x);
-        }
-        hand.setLayoutY(0);
-        hand.setLayoutX(3 * (dimension2D.getWidth() / 7));
-        final double cst2;
-        if (gameType.equals("biboule")) {
-            cst2 = 2;
-        } else {// equals robot
-            cst2 = 1.7;
-        }
-        hand.setLayoutY(dimension2D.getHeight() / cst2);
-    }
-
-    /**
-     * Places the cage for the size of the game area.
-     */
-    public void updateCage() {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
-
-        final double y;
-        if (gameType.equals("biboule")) {
-            cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
-            y = dimension2D.getHeight() / 6.5;
-        } else {// equals robot
-            cage.setLayoutY(3.5 * dimension2D.getHeight() / 21);
-            y = dimension2D.getHeight() / 8.5;
-        }
-        cage.setFitHeight(y);
-        cage.setPreserveRatio(true);
-    }
-
-    /**
-     * Places the score for the size of the game area.
-     */
-    public void updateScore(final Label sc, final Label tc) {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        sc.setFont(Font.font(dimension2D.getHeight() / 20));
-        sc.setLayoutX(dimension2D.getWidth() * 0.08);
-        sc.setLayoutY(0.0);
-
-        tc.setFont(Font.font(dimension2D.getHeight() / 20));
-        tc.setLayoutX(dimension2D.getWidth() * 0.0);
-        tc.setLayoutY(dimension2D.getHeight() * 0.0);
-
     }
 
     @Override
     public void launch() {
-        stats.notifyNewRoundReady();
-        racerMovement = 0;
-
+        raceOver = false;
+        caught = 0;
+        getChildren().clear();
+        animations.clear();
+        bugs.clear();
+        racers.clear();
+        dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         gameContext.setLimiterAvailable();
-        score = 0;
-        this.getChildren().clear();
 
-        Rectangle imageRectangle = createBackground();
-        gameContext.getChildren().add(this);
-
-        final EventHandler<MouseEvent> handEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                final double x = e.getX();
-                final double y = e.getY();
-                hand.setRotate(getAngle(new Point(x, y)));
-            }
-        };
-
-        racers = new Target[3];
-
-        handEventGaze = e -> {
-            final double x = e.getX();
-            final double y = e.getY();
-            hand.setRotate(getAngle(new Point(x, y)));
-        };
-        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        this.addEventFilter(GazeEvent.ANY, handEventGaze);
-
-        final Point[] points = new Point[8];
-        // init all points
-        for (int i = 0; i < points.length; ++i) {
-            points[i] = new Point(0, 0);
+        getChildren().add(createBackground());
+        createLanes();
+        createCatcher();
+        updateScorePill();
+        for (int i = 0; i < BUGS; i++) {
+            addBug();
         }
 
-        this.endPoints = points;
-        // then update them
-        updatePoints(imageRectangle);
-
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            updatePoints(imageRectangle);
-        });
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
-            updatePoints(imageRectangle);
-        });
-
-        enterEvent = e -> {
-            if (e.getTarget() instanceof Target) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    if (!((Target) e.getTarget()).done) {
-                        ((Target) e.getTarget()).done = true;
-                        enter((Target) e.getTarget());
-                        stats.incrementNumberOfGoalsReached();
-                    }
-                }
-            }
-        };
-
+        // Already there when the game area was not cleared before a new race
+        if (!gameContext.getChildren().contains(this)) {
+            gameContext.getChildren().add(this);
+        }
         gameContext.start();
-
-        final Label sc = new Label();
-        final Label tc = new Label();
-
-        final String cst;
-
-        tc.setText("Score:");
-        tc.setTextFill(Color.WHITE);
-        cst = "" + score;
-
-        sc.setText(cst);
-        sc.setTextFill(Color.WHITE);
-        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final ImageView iv1 = new ImageView(new Image("data/" + gameType + "/images/hand.png"));
-        final ImageView iv2 = new ImageView(new Image("data/" + gameType + "/images/handShot.png"));
-
-        final StackPane iv = new StackPane();
-        final double x = dimension2D.getHeight();
-        iv1.setPreserveRatio(true);
-        iv1.setFitHeight(x);
-        iv2.setPreserveRatio(true);
-        iv2.setFitHeight(x);
-
-        iv.getChildren().addAll(iv1, iv2);
-        iv.getChildren().get(1).setOpacity(0);
-        iv.setLayoutY(0);
-        iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
-
-        iv.setLayoutY(dimension2D.getHeight() / 2);
-
-        this.getChildren().add(iv);
-        hand = (StackPane) this.getChildren().get(this.getChildren().indexOf(iv));
-        hand.toFront();
-
-        tc.setFont(Font.font(dimension2D.getHeight() / 20));
-        sc.setFont(Font.font(dimension2D.getHeight() / 20));
-        tc.setLineSpacing(10);
-        tc.setLayoutX(0.0);
-        tc.setLayoutY(0.0);
-
-        sc.setLayoutX(dimension2D.getWidth() * 0.08);
-        sc.setLayoutY(0.0);
-
-        this.getChildren().add(tc);
-
-        text = sc;
-
-        this.getChildren().add(sc);
-
-        iv.setMouseTransparent(true);
-
-        updateCage();
-
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            updateScore(sc, tc);
-            updateCage();
-            updateHand();
-        });
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
-            updateScore(sc, tc);
-            updateCage();
-            updateHand();
-        });
-
-        cage.toBack();
-        this.getChildren().add(cage);
-
-        for (int i = 0; i < bugsAmount; i++) {
-            newCircle();
-        }
-
-        makePlayer(0.6);
-        racers[0] = makeRacers(0.7);
-        racers[1] = makeRacers(0.8);
-        racers[2] = makeRacers(0.9);
-
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-
         gameContext.setOffFixationLengthControl();
+
+        for (final Racer racer : racers) {
+            if (!racer.player) {
+                scheduleHop(racer);
+            }
+        }
     }
 
-    // done
     @Override
     public void dispose() {
-        this.removeEventFilter(GazeEvent.ANY, handEventGaze);
-        this.getChildren().clear();
+        animations.forEach(Animation::stop);
+        animations.clear();
+        for (final Bug bug : bugs) {
+            gameContext.getGazeDeviceManager().removeEventFilter(bug);
+        }
+        bugs.clear();
+        getChildren().clear();
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // Scenery
+
     /**
-     * Catches a bug: counts it, plays a sound, makes it disappear and sends another one; the player's racer moves
-     * forward every few bugs.
+     * @return the background picture, as bright as the background settings ask (none when it is disabled)
      */
-    private void enter(final Target t) {
-        t.removeEventFilter(MouseEvent.ANY, enterEvent);
-        t.removeEventFilter(GazeEvent.ANY, enterEvent);
-        t.t.stop();
+    private ImageView createBackground() {
+        final ImageView background = new ImageView(new Image(IMAGES + "background.png"));
+        background.setFitWidth(dimension.getWidth());
+        background.setFitHeight(dimension.getHeight());
+        final double styleCoefficient = gameContext.getConfiguration().getBackgroundStyle()
+            .accept(new BackgroundStyleVisitor<Double>() {
+                @Override
+                public Double visitLight() {
+                    return 0.5;
+                }
 
-        final String cst;
-        cst = "" + ++score;
-
-        text.setText(cst);
-
-        final String soundResource = "data/race/sounds/frog.WAV";
-        gameContext.getSoundManager().add(soundResource);
-
-        t.getChildren().get(0).setOpacity(1);
-
-        hand.getChildren().get(1).setOpacity(1);
-        final FadeTransition ft = new FadeTransition(Duration.millis(500), t);
-        ft.setFromValue(1);
-        ft.setToValue(0);
-        final FadeTransition ft2 = new FadeTransition(Duration.millis(500), hand.getChildren().get(1));
-        ft2.setFromValue(1);
-        ft2.setToValue(0);
-
-        if (t.animDone) {
-            t.animDone = false;
-            final ScaleTransition st = new ScaleTransition(Duration.millis(100), hand);
-            st.setFromX(1);
-            st.setFromY(1);
-            st.setToX(0.7);
-            st.setToY(0.7);
-            final ScaleTransition st2 = new ScaleTransition(Duration.millis(100), hand);
-            st.setFromX(0.7);
-            st.setFromY(0.7);
-            st2.setToX(1);
-            st2.setToY(1);
-            final SequentialTransition seqt = new SequentialTransition();
-            seqt.getChildren().addAll(st, st2);
-            seqt.setOnFinished(actionEvent -> t.animDone = true);
-            seqt.play();
-        }
-
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(ft, ft2);
-        pt.setOnFinished(actionEvent -> {
-            final int i = getChildren().indexOf(t);
-            if (i != -1) {
-                getChildren().remove(i);
-            }
-            newCircle();
-        });
-        pt.play();
-        if (score % movementPerBug == 0) {
-            racerMovement++;
-            movePlayer(playerRacer, racerMovement);
-        }
-        if (racerMovement == 18) {
-            this.gameContext.updateScore(stats, this);
-            racers[0].t.stop();
-            racers[1].t.stop();
-            racers[2].t.stop();
-            gameContext.playWinTransition(500, actionEvent -> {
-                dispose();
-                gameContext.clear();
-                launch();
+                @Override
+                public Double visitDark() {
+                    return 1.d;
+                }
             });
-        }
+        background.setOpacity(gameContext.getConfiguration().isBackgroundEnabled() ? styleCoefficient : 0);
+        background.setMouseTransparent(true);
+        return background;
+    }
 
+    private double laneTop(final int lane) {
+        return dimension.getHeight() * (0.56 + lane * 0.105);
+    }
+
+    private double laneHeight() {
+        return dimension.getHeight() * 0.095;
+    }
+
+    private double startX() {
+        return dimension.getWidth() * 0.11;
+    }
+
+    private double finishX() {
+        return dimension.getWidth() * 0.92;
     }
 
     /**
-     * Sends a new bug.
+     * The four lanes on the pond (the first one, of the player, in the main color, with "You"), the finish line, and a
+     * frog at the start of each lane.
      */
-    private void newCircle() {
+    private void createLanes() {
+        for (int lane = 0; lane < LANES; lane++) {
+            final boolean ofPlayer = lane == 0;
+            final Rectangle strip = new Rectangle(dimension.getWidth() * 0.01, laneTop(lane),
+                dimension.getWidth() * 0.98, laneHeight());
+            strip.setArcWidth(laneHeight());
+            strip.setArcHeight(laneHeight());
+            strip.setStyle(ofPlayer
+                ? "-fx-fill: rgba(255, 255, 255, 0.35); -fx-stroke: -gp-accent; -fx-stroke-width: 4;"
+                : "-fx-fill: rgba(255, 255, 255, 0.18);");
+            strip.setMouseTransparent(true);
+            getChildren().add(strip);
+        }
+        getChildren().add(createFinishLine());
 
-        final Target sp = buildCircle();
-        sp.toBack();
-        this.getChildren().add(sp);
-        gameContext.getGazeDeviceManager().addEventFilter(sp);
+        final Group you = GameStyle.pill(gameContext.getTranslator().translate("RaceYou"), laneHeight() * 0.32);
+        you.setLayoutX(dimension.getWidth() * 0.018);
+        you.setLayoutY(laneTop(0) + (laneHeight() - you.getBoundsInLocal().getHeight()) / 2);
+        you.setMouseTransparent(true);
+        getChildren().add(you);
 
-        sp.addEventFilter(MouseEvent.ANY, enterEvent);
-        sp.addEventHandler(GazeEvent.ANY, enterEvent);
-        final double yMinRange = dimension2D.getHeight() * 0.1;
-        final double yMaxRange = dimension2D.getHeight() * 0.25;
+        player = new Racer("green", 0, true, laneHeight() * 1.15);
+        racers.add(player);
+        for (int i = 0; i < OPPONENT_COLORS.length; i++) {
+            final Racer opponent = new Racer(OPPONENT_COLORS[i], i + 1, false, laneHeight() * 0.95);
+            final double raceSeconds = variant.getMinRaceSeconds()
+                + random.nextDouble() * (variant.getMaxRaceSeconds() - variant.getMinRaceSeconds());
+            opponent.hopInterval = raceSeconds * 1000 / HOPS_TO_FINISH;
+            racers.add(opponent);
+        }
+        for (final Racer racer : racers) {
+            getChildren().add(racer.view);
+        }
+    }
 
-        final double x = (randomGenerator.nextDouble() * (dimension2D.getWidth() * 0.9));
-        sp.setLayoutX(x);
-        final double y = randomGenerator.nextDouble() * yMaxRange + yMinRange;
-        sp.setLayoutY(y);
-        sp.centerX = x;
-        sp.centerY = y;
+    /**
+     * @return a checkered band across the lanes, at the finish
+     */
+    private Group createFinishLine() {
+        final Group line = new Group();
+        final double top = laneTop(0) - dimension.getHeight() * 0.01;
+        final double bottom = laneTop(LANES - 1) + laneHeight() + dimension.getHeight() * 0.01;
+        final double square = dimension.getHeight() * 0.018;
+        int row = 0;
+        for (double y = top; y < bottom; y += square, row++) {
+            for (int column = 0; column < 2; column++) {
+                final Rectangle cell = new Rectangle(finishX() + column * square, y, square,
+                    Math.min(square, bottom - y));
+                cell.setFill((row + column) % 2 == 0 ? Color.WHITE : Color.rgb(34, 30, 38));
+                line.getChildren().add(cell);
+            }
+        }
+        line.setMouseTransparent(true);
+        return line;
+    }
+
+    /**
+     * The frog of the bank, catching the bugs.
+     */
+    private void createCatcher() {
+        catcher = new ImageView(catcherImage);
+        catcher.setPreserveRatio(true);
+        catcher.setFitHeight(dimension.getHeight() * 0.17);
+        final double width = catcher.getFitHeight() * catcherImage.getWidth() / catcherImage.getHeight();
+        catcher.setLayoutX((dimension.getWidth() - width) / 2);
+        catcher.setLayoutY(dimension.getHeight() * 0.535 - catcher.getFitHeight());
+        catcher.setMouseTransparent(true);
+        getChildren().add(catcher);
+    }
+
+    private double mouthX() {
+        final double width = catcher.getFitHeight() * catcherImage.getWidth() / catcherImage.getHeight();
+        return catcher.getLayoutX() + width * CATCHER_MOUTH_X;
+    }
+
+    private double mouthY() {
+        return catcher.getLayoutY() + catcher.getFitHeight() * CATCHER_MOUTH_Y;
+    }
+
+    /**
+     * The number of bugs caught, in a label at the top left.
+     */
+    private void updateScorePill() {
+        if (scorePill != null) {
+            getChildren().remove(scorePill);
+        }
+        scorePill = GameStyle.pill(gameContext.getTranslator().translate("RaceCaught") + " " + caught,
+            dimension.getHeight() * 0.03);
+        scorePill.setLayoutX(dimension.getWidth() * 0.015);
+        scorePill.setLayoutY(dimension.getHeight() * 0.02);
+        scorePill.setMouseTransparent(true);
+        getChildren().add(scorePill);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Bugs
+
+    private double bugSize() {
+        return dimension.getHeight() * 0.085;
+    }
+
+    /**
+     * Sends a new bug in the sky, at a random place, of a random color.
+     */
+    private void addBug() {
+        final Bug bug = new Bug(bugImages[random.nextInt(bugImages.length)], flashImage, bugSize());
+        bug.setLayoutX(randomBugX());
+        bug.setLayoutY(randomBugY());
+        bug.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> catchBug(bug));
+        bug.addEventHandler(GazeEvent.GAZE_ENTERED, e -> catchBug(bug));
+        gameContext.getGazeDeviceManager().addEventFilter(bug);
+        bugs.add(bug);
+        // Behind the frog of the bank and the score
+        getChildren().add(getChildren().indexOf(catcher), bug);
+        stats.incrementNumberOfGoalsToReach();
+        fly(bug);
+    }
+
+    private double randomBugX() {
+        return dimension.getWidth() * 0.04 + random.nextDouble() * (dimension.getWidth() * 0.92 - bugSize());
+    }
+
+    private double randomBugY() {
+        return dimension.getHeight() * 0.1 + random.nextDouble() * (dimension.getHeight() * 0.36 - bugSize());
+    }
+
+    /**
+     * Moves a bug to another random place of the sky, then again, until it is caught.
+     */
+    private void fly(final Bug bug) {
+        final double seconds = 3 + random.nextDouble() * 3;
+        final TranslateTransition flight = new TranslateTransition(Duration.seconds(seconds), bug);
+        flight.setToX(randomBugX() - bug.getLayoutX());
+        flight.setToY(randomBugY() - bug.getLayoutY());
+        flight.setInterpolator(Interpolator.EASE_BOTH);
+        flight.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        flight.setOnFinished(e -> {
+            animations.remove(flight);
+            if (!bug.caught) {
+                fly(bug);
+            }
+        });
+        bug.flight = flight;
+        play(flight);
+    }
+
+    /**
+     * The frog of the bank shoots its tongue at the bug, which is caught: counted, then replaced by another one; the
+     * frog of the player hops.
+     */
+    private void catchBug(final Bug bug) {
+        if (bug.caught || raceOver) {
+            return;
+        }
+        bug.caught = true;
+        bug.flight.stop();
+        animations.remove(bug.flight);
+        gameContext.getGazeDeviceManager().removeEventFilter(bug);
         stats.incrementNumberOfGoalsReached();
-        moveCircle(sp);
-    }
+        caught++;
+        updateScorePill();
+        gameContext.getSoundManager().add("data/race/sounds/frog.WAV");
+        bug.flash.setOpacity(1);
 
-    /**
-     * Creates the racer of the player.
-     */
-    private void makePlayer(final double racerPosition) {
+        final double bugX = bug.getLayoutX() + bug.getTranslateX() + bugSize() / 2;
+        final double bugY = bug.getLayoutY() + bug.getTranslateY() + bugSize() / 2;
+        final Line tongue = new Line(mouthX(), mouthY(), mouthX(), mouthY());
+        tongue.setStroke(Color.rgb(240, 120, 150));
+        tongue.setStrokeWidth(dimension.getHeight() * 0.012);
+        tongue.setStrokeLineCap(StrokeLineCap.ROUND);
+        tongue.setMouseTransparent(true);
+        getChildren().add(getChildren().indexOf(catcher), tongue);
 
-        Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth() / 15, scene.getHeight() / 15);
-        playerRacer = buildRacer(size);
-        playerRacer.toBack();
-        this.getChildren().add(playerRacer);
-        final double x = 0;
-        playerRacer.setLayoutX(x);
-        final double y = dimension2D.getHeight() * racerPosition;
-        playerRacer.setLayoutY(y);
-        playerRacer.centerX = x;
-        playerRacer.centerY = y;
-
-    }
-
-    /**
-     * Moves the racer of the player forward.
-     */
-    private void movePlayer(final Target frogRacer, final int iteration) {
-        final double timelength = 1000;
-        final double movementDistance = iteration * 0.05;
-
-        final TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
-        tt1.setToX(dimension2D.getWidth() * movementDistance);
-
-        final ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
-        st.setByX(1);
-        st.setByY(1);
-
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(tt1);
-        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-
-        frogRacer.t = pt;
-
-        pt.play();
-    }
-
-    /**
-     * Shows the end of the race.
-     */
-    private void raceFinished() {
-        for (int i = 0; i < 3; i++) {
-            getChildren().remove(racers[i]);
-        }
-        getChildren().remove(playerRacer);
-        final int index = (getChildren().indexOf(racers[0]));
-        if (index != -1) {
-            getChildren().remove(index);
-        }
-    }
-
-    /**
-     * Creates the other racers, moving on their own.
-     */
-    private Target makeRacers(final double racerPosition) {
-
-        Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth() / 10, scene.getHeight() / 10);
-        final Target frogRacer = buildRacer(size);
-
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setSaturation(1.3);
-        frogRacer.setEffect(colorAdjust);
-
-        frogRacer.toBack();
-        this.getChildren().add(frogRacer);
-        frogRacer.setLayoutX(0);
-
-        final double y = dimension2D.getHeight() * racerPosition;
-        frogRacer.setLayoutY(y);
-        frogRacer.centerX = 0;
-        frogRacer.centerY = y;
-
-        final TranslateTransition tt1 = new TranslateTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_RACE_TIME_LENGTH)
-            * 1000), frogRacer);
-        tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
-
-        final ScaleTransition st = new ScaleTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_RACE_TIME_LENGTH)
-            * 1000), frogRacer);
-        st.setByX(1);
-        st.setByY(1);
-
-        frogRacer.t = tt1;
-        tt1.setOnFinished(event -> {
-            endGame(frogRacer);
-        });
-
-        tt1.play();
-        return frogRacer;
-    }
-
-    /**
-     * Resizes an image for the size of the scene.
-     */
-    private void resize(final ImageView i) {
-        Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth() / 30, scene.getHeight() / 30);
-        i.setFitHeight(size);
-        i.setFitWidth(size * 5 / 4);
-    }
-
-    /**
-     * Resizes a racer.
-     */
-    private void resizeRacer(final ImageView i, final double size) {
-        i.setFitHeight(size);
-        i.setFitWidth(size * 5 / 4);
-    }
-
-    /**
-     * @return a racer frog
-     */
-    private Target buildRacer(final double racerSize) {
-
-        final Target sp = new Target();
-        final ImageView race = new ImageView(racer);
-        resizeRacer(race, racerSize);
-        sp.getChildren().addAll(race);
-        return sp;
-    }
-
-    /**
-     * @return a bug
-     */
-    private Target buildCircle() {
-
-        final Target sp = new Target();
-        final ImageView b1 = new ImageView(blue);
-        final ImageView b2 = new ImageView(green);
-        final ImageView b3 = new ImageView(yellow);
-        final ImageView b4 = new ImageView(orange);
-        final ImageView b5 = new ImageView(red);
-        final ImageView f = new ImageView(flash);
-        final ImageView race = new ImageView(racer);
-
-        resize(b1);
-        resize(b2);
-        resize(b3);
-        resize(b4);
-        resize(b5);
-        resize(race);
-
-        resize(f);
-
-        sp.getChildren().addAll(f, b1, b2, b3, b4, b5, race);
-        sp.getChildren().get(0).setOpacity(0);
-        sp.getChildren().get(5).setOpacity(0);
-        sp.getChildren().get(2).setOpacity(0);
-        sp.getChildren().get(3).setOpacity(0);
-        sp.getChildren().get(4).setOpacity(0);
-        sp.getChildren().get(6).setOpacity(0);
-
-        return sp;
-    }
-
-    /**
-     * Moves a bug to a random place, in a random time.
-     */
-    private void moveCircle(final Target sp) {
-        final double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
-
-        final TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
-        final double min = Math.ceil(0);
-        final double max = Math.floor(endPoints.length - 1);
-        final int r = (int) (Math.floor(randomGenerator.nextDouble() * (max - min + 1)) + min);
-        final Point randomPoint = endPoints[r];
-        tt1.setToY((-sp.centerY + randomPoint.y) / 4);
-        tt1.setToX(-sp.centerX + randomPoint.x);
-
-        if (r == 2) {
-            this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
-        } else {
-            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
-            text.toBack();
-            cage.toBack();
-        }
-
-        final ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
-        st.setByX(1);
-        st.setByY(1);
-        final ParallelTransition pt = new ParallelTransition();
-
-        final FadeTransition btog = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(2));
-        final FadeTransition gtoy = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(3));
-        final FadeTransition ytoo = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(4));
-        final FadeTransition otor = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(5));
-
-        btog.setFromValue(0);
-        gtoy.setFromValue(0);
-        ytoo.setFromValue(0);
-        otor.setFromValue(0);
-
-        btog.setToValue(1);
-        gtoy.setToValue(1);
-        ytoo.setToValue(1);
-        otor.setToValue(1);
-
-        final SequentialTransition seqt = new SequentialTransition(btog);
-
-        pt.getChildren().addAll(seqt, tt1, st);
-        sp.t = pt;
-
-        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-        pt.setOnFinished(actionEvent -> {
-            final int index = (getChildren().indexOf(sp));
-            if (index != -1) {
-                getChildren().remove(index);
-                newCircle();
+        // The tongue reaches the bug, then brings it back to the mouth
+        final double toX = mouthX() - bugSize() / 2 - bug.getLayoutX();
+        final double toY = mouthY() - bugSize() / 2 - bug.getLayoutY();
+        final Timeline shot = new Timeline(
+            new KeyFrame(Duration.millis(140), new KeyValue(tongue.endXProperty(), bugX),
+                new KeyValue(tongue.endYProperty(), bugY),
+                new KeyValue(bug.translateXProperty(), bug.getTranslateX()),
+                new KeyValue(bug.translateYProperty(), bug.getTranslateY())),
+            new KeyFrame(Duration.millis(340), new KeyValue(tongue.endXProperty(), mouthX()),
+                new KeyValue(tongue.endYProperty(), mouthY()),
+                new KeyValue(bug.translateXProperty(), toX),
+                new KeyValue(bug.translateYProperty(), toY),
+                new KeyValue(bug.scaleXProperty(), 0.3),
+                new KeyValue(bug.scaleYProperty(), 0.3)));
+        shot.setOnFinished(e -> {
+            animations.remove(shot);
+            getChildren().removeAll(tongue, bug);
+            bugs.remove(bug);
+            if (!raceOver) {
+                addBug();
             }
         });
-        pt.play();
+        play(shot);
+
+        hop(player);
+        gameContext.updateScore(stats, this);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Racers
+
+    /**
+     * The next hop of another frog, after its interval (a little shorter or longer each time).
+     */
+    private void scheduleHop(final Racer racer) {
+        final PauseTransition wait = new PauseTransition(
+            Duration.millis(racer.hopInterval * (0.75 + random.nextDouble() * 0.5)));
+        wait.setOnFinished(e -> {
+            animations.remove(wait);
+            if (!raceOver) {
+                hop(racer);
+                scheduleHop(racer);
+            }
+        });
+        play(wait);
     }
 
     /**
-     * Starts a new race when a racer reaches the finish.
+     * A frog hops one step forward (in its jumping pose, along an arc); the race ends when it reaches the finish.
      */
-    private void endGame(Target frogRacer) {
-        if (frogRacer.getBoundsInParent().getMinX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
-            numberOfRacerFinished = numberOfRacerFinished + 1;
+    void hop(final Racer racer) {
+        if (raceOver || racer.hops >= HOPS_TO_FINISH) {
+            return;
+        }
+        racer.hops++;
+        final double step = (finishX() - startX() - racer.width()) / HOPS_TO_FINISH;
+        final double height = laneHeight() * 0.6;
+        racer.view.setImage(racer.jump);
+        final Timeline jump = new Timeline(
+            new KeyFrame(HOP.divide(2), new KeyValue(racer.view.translateYProperty(), -height, Interpolator.EASE_OUT)),
+            new KeyFrame(HOP, new KeyValue(racer.view.translateXProperty(), racer.hops * step),
+                new KeyValue(racer.view.translateYProperty(), 0, Interpolator.EASE_IN)));
+        jump.setOnFinished(e -> {
+            animations.remove(jump);
+            racer.view.setImage(racer.sit);
+        });
+        play(jump);
+        if (racer.hops >= HOPS_TO_FINISH) {
+            endRace(racer);
+        }
+    }
 
-            if (numberOfRacerFinished == 1) {
-                numberOfRacerFinished = 0;
-                racers[0].t.stop();
-                racers[1].t.stop();
-                racers[2].t.stop();
-                raceFinished();
-                dispose();
-                gameContext.clear();
-                launch();
+    /**
+     * Shows the ranking (the winner first, then the others by their progress), then starts a new race; "Bravo" when the
+     * player wins.
+     */
+    private void endRace(final Racer winner) {
+        raceOver = true;
+        final List<Racer> ranking = new ArrayList<>(racers);
+        ranking.sort(Comparator.comparingInt((Racer racer) -> racer == winner ? 1 : 0)
+            .thenComparingInt(racer -> racer.hops).reversed());
+        final StringBuilder text = new StringBuilder(gameContext.getTranslator()
+            .translate(winner.player ? "RaceWon" : "RaceLost"));
+        for (int i = 0; i < ranking.size(); i++) {
+            text.append('\n').append(i + 1).append(". ")
+                .append(gameContext.getTranslator().translate(ranking.get(i).nameKey));
+        }
+        final Group card = GameStyle.card(text.toString(), dimension.getHeight() * 0.04, dimension.getWidth() * 0.5);
+        card.setLayoutX((dimension.getWidth() - card.getBoundsInLocal().getWidth()) / 2);
+        card.setLayoutY((dimension.getHeight() - card.getBoundsInLocal().getHeight()) / 2);
+        getChildren().add(card);
+
+        final PauseTransition show = new PauseTransition(Duration.seconds(3.5));
+        show.setOnFinished(e -> {
+            if (winner.player) {
+                getChildren().remove(card);
+                gameContext.playWinTransition(200, event -> restart());
+            } else {
+                restart();
             }
+        });
+        play(show);
+    }
+
+    private void restart() {
+        dispose();
+        gameContext.clear();
+        launch();
+    }
+
+    private void play(final Animation animation) {
+        animations.add(animation);
+        animation.play();
+    }
+
+    /**
+     * A frog of the race: its pictures (sitting, jumping), its lane, its hops.
+     */
+    final class Racer {
+        final Image sit;
+        final Image jump;
+        final ImageView view;
+        final boolean player;
+        final String nameKey;
+        int hops;
+        double hopInterval;
+
+        Racer(final String color, final int lane, final boolean player, final double height) {
+            this.player = player;
+            this.nameKey = player ? "RaceYou" : "RaceFrog_" + color;
+            sit = new Image(IMAGES + "frog-" + color + ".png");
+            jump = new Image(IMAGES + "frog-" + color + "-jump.png");
+            view = new ImageView(sit);
+            view.setPreserveRatio(true);
+            view.setFitHeight(height);
+            view.setLayoutX(startX());
+            view.setLayoutY(laneTop(lane) + laneHeight() - height);
+            view.setMouseTransparent(true);
+        }
+
+        double width() {
+            return view.getFitHeight() * sit.getWidth() / sit.getHeight();
+        }
+    }
+
+    /**
+     * A flying bug: its picture, and the flash shown when it is caught.
+     */
+    static final class Bug extends StackPane {
+        final ImageView flash;
+        TranslateTransition flight;
+        boolean caught;
+
+        Bug(final Image picture, final Image flashPicture, final double size) {
+            final ImageView view = new ImageView(picture);
+            view.setPreserveRatio(true);
+            view.setFitHeight(size);
+            flash = new ImageView(flashPicture);
+            flash.setPreserveRatio(true);
+            flash.setFitHeight(size * 1.3);
+            flash.setOpacity(0);
+            getChildren().addAll(flash, view);
+            setPrefSize(size * 1.4, size);
+            setMinSize(size * 1.4, size);
+            setMaxSize(size * 1.4, size);
         }
     }
 }

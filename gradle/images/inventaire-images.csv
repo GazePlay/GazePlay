@@ -585,18 +585,22 @@ gazeplay-games/src/main/resources/data/potions/images/mixingPot.png,oui,libre,"d
 gazeplay-games/src/main/resources/data/potions/images/potionBlue.png,oui,libre,"dessiné pour le projet (gradle/images/make_potions_images.py), GPL-3.0-or-later",2019-06-07,johzz-o2,set game scene and game elements
 gazeplay-games/src/main/resources/data/potions/images/potionRed.png,oui,libre,"dessiné pour le projet (gradle/images/make_potions_images.py), GPL-3.0-or-later",2019-06-07,johzz-o2,set game scene and game elements
 gazeplay-games/src/main/resources/data/potions/images/potionYellow.png,oui,libre,"dessiné pour le projet (gradle/images/make_potions_images.py), GPL-3.0-or-later",2019-06-07,johzz-o2,set game scene and game elements
-gazeplay-games/src/main/resources/data/race/images/Background.jpg,oui,source inconnue,,2019-03-04,sannara,Readjusted landscape and made racers
 gazeplay-games/src/main/resources/data/race/images/Blue.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
-gazeplay-games/src/main/resources/data/race/images/Cage.png,oui,source inconnue,,2019-03-04,sannara,Readjusted landscape and made racers
 gazeplay-games/src/main/resources/data/race/images/Flash.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
 gazeplay-games/src/main/resources/data/race/images/Green.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/race/images/Orange.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
-gazeplay-games/src/main/resources/data/race/images/Racer.png,oui,non libre probable,"clipart de www.cutecolors.com (Grace Lee), site commercial",2019-10-03,Miles Bardon,Fixed Resource Locating
 gazeplay-games/src/main/resources/data/race/images/Red.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/race/images/Yellow.png,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/race/images/frogJump.gif,oui,source inconnue,,2019-03-12,sannara,Added picture inside
-gazeplay-games/src/main/resources/data/race/images/hand.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/race/images/handShot.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
+gazeplay-games/src/main/resources/data/race/images/background.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-blue-jump.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-blue.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-catcher.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-green-jump.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-green.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-orange-jump.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-orange.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-violet-jump.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
+gazeplay-games/src/main/resources/data/race/images/frog-violet.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
 gazeplay-games/src/main/resources/data/rockPaperScissors/paper.png,oui,source inconnue,,2020-06-03,PillouMatou,first commit for the game PaperScissorsStone
 gazeplay-games/src/main/resources/data/rockPaperScissors/park.png,oui,source inconnue,,2020-06-03,PillouMatou,Implementation of the PaperScissorsStone games
 gazeplay-games/src/main/resources/data/rockPaperScissors/rock.png,oui,source inconnue,,2020-06-03,PillouMatou,first commit for the game PaperScissorsStone

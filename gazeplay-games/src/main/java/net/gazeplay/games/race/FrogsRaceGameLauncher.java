@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
@@ -18,7 +18,7 @@ import java.util.LinkedList;
  * Creates the game "FrogsRace" and its statistics, for a new game or for the replay of a saved one (see
  * {@code IGameLauncher}).
  */
-public class FrogsRaceGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class FrogsRaceGameLauncher implements IGameLauncher<Stats, EnumGameVariant<RaceVariant>> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new RaceGamesStats(scene, "race");
@@ -30,14 +30,21 @@ public class FrogsRaceGameLauncher implements IGameLauncher<Stats,IGameVariant> 
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<RaceVariant> gameVariant,
                                        Stats stats) {
-        return new Race(gameContext, stats, "race");
+        return new Race(gameContext, stats, variantOf(gameVariant));
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
-        return new Race(gameContext, stats, "race", gameSeed);
+    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<RaceVariant> gameVariant,
+                                    Stats stats, double gameSeed) {
+        return new Race(gameContext, stats, variantOf(gameVariant), gameSeed);
+    }
+
+    /**
+     * @return the variant chosen, easy for a game saved before the variants (30/10/2026)
+     */
+    static RaceVariant variantOf(final EnumGameVariant<RaceVariant> gameVariant) {
+        return gameVariant == null ? RaceVariant.EASY : gameVariant.getEnumValue();
     }
 }

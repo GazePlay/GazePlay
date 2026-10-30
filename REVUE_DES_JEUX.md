@@ -111,6 +111,13 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    taille, barre de progression, couleur de fond ; `GameContextFactory`, `GameContext.createControlPanel`). À
    préparer comme les autres étapes (état des lieux, propositions validées). Penser à la décision encore ouverte sur
    le temps du menu compté dans les durées (`MODERNIZATION.md` 2an).
+7. **À surveiller, puis à chercher à la toute fin s'il revient** (décision du mainteneur du 30/10/2026) : le
+   30/10/2026 vers 11 h 19, pendant un `build` complet, la JVM des tests de `gazeplay-core` s'est arrêtée dès le
+   début du module (« Gradle Test Run :gazeplay-core:test FAILED », `MessageIOException: Could not write
+   '/127.0.0.1:…'`, « Connection reset by peer » ; aucun test en échec, pas de `hs_err`). Relancé aussitôt :
+   `:gazeplay-core:test` seul puis `build` complet réussis (575 tests). Cause inconnue. Si ça revient : noter
+   l'heure, le dernier test écrit dans `gazeplay-core/build/test-results/test`, chercher un `hs_err_pid*.log` et
+   `%LOCALAPPDATA%\CrashDumps`. Si rien ne revient d'ici la fin de la revue des jeux, chercher quand même à la fin.
 
 ## Règles pour chaque jeu
 
@@ -227,7 +234,7 @@ Après chaque famille : `allGamesTest` complet (77 entrées), et point avec le m
 | **Sprint Finish** (`SprintFinish`, `SprintFinishMouse`) | **Risque** : 6 images (chat et chien dessinés, boutons) | | |
 | **Colored Bubbles**, **Portrait Bubbles** (`ColoredBubbles`, `PortraitBubbles`) | **Risque** : 3 fonds sous-marins (un signé Koshkina L) ; Portrait utilise les images par défaut | | |
 | **Egg Game**, **Personalize Egg Game** | **Risque** : 3 photos d'œufs (auteur « FRIEDMANN Chloe » dans les métadonnées) | | |
-| **Frogs Race** (`FrogsRace`) | **Non libre probable** : `Racer.png` (clipart de cutecolors.com) ; à confirmer : 11 dessins (Biboule) | | |
+| **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
 | Labyrinth (`Labyrinth`) | **Remplacé le 28/10** : animaux sans fond (OpenMoji) ; à confirmer : 19 dessins (souris, flèches, fromage) et 9 du dossier `common` des jeux | | |
 | Memory, Memory Letters, Memory Numbers, Open Memory (×3) | Images par défaut : 10 animaux **remplacés le 28/10** (OpenMoji) ; **risque** : 9 animaux dessinés (chouette, crabe… « Free Fundation », source non dite) ; lettres et chiffres OK | | |
@@ -650,3 +657,86 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   - Le message de JavaFX « Appuyez sur Échap pour quitter le mode plein écran » au début : retiré pour toute
     l'application (`setFullScreenExitHint("")`, menu et parties) ; Échap quitte toujours le plein écran.
   - Tests : `MenuMessageDialogTest` (3) ; capture `3f-message` de `menuScreenshots` ; `build` réussi.
+
+### Frogs Race (`FrogsRace`, code `race`) — 30/10/2026
+
+- **Ce qu'il fait / variantes** (lecture du code, `Race.java`, 734 lignes ; pas de variante) : 14 insectes (les
+  Biboules volantes) traversent le haut de l'écran ; chaque insecte où entre le regard ou la souris est attrapé (pas
+  de durée de fixation : l'entrée suffit, `setOffFixationLengthControl`). Tous les 2 insectes, la grenouille du
+  joueur avance de 5 % de la largeur ; il en faut 36 pour arriver (18 sauts). Trois autres grenouilles avancent
+  seules, chacune en 15 à 30 s (tirées au hasard). Un tube rouge en bas au centre tourne vers le regard.
+- **Défauts vus (faits, lecture du code)** :
+  - D1. `Racer.png` (non libre probable, clipart de cutecolors.com) **n'est lu par aucun code** : la grenouille est
+    `frogJump.gif`. `Cage.png` (143 octets) est presque vide.
+  - D2. Le « tube rouge » (`hand.png`, `handShot.png`) vient du jeu des robots : il ne représente rien ici (ce n'est
+    ni une grenouille ni une langue). Les branches `biboule` / `robot` de `updateHand` et `updateCage` sont copiées de
+    ce jeu.
+  - D3. La grenouille du joueur est **plus petite** que les autres (taille ÷ 15 au lieu de ÷ 10) et de même image :
+    rien n'indique laquelle est la sienne, ni sa ligne.
+  - D4. Si une autre grenouille arrive la première, la course **recommence sans rien dire** (`endGame` relance) :
+    pas de classement, pas de « perdu ». Seule la victoire du joueur a l'animation « Bravo ».
+  - D5. Hypothèse (non mesurée) : 36 insectes avant une grenouille qui met 15 à 30 s, soit 1,2 à 2,4 insectes par
+    seconde : le joueur perd souvent, surtout au regard.
+  - D6. Insectes petits (un trentième de l'écran, environ 36 px en 1080 p au départ) : cibles difficiles au regard.
+    Seul le passage bleu → vert des couleurs est joué (jaune, orange, rouge : code mort).
+  - D7. **Statistiques fausses** : `newCircle()` compte un but atteint à chaque apparition d'insecte
+    (`incrementNumberOfGoalsReached`), en plus de celui de la capture ; le nombre de buts à atteindre n'est jamais
+    compté. Corriger change les nombres enregistrés (pas le format des fichiers) : à expliquer dans les notes de
+    version, sans `formatVersion` (les fichiers gardent leurs colonnes).
+  - D8. À chaque course, `launch()` ajoute 4 écouteurs de taille sur la zone de jeu, jamais retirés (ils
+    s'accumulent) ; `dispose()` n'arrête pas les animations des insectes.
+  - D9. « Score: » écrit en dur (non traduit), en blanc sans fond ; la vignette du menu montre l'ancien score et
+    l'ancien engrenage.
+- **Images (licences, `INVENTAIRE_IMAGES.md`)** : `Racer.png` non libre probable (inutilisée) ; `frogJump.gif`
+  (grenouille animée de style dessin animé, 372 Ko) et `Background.jpg` (jungle vectorielle de style banque
+  d'images) : source inconnue, **à risque** ; Biboules (`Blue`…`Red`, `Flash`) : dessins du projet (kuhlkrein,
+  2018), à confirmer ; `frog.WAV` : source inconnue.
+- **Propositions** : **toutes validées ✔ par le mainteneur (30/10/2026)** ; Biboules : dessins du projet ✔ ;
+  variantes Facile / Normal / Difficile ✔.
+  - Images
+    - I1. Supprimer `Racer.png`, `Cage.png`, `hand.png`, `handShot.png` (inutiles ou sans rapport).
+    - I2. Remplacer `frogJump.gif` par des grenouilles **dessinées pour le projet** (script, comme les potions),
+      vues de côté, une couleur par ligne, avec une pose « saut ».
+    - I3. Remplacer `Background.jpg` par un décor dessiné pour le projet : une mare vue de face avec quatre lignes
+      de nénuphars jusqu'à une ligne d'arrivée.
+    - I4. Garder les Biboules volantes (dessins du projet), à confirmer par le mainteneur.
+  - Graphisme
+    - G1. La grenouille du joueur plus grande que les autres, sur sa ligne marquée de la couleur principale, avec
+      « Toi » à côté.
+    - G2. À la place du tube rouge, une grenouille en bas au centre qui **tire la langue** vers l'insecte attrapé.
+    - G3. Insectes plus gros (au moins un douzième de la hauteur), dans toutes leurs couleurs.
+    - G4. Le score dans une pastille au style des menus (`GameStyle.pill`), traduit ; une ligne d'arrivée dessinée.
+  - Gameplay
+    - P1. Fin de course : le **classement** s'affiche (1ʳᵉ, 2ᵉ…), avec « Bravo » si le joueur gagne, puis une
+      nouvelle course.
+    - P2. Une course **gagnable** : la vitesse des autres grenouilles dépend d'une variante (Facile, Normal,
+      Difficile), Facile par défaut.
+    - P3. Corriger les statistiques (D7) : un but atteint par insecte attrapé, un but à atteindre par insecte
+      apparu.
+    - P4. Corriger D8 (écouteurs retirés, animations arrêtées).
+- **Fait (30/10/2026)** :
+  - Images : `gradle/images/make_race_images.py` dessine 4 grenouilles de course (vert pour le joueur, bleu,
+    orange, violet ; assise et en saut), la grenouille de la rive (de face, bouche ouverte) et la mare (ciel et
+    arbres en haut, rive, eau). Retirés : `Racer.png`, `Cage.png`, `hand.png`, `handShot.png`, `frogJump.gif`,
+    `Background.jpg`. Crédits : `gradle/images/README.txt`, licence affichée, inventaire.
+  - `Race.java` réécrit : 8 insectes (un douzième de la hauteur, couleur au hasard) qui volent dans le ciel ; à
+    l'entrée du regard ou de la souris, la grenouille de la rive tire la langue, ramène l'insecte, et la grenouille
+    du joueur saute (20 insectes pour arriver). 4 couloirs sur la mare, celui du joueur bordé de la couleur
+    principale avec « Toi » ; ligne d'arrivée à damier ; pastille « Insectes attrapés : n ». Les autres grenouilles
+    sautent seules, à un rythme tiré au hasard selon la variante (`RaceVariant` : Facile 90 à 110 s, Normal 60 à
+    75 s, Difficile 40 à 50 s ; **valeurs non mesurées, à ajuster après l'essai réel**). Fin de course : carte du
+    classement 3,5 s, « Bravo » si le joueur gagne, puis nouvelle course. Plus d'écouteurs de taille ni de classes
+    `Target` et `Point`.
+  - Statistiques : un but à atteindre par insecte apparu, un but atteint par insecte attrapé (D7). Les colonnes
+    des fichiers ne changent pas ; les nombres des parties de Frogs Race d'avant le 30/10 sont faux (buts atteints
+    comptés aussi à l'apparition) : à dire dans les notes de version. Une partie enregistrée avant les variantes se
+    rejoue en Facile.
+  - Traductions (français, anglais) : `RaceYou`, `RaceCaught`, `RaceWon`, `RaceLost`, `RaceFrog_*` ; variantes :
+    `Easy`, `Normal`, `Hard` (déjà traduites). Vignette du menu refaite (photo du jeu sans fenêtre, 960 × 540).
+- **Vérifications** : `RaceTest` (7 : départ, nouvelle course dans la même zone, capture unique, victoire,
+  défaite, variantes, fin de partie ; chaque test arrête sa course, dont les minuteries débordaient sur les tests
+  suivants) ; `build` : **575 tests, 0 échec** ;
+  `allGamesTest -PallGamesOnly=FrogsRace -PallGamesRepeat=5` réussi ; photos du jeu sans fenêtre (couloirs,
+  langue, classement). **Reste** : l'essai réel du mainteneur (souris et Tobii), en particulier la difficulté des
+  trois variantes.
+- **Commit** : à faire sur demande.

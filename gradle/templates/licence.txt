@@ -108,6 +108,9 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images de Magic Potions (fioles, chaudron, bulle, décor) : dessinées pour GazePlay Learning
   (gradle/images/make_potions_images.py), sous la licence du projet.
   Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
+- Images de La course des grenouilles (grenouilles et décor de la mare) : dessinées pour GazePlay Learning
+  (gradle/images/make_race_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 une
+  grenouille animée et un décor de source inconnue.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
   data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
   public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier
