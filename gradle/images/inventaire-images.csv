@@ -63,8 +63,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/TowerDefense.png,oui,sou
 gazeplay-core/src/main/resources/data/common/Thumbnails/biboulejump.png,oui,source inconnue,,2019-02-23,Teo Blachere,Biboule Jump: buggy physics
 gazeplay-core/src/main/resources/data/common/Thumbnails/block.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/bottle.jpg,oui,source inconnue,,2020-06-30,PillouMatou,bottles height fixed
-gazeplay-core/src/main/resources/data/common/Thumbnails/bubble.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
-gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
+gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,source inconnue,,2021-07-30,Iluvrog,picture
 gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,source inconnue,,2024-04-24,Yaniissou,setup ColorBlendGame
@@ -318,9 +317,23 @@ gazeplay-games/src/main/resources/data/bottle/bottle.png,oui,source inconnue,,20
 gazeplay-games/src/main/resources/data/bottle/broken.png,oui,source inconnue,,2020-07-07,PillouMatou,height of all elements
 gazeplay-games/src/main/resources/data/bottle/etagere.png,oui,source inconnue,,2020-07-07,PillouMatou,height of all elements
 gazeplay-games/src/main/resources/data/bottle/supermarket.jpg,oui,source inconnue,,2020-06-30,PillouMatou,bottles height fixed
-gazeplay-games/src/main/resources/data/bubble/images/empty-ocean.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
-gazeplay-games/src/main/resources/data/bubble/images/inhabited-ocean.png,oui,source inconnue,,2021-07-05,kuhlkrein,adding new free images and adding some random selected backgrounds for bubble game
-gazeplay-games/src/main/resources/data/bubble/images/underwater-treasures.jpg,oui,source inconnue,auteur dans les métadonnées : Koshkina L,2017-11-11,schwab,some little changes in colored bubble
+gazeplay-games/src/main/resources/data/bubble/images/animals/blowfish.png,oui,libre,"OpenMoji 1F421 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/crab.png,oui,libre,"OpenMoji 1F980 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/dolphin.png,oui,libre,"OpenMoji 1F42C (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/fish.png,oui,libre,"OpenMoji 1F41F (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/jellyfish.png,oui,libre,"OpenMoji 1FABC (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/lobster.png,oui,libre,"OpenMoji 1F99E (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/octopus.png,oui,libre,"OpenMoji 1F419 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/penguin.png,oui,libre,"OpenMoji 1F427 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/seal.png,oui,libre,"OpenMoji 1F9AD (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/shrimp.png,oui,libre,"OpenMoji 1F990 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/squid.png,oui,libre,"OpenMoji 1F991 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/tropical-fish.png,oui,libre,"OpenMoji 1F420 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/turtle.png,oui,libre,"OpenMoji 1F422 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/animals/whale.png,oui,libre,"OpenMoji 1F433 (CC BY-SA 4.0), gradle/images/make_bubbles_images.py",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/kelp.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/reef.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
+gazeplay-games/src/main/resources/data/bubble/images/wreck.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
 gazeplay-games/src/main/resources/data/cake/images/01.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
 gazeplay-games/src/main/resources/data/cake/images/02.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
 gazeplay-games/src/main/resources/data/cake/images/03.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images

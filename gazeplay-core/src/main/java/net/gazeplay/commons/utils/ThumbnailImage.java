@@ -13,7 +13,6 @@ public class ThumbnailImage {
         new AbstractMap.SimpleEntry<>("block", "data/common/Thumbnails/block.png"),
         new AbstractMap.SimpleEntry<>("bottle", "data/common/Thumbnails/bottle.jpg"),
         new AbstractMap.SimpleEntry<>("bubblecolor", "data/common/Thumbnails/bubblecolor.png"),
-        new AbstractMap.SimpleEntry<>("bubble", "data/common/Thumbnails/bubble.png"),
         new AbstractMap.SimpleEntry<>("cakes", "data/common/Thumbnails/cakes.png"),
         new AbstractMap.SimpleEntry<>("cassebrique", "data/common/Thumbnails/cassebrique.png"),
         new AbstractMap.SimpleEntry<>("colors", "data/common/Thumbnails/colors.png"),

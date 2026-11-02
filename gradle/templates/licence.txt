@@ -138,6 +138,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (https://openmoji.org/), licence CC BY-SA 4.0 ; prairie, gamelle et sons faits pour GazePlay Learning
   (gradle/images/make_sprintfinish_images.py, make_sprintfinish_sounds.py), sous la licence du projet. Ils
   remplacent depuis novembre 2026 des images de source inconnue.
+- Images et sons de « Bulles » (data/bubble) : paysages sous la mer et sons faits pour GazePlay Learning
+  (gradle/images/make_bubbles_images.py, make_bubbles_sounds.py), sous la licence du projet ; animaux marins
+  d'OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0. Ils remplacent depuis novembre 2026 des images de
+  source inconnue et deux sons dont la licence n'était pas connue.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
   data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
   public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier

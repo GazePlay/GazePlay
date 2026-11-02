@@ -36,7 +36,8 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
   cours est maintenant coupé (fait, voir sa fiche).
 - Point 4 : Flower Of Numbers revu (propositions validées, tout fait, voir sa fiche) ; reste l'essai du mainteneur.
   Ensuite : Opinions (revu le 2/11, essayé et validé par le mainteneur, commité `d82b754e2`) ; Sprint Finish :
-  revu le 2/11 (règle du mainteneur, voir sa fiche), en attente de l'essai du mainteneur ; puis Bubbles.
+  revu, validé et commité le 2/11 (`31c7bb394`) ; Bubbles : revu le 2/11 (règle du mainteneur, voir sa fiche), en
+  attente de l'essai du mainteneur ; puis Egg Game.
   Un test de GazePlay Eval en échec une seule fois : point 8 ci-dessous, à surveiller.
 - Point 3 : clés `Spot all the differences` et `Differences found` retirées (décision du mainteneur), des deux
   `multilinguism.csv` (application et tests) ; aucun code ne les lisait.
@@ -218,7 +219,7 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
   |---|---|
   | `magiccards` | Magic Cards, Memory |
   | `default` | Memory |
-  | `portraits` | Colored/Portrait Bubbles, Cream Pie, Ladder, Whac-A-Mole (moles), Ninja, Divisor |
+  | `portraits` | Cream Pie, Ladder, Whac-A-Mole (moles), Ninja, Divisor (plus Bubbles depuis le 2/11/2026) |
   | `blocs` | Blocks, Egg Game, Letters |
   | `opinions` | Casse-Brique (plus Opinions depuis le 2/11/2026) |
 
@@ -299,7 +300,7 @@ urgent (images non libres, jeux très joués) au plus simple ; le mainteneur peu
 10. **GazePlay Eval et GazePlay Eval Test** : en dernier (contrat avec le site GazePlay Eval, format de résultats
     versionné).
 
-Après chaque famille : `allGamesTest` complet (70 entrées depuis le 2/11/2026), et point avec le mainteneur.
+Après chaque famille : `allGamesTest` complet (69 entrées depuis le 2/11/2026), et point avec le mainteneur.
 
 ## Légende des images
 
@@ -325,7 +326,7 @@ Après chaque famille : `allGamesTest` complet (70 entrées depuis le 2/11/2026)
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Remplacées le 2/11** : mains, dés, pièces et billets génériques dessinés par script ; fleur et auras dessinées par le jeu (avant : 21 images à risque, dont des reproductions de l'euro) | ✔ 2/11 (cartes de la couleur des pétales, anneau, plateau mis à l'échelle) | ✔ 2/11 (règle du mainteneur : total de tous les pétales, chaque valeur une fois ; modes Guidé, Libre, Tous les pétales ; jusqu'à 10 à 50 ; buts comptés) |
 | **Opinions** (`Opinions`) | **Retirées le 2/11** : les 9 images (photos d'aliments jamais montrées, visages brillants) ; le jeu ne joue que les images de l'utilisateur | ✔ 2/11 (image en carte au centre, boutons « J'aime » / « Je n'aime pas » à icônes, anneau) | ✔ 2/11 (règle du mainteneur : images de l'utilisateur une par une, réponses enregistrées dans `-opinions.csv`) |
 | **Sprint Finish** (`SprintFinish` ; `SprintFinishMouse` retiré, devenu une variante) | **Remplacées le 2/11** : chat, chien (recoloré) et poisson OpenMoji, prairie et gamelle dessinées ; haies, barrières, boutons, rondins dessinés par le jeu | ✔ 2/11 (plateau à l'échelle de l'écran, compte à rebours, chien regardé entouré, sons) | ✔ 2/11 (règle du mainteneur : seul au clavier ou au regard, à deux ; cartes au hasard ; 5 / 10 / 15 cartes) |
-| **Colored Bubbles**, **Portrait Bubbles** (`ColoredBubbles`, `PortraitBubbles`) | **Risque** : 3 fonds sous-marins (un signé Koshkina L) ; Portrait utilise les images par défaut | | |
+| **Bubbles** (`Bubbles` ; `ColoredBubbles` et `PortraitBubbles` réunis) | **Remplacées le 2/11** : 3 paysages sous la mer dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (vraies bulles, vitres dépolies, compte 12 / 36) | ✔ 2/11 (règle du mainteneur : une carte, image à découvrir puis nouvelle image, éclater dès le regard ou après fixation) |
 | **Egg Game**, **Personalize Egg Game** | **Risque** : 3 photos d'œufs (auteur « FRIEDMANN Chloe » dans les métadonnées) | | |
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
@@ -1630,3 +1631,102 @@ par seconde du niveau 1 dans les deux modes : `timeline/*-planche.png`). Pas d'e
   court chemin, diagonales comprises (jamais à travers le coin d'une haie), en filant vers la case la plus lointaine
   qu'il voit encore : il contourne les haies en souplesse. Test
   `SprintFinishTest.shouldRunDiagonallyToTheCat` ; vérifié en vraie fenêtre (`build/game-screenshots/essai2/`).
+
+### Bubbles (`ColoredBubbles`, `PortraitBubbles`, code `bubbles`) — 2/11/2026
+
+**Étape 1 (état des lieux) faite le 2/11/2026.** Captures « avant » : `build/game-screenshots/avant/bubbles/`
+(1366 × 768, mode souris, français ; Bulles colorées vers le haut et vers la gauche sans fond, Bulles portraits
+fixes ; déroulé seconde par seconde, pointeur au centre ; planches `*-planche.png`). Pas d'essai avec le Tobii.
+
+- **Ce qu'il fait** (lecture du code : 10 classes, 682 lignes ; et captures) : 10 bulles traversent l'écran dans le
+  sens de la variante, ou restent immobiles ; une bulle **éclate dès que le regard (ou la souris) entre dedans** (pas
+  de fixation), en petits morceaux avec un « plop », et repart d'un bord. Avec le fond activé dans les réglages,
+  une image sous-marine (tirée parmi 3) est cachée sous 36 pavés noirs (6 × 6) : chaque bulle éclatée en enlève un.
+  **Le jeu ne finit jamais** (on quitte par l'engrenage) ; rien ne se passe quand l'image est toute découverte.
+- **Deux entrées au catalogue** : **Bulles colorées** (`ColoredBubbles` : couleurs tirées au hasard) et **Bulles
+  portraits** (`PortraitBubbles` : les images du dossier partagé `portraits` de l'utilisateur, sinon les 19 animaux
+  par défaut). Mêmes 5 variantes : du bas vers le haut, du haut vers le bas, de gauche à droite, de droite à gauche,
+  « fixe » (immobiles : une bulle regardée grossit pendant la durée de fixation puis éclate ; toutes changent de
+  place toutes les 15 s).
+- **Défauts vus** :
+  - D1. **Couleurs au hasard, souvent sombres** (fait, captures) : sur le fond noir, des bulles presque noires ou
+    vert sombre ne se voient pas.
+  - D2. **Aucun but ni fin** : un seul but à atteindre compté pour toute la partie, un but atteint par bulle ;
+    l'image découverte n'apporte rien (pas de « Bravo »).
+  - D3. **Bulles portraits incohérentes** (captures) : les images à fond transparent (OpenMoji) flottent sans bulle,
+    les autres sont sur un disque blanc ; rien ne montre que ce sont des bulles. Elles lisent l'ancien dossier
+    partagé `portraits` (règle du 29/10 : à remplacer par une variante « Mes images » propre au jeu).
+  - D4. **Rejeu** (fait, code) : le constructeur d'une partie rejouée ne crée pas la liste des pavés : avec le fond
+    activé, le rejeu planterait (hypothèse forte, non essayée ; le jeu n'est pas dans la liste du rejeu).
+  - D5. Variante « fixe » : la bulle ne grossit qu'avec la souris (le regard passe par l'indicateur de JavaFX), et
+    écrit « fixe » en minuscule ; 15 s fixes divisées par la vitesse d'animation.
+  - D6. Fin de partie mal rangée : `dispose` vide l'écran mais laisse tourner les animations (attente des bulles
+    fixes relancée sans fin) ; chaque bulle relance les limiteurs et `gameContext.start()` (10 fois).
+  - D7. Graphisme ancien : disques plats, fond noir, pavés noirs ; en thème clair, l'image n'est qu'à 10 %
+    d'opacité.
+- **Images et sons (licences)** : **à risque**. Les 3 fonds sous-marins sont de source inconnue (l'un porte
+  l'autrice « Koshkina L », illustratrice de banques d'images) ; les 2 vignettes du menu aussi. Les 2 sons viennent
+  de SoundBible (`Blop-Mark_DiAngelo`, `Large-Bubble`) : licence non notée (sur SoundBible, selon le son :
+  domaine public, CC BY 3.0 ou droits réservés ; hypothèse à vérifier, plus simple de les refaire).
+- **Propositions** (à valider ✔ / refuser ✘ ; elles dépendent des questions plus bas) :
+  - Images et sons
+    - I1. **Fonds sous-marins dessinés par script** (3 : récif, épave, algues), libres ; vignettes refaites
+      (captures).
+    - I2. **Vraies bulles** dessinées par le jeu : bulle de savon translucide avec un reflet, couleurs vives tirées
+      dans une palette (plus de couleurs sombres) ; dans les bulles à images, l'image ronde dans la bulle.
+    - I3. « Plop » refait par script (2 ou 3 sons proches, tirés au hasard).
+  - Graphisme
+    - G1. L'image cachée sous des pavés en verre dépoli (on devine l'image) plutôt que noirs, avec un compte
+      « 12 / 36 » en haut ; éclatement en gouttes de la couleur de la bulle.
+  - Gameplay
+    - P1. **Une seule carte « Bulles »** : en bas de la fenêtre des variantes, le contenu (Couleurs, Animaux
+      OpenMoji, **Mes images** : dossier `files/images/Bubbles`, ligne dans les réglages, comme Opinions) ; en
+      boutons, le sens (monte, descend, vers la droite, vers la gauche, immobiles).
+    - P2. **Une fin** : l'image toute découverte (36 bulles éclatées), « Bravo », puis une nouvelle image ; ou les
+      statistiques (au choix du mainteneur).
+    - P3. Option « Éclater dès qu'on regarde » / « Éclater après une fixation » (anneau), pour le niveau de la
+      personne.
+  - Corrections
+    - P4. D4 (rejeu), D5 (le regard fait grossir la bulle fixe comme la souris), D6 (tout arrêter à la fin), un but
+      à atteindre par bulle à éclater.
+- **Questions au mainteneur** (la règle d'abord) :
+  1. **À quoi sert le jeu ?** Découverte libre (cause-effet : je regarde, ça éclate) sans fin, ou avec un but
+     (découvrir l'image cachée, puis « Bravo ») ?
+  2. **Une seule carte** avec le contenu en variante (couleurs, animaux, mes images), ou garder deux cartes ?
+  3. **Éclater** : dès que le regard entre dans la bulle (comme maintenant), après une fixation, ou les deux au
+     choix ?
+  4. **L'image cachée** : la garder ? Toujours visible derrière (sans pavés), ou découverte morceau par morceau ? Et
+     une fois découverte : nouvelle image, ou statistiques ?
+  5. **Nombre et vitesse des bulles** : 10, à la vitesse d'animation des réglages, ou des variantes (lent, normal,
+     rapide ; peu ou beaucoup de bulles) ?
+- **Réponse du mainteneur (2/11/2026)** : **une seule carte** ; **découvrir l'image, puis une nouvelle image** ;
+  éclater **dès le regard ou après une fixation, au choix**. (Question 5 sans réponse : 10 bulles gardées, à la vitesse
+  d'animation des réglages.)
+- **Fait (2/11/2026)** :
+  - **Une seule entrée** `Bubbles` (« Bulles ») : `ColoredBubbles` et `PortraitBubbles` retirés du catalogue (69
+    entrées). Variantes `GroupedGameVariant` : le sens en boutons (monte, descend, vers la droite, vers la gauche,
+    immobiles) ; en bas, la façon d'éclater (`BubblesBurst` : dès qu'on les regarde, après une fixation avec
+    l'anneau) et le contenu (`BubblesContent` : Couleurs, Animaux marins, **Mes images** : dossier
+    `files/images/Bubbles`, ligne dans les réglages et message dans la fenêtre des variantes sans image). Une
+    ancienne variante (un sens seulement) se joue en couleurs, éclatement immédiat. Le jeu ne lit plus le dossier
+    partagé `portraits`.
+  - **L'image à découvrir** : toujours là (plus besoin du fond des réglages), sous 36 vitres dépolies jointives (on
+    la devine) ; chaque bulle éclatée en enlève une au hasard (fondu), « 12 / 36 » en haut. Les 36 enlevées :
+    carillon, « Bravo », puis une nouvelle image (paysages dessinés, ou les images de l'utilisateur, dans un ordre
+    tiré au hasard) ; pendant « Bravo », une bulle éclate sans compter. Un but à atteindre par vitre, un but atteint
+    par bulle éclatée.
+  - **Vraies bulles** : film de savon translucide, reflet, couleurs vives d'une palette (plus de couleurs sombres) ;
+    animal entier ou photo de l'utilisateur ronde à l'intérieur. Éclatement : gouttes de la couleur de la bulle,
+    3 « plop » tirés au hasard. Une seule boucle de jeu en temps réel ; les bulles ondulent un peu ; immobiles, elles
+    flottent, changent de place toutes les 15 s, jamais l'une sur l'autre, ni sous l'engrenage ni sous le compte.
+    Pause pendant le menu de l'engrenage ; tout est arrêté à la fin (D6). Le regard et la souris font la même chose
+    (D5) ; plus de plantage au rejeu (D4 : plus de liste de pavés à part).
+  - Images (`make_bubbles_images.py`) et sons (`make_bubbles_sounds.py`) ; les 3 anciens fonds, les 2 sons
+    SoundBible et la vignette `bubble.png` retirés ; une vignette refaite (`bubblecolor.png`, capture, 960 × 540).
+    Traductions (nom « Bulles », contenus, façons d'éclater ; « fixe » devient « immobiles ») ; aide
+    (`Bubbles-fra.txt`, `-eng.txt`) ; crédits ; inventaire. Les clés `ColoredBubbles` et `PortraitBubbles` sont
+    retirées (les autres langues n'ont plus le nom traduit : seulement français et anglais).
+- **Vérifications** : `BubblesGameTest` (5 tests : chaque bulle enlève une vitre, l'image trouvée puis une nouvelle,
+  rien compté pendant « Bravo » ; éclatement immédiat ou après fixation ; sens des bulles et retour ; « Mes images »
+  cachées, sinon les paysages ; variantes et ancienne variante) ; `GameHelpTest` avec `Bubbles` ; captures en vraie
+  fenêtre (`build/game-screenshots/essai1/bubbles/`). Pas d'essai au Tobii : à faire par le mainteneur.

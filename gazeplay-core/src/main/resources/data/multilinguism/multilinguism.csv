@@ -97,7 +97,12 @@ Blocks,Blloqe,مكعبات,Блокі,色块,Blöcke,Επιτυχημένες α
 Bottle,Shishe,زجاجة,Бутэлька,瓶子,Flasche,Μπουκάλι,Bottle,Pullo,Bouteille,बोतल,Boca,Botol,Bottiglia,ボトル,Fles,Butelka,Garrafa,Бутылка,Botella,Chai,Botol
 Cakes,Fabrika e ëmbëlsirave,مصنع الكيك,Тортная фабрыка,蛋糕工厂,Die Kuchenfabrik,Το εργοστάσιο κέικ,The Cake Factory,Kakkutehdas,La Fabrique à Gateaux,केक फैक्टरी,Tvornica kolača,Pabrik Kue,La fabbrica di torte,ケーキ工場,De taartfabriek,Fabryka ciast,A Fábrica de Bolos,Торт Фабрика,La fábrica de pasteles,Nhà máy bánh,Kilang Kek
 CasseBrique,Breakout,انطلق,Прарыў,爆发,Ausbrechen,Διάσπαση,Breakout,Puhjeta,Casse-brique,फैलना,Bijeg,Kesuksesan besar,Scoppiare,起こる,Uitbreken,Wybuch,Saia,Разразиться,Fugarse,Đột phá,Breakout
-ColoredBubbles,Flluska me ngjyra,فقاعات ملونة,Каляровыя бурбалкі,多彩泡泡,Farbige blasen,Eγχρωμες φυσαλίδες,Colored Bubbles,väritetyt kuplat,Bulles colorées,रंगीन बुलबुले,Šareni mjehurići,Buih berwarna,Bolle colorate,たしょくのあわ,Kleur Bubbels,Kolorowe bąbelki,Bulha colorida,Цветные пузыри,Burbujas de colores,Bong bóng màu,Buih berwarna
+Bubbles,,,,,,,Bubbles,,Bulles,,,,,,,,,,,,
+BubblesColors,,,,,,,Colors,,Couleurs,,,,,,,,,,,,
+BubblesAnimals,,,,,,,Sea animals,,Animaux marins,,,,,,,,,,,,
+BubblesMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
+BubblesBurstAtOnce,,,,,,,Burst as soon as looked at,,Éclatent dès qu'on les regarde,,,,,,,,,,,,
+BubblesBurstFixation,,,,,,,Burst after a fixation,,Éclatent après une fixation,,,,,,,,,,,,
 Coloring,Ngjyrosje,تلوين,Размалёўка,填色,Färbung,Χρωματίζω,Coloring,värit,Coloriage,रंग,Oboji,Mewarna,Colorare,,Kleuren,Kolorowanie,Coloraçaõ,Раскраска,Colorear,Tô màu,Mewarna
 Creampie,Tartë me krem,فطائر كريمة,Крэмавы пірог,奶油派,Sahnetorte,Κρέμα πίτες,Cream pies,kermatorttu,Tartes à la crème,क्रीम पाई,Krempita,Pai krim,Torte alla crema,クリームパイ,Taarten,Torty kremowe,Pastéis de nata,Кремовый пирог,Tarta de crema,Bánh kem,Pai krim
 CupsBalls,Tasa dhe topa,كؤوس وكرات,Кубкі і шарыкі,杯子和球,Bechertrick,Επιτυχημένες αποκαλύψεις,Cups and Balls,kupit ja pallot,Gobelets Pass Pass,पास पास कप,Šalice i lopte,Piala dan Balls,Tazze e palle,,Bekers en Ballen,Puchary i kule,*Copos e Bolas,Чашки и шарики,Tazas y bolas,Chiếc cốc và Quả bóng,Piala dan Balls
@@ -193,7 +198,6 @@ Order,Rendit,امر,Мішэні па парадку,排序,Reihenfolge,Σειρ
 PersonalizeEggGame,Lojë me vezë e personalizuar,لعبة البيض شخصية,Разбі яйка персаналізацыя,孵鸡蛋,Eierspiel personalisiert,Εξατομικευμένο παιχνίδι αυγών,Egg Game personalised,Henkilökohtainen munapeli,Jeu de l'oeuf personnalisation,अंडा खेल व्यक्तिगत,Personalizirana igra jaja,Game Telur dipersonalisasi,Egg Game personalizzato,卵のゲームのパーソナライズ,Egg Game gepersonaliseerd,Spersonalizowana gra w jajka,Ovo Game personalizado,Разбей яйцо персонализация,Juego de huevos personalizado,Trò chơi trứng cá nhân hóa,Permainan Telur diperibadikan
 Pet,Kam një Biball !,لدي كويرات,Тамагочы,我有一只Bibole！,Ich habe ein Biboles,Έχω ένα Biball!,I've got a Biball !,Lemmikki,J'ai un Biboule !,मेरे पास एक बाइबॉल है!,Imam Biboule!,Saya mempunyai Biball!,Ho un Biball!,バイボールを手に入れた！,Ik heb een paar !,Mam Biballa!,Eu tenho um Biball!,Домашний питомец,Yo tengo un Bibole!,Tôi có Bóng Bi!,Saya mempunyai Biball!
 Piano,Piano,بيانو,Піяніна,琴键,Piano,Πιάνο,Piano,Piano,Piano,पियानो,Sviraj piano,Piano,Pianoforte,ピアノ,Piano,Pianino,Piano,Пианино,Piano,Đàn Piano,Piano
-PortraitBubbles,Flluska me portrete,فقاعات,Бурбалкі з малюнкамі,肥皂泡,Porträt Blasen,Φυσαλίδες με πορτρέτα,Portrait Bubbles,Muotokuvakuplat,Bulles portrait,पोर्ट्रेट बबल्स,Mjehurići s portretom,Potret Bubbles,Bolle con ritratto,しょうぞうのあわ,Foto Bubbels,Bąbelki portretowe,Bulha retrato,Пузырьки с картинками,Burbujas retrato,Bong bóng có chân dung,Potret Bubbles
 Potions,Ilaçet Magjike,جرعات سحرية,Чароўныя зелля,魔法药水,Zaubertränke,Μαγικά φίλτρα,Magic Potions,Taikajuomat,Potions Magiques,जादू औषधि,Čarobni napitci,Ramuan Ajaib,Pozioni Magiche,魔法のポーション,Toverdrankjes,Magiczne Mikstury,Poções mágicas,Волшебные зелья,Pociones Mágicas,Thuốc ma thuật,Ramuan Ajaib
 Puzzle,Lojë ngacmuese,لعبة إغاظة,Мозайка,滑动拼图,Neckendes Spiel,πειράγμα παιχνίδι,Sliding Puzzle,Kiusantekopeli,Jeu de taquin,छेड़ने वाला खेल,Igra zadirkivanja,Permainan menggoda,Puzzle scorrevole,からかいゲーム,Schuifpuzzel,Drażniąca gra,Jogo de provocação,Мозайка,Juego de burlas,Trò chơi trêu chọc,Permainan mengusik
 Rabbits,Lepurusha,الارانب,Трусы,兔子,Conejos,Κουνέλια,Rabbits,Jänis,Lapins,खरगोश,Zečevi,Arnab,Conigli,うさぎ,Konijnen,Króliki,Coelhos,Кролики,Conejos,Thỏ,Arnab
@@ -310,7 +314,7 @@ ToTop,,,знізу ўверх,从下到上,,,from bottom to top,,du bas vers le 
 ToBottom,,,зверху ўніз,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,сверху вниз,de arriba hacia abajo,,
 ToRight,,,злева направа,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,слева направо,de la izquierda hacia la derecha,,
 ToLeft,,,справа налева,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,справа налево,de la derecha hacia la izquierda,,
-Fix,,,,,,,fix,,fixe,,,,,,,,,,,,
+Fix,,,,,,,still,,immobiles,,,,,,,,,,,,
 Bloc,,,,,,,Bloc,,Bloc,,,,,,,,,,,,
 Space,,,,,,,Space Invader,,Space Invader,,,,,,,,,,,,
 Arc,,,,,,,Rainbow,,Arc-en-ciel,,,,,,,,,,,,

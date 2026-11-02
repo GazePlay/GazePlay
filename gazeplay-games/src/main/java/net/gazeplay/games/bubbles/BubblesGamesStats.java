@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the games "ColoredBubbles" and "PortraitBubbles", with the info-game.csv file of the games where
+ * Statistics of the game "Bubbles", with the info-game.csv file of the games where
  * targets are hit (see {@code ShootGamesStats}).
  */
 public class BubblesGamesStats extends ShootGamesStats {

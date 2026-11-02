@@ -66,6 +66,14 @@ the license of GazePlay Learning (GPL-3.0-or-later). They replace (November 2026
 hedges, fences, buttons and logs are drawn by the game. The thumbnail (gazeplay-core:
 data/common/Thumbnails/sprintToTheFinish.png) is a capture of the game, 960 x 540.
 
+Images and sounds of Bubbles (gazeplay-games: data/bubble): the three underwater scenes hidden under the bubbles
+(images/reef.png, wreck.png, kelp.png) are drawn by make_bubbles_images.py (this folder) and the sounds (sounds/pop1.wav,
+pop2.wav, pop3.wav, picture.wav) made by make_bubbles_sounds.py, under the license of GazePlay Learning
+(GPL-3.0-or-later); the sea animals of the bubbles (images/animals) are OpenMoji (CC BY-SA 4.0). They replace
+(November 2026) three pictures of unknown source and two sounds of SoundBible whose license was not known. The
+bubbles and the panes are drawn by the game. The thumbnail (gazeplay-core: data/common/Thumbnails/bubblecolor.png) is
+a capture of the game, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

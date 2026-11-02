@@ -1,0 +1,21 @@
+# Le principe
+Une image est cachée sous des vitres. Des bulles passent : chaque bulle éclatée enlève une vitre. Découvre toute l'image !
+
+# Comment jouer
+- Regarde une bulle pour la faire éclater (avec un « plop »).
+- Selon la variante, elle éclate dès que tu la regardes, ou après une fixation : un anneau en fait le tour (durée de fixation des réglages).
+- En haut, « 12 / 36 » compte les vitres enlevées.
+- La vitesse des bulles suit la vitesse d'animation des réglages.
+- Rien ne bouge quand le menu de l'engrenage est ouvert.
+
+# Comment gagner
+Quand les 36 vitres sont enlevées : « Bravo », puis une nouvelle image cachée. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Les bulles montent, descendent, vont vers la droite, vers la gauche, ou restent immobiles (elles changent de place de temps en temps).
+- En bas, comment elles éclatent : dès qu'on les regarde, ou après une fixation.
+- En bas aussi, ce qu'elles montrent :
+- Couleurs : des bulles de toutes les couleurs ; les images cachées sont des paysages sous la mer.
+- Animaux marins : un animal dans chaque bulle ; mêmes images cachées.
+- Mes images : tes images dans les bulles, et ce sont elles qui sont cachées. Ajoute-les dans les réglages (Dossiers, « Images des jeux ») ou depuis la fenêtre des variantes.
