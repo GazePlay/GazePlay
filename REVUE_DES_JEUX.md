@@ -5,7 +5,64 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
-## À FAIRE EN PRIORITÉ à la prochaine séance (demandes du mainteneur du 29/10/2026 au soir, et point 5 du 30/10)
+## REPRISE DU LUNDI 2/11/2026 (bilan de la séance du vendredi 30/10/2026)
+
+**État laissé le 30/10/2026 au soir** : tout est commité et poussé sur `addClaudeCode`, dernier commit `2e1957327`
+(Pet). Rien en cours dans la copie de travail, à part ce bilan (`REVUE_DES_JEUX.md`, `CLAUDE.md`). `build` :
+**634 tests, 0 échec** ; CI verte pour tous les commits du jour, `2e1957327` compris (run 41082263427, 7 jobs).
+
+**Fait le 30/10/2026** (un commit par point, chacun validé par le mainteneur, CI verte) :
+
+| Commit | Quoi |
+|---|---|
+| `82774206c` | Eval : liste prioritaire 1 à 5 (plus de touche pour quitter ni de `QUIT_KEY`, réglages allégés, carte d'aide, bouton « Commencer » du formulaire, souris permise sur le formulaire en « Tobii seul », carte du site GazePlay Eval) et revue du lecteur |
+| `67f6b871b` | Frogs Race (grenouilles dessinées, couloirs, Facile / Normal / Difficile, classement) |
+| `f72d4c334` | Horses (une carte avec Horses Simplified, adversaires ordinateur, dé équitable) et **aide des jeux** (« i » de la fenêtre des variantes ; fenêtre « Lancer le jeu » pour un jeu sans variante) |
+| `1029042bb` | Memory (6 entrées en une carte, `GroupedGameVariant`) et **fenêtre des variantes des jeux revus** (boutons qui choisissent, « Commencer », boutons radio en bas, écart de 28 px) |
+| `5d44c5b15` | Sounds Of Life (décors dessinés, animaux OpenMoji, zèbre et girafe, 21 sons crédités, nom de l'animal, anneau) |
+| `71d75fed4` | Spot The Differences (8 scènes dessinées par script, Facile / Normal / Difficile = 3, 5, 7 différences, indice après 20 s, images enchaînées) |
+| `2e1957327` | Pet (4 pièces dessinées, jauges Faim / Propreté / Jeu de 2 minutes, Biboule triste et bulle, activités claires, plantage corrigé) |
+
+**Installeur Windows construit le 30/10/2026** pour un essai sur un autre PC (Jeux et Évaluations) :
+`build/distributions/gazeplay-learning-windows-x64-1.11.10-installer.exe` (296 Mo, Java 25 et JavaFX compris,
+SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWindowsInstaller`). Non signé
+(avertissement SmartScreen attendu). **Première installation réelle par l'installeur** (jamais testée avant).
+
+**Avancement du lundi 2/11/2026** (non commité) :
+- Point 1 : **installeur essayé par le mainteneur sur un autre PC, avec l'oculomètre : il fonctionne** (noté dans
+  `CLAUDE.md`).
+- Point 2 : Pet au regard validé tel quel ; Spot The Differences validé, avec une **option demandée : anneau de
+  fixation visible ou non** (fait, voir sa fiche) ; Sounds Of Life : deux sons pouvaient se superposer, le son en
+  cours est maintenant coupé (fait, voir sa fiche).
+- Point 4 : Flower Of Numbers revu (propositions validées, tout fait, voir sa fiche) ; reste l'essai du mainteneur.
+  Ensuite : Opinions.
+- Point 3 : clés `Spot all the differences` et `Differences found` retirées (décision du mainteneur), des deux
+  `multilinguism.csv` (application et tests) ; aucun code ne les lisait.
+
+**À faire lundi, dans l'ordre** :
+
+1. **Retours de l'essai sur l'autre PC** (si le mainteneur l'a fait) : installation, premier lancement (dossier
+   `Documents\GazePlay_Learning`), jeux revus (fenêtre des variantes, « Commencer », aide « i », Pet avec « Lancer le
+   jeu »), son, Tobii (calibrage dans Tobii Experience), Évaluations (import de `Tests sons et
+   vidéos-gazeplayEval.zip`, formulaire, passation, résultats dans `Documents\GazePlayLearning_Eval\Eval<n>_<date>`,
+   « Tester une évaluation », aide, carte du site). En cas de problème : `Documents\GazePlay_Learning\gazeplay.log` et
+   `%LOCALAPPDATA%\CrashDumps`. Corriger ce qui est trouvé avant de continuer la revue ; noter le résultat de
+   l'installation réelle dans `CLAUDE.md` (« L'installation réelle n'a pas été testée »).
+2. **Retours du mainteneur sur les jeux du jour**, à corriger s'il y en a : Sounds Of Life (les 15 sons de Commons
+   ont été choisis sur leur titre, **sans écoute** : à écouter, surtout poisson, pieuvre, crabe, dauphin, girafe) ;
+   Spot The Differences (difficulté du niveau Difficile, réglable dans `gradle/images/make_spotdifferences_images.py`) ;
+   Pet au regard (marge autour de la bouche pour la cuillère, 3 s de douche pour laver).
+3. **Question en attente** : retirer de `multilinguism.csv` les clés `Spot all the differences` et
+   `Differences found`, qui ne servent plus depuis la revue de Spot The Differences ?
+4. **Continuer la revue** (groupe 5, « Jeux à images à risque ») : **Flower Of Numbers** (21 images à risque, dont
+   billets et pièces en euros), puis Opinions, Sprint Finish (×2), Bubbles (×2), Egg Game (×2) ; ensuite le groupe 6
+   (jeux de tir et d'action). Chaque jeu : les 8 étapes de la marche à suivre ci-dessous (état des lieux et
+   propositions validées avant tout changement ; aide du jeu ; fenêtre des variantes des jeux revus ; un commit par
+   jeu sur demande).
+5. Toujours à la fin de la revue : points 6 (refonte de l'engrenage) et 7 (plantage de la JVM des tests du
+   30/10 vers 11 h 19, pas revenu depuis) de la liste ci-dessous.
+
+## Liste prioritaire du 29/10/2026 (points 1 à 5 faits et commités le 30/10/2026 ; points 6 et 7 pour la fin)
 
 **À faire avant de commencer la famille suivante (Frogs Race).** Rien n'est codé : chaque point passe par les étapes
 habituelles (vérifier, faire, tester, montrer, commit sur demande).
@@ -253,7 +310,7 @@ Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026
 | **Sounds Of Life** (`SoundsOfLife`) | **Remplacées le 30/10** : 4 décors dessinés, 21 animaux OpenMoji ; 21 sons (15 de Commons, 6 de Where Is The Sound), crédités | ✔ 30/10 (anneau, nom de l'animal) | ✔ 30/10 (rejeu, placement sans fond, exception) |
 | **Spot The Differences** (`SpotDifference`) | **Remplacées le 30/10** : 8 scènes dessinées par script (décors du projet, objets OpenMoji), son synthétisé | ✔ 30/10 (grandes images, pastille, vert, flèche dans le coin) | ✔ 30/10 (fixation des réglages, images enchaînées, indice 20 s, 3 niveaux) |
 | **Pet** (`Pet`) | **Remplacées le 30/10** : 4 pièces dessinées, objets OpenMoji, bouche triste ; la Biboule du projet gardée | ✔ 30/10 (boutons ronds, jauges nommées, bulle) | ✔ 30/10 (2 min par jauge, Biboule triste, activités claires, plantage corrigé) |
-| **Flower Of Numbers** (`FlowerOfNumbers`) | **Risque** : 21 images, dont billets et pièces en euros (règles de reproduction de la BCE), mains, dés | | |
+| **Flower Of Numbers** (`FlowerOfNumbers`) | **Remplacées le 2/11** : mains, dés, pièces et billets génériques dessinés par script ; fleur et auras dessinées par le jeu (avant : 21 images à risque, dont des reproductions de l'euro) | ✔ 2/11 (cartes de la couleur des pétales, anneau, plateau mis à l'échelle) | ✔ 2/11 (règle du mainteneur : total de tous les pétales, chaque valeur une fois ; modes Guidé, Libre, Tous les pétales ; jusqu'à 10 à 50 ; buts comptés) |
 | **Opinions** (`Opinions`) | **Risque** : 9 images (photos d'aliments, icônes brillantes) | | |
 | **Sprint Finish** (`SprintFinish`, `SprintFinishMouse`) | **Risque** : 6 images (chat et chien dessinés, boutons) | | |
 | **Colored Bubbles**, **Portrait Bubbles** (`ColoredBubbles`, `PortraitBubbles`) | **Risque** : 3 fonds sous-marins (un signé Koshkina L) ; Portrait utilise les images par défaut | | |
@@ -1003,6 +1060,15 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   rejeu et nom affiché) ; `GameHelpTest` avec `SoundsOfLife` ; captures sans fenêtre de la ferme et de la mer
   (anneau et pastille vus) ; `allGamesTest -PallGamesOnly=SoundsOfLife -PallGamesRepeat=5` réussi ; `build` :
   **617 tests, 0 échec**, SpotBugs sans alerte. Reste à faire par le mainteneur : jouer, et écouter les sons.
+- **Retour du mainteneur (2/11/2026)** : quand on choisit un animal pendant qu'un autre son joue, les deux sons se
+  superposent. Deux choix : bloquer toute sélection pendant un son, ou couper le son en cours avant le suivant.
+  Fait (code) : `SoundManager.add` met le son en file, `ForegroundSoundsUtils.playSound` le joue sans arrêter le
+  précédent (`stopSound` existe et arrête le dernier son joué). Recommandation : couper le son en cours (au regard,
+  une sélection bloquée ne se voit pas). **Décision du mainteneur (2/11/2026) : couper le son en cours.**
+- **Fait (2/11/2026)** : `SoundManager.replace` (vide la file, arrête le son en cours, met le nouveau) ; un animal
+  choisi arrête l'animal entendu avant (balancement arrêté, nom caché, `SoundMakingEntity.quiet`). Tests :
+  `SoundManagerTest.shouldForgetTheSoundsWaitingWhenASoundReplacesThem`, `SoundsOfLifeTest` (chaque son remplace le
+  précédent, seul le nom du dernier animal reste affiché).
 
 ### Spot The Differences (`SpotDifference`, code `spotthedifferences`) — 30/10/2026
 
@@ -1084,6 +1150,21 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   `allGamesTest -PallGamesOnly=SpotDifference -PallGamesRepeat=5` réussi ; `build` : **627 tests, 0 échec**,
   SpotBugs sans alerte. Reste à faire par le mainteneur : jouer (souris et Tobii), et dire si les différences de
   Difficile sont trop dures ou trop faciles.
+- **Retour du mainteneur (2/11/2026)** : le jeu convient ; ajouter dans la fenêtre des variantes une option **avec ou
+  sans l'indicateur de fixation visible**.
+- **Fait (2/11/2026)** :
+  - Variantes `GroupedGameVariant` (`SpotTheDifferencesVariantGenerator`) : un seul groupe, sous-groupe « Sans
+    anneau de fixation » (en premier : le jeu tel que validé le 30/10) ou « Avec anneau de fixation » (clés
+    `SpotDifferencesRingHidden`, `SpotDifferencesRingShown`), valeur Facile / Normal / Difficile. Forme enregistrée :
+    `GroupedGameVariant:SpotDifference:<anneau>:<Easy|Normal|Hard>:-` au lieu de `EnumGameVariant:…`. Le jeu n'est
+    pas dans la liste des jeux rejouables ; sans variante lisible, il se lance en Normal sans anneau.
+  - Avec l'anneau : un arc de la couleur principale se remplit autour du cercle regardé (image de gauche ou de
+    droite) pendant la durée de fixation, et disparaît quand le regard sort ou que la différence est trouvée.
+  - Fenêtre des variantes : un groupe (ou un sous-groupe) seul n'a plus de ligne de boutons radio ; ici, seule la
+    ligne de l'anneau s'affiche sous les niveaux. Memory n'est pas touché (deux lignes).
+  - Aide du jeu (français et anglais) : une ligne sur l'option.
+  - Tests : `SpotTheDifferencesTest` (anneau absent par défaut ; présent, placé sur le cercle regardé, caché à la
+    sortie et une fois trouvée ; 6 variantes relues), `GameVariantDialogTest.shouldShowNoSwitchForAGroupAlone`.
 
 ### Pet (`Pet`, code `pet`) — 30/10/2026
 
@@ -1161,3 +1242,134 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   fenêtre des 4 pièces ; `allGamesTest -PallGamesOnly=Pet -PallGamesRepeat=5` réussi ; `build` : **634 tests, 0
   échec**, SpotBugs sans alerte. Reste à faire par le mainteneur : jouer à la souris et au Tobii (la cuillère et la
   douche au regard : marge de la bouche, durée du lavage).
+
+### Flower Of Numbers (`FlowerOfNumbers`, code `flowerOfNumbers`) — 2/11/2026
+
+**Étape 1 (état des lieux) faite le 2/11/2026.** Captures « avant » : `build/game-screenshots/avant/flowerofnumbers/`
+(1366 × 768, mode souris, français ; fixation sur le chiffre 1). Pas d'essai avec le Tobii.
+
+- **Ce qu'il fait / variantes** (lecture du code, 5 classes, 870 lignes) : un nombre de 1 à 20 (tiré avec la graine
+  de la partie) est écrit au centre d'une fleur à 5 pétales. Autour, les valeurs à choisir par fixation : les chiffres
+  1 à 9 (en haut à droite), les mots « un » à « vingt » (2 colonnes à gauche), des mains de 1 à 5 doigts (à gauche),
+  les dés de 1 à 6 (en bas à droite), 1 €, 2 €, 5 €, 10 € (à droite). Une valeur choisie glisse en 1 s dans le pétale
+  de sa famille (chiffres : 4 places ; mots : 1 ; doigts, dés, argent : 4). Une fixation sur une valeur posée la
+  retire. Un pétale dont la somme vaut le nombre s'entoure d'une aura jaune ; les 5 pétales justes : « Bravo », puis
+  un autre nombre. Rejouable (dans la liste des jeux rejouables). Pas de variante.
+- **Défauts vus** :
+  - D1. **Rien n'explique la règle** : rien ne dit qu'il faut faire le nombre dans chaque pétale, ni quel pétale
+    reçoit quelle famille (les couleurs des pétales ne rappellent rien autour) ; pas de somme en cours, pas de
+    signal quand un pétale dépasse le nombre (il faut deviner et retirer).
+  - D2. **Cibles trop petites pour le regard** (fait, calcul et capture) : les 20 mots ont environ 27 px de haut en
+    1366 × 768 (largeur commune calculée sur le mot le plus long de toutes les langues) ; les mains, environ 40 px de
+    large.
+  - D3. **Mise en page fixe en proportions de l'écran** (fait, calcul) : la fleur est un carré de la hauteur, centré ;
+    en 800 × 600 elle va de 100 à 700 px, et la colonne des mots (centre à 128 px) et les mains passent sur ses
+    pétales. Hypothèse : pareil pour l'argent et les dés à droite (non vérifié par une capture).
+  - D4. Style d'origine : fond noir, textes dessinés en police Java par défaut (blanc ou noir selon le thème
+    seulement), indicateur de fixation gris (`ProgressButton`), traits gris parasites au-dessus à gauche de la fleur
+    (hypothèse : bords semi-transparents de `flower.png`).
+  - D5. Aucun son : ni à la pose, ni pour un pétale juste, ni pour la fleur.
+  - D6. **Statistiques** (fait, code) : `incrementNumberOfGoalsReached` à chaque fleur, mais jamais
+    `incrementNumberOfGoalsToReach`. Hypothèse : l'écran des statistiques montre plus de buts atteints que de buts à
+    atteindre.
+- **Images et sons (licences)** : **à risque**, 21 images de 2022 (auteur du commit : Sakraft), sans source :
+  - fleur (`flower.png`) et 5 auras ;
+  - 5 mains (style banque d'images vectorielles, type Freepik : hypothèse) ;
+  - 6 dés (rendu 3D, source inconnue) ;
+  - **4 images de l'euro** (pièces de 1 € et 2 €, billets de 5 € et 10 €) : reproductions des dessins officiels.
+    Les billets sont soumis aux règles de reproduction de la BCE, et les faces des pièces ont leurs propres droits.
+    Risque : on ne sait pas si ces images respectent ces règles.
+  - Aucun son.
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur) :
+  - Images
+    - I1. **Tout dessiner par script** (comme Spot The Differences et Pet), sous la licence du projet : la fleur (5
+      pétales aux couleurs franches, sans bords parasites), les dés (carré arrondi et points), les mains (main
+      stylisée, 1 à 5 doigts levés), les auras (halo dessiné par le jeu autour du pétale).
+    - I2. **Argent** : pièces et billets **dessinés, génériques** (pièces dorée « 1 € » et bicolore « 2 € », billets
+      colorés « 5 € » et « 10 € », sans aucun motif officiel) ; on garde l'euro comme unité. Plus aucune
+      reproduction de l'euro.
+  - Graphisme
+    - G1. Fond et style des jeux revus (`-gp-bg`, police Fredoka, couleurs du thème) ; chaque famille de valeurs dans
+      une **carte arrondie bordée de la couleur de son pétale**, placée à côté de lui : on voit tout de suite quel
+      pétale reçoit quoi.
+    - G2. **Cibles plus grandes** : environ 60 px au moins pour toutes les valeurs. Les mots en pastilles, sur 4
+      colonnes de 5 (au lieu de 2 de 10) ; les mains et l'argent agrandis.
+    - G3. Anneau de fixation de la couleur principale (comme les autres jeux revus), à la place de l'indicateur gris.
+    - G4. Mise en page calculée d'après la taille de l'écran, sans chevauchement de 800 × 600 à 1920 × 1080.
+  - Gameplay
+    - P1. **Somme affichée sur chaque pétale** (« 6 / 14 ») ; un pétale qui dépasse le nombre devient rouge et tremble
+      un peu (on retire une valeur pour corriger). Un pétale juste : aura, son de réussite. Fleur complète :
+      « Bravo », puis un autre nombre (comme aujourd'hui).
+    - P2. **Variantes** : « Jusqu'à 10 » (plus facile, mots de un à dix seulement) et « Jusqu'à 20 » (le jeu
+      actuel) ; et, en bas, « Somme affichée » ou « Somme cachée » (pour qui veut compter seul).
+    - P3. Sons (synthétisés par script, comme `ding.wav`) : pose d'une valeur, pétale juste ; fleur complète :
+      l'animation de victoire habituelle.
+  - Corrections
+    - P4. D6 : un but à atteindre par fleur (`incrementNumberOfGoalsToReach`), comme les autres jeux. Même format de
+      fichiers.
+    - P5. **Rejeu** : les positions des valeurs changent (G1, G2, G4). Risque : une partie enregistrée avant la revue
+      se rejouerait avec le regard enregistré sur l'ancienne disposition, donc à côté des nouvelles cibles. Comme
+      pour les autres jeux revus, on n'y touche pas (pas de conversion des anciennes parties).
+  - Aide du jeu (`FlowerOfNumbers-fra.txt`, `-eng.txt`), vignette, traductions, crédits, inventaire.
+- **Questions au mainteneur** : I2 (pièces et billets dessinés génériques, en gardant l'euro, ou un autre support,
+  comme des jetons de 1, 2, 5, 10 ?) ; P1 (somme affichée par défaut ?) ; P2 (les deux variantes vous
+  conviennent-elles ?) ; G2 (mots sur 4 colonnes : d'accord ?)
+- **Réponses du mainteneur (2/11/2026)** : tout est validé ; l'euro gardé, dessiné ; somme affichée par défaut ; les
+  2 variantes ; les mots sur 4 colonnes.
+- **Fait (2/11/2026, première version ; ses règles de jeu P1 et P2 sont remplacées plus bas)** :
+  - Images (I1, I2) : `gradle/images/make_flowerofnumbers_images.py` dessine les 5 mains (main stylisée, 1 à 5 doigts
+    levés), les 6 dés, les pièces de 1 € et 2 € (deux métaux, valeur et €) et les billets de 5 € et 10 € (rectangle
+    coloré, valeur, € et « EURO », aucun motif officiel). Mêmes noms de fichiers. `flower.png` et les 5 auras sont
+    retirées : la fleur (tige, 5 pétales, cœur jaune) et l'aura (contour vert lumineux) sont dessinées par le jeu.
+  - Sons (P3) : `make_flowerofnumbers_sounds.py` fait `sounds/put.wav` (valeur posée) et `sounds/petal.wav` (pétale
+    juste, trois notes de clochette).
+  - Graphisme (G1 à G4) : code réécrit (`FlowerOfNumbersGame`, nouvelle `ValueTarget`, l'ancien `ProgressButton`
+    n'est plus utilisé). Tout est placé sur un plateau de 1366 x 768, mis à l'échelle de l'écran et centré : plus de
+    chevauchement à aucune taille. Fond, cartes et police des jeux revus ; chaque famille dans une carte bordée de la
+    couleur de son pétale (à gauche : mots en 4 colonnes de 5, dans l'ordre des colonnes, puis les mains en 3 + 2 ; à
+    droite : chiffres, argent, dés), loin de l'engrenage. Cibles de 54 à 150 px de large (mots 72 x 60, mains
+    90 x 108) ; les mots trop longs d'une langue sont écrits plus petits. Anneau de la couleur principale autour de
+    la carte regardée ; il faut quitter une valeur et revenir pour la choisir une nouvelle fois.
+  - Gameplay (P1, P2) : somme « 6 / 14 » au bout de chaque pétale ; pétale qui dépasse : contour rouge (`-gp-danger`)
+    et petit tremblement ; pétale juste : contour vert lumineux et son. Fleur complète : « Bravo », puis un autre
+    nombre. Variantes (`GroupedGameVariant`, un seul groupe) : « Jusqu'à 10 » (mots de un à dix, 2 colonnes) ou
+    « Jusqu'à 20 », et en bas « Somme affichée » (par défaut) ou « Somme cachée » (le rouge et le vert restent).
+  - Corrections (P4) : un but à atteindre par fleur (`incrementNumberOfGoalsToReach` au lancement), un but atteint
+    par fleur complète ; mêmes fichiers. Une partie enregistrée sans variante se rejoue « Jusqu'à 20 » (même tirage
+    des nombres qu'avant), avec les sommes ; le regard enregistré tombe sur l'ancienne disposition (P5, accepté).
+  - Aide (`FlowerOfNumbers-fra.txt`, `-eng.txt`), traductions (`FlowerUpTo10`, `FlowerUpTo20`, `FlowerSumShown`,
+    `FlowerSumHidden`), vignette (capture, 960 x 540), crédits (`gradle/images/README.txt`,
+    `gradle/templates/licence.txt`), inventaire (`inventaire-images.csv`, `INVENTAIRE_IMAGES.md`).
+- **Vérifications** : `FlowerOfNumbersGameTest` (7 tests : valeurs de chaque variante, valeur posée puis retirée
+  avec sa somme et son son, pétale plein et qui dépasse, victoire avec les 5 pétales justes, sommes cachées,
+  disposition sans chevauchement en 800 x 600, variantes relues) ; `FlowerTest` gardé ; `GameHelpTest` avec
+  `FlowerOfNumbers` ; captures en vraie fenêtre `build/game-screenshots/essai1/` et `essai2/flowerofnumbers/`.
+  Reste à faire par le mainteneur : jouer à la souris et au Tobii.
+- **Retour du mainteneur (2/11/2026, essai souris et Tobii)** : tout fonctionne, mais **la règle n'est pas la bonne**.
+  La vraie règle : le nombre du centre est le **total à faire avec l'ensemble des pétales** (pas un nombre par
+  pétale), et **chaque valeur ne sert qu'une fois** (pas trois fois le dé 1). Modes décidés (réponses aux
+  questions du 2/11) : **Guidé** (le jeu indique la valeur de chaque pétale, tirée au hasard), **Libre** (seul le
+  total compte, pétales vides permis), **Tous les pétales** (le total, chaque pétale doit servir) ; nombres
+  **jusqu'à 10, 20, 30, 40 et 50** ; les modes remplacent « Somme affichée / cachée ».
+- **Fait (2/11/2026, nouvelles règles)** :
+  - `FlowerMode` (Guidé, Libre, Tous les pétales) ; variantes : 5 boutons (« Jusqu'à 10 » à « Jusqu'à 50 ») et
+    les 3 modes en bas (Guidé en premier), soit 15 variantes. Clés `FlowerUpTo30/40/50`, `FlowerGuided`,
+    `FlowerFree`, `FlowerAllPetals`, `FlowerTotal` ; `FlowerSumShown` et `FlowerSumHidden` retirées.
+  - Nombre du cœur : de 5 (Guidé, Tous les pétales : au moins 1 par pétale) ou de 1 (Libre) jusqu'au plus grand
+    de la variante, jamais deux fois de suite le même. Mots de un à vingt (jusqu'à dix pour « Jusqu'à 10 »).
+  - Guidé : le nombre est partagé au hasard (graine de la partie) entre les 5 pétales, au moins 1 chacun, chaque
+    part étant une somme que le pétale peut faire avec des valeurs différentes, 4 au plus (l'argent ne peut pas
+    faire 4, 9 ni 14 : 1, 2, 5, 10 une fois chacun). Au bout du pétale : « 1 / 4 » ; rouge s'il dépasse sa part,
+    vert avec un son quand il la fait.
+  - Libre et Tous les pétales : au bout du pétale, sa somme seule ; en Tous les pétales, un pétale vide est pâle
+    (couleur éclaircie). Fleur gagnée : tous les pétales verts, son.
+  - Partout : chaque valeur une seule fois (pâle dans sa carte tant qu'elle est posée, de nouveau choisissable
+    une fois retirée) ; « Total : 12 / 17 » en bas, sous la fleur, rouge (et qui tremble) au-dessus du nombre,
+    vert une fois gagné.
+  - Une partie enregistrée sans variante se rejoue en Guidé, jusqu'à 20 (ses règles étaient autres).
+  - Aide réécrite (français et anglais).
+- **Vérifications (nouvelles règles)** : `FlowerOfNumbersGameTest` (15 tests : valeurs et nombre de chaque
+  variante ; parts du mode guidé pour 15 graines et chaque variante, sommes possibles ; chaque valeur une fois puis
+  retirée ; pétale plein et total rouge ; victoire en Guidé, en Libre avec le total seul, en Tous les pétales
+  seulement sans pétale vide ; disposition sans chevauchement en 800 x 600 avec le total ; 15 variantes relues) ;
+  captures `build/game-screenshots/essai3/flowerofnumbers/` (Guidé jusqu'à 20, Tous les pétales jusqu'à 50).
