@@ -98,7 +98,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/ninja.png,oui,source inc
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
-gazeplay-core/src/main/resources/data/common/Thumbnails/opinions.jpg,oui,source inconnue,,2020-05-27,PillouMatou,image for Thumbnails and launcher
+gazeplay-core/src/main/resources/data/common/Thumbnails/opinions.jpg,oui,libre,"capture du jeu (novembre 2026) ; image d'exemple OpenMoji CC BY-SA 4.0, icônes Material Symbols Apache-2.0",2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,libre,"capture du jeu (octobre 2026) ; pièce dessinée pour le projet, objets OpenMoji CC BY-SA 4.0, Biboule du projet",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
@@ -533,15 +533,6 @@ gazeplay-games/src/main/resources/data/math101/images/note2.png,oui,source incon
 gazeplay-games/src/main/resources/data/noughtsandcrosses/crosse.png,oui,source inconnue,,2021-08-24,Iluvrog,remove rectangles + add pictures + add first button
 gazeplay-games/src/main/resources/data/noughtsandcrosses/nought.png,oui,source inconnue,,2021-08-24,Iluvrog,remove rectangles + add pictures + add first button
 gazeplay-games/src/main/resources/data/noughtsandcrosses/white.png,oui,source inconnue,,2021-08-25,Iluvrog,white when 0 in the game + IA works + restart works + wait before IA and restart
-gazeplay-games/src/main/resources/data/opinions/images/Pommes.jpg,oui,source inconnue,,2020-05-28,PillouMatou,New Game
-gazeplay-games/src/main/resources/data/opinions/images/brezelle.jpg,oui,source inconnue,auteur dans les métadonnées : Couleur,2020-05-28,PillouMatou,images for the game and implementation
-gazeplay-games/src/main/resources/data/opinions/images/haricot vert.jpg,oui,source inconnue,,2020-05-28,PillouMatou,New Game
-gazeplay-games/src/main/resources/data/opinions/images/orange.jpg,oui,source inconnue,,2020-05-28,PillouMatou,images for the game and implementation
-gazeplay-games/src/main/resources/data/opinions/thumbs/correct2.png,oui,source inconnue,,2021-05-19,Iluvrog,changement des images
-gazeplay-games/src/main/resources/data/opinions/thumbs/error.png,oui,source inconnue,,2021-05-19,Iluvrog,changement des images
-gazeplay-games/src/main/resources/data/opinions/thumbs/nocare.png,oui,source inconnue,,2020-05-28,PillouMatou,Improvement
-gazeplay-games/src/main/resources/data/opinions/thumbs/thumbdown.png,oui,source inconnue,,2020-05-28,PillouMatou,Improvement
-gazeplay-games/src/main/resources/data/opinions/thumbs/thumbup.png,oui,source inconnue,,2020-05-28,PillouMatou,Improvement
 gazeplay-games/src/main/resources/data/order/images/fail.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
 gazeplay-games/src/main/resources/data/order/images/success.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
 gazeplay-games/src/main/resources/data/order/images/target.png,oui,source inconnue,,2018-05-15,Skullhack,Changed target image and added a progress bar to select a target

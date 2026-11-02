@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
@@ -46,7 +47,8 @@ import java.util.Set;
  * of trains. For a reviewed game (it has a help, 30/10/2026): the switches are all at the bottom, under the variants;
  * a variant button only chooses the variant (framed), and the "Start" button at the bottom starts the game, next to
  * the "i" of the help. For the other games, a variant button starts the game at once, and the switches are at the
- * top.
+ * top. A reviewed variant playing with the images of the user which has none yet shows a message and a button adding
+ * images above "Start", disabled until there is one (2/11/2026).
  * <p>
  * Look of the menus ({@link MenuDialog}): the name of the game and a close button at the top, no frame of the system.
  */
@@ -106,6 +108,30 @@ public class GameVariantDialog extends Stage {
      */
     @Getter
     private Button startButton;
+
+    /**
+     * The folder of the images of the user of each variant button playing with them (see {@link UserImagesVariant}).
+     */
+    private final Map<Button, String> userImageFolders = new HashMap<>();
+
+    /**
+     * Reviewed games (2/11/2026, maintainer's request): above "Start", shown when the variant chosen plays with the
+     * images of the user and there is none yet: the message saying so and a button adding images; "Start" stays
+     * disabled until there is one.
+     */
+    @Getter
+    private VBox userImagesBox;
+
+    @Getter
+    private Label userImagesMessage;
+
+    @Getter
+    private Button addImagesButton;
+
+    /**
+     * Height added to the window for the message about the images of the user.
+     */
+    private static final double USER_IMAGES_ROW_HEIGHT = 90;
 
     public GameVariantDialog(
         final GazePlay gazePlay,
@@ -509,7 +535,7 @@ public class GameVariantDialog extends Stage {
                 }
             };
             // A click, Enter or Space: starts the game, or chooses the variant (reviewed games)
-            register(button, () -> event.handle(null));
+            register(button, variant, () -> event.handle(null));
         }
 
         if (reviewed) {
@@ -518,7 +544,7 @@ public class GameVariantDialog extends Stage {
             startButton.getStyleClass().addAll("gp-button", "gp-button-primary");
             startButton.setDefaultButton(true);
             startButton.setOnAction(e -> {
-                if (selectedButton != null) {
+                if (selectedButton != null && !lacksUserImages(selectedButton)) {
                     launches.get(selectedButton).run();
                 }
             });
@@ -532,7 +558,24 @@ public class GameVariantDialog extends Stage {
             balance.prefWidthProperty().bind(helpButton.widthProperty());
             bottom.setLeft(balance);
             bottom.setPadding(new Insets(8, 16, 0, 16));
-            sceneContentPane.setBottom(bottom);
+
+            // The message when the variant chosen has no image of the user yet, and the button adding them
+            userImagesMessage = new Label(translator.translate("NoUserImages"));
+            userImagesMessage.getStyleClass().add("gp-dialog-prompt");
+            userImagesMessage.setStyle("-fx-text-fill: -gp-danger;");
+            userImagesMessage.setWrapText(true);
+            userImagesMessage.setTextAlignment(TextAlignment.CENTER);
+            userImagesMessage.setMinHeight(Region.USE_PREF_SIZE);
+            addImagesButton = new Button(translator.translate("AddImages"), MenuIcon.ADD.create(22));
+            addImagesButton.getStyleClass().addAll("gp-button", "gp-button-secondary");
+            addImagesButton.setOnAction(e -> openUserImages(gazePlay, gameSpec));
+            userImagesBox = new VBox(8, userImagesMessage, addImagesButton);
+            userImagesBox.setAlignment(Pos.CENTER);
+            userImagesBox.setPadding(new Insets(12, 16, 0, 16));
+            sceneContentPane.setBottom(new VBox(userImagesBox, bottom));
+            if (!userImageFolders.isEmpty()) {
+                extraHeight += USER_IMAGES_ROW_HEIGHT;
+            }
 
             // The variant at the same place stays chosen when a switch shows other variants
             choicePanelScroller.contentProperty().addListener((observable, oldPane, newPane) -> {
@@ -559,8 +602,12 @@ public class GameVariantDialog extends Stage {
      * A variant button: it starts the game at once, or, for a reviewed game, it is chosen (the "Start" button starts
      * the game).
      */
-    private void register(final Button button, final Runnable launch) {
+    private void register(final Button button, final IGameVariant variant, final Runnable launch) {
         launches.put(button, launch);
+        final String userImages = UserImagesVariant.folderOf(variant);
+        if (userImages != null) {
+            userImageFolders.put(button, userImages);
+        }
         button.setOnAction(e -> {
             if (reviewed) {
                 select(button);
@@ -579,6 +626,48 @@ public class GameVariantDialog extends Stage {
         }
         selectedButton = button;
         button.getStyleClass().add("gp-variant-selected");
+        updateUserImages();
+    }
+
+    /**
+     * @return whether the variant of a button plays with the images of the user and there is none yet
+     */
+    private boolean lacksUserImages(final Button button) {
+        final String folder = userImageFolders.get(button);
+        return folder != null && UserImagesVariant.images(folder).isEmpty();
+    }
+
+    /**
+     * Shows the message about the images of the user if the variant chosen has none yet, and disables "Start" until
+     * there is one.
+     */
+    void updateUserImages() {
+        if (startButton == null || userImagesBox == null) {
+            return;
+        }
+        final boolean lacking = selectedButton != null && lacksUserImages(selectedButton);
+        userImagesBox.setVisible(lacking);
+        userImagesBox.setManaged(lacking);
+        startButton.setDisable(lacking);
+    }
+
+    /**
+     * Opens the window of the images of the user of the variant chosen, over this one; when it closes, the message
+     * and "Start" are updated.
+     */
+    private void openUserImages(final GazePlay gazePlay, final GameSpec gameSpec) {
+        final String folder = selectedButton == null ? null : userImageFolders.get(selectedButton);
+        if (folder == null) {
+            return;
+        }
+        final Parent ownRoot = getScene().getRoot();
+        ownRoot.setEffect(new BoxBlur());
+        ownRoot.setDisable(true);
+        final UserImagesDialog dialog = new UserImagesDialog(this, ownRoot, gazePlay.getTranslator(), folder,
+            gazePlay.getTranslator().translate(gameSpec.getGameSummary().getNameCode()), this::updateUserImages);
+        dialog.addEventHandler(WindowEvent.WINDOW_HIDDEN, event -> updateUserImages());
+        dialog.show();
+        dialog.toFront();
     }
 
     /**
@@ -622,7 +711,7 @@ public class GameVariantDialog extends Stage {
             groups.add(variant.getGroup());
             subGroups.add(variant.getSubGroup());
             final Button button = variantButton(variant.getLabel(translator), primaryStage);
-            register(button, () -> {
+            register(button, variant, () -> {
                 close();
                 final String userImages = UserImagesVariant.folderOf(variant);
                 if (userImages != null && UserImagesVariant.images(userImages).isEmpty()) {

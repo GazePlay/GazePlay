@@ -1,0 +1,18 @@
+# Le principe
+Tes propres images sont montrées une par une : dis si tu aimes chacune ou pas.
+
+# Avant de jouer
+Ajoute les images dans les réglages, section Dossiers, « Images des jeux », ligne « Opinions » (ou en choisissant le jeu, s'il n'y en a pas encore). Elles sont montrées dans l'ordre de leurs noms.
+
+# Comment jouer
+- L'image est au milieu ; au-dessus, son numéro (« 3 / 12 »).
+- Regarde « J'aime » (à gauche) ou « Je n'aime pas » (à droite) : un anneau fait le tour du bouton (durée de fixation des réglages), puis la réponse s'entoure de sa couleur et l'image suivante arrive.
+
+# Comment gagner
+Il n'y a pas de bonne réponse : chaque avis compte. Après la dernière image : « Bravo », puis les statistiques. Pour arrêter avant, l'engrenage en bas à gauche.
+
+# Les réponses
+Elles sont écrites avec les statistiques du jeu, dans un fichier « ...-opinions.csv » : le nom de chaque image et le choix (« aime » ou « n'aime pas »). Une image sans réponse n'a pas de ligne.
+
+# Les variantes
+Une seule variante, Mes images : appuie sur « Commencer ».

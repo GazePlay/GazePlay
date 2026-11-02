@@ -52,7 +52,7 @@ Images qui ressemblent à des photos ou des illustrations professionnelles, sans
 | `common/images` (core) | 17 | Icônes diverses (smiley, dossier, maison…) | — |
 | ~~Spot the Differences~~ | ~~15~~ | Scènes dessinées | **Remplacées le 30/10/2026** (8 scènes dessinées par script, objets OpenMoji) |
 | Images par défaut (core) | 9 | Animaux dessinés (chouette, crabe, écureuil…) | Commit de 2021 « adding free of right Free Fundation images » : dites libres, source non indiquée |
-| Opinions | 9 | Photos d'aliments, icônes brillantes | — |
+| ~~Opinions~~ | ~~9~~ | Photos d'aliments, icônes brillantes | **Retirées le 2/11/2026** : le jeu ne montre plus que les images de l'utilisateur ; boutons en icônes Material Symbols |
 | Room | 9 | Murs, flèches | — |
 | Sprint Finish | 6 | Chat et chien dessinés, boutons | — |
 | Bubble | 3 | Fonds sous-marins | Un porte « Koshkina L » (illustratrice de banques d'images) |

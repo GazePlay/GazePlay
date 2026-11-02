@@ -35,7 +35,7 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
   fixation visible ou non** (fait, voir sa fiche) ; Sounds Of Life : deux sons pouvaient se superposer, le son en
   cours est maintenant coupé (fait, voir sa fiche).
 - Point 4 : Flower Of Numbers revu (propositions validées, tout fait, voir sa fiche) ; reste l'essai du mainteneur.
-  Ensuite : Opinions.
+  Ensuite : Opinions (revu le 2/11, voir sa fiche ; reste l'essai du mainteneur), puis Sprint Finish.
 - Point 3 : clés `Spot all the differences` et `Differences found` retirées (décision du mainteneur), des deux
   `multilinguism.csv` (application et tests) ; aucun code ne les lisait.
 
@@ -208,9 +208,9 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
   | `default` | Memory |
   | `portraits` | Colored/Portrait Bubbles, Cream Pie, Ladder, Whac-A-Mole (moles), Ninja, Divisor |
   | `blocs` | Blocks, Egg Game, Letters |
-  | `opinions` | Opinions, Casse-Brique |
+  | `opinions` | Casse-Brique (plus Opinions depuis le 2/11/2026) |
 
-  Fait : Coloring (`files/images/Coloring`, variante « Palette personnalisée », 29/10/2026).
+  Fait : Coloring (`files/images/Coloring`, variante « Palette personnalisée », 29/10/2026) ; Opinions (`files/images/Opinions`, variante unique « Mes images », 2/11/2026).
 
 ## Aide des jeux (demande du mainteneur du 30/10/2026, validée le 30/10/2026)
 
@@ -311,7 +311,7 @@ Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026
 | **Spot The Differences** (`SpotDifference`) | **Remplacées le 30/10** : 8 scènes dessinées par script (décors du projet, objets OpenMoji), son synthétisé | ✔ 30/10 (grandes images, pastille, vert, flèche dans le coin) | ✔ 30/10 (fixation des réglages, images enchaînées, indice 20 s, 3 niveaux) |
 | **Pet** (`Pet`) | **Remplacées le 30/10** : 4 pièces dessinées, objets OpenMoji, bouche triste ; la Biboule du projet gardée | ✔ 30/10 (boutons ronds, jauges nommées, bulle) | ✔ 30/10 (2 min par jauge, Biboule triste, activités claires, plantage corrigé) |
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Remplacées le 2/11** : mains, dés, pièces et billets génériques dessinés par script ; fleur et auras dessinées par le jeu (avant : 21 images à risque, dont des reproductions de l'euro) | ✔ 2/11 (cartes de la couleur des pétales, anneau, plateau mis à l'échelle) | ✔ 2/11 (règle du mainteneur : total de tous les pétales, chaque valeur une fois ; modes Guidé, Libre, Tous les pétales ; jusqu'à 10 à 50 ; buts comptés) |
-| **Opinions** (`Opinions`) | **Risque** : 9 images (photos d'aliments, icônes brillantes) | | |
+| **Opinions** (`Opinions`) | **Retirées le 2/11** : les 9 images (photos d'aliments jamais montrées, visages brillants) ; le jeu ne joue que les images de l'utilisateur | ✔ 2/11 (image en carte au centre, boutons « J'aime » / « Je n'aime pas » à icônes, anneau) | ✔ 2/11 (règle du mainteneur : images de l'utilisateur une par une, réponses enregistrées dans `-opinions.csv`) |
 | **Sprint Finish** (`SprintFinish`, `SprintFinishMouse`) | **Risque** : 6 images (chat et chien dessinés, boutons) | | |
 | **Colored Bubbles**, **Portrait Bubbles** (`ColoredBubbles`, `PortraitBubbles`) | **Risque** : 3 fonds sous-marins (un signé Koshkina L) ; Portrait utilise les images par défaut | | |
 | **Egg Game**, **Personalize Egg Game** | **Risque** : 3 photos d'œufs (auteur « FRIEDMANN Chloe » dans les métadonnées) | | |
@@ -1373,3 +1373,113 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
   retirée ; pétale plein et total rouge ; victoire en Guidé, en Libre avec le total seul, en Tous les pétales
   seulement sans pétale vide ; disposition sans chevauchement en 800 x 600 avec le total ; 15 variantes relues) ;
   captures `build/game-screenshots/essai3/flowerofnumbers/` (Guidé jusqu'à 20, Tous les pétales jusqu'à 50).
+
+### Opinions (`Opinions`, code `opinions`) — 2/11/2026
+
+**Étape 1 (état des lieux) faite le 2/11/2026.** Captures « avant » : `build/game-screenshots/avant/opinions/`
+(1366 × 768, mode souris, français ; variantes Opinions et Oui/Non haut-bas). Pas d'essai avec le Tobii.
+
+- **Ce qu'il fait / variantes** (lecture du code, 6 classes, 352 lignes, et captures) : une image est montrée en grand ;
+  le joueur répond par une fixation sur un bouton, puis l'image suivante s'affiche. Après 10 réponses : animation de
+  victoire, puis l'écran des statistiques (la partie s'arrête). 5 variantes : **Opinions** (3 boutons : visage
+  content à gauche, visage qui lève les yeux en haut, visage rouge triste à droite) et **Oui/Non** dans 4
+  dispositions (haut-bas, bas-haut, gauche-droite, droite-gauche ; coche verte et croix rouge). Rejouable (graine).
+- **Défauts vus** :
+  - D1. **La réponse n'est enregistrée nulle part** (fait, code) : les boutons font tous la même chose (image
+    suivante, un « but atteint »). Ni le jeu ni les statistiques ne savent ce que le joueur a répondu.
+  - D2. **Les images du jeu ne sont jamais montrées** (fait, code et captures) : le jeu lit le dossier de
+    l'utilisateur `files/images/opinions` et, s'il est vide, les **images par défaut** (`data/common/default/images` :
+    animaux OpenMoji). Les 4 photos d'aliments de `data/opinions/images` (bretzel, haricots verts, orange, pommes)
+    ne sont lues par aucun code. Les images de l'utilisateur remplacent celles du jeu sans le dire (ancien dossier
+    partagé `opinions`, aussi lu par Casse-Brique pour son fond).
+  - D3. **Compte faux** (fait, code) : quand le tirage redonne l'image qui vient d'être montrée, la boucle du tirage
+    compte une réponse de plus à chaque nouveau tirage ; une partie peut finir avant 10 réponses. Les mêmes images
+    reviennent dans une partie (pas de tirage sans remise).
+  - D4. **Boutons sur l'image** (captures) : en Opinions, le visage du haut cache le haut de l'image ; en Oui/Non
+    haut-bas, la coche et la croix sont posées sur l'image (oreilles et menton de l'ours). Positions fixes en
+    proportions de l'écran ; boutons de 140 px, ronds gris.
+  - D5. Rien ne dit ce que veut dire chaque bouton (pas de texte « J'aime », « Oui »...) ; libellés des variantes
+    mal écrits en anglais (« rigth ») et absents de la plupart des langues.
+  - D6. Ancien style : fond noir, image étirée sur toute la hauteur, indicateur de fixation gris.
+  - D7. `dispose` vide : les filtres du regard des boutons ne sont jamais retirés. `OpinionsGameStats` a une
+    méthode `incrementNumberOfGoalsReached(int)` qui remplace le compte au lieu de l'augmenter (inutilisée) ; aucun
+    but à atteindre n'est compté.
+- **Images (licences)** : **à risque**. Les 4 photos d'aliments (2020, sans source ; `brezelle.jpg` porte l'auteur
+  « Couleur » dans ses métadonnées, signature d'un photographe de banque d'images gratuite : hypothèse) ne servent
+  pas. Les 5 boutons sont des visages brillants et des icônes de banque d'images (style Apple ou Emojipedia pour le
+  visage content, hypothèse), sans source. Vignette du menu sans source.
+- **Propositions** (à valider ✔ / refuser ✘ par le mainteneur ; elles dépendent des questions plus bas) :
+  - Images
+    - I1. **Séries d'images OpenMoji** (CC BY-SA 4.0), choisies par variante : par exemple Aliments, Animaux,
+      Activités et jouets (une douzaine chacune). Les 4 photos d'aliments retirées.
+    - I2. **Variante « Mes images »** (règle du 29/10 : `UserImagesVariant`, dossier `files/images/Opinions`, ligne
+      dans les réglages, fenêtre d'erreur sans image) : photos de la famille, des activités de la semaine, etc. Le
+      jeu ne lit plus l'ancien dossier `opinions`, qui reste lu par Casse-Brique jusqu'à sa revue.
+    - I3. Boutons : visages OpenMoji (content, neutre, pas content) et coche / croix dessinées, chacun avec son mot
+      (« J'aime », « Bof », « Je n'aime pas » ; « Oui », « Non »).
+  - Graphisme
+    - G1. L'image dans une carte au centre, entière, jamais cachée ; les boutons en grandes cartes autour, sans
+      toucher l'image ; anneau de fixation de la couleur principale ; fond et police des jeux revus.
+    - G2. Retour après la réponse : le bouton choisi s'entoure, petit son, puis l'image suivante glisse.
+  - Gameplay
+    - P1. Partie de 10 images **sans remise** (D3 corrigé) ; à la fin, **un récapitulatif** : les images de la
+      partie avec la réponse donnée pour chacune (avant l'écran des statistiques).
+    - P2. Variantes regroupées : les boutons = la série d'images (Aliments, Animaux, Activités, Mes images) ; en bas
+      = la sorte de réponse (« J'aime / Bof / Je n'aime pas », « Oui / Non »).
+  - Corrections
+    - P3. D3 (compte), D7 (`dispose`, un but à atteindre par image).
+- **Questions au mainteneur** (la règle d'abord, comme pour Flower Of Numbers) :
+  1. **À quoi sert le jeu** ? Donner son avis (dire ce qu'on aime, pour la communication) ; s'entraîner à répondre
+     oui / non ; ou les deux ? Pour « Oui / Non », quelle est la question (« Tu aimes ? », « C'est un animal ? »...) ?
+  2. **Faut-il garder les réponses** ? Dans un fichier des résultats (nouveau fichier, par exemple `reponses.csv`,
+     avec l'image, la réponse et son heure : un **ajout au format des résultats**, versionné, sans toucher aux
+     fichiers existants), ou seulement dans le récapitulatif de fin (P1), ou pas du tout ?
+  3. **Les 4 dispositions du oui / non** (haut-bas, bas-haut, gauche-droite, droite-gauche) servent-elles (par
+     exemple à tester le regard dans chaque direction) ? Sinon : une seule disposition, oui à gauche et non à droite.
+  4. **Séries d'images** : Aliments, Animaux, Activités et jouets, plus « Mes images » : d'accord, ou d'autres ?
+  5. **Fin de partie** : 10 images puis récapitulatif et statistiques, ou sans fin (comme Memory), ou un nombre
+     d'images au choix ?
+- **Réponse du mainteneur (2/11/2026) : la règle du jeu.** Le jeu ne se lance qu'avec des **images données par
+  l'utilisateur** ; elles sont montrées au centre **une par une**, et la personne choisit si elle **aime ou pas**
+  l'image. Les réponses sont enregistrées : **un fichier de plus dans les statistiques**, avec le nom de l'image et le
+  choix. (Les questions 3 à 5 tombent : plus de oui / non ni de séries d'images du jeu.)
+- **Fait (2/11/2026)** :
+  - Variante unique **Mes images** (`OpinionsGameVariant.MY_IMAGES`, `UserImagesVariant`, dossier
+    `files/images/Opinions`) : ligne « Opinions » dans les réglages (Dossiers, « Images des jeux ») et fenêtre
+    d'images du menu quand le dossier est vide, sans code de plus. Les anciennes valeurs (Opinions, 4 Oui/Non) restent
+    dans l'énumération pour relire les parties enregistrées, mais ne sont plus proposées. Le jeu ne lit plus l'ancien
+    dossier partagé `opinions` (encore lu par Casse-Brique pour son fond ; la fenêtre `CustomFileChooser` garde ses
+    boutons « thumbs » qui ne servaient déjà à rien, à retirer avec ce dossier).
+  - Déroulement : les images dans l'ordre de leurs noms, au centre dans une carte (entière, jamais cachée), le
+    numéro au-dessus (« 3 / 12 ») ; à gauche « J'aime » (pouce levé vert), à droite « Je n'aime pas » (pouce baissé
+    rouge), grandes cartes à icône (Material Symbols `thumb_up_fill1`, `thumb_down_fill1`, Apache-2.0, ajoutées à
+    `data/icons`) avec l'anneau de fixation. La réponse s'entoure de sa couleur 0,7 s, puis l'image suivante ; une
+    seule réponse par image. Après la dernière : « Bravo », puis les statistiques. Sans image : le message commun
+    `NoUserImages`. Un but à atteindre par image, un but atteint par réponse.
+  - **Nouveau fichier de résultats** `<heure>-opinions.csv` (`OpinionsAnswers`, format 1), à côté des autres fichiers
+    de la partie et avec le même horodatage : UTF-8 avec BOM, « ; » (comme les résultats d'Eval), en-tête
+    `image;choix`, une ligne par image répondue dans l'ordre (`aime` ou `n'aime pas`, en français quelle que soit la
+    langue : format stable). **Impact** : un ajout ; aucun fichier existant n'est changé ; les parties d'avant n'ont
+    pas ce fichier. Il est aussi écrit quand on quitte avant la fin (réponses données jusque-là).
+  - Retirés : les 4 photos d'aliments (jamais montrées) et les 5 icônes de boutons de `data/opinions`. Traductions
+    `OpinionsMyImages`, `OpinionsLike`, `OpinionsDislike`. Aide (`Opinions-fra.txt`, `-eng.txt`, avec une section
+    « Les réponses »). Vignette (capture, 960 x 540, même nom `opinions.jpg`). Inventaire à jour.
+- **Vérifications** : `OpinionsGameTest` (6 tests : images dans l'ordre des noms et réponses enregistrées dans
+  l'ordre, fin après la dernière ; une réponse par image ; fichier des réponses, guillemets compris ; disposition sans
+  recouvrir l'image ni l'engrenage ; sans image ; variante unique et anciennes valeurs relues) ; `GameHelpTest` avec
+  `Opinions` ; **partie réelle** en vraie fenêtre (souris, 4 images de test, 4 réponses) : `...-opinions.csv` écrit
+  avec les 4 choix, à côté des autres fichiers (`build/game-screenshots/essai1/opinions/`). Reste à faire par le
+  mainteneur : jouer à la souris et au Tobii avec ses images.
+- **Retour du mainteneur (2/11/2026)** : le message « il faut des images » doit être dans la **fenêtre des
+  variantes**, et le jeu ne doit pas pouvoir se lancer sans image. **Fait** (pour tous les jeux revus à images de
+  l'utilisateur : Opinions, Coloring, Memory) : quand la variante choisie joue les images de l'utilisateur et que son
+  dossier est vide, `GameVariantDialog` montre au-dessus de « Commencer » le message `NoUserImages` (en rouge) et un
+  bouton « Ajouter des images », qui ouvre la fenêtre des images par-dessus ; « Commencer » (et Entrée) reste grisé
+  tant qu'il n'y a pas d'image, et se réactive à la fermeture de cette fenêtre s'il y en a. Les jeux pas encore
+  revus (une variante lance le jeu tout de suite) gardent la fenêtre d'images d'avant. Test :
+  `GameVariantDialogTest.shouldAskForImagesBeforeStartingAVariantPlayingWithThem`.
+  - **Second retour (2/11/2026)** : le jeu se lançait encore sans image. Cause (fait) : avec **une seule variante**
+    et une aide, le menu sautait la fenêtre des variantes et ouvrait l'aide, dont le bouton lançait le jeu sans
+    rien vérifier. Corrigé : une variante unique qui joue les images de l'utilisateur ouvre aussi la fenêtre des
+    variantes (`GameMenuController.showsTheVariants`, test
+    `GameMenuControllerTest.shouldShowTheVariantsOfASingleVariantPlayingWithTheImagesOfTheUser`).

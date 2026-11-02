@@ -4,19 +4,20 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
  * Creates the game "Opinions" and its statistics, for a new game or for the replay of a saved one (see
- * {@code IGameLauncher}).
+ * {@code IGameLauncher}). Every variant plays the images of the user (see {@link OpinionsGameVariant}).
  */
-public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, EnumGameVariant<OpinionsGameVariant>> {
+public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, IGameVariant> {
 
     @Override
     public OpinionsGameStats createNewStats(Scene scene) {
@@ -24,8 +25,8 @@ public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, En
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<OpinionsGameVariant> gameVariant, OpinionsGameStats stats) {
-        return new OpinionsGame(gameContext, stats, gameVariant.getEnumValue());
+    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, OpinionsGameStats stats) {
+        return new OpinionsGame(gameContext, stats);
     }
 
     @Override
@@ -34,8 +35,7 @@ public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, En
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<OpinionsGameVariant> gameVariant, OpinionsGameStats stats, double gameSeed) {
-        return new OpinionsGame(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
+    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, OpinionsGameStats stats, double gameSeed) {
+        return new OpinionsGame(gameContext, stats, gameSeed);
     }
-
 }

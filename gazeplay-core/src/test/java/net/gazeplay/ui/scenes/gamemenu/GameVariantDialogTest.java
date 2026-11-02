@@ -276,6 +276,59 @@ class GameVariantDialogTest {
     }
 
     /**
+     * A variant playing with the images of the user, which has none yet (2/11/2026, maintainer's request): the message
+     * in the window of the variants, "Start" disabled; the window of the images opens from it, and once there is an
+     * image, "Start" starts the game. A variant without images of the user shows no message.
+     */
+    @Test
+    void shouldAskForImagesBeforeStartingAVariantPlayingWithThem() throws Exception {
+        final String folder = "VariantDialogTest";
+        final java.io.File directory = net.gazeplay.commons.gamevariants.UserImagesVariant.directory(folder);
+        final java.io.File[] previous = directory.listFiles();
+        org.junit.jupiter.api.Assumptions.assumeTrue(previous == null || previous.length == 0);
+        IGameVariant mine = new GroupedGameVariant("Images", "Mine", "MyImages", folder);
+        IGameVariant others = new GroupedGameVariant("Images", "Mine", "Others", null);
+        IGameVariantGenerator generator = mock(IGameVariantGenerator.class);
+        when(generator.getVariants()).thenReturn(new LinkedHashSet<>(List.of(mine, others)));
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Opinions").gameThumbnail("opinions").build(),
+            generator, mock(IGameLauncher.class));
+        GameVariantDialog dialog = openDialog(new BorderPane());
+        final java.io.File image = new java.io.File(directory, "a.png");
+        try {
+            assertTrue(dialog.getUserImagesBox().isVisible());
+            assertEquals("NoUserImages", dialog.getUserImagesMessage().getText());
+            assertTrue(dialog.getStartButton().isDisable());
+            WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+            verifyNoInteractions(gameMenuController);
+
+            List<Button> buttons = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot()
+                .lookupAll(".gp-variant").stream().map(Button.class::cast).toList()).get();
+            WaitForAsyncUtils.asyncFx(() -> buttons.get(1).fire()).get();
+            assertFalse(dialog.getUserImagesBox().isVisible());
+            assertFalse(dialog.getStartButton().isDisable());
+            WaitForAsyncUtils.asyncFx(() -> buttons.get(0).fire()).get();
+            assertTrue(dialog.getStartButton().isDisable());
+
+            net.gazeplay.ui.scenes.configuration.UserImagesDialog images = WaitForAsyncUtils.asyncFx(() -> {
+                dialog.getAddImagesButton().fire();
+                return javafx.stage.Window.getWindows().stream()
+                    .filter(net.gazeplay.ui.scenes.configuration.UserImagesDialog.class::isInstance)
+                    .map(net.gazeplay.ui.scenes.configuration.UserImagesDialog.class::cast).findFirst().orElseThrow();
+            }).get();
+            javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(20, 20,
+                java.awt.image.BufferedImage.TYPE_INT_RGB), "png", image);
+            WaitForAsyncUtils.asyncFx(images::close).get();
+            assertFalse(dialog.getUserImagesBox().isVisible());
+            assertFalse(dialog.getStartButton().isDisable());
+            assertFalse(dialog.getScene().getRoot().isDisable());
+            WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+            verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, mine);
+        } finally {
+            java.nio.file.Files.deleteIfExists(image.toPath());
+        }
+    }
+
+    /**
      * @return the window, open over a menu blurred and disabled as {@link GameMenuController#onGameSelection} does
      */
     private GameVariantDialog openDialog(final Parent menuRoot) throws Exception {

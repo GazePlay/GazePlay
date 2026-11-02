@@ -14,6 +14,7 @@ import net.gazeplay.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -42,7 +43,8 @@ public class GameMenuController {
     }
 
     /**
-     * Starts a game chosen in the menu: shows its variants when it has several; otherwise shows its help with a button
+     * Starts a game chosen in the menu: shows its variants when it has several, or a single one playing with the
+     * images of the user (see {@link #showsTheVariants}); otherwise shows its help with a button
      * starting it, when it has a help (see {@link GameHelp}), or starts it directly.
      */
     public void onGameSelection(
@@ -53,7 +55,15 @@ public class GameMenuController {
     ) {
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
         final String nameCode = gameSpec.getGameSummary().getNameCode();
-        if (variants.size() <= 1 && GameHelp.exists(nameCode)) {
+        if (showsTheVariants(variants)) {
+            root.setEffect(new BoxBlur());
+            root.setDisable(true);
+            GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
+            dialog.setTitle(gameName);
+            dialog.show();
+            dialog.toFront();
+            dialog.setAlwaysOnTop(true);
+        } else if (variants.size() <= 1 && GameHelp.exists(nameCode)) {
             final IGameVariant onlyGameVariant = variants.isEmpty() ? null : variants.iterator().next();
             root.setEffect(new BoxBlur());
             root.setDisable(true);
@@ -66,20 +76,22 @@ public class GameMenuController {
             });
             dialog.show();
             dialog.toFront();
-        } else if (variants.size() > 1) {
-            root.setEffect(new BoxBlur());
-            root.setDisable(true);
-            GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
-            dialog.setTitle(gameName);
-            dialog.show();
-            dialog.toFront();
-            dialog.setAlwaysOnTop(true);
         } else if (variants.size() == 1) {
             IGameVariant onlyGameVariant = variants.iterator().next();
             chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
         } else {
             chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
         }
+    }
+
+    /**
+     * @return whether the window of the variants is shown: several variants, or a single one playing with the images
+     * of the user (Opinions, 2/11/2026: the window says when there is no image yet and does not start the game until
+     * there is one; the help alone used to start it without images)
+     */
+    static boolean showsTheVariants(final Collection<IGameVariant> variants) {
+        return variants.size() > 1
+            || (variants.size() == 1 && UserImagesVariant.folderOf(variants.iterator().next()) != null);
     }
 
     /**

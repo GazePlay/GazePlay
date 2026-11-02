@@ -17,7 +17,12 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.util.List;
 
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -70,6 +75,21 @@ class GameMenuControllerTest {
         gameMenuController.playBackgroundMusic(mockGameContext, mockGameSpec, mockMusicManager);
 
         assertTrue(BackgroundMusicManager.getInstance().getBackupPlaylist().isEmpty());
+    }
+
+    /**
+     * The window of the variants for several variants, and for a single one playing with the images of the user
+     * (Opinions, 2/11/2026: it says when there is no image and does not start the game without); a single other
+     * variant goes to the help or starts at once.
+     */
+    @Test
+    void shouldShowTheVariantsOfASingleVariantPlayingWithTheImagesOfTheUser() {
+        IGameVariant mine = new GroupedGameVariant("G", "S", "MyImages", "Opinions");
+        IGameVariant other = new DimensionGameVariant(2, 2);
+        assertTrue(GameMenuController.showsTheVariants(List.of(mine)));
+        assertTrue(GameMenuController.showsTheVariants(List.of(other, new DimensionGameVariant(3, 3))));
+        assertFalse(GameMenuController.showsTheVariants(List.of(other)));
+        assertFalse(GameMenuController.showsTheVariants(List.of()));
     }
 
     /**
