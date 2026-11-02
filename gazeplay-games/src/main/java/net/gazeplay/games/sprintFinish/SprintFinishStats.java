@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the games "SprintFinish" and "SprintFinishMouse" (see {@code SelectionGamesStats}).
+ * Statistics of the game "SprintFinish" (see {@code SelectionGamesStats}).
  */
 public class SprintFinishStats extends SelectionGamesStats {
 

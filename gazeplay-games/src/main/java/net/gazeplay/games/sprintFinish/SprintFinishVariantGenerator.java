@@ -1,31 +1,29 @@
 package net.gazeplay.games.sprintFinish;
 
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
- * Gives the variants of the games "SprintFinish" and "SprintFinishMouse" proposed in the menu.
+ * Gives the variants of "Sprint Finish" (maintainer's rules of 2/11/2026): the difficulty, easy, normal or hard (5, 10
+ * or 15 maps to win, buttons), and how it is played (switches at the bottom, see {@link SprintMode}). One group only:
+ * the window of the variants shows no switch for it.
  */
 public class SprintFinishVariantGenerator implements IGameVariantGenerator {
 
+    static final String GROUP = "SprintFinish";
+
     @Override
     public Set<IGameVariant> getVariants() {
-
-        Set<IGameVariant> gameVariants = new HashSet<>();
-
-        for (int i = 1; i <= 17; i++) {
-            gameVariants.add(new IntGameVariant(i));
+        final Set<IGameVariant> variants = new LinkedHashSet<>();
+        for (final SprintMode mode : SprintMode.values()) {
+            for (final SprintDifficulty difficulty : SprintDifficulty.values()) {
+                variants.add(new GroupedGameVariant(GROUP, mode.getKey(), difficulty.getKey(), null));
+            }
         }
-
-        return gameVariants.stream()
-            .sorted(Comparator.comparingInt(v -> ((IntGameVariant) v).getNumber()))
-            .collect(Collectors.toCollection(LinkedHashSet::new));
+        return variants;
     }
 }

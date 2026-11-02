@@ -35,7 +35,9 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
   fixation visible ou non** (fait, voir sa fiche) ; Sounds Of Life : deux sons pouvaient se superposer, le son en
   cours est maintenant coupé (fait, voir sa fiche).
 - Point 4 : Flower Of Numbers revu (propositions validées, tout fait, voir sa fiche) ; reste l'essai du mainteneur.
-  Ensuite : Opinions (revu le 2/11, voir sa fiche ; reste l'essai du mainteneur), puis Sprint Finish.
+  Ensuite : Opinions (revu le 2/11, essayé et validé par le mainteneur, commité `d82b754e2`) ; Sprint Finish :
+  revu le 2/11 (règle du mainteneur, voir sa fiche), en attente de l'essai du mainteneur ; puis Bubbles.
+  Un test de GazePlay Eval en échec une seule fois : point 8 ci-dessous, à surveiller.
 - Point 3 : clés `Spot all the differences` et `Differences found` retirées (décision du mainteneur), des deux
   `multilinguism.csv` (application et tests) ; aucun code ne les lisait.
 
@@ -59,8 +61,9 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
    (jeux de tir et d'action). Chaque jeu : les 8 étapes de la marche à suivre ci-dessous (état des lieux et
    propositions validées avant tout changement ; aide du jeu ; fenêtre des variantes des jeux revus ; un commit par
    jeu sur demande).
-5. Toujours à la fin de la revue : points 6 (refonte de l'engrenage) et 7 (plantage de la JVM des tests du
-   30/10 vers 11 h 19, pas revenu depuis) de la liste ci-dessous.
+5. Toujours à la fin de la revue : points 6 (refonte de l'engrenage), 7 (plantage de la JVM des tests du
+   30/10 vers 11 h 19, pas revenu depuis) et 8 (test GazePlay Eval en échec une fois le 2/11) de la liste
+   ci-dessous.
 
 ## Liste prioritaire du 29/10/2026 (points 1 à 5 faits et commités le 30/10/2026 ; points 6 et 7 pour la fin)
 
@@ -175,6 +178,15 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    `:gazeplay-core:test` seul puis `build` complet réussis (575 tests). Cause inconnue. Si ça revient : noter
    l'heure, le dernier test écrit dans `gazeplay-core/build/test-results/test`, chercher un `hs_err_pid*.log` et
    `%LOCALAPPDATA%\CrashDumps`. Si rien ne revient d'ici la fin de la revue des jeux, chercher quand même à la fin.
+8. **À surveiller, puis à chercher à la toute fin** (décision du mainteneur du 2/11/2026, comme le point 7) : le
+   2/11/2026 vers 14 h 30, pendant un `build` complet, un test de GazePlay Eval a échoué une fois :
+   `GazeplayEvalTest.shouldPlayAnEvaluationToItsEndAndWriteItsResults` (`gazeplay-games`), « Wanted but not
+   invoked: iGameContext.showRoundStats(...) » à la ligne 164 du test. L'évaluation était bien finie (phase `END`,
+   résultats écrits) ; seul l'appel à l'écran des statistiques manquait au moment de la vérification. Aucun
+   changement dans `gazeplay-games` depuis le build précédent, qui passait. Relancé aussitôt : le test seul, puis le
+   `build` complet réussis (665 tests). **Hypothèse** : test dépendant d'un délai (l'écran des statistiques vient
+   après une pause que le test n'attend pas toujours assez), machine chargée. Si ça revient : noter l'heure et le
+   message, regarder le délai attendu par le test et celui du jeu avant `showRoundStats`.
 
 ## Règles pour chaque jeu
 
@@ -287,7 +299,7 @@ urgent (images non libres, jeux très joués) au plus simple ; le mainteneur peu
 10. **GazePlay Eval et GazePlay Eval Test** : en dernier (contrat avec le site GazePlay Eval, format de résultats
     versionné).
 
-Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026), et point avec le mainteneur.
+Après chaque famille : `allGamesTest` complet (70 entrées depuis le 2/11/2026), et point avec le mainteneur.
 
 ## Légende des images
 
@@ -312,7 +324,7 @@ Après chaque famille : `allGamesTest` complet (71 entrées depuis le 30/10/2026
 | **Pet** (`Pet`) | **Remplacées le 30/10** : 4 pièces dessinées, objets OpenMoji, bouche triste ; la Biboule du projet gardée | ✔ 30/10 (boutons ronds, jauges nommées, bulle) | ✔ 30/10 (2 min par jauge, Biboule triste, activités claires, plantage corrigé) |
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Remplacées le 2/11** : mains, dés, pièces et billets génériques dessinés par script ; fleur et auras dessinées par le jeu (avant : 21 images à risque, dont des reproductions de l'euro) | ✔ 2/11 (cartes de la couleur des pétales, anneau, plateau mis à l'échelle) | ✔ 2/11 (règle du mainteneur : total de tous les pétales, chaque valeur une fois ; modes Guidé, Libre, Tous les pétales ; jusqu'à 10 à 50 ; buts comptés) |
 | **Opinions** (`Opinions`) | **Retirées le 2/11** : les 9 images (photos d'aliments jamais montrées, visages brillants) ; le jeu ne joue que les images de l'utilisateur | ✔ 2/11 (image en carte au centre, boutons « J'aime » / « Je n'aime pas » à icônes, anneau) | ✔ 2/11 (règle du mainteneur : images de l'utilisateur une par une, réponses enregistrées dans `-opinions.csv`) |
-| **Sprint Finish** (`SprintFinish`, `SprintFinishMouse`) | **Risque** : 6 images (chat et chien dessinés, boutons) | | |
+| **Sprint Finish** (`SprintFinish` ; `SprintFinishMouse` retiré, devenu une variante) | **Remplacées le 2/11** : chat, chien (recoloré) et poisson OpenMoji, prairie et gamelle dessinées ; haies, barrières, boutons, rondins dessinés par le jeu | ✔ 2/11 (plateau à l'échelle de l'écran, compte à rebours, chien regardé entouré, sons) | ✔ 2/11 (règle du mainteneur : seul au clavier ou au regard, à deux ; cartes au hasard ; 5 / 10 / 15 cartes) |
 | **Colored Bubbles**, **Portrait Bubbles** (`ColoredBubbles`, `PortraitBubbles`) | **Risque** : 3 fonds sous-marins (un signé Koshkina L) ; Portrait utilise les images par défaut | | |
 | **Egg Game**, **Personalize Egg Game** | **Risque** : 3 photos d'œufs (auteur « FRIEDMANN Chloe » dans les métadonnées) | | |
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
@@ -1483,3 +1495,138 @@ pour le début : `eval-video-t03..16`). Mode souris, pas d'essai avec le Tobii. 
     rien vérifier. Corrigé : une variante unique qui joue les images de l'utilisateur ouvre aussi la fenêtre des
     variantes (`GameMenuController.showsTheVariants`, test
     `GameMenuControllerTest.shouldShowTheVariantsOfASingleVariantPlayingWithTheImagesOfTheUser`).
+
+### Sprint Finish (`SprintFinish`, `SprintFinishMouse`, code `sprintFinish`) — 2/11/2026
+
+**Étape 1 (état des lieux) faite le 2/11/2026.** Captures « avant » : `build/game-screenshots/avant/sprintfinish/`
+(1366 × 768, mode souris, français ; niveaux 1, 6, 13 et 17 de « (Regard) », 4 et 11 de l'autre ; déroulé seconde
+par seconde du niveau 1 dans les deux modes : `timeline/*-planche.png`). Pas d'essai avec le Tobii ni à deux.
+
+- **Ce qu'il fait** (lecture du code : 10 classes, 2 053 lignes, écrites en 2023 ; et captures) : un chat doit
+  atteindre sa gamelle sans se faire attraper par des chiens qui le poursuivent. Obstacles : murs noirs, portes
+  marron ouvertes par un bouton rouge (fixation, avec un indicateur de progression ; les chiens ralentissent pendant
+  la fixation), murs rouges qui vont et viennent (le toucher fait perdre). 17 niveaux de difficulté croissante.
+  Attrapé : le niveau recommence aussitôt. Gamelle atteinte : « Bravo », niveau suivant ; l'écran des statistiques
+  vient quand le numéro du niveau atteint un multiple de 6 (après les niveaux 5, 11 et 17). 3 s d'attente au début
+  de chaque niveau, sans rien d'affiché.
+- **Deux entrées au catalogue, deux façons de jouer** (c'est un **jeu à deux**, d'après le code) :
+  - **« Sprint jusqu'à l'arrivée »** (`SprintFinish`) : **un joueur déplace le chat au clavier** (flèches) ;
+    **l'autre aide avec le regard** : regarder un chien l'arrête, regarder un mur mobile l'arrête (il devient bleu),
+    fixer un bouton ouvre ou referme ses portes.
+  - **« Sprint jusqu'à l'arrivée (Regard) »** (`SprintFinishMouse`) : **le chat suit le regard** (ou la souris) ;
+    **l'aide joue au clavier** : A arrête le chien le plus proche du chat, Z appuie sur le bouton le plus proche, E
+    arrête le mur mobile le plus proche (tant que la touche est tenue).
+  - Rien ne l'explique à l'écran (pas d'aide, pas de consigne, touches A / Z / E à deviner). Le nom de code
+    « Mouse » désigne en fait le mode où le chat suit le **regard**.
+- **Défauts vus** :
+  - D1. **Niveaux faits pour un grand écran** (fait ; 1920 × 1080 probable, hypothèse) : positions en pixels écrites en dur
+    (chien à x = 1100, bouton à « hauteur − 900 »...). En 1366 × 768, le **niveau 6 est impossible** : le bouton qui
+    ouvre la cage de la gamelle est hors de l'écran (y = −132). Tailles fixes (chat et chiens 125 px).
+  - D2. **Des chiens fantômes** (hypothèse forte, code et captures) : quand le chat est attrapé, le niveau est
+    reconstruit aussitôt, mais les minuteries de l'ancien chat et des anciens chiens ne s'arrêtent pas (elles ne
+    s'arrêtent qu'en voyant la fin du niveau, déjà remise à zéro). Les anciens chiens, invisibles, continuent de
+    courir et peuvent « attraper » le nouveau chat : en mode Regard, le chat revient au départ alors qu'aucun chien
+    visible ne le touche (déroulé du niveau 1). Leur nombre augmente à chaque échec : le jeu devient de plus en plus
+    dur, puis injouable. Même chose pour les murs mobiles (animations jamais arrêtées) et pour les écouteurs du
+    clavier et de la souris ajoutés sur la scène à chaque niveau, jamais retirés.
+  - D3. **Échec sans retour** : le niveau recommence en un instant, sans dire pourquoi (ni son, ni image). En mode
+    Regard, le chat repart vers le coin haut gauche tant que le regard (la souris) n'a pas bougé.
+  - D4. Compte des statistiques : un but atteint par niveau réussi, **aucun but à atteindre** ; écran des
+    statistiques à des moments sans lien avec le niveau choisi (niveau 4 choisi : statistiques après le niveau 5).
+  - D5. Fenêtre des variantes : 17 boutons « 1 » à « 17 » et trois boutons ronds « Niveau 1-5 / 6-11 / 12-17 »
+    (traduction française fausse : « Niveau 6-5 ») ; deux cartes au menu avec la même vignette.
+  - D6. Graphisme ancien : murs et portes en rectangles unis (noir, marron, rouge / bleu), bouton rouge brillant,
+    indicateur de progression gris de JavaFX, chat et chien en images détourées sur une prairie.
+  - D7. Code : vitesse liée au nombre d'images par seconde (60 supposées), 3 s comptées en images ; ralentissement
+    des chiens multiplié à chaque entrée du regard (regard et souris ensemble : deux fois).
+- **Images (licences)** : **à risque**. Les 6 images (`background.png` prairie, `chat.png`, `chien.png`,
+  `gamelle.png`, `pushButtonOff/On.png`) et la vignette sont de source inconnue (ajoutées en 2023 par l'auteur du
+  jeu, sans source) ; le chat et le chien ressemblent à des illustrations de banques d'images (hypothèse). Aucun
+  son.
+- **Propositions** (à valider ✔ / refuser ✘ ; elles dépendent des questions plus bas) :
+  - Images
+    - I1. Chat, chien, gamelle, os ou croquettes : **OpenMoji** (CC BY-SA 4.0) ; prairie, murs (haies), portes
+      (barrières en bois) et boutons **dessinés par script** (`gradle/images/make_sprintfinish_images.py`) ; nouvelle
+      vignette (capture).
+  - Graphisme
+    - G1. Plateau dessiné à l'échelle de l'écran (niveaux décrits sur une grille, pas en pixels) ; murs en haies,
+      portes en barrières reliées à leur bouton par la même couleur ; mur mobile qui change d'aspect quand il est
+      arrêté ; chien arrêté qui s'assoit (ou un « stop » au-dessus) ; anneau de fixation des jeux revus sur les
+      boutons ; « Niveau 4 » affiché en haut ; compte à rebours 3-2-1 au début.
+    - G2. Échec visible : le chien attrape le chat (petite animation, son), puis le niveau recommence.
+  - Gameplay
+    - P1. **Une seule carte** « Sprint Finish » au menu, la façon de jouer choisie en bas de la fenêtre des
+      variantes (« Le chat suit le regard » / « Le chat au clavier ») ; les niveaux en boutons (groupes 1-5, 6-11,
+      12-17 gardés ou non).
+    - P2. Partie = le niveau choisi puis les suivants ; statistiques à la fin d'une série (par exemple 5 niveaux)
+      ou quand on quitte ; un but à atteindre par niveau.
+    - P3. Les touches de l'aide au clavier écrites à l'écran (A, Z, E, ou des touches plus simples : flèches pour le
+      chat, barre d'espace...) et dans l'aide du jeu.
+  - Corrections
+    - P4. D2 (tout arrêter à la fin d'un niveau : minuteries, animations, écouteurs), D1 (niveaux à l'échelle,
+      niveau 6 jouable), D4, D5 (traduction), D7 (vitesse en temps réel).
+- **Questions au mainteneur** (la règle d'abord) :
+  1. **À quoi sert le jeu, et à qui ?** Est-ce bien un jeu **à deux** (un au regard, un au clavier), par exemple un
+     enfant et un adulte, ou un frère ou une sœur ? Faut-il aussi pouvoir y jouer **seul** au regard (chat au regard,
+     chiens qui s'arrêtent tout seuls de temps en temps, ou sans aide) ?
+  2. **Les deux façons de jouer** sont-elles à garder toutes les deux (chat au clavier + aide au regard ; chat au
+     regard + aide au clavier) ? Une seule carte avec le choix en bas (P1) ?
+  3. **Les touches de l'aide** : A / Z / E à garder, ou d'autres (une seule touche « stop » pour tout ce qui est
+     proche, par exemple) ?
+  4. **Les 17 niveaux** : à garder tels quels (refaits à l'échelle de l'écran), à réduire, ou à refaire ?
+  5. **Fin de partie** : statistiques après combien de niveaux (5 ? le dernier niveau ? jamais, on quitte par
+     l'engrenage) ?
+- **Réponse du mainteneur (2/11/2026) : la règle.**
+  - **À deux** : le joueur au regard arrête les chiens en les regardant (l'autre déplace le chat).
+  - **Variante à un joueur** : le chat se déplace **au clavier ou au regard** ; les chiens sont **beaucoup plus
+    lents** (s'amuser sans perdre trop souvent) ; les boutons s'activent quand **le chat passe dessus**.
+  - **Touches** : Z / Q / S / D (clavier AZERTY) ou W / A / S / D (QWERTY), avec une option dans les réglages pour
+    choisir son clavier.
+  - **Niveaux** : garder les 17, ou les générer au hasard (avis demandé).
+  - **Fin de partie** : variantes Facile / Normal / Difficile = gagner après 5 / 10 / 15 cartes.
+- **Avis donné et validé (2/11/2026, « ok pour tout, fais comme tu proposes »)** : à deux, seulement « chat au clavier
+  + aide au regard » (l'ancien mode « chat au regard + aide au clavier A / Z / E » disparaît) ; les flèches, Z Q S D
+  et W A S D marchent toutes, **sans réglage** (elles ne se gênent pas) ; cartes **tirées au hasard à partir de
+  modèles** ; une seule carte au menu.
+- **Fait (2/11/2026)** :
+  - **Une seule entrée** `SprintFinish` (`SprintFinishMouse` retiré du catalogue : 70 entrées). Variantes
+    `GroupedGameVariant` : Facile (5 cartes), Normal (10), Difficile (15) en boutons ; en bas, « Seul : le chat suit
+    le regard », « Seul : le chat au clavier », « À deux » (`SprintMode`, `SprintDifficulty`). Une ancienne variante
+    (numéro de niveau) se joue seul au regard, en Normal. Le jeu n'est pas dans la liste du rejeu : pas de
+    correspondance à garder pour les anciennes parties.
+  - **Cartes au hasard** (`SprintMapGenerator`, `SprintMap`) : grille de 16 × 9 cases à l'échelle de l'écran (plus de
+    pixels écrits en dur : D1 corrigé). Modèles dans l'ordre de la partie, repris des 17 niveaux : prairie avec des
+    buissons, haie avec un passage, haie avec une barrière ouverte par un bouton (les chiens attendent derrière),
+    gamelle dans un enclos fermé par une barrière (avec une haie à passage en plus une fois sur deux), rondins qui
+    montent et descendent (1 ou 2). Chiens : 1 puis 2 dans la seconde moitié, 3 dans le dernier tiers du Difficile ;
+    jamais près du chat (7 pas au moins), de la gamelle ni sous le compteur. Chaque carte est vérifiée jouable
+    (boutons atteignables barrières fermées, gamelle atteignable une fois ouvertes) ; tirage rejouable (graine).
+  - **Une seule boucle de jeu**, en temps réel (cases par seconde), arrêtée à chaque fin de carte ; écouteurs du
+    clavier et du regard retirés à chaque carte et à la fin : **plus de chiens fantômes** (D2), vérifié par un test.
+    Rien ne bouge pendant que le menu de l'engrenage est ouvert.
+  - Chiens : ils prennent le plus court chemin autour des haies et des barrières fermées (ils attendent derrière une
+    barrière), s'arrêtent devant un rondin ; seuls, beaucoup plus lents (0,7 case/s contre 1,6 à deux). À deux, un
+    chien regardé s'arrête (cercle rouge, grisé) ; un rondin regardé s'arrête (gris) ; un bouton s'ouvre par une
+    fixation (anneau de la couleur principale). Seul, le bouton s'ouvre quand le chat passe dessus. Une barrière
+    ouverte le reste.
+  - Chat au regard : il va vers le point regardé (il attend le premier regard, au lieu de partir dans le coin) et
+    glisse le long d'une haie. Chat au clavier : vitesse constante, 3,2 cases/s.
+  - Retours : compte à rebours 3-2-1 (son), « Carte 3 / 10 » en haut ; attrapé : le chat tremble (son), la même carte
+    recommence ; gamelle : le chat saute (son), carte suivante ; après la dernière : « Bravo », puis les statistiques.
+    Un but à atteindre par carte, un but atteint par carte gagnée (D4).
+  - Images (`make_sprintfinish_images.py`) et sons (`make_sprintfinish_sounds.py`) ; les 6 anciennes images
+    retirées ; classes `Cat`, `Interrupteur`, `MovingWall`, `SprintFinishMouse*` retirées. Branches propres à Sprint
+    Finish retirées de `GameVariantDialog` ; traduction « Niveau 6-5 » corrigée (« Niveau 6-11 », encore utilisée par
+    Rush Hour). Aide (`SprintFinish-fra.txt`, `-eng.txt`), vignette (capture d'une carte avec enclos, 960 × 540),
+    crédits (`gradle/images/README.txt`, licence affichée), inventaire.
+- **Vérifications** : `SprintFinishTest` (8 tests : cartes jouables sur 150 tirages pour chaque difficulté, modèles et
+  nombre de chiens ; chat aux flèches, Z Q S D et W A S D, clavier écouté puis plus à la fin ; chat au regard ; même
+  carte après avoir été attrapé, sans les chiens d'avant ; les 5 cartes du Facile puis la fin ; bouton ouvert par le
+  chat seul et pas à deux ; chien regardé arrêté ; variantes) ; `GameHelpTest` avec `SprintFinish` ; captures en vraie
+  fenêtre des deux modes (`build/game-screenshots/essai1/sprintfinish/`) et de chaque modèle de carte. Pas d'essai au
+  Tobii ni à deux : à faire par le mainteneur.
+- **Retour du mainteneur (2/11/2026)** : « c'est nickel », mais les chiens sont un peu raides : qu'ils puissent aller
+  **en diagonale**. **Fait** : un chien court tout droit vers le chat quand rien ne le gêne ; sinon il suit le plus
+  court chemin, diagonales comprises (jamais à travers le coin d'une haie), en filant vers la case la plus lointaine
+  qu'il voit encore : il contourne les haies en souplesse. Test
+  `SprintFinishTest.shouldRunDiagonallyToTheCat` ; vérifié en vraie fenêtre (`build/game-screenshots/essai2/`).

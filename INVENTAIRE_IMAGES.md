@@ -54,7 +54,7 @@ Images qui ressemblent à des photos ou des illustrations professionnelles, sans
 | Images par défaut (core) | 9 | Animaux dessinés (chouette, crabe, écureuil…) | Commit de 2021 « adding free of right Free Fundation images » : dites libres, source non indiquée |
 | ~~Opinions~~ | ~~9~~ | Photos d'aliments, icônes brillantes | **Retirées le 2/11/2026** : le jeu ne montre plus que les images de l'utilisateur ; boutons en icônes Material Symbols |
 | Room | 9 | Murs, flèches | — |
-| Sprint Finish | 6 | Chat et chien dessinés, boutons | — |
+| ~~Sprint Finish~~ | ~~6~~ | Chat et chien dessinés, boutons | **Remplacées le 2/11/2026** : chat, chien (recoloré) et poisson OpenMoji ; prairie et gamelle dessinées par script ; haies, barrières, boutons et rondins dessinés par le jeu |
 | Bubble | 3 | Fonds sous-marins | Un porte « Koshkina L » (illustratrice de banques d'images) |
 | Egg | 3 | Photos d'œufs | Auteur « FRIEDMANN Chloe » dans les métadonnées |
 

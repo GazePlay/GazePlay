@@ -1,765 +1,458 @@
-/**
- * The SprintFinish class represents a cooperative game in which the player controls a cat to complete levels.
- * The objective of the game is for the cat to reach its food dish without being caught by the pursuing dogs. If the cat is caught by a dog, the level restarts.
- * The game is implemented as a JavaFX application and extends the Parent class.
- */
 package net.gazeplay.games.sprintFinish;
 
-import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Parent;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.util.Duration;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GameStyle;
+import net.gazeplay.games.sprintFinish.SprintMap.Button;
+import net.gazeplay.games.sprintFinish.SprintMap.Cell;
+import net.gazeplay.games.sprintFinish.SprintMap.Log;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Games "SprintFinish" and "SprintFinishMouse": the cat must reach its food dish through walls, doors opened by
- * switches and moving walls, while dogs chase it (looking at a dog stops it). Several levels.
+ * Game "Sprint Finish" (reviewed on 2/11/2026, maintainer's rules): the cat must reach its bowl without being caught by
+ * the dogs, on maps made at random (see {@link SprintMapGenerator}), with hedges, fences opened by a button, and logs
+ * going up and down. The cat moves with the keyboard (arrows, Z Q S D or W A S D: both keyboards work, without a
+ * setting) or follows the gaze, alone; with two players, one moves the cat with the keyboard and the other stops the
+ * dogs and the logs by looking at them, and opens the fences by a fixation on their button (see {@link SprintMode}).
+ * Alone, a button opens its fences when the cat walks on it. A dog or a log catching the cat: the map starts again. The
+ * bowl reached: the next map; after the last one of the difficulty (5, 10 or 15 maps), "Bravo", then the statistics.
+ * <p>
+ * The board is a grid scaled to the screen: positions are in cells, all moves in cells per second (one loop, stopped
+ * at the end of each map: no dog keeps running after it). Nothing moves while the menu of the gear is open.
  */
-public class SprintFinish extends Parent implements GameLifeCycle {
+@Slf4j
+public class SprintFinish implements GameLifeCycle {
+
+    static final String FOLDER = "data/sprintFinish/";
+
+    static final String TICK_SOUND = FOLDER + "sounds/tick.wav";
+    static final String DOOR_SOUND = FOLDER + "sounds/door.wav";
+    static final String CAUGHT_SOUND = FOLDER + "sounds/caught.wav";
+    static final String DISH_SOUND = FOLDER + "sounds/dish.wav";
 
     /**
-     * The game context for the current game instance.
+     * Speed of the cat, in cells per second.
      */
+    static final double CAT_SPEED = 3.2;
+
+    /**
+     * Half the side of the square of the cat and of the dogs, in cells (a little smaller than the picture).
+     */
+    static final double HALF = 0.34;
+
+    /**
+     * Size of the pictures of the cat and of the dogs, in cells (a little more than a cell: they are long and low).
+     */
+    static final double ANIMAL_SIZE = 1.1;
+
+    /**
+     * Distance between the cat and a dog at which the dog catches it, in cells.
+     */
+    static final double CATCH_DISTANCE = 0.68;
+
+    /**
+     * Distance between the cat and its bowl at which it reaches it, in cells.
+     */
+    static final double DISH_DISTANCE = 0.55;
+
+    /**
+     * The colors of the buttons and of their fences.
+     */
+    static final String[] BUTTON_COLORS = {"#3A7BD5", "#9B59D0"};
+
+    enum Phase { COUNTDOWN, PLAY, WON, CAUGHT, OVER }
+
     private final IGameContext gameContext;
-
-    /**
-     * The game statistics for the current game instance.
-     */
     private final Stats stats;
+    @Getter
+    private final SprintMode mode;
+    @Getter
+    private final SprintDifficulty difficulty;
+    private final ReplayablePseudoRandom random;
 
     /**
-     * A flag indicating whether the current level has ended.
+     * The maps of the game, made when first played (a map starting again is the same).
      */
-    protected boolean endOfLevel;
+    private final List<SprintMap> maps = new ArrayList<>();
+
+    @Getter
+    private int index;
+
+    @Getter
+    private Phase phase = Phase.OVER;
+
+    private double cell;
+    private double originX;
+    private double originY;
+
+    private Group layer;
+    private Group board;
+    private Group hud;
+    private Node gazeArea;
+
+    @Getter
+    private double catX;
+    @Getter
+    private double catY;
+    private ImageView catView;
+    private ImageView dishView;
+
+    @Getter
+    private final List<Dog> dogs = new ArrayList<>();
+    private final List<LogPiece> logs = new ArrayList<>();
+    @Getter
+    private final List<ButtonPiece> buttons = new ArrayList<>();
 
     /**
-     * The cat controlled by the player.
+     * Where the cat goes when it follows the gaze, in cells; null before the first look.
      */
-    protected Cat cat;
+    private double[] target;
+
+    private final Set<KeyCode> pressed = EnumSet.noneOf(KeyCode.class);
+    private final EventHandler<KeyEvent> keyPressed = this::onKeyPressed;
+    private final EventHandler<KeyEvent> keyReleased = this::onKeyReleased;
 
     /**
-     * The current level of the game.
+     * Nodes followed by the gaze, and their handlers, removed when the map changes and at the end.
      */
-    private int level;
+    private final Map<Node, EventHandler<Event>> gazeNodes = new HashMap<>();
+
+    private final AnimationTimer loop = new AnimationTimer() {
+        private long last = -1;
+
+        @Override
+        public void handle(final long now) {
+            final double seconds = last < 0 ? 0 : Math.min(0.05, (now - last) / 1e9);
+            last = now;
+            if (Stats.isConfigMenuOpen()) {
+                // The keys are not received while the menu is open: one released meanwhile must not stay pressed
+                pressed.clear();
+            } else {
+                step(seconds);
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            last = -1;
+        }
+    };
+
+    private boolean manual;
+    private Timeline countdown;
+    private PauseTransition afterMap;
+
+    private final Map<String, Image> images = new HashMap<>();
+
+    public SprintFinish(final IGameContext gameContext, final Stats stats, final SprintMode mode,
+                        final SprintDifficulty difficulty) {
+        this(gameContext, stats, mode, difficulty, -1);
+    }
 
     /**
-     * The cat's food dish in the game.
+     * @param gameSeed the seed of the game to replay, or a negative value for a new game
      */
-    private Rectangle gamelle;
-
-    /**
-     * The obstacles in the game that the cat and other moving object must navigate around.
-     */
-    private ArrayList<Rectangle> obstacles;
-
-    /**
-     * The switches in the game that the cat can activate to open doors or move walls.
-     */
-    protected ArrayList<Interrupteur> interrupteurs;
-
-    /**
-     * The walls in the game that the cat must navigate around.
-     */
-    private ArrayList<Rectangle> walls;
-
-    /**
-     * The moving walls in the game that the cat must navigate around.
-     */
-    protected ArrayList<MovingWall> wallsMoving;
-
-    /**
-     * The dogs in the game that pursue the cat.
-     */
-    protected ArrayList<Cat> dogs;
-
-    /**
-     * Specifies if the cat is playable with keyboard or not
-     */
-    protected boolean catNotKeyboard;
-
-    /**
-     * Specifies if a key is pressed
-     */
-    private boolean isKeyPressed;
-
-    /**
-     * Specifies if the game timer has ended or not
-     */
-    protected boolean gameTimerEnded;
-
-    /**
-     * Constructs a new SprintFinish instance with the specified game context, statistics, and level.
-     * @param gameContext the game context for the new game instance
-     * @param stats the game statistics for the new game instance
-     * @param level the level for the new game instance
-     */
-    public SprintFinish(final IGameContext gameContext, Stats stats, int level, boolean catNotKeyboard){
+    public SprintFinish(final IGameContext gameContext, final Stats stats, final SprintMode mode,
+                        final SprintDifficulty difficulty, final double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.level = level;
-        this.obstacles = new ArrayList<>();
-        this.dogs = new ArrayList<>();
-        this.interrupteurs = new ArrayList<>();
-        this.walls = new ArrayList<>();
-        this.wallsMoving = new ArrayList<>();
-        this.catNotKeyboard = catNotKeyboard;
-        this.gameTimerEnded = false;
+        this.mode = mode;
+        this.difficulty = difficulty;
+        if (gameSeed < 0) {
+            random = new ReplayablePseudoRandom();
+            stats.setGameSeed(random.getSeed());
+        } else {
+            random = new ReplayablePseudoRandom(gameSeed);
+        }
     }
 
-
-
-
-
-    /**
-     * Launches a new level of the game by resetting the obstacles, switches, dogs, and walls,
-     * setting the end of the level to false, adding the stats to the gaze device manager,
-     * creating a new background rectangle, initializing the game box,
-     * notifying that a new round is ready, and starting the game.
-     */
     @Override
     public void launch() {
-        //Clear all arrayLists
-        this.obstacles.clear();
-        this.dogs.clear();
-        this.interrupteurs.clear();
-        this.walls.clear();
-        this.wallsMoving.clear();
-
-        this.endOfLevel = false;
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         gameContext.setLimiterAvailable();
-        Rectangle background = new Rectangle(0,0,dimension2D.getWidth(),dimension2D.getHeight());
-        background.setFill(new ImagePattern(new Image("data/sprintFinish/background.png")));
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double width = dimension.getWidth();
+        final double height = dimension.getHeight();
+        cell = Math.min(width / SprintMap.COLUMNS, height / SprintMap.ROWS);
+        originX = (width - cell * SprintMap.COLUMNS) / 2;
+        originY = (height - cell * SprintMap.ROWS) / 2;
+
+        final ImageView meadow = new ImageView(image("meadow"));
+        meadow.setFitWidth(width);
+        meadow.setFitHeight(height);
+        gazeArea = meadow;
+        board = new Group();
+        board.setLayoutX(originX);
+        board.setLayoutY(originY);
+        hud = new Group();
+        hud.setMouseTransparent(true);
+        layer = new Group(meadow, board, hud);
+        gameContext.getChildren().add(layer);
+
+        if (mode.isKeyboardCat()) {
+            gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, keyPressed);
+            gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_RELEASED, keyReleased);
+        }
+        if (mode.isGazeCat()) {
+            // The cat goes where the gaze (or the mouse) is, anywhere on the board (the gaze on the meadow: see
+            // startMap)
+            layer.addEventFilter(MouseEvent.MOUSE_MOVED,
+                event -> gazeAt((event.getX() - originX) / cell, (event.getY() - originY) / cell));
+            layer.addEventFilter(MouseEvent.MOUSE_DRAGGED,
+                event -> gazeAt((event.getX() - originX) / cell, (event.getY() - originY) / cell));
+        }
+
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.getChildren().add(background);
-        setLevel(level);
-        initGameBox();
         stats.notifyNewRoundReady();
         gameContext.firstStart();
-        this.gameTimerEnded = false;
-
-
-        if (catNotKeyboard){
-            gameContext.getPrimaryScene().setOnKeyPressed(keyEvent -> {
-                if (gameTimerEnded){
-                    if (!endOfLevel){
-                        if (!isKeyPressed){
-
-                            // Perform different actions depending on the pressed key
-                            switch (keyEvent.getCode()) {
-                                // If the A key is pressed, stop the nearest dog
-                                case A -> {
-                                    isKeyPressed = true;
-                                    if (!this.dogs.isEmpty()) {
-                                        Cat nearestDog = getNearestDogFromCat(this.dogs);
-                                        if (nearestDog != null) {
-                                            nearestDog.canMove = false;
-                                        }
-                                    }
-                                }
-                                // If the Z key is pressed, activate the nearest interrupteur
-                                case Z -> {
-                                    isKeyPressed = true;
-                                    if (!this.interrupteurs.isEmpty()){
-                                        Interrupteur nearestInterrupteur = getNearestInterrupteurFromCat(this.interrupteurs);
-                                        if (nearestInterrupteur != null){
-                                            nearestInterrupteur.initTimerInterrupteur();
-                                        }
-                                    }
-                                }
-                                // If the E key is pressed, stop the nearest movingWall
-                                case E -> {
-                                    isKeyPressed = true;
-                                    if (!this.wallsMoving.isEmpty()){
-                                        MovingWall nearestMovingWall = getNearestWallMovingFromCat(this.wallsMoving);
-                                        if (nearestMovingWall != null){
-                                            nearestMovingWall.canMove = false;
-                                        }
-                                    }
-                                }
-                                default -> {
-
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            gameContext.getPrimaryScene().setOnKeyReleased(keyEvent -> {
-                if (gameTimerEnded){
-                    if (!endOfLevel){
-                        switch (keyEvent.getCode()) {
-                            // If the A key is released, let the dogs move again
-                            case A -> {
-                                isKeyPressed = false;
-                                if (!this.dogs.isEmpty()) {
-                                    for (Cat dog : this.dogs) {
-                                        dog.canMove = true;
-                                    }
-                                }
-                            }
-                            // If the Z key is released, stop the timers of all switches
-                            case Z -> {
-                                isKeyPressed = false;
-                                if (!this.interrupteurs.isEmpty()){
-                                    for (Interrupteur interrupteur : this.interrupteurs) {
-
-                                        if (interrupteur.timelineProgressBar != null && interrupteur.timelineProgressBar.getStatus() == Animation.Status.RUNNING ){
-                                            interrupteur.stopTimerInterrupteur();
-                                        }
-
-                                    }
-                                }
-
-                            }
-                            // If the E key is released, let the movingWall move again
-                            case E -> {
-                                isKeyPressed = false;
-                                if (!this.wallsMoving.isEmpty()){
-                                    for (MovingWall wallMoving : this.wallsMoving) {
-                                        wallMoving.canMove = true;
-                                    }
-                                }
-                            }
-                            default -> {
-
-                            }
-                        }
-                    }
-                }
-            });
+        index = 0;
+        startMap();
+        if (!manual) {
+            loop.start();
         }
     }
 
+    /**
+     * Shows the map of {@link #index} (made at its first time), the cat and the dogs at their start, the fences
+     * closed, then the countdown.
+     */
+    private void startMap() {
+        stopTransitions();
+        unfollowAll();
+        if (mode.isGazeCat()) {
+            follow(gazeArea, gazeHandlerOfArea);
+        }
+        board.getChildren().clear();
+        dogs.clear();
+        logs.clear();
+        buttons.clear();
+        pressed.clear();
+        target = null;
+        if (index >= maps.size()) {
+            maps.add(SprintMapGenerator.generate(index, difficulty.getMaps(), random));
+            stats.incrementNumberOfGoalsToReach();
+        }
+        final SprintMap map = maps.get(index);
+
+        for (int column = 0; column < SprintMap.COLUMNS; column++) {
+            for (int row = 0; row < SprintMap.ROWS; row++) {
+                if (map.isHedge(column, row)) {
+                    board.getChildren().add(hedge(column, row));
+                }
+            }
+        }
+        for (final Button button : map.getButtons()) {
+            final ButtonPiece piece = new ButtonPiece(button);
+            buttons.add(piece);
+            board.getChildren().addAll(piece.fences);
+            board.getChildren().add(piece.node);
+        }
+        dishView = picture("dish", 0.9);
+        place(dishView, map.getDish().column() + 0.5, map.getDish().row() + 0.5, 0.9);
+        board.getChildren().add(dishView);
+        for (final Log log : map.getLogs()) {
+            final LogPiece piece = new LogPiece(log);
+            logs.add(piece);
+            board.getChildren().add(piece.node);
+        }
+        for (final Cell start : map.getDogs()) {
+            final Dog dog = new Dog(start.column() + 0.5, start.row() + 0.5);
+            dogs.add(dog);
+            board.getChildren().add(dog.node);
+        }
+        catX = map.getCat().column() + 0.5;
+        catY = map.getCat().row() + 0.5;
+        catView = picture("cat", ANIMAL_SIZE);
+        board.getChildren().add(catView);
+        render();
+
+        hud.getChildren().clear();
+        final Group counter = GameStyle.pill(gameContext.getTranslator().translate("SprintMap") + " " + (index + 1)
+            + " / " + difficulty.getMaps(), cell * 0.32);
+        counter.setLayoutX(originX + (cell * SprintMap.COLUMNS - counter.getBoundsInLocal().getWidth()) / 2);
+        counter.setLayoutY(originY + cell * 0.08);
+        hud.getChildren().add(counter);
+        startCountdown();
+    }
+
+    private final EventHandler<Event> gazeHandlerOfArea = event -> {
+        if (event instanceof GazeEvent gaze && (gaze.getEventType() == GazeEvent.GAZE_MOVED
+            || gaze.getEventType() == GazeEvent.GAZE_ENTERED)) {
+            gazeAt((gaze.getX() - originX) / cell, (gaze.getY() - originY) / cell);
+        }
+    };
 
     /**
-     * Builds a level: its walls, switches, doors, dogs and dish.
+     * 3, 2, 1 in the middle, a "tock" each, then the map is played.
      */
-    private void setLevel(final int i){
-
-        this.level = i;
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        double dogSpeed = 3.5;
-
-        int widthCat = 125;
-        int heightCat = 125;
-        int widthDog = 125;
-        int heightDog = 125;
-        int widthInterrupteur = 130;
-        int heightInterrupteur = 100;
-        int widthGamelle = 120;
-        int heightGamelle = 80;
-
-        if (!catNotKeyboard){
-            this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true,null);
-        }else{
-            this.cat = new Cat(0,0,widthCat,heightCat,gameContext,stats,this,8,true, new Rectangle(0,0,1,1));
+    private void startCountdown() {
+        phase = Phase.COUNTDOWN;
+        final Group[] shown = new Group[1];
+        countdown = new Timeline();
+        for (int i = 0; i < 3; i++) {
+            final String number = String.valueOf(3 - i);
+            countdown.getKeyFrames().add(new KeyFrame(Duration.seconds(i), event -> {
+                hud.getChildren().remove(shown[0]);
+                shown[0] = GameStyle.pill(number, cell * 0.9);
+                shown[0].setLayoutX(originX + (cell * SprintMap.COLUMNS - shown[0].getBoundsInLocal().getWidth()) / 2);
+                shown[0].setLayoutY(originY + (cell * SprintMap.ROWS - shown[0].getBoundsInLocal().getHeight()) / 2);
+                hud.getChildren().add(shown[0]);
+                gameContext.getSoundManager().add(TICK_SOUND);
+            }));
         }
-
-        this.gamelle = new Rectangle(1000,1000,widthGamelle,heightGamelle);
-
-        if (this.level == 1){
-            this.cat.hitbox.setX(100);
-            this.cat.hitbox.setY(100);
-
-            Cat dog = new Cat(900, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-
-            this.dogs.add(dog);
-
-        }else if (this.level == 2){
-            this.cat.hitbox.setX(150);
-            this.cat.hitbox.setY(150);
-            Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-
-            this.gamelle.setX(dimension2D.getWidth()-350);
-            this.gamelle.setY(dimension2D.getHeight()-250);
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-        }else if (this.level == 3){
-            this.cat.hitbox.setX(150);
-            this.cat.hitbox.setY(150);
-            Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed+2, false, this.cat.hitbox);
-            Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed+2, false, this.cat.hitbox);
-
-            this.gamelle.setX(dimension2D.getWidth()-350);
-            this.gamelle.setY(dimension2D.getHeight()-250);
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-
-
-        }else if (this.level == 4){
-            this.cat.hitbox.setX(200);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-600);
-
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(600,600,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.createDoorAroundAnObject(gamelle);
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-            this.interrupteurs.add(interrupteur);
-
-
-        }else if (this.level == 5){
-            this.cat.hitbox.setX(200);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(200, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(1100, 460, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-650);
-
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(400,600,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.getPortes().add(new Rectangle(dimension2D.getWidth()/2,0, 50,dimension2D.getHeight()));
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-            this.interrupteurs.add(interrupteur);
-
-
-        }else if (this.level == 6){
-
-            this.cat.hitbox.setX(200);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(200, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(1100, 460, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-400);
-
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(400,600,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.getPortes().add(new Rectangle(dimension2D.getWidth()/2,0, 50,dimension2D.getHeight()));
-
-            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(dimension2D.getWidth()-400,dimension2D.getHeight()-900,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur2.createDoorAroundAnObject(gamelle);
-
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-            this.interrupteurs.add(interrupteur);
-            this.interrupteurs.add(interrupteur2);
-
-
-        }else if (this.level == 7){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-300,200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.getPortes().add(new Rectangle(0,dimension2D.getHeight()/2, dimension2D.getWidth(),50));
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-            this.interrupteurs.add(interrupteur);
-
-
-        }else if(this.level == 8){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-300,200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.getPortes().add(new Rectangle(0,dimension2D.getHeight()/2, dimension2D.getWidth(),50));
-
-            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(300,dimension2D.getHeight()-300,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur2.createDoorAroundAnObject(gamelle);
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-
-            this.interrupteurs.add(interrupteur);
-            this.interrupteurs.add(interrupteur2);
-        }else if(this.level == 9){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Rectangle mur = new Rectangle(dimension2D.getWidth()/2,0,50,dimension2D.getHeight()/2-100);
-            Rectangle mur2 = new Rectangle(dimension2D.getWidth()/2,dimension2D.getHeight()/2+100,50,dimension2D.getHeight()/2+100);
-
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-            this.walls.add(mur);
-            this.walls.add(mur2);
-
-        }else if(this.level == 10){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Rectangle mur = new Rectangle(0,dimension2D.getHeight()/2,dimension2D.getWidth()/2-100,50);
-            Rectangle mur2 = new Rectangle(dimension2D.getWidth()/2+100,dimension2D.getHeight()/2,dimension2D.getWidth()/2+100,50);
-
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-            this.walls.add(mur);
-            this.walls.add(mur2);
-        }else if(this.level == 11){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Rectangle mur = new Rectangle(dimension2D.getWidth()/2,0,50,dimension2D.getHeight()/2-100);
-            Rectangle mur2 = new Rectangle(dimension2D.getWidth()/2,dimension2D.getHeight()/2+100,50,dimension2D.getHeight()/2+100);
-
-
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(200,dimension2D.getHeight()-300,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.getPortes().add(new Rectangle(dimension2D.getWidth()/2,dimension2D.getHeight()/2-100, 50,200));
-
-            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(dimension2D.getWidth()-300,200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur2.createDoorAroundAnObject(gamelle);
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-            this.walls.add(mur);
-            this.walls.add(mur2);
-            this.interrupteurs.add(interrupteur);
-            this.interrupteurs.add(interrupteur2);
-
-        }else if(this.level == 12){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Rectangle mur = new Rectangle(0,dimension2D.getHeight()/2,dimension2D.getWidth()/2-100,50);
-            Rectangle mur2 = new Rectangle(dimension2D.getWidth()/2+100,dimension2D.getHeight()/2,dimension2D.getWidth()/2+100,50);
-
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-300,200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.getPortes().add(new Rectangle(dimension2D.getWidth()/2-100,dimension2D.getHeight()/2, 200,50));
-
-            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(200,dimension2D.getHeight()-300,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur2.createDoorAroundAnObject(gamelle);
-
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-            this.walls.add(mur);
-            this.walls.add(mur2);
-            this.interrupteurs.add(interrupteur);
-            this.interrupteurs.add(interrupteur2);
-
-        }else if (level == 13){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
-            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()-50);
-
-            this.wallsMoving.add(wallMoving);
-            this.dogs.add(dog);
-        }else if (level == 14){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
-            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true,5);
-            wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
-
-            this.wallsMoving.add(wallMoving);
-            this.wallsMoving.add(wallMoving2);
-            this.dogs.add(dog);
-        }else if (level == 15){
-
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-350, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
-            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true,5);
-            wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving3 = new MovingWall(50,dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
-            wallMoving3.animationHorizontal(wallMoving3.getX(),dimension2D.getWidth()/2);
-            MovingWall wallMoving4 = new MovingWall(dimension2D.getWidth()-250, dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
-            wallMoving4.animationHorizontal(wallMoving4.getX(),dimension2D.getWidth()/2+50);
-
-            this.wallsMoving.add(wallMoving);
-            this.wallsMoving.add(wallMoving2);
-            this.wallsMoving.add(wallMoving3);
-            this.wallsMoving.add(wallMoving4);
-            this.dogs.add(dog);
-        }else if (level == 16){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(250, dimension2D.getHeight()-250, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-350,200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.createDoorAroundAnObject(gamelle);
-
-
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
-            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true,5);
-            wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving3 = new MovingWall(50,dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
-            wallMoving3.animationHorizontal(wallMoving3.getX(),dimension2D.getWidth()/2);
-            MovingWall wallMoving4 = new MovingWall(dimension2D.getWidth()-250, dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
-            wallMoving4.animationHorizontal(wallMoving4.getX(),dimension2D.getWidth()/2+50);
-
-            this.interrupteurs.add(interrupteur);
-            this.wallsMoving.add(wallMoving);
-            this.wallsMoving.add(wallMoving2);
-            this.wallsMoving.add(wallMoving3);
-            this.wallsMoving.add(wallMoving4);
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-        }else if (level == 17){
-            this.cat.hitbox.setX(250);
-            this.cat.hitbox.setY(200);
-
-            Cat dog = new Cat(dimension2D.getWidth()-600, 250, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(dimension2D.getWidth()/2, dimension2D.getHeight()-250, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            this.gamelle.setX(dimension2D.getWidth()-300);
-            this.gamelle.setY(dimension2D.getHeight()-200);
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-350,200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur.createDoorAroundAnObject(gamelle);
-            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(250,dimension2D.getHeight()-200,widthInterrupteur,heightInterrupteur),gameContext,this);
-            interrupteur2.createDoorAroundAnObject(gamelle);
-
-
-            MovingWall wallMoving = new MovingWall(50,dimension2D.getHeight()/2,400,50,this,gameContext,true,10);
-            wallMoving.animationHorizontal(wallMoving.getX(),dimension2D.getWidth()-50);
-
-            this.interrupteurs.add(interrupteur);
-            this.interrupteurs.add(interrupteur2);
-            this.wallsMoving.add(wallMoving);
-
-            this.dogs.add(dog);
-            this.dogs.add(dog2);
-        }else{
-            this.level = 1;
-            dispose();
-            launch();
+        countdown.getKeyFrames().add(new KeyFrame(Duration.seconds(3), event -> {
+            hud.getChildren().remove(shown[0]);
+            play();
+        }));
+        countdown.playFromStart();
+    }
+
+    /**
+     * Ends the countdown: the map is played.
+     */
+    void play() {
+        if (countdown != null) {
+            countdown.stop();
+        }
+        hud.getChildren().removeIf(node -> node != hud.getChildren().getFirst());
+        phase = Phase.PLAY;
+    }
+
+    /**
+     * One step of the game, of a duration in seconds: the logs, the cat, the dogs move; then the cat caught, or at its
+     * bowl.
+     */
+    void step(final double seconds) {
+        if (phase != Phase.PLAY || seconds <= 0) {
             return;
         }
-
-        this.cat.initPos();
-        this.obstacles.add(this.cat.hitbox);
-        this.cat.hitbox.toFront();
-
-        this.gamelle.setFill(new ImagePattern(new Image("data/sprintFinish/gamelle.png")));
-        gameContext.getChildren().add(this.cat.hitbox);
-        gameContext.getChildren().add(this.gamelle);
-        this.obstacles.add(this.gamelle);
-        this.gamelle.toFront();
-
-
-        for (Interrupteur interrupteur : this.interrupteurs) {
-            this.obstacles.add(interrupteur.getInterrupteur());
-            for (int k = 0; k < interrupteur.getPortes().size(); k++){
-                interrupteur.getPortes().get(k).setFill(Color.BROWN);
-                obstacles.add(interrupteur.getPortes().get(k));
-                gameContext.getChildren().add(interrupteur.getPortes().get(k));
+        final SprintMap map = maps.get(index);
+        closed = closedFences();
+        for (final LogPiece log : logs) {
+            log.move(seconds);
+        }
+        moveCat(seconds);
+        if (!mode.isHelperGaze()) {
+            for (final ButtonPiece button : buttons) {
+                if (!button.open && (int) Math.floor(catX) == button.button.cell().column()
+                    && (int) Math.floor(catY) == button.button.cell().row()) {
+                    button.open();
+                }
             }
         }
-
-        for (Cat dog : this.dogs) {
-            this.obstacles.add(dog.hitbox);
-            dog.hitbox.toFront();
-            gameContext.getChildren().add(dog.hitbox);
+        closed = closedFences();
+        final int[][] distances = map.distancesFrom(new Cell((int) Math.floor(catX), (int) Math.floor(catY)),
+            closed);
+        for (final Dog dog : dogs) {
+            dog.move(seconds, distances);
         }
+        render();
 
-        for (Rectangle mur : this.walls){
-            mur.setFill(Color.BLACK);
-            this.obstacles.add(mur);
-            mur.toFront();
-            gameContext.getChildren().add(mur);
+        if (dogs.stream().anyMatch(dog -> Math.hypot(dog.x - catX, dog.y - catY) < CATCH_DISTANCE)
+            || logs.stream().anyMatch(log -> log.touches(catX, catY))) {
+            caught();
+        } else if (Math.hypot(map.getDish().column() + 0.5 - catX, map.getDish().row() + 0.5 - catY)
+            < DISH_DISTANCE) {
+            won();
         }
-
-        for(Rectangle wallMoving: this.wallsMoving){
-            wallMoving.setFill(Color.RED);
-            this.obstacles.add(wallMoving);
-            wallMoving.toFront();
-            gameContext.getChildren().add(wallMoving);
-        }
-
-
-        initGameTimer(3);
-
-
     }
 
-    @Override
-    public void dispose() {
-        gameContext.getChildren().clear();
-    }
-
-
-
-
-    /**
-     * Initializes the game box by creating and adding four wall obstacles to the game panel.
-     * The walls are black and are positioned at the edges of the game panel to prevent the cat from leaving the playing area.
-     * The walls are also added to the game's list of obstacles.
-     */
-    private void initGameBox(){
-
-        // Get the dimensions of the game panel from the game context
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        // Create and position the four wall obstacles
-        Rectangle upWall = new Rectangle(0,0,dimension2D.getWidth(),50);
-        upWall.setFill(Color.TRANSPARENT);
-
-        Rectangle downWall = new Rectangle(0,dimension2D.getHeight()-50,dimension2D.getWidth(),50);
-        downWall.setFill(Color.TRANSPARENT);
-
-        Rectangle leftWall = new Rectangle(0,0,50,dimension2D.getHeight());
-        leftWall.setFill(Color.TRANSPARENT);
-
-        Rectangle rightWall = new Rectangle(dimension2D.getWidth()-50,0,50,dimension2D.getHeight());
-        rightWall.setFill(Color.TRANSPARENT);
-
-        // Add the wall obstacles to the game's list of obstacles
-        this.obstacles.add(upWall);
-        this.obstacles.add(downWall);
-        this.obstacles.add(leftWall);
-        this.obstacles.add(rightWall);
-
-        // Add the wall obstacles to the game panel
-        gameContext.getChildren().add(upWall);
-        gameContext.getChildren().add(downWall);
-        gameContext.getChildren().add(leftWall);
-        gameContext.getChildren().add(rightWall);
-
-    }
-
-    /**
-     * Method to check if the object will collide with an obstacle in a given direction.
-     *
-     * @param direction direction to check for collision
-     * @param object object that has to be checked
-     * @param speed speed of the object
-     * @return true if the object will collide with an obstacle, false otherwise
-     */
-    protected boolean willCollideWithAnObstacle(String direction, double speed, Rectangle object) {
-        // Calculate the next position of the object based on the given direction and speed
-        double nextX = object.getX();
-        double nextY = object.getY();
-        switch (direction) {
-            case "left" -> nextX -= speed;
-            case "right" -> nextX += speed;
-            case "up" -> nextY -= speed;
-            case "down" -> nextY += speed;
-            default -> {
-
+    private void moveCat(final double seconds) {
+        double dx = 0;
+        double dy = 0;
+        if (mode.isKeyboardCat()) {
+            dx = (isPressed(KeyCode.RIGHT, KeyCode.D) ? 1 : 0) - (isPressed(KeyCode.LEFT, KeyCode.Q, KeyCode.A) ? 1 : 0);
+            dy = (isPressed(KeyCode.DOWN, KeyCode.S) ? 1 : 0) - (isPressed(KeyCode.UP, KeyCode.Z, KeyCode.W) ? 1 : 0);
+        } else if (target != null) {
+            dx = target[0] - catX;
+            dy = target[1] - catY;
+            if (Math.hypot(dx, dy) < 0.15) {
+                dx = 0;
+                dy = 0;
             }
         }
-        Rectangle futurePos = new Rectangle(nextX, nextY, object.getWidth(), object.getHeight());
-
-        // Check if the object collides with any of the obstacles
-        for (Rectangle obstacle : obstacles) {
-            // If the object is the same as the obstacle, skip the current iteration
-            if (obstacle.equals(object)) {
-                continue;
+        final double length = Math.hypot(dx, dy);
+        if (length == 0) {
+            return;
+        }
+        double distance = CAT_SPEED * seconds;
+        if (target != null && !mode.isKeyboardCat()) {
+            distance = Math.min(distance, length);
+        }
+        final double stepX = dx / length * distance;
+        final double stepY = dy / length * distance;
+        final boolean movedX = !blocked(catX + stepX, catY);
+        if (movedX) {
+            catX += stepX;
+        }
+        final boolean movedY = !blocked(catX, catY + stepY);
+        if (movedY) {
+            catY += stepY;
+        }
+        if (mode.isGazeCat() && movedX != movedY) {
+            // Against a hedge, the cat following the gaze slides along it at its whole speed, towards the gaze
+            if (!movedX && Math.abs(dy) > 0.05) {
+                final double slide = Math.copySign(Math.min(distance - Math.abs(stepY), Math.abs(dy)
+                    - Math.abs(stepY)), dy);
+                if (!blocked(catX, catY + slide)) {
+                    catY += slide;
+                }
+            } else if (!movedY && Math.abs(dx) > 0.05) {
+                final double slide = Math.copySign(Math.min(distance - Math.abs(stepX), Math.abs(dx)
+                    - Math.abs(stepX)), dx);
+                if (!blocked(catX + slide, catY)) {
+                    catX += slide;
+                }
             }
-            if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
-                // If the object collides with an obstacle, check the type of the obstacle
-                if (obstacle instanceof MovingWall movingWall){
-                    // If the obstacle is a moving wall, and it has to reset the pos of the cat, check for collision with the object and dogs
-                    if (movingWall.resetPos && isCollidingWithASpecificObstacle(movingWall,futurePos)){
-                        if (object.equals(this.cat.hitbox)){
-                            // If the object is the cat and if it collides with the moving wall, game over and return true
-                            endOfGame(false);
-                            return true;
-                        }else{
-                            // If the object is a dog and if it collides with the moving wall, reset its position and return true
-                            for (Cat dog : this.dogs) {
-                                if (dog.hitbox.equals(object)){
-                                    if (isCollidingWithASpecificObstacle(movingWall, futurePos)) {
-                                        dog.hitbox.setX(dog.initPosX);
-                                        dog.hitbox.setY(dog.initPosY);
-                                        return true;
+        }
+        if (stepX != 0) {
+            catView.setScaleX(stepX < 0 ? -1 : 1);
+        }
+    }
 
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (this.cat.hitbox.equals(object) && gamelle.equals(obstacle)) {
-                    // If the object is the cat and if it collides with the gamelle, the cat win and return true
-                    if (!endOfLevel) {
-                        endOfGame(true);
-                        return true;
-                    }
-                } else {
-                    // If the object is a dog, and it collides with the cat, end the game and return true
-                    for (Cat dog : this.dogs) {
-                        if (dog.hitbox.equals(object) && this.cat.hitbox.equals(obstacle)) {
-                            if (!endOfLevel) {
-                                endOfGame(false);
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                // We add this for loop to avoid that when we don't move, the moving wall ignores the collisions
-                for (MovingWall wallMoving : wallsMoving) {
-                    if (object.equals(wallMoving) && wallMoving.resetPos) {
-                        if (isCollidingWithASpecificObstacle(wallMoving, this.cat.hitbox)) {
-                            endOfGame(false);
-                            return true;
-                        } else {
-                            for (Cat dog : this.dogs) {
-                                if (isCollidingWithASpecificObstacle(wallMoving, dog.hitbox)) {
-                                    dog.hitbox.setX(dog.initPosX);
-                                    dog.hitbox.setY(dog.initPosY);
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
+    private boolean isPressed(final KeyCode... codes) {
+        for (final KeyCode code : codes) {
+            if (pressed.contains(code)) {
                 return true;
             }
         }
@@ -767,169 +460,600 @@ public class SprintFinish extends Parent implements GameLifeCycle {
     }
 
     /**
-     * Determines whether two rectangles are colliding with each other.
-     * @param object1 the first rectangle to check for collision
-     * @param object2 the second rectangle to check for collision against
-     * @return true if the two rectangles are colliding, false otherwise
+     * @return whether a square of the cat or a dog at a place would be in a hedge, a closed fence or out of the board
      */
-    protected boolean isCollidingWithASpecificObstacle(Rectangle object1, Rectangle object2){
-
-        return object1.getX() < object2.getX() + object2.getWidth() && object1.getX() + object1.getWidth() > object2.getX()
-            && object1.getY() < object2.getY() + object2.getHeight() && object1.getY() + object1.getHeight() > object2.getY();
-
+    private boolean blocked(final double x, final double y) {
+        if (x - HALF < 0 || y - HALF < 0 || x + HALF > SprintMap.COLUMNS || y + HALF > SprintMap.ROWS) {
+            return true;
+        }
+        final SprintMap map = maps.get(index);
+        for (int column = (int) Math.floor(x - HALF); column <= (int) Math.floor(x + HALF - 1e-9); column++) {
+            for (int row = (int) Math.floor(y - HALF); row <= (int) Math.floor(y + HALF - 1e-9); row++) {
+                if (map.isHedge(column, row) || closed.contains(new Cell(column, row))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
+    /**
+     * @return the next cell towards the cat from a cell, among its 8 neighbours (a diagonal only when both cells
+     * beside it are free: never through the corner of a hedge), or null if none is nearer
+     */
+    static int[] nextCell(final int column, final int row, final int[][] distances) {
+        int[] best = null;
+        int bestDistance = distances[column][row];
+        for (int dc = -1; dc <= 1; dc++) {
+            for (int dr = -1; dr <= 1; dr++) {
+                final int c = column + dc;
+                final int r = row + dr;
+                if ((dc == 0 && dr == 0) || !SprintMap.inside(c, r) || distances[c][r] < 0) {
+                    continue;
+                }
+                if (dc != 0 && dr != 0 && (distances[column + dc][row] < 0 || distances[column][row + dr] < 0)) {
+                    continue;
+                }
+                if (distances[c][r] < bestDistance) {
+                    bestDistance = distances[c][r];
+                    best = new int[]{c, r};
+                }
+            }
+        }
+        return best;
+    }
 
     /**
-     Method to handle the end of the game.
-     @param win true if the game is won, false otherwise
+     * @return whether the square of a dog can go in a straight line from a place to another, without touching a
+     * hedge, a closed fence or the edge of the board
      */
-    protected void endOfGame(boolean win){
-        endOfLevel = true;
-        if(win){
-            // Increment the number of goals reached and update the score
-            stats.incrementNumberOfGoalsReached();
+    boolean clearLine(final double fromX, final double fromY, final double toX, final double toY) {
+        final double length = Math.hypot(toX - fromX, toY - fromY);
+        final int samples = (int) Math.ceil(length / 0.1);
+        for (int i = 1; i <= samples; i++) {
+            final double t = (double) i / samples;
+            if (blocked(fromX + (toX - fromX) * t, fromY + (toY - fromY) * t)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * The fences closed now, kept up to date (read many times at each step).
+     */
+    private List<Cell> closed = List.of();
+
+    private List<Cell> closedFences() {
+        final List<Cell> fences = new ArrayList<>();
+        for (final ButtonPiece button : buttons) {
+            if (!button.open) {
+                fences.addAll(button.button.fences());
+            }
+        }
+        return fences;
+    }
+
+    /**
+     * The cat caught: it shakes, then the same map starts again.
+     */
+    private void caught() {
+        phase = Phase.CAUGHT;
+        pressed.clear();
+        gameContext.getSoundManager().add(CAUGHT_SOUND);
+        catView.setEffect(new ColorAdjust(0, 0, -0.3, 0));
+        final TranslateTransition shake = new TranslateTransition(Duration.millis(60), catView);
+        shake.setByX(cell * 0.12);
+        shake.setAutoReverse(true);
+        shake.setCycleCount(8);
+        shake.play();
+        afterMap = new PauseTransition(Duration.millis(1100));
+        afterMap.setOnFinished(event -> startMap());
+        afterMap.play();
+    }
+
+    /**
+     * The bowl reached: the next map, or "Bravo" then the statistics after the last one.
+     */
+    private void won() {
+        phase = Phase.WON;
+        pressed.clear();
+        stats.incrementNumberOfGoalsReached();
+        gameContext.getSoundManager().add(DISH_SOUND);
+        final ScaleTransition jump = new ScaleTransition(Duration.millis(200), catView);
+        jump.setByY(0.25);
+        jump.setByX(catView.getScaleX() * 0.25);
+        jump.setAutoReverse(true);
+        jump.setCycleCount(4);
+        jump.play();
+        afterMap = new PauseTransition(Duration.millis(1300));
+        afterMap.setOnFinished(event -> nextMap());
+        afterMap.play();
+    }
+
+    /**
+     * After a map won: the next one, or the end.
+     */
+    void nextMap() {
+        if (index + 1 >= difficulty.getMaps()) {
+            phase = Phase.OVER;
+            loop.stop();
+            stats.takeScreenShot();
             gameContext.updateScore(stats, this);
-            // Play a win transition and launch the next level
-            gameContext.playWinTransition(500, actionEvent -> {
-                this.level++;
-                dispose();
-                if (this.level % 6 == 0){
-                    gameContext.showRoundStats(stats, this);
-                }else{
-                    launch();
-                }
-            });
-        }else{
-            // Launch the same level again in case of a loss
-            dispose();
-            launch();
+            gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
+        } else {
+            index++;
+            startMap();
         }
     }
 
-
-
-
     /**
-     * Returns the nearest Cat object to the current Cat object, from a given list of Cat objects.
-     *
-     * @param nbDog the list of Cat objects to search from (they represent the dogs)
-     * @return the nearest Cat object, or null if the list is empty
+     * Where the gaze (or the mouse) is, in cells: the cat goes there (alone with the gaze).
      */
-    private Cat getNearestDogFromCat(ArrayList<Cat> nbDog) {
-        Cat nearest = null;
-        double minDistance = Double.MAX_VALUE;
-
-        for (Cat rect : nbDog) {
-            // Calculate the distance between the current Cat object and the current Cat in the list (dog)
-            double distance = distance(this.cat.hitbox, rect.hitbox);
-
-            // If the distance is less than the current minimum distance, update the nearest Cat object and minimum distance
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearest = rect;
-            }
+    void gazeAt(final double x, final double y) {
+        if (mode.isGazeCat()) {
+            target = new double[]{x, y};
         }
-
-        // Return the nearest Cat object
-        return nearest;
     }
 
-    /**
-     * Returns the nearest Interrupteur object to the current Cat object, from a given list of Interrupteur objects.
-     *
-     * @param nbInterrupteurs the list of Interrupteur objects to search from
-     * @return the nearest Interrupteur object, or null if the list is empty
-     */
-    private Interrupteur getNearestInterrupteurFromCat(ArrayList<Interrupteur> nbInterrupteurs) {
-        Interrupteur nearest = null;
-        double minDistance = Double.MAX_VALUE;
-
-        for (Interrupteur rect : nbInterrupteurs) {
-            // Calculate the distance between the current Interrupteur object and the current Interrupteur in the list
-            double distance = distance(this.cat.hitbox, rect.getInterrupteur());
-
-            // If the distance is less than the current minimum distance, update the nearest Interrupteur object and minimum distance
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearest = rect;
-            }
+    void press(final KeyCode code) {
+        if (phase == Phase.PLAY || phase == Phase.COUNTDOWN) {
+            pressed.add(code);
         }
-        // Return the nearest Interrupteur object
-        return nearest;
     }
 
+    void release(final KeyCode code) {
+        pressed.remove(code);
+    }
+
+    private void onKeyPressed(final KeyEvent event) {
+        press(event.getCode());
+    }
+
+    private void onKeyReleased(final KeyEvent event) {
+        release(event.getCode());
+    }
 
     /**
-     * Returns the nearest MovingWall object to the current Cat object, from a given list of MovingWall objects.
-     *
-     * @param nbMovingWalls the list of MovingWall objects to search from
-     * @return the nearest MovingWall object, or null if the list is empty
+     * Moves the pictures to the places of the cat, the dogs and the logs.
      */
-    private MovingWall getNearestWallMovingFromCat(ArrayList<MovingWall> nbMovingWalls) {
-        MovingWall nearest = null;
-        double minDistance = Double.MAX_VALUE;
-
-        for (MovingWall rect : nbMovingWalls) {
-            // Calculate the distance between the current Cat object and the current MovingWall in the list
-            double distance = distance(this.cat.hitbox, rect);
-
-            // If the distance is less than the current minimum distance, update the nearest MovingWall object and minimum distance
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearest = rect;
-            }
+    private void render() {
+        place(catView, catX, catY, ANIMAL_SIZE);
+        for (final Dog dog : dogs) {
+            place(dog.view, dog.x, dog.y, ANIMAL_SIZE);
+            dog.halo.setCenterX(dog.x * cell);
+            dog.halo.setCenterY(dog.y * cell);
         }
-
-        // Return the nearest MovingWall object
-        return nearest;
+        for (final LogPiece log : logs) {
+            log.node.setLayoutY(log.y * cell);
+        }
     }
 
-
-    /**
-     * Calculates and returns the distance between two rectangles.
-     *
-     * @param rect1 the first rectangle
-     * @param rect2 the second rectangle
-     * @return the distance between the two rectangles
-     */
-    private double distance(Rectangle rect1, Rectangle rect2) {
-        double dx = rect2.getX() - rect1.getX();
-        double dy = rect2.getY() - rect1.getY();
-
-        // Calculate the distance using the Pythagorean theorem
-        return Math.sqrt(dx*dx + dy*dy);
+    private void place(final ImageView view, final double x, final double y, final double size) {
+        view.setLayoutX((x - size / 2) * cell);
+        view.setLayoutY((y - size / 2) * cell);
     }
 
+    private ImageView picture(final String name, final double size) {
+        final ImageView view = new ImageView(image(name));
+        view.setFitWidth(size * cell);
+        view.setFitHeight(size * cell);
+        view.setPreserveRatio(true);
+        view.setSmooth(true);
+        view.setMouseTransparent(true);
+        return view;
+    }
+
+    private Image image(final String name) {
+        return images.computeIfAbsent(name, key -> new Image(FOLDER + "images/" + key + ".png"));
+    }
 
     /**
-     * Initializes an animation timer that counts the number of seconds specified by the 'sec' parameter.
-     *
-     * @param sec the number of seconds the timer should count
+     * A hedge of one cell: a rounded bush with leaves.
      */
-    private void initGameTimer(int sec) {
-        AnimationTimer gameTimer = new AnimationTimer() {
-            int nbframe = 0;
-            int nbSec = 0;
+    private Group hedge(final int column, final int row) {
+        final double x = column * cell;
+        final double y = row * cell;
+        final Rectangle body = new Rectangle(x + cell * 0.04, y + cell * 0.04, cell * 0.92, cell * 0.92);
+        body.setArcWidth(cell * 0.5);
+        body.setArcHeight(cell * 0.5);
+        body.setFill(Color.web("#3E8E41"));
+        body.setStroke(Color.web("#2B6630"));
+        body.setStrokeWidth(Math.max(2, cell * 0.04));
+        final Group group = new Group(body);
+        final double[][] leaves = {{0.3, 0.32, 0.16}, {0.66, 0.3, 0.14}, {0.48, 0.66, 0.17}, {0.24, 0.7, 0.1}};
+        for (final double[] leaf : leaves) {
+            final Circle circle = new Circle(x + leaf[0] * cell, y + leaf[1] * cell, leaf[2] * cell);
+            circle.setFill(Color.web("#5DAE55"));
+            group.getChildren().add(circle);
+        }
+        group.setMouseTransparent(true);
+        return group;
+    }
 
-            @Override
-            public void handle(long now) {
-                // Increase the number of frames
-                if (nbframe <= 60) {
-                    nbframe++;
-                } else { // If one second has passed, increase the number of seconds
-                    nbSec++;
-                    // If the number of seconds equals 'sec', set the 'gameTimerEnded' flag to true
-                    if (nbSec == sec) {
-                        gameTimerEnded = true;
+    /**
+     * Follows the gaze (and the mouse, through the same handler) on a node.
+     */
+    private void follow(final Node node, final EventHandler<Event> handler) {
+        gameContext.getGazeDeviceManager().addEventFilter(node);
+        node.addEventFilter(GazeEvent.ANY, handler);
+        node.addEventFilter(MouseEvent.ANY, handler);
+        gazeNodes.put(node, handler);
+    }
+
+    private void unfollowAll() {
+        for (final Map.Entry<Node, EventHandler<Event>> entry : gazeNodes.entrySet()) {
+            gameContext.getGazeDeviceManager().removeEventFilter(entry.getKey());
+            entry.getKey().removeEventFilter(GazeEvent.ANY, entry.getValue());
+            entry.getKey().removeEventFilter(MouseEvent.ANY, entry.getValue());
+        }
+        gazeNodes.clear();
+    }
+
+    private void stopTransitions() {
+        if (countdown != null) {
+            countdown.stop();
+        }
+        if (afterMap != null) {
+            afterMap.stop();
+        }
+        for (final ButtonPiece button : buttons) {
+            button.stopFixation();
+        }
+    }
+
+    /**
+     * For the tests: the loop does not run, {@link #step(double)} is called instead.
+     */
+    void setManual() {
+        manual = true;
+        loop.stop();
+    }
+
+    /**
+     * For the tests: puts the cat at a place, in cells.
+     */
+    void placeCat(final double x, final double y) {
+        catX = x;
+        catY = y;
+    }
+
+    /**
+     * For the tests: ends at once the pause after a map won or lost.
+     */
+    void skipPause() {
+        if (afterMap != null && afterMap.getStatus() == javafx.animation.Animation.Status.RUNNING) {
+            afterMap.stop();
+            afterMap.getOnFinished().handle(null);
+        }
+    }
+
+    /**
+     * @return the map played
+     */
+    SprintMap getMap() {
+        return maps.get(index);
+    }
+
+    @Override
+    public void dispose() {
+        loop.stop();
+        stopTransitions();
+        unfollowAll();
+        if (mode.isKeyboardCat()) {
+            gameContext.getPrimaryScene().removeEventFilter(KeyEvent.KEY_PRESSED, keyPressed);
+            gameContext.getPrimaryScene().removeEventFilter(KeyEvent.KEY_RELEASED, keyReleased);
+        }
+        if (layer != null) {
+            gameContext.getChildren().remove(layer);
+            layer = null;
+        }
+        phase = Phase.OVER;
+    }
+
+    /**
+     * A dog: it runs straight to the cat when nothing is in the way, else by the shortest way round the hedges and the
+     * closed fences, diagonals included (maintainer's request of 2/11/2026: the dogs used to go only up, down, left or
+     * right), stopped by a log in its way; with two players, it stops while it is looked at.
+     */
+    final class Dog {
+        @Getter
+        private double x;
+        @Getter
+        private double y;
+        @Getter
+        private boolean looked;
+        private final ImageView view;
+        private final Circle halo;
+        private final Group node;
+
+        Dog(final double x, final double y) {
+            this.x = x;
+            this.y = y;
+            view = picture("dog", ANIMAL_SIZE);
+            view.setMouseTransparent(false);
+            view.setPickOnBounds(true);
+            halo = new Circle(cell * 0.55);
+            halo.setFill(Color.web("#D64545", 0.28));
+            halo.setStroke(Color.web("#D64545"));
+            halo.setStrokeWidth(Math.max(3, cell * 0.05));
+            halo.setVisible(false);
+            halo.setMouseTransparent(true);
+            node = new Group(halo, view);
+            if (mode.isHelperGaze()) {
+                follow(view, event -> {
+                    if (event.getEventType() == GazeEvent.GAZE_ENTERED
+                        || event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                        setLooked(true);
+                    } else if (event.getEventType() == GazeEvent.GAZE_EXITED
+                        || event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                        setLooked(false);
                     }
-                    // Reset the number of frames
-                    nbframe = 0;
+                });
+            }
+        }
+
+        /**
+         * For the tests: puts the dog at a place, in cells.
+         */
+        void placeAt(final double x, final double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        void setLooked(final boolean looked) {
+            this.looked = looked;
+            halo.setVisible(looked);
+            view.setEffect(looked ? new ColorAdjust(0, -0.6, 0, 0) : null);
+        }
+
+        void move(final double seconds, final int[][] distances) {
+            if (looked) {
+                return;
+            }
+            int column = (int) Math.floor(x);
+            int row = (int) Math.floor(y);
+            if (!SprintMap.inside(column, row) || distances[column][row] < 0) {
+                // The cat cannot be reached (behind a closed fence): the dog waits
+                return;
+            }
+            double goalX = catX;
+            double goalY = catY;
+            if (!clearLine(x, y, catX, catY)) {
+                // The shortest way, diagonals included (never cutting the corner of a hedge): the dog runs straight
+                // to its farthest cell still in sight, so that it goes smoothly round the hedges
+                goalX = column + 0.5;
+                goalY = row + 0.5;
+                for (int stepCount = 0; stepCount < 8 && distances[column][row] > 0; stepCount++) {
+                    final int[] next = nextCell(column, row, distances);
+                    if (next == null) {
+                        break;
+                    }
+                    column = next[0];
+                    row = next[1];
+                    if (!clearLine(x, y, column + 0.5, row + 0.5)) {
+                        break;
+                    }
+                    goalX = column + 0.5;
+                    goalY = row + 0.5;
                 }
             }
-        };
-        // Start the animation timer
-        gameTimer.start();
+            final double dx = goalX - x;
+            final double dy = goalY - y;
+            final double length = Math.hypot(dx, dy);
+            if (length < 1e-6) {
+                return;
+            }
+            final double distance = Math.min(length, mode.getDogSpeed() * seconds);
+            final double nextX = x + dx / length * distance;
+            final double nextY = y + dy / length * distance;
+            if (logs.stream().anyMatch(log -> log.touches(nextX, nextY))) {
+                return;
+            }
+            x = nextX;
+            y = nextY;
+            if (Math.abs(dx) > 1e-6) {
+                view.setScaleX(dx < 0 ? -1 : 1);
+            }
+        }
     }
 
+    /**
+     * A log going up and down its column; with two players, it stops while it is looked at (it turns grey).
+     */
+    final class LogPiece {
+        private final Log log;
+        @Getter
+        private double y;
+        private double direction = 1;
+        @Getter
+        private boolean looked;
+        private final Rectangle body;
+        private final Group node;
+
+        LogPiece(final Log log) {
+            this.log = log;
+            final double travel = SprintMap.ROWS - log.length();
+            y = travel * log.phase();
+            body = new Rectangle(log.column() * cell + cell * 0.12, 0, cell * 0.76, log.length() * cell);
+            body.setArcWidth(cell * 0.5);
+            body.setArcHeight(cell * 0.5);
+            body.setStrokeWidth(Math.max(2, cell * 0.05));
+            node = new Group(body);
+            for (int i = 1; i < 4; i++) {
+                final Line ring = new Line(log.column() * cell + cell * 0.25, i * log.length() * cell / 4,
+                    log.column() * cell + cell * 0.75, i * log.length() * cell / 4);
+                ring.setStroke(Color.web("#5C3A1A"));
+                ring.setStrokeWidth(Math.max(1.5, cell * 0.03));
+                ring.setStrokeLineCap(StrokeLineCap.ROUND);
+                ring.setMouseTransparent(true);
+                node.getChildren().add(ring);
+            }
+            setLooked(false);
+            if (mode.isHelperGaze()) {
+                follow(body, event -> {
+                    if (event.getEventType() == GazeEvent.GAZE_ENTERED
+                        || event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                        setLooked(true);
+                    } else if (event.getEventType() == GazeEvent.GAZE_EXITED
+                        || event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                        setLooked(false);
+                    }
+                });
+            }
+        }
+
+        void setLooked(final boolean looked) {
+            this.looked = looked;
+            body.setFill(Color.web(looked ? "#A8A29A" : "#9C6A3A"));
+            body.setStroke(Color.web(looked ? "#6E6A64" : "#5C3A1A"));
+        }
+
+        void move(final double seconds) {
+            if (looked) {
+                return;
+            }
+            final double travel = SprintMap.ROWS - log.length();
+            y += direction * mode.getLogSpeed() * seconds;
+            if (y >= travel) {
+                y = travel;
+                direction = -1;
+            } else if (y <= 0) {
+                y = 0;
+                direction = 1;
+            }
+        }
+
+        /**
+         * @return whether the square of the cat or of a dog at a place touches the log
+         */
+        boolean touches(final double x, final double centerY) {
+            final double left = log.column() + 0.12;
+            final double right = log.column() + 0.88;
+            return x + HALF > left && x - HALF < right && centerY + HALF > y && centerY - HALF < y + log.length();
+        }
+    }
+
+    /**
+     * A button and its fences. Alone, the cat opens them by walking on the button; with two players, a fixation on
+     * the button opens them (a ring of the main color goes round it meanwhile). Once open, they stay open.
+     */
+    final class ButtonPiece {
+        private final Button button;
+        @Getter
+        private boolean open;
+        private final Group node;
+        private final List<Group> fences = new ArrayList<>();
+        private final Circle plate;
+        private final Arc ring;
+        private final DoubleProperty progress = new SimpleDoubleProperty(0);
+        private Timeline fixation;
+
+        ButtonPiece(final Button button) {
+            this.button = button;
+            final String color = BUTTON_COLORS[button.color() % BUTTON_COLORS.length];
+            final double centerX = (button.cell().column() + 0.5) * cell;
+            final double centerY = (button.cell().row() + 0.5) * cell;
+            final Circle base = new Circle(centerX, centerY + cell * 0.05, cell * 0.36, Color.web("#4A4A4A"));
+            plate = new Circle(centerX, centerY, cell * 0.3, Color.web(color));
+            plate.setStroke(Color.web("#222222"));
+            plate.setStrokeWidth(Math.max(2, cell * 0.035));
+            final Circle shine = new Circle(centerX - cell * 0.08, centerY - cell * 0.09, cell * 0.08,
+                Color.web("#FFFFFF", 0.45));
+            ring = new Arc(centerX, centerY, cell * 0.45, cell * 0.45, 90, 0);
+            ring.setType(ArcType.OPEN);
+            ring.setFill(null);
+            ring.setStrokeWidth(Math.max(4, cell * 0.07));
+            ring.setStrokeLineCap(StrokeLineCap.ROUND);
+            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setMouseTransparent(true);
+            progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));
+            // A larger zone than the plate, easier to look at
+            final Circle zone = new Circle(centerX, centerY, cell * 0.5, Color.TRANSPARENT);
+            node = new Group(zone, base, plate, shine, ring);
+            for (final Cell fence : button.fences()) {
+                fences.add(fence(fence, color));
+            }
+            if (mode.isHelperGaze()) {
+                follow(zone, event -> {
+                    if (event.getEventType() == GazeEvent.GAZE_ENTERED
+                        || event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                        startFixation();
+                    } else if (event.getEventType() == GazeEvent.GAZE_EXITED
+                        || event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                        stopFixation();
+                    }
+                });
+            } else {
+                zone.setMouseTransparent(true);
+            }
+        }
+
+        /**
+         * A fence of one cell: wooden posts and planks, the top plank of the color of its button.
+         */
+        private Group fence(final Cell fence, final String color) {
+            final double x = fence.column() * cell;
+            final double y = fence.row() * cell;
+            final Group group = new Group();
+            for (final double post : new double[]{0.18, 0.5, 0.82}) {
+                final Rectangle rectangle = new Rectangle(x + (post - 0.06) * cell, y + 0.06 * cell, 0.12 * cell,
+                    0.88 * cell);
+                rectangle.setFill(Color.web("#B07A45"));
+                rectangle.setStroke(Color.web("#6E4A26"));
+                rectangle.setStrokeWidth(Math.max(1.5, cell * 0.025));
+                group.getChildren().add(rectangle);
+            }
+            for (final double plank : new double[]{0.22, 0.48, 0.74}) {
+                final Rectangle rectangle = new Rectangle(x + 0.04 * cell, y + (plank - 0.06) * cell, 0.92 * cell,
+                    0.12 * cell);
+                rectangle.setFill(Color.web(plank < 0.3 ? color : "#C68B52"));
+                rectangle.setStroke(Color.web("#6E4A26"));
+                rectangle.setStrokeWidth(Math.max(1.5, cell * 0.025));
+                group.getChildren().add(rectangle);
+            }
+            group.setMouseTransparent(true);
+            return group;
+        }
+
+        private void startFixation() {
+            if (open || phase != Phase.PLAY) {
+                return;
+            }
+            stopFixation();
+            fixation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(progress, 0)),
+                new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progress, 1)));
+            fixation.setOnFinished(event -> open());
+            fixation.playFromStart();
+        }
+
+        void stopFixation() {
+            if (fixation != null) {
+                fixation.stop();
+                fixation = null;
+            }
+            progress.set(0);
+        }
+
+        /**
+         * Opens the fences of the button: they fade away; the button is pressed down.
+         */
+        void open() {
+            if (open) {
+                return;
+            }
+            open = true;
+            stopFixation();
+            gameContext.getSoundManager().add(DOOR_SOUND);
+            plate.setFill(Color.web(GameStyle.SUCCESS_COLOR));
+            plate.setScaleX(0.85);
+            plate.setScaleY(0.85);
+            for (final Group fence : fences) {
+                final FadeTransition fade = new FadeTransition(Duration.millis(400), fence);
+                fade.setToValue(0.12);
+                fade.play();
+            }
+        }
+    }
 }
