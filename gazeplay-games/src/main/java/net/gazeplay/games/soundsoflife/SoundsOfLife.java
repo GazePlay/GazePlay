@@ -34,6 +34,11 @@ public class SoundsOfLife implements GameLifeCycle {
     private final SoundsOfLifeGameVariant gameVariant;
     private final ReplayablePseudoRandom randomGenerator;
 
+    /**
+     * The animal heard last, null before the first one.
+     */
+    private SoundMakingEntity heard;
+
     public SoundsOfLife(IGameContext gameContext, Stats stats, SoundsOfLifeGameVariant gameVariant) {
         this(gameContext, stats, gameVariant, -1);
     }
@@ -125,6 +130,13 @@ public class SoundsOfLife implements GameLifeCycle {
                 : "";
             SoundMakingEntity entity = new SoundMakingEntity(imageView, name, stats, sounds, gameContext,
                 gameContext.getSoundManager(), randomGenerator);
+            // One animal heard at a time (2/11/2026): the one heard before stops, its sound is cut
+            entity.setOnSelected(() -> {
+                if (heard != null && heard != entity) {
+                    heard.quiet();
+                }
+                heard = entity;
+            });
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }

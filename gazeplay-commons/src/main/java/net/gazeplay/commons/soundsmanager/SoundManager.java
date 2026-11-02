@@ -72,4 +72,16 @@ public class SoundManager {
     public void add(String resource) {
         listOfMusicToPlay.add(resource);
     }
+
+    /**
+     * Plays a sound instead of the one playing (stopped) and of those waiting (forgotten), so that two sounds never
+     * play together (2/11/2026, first for SoundsOfLife). On the JavaFX thread.
+     *
+     * @param resource path of the sound (resource of the classpath or file)
+     */
+    public void replace(String resource) {
+        listOfMusicToPlay.clear();
+        ForegroundSoundsUtils.stopSound();
+        listOfMusicToPlay.add(resource);
+    }
 }

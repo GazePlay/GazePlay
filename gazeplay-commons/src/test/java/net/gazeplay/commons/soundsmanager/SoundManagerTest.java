@@ -35,4 +35,19 @@ public class SoundManagerTest {
         Assertions.assertFalse(soundManager.getListOfMusicToPlay().contains("music/hand_sound1.mp3"));
     }
 
+    /**
+     * A sound that replaces the others: the sounds waiting are forgotten (and the one playing is stopped, with no
+     * sound played here).
+     */
+    @Test
+    void shouldForgetTheSoundsWaitingWhenASoundReplacesThem() {
+        soundManager.add("music/mvmt0.wav");
+        soundManager.add("music/hand_sound1.mp3");
+
+        soundManager.replace("music/song.mp3");
+
+        Assertions.assertEquals(java.util.List.of("music/song.mp3"),
+            new java.util.ArrayList<>(soundManager.getListOfMusicToPlay()));
+    }
+
 }

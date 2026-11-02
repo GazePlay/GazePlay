@@ -131,12 +131,17 @@ class SoundsOfLifeTest {
         reset(soundManager);
         WaitForAsyncUtils.asyncFx(() -> animals.forEach(SoundMakingEntity::selected)).get();
         ArgumentCaptor<String> sounds = ArgumentCaptor.forClass(String.class);
-        verify(soundManager, times(animals.size())).add(sounds.capture());
+        // Each sound replaces the one playing (2/11/2026: never two together)
+        verify(soundManager, times(animals.size())).replace(sounds.capture());
+        verify(soundManager, never()).add(anyString());
         WaitForAsyncUtils.sleep(300, java.util.concurrent.TimeUnit.MILLISECONDS);
-        for (SoundMakingEntity animal : animals) {
-            assertTrue(animal.getNameLabel().getOpacity() > 0, "the name is shown");
-            Node text = animal.getNameLabel().getChildren().get(1);
-            assertTrue(((javafx.scene.text.Text) text).getText().startsWith("SoundsOfLife_"));
+        // Only the name of the animal heard last is shown
+        SoundMakingEntity last = animals.get(animals.size() - 1);
+        assertTrue(last.getNameLabel().getOpacity() > 0, "the name is shown");
+        Node text = last.getNameLabel().getChildren().get(1);
+        assertTrue(((javafx.scene.text.Text) text).getText().startsWith("SoundsOfLife_"));
+        for (SoundMakingEntity animal : animals.subList(0, animals.size() - 1)) {
+            assertEquals(0, animal.getNameLabel().getOpacity(), "the name of an animal heard before is hidden");
         }
         return sounds.getAllValues();
     }

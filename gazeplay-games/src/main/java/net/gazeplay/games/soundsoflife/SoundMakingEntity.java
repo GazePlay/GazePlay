@@ -18,6 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -30,7 +31,8 @@ import java.util.List;
 
 /**
  * An animal of the SoundsOfLife game (reviewed on 30/10/2026): during a fixation, a ring of the main color goes round
- * it; then it plays one of its sounds (in turn), swings, and its name is shown above it in a label.
+ * it; then it plays one of its sounds (in turn), swings, and its name is shown above it in a label. Its sound stops
+ * the one playing (2/11/2026).
  */
 @Slf4j
 public class SoundMakingEntity extends Parent {
@@ -55,9 +57,18 @@ public class SoundMakingEntity extends Parent {
     @Getter
     private final Group nameLabel;
 
+    private final ImageView imageView;
+
     private Timeline fixation;
     private SequentialTransition nameShown;
     private int soundIter;
+
+    /**
+     * What the game does when the animal is chosen, before its sound (stop the animal heard before).
+     */
+    @Setter
+    private Runnable onSelected = () -> {
+    };
 
     /**
      * @param name the name of the animal, translated
@@ -65,6 +76,7 @@ public class SoundMakingEntity extends Parent {
     public SoundMakingEntity(final ImageView imageView, final String name, final Stats stats,
                              final List<String> audioClips, final IGameContext gameContext,
                              final SoundManager soundManager, final ReplayablePseudoRandom randomGenerator) {
+        this.imageView = imageView;
         this.audioClips = audioClips;
         this.stats = stats;
         this.soundManager = soundManager;
@@ -141,11 +153,26 @@ public class SoundMakingEntity extends Parent {
      */
     void selected() {
         ring.setVisible(false);
+        onSelected.run();
         swing.playFromStart();
-        soundManager.add(audioClips.get(soundIter));
+        // The sound of the animal heard before is stopped (maintainer's request of 2/11/2026: never two together)
+        soundManager.replace(audioClips.get(soundIter));
         soundIter = (soundIter + 1) % audioClips.size();
         showName();
         stats.incrementNumberOfGoalsReached();
+    }
+
+    /**
+     * Stops the animal: no swing, name hidden (another animal was chosen, its sound replaces this one's).
+     */
+    void quiet() {
+        swing.stop();
+        imageView.setRotate(0);
+        if (nameShown != null) {
+            nameShown.stop();
+            nameShown = null;
+        }
+        nameLabel.setOpacity(0);
     }
 
     private void showName() {
