@@ -1,0 +1,19 @@
+# The principle
+Biboules escape from their cage (or robots come out of their flying saucer). Hit them with your gaze!
+
+# How to play
+- The cage (or the saucer) goes to and fro at the top. The targets come out of it one by one, change color and grow while flying away.
+- Look at a target to hit it: a flash, a sound, and one more point.
+- Depending on the variant, it is hit as soon as you look at it, or after a fixation: a ring goes round it (fixation length of the settings) and the target stops meanwhile.
+- At the bottom, the magic wand (or the gun) turns to what you look at.
+- At the top right, the score; at the top left, the time left (variants in minutes).
+- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+
+# How to win
+Depending on the variant: without end (leave by the gear at the bottom left), 50 or 100 targets to hit, or 1 or 3 minutes of game. At the end: "Bravo", then the statistics.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Without end, 50 targets, 100 targets, 1 minute or 3 minutes: the end of the game.
+- At the bottom, how to hit: as soon as looked at, or after a fixation.
+- At the bottom too, the scene: the Biboules in the classroom, or the robots above the street.

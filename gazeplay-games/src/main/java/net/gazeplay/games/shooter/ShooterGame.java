@@ -1,681 +1,551 @@
 package net.gazeplay.games.shooter;
 
-import javafx.animation.*;
-import javafx.application.Platform;
+import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GameStyle;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Games "ShootTheBiboules" and "ShootTheRobots": targets fly out of a moving box at random places; each target the gaze
- * (or the mouse) enters is shot, the gun turning towards it, and counted.
+ * The shooting game (reviewed on 2/11/2026, maintainer's rules; it was "ShootTheBiboules" and "ShootTheRobots"): a
+ * cage (Biboules, in a classroom) or a flying saucer (robots, above a street) goes to and fro at the top; targets come
+ * out of it one by one ({@value #TARGETS} at a time), change color and grow while flying to a place of the screen.
+ * A target is shot as soon as the gaze (or the mouse) enters it, or after a fixation, as chosen in the variants: the
+ * wand or the gun at the bottom turns to it, a flash, a sound, one more point. The game ends never, after 50 or 100
+ * targets, or after 1 or 3 minutes (then "Bravo" and the statistics).
+ * <p>
+ * One loop moves everything in real time, at the animation speed of the settings; nothing moves and the time does not
+ * run while the menu of the gear is open.
  */
 @Slf4j
-public class ShooterGame extends Parent implements GameLifeCycle {
+public class ShooterGame implements GameLifeCycle {
 
-    private static final double MIN_RADIUS = 30.d;
+    static final int TARGETS = 5;
 
-    private static final int MAX_TIME_LENGTH = 7;
-    private static final int MIN_TIME_LENGTH = 4;
+    /**
+     * Time a target takes to fly to its place, at the normal speed, in seconds (drawn between both).
+     */
+    static final double SLOWEST = 7;
+    static final double FASTEST = 4;
+
+    /**
+     * How much a target grows on its way (it used to grow 10 times, hiding the screen).
+     */
+    static final double GROWTH = 2.6;
+
+    static final String[] COLORS = {"Blue", "Green", "Yellow", "Orange", "Red"};
+
+    enum Phase { PLAY, OVER }
 
     private final IGameContext gameContext;
+    private final Stats stats;
+    @Getter
+    private final ShooterTheme theme;
+    @Getter
+    private final ShooterShot shot;
+    @Getter
+    private final ShooterEnd end;
+    private final ReplayablePseudoRandom random;
 
-    private final Image[] targetFrames;
+    @Getter
+    private Phase phase = Phase.OVER;
 
-    private final String date;
-    private Label text;
+    @Getter
     private int score;
 
-    private StackPane hand;
-    private final ImageView box;
+    /**
+     * Time left, in seconds, for a game ended by a time.
+     */
+    @Getter
+    private double timeLeft;
 
-    private Boolean isOnLeftSide;
+    private double width;
+    private double height;
+    private double time;
 
-    private final String gameType;
+    private Group layer;
+    private Group targetsLayer;
+    private Group hud;
+    private ImageView box;
+    private Group gun;
+    private ImageView gunShot;
+    private ImageView background;
 
-    private final Stats stats;
+    private final Image[] frames = new Image[COLORS.length];
+    private Image flash;
 
-    private EventHandler<Event> enterEvent;
-    private EventHandler<GazeEvent> handEventGaze;
+    @Getter
+    private final List<Target> targets = new ArrayList<>();
 
-    private final SequentialTransition st = new SequentialTransition();
+    private final EventHandler<Event> aimHandler = this::aim;
 
-    private Timer minuteur;
+    private final AnimationTimer loop = new AnimationTimer() {
+        private long last = -1;
 
-    private final ReplayablePseudoRandom randomGenerator;
+        @Override
+        public void handle(final long now) {
+            final double seconds = last < 0 ? 0 : Math.min(0.05, (now - last) / 1e9);
+            last = now;
+            if (!Stats.isConfigMenuOpen()) {
+                step(seconds);
+            }
+        }
 
-    ShooterGame(final IGameContext gameContext, final Stats stats, final String type) {
+        @Override
+        public void stop() {
+            super.stop();
+            last = -1;
+        }
+    };
+
+    private boolean manual;
+
+    public ShooterGame(final IGameContext gameContext, final Stats stats, final ShooterTheme theme,
+                       final ShooterShot shot, final ShooterEnd end) {
+        this(gameContext, stats, theme, shot, end, -1);
+    }
+
+    /**
+     * @param gameSeed the seed of the game to replay, or a negative value for a new game
+     */
+    public ShooterGame(final IGameContext gameContext, final Stats stats, final ShooterTheme theme,
+                       final ShooterShot shot, final ShooterEnd end, final double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final LocalDate localDate = LocalDate.now();
-        this.gameContext.startScoreLimiter();
-        this.gameContext.startTimeLimiter();
-        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
-        score = 0;
-        gameType = type;
-        hand = new StackPane();
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
-
-        targetFrames = new Image[6];
-        targetFrames[0] = new Image("data/shooter/" + gameType + "/images/Blue.png");
-        targetFrames[1] = new Image("data/shooter/" + gameType + "/images/Green.png");
-        targetFrames[2] = new Image("data/shooter/" + gameType + "/images/Yellow.png");
-        targetFrames[3] = new Image("data/shooter/" + gameType + "/images/Orange.png");
-        targetFrames[4] = new Image("data/shooter/" + gameType + "/images/Red.png");
-        targetFrames[5] = new Image("data/shooter/" + gameType + "/images/Flash.png");
-
-        box = new ImageView(new Image("data/shooter/" + gameType + "/images/Cage.png"));
-
-    }
-
-    ShooterGame(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
-        this.gameContext = gameContext;
-        this.stats = stats;
-        final LocalDate localDate = LocalDate.now();
-        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
-        score = 0;
-        gameType = type;
-        hand = new StackPane();
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
-        targetFrames = new Image[6];
-        targetFrames[0] = new Image("data/shooter/" + gameType + "/images/Blue.png");
-        targetFrames[1] = new Image("data/shooter/" + gameType + "/images/Green.png");
-        targetFrames[2] = new Image("data/shooter/" + gameType + "/images/Yellow.png");
-        targetFrames[3] = new Image("data/shooter/" + gameType + "/images/Orange.png");
-        targetFrames[4] = new Image("data/shooter/" + gameType + "/images/Red.png");
-        targetFrames[5] = new Image("data/shooter/" + gameType + "/images/Flash.png");
-
-        box = new ImageView(new Image("data/shooter/" + gameType + "/images/Cage.png"));
-
-    }
-
-    /**
-     * @return the background picture of the game
-     */
-    private Rectangle createBackground() {
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(new ImagePattern(new Image("data/shooter/" + gameType + "/images/Background.jpg")));
-
-        double backgroundDefaultOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
-            @Override
-            public Double visitLight() {
-                return 0.5;
-            }
-
-            @Override
-            public Double visitDark() {
-                return 1.d;
-            }
-        });
-        double finalOpacity = (gameContext.getConfiguration().isBackgroundEnabled()) ? backgroundDefaultOpacity : 0.d;
-        imageRectangle.setOpacity(finalOpacity);
-
-        gameContext.getChildren().add(imageRectangle);
-
-        return imageRectangle;
-    }
-
-    /**
-     * @return the angle from the gun to a point, in degrees
-     */
-    private float getAngle(final Point target) {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        float angle = (float) Math
-            .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
-        return (angle < 0) ?  angle : angle + 360;
-    }
-
-    /**
-     * Moves the box from side to side at regular intervals.
-     */
-    private void initBoxTimeline() {
-        minuteur = new Timer();
-        TimerTask tache = new TimerTask() {
-            public void run() {
-                // The box and its animations belong to the scene: changed on the JavaFX thread, not the timer's
-                Platform.runLater(() -> {
-                    if (moveBox(isOnLeftSide)) {
-                        isOnLeftSide = !isOnLeftSide;
-                    }
-                });
-            }
-        };
-
-        minuteur.schedule(tache, 0, 8000);
-    }
-
-
-    /**
-     * Moves the box across the screen, by one of three paths drawn at random.
-     *
-     * @return whether the box ends on the right side
-     */
-    private boolean moveBox(final boolean isOnLeftSide) {
-
-        clearTransition();
-
-        final int randomValue = randomGenerator.nextInt(3);
-
-        boolean goesFromLeftToRight = false;
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        final Timeline firstMove = new Timeline();
-        final Timeline thirdMove = new Timeline();
-        final Timeline secondMove = new Timeline();
-
-        if ((randomValue == 2) || (randomValue == 0)) {
-            // Move UP
-            double multiplier = (gameType.equals("biboule")?-1:1);
-            firstMove.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(box.translateYProperty(),  multiplier*(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
-        }
-
-        if ((randomValue == 1) || (randomValue == 2)) {
-            // Move Left or Right
-
-            double val = (dimension2D.getWidth() / (gameType.equals("biboule") ? 2.5 : 3) );
-
-            if (!isOnLeftSide) {
-                val = 0;
-            }
-
-            secondMove.getKeyFrames().add(
-                new KeyFrame(new Duration(3000), new KeyValue(box.translateXProperty(), val, Interpolator.LINEAR)));
-            goesFromLeftToRight = true;
-        }
-
-        if ((randomValue == 2) || (randomValue == 0)) {
-            // Move DOWN
-            thirdMove.getKeyFrames().add(
-                new KeyFrame(new Duration(500), new KeyValue(box.translateYProperty(), 0, Interpolator.EASE_OUT)));
-        }
-
-        st.getChildren().addAll(firstMove, secondMove, thirdMove);
-        st.play();
-
-        return goesFromLeftToRight;
-    }
-
-    /**
-     * Stops the movement of the box.
-     */
-    public void clearTransition(){
-        st.stop();
-        st.getChildren().clear();
-    }
-
-    /**
-     * Places the gun for the size of the game area.
-     */
-    public void updateHand() {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double x = dimension2D.getHeight();
-        for (final Node child : hand.getChildren()) {
-            ((ImageView) child).setPreserveRatio(true);
-            ((ImageView) child).setFitHeight(x);
-        }
-        hand.setLayoutY(0);
-        hand.setLayoutX(3 * (dimension2D.getWidth() / 7));
-        final double cst2;
-        if (gameType.equals("biboule")) {
-            cst2 = 2;
-        } else {// equals robot
-            cst2 = 1.7;
-        }
-        hand.setLayoutY(dimension2D.getHeight() / cst2);
-    }
-
-    /**
-     * Places the score for the size of the game area.
-     */
-    public void updateScore(final Label sc, final Label tc) {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        if (gameType.equals("biboule")) {
-            sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-            sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+        this.theme = theme;
+        this.shot = shot;
+        this.end = end;
+        if (gameSeed < 0) {
+            random = new ReplayablePseudoRandom();
+            stats.setGameSeed(random.getSeed());
         } else {
-            sc.setFont(Font.font(dimension2D.getHeight() / 20));
-            sc.setLayoutX(16 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(15.2 * dimension2D.getHeight() / 21);
-
-            tc.setFont(Font.font(dimension2D.getHeight() / 20));
-            tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
-            tc.setLayoutY(14 * dimension2D.getHeight() / 21);
+            random = new ReplayablePseudoRandom(gameSeed);
         }
+    }
+
+    private String path(final String name) {
+        return "data/shooter/" + theme.getFolder() + "/" + name;
     }
 
     @Override
     public void launch() {
-
-        closeTimer();
-
-        this.gameContext.setLimiterAvailable();
-        score = 0;
-        this.getChildren().clear();
-
-        Rectangle imageRectangle = createBackground();
-
-        gameContext.getChildren().add(this);
-
-        final EventHandler<Event> handEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                final double x = ((MouseEvent) e).getX();
-                final double y = ((MouseEvent) e).getY();
-                hand.setRotate(getAngle(new Point(x, y)));
-            }
-        };
-
-        handEventGaze = e -> {
-            final double x = e.getX();
-            final double y = e.getY();
-            hand.setRotate(getAngle(new Point(x, y)));
-        };
-
-        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        this.addEventFilter(GazeEvent.ANY, handEventGaze);
-
-        enterEvent = e -> {
-            if (e.getTarget() instanceof Target) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    final Target target = (Target) e.getTarget();
-                    if (!target.isDone()) {
-                        target.setDone(true);
-                        enter(target);
-                    }
-                }
-            }
-        };
-
-        final Label sc = new Label();
-        final Label tc = new Label();
-
-        final String cst;
-        if (gameType.equals("biboule")) {
-            cst = date + "\n\t" + "Score:" + score;
-        } else {// equals robot
-            tc.setText("Score:");
-            tc.setTextFill(Color.WHITE);
-            cst = "" + score;
-
+        gameContext.setLimiterAvailable();
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        width = dimension.getWidth();
+        height = dimension.getHeight();
+        for (int i = 0; i < COLORS.length; i++) {
+            frames[i] = new Image(path("images/" + COLORS[i] + ".png"));
         }
-        sc.setText(cst);
-        sc.setTextFill(Color.WHITE);
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final ImageView iv1 = new ImageView(new Image("data/shooter/" + gameType + "/images/hand.png"));
-        final ImageView iv2 = new ImageView(new Image("data/shooter/" + gameType + "/images/handShot.png"));
+        flash = new Image(path("images/Flash.png"));
 
-        final StackPane iv = new StackPane();
-        final double x = dimension2D.getHeight();
-        iv1.setPreserveRatio(true);
-        iv1.setFitHeight(x);
-        iv2.setPreserveRatio(true);
-        iv2.setFitHeight(x);
+        background = new ImageView(new Image(path("images/Background.png")));
+        background.setFitWidth(width);
+        background.setFitHeight(height);
 
-        iv.getChildren().addAll(iv1, iv2);
-        iv.getChildren().get(1).setOpacity(0);
-        iv.setLayoutY(0);
-        iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
-
-        final double cst2;
-        if (gameType.equals("biboule")) {
-            cst2 = 2;
-        } else {// equals robot
-            cst2 = 1.7;
-        }
-        iv.setLayoutY(dimension2D.getHeight() / cst2);
-
-        this.getChildren().add(iv);
-        hand = (StackPane) this.getChildren().get(this.getChildren().indexOf(iv));
-        hand.toFront();
-
-        if (gameType.equals("biboule")) {
-            sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-            sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
-        } else {
-            sc.setFont(Font.font(dimension2D.getHeight() / 20));
-            sc.setLineSpacing(10);
-            sc.setLayoutX(16 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(15.2 * dimension2D.getHeight() / 21);
-
-            tc.setFont(Font.font(dimension2D.getHeight() / 20));
-            tc.setLineSpacing(10);
-            tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
-            tc.setLayoutY(14 * dimension2D.getHeight() / 21);
-
-            this.getChildren().add(tc);
-        }
-        text = sc;
-
-        this.getChildren().add(sc);
-
-        iv.setMouseTransparent(true);
-
-        box.layoutXProperty().bind(imageRectangle.widthProperty().multiply(8.5/29.7).subtract(box.fitWidthProperty().divide(2)));
-
-        if (gameType.equals("biboule")) {
-            box.layoutYProperty().bind(imageRectangle.heightProperty().multiply(8.5/ 21));
-            box.fitHeightProperty().bind(imageRectangle.heightProperty().divide(6.5));
-        } else {// equals robot
-            box.fitHeightProperty().bind(imageRectangle.heightProperty().divide(8.5));
-        }
+        box = new ImageView(new Image(path("images/Cage.png")));
         box.setPreserveRatio(true);
+        box.setFitHeight(height * (theme == ShooterTheme.BIBOULES ? 0.2 : 0.13));
+        box.setMouseTransparent(true);
 
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            updateScore(sc, tc);
-            updateHand();
-        });
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
-            updateScore(sc, tc);
-            updateHand();
-        });
+        // The wand or the gun: its picture is centered on the bottom of the screen, so that it turns around it
+        final double gunHeight = height * 0.9;
+        final ImageView gunView = new ImageView(new Image(path("images/hand.png")));
+        gunView.setPreserveRatio(true);
+        gunView.setFitHeight(gunHeight);
+        gunShot = new ImageView(new Image(path("images/handShot.png")));
+        gunShot.setPreserveRatio(true);
+        gunShot.setFitHeight(gunHeight);
+        gunShot.setOpacity(0);
+        gun = new Group(gunView, gunShot);
+        gun.setMouseTransparent(true);
+        gun.setLayoutX(width / 2 - gunView.getBoundsInLocal().getWidth() / 2);
+        gun.setLayoutY(height - gunHeight / 2);
 
-        box.toBack();
-        isOnLeftSide = true;
-        this.getChildren().add(box);
+        targetsLayer = new Group();
+        hud = new Group();
+        hud.setMouseTransparent(true);
+        layer = new Group(background, box, targetsLayer, gun, hud);
+        gameContext.getChildren().add(layer);
 
-        final Timeline waitbeforestart = new Timeline();
-        waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
-        waitbeforestart.setOnFinished(actionEvent -> {
+        // The wand or the gun follows the gaze and the mouse
+        gameContext.getGazeDeviceManager().addEventFilter(background);
+        background.addEventFilter(GazeEvent.ANY, aimHandler);
+        layer.addEventFilter(MouseEvent.MOUSE_MOVED, aimHandler);
 
-            for (int i = 0; i < 5; i++) {
-                newCircle();
-            }
-
-            initBoxTimeline();
-        });
-        waitbeforestart.play();
-
-        stats.notifyNewRoundReady();
+        score = 0;
+        timeLeft = end.getSeconds();
         gameContext.getGazeDeviceManager().addStats(stats);
-        this.gameContext.start();
-        clearTransition();
-        box.setTranslateX(0);
-        box.setTranslateY(0);
-
-        gameContext.setOffFixationLengthControl();
+        stats.notifyNewRoundReady();
+        gameContext.firstStart();
+        phase = Phase.PLAY;
+        placeBox();
+        for (int i = 0; i < TARGETS; i++) {
+            final Target target = new Target();
+            targets.add(target);
+            targetsLayer.getChildren().add(target.node);
+            target.start(i * 0.8);
+        }
+        showScore();
+        if (!manual) {
+            loop.start();
+        }
     }
 
     /**
-     * Stops the timer of the box.
+     * Turns the wand or the gun towards the gaze or the mouse.
      */
-    private void closeTimer(){
-        if(minuteur != null) {
-            minuteur.cancel();
-            minuteur.purge();
+    private void aim(final Event event) {
+        double x;
+        double y;
+        if (event instanceof GazeEvent gaze && (gaze.getEventType() == GazeEvent.GAZE_MOVED
+            || gaze.getEventType() == GazeEvent.GAZE_ENTERED)) {
+            x = gaze.getX();
+            y = gaze.getY();
+        } else if (event instanceof MouseEvent mouse) {
+            x = mouse.getX();
+            y = mouse.getY();
+        } else {
+            return;
+        }
+        aimAt(x, y);
+    }
+
+    private void aimAt(final double x, final double y) {
+        final double angle = Math.toDegrees(Math.atan2(x - width / 2, height - y));
+        gun.setRotate(Math.max(-75, Math.min(75, angle)));
+    }
+
+    /**
+     * The cage (or the saucer) goes to and fro at the top, a little up and down.
+     */
+    private void placeBox() {
+        final double boxWidth = box.getBoundsInLocal().getWidth();
+        final double centerX = width / 2 + Math.sin(time * 0.35) * (width / 2 - boxWidth);
+        final double top = height * (theme == ShooterTheme.BIBOULES ? 0.12 : 0.03);
+        box.setLayoutX(centerX - boxWidth / 2);
+        box.setLayoutY(top + Math.sin(time * 0.9) * height * 0.03);
+    }
+
+    private void showScore() {
+        hud.getChildren().clear();
+        String text = gameContext.getTranslator().translate("ShooterScore") + " " + score;
+        if (end.getTargets() > 0) {
+            text += " / " + end.getTargets();
+        }
+        final Group pill = GameStyle.pill(text, height * 0.035);
+        pill.setLayoutX(width - pill.getBoundsInLocal().getWidth() - height * 0.03);
+        pill.setLayoutY(height * 0.025);
+        hud.getChildren().add(pill);
+        if (end.getSeconds() > 0) {
+            final int seconds = (int) Math.ceil(timeLeft);
+            final Group clock = GameStyle.pill(String.format("%d:%02d", seconds / 60, seconds % 60), height * 0.035);
+            clock.setLayoutX(height * 0.03);
+            clock.setLayoutY(height * 0.025);
+            hud.getChildren().add(clock);
         }
     }
 
-    // done
+    /**
+     * One step of the game, of a duration in seconds: the box and the targets move, the time runs.
+     */
+    void step(final double seconds) {
+        if (phase != Phase.PLAY || seconds <= 0) {
+            return;
+        }
+        final double ratio = Math.max(0.1, gameContext.getConfiguration().getAnimationSpeedRatio());
+        time += seconds * ratio;
+        placeBox();
+        for (final Target target : targets) {
+            target.move(seconds * ratio);
+        }
+        if (end.getSeconds() > 0) {
+            final int before = (int) Math.ceil(timeLeft);
+            timeLeft = Math.max(0, timeLeft - seconds);
+            if ((int) Math.ceil(timeLeft) != before) {
+                showScore();
+            }
+            if (timeLeft <= 0) {
+                finish();
+            }
+        }
+    }
+
+    /**
+     * A target shot: one more point, the wand or the gun flashes, a sound; the end reached, "Bravo" then the
+     * statistics.
+     */
+    void shoot(final Target target) {
+        if (phase != Phase.PLAY || target.shot) {
+            return;
+        }
+        target.shot = true;
+        target.stopFixation();
+        score++;
+        stats.incrementNumberOfGoalsReached();
+        gameContext.updateScore(stats, this);
+        gameContext.getSoundManager().add(path("sounds/shot" + (1 + random.nextInt(3)) + ".wav"));
+        aimAt(target.x, target.y);
+        gunShot.setOpacity(1);
+        final FadeTransition fire = new FadeTransition(Duration.millis(450), gunShot);
+        fire.setToValue(0);
+        fire.play();
+        target.burst();
+        showScore();
+        if (end.getTargets() > 0 && score >= end.getTargets()) {
+            finish();
+        }
+    }
+
+    private void finish() {
+        if (phase != Phase.PLAY) {
+            return;
+        }
+        phase = Phase.OVER;
+        loop.stop();
+        targets.forEach(Target::stopFixation);
+        stats.takeScreenShot();
+        gameContext.updateScore(stats, this);
+        gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
+    }
+
+    /**
+     * For the tests: the loop does not run, {@link #step(double)} is called instead.
+     */
+    void setManual() {
+        manual = true;
+        loop.stop();
+    }
+
     @Override
     public void dispose() {
-        this.closeTimer();
-        this.removeEventFilter(GazeEvent.ANY, handEventGaze);
-        this.getChildren().clear();
-    }
-
-    /**
-     * @return the transition bringing a target back into the box
-     */
-    private Transition restartTransition(final Target t) {
-
-        final FadeTransition ft = new FadeTransition(Duration.millis(1), t);
-        ft.setFromValue(0);
-        ft.setToValue(1);
-
-        final TranslateTransition tt1 = new TranslateTransition(Duration.millis(1), t);
-        tt1.setToY(0);
-        tt1.setToX(0);
-
-        final ScaleTransition st = new ScaleTransition(Duration.millis(1), t);
-        st.setToX(1);
-        st.setToY(1);
-
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(ft, tt1, st);
-
-        return pt;
-    }
-
-    /**
-     * Shoots a target: counts it, plays a sound, turns the gun and shows the target destroyed, then sends a new one.
-     */
-    private void enter(final Target t) {
-        t.removeEventFilter(MouseEvent.ANY, enterEvent);
-        t.removeEventFilter(GazeEvent.ANY, enterEvent);
-        t.getTransition().stop();
-        stats.incrementNumberOfGoalsReached();
-
-        final String cst;
-        if (gameType.equals("biboule")) {
-            cst = date + "\n\t" + "Score:" + score++;
-        } else {// equals robot
-            cst = "" + score++;
+        phase = Phase.OVER;
+        loop.stop();
+        for (final Target target : targets) {
+            target.dispose();
         }
-        gameContext.updateScore(stats,this);
+        targets.clear();
+        if (background != null) {
+            gameContext.getGazeDeviceManager().removeEventFilter(background);
+        }
+        if (layer != null) {
+            gameContext.getChildren().remove(layer);
+            layer = null;
+        }
+    }
 
-        text.setText(cst);
+    /**
+     * A target: it comes out of the box, changes color and grows while flying to a place of the screen; not shot when
+     * it gets there, it fades and comes out again.
+     */
+    final class Target {
+        @Getter
+        private double x;
+        @Getter
+        private double y;
+        private double fromX;
+        private double fromY;
+        private double toX;
+        private double toY;
+        private double duration;
+        private double elapsed;
+        private double wait;
+        private boolean shot;
+        private final ImageView view = new ImageView();
+        private final Circle zone = new Circle();
+        private final Arc ring;
+        private final Group node;
+        private final DoubleProperty progress = new SimpleDoubleProperty(0);
+        private Timeline fixation;
+        private final EventHandler<Event> handler = this::handle;
+        private final double baseSize = height * 0.075;
 
-        final int r = 1 + randomGenerator.nextInt(3);
-
-        final String soundResource = "data/shooter/" + gameType + "/sounds/hand_sound" + r + ".mp3";
-        gameContext.getSoundManager().add(soundResource);
-
-        t.getChildren().get(5).setOpacity(1);
-
-        hand.getChildren().get(1).setOpacity(1);
-        final FadeTransition ft = new FadeTransition(Duration.millis(500), t);
-        ft.setFromValue(1);
-        ft.setToValue(0);
-        final FadeTransition ft2 = new FadeTransition(Duration.millis(500), hand.getChildren().get(1));
-        ft2.setFromValue(1);
-        ft2.setToValue(0);
-
-        if (t.isAnimDone()) {
-            t.setAnimDone(false);
-            final ScaleTransition st = new ScaleTransition(Duration.millis(100), hand);
-            st.setFromX(1);
-            st.setFromY(1);
-            st.setToX(0.7);
-            st.setToY(0.7);
-            final ScaleTransition st2 = new ScaleTransition(Duration.millis(100), hand);
-            st.setFromX(0.7);
-            st.setFromY(0.7);
-            st2.setToX(1);
-            st2.setToY(1);
-            final SequentialTransition seqt = new SequentialTransition();
-            seqt.getChildren().addAll(st, st2);
-            seqt.setOnFinished(actionEvent -> t.setAnimDone(true));
-            seqt.play();
+        Target() {
+            view.setPreserveRatio(true);
+            view.setMouseTransparent(true);
+            zone.setFill(Color.TRANSPARENT);
+            ring = new Arc(0, 0, 10, 10, 90, 0);
+            ring.setType(ArcType.OPEN);
+            ring.setFill(null);
+            ring.setStrokeLineCap(StrokeLineCap.ROUND);
+            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setMouseTransparent(true);
+            progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));
+            node = new Group(zone, view, ring);
+            gameContext.getGazeDeviceManager().addEventFilter(node);
+            node.addEventFilter(GazeEvent.ANY, handler);
+            node.addEventFilter(MouseEvent.ANY, handler);
         }
 
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(ft, ft2);
-        pt.setOnFinished(actionEvent -> {
-            final int i = getChildren().indexOf(t);
-            if (i != -1) {
-                getChildren().remove(i);
-            }
-            newCircle();
-        });
-        pt.play();
-    }
-
-    /**
-     * Sends a new target.
-     */
-    private void newCircle() {
-
-        final Target sp = buildTarget();
-        sp.toBack();
-        this.getChildren().add(sp);
-        gameContext.getGazeDeviceManager().addEventFilter(sp);
-
-        sp.addEventFilter(MouseEvent.ANY, enterEvent);
-        sp.addEventHandler(GazeEvent.ANY, enterEvent);
-
-        final double x = (box.getBoundsInParent().getMinX());
-        sp.setLayoutX(x);
-        final double y = (box.getBoundsInParent().getMinY() + box.getBoundsInParent().getMaxY()) / 2;
-        sp.setLayoutY(y);
-        sp.setCenterX(x);
-        sp.setCenterY(y);
-        stats.incrementNumberOfGoalsToReach();
-        moveTarget(sp);
-    }
-
-    /**
-     * Gives a target its initial size.
-     */
-    private void setInitialSize(final ImageView targetFramesView) {
-        targetFramesView.setFitHeight(MIN_RADIUS);
-        targetFramesView.setFitWidth(MIN_RADIUS * 5.d / 4.d);
-    }
-
-    /**
-     * @return a new target
-     */
-    private Target buildTarget() {
-
-        final Target target = new Target();
-
-        final ImageView[] targetFramesViews = new ImageView[6];
-
-        for(int i = 0; i <6 ; i++){
-            targetFramesViews[i] = new ImageView(targetFrames[i]);
-            setInitialSize(targetFramesViews[i]);
-            target.getChildren().add(targetFramesViews[i]);
-            if(i != 0){
-                targetFramesViews[i].setOpacity(0);
+        private void handle(final Event event) {
+            if (event.getEventType() == GazeEvent.GAZE_ENTERED || event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                if (shot || wait > 0) {
+                    return;
+                }
+                if (ShooterGame.this.shot == ShooterShot.AT_ONCE) {
+                    shoot(this);
+                } else {
+                    startFixation();
+                }
+            } else if (event.getEventType() == GazeEvent.GAZE_EXITED
+                || event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                stopFixation();
             }
         }
 
-        return target;
-    }
-
-    /**
-     * @return one of the destinations of the targets
-     */
-    private Point getRandomPoint(int random) {
-
-        switch(random){
-            case 1:
-                return new Point(0, gameContext.getRoot().heightProperty().getValue()/2);
-            case 2:
-                return new Point(0, gameContext.getRoot().heightProperty().getValue());
-            case 3:
-                return new Point(gameContext.getRoot().widthProperty().getValue()/2, 0);
-            case 4:
-                return new Point(gameContext.getRoot().widthProperty().getValue()/2, gameContext.getRoot().heightProperty().getValue());
-            case 5:
-                return new Point(gameContext.getRoot().widthProperty().getValue(), 0);
-            case 6:
-                return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue()/2);
-            case 7:
-                return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue());
-            default:
-                return new Point(0,0);
-        }
-    }
-
-    /**
-     * Moves a target out of the box to a random place, growing, in a random time.
-     */
-    private void moveTarget(final Target sp) {
-        final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
-
-        Point randomPoint = getRandomPoint(randomGenerator.nextInt(8));
-
-        final TranslateTransition tt1 = new TranslateTransition(new Duration(timebasic), sp);
-        tt1.setToY(-sp.getCenterY() + randomPoint.y);
-        tt1.setToX(-sp.getCenterX() + randomPoint.x);
-        sp.setDestination(randomPoint);
-
-            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
-            text.toBack();
-            box.toBack();
-
-
-        final SequentialTransition seqt = new SequentialTransition();
-
-        for(int i = 1; i <5 ; i++){
-            final FadeTransition toNextFrame = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(i));
-            toNextFrame.setFromValue(0);
-            toNextFrame.setToValue(1);
-            seqt.getChildren().add(toNextFrame);
+        private void startFixation() {
+            stopFixation();
+            fixation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(progress, 0)),
+                new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progress, 1)));
+            fixation.setOnFinished(event -> shoot(this));
+            fixation.playFromStart();
         }
 
-
-
-        final ScaleTransition st = new ScaleTransition(new Duration(timebasic), sp);
-        st.setByX(10);
-        st.setByY(10);
-
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(seqt, tt1, st);
-        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-
-        sp.setTransition(pt);
-
-        pt.setOnFinished(actionEvent -> {
-            final int index = (getChildren().indexOf(sp));
-            if (index != -1) {
-                getChildren().remove(index);
-                newCircle();
+        void stopFixation() {
+            if (fixation != null) {
+                fixation.stop();
+                fixation = null;
             }
-        });
+            progress.set(0);
+        }
 
-        pt.play();
+        /**
+         * Comes out of the box again, after a delay in seconds.
+         */
+        void start(final double delay) {
+            stopFixation();
+            shot = false;
+            wait = delay;
+            elapsed = 0;
+            fromX = box.getLayoutX() + box.getBoundsInLocal().getWidth() / 2;
+            fromY = box.getLayoutY() + box.getBoundsInLocal().getHeight() / 2;
+            // To a place of the screen, not under the wand nor the score
+            final double margin = baseSize * GROWTH / 2;
+            toX = margin + (width - 2 * margin) * random.nextDouble();
+            toY = height * 0.18 + (height * 0.55) * random.nextDouble();
+            duration = FASTEST + (SLOWEST - FASTEST) * random.nextDouble();
+            x = fromX;
+            y = fromY;
+            view.setImage(frames[0]);
+            node.setOpacity(1);
+            node.setScaleX(1);
+            node.setScaleY(1);
+            node.setVisible(delay <= 0);
+            size(0);
+        }
+
+        /**
+         * The size of the target along its way (0 to 1).
+         */
+        private void size(final double along) {
+            final double size = baseSize * (0.5 + (GROWTH - 0.5) * along);
+            view.setFitWidth(size * 1.25);
+            view.setFitHeight(size);
+            view.setLayoutX(-size * 1.25 / 2);
+            view.setLayoutY(-size / 2);
+            zone.setRadius(size * 0.6);
+            ring.setRadiusX(size * 0.7);
+            ring.setRadiusY(size * 0.7);
+            ring.setStrokeWidth(Math.max(4, size * 0.08));
+            node.setLayoutX(x);
+            node.setLayoutY(y);
+        }
+
+        void move(final double seconds) {
+            if (shot) {
+                return;
+            }
+            if (wait > 0) {
+                wait -= seconds;
+                if (wait <= 0) {
+                    start(0);
+                }
+                return;
+            }
+            if (fixation != null) {
+                // Looked at, with the fixation: it waits, so that the fixation can end
+                return;
+            }
+            elapsed += seconds;
+            final double along = Math.min(1, elapsed / duration);
+            final double eased = 1 - (1 - along) * (1 - along);
+            x = fromX + (toX - fromX) * eased;
+            y = fromY + (toY - fromY) * eased;
+            view.setImage(frames[Math.min(frames.length - 1, (int) (along * frames.length))]);
+            size(along);
+            if (along >= 1) {
+                // Not shot: it fades, then comes out again
+                shot = true;
+                stopFixation();
+                final FadeTransition fade = new FadeTransition(Duration.millis(400), node);
+                fade.setToValue(0);
+                fade.setOnFinished(event -> {
+                    if (phase == Phase.PLAY) {
+                        stats.incrementNumberOfGoalsToReach();
+                        start(0.3);
+                    }
+                });
+                fade.play();
+            }
+        }
+
+        /**
+         * Shot: a flash, it pops and fades, then comes out again.
+         */
+        void burst() {
+            stats.incrementNumberOfGoalsToReach();
+            view.setImage(flash);
+            final ScaleTransition pop = new ScaleTransition(Duration.millis(250), node);
+            pop.setToX(1.4);
+            pop.setToY(1.4);
+            final FadeTransition fade = new FadeTransition(Duration.millis(400), node);
+            fade.setToValue(0);
+            fade.setOnFinished(event -> {
+                if (phase == Phase.PLAY) {
+                    start(0.4);
+                }
+            });
+            pop.play();
+            fade.play();
+        }
+
+        /**
+         * @return the node of the target (for the tests)
+         */
+        Group node() {
+            return node;
+        }
+
+        void dispose() {
+            stopFixation();
+            gameContext.getGazeDeviceManager().removeEventFilter(node);
+        }
     }
-
-    /**
-     * Brings a target back into the box, then sends it again.
-     */
-    public void restart(final Target sp) {
-        final Transition pt = restartTransition(sp);
-        sp.addEventFilter(MouseEvent.ANY, enterEvent);
-        sp.addEventHandler(GazeEvent.ANY, enterEvent);
-        pt.setOnFinished(actionEvent -> {
-            sp.getChildren().get(1).setOpacity(0);
-            sp.getChildren().get(2).setOpacity(0);
-            sp.getChildren().get(3).setOpacity(0);
-            sp.getChildren().get(4).setOpacity(0);
-            sp.getChildren().get(5).setOpacity(0);
-            moveTarget(sp);
-        });
-        pt.play();
-
-    }
-
 }

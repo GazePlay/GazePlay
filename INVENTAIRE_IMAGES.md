@@ -70,7 +70,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Sliding Puzzle (dont la Joconde, domaine public) | 36 |
 | Cake | 24 |
 | Tower Defense (certaines icônes ressemblent à des émojis : à vérifier) | 23 |
-| Shooter | 20 |
+| ~~Shooter~~ | ~~20~~ **Fait le 2/11/2026** : décors, robots, cage, soucoupe, éclairs, baguette et canon redessinés par script ; les 5 Biboules gardées (mascotte du laboratoire, dessinée par lui) |
 | Labyrinth | 19 |
 | Follow | 13 |
 | Space, Survive Against Robots | 12 chacun |

@@ -49,7 +49,6 @@ public class ThumbnailImage {
         new AbstractMap.SimpleEntry<>("rushHour", "data/common/Thumbnails/rushHour.png"),
         new AbstractMap.SimpleEntry<>("scratchcard", "data/common/Thumbnails/scratchcard.png"),
         new AbstractMap.SimpleEntry<>("shootTheBiboules", "data/common/Thumbnails/shootTheBiboules.png"),
-        new AbstractMap.SimpleEntry<>("shootTheRobots", "data/common/Thumbnails/shootTheRobots.png"),
         new AbstractMap.SimpleEntry<>("simon", "data/common/Thumbnails/simon.png"),
         new AbstractMap.SimpleEntry<>("slidingpuzzle", "data/common/Thumbnails/slidingpuzzle.png"),
         new AbstractMap.SimpleEntry<>("soundsOfLife", "data/common/Thumbnails/soundsOfLife.png"),

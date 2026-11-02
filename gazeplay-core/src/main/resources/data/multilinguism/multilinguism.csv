@@ -212,8 +212,17 @@ Room,Dhoma,الغرفة,Пакой,房间,Das Zimmer,Το δωμάτιο,The roo
 RushHour,Ora e pikut,ساعة الذروة,Гадзіна пік,逃脱堵车,Rush Hour,Ώρα αιχμής,Rush Hour,Ruuhka-aika,Rush Hour,व्यस्त समय,Rush Hour,Masa yang sibuk,Rush Hour,ラッシュアワー,Rush Hour,Godziny szczytu,Rush Hour,Час пик,Rush Hour,Giờ cao điểm,Masa yang sibuk
 ScratchCard,Karta gërvishtëse,بطاقات للخدش,Латарэя,刮刮乐,Rubbellose,Επιτυχημένες αποκαλύψεις,ScratchCards,Raaputuskortti,Cartes à gratter,स्क्रैच कार्ड,Zagrebi i osvoji,Kartu Gores,Gratta e vinci,スクラッチカード,Kraskaart,Zdrapki,Raspadinhas,Лотерейка,Tarjetas para raspar,Thẻ cào,ScratchCards
 Scribble,Zhgarravina,سكريبل,Крамзолі,涂鸦,Kritzeln,Ζωγραφιά,Scribble,Raaputus,Gribouille,घसीटना,Škrabotine,Tulisan cakar ayam,Scarabocchio,落書き,Kribbel Krabbel,Bazgrać,Rabiscos,Каракули,Garabato,Nguệch ngoạc,Scribble
-ShootTheBiboules,Gjuaj Biboules,أطلق النار على الأناجيل,Страляйце ў бібуляў,射击双球,Erschieße die Biboules,Πυροβολήστε τους Μπίμπουλες,Shoot the Biboules,Ammu Biboules,Viser les Biboules,बिबौल्स को गोली मारो,Pucaj u Biboules,Tembak Biboules,Spara alle Bibule,ビブールを撃て,Schiet op de Biboules,Strzelaj do Bibule,Atire nas Biboules,Стреляй в бибулей,Dispara a los biboules,Bắn Biboules,Tembak Biboules
-ShootTheRobots,Gjuaj robotët,أطلق النار على الروبوتات,Страляйце ў робатаў,射击机器人,Erschieße die Roboter,Πυροβολήστε τα ρομπότ,Shoot the robots,Ammu robotteja,Viser les robots,रोबोट को गोली मारो,Pucaj u robote,Tembak robotnya,Spara ai robot,ロボットを撃て,Schiet op de robots,Strzelaj do robotów,Atire nos robôs,Стреляй в роботов,Dispara a los robots,Bắn robot,Tembak robot
+Shooter,,,,,,,Shooting,,Tir,,,,,,,,,,,,
+ShooterBiboules,,,,,,,The Biboules,,Les Biboules,,,,,,,,,,,,
+ShooterRobots,,,,,,,The robots,,Les robots,,,,,,,,,,,,
+ShooterAtOnce,,,,,,,Shot as soon as looked at,,Tir dès qu'on regarde,,,,,,,,,,,,
+ShooterFixation,,,,,,,Shot after a fixation,,Tir après une fixation,,,,,,,,,,,,
+ShooterEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+ShooterScore50,,,,,,,50 targets,,50 cibles,,,,,,,,,,,,
+ShooterScore100,,,,,,,100 targets,,100 cibles,,,,,,,,,,,,
+ShooterTime1,,,,,,,1 minute,,1 minute,,,,,,,,,,,,
+ShooterTime3,,,,,,,3 minutes,,3 minutes,,,,,,,,,,,,
+ShooterScore,,,,,,,Score:,,Score :,,,,,,,,,,,,
 SoundsOfLife,Tingujt e jetës,أصوات الحياة,Гукі жыцця,音乐之声,Klänge des Lebens,Ήχοι Ζωής,Sounds of Life,Elämän äänet,Les sons de la Vie,जीवन की ध्वनि,Zvukovi života,Suara Kehidupan,Suoni di vita,生命の音,Geluiden van het leven,Dźwięki Życia,Sons da vida,Звуки жизни,Sonidos de la vida,Âm thanh của cuộc sống,Bunyi Kehidupan
 SoundsOfLife_sheep,,,,,,,Sheep,,Mouton,,,,,,,,,,,,
 SoundsOfLife_cow,,,,,,,Cow,,Vache,,,,,,,,,,,,

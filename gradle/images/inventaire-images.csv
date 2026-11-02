@@ -107,8 +107,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/rabbits.png,oui,source i
 gazeplay-core/src/main/resources/data/common/Thumbnails/rockPaperScissors.png,oui,source inconnue,,2020-06-04,PillouMatou,"background debugged, replace images, multilinguism for the game"
 gazeplay-core/src/main/resources/data/common/Thumbnails/rushHour.png,oui,source inconnue,,2018-07-26,kuhlkrein,new images for gazeplay
 gazeplay-core/src/main/resources/data/common/Thumbnails/scratchcard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
-gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheBiboules.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
-gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheRobots.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
+gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheBiboules.png,oui,libre,capture du jeu (novembre 2026) ; décor dessiné pour le projet ; Biboules dessinées pour le projet (2018),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/simon.png,oui,source inconnue,,2023-06-07,iwa,Ajout du 3e mode multijoueur + miniature + traduction
 gazeplay-core/src/main/resources/data/common/Thumbnails/slidingpuzzle.png,oui,source inconnue,,2019-05-16,Peter Bardawil,Game step 2
 gazeplay-core/src/main/resources/data/common/Thumbnails/soundsOfLife.png,oui,libre,"capture du jeu (octobre 2026) ; décor dessiné pour le projet, animaux OpenMoji CC BY-SA 4.0",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
@@ -628,26 +627,26 @@ gazeplay-games/src/main/resources/data/rushHour/carH.png,oui,source inconnue,,20
 gazeplay-games/src/main/resources/data/rushHour/carV.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
 gazeplay-games/src/main/resources/data/rushHour/taxiH.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
 gazeplay-games/src/main/resources/data/rushHour/taxiV.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Background.jpg,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Blue.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Cage.png,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Flash.png,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Green.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Orange.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Red.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
-gazeplay-games/src/main/resources/data/shooter/biboule/images/Yellow.png,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/shooter/biboule/images/hand.png,oui,source inconnue,,2018-02-08,kuhlkrein,Biboules new classes
-gazeplay-games/src/main/resources/data/shooter/biboule/images/handShot.png,oui,source inconnue,,2018-02-10,kuhlkrein,magic effect of the wand
-gazeplay-games/src/main/resources/data/shooter/robot/images/Background.jpg,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Blue.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Cage.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Flash.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Green.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Orange.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Red.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/Yellow.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/hand.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
-gazeplay-games/src/main/resources/data/shooter/robot/images/handShot.png,oui,source inconnue,,2018-02-15,kuhlkrein,AJout du jeu robot
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Background.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Blue.png,oui,libre,"Biboule, mascotte du laboratoire, dessinée par lui (confirmé par le mainteneur le 2/11/2026)",2018-02-09,kuhlkrein,Biboules du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Cage.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Flash.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Green.png,oui,libre,"Biboule, mascotte du laboratoire, dessinée par lui (confirmé par le mainteneur le 2/11/2026)",2018-02-09,kuhlkrein,Biboules du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Orange.png,oui,libre,"Biboule, mascotte du laboratoire, dessinée par lui (confirmé par le mainteneur le 2/11/2026)",2018-02-09,kuhlkrein,Biboules du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Red.png,oui,libre,"Biboule, mascotte du laboratoire, dessinée par lui (confirmé par le mainteneur le 2/11/2026)",2018-02-09,kuhlkrein,Biboules du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/Yellow.png,oui,libre,"Biboule, mascotte du laboratoire, dessinée par lui (confirmé par le mainteneur le 2/11/2026)",2018-02-08,kuhlkrein,Biboules du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/hand.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/biboule/images/handShot.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Background.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Blue.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Cage.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Flash.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Green.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Orange.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Red.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/Yellow.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/hand.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
+gazeplay-games/src/main/resources/data/shooter/robot/images/handShot.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
 gazeplay-games/src/main/resources/data/simonGame/right.png,oui,source inconnue,,2023-05-25,iwa,"Le deuxième mode marche correctement. Ajout d'image qui indique si le joueur a réussi ou pas. Ajout des sons qui se joue quand on appuie sur une touche. Ajustement de la difficulté, maintenant, c'est juste le nombre total de touche max avant de gagner la partie. (easy = 10, normal = 21, hard = 32)"
 gazeplay-games/src/main/resources/data/simonGame/wrong.png,oui,source inconnue,,2023-05-25,iwa,"Le deuxième mode marche correctement. Ajout d'image qui indique si le joueur a réussi ou pas. Ajout des sons qui se joue quand on appuie sur une touche. Ajustement de la difficulté, maintenant, c'est juste le nombre total de touche max avant de gagner la partie. (easy = 10, normal = 21, hard = 32)"
 gazeplay-games/src/main/resources/data/sliding-puzzle/biboule/p1.png,oui,source inconnue,,2019-05-29,Peter Bardawil,Added new Biboule Variant

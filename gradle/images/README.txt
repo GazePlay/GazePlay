@@ -81,6 +81,15 @@ make_egg_sounds.py, under the license of GazePlay Learning (GPL-3.0-or-later); t
 license; the egg and its cracks are drawn by the game. The thumbnail (gazeplay-core: data/common/Thumbnails/egg.png)
 is a capture of the game, 960 x 540.
 
+Images and sounds of the shooting game (gazeplay-games: data/shooter): the classroom and the street
+(biboule/images/Background.png, robot/images/Background.png) are drawn by make_shooter_images.py (this folder) and
+the sounds (biboule/sounds/shot1-3.wav, robot/sounds/shot1-3.wav) made by make_shooter_sounds.py, under the license
+of GazePlay Learning (GPL-3.0-or-later). They replace (November 2026) two backgrounds and six sounds of unknown
+source; the robots, the cage, the flying saucer, the flashes, the wand and the gun are drawn by the same script
+(they replace drawings of 2018 whose author was not known for sure). The Biboules (biboule/images/Blue.png to
+Red.png) are the mascot of the laboratory, drawn by it, kept. The music "Talking Cute (Chiptune)" is by Pro Sensory (Alex McCulloch), OpenGameArt, CC0. The
+thumbnail (gazeplay-core: data/common/Thumbnails/shootTheBiboules.png) is a capture of the game, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

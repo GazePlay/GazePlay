@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the games "ShootTheBiboules" and "ShootTheRobots", with the info-game.csv file of the games where
+ * Statistics of the shooting game ("biboule" or "robot", its scene), with the info-game.csv file of the games where
  * targets are hit (see {@code ShootGamesStats}).
  */
 public class ShooterGamesStats extends ShootGamesStats {
@@ -28,4 +28,11 @@ public class ShooterGamesStats extends ShootGamesStats {
         setAccidentalShotPreventionPeriod(0);
     }
 
+
+    /**
+     * Names the statistics after the scene of the game (they are made before the game).
+     */
+    void setName(final String name) {
+        this.gameName = name;
+    }
 }

@@ -1,0 +1,19 @@
+# Le principe
+Des Biboules s'échappent de leur cage (ou des robots sortent de leur soucoupe volante). Touche-les avec le regard !
+
+# Comment jouer
+- La cage (ou la soucoupe) se promène en haut. Les cibles en sortent une à une, changent de couleur et grossissent en s'éloignant.
+- Regarde une cible pour la toucher : un éclair, un bruit, et un point de plus.
+- Selon la variante, elle est touchée dès que tu la regardes, ou après une fixation : un anneau en fait le tour (durée de fixation des réglages) et la cible s'arrête pendant ce temps.
+- En bas, la baguette magique (ou le canon) se tourne vers ce que tu regardes.
+- En haut à droite, le score ; en haut à gauche, le temps qui reste (variantes en minutes).
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert, et le temps s'arrête.
+
+# Comment gagner
+Selon la variante : sans fin (quitte par l'engrenage en bas à gauche), 50 ou 100 cibles à toucher, ou 1 ou 3 minutes de jeu. À la fin : « Bravo », puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Sans fin, 50 cibles, 100 cibles, 1 minute ou 3 minutes : la fin de la partie.
+- En bas, comment toucher : dès qu'on regarde, ou après une fixation.
+- En bas aussi, le décor : les Biboules dans la classe, ou les robots au-dessus de la rue.
