@@ -1,0 +1,17 @@
+La Biboule d'origine : copie de sauvegarde (2/11/2026)
+
+La Biboule est la mascotte du laboratoire, dessinée par lui. Le 2/11/2026, le mainteneur a choisi une version
+modernisée de la Biboule (proposition A, avec la bouche d'origine), pas encore appliquée. Il a demandé de garder une
+copie des dessins d'origine, pour pouvoir revenir en arrière.
+
+Ce dossier contient ces dessins tels qu'ils étaient le 2/11/2026 (34 fichiers), rangés par jeu :
+- shooter/ : les 5 Biboules du jeu « Tir » (data/shooter/biboule/images, Blue.png à Red.png).
+- biboulejump/ : les 5 Biboules de Biboule Jump (data/biboulejump/biboules).
+- horses/ : les 4 Biboules de Horses (data/horses/biboules).
+- pet/ : la Biboule de Pet en morceaux (data/pet/images : body, eye, eyeclosed, mouth, smile, wing).
+- sliding-puzzle/ : le puzzle de la Biboule (data/sliding-puzzle/biboule, p1.png à p9.png).
+- autres/ : Follow, Ladder, Math101 (main), Potions (cliente), Whac-A-Mole (taupe), nommés <jeu>-<fichier>.
+
+Ces fichiers ne sont pas livrés avec l'application (ils ne sont pas dans les ressources des jeux). Pour revenir à
+l'ancienne Biboule dans un jeu, recopier le fichier à son ancienne place. L'historique git garde aussi chaque
+version de chaque image.

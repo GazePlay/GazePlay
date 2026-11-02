@@ -5,6 +5,55 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU MARDI 3/11/2026 (bilan de la séance du lundi 2/11/2026)
+
+**État laissé le 2/11/2026 au soir** : tout est commité et poussé (demande du mainteneur), y compris le **jeu « Tir »**
+(Shoot The Biboules et Shoot The Robots réunis, voir sa fiche), **pas encore essayé par le mainteneur**, et la copie de
+sauvegarde de la Biboule d'origine. Dernier `build` (avec tous les nouveaux dessins du Tir) : **694
+tests, 0 échec** ; `allGamesTest` complet un peu avant : **67 entrées, 0 échec** ; le Tir relancé 3 fois ensuite
+avec ses nouveaux dessins : OK. CI des commits du soir : à vérifier à la reprise.
+
+**Fait le 2/11/2026** (un commit par jeu, chacun essayé et validé par le mainteneur, CI verte) :
+
+| Commit | Quoi |
+|---|---|
+| `bcb5482a4` | Sounds Of Life : un seul son à la fois (le son en cours est coupé) |
+| `daa00a531` | Spot The Differences : option « Avec / Sans anneau de fixation » |
+| `559b034be` | Flower Of Numbers (règle du total, 3 modes, images dessinées) |
+| `e21decc27` | Bilan, clés de traduction inutilisées retirées, installeur essayé sur un autre PC (il marche, Tobii compris) |
+| `d82b754e2` | Opinions (images de l'utilisateur seulement, « J'aime / Je n'aime pas », fichier `-opinions.csv`) ; fenêtre des variantes : message et « Commencer » grisé sans image de l'utilisateur |
+| `31c7bb394` | Sprint Finish (une carte, seul au clavier ou au regard, à deux ; cartes au hasard ; chiens en diagonale) |
+| `e71b88a5b` | Bubbles (une carte « Bulles », image à découvrir sous 36 vitres, éclatement immédiat ou après fixation) |
+| `9534f5792` | Egg Game (une carte, sans fin, rester sur l'œuf suffit) ; recherche du menu sans accents ni « œ » ; nouvelle tâche de fin : refonte de l'écran des statistiques |
+
+**Décision du mainteneur du 2/11/2026 au soir, sur la Biboule** : planche de 3 propositions
+(`build/game-screenshots/propositions/biboule-propositions.png`, script `biboule_proposals.py` copié à côté) :
+**le mainteneur aime la version A (« fidèle modernisée » : ombres douces, contour fin de la couleur, joues roses), mais
+avec la bouche d'origine** (la petite bouche ouverte en « 3 » couché, rose, de la Biboule du laboratoire) **et les ailes
+d'origine, plus détaillées** (feuilles avec leur nervure centrale et leurs nervures latérales, contour foncé). Rien n'est
+appliqué : à faire demain, sur sa demande. **Copie de sauvegarde de la Biboule d'origine** (demande du mainteneur :
+c'est la mascotte, pouvoir revenir en arrière) : `gradle/images/biboule-originale/` (34 dessins de tous les jeux où
+elle apparaît, rangés par jeu, avec un `LISEZMOI.txt` ; non livrés, non commités pour l'instant).
+
+**À faire mardi, dans l'ordre** :
+
+1. **Biboule** : refaire la version A avec la **bouche d'origine** et les **ailes d'origine** (détaillées), la montrer
+   au mainteneur ; une fois validée, la
+   mettre dans le jeu « Tir » (`data/shooter/biboule/images/Blue.png` à `Red.png`, dessinée par
+   `gradle/images/make_shooter_images.py`, aux mêmes proportions 500 × 400). **Demander** s'il faut aussi la mettre
+   dans les autres jeux où la Biboule apparaît (Pet, Horses, Frogs Race, Biboule Jump…), pour qu'elle soit la même
+   partout.
+2. **Jeu « Tir »** (commité le 2/11 au soir) : vérifier la CI, regarder le jeu en vraie fenêtre avec les nouveaux
+   dessins (robots, soucoupe, cage, éclairs, baguette, canon), refaire la vignette
+   (`data/common/Thumbnails/shootTheBiboules.png`, encore une capture avec l'ancienne cage et l'ancienne baguette) ;
+   puis **essai du mainteneur** (souris et Tobii : tir immédiat et après fixation, les 5 fins) ; corrections dans un
+   nouveau commit sur sa demande.
+3. **Continuer la revue, groupe 6** (jeux de tir et d'action) : **Survive Against Robots (×2)**, puis Space Game,
+   Tower Defense, Casse-Brique, Ninja, Whac-A-Mole, Biboule Jump, Gaze Race. Chaque jeu : état des lieux, **demander
+   la règle voulue d'abord**, propositions validées, puis le travail ; un commit par jeu sur demande.
+4. Toujours à la fin de la revue : point 6 (refonte de l'engrenage **et** de l'écran des statistiques), points 7 et 8
+   (plantage de la JVM des tests du 30/10 ; test GazePlay Eval en échec une fois le 2/11, revenu à la normale).
+
 ## REPRISE DU LUNDI 2/11/2026 (bilan de la séance du vendredi 30/10/2026)
 
 **État laissé le 30/10/2026 au soir** : tout est commité et poussé sur `addClaudeCode`, dernier commit `2e1957327`
@@ -37,8 +86,9 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
 - Point 4 : Flower Of Numbers revu (propositions validées, tout fait, voir sa fiche) ; reste l'essai du mainteneur.
   Ensuite : Opinions (revu le 2/11, essayé et validé par le mainteneur, commité `d82b754e2`) ; Sprint Finish :
   revu, validé et commité le 2/11 (`31c7bb394`) ; Bubbles : revu, essayé et validé le 2/11, commité `e71b88a5b` ;
-  Egg Game : revu le 2/11 (règle du mainteneur, voir sa fiche), en attente de l'essai du mainteneur ; puis le
-  groupe 6 (jeux de tir et d'action).
+  Egg Game : revu, essayé et validé le 2/11, commité `9534f5792` ; groupe 6 (jeux de tir et d'action) : Shoot The
+  Biboules et Shoot The Robots réunis en « Tir », revus le 2/11 (règle du mainteneur, voir leur fiche), en attente
+  de l'essai du mainteneur ; puis Survive Against Robots.
   Un test de GazePlay Eval en échec une seule fois : point 8 ci-dessous, à surveiller.
 - Point 3 : clés `Spot all the differences` et `Differences found` retirées (décision du mainteneur), des deux
   `multilinguism.csv` (application et tests) ; aucun code ne les lisait.
@@ -305,7 +355,7 @@ urgent (images non libres, jeux très joués) au plus simple ; le mainteneur peu
 10. **GazePlay Eval et GazePlay Eval Test** : en dernier (contrat avec le site GazePlay Eval, format de résultats
     versionné).
 
-Après chaque famille : `allGamesTest` complet (68 entrées depuis le 2/11/2026), et point avec le mainteneur.
+Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026), et point avec le mainteneur.
 
 ## Légende des images
 
@@ -342,7 +392,7 @@ Après chaque famille : `allGamesTest` complet (68 entrées depuis le 2/11/2026)
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
 | Tower Defense (`TowerDefense`) | À confirmer : 23 dessins ; certaines icônes ressemblent à des émojis (cœur, vague, argent) : vérifier leur origine | | |
 | Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
-| Shoot The Biboules, Shoot The Robots | À confirmer : 20 dessins (Biboule, robots) ; musiques OpenGameArt | | |
+| **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
 | Survive Against Robots (et Mouse) | À confirmer : 12 dessins | | |
 | Space Game (`SpaceGame`) | À confirmer : 12 dessins (aliens, vaisseaux) | | |
 | Cakes (`Cakes`) | À confirmer : 24 dessins | | |
@@ -1823,3 +1873,93 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   de recherche du menu pour le trouver (« oeuf » ne le trouvait pas). **Fait** pour tous les jeux : la recherche ne
   tient plus compte des majuscules, des accents, de « œ » / « æ » (écrits « oe » / « ae ») ni de l'apostrophe
   courbe (`HomeMenuScreen.searchable`, test `HomeMenuSearchTest`).
+
+### Shoot The Biboules et Shoot The Robots (`ShootTheBiboules`, `ShootTheRobots`, code `shooter`) — 2/11/2026
+
+**Étape 1 (état des lieux) faite le 2/11/2026.** Captures « avant » : `build/game-screenshots/avant/shooter/`
+(1366 × 768, mode souris, français ; déroulé seconde par seconde, pointeur fixe à droite du centre ; planches
+`biboules-planche.png`, `robots-planche.png`). Pas d'essai avec le Tobii.
+
+- **Ce qu'ils font** (lecture du code : 7 classes, 893 lignes, un seul jeu `ShooterGame` pour les deux ; et
+  captures) : une cage (Biboules) ou une soucoupe (robots) se promène en haut de l'écran ; des cibles en sortent une
+  à une (5 à la fois), changent de couleur (bleu, vert, jaune, orange, rouge) et grossissent jusqu'à 10 fois en
+  4 à 7 s en filant vers un bord. Une cible **est touchée dès que le regard (ou la souris) entre dedans** (pas de
+  fixation) : éclair, bruit, la baguette (Biboules, dans une salle de classe) ou le canon (robots, dans une rue)
+  tourne vers elle, +1 au score. **Pas de fin, pas de variante** (le jeu démarre directement depuis le menu).
+- **Défauts vus** :
+  - D1. **Score faux de 1** (fait, code) : le texte affiche la valeur d'avant le tir (`score++`) : le premier tir
+    laisse « Score:0 ».
+  - D2. **Score illisible pour les robots** (captures) : seul « Score: » se lit sur le panneau jaune ; le nombre,
+    blanc, ne se voit pas. Pour les Biboules, la **date du jour** est écrite au tableau au-dessus du score (sans
+    raison) ; police « AR BLANCA » (absente sous Windows et Linux).
+  - D3. **Cibles énormes** : une cible grossit jusqu'à 10 fois sa taille ; près des bords, des Biboules géantes
+    coupées cachent une partie de l'écran (captures).
+  - D4. Positions bricolées (fractions comme 8,9/29,7 de la largeur) ; la cage passe parfois sous le tableau ou la
+    soucoupe sort de l'écran en haut.
+  - D5. Le déplacement de la cage utilise un `java.util.Timer` (règle du projet : `PauseTransition`) ; le rejeu ne
+    relance pas les limiteurs (deux constructeurs différents) ; écouteurs de redimensionnement jamais retirés.
+  - D6. Pas de durée de fixation ni de vitesse (la vitesse d'animation des réglages joue sur les cibles, mais pas
+    sur la cage).
+- **Images et sons (licences)** : 20 dessins de 2018 (salle de classe, rue, cage, soucoupe, Biboules de 5 couleurs,
+  robots de 5 couleurs, éclair, bras et baguette, canon), ajoutés par l'auteur du jeu sans source : **probablement
+  faits pour le jeu** (la Biboule est la mascotte du projet) ; 6 sons de tir (`hand_sound1-3.mp3`, deux jeux) de
+  source inconnue ; deux musiques d'OpenGameArt (« Talking Cute Chiptune », « DST Tower Defense Theme »), licence à
+  vérifier (hypothèse : CC BY ou CC0).
+- **Propositions** (à valider ✔ / refuser ✘ ; elles dépendent des questions plus bas) :
+  - Images et sons
+    - I1. Garder les Biboules et les robots (dessins du projet, à faire confirmer) ; redessiner les deux décors en
+      plus simple et plus doux (classe, rue) ou les remplacer par des décors dessinés par script ; sons de tir
+      refaits par script.
+  - Graphisme
+    - G1. Score dans une étiquette (pastille) en haut, lisible, sans date ; taille des cibles limitée (3 fois au
+      plus) ; anneau de fixation si un mode avec fixation est choisi.
+  - Gameplay
+    - P1. **Une seule carte « Tir »** avec le décor en variante (Biboules dans la classe, robots dans la rue), ou
+      garder deux cartes.
+    - P2. **Variantes** : vitesse (lent, normal, rapide) et nombre de cibles à la fois ; tir dès qu'on regarde ou
+      après une fixation (comme Bubbles).
+    - P3. **Une fin** (par exemple 20 cibles touchées : « Bravo » puis les statistiques) ou sans fin.
+  - Corrections
+    - P4. D1 (score), D4 (positions), D5 (`PauseTransition`, rejeu), D6.
+- **Questions au mainteneur** (la règle d'abord) :
+  1. **Une seule carte** avec le décor en variante, ou garder Biboules et robots séparés ?
+  2. **Fin de partie** : sans fin (comme maintenant), ou un nombre de cibles à toucher (combien ?), ou une durée ?
+  3. **Tirer** : dès que le regard entre dans la cible (comme maintenant), après une fixation, ou les deux au choix ?
+  4. **Vitesse et nombre de cibles** : des variantes (lent / normal / rapide) ?
+  5. **Les dessins** (Biboules, robots, décors) : les garder tels quels, les retoucher, ou les refaire ?
+- **Réponse du mainteneur (2/11/2026)** : **une seule carte** ; tirer **dès le regard ou après une fixation, au
+  choix** ; **fin de partie au choix** : sans fin, 50 ou 100 cibles, 1 ou 3 minutes. **Dessins** : avis demandé ;
+  avis donné et validé (« fais comme tu proposes ») : garder les Biboules et les robots (dessins versés au projet en
+  2018 par un contributeur, sous la licence du projet ; hypothèse : faits par lui, à faire confirmer par l'auteur si
+  possible), refaire les deux décors par script (plus détaillés, plus à risque) et les sons ; garder la musique si sa
+  licence est libre. (Vitesse : sans réponse, celle des réglages.)
+- **Fait (2/11/2026)** :
+  - **Une seule entrée** `Shooter` (« Tir ») : `ShootTheBiboules` et `ShootTheRobots` retirés du catalogue (67
+    entrées). Variantes `GroupedGameVariant` : la fin en boutons (`ShooterEnd` : sans fin, 50 cibles, 100 cibles,
+    1 minute, 3 minutes) ; en bas, la façon de tirer (`ShooterShot`) et le décor (`ShooterTheme` : les Biboules dans
+    la classe, les robots au-dessus de la rue). Statistiques gardées sous leurs noms d'avant (`biboule`, `robot`).
+    Les deux jeux n'étaient pas dans la liste du rejeu.
+  - **Déroulement** : une seule boucle en temps réel (plus de `java.util.Timer`), à la vitesse d'animation des
+    réglages, arrêtée pendant le menu de l'engrenage (le temps aussi). La cage (ou la soucoupe) va et vient en haut
+    en ondulant ; 5 cibles en sortent tour à tour vers un point de l'écran (ni sous le score, ni sous la baguette),
+    changent de couleur et grossissent **2,6 fois au plus** (10 fois avant, D3) ; non touchée, une cible s'efface et
+    ressort. Touchée : éclair, petit saut, son, +1 ; la baguette (ou le canon) se tourne vers elle. En mode fixation,
+    l'anneau de la couleur principale fait le tour de la cible et **la cible s'arrête pendant la fixation** (sinon
+    impossible à fixer : 0 point en 24 s à l'essai). **Score juste** (D1) dans une pastille en haut à droite
+    (« Score : 12 / 50 »), **temps restant** en haut à gauche (variantes en minutes) ; plus de date (D2). Fin :
+    « Bravo » puis les statistiques. Un but à atteindre par cible sortie, un but atteint par cible touchée.
+  - Décors (`make_shooter_images.py` : salle de classe, rue) et sons (`make_shooter_sounds.py` : baguette magique,
+    laser) refaits ; les 2 anciens décors, les 6 sons et la vignette des robots retirés ; vignette refaite (capture,
+    960 × 540). **Musiques** : « Talking Cute (Chiptune) » (Pro Sensory, Alex McCulloch) et « Tower Defense Theme »
+    (DST) sont sous **CC0** (vérifié sur leurs pages OpenGameArt) ; une seule carte, donc une seule musique : la
+    première, créditée dans la licence affichée. Traductions, aide (`Shooter-fra.txt`, `-eng.txt`), crédits,
+    inventaire (les 18 dessins gardés notés « libre probable, auteur à confirmer »).
+- **Vérifications** : `ShooterGameTest` (6 tests : fin à 50 cibles et pas avant ; sans fin après 120 ; fin après
+  1 minute, le temps comptant avec le jeu ; tir immédiat ou après fixation, la cible arrêtée pendant la fixation ;
+  cibles qui sortent et grossissent, tout retiré à la fin ; variantes) ; `GameHelpTest` avec `Shooter` ; captures
+  en vraie fenêtre (`build/game-screenshots/essai1/shooter/`). Pas d'essai au Tobii : à faire par le mainteneur.
+- **Second avis du mainteneur (2/11/2026)** : pour être tout à fait sûr, **refaire nous-mêmes les dessins**, comme pour
+  les autres jeux ; mais **la Biboule est un dessin du laboratoire, sa mascotte** : gardée. **Fait** : robots (5
+  couleurs : tête, antenne, yeux et bouche de la couleur), soucoupe volante, cage dorée, éclairs (pâle pour les
+  Biboules, rouge pour les robots), bras et baguette magique (étincelle au tir), canon (flamme au tir), dessinés par
+  `make_shooter_images.py` aux mêmes proportions que les anciens ; les 5 Biboules gardées. Inventaire : tout « libre ».
