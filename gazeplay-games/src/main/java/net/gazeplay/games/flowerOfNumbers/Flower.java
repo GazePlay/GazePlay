@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The state of the flower of the "FlowerOfNumbers" game: the number of the pistil (up to {@link #NUMBER_LIMIT}), and
- * the values put in each petal.
+ * The state of the flower of the "FlowerOfNumbers" game: the number of the pistil, and the values put in each petal
+ * (0: a free place). {@link #petalIsComplete} and {@link #isComplete} are the rule of the first version (each petal
+ * makes the number of the pistil); the game reviewed on 2/11/2026 uses the sums and the total.
  */
 public class Flower {
     public static final int NUMBER_LIMIT = 20;
@@ -117,12 +118,42 @@ public class Flower {
      * @param petal the petal in which do the sum
      * @return the sum of the values of it array
      */
-    private int getSum(final Petal petal) {
+    public int getSum(final Petal petal) {
         int sum = 0;
         for (int value : flower.get(petal.ordinal())) {
             sum += value;
         }
         return sum;
+    }
+
+    /**
+     * @return the sum of the values of all the petals
+     */
+    public int getTotal() {
+        int total = 0;
+        for (Petal petal : Petal.values()) {
+            total += getSum(petal);
+        }
+        return total;
+    }
+
+    /**
+     * @return whether the petal holds no value
+     */
+    public boolean petalIsEmpty(final Petal petal) {
+        return size(petal) == 0;
+    }
+
+    /**
+     * @return whether the petal holds this value
+     */
+    public boolean petalHolds(final Petal petal, final int value) {
+        for (int held : flower.get(petal.ordinal())) {
+            if (held == value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

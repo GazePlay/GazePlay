@@ -17,6 +17,7 @@ public class FlowerOfNumbersGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .build(),
+            new FlowerOfNumbersVariantGenerator(),
             new FlowerOfNumbersGameLauncher());
     }
 }

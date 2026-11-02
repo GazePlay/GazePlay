@@ -51,6 +51,14 @@ and the ball are OpenMoji (CC BY-SA 4.0). They replace (October 2026) photos and
 with brands). The Biboule (body.png, eye.png, eyeclosed.png, mouth.png, smile.png, wing.png) is a drawing of the
 project, kept. The thumbnail (gazeplay-core: data/common/Thumbnails/pet.png) is a capture of the bathroom, 960 x 540.
 
+Images and sounds of Flower Of Numbers (gazeplay-games: data/flowerOfNumbers): the hands (images/fingers), the dice
+(images/dice) and the coins and notes (images/money) are drawn by make_flowerofnumbers_images.py (this folder), the
+sounds (sounds/put.wav, sounds/petal.wav) made by make_flowerofnumbers_sounds.py, under the license of GazePlay
+Learning (GPL-3.0-or-later). The coins and notes are generic drawings (their value and the euro sign only). They
+replace (November 2026) pictures of unknown source and reproductions of the euro coins and notes; the flower and its
+auras are now drawn by the game. The thumbnail (gazeplay-core: data/common/Thumbnails/flowerOfNumbers.png) is a
+capture of the game, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

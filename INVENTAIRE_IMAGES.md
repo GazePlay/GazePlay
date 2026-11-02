@@ -47,7 +47,7 @@ Images qui ressemblent à des photos ou des illustrations professionnelles, sans
 | ~~Where Is The Sound~~ | ~~59~~ | Photos d'animaux et d'instruments | **Remplacées le 29/10/2026** (Wikimedia Commons) |
 | ~~Sounds of Life~~ | ~~32~~ | Cliparts d'animaux, décors | **Remplacées le 30/10/2026** (décors dessinés pour le projet, animaux OpenMoji ; sons de Wikimedia Commons, voir `data/soundsoflife/CREDITS.txt`) |
 | ~~Pet~~ | ~~21~~ | Photos (pièces, objets), pictogrammes | **Remplacées le 30/10/2026** (pièces dessinées, objets OpenMoji ; la Biboule, dessin du projet, gardée) |
-| Flower of Numbers | 21 | Billets et pièces en euros, mains, dés | Les euros ont des règles de reproduction propres (BCE, faces nationales des pièces) |
+| ~~Flower of Numbers~~ | ~~21~~ | Billets et pièces en euros, mains, dés | **Remplacées le 2/11/2026** (mains, dés, pièces et billets génériques dessinés par script ; fleur et auras dessinées par le jeu) |
 | ~~Colors~~ | ~~19~~ | Coloriages (pomme, dauphin, papillon…) | **Remplacés le 29/10/2026** (OpenMoji) ; flèches et palette retirées |
 | `common/images` (core) | 17 | Icônes diverses (smiley, dossier, maison…) | — |
 | ~~Spot the Differences~~ | ~~15~~ | Scènes dessinées | **Remplacées le 30/10/2026** (8 scènes dessinées par script, objets OpenMoji) |

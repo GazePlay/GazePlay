@@ -1,0 +1,21 @@
+# The principle
+A number is written in the heart of the flower. Make this number with all the petals together.
+
+# How to play
+- Each petal takes one kind of values: digits, words, fingers, dice or money. The values of a petal are in the card of its color around the flower.
+- Look at a value: a ring goes round it (fixation length of the settings), then it goes into its petal.
+- Each value can be used only once: once put, it is pale in its card.
+- A petal holds 4 values at most (one word only).
+- Look at a value in a petal to take it back.
+- At the bottom, "Total" shows the sum of all the petals and the number to make; it turns red when it goes over.
+
+# How to win
+When the total makes the number (with the rule of the variant): "Bravo", then a new number. The game does not stop by itself: leave with the gear at the bottom left.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Up to 10, 20, 30, 40 or 50: the largest number of the heart.
+- At the bottom, the mode:
+- Guided: the number is shared out among the petals; each petal shows its part ("0 / 4"), turns red when it goes over and green when it makes it.
+- Free: only the total counts; some petals can stay empty.
+- All the petals: the total, with at least one value in each petal (an empty petal is pale).

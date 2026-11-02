@@ -130,6 +130,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (gradle/images/make_pet_images.py), sous la licence du projet ; main, cuillère, bol, douche et ballon
   d'OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0. Elles remplacent depuis octobre 2026 des photos et
   des images de source inconnue.
+- Images et sons de « La Fleur des nombres » (data/flowerOfNumbers) : mains, dés, pièces et billets dessinés pour
+  GazePlay Learning (gradle/images/make_flowerofnumbers_images.py, make_flowerofnumbers_sounds.py), sous la
+  licence du projet ; les pièces et billets sont des dessins génériques (valeur et signe de l'euro seulement). Ils
+  remplacent depuis novembre 2026 des images de source inconnue et des reproductions des pièces et billets en euros.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
   data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
   public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier

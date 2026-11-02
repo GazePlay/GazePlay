@@ -1,0 +1,21 @@
+# Le principe
+Un nombre est écrit au cœur de la fleur. Fais ce nombre avec tous les pétales ensemble.
+
+# Comment jouer
+- Chaque pétale prend une sorte de valeurs : chiffres, mots, doigts, dés ou argent. Les valeurs d'un pétale sont dans la carte de sa couleur, autour de la fleur.
+- Regarde une valeur : un anneau en fait le tour (durée de fixation des réglages), puis elle va dans son pétale.
+- Chaque valeur ne sert qu'une fois : une fois posée, elle est pâle dans sa carte.
+- Un pétale prend 4 valeurs au plus (un seul mot).
+- Regarde une valeur dans un pétale pour la retirer.
+- En bas, « Total » montre la somme de tous les pétales et le nombre à faire ; il devient rouge quand il dépasse.
+
+# Comment gagner
+Quand le total fait le nombre (avec la règle de la variante) : « Bravo », puis un nouveau nombre. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Jusqu'à 10, 20, 30, 40 ou 50 : le plus grand nombre du cœur.
+- En bas, le mode :
+- Guidé : le nombre est partagé entre les pétales ; chaque pétale montre sa part (« 0 / 4 »), devient rouge s'il la dépasse et vert quand il la fait.
+- Libre : seul le total compte ; des pétales peuvent rester vides.
+- Tous les pétales : le total, avec au moins une valeur dans chaque pétale (un pétale vide est pâle).
