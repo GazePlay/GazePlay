@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -18,7 +18,7 @@ import java.util.LinkedList;
  * {@code IGameLauncher}).
  */
 public class SpotDifferencesGameLauncher
-    implements IGameLauncher<SpotTheDifferencesStats, EnumGameVariant<SpotTheDifferencesVariant>> {
+    implements IGameLauncher<SpotTheDifferencesStats, GroupedGameVariant> {
 
     @Override
     public SpotTheDifferencesStats createNewStats(Scene scene) {
@@ -31,21 +31,35 @@ public class SpotDifferencesGameLauncher
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<SpotTheDifferencesVariant> gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, GroupedGameVariant gameVariant,
                                        SpotTheDifferencesStats stats) {
-        return new SpotTheDifferences(gameContext, stats, variantOf(gameVariant), -1);
+        return new SpotTheDifferences(gameContext, stats, levelOf(gameVariant), ringShown(gameVariant), -1);
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<SpotTheDifferencesVariant> gameVariant,
+    public GameLifeCycle replayGame(IGameContext gameContext, GroupedGameVariant gameVariant,
                                     SpotTheDifferencesStats stats, double gameSeed) {
-        return new SpotTheDifferences(gameContext, stats, variantOf(gameVariant), gameSeed);
+        return new SpotTheDifferences(gameContext, stats, levelOf(gameVariant), ringShown(gameVariant), gameSeed);
     }
 
     /**
-     * @return the variant chosen, normal for a game saved before the variants (30/10/2026)
+     * @return the level chosen, normal when there is none
      */
-    static SpotTheDifferencesVariant variantOf(final EnumGameVariant<SpotTheDifferencesVariant> gameVariant) {
-        return gameVariant == null ? SpotTheDifferencesVariant.NORMAL : gameVariant.getEnumValue();
+    static SpotTheDifferencesVariant levelOf(final GroupedGameVariant gameVariant) {
+        if (gameVariant != null) {
+            for (final SpotTheDifferencesVariant level : SpotTheDifferencesVariant.values()) {
+                if (level.getLabel().equals(gameVariant.getValue())) {
+                    return level;
+                }
+            }
+        }
+        return SpotTheDifferencesVariant.NORMAL;
+    }
+
+    /**
+     * @return whether the ring of the fixation is shown (not when there is no variant)
+     */
+    static boolean ringShown(final GroupedGameVariant gameVariant) {
+        return gameVariant != null && SpotTheDifferencesVariantGenerator.RING_SHOWN.equals(gameVariant.getSubGroup());
     }
 }

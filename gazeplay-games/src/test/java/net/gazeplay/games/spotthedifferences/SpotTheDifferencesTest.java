@@ -10,6 +10,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.junit.jupiter.api.BeforeEach;
@@ -141,6 +143,63 @@ class SpotTheDifferencesTest {
         assertFalse(second.isFound());
         verify(stats).incrementNumberOfGoalsReached();
         verify(gameContext.getSoundManager()).add("data/spotthedifferences/ding.wav");
+    }
+
+    /**
+     * Without the ring (the game as reviewed on 30/10/2026), nothing shows during the fixation; with it, a ring fills
+     * round the circle looked at, then goes when the gaze leaves or the difference is found.
+     */
+    @Test
+    void shouldShowTheRingOfTheFixationOnlyInItsVariant() throws Exception {
+        final SpotTheDifferences hidden = launched(SpotTheDifferencesVariant.EASY, 3);
+        assertTrue(hidden.getDifferences().stream().allMatch(difference -> difference.getRing() == null));
+
+        final SpotTheDifferences shown = WaitForAsyncUtils.asyncFx(() -> {
+            gameArea.getChildren().clear();
+            final SpotTheDifferences game = new SpotTheDifferences(gameContext, stats, SpotTheDifferencesVariant.EASY,
+                true, 3);
+            game.launch();
+            return game;
+        }).get();
+        when(configuration.getFixationLength()).thenReturn(100_000);
+        final Difference first = shown.getDifferences().get(0);
+        final Circle right = first.getCircles().get(1);
+        assertNotNull(first.getRing().getParent(), "in the scene");
+        assertFalse(first.getRing().isVisible());
+
+        WaitForAsyncUtils.asyncFx(() -> right.fireEvent(mouse(MouseEvent.MOUSE_ENTERED))).get();
+        assertTrue(first.getRing().isVisible());
+        assertEquals(right.getCenterX(), first.getRing().getCenterX());
+        assertEquals(right.getCenterY(), first.getRing().getCenterY());
+
+        WaitForAsyncUtils.asyncFx(() -> right.fireEvent(mouse(MouseEvent.MOUSE_EXITED))).get();
+        assertFalse(first.getRing().isVisible());
+
+        WaitForAsyncUtils.asyncFx(() -> {
+            right.fireEvent(mouse(MouseEvent.MOUSE_ENTERED));
+            first.found();
+        }).get();
+        assertFalse(first.getRing().isVisible());
+    }
+
+    /**
+     * The variants: each level without then with the ring, read back by the launcher (normal and no ring without a
+     * variant).
+     */
+    @Test
+    void shouldGiveEachLevelWithAndWithoutTheRing() {
+        final List<GroupedGameVariant> variants = new SpotTheDifferencesVariantGenerator().getVariants().stream()
+            .map(GroupedGameVariant.class::cast).toList();
+        assertEquals(List.of("Easy", "Normal", "Hard", "Easy", "Normal", "Hard"),
+            variants.stream().map(GroupedGameVariant::getValue).toList());
+        assertTrue(variants.subList(0, 3).stream().noneMatch(SpotDifferencesGameLauncher::ringShown));
+        assertTrue(variants.subList(3, 6).stream().allMatch(SpotDifferencesGameLauncher::ringShown));
+        assertEquals(SpotTheDifferencesVariant.HARD, SpotDifferencesGameLauncher.levelOf(variants.get(5)));
+        for (final GroupedGameVariant variant : variants) {
+            assertEquals(variant, IGameVariant.toGameVariant(variant.toString()));
+        }
+        assertEquals(SpotTheDifferencesVariant.NORMAL, SpotDifferencesGameLauncher.levelOf(null));
+        assertFalse(SpotDifferencesGameLauncher.ringShown(null));
     }
 
     /**

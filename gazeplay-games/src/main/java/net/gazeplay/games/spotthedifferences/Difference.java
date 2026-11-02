@@ -1,14 +1,20 @@
 package net.gazeplay.games.spotthedifferences;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
@@ -21,8 +27,9 @@ import java.util.List;
 /**
  * A difference between the two pictures of SpotTheDifferences (reviewed on 30/10/2026): a circle at the same place on
  * each picture. Looking at either one for the fixation length of the settings finds it (it used to need the gaze to
- * move after 1 s); nothing shows during the fixation, which would tell where it is. Found, it is circled in green on
- * both pictures. A hint makes both circles blink.
+ * move after 1 s). By default nothing shows during the fixation, which would tell where it is; a variant (2/11/2026)
+ * shows a ring of the main color that fills round the circle looked at. Found, it is circled in green on both pictures.
+ * A hint makes both circles blink.
  */
 public class Difference {
 
@@ -39,22 +46,44 @@ public class Difference {
 
     private PauseTransition fixation;
 
+    /**
+     * The ring of the fixation, null when the variant does not show it; added to the scene by the game.
+     */
+    @Getter
+    private final Arc ring;
+
+    private Timeline ringFilling;
+
     private FadeTransition hint;
 
     @Getter
     private boolean found;
 
     /**
-     * @param circles the circle of the difference on each picture, placed by the game
-     * @param areas   the target areas of the statistics of the circles
-     * @param onFound what to do when it is found
+     * @param circles   the circle of the difference on each picture, placed by the game
+     * @param areas     the target areas of the statistics of the circles
+     * @param ringShown whether a ring of the main color fills round the circle looked at during the fixation
+     * @param onFound   what to do when it is found
      */
     Difference(final IGameContext gameContext, final List<Circle> circles, final List<TargetAOI> areas,
-               final Runnable onFound) {
+               final boolean ringShown, final Runnable onFound) {
         this.gameContext = gameContext;
         this.circles = circles;
         this.areas = areas;
         this.onFound = onFound;
+        if (ringShown) {
+            final double radius = circles.get(0).getRadius();
+            ring = new Arc(0, 0, radius, radius, 90, 0);
+            ring.setType(ArcType.OPEN);
+            ring.setFill(null);
+            ring.setStrokeWidth(Math.max(5, radius * 0.12));
+            ring.setStrokeLineCap(StrokeLineCap.ROUND);
+            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setMouseTransparent(true);
+            ring.setVisible(false);
+        } else {
+            ring = null;
+        }
         for (final Circle circle : circles) {
             // Transparent, but the whole disc follows the gaze
             circle.setFill(Color.TRANSPARENT);
@@ -72,9 +101,18 @@ public class Difference {
         }
         if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
             stopFixation();
-            fixation = new PauseTransition(Duration.millis(gameContext.getConfiguration().getFixationLength()));
+            final Duration length = Duration.millis(gameContext.getConfiguration().getFixationLength());
+            fixation = new PauseTransition(length);
             fixation.setOnFinished(event -> found());
             fixation.play();
+            if (ring != null && e.getSource() instanceof Circle circle) {
+                ring.setCenterX(circle.getCenterX());
+                ring.setCenterY(circle.getCenterY());
+                ring.setLength(0);
+                ring.setVisible(true);
+                ringFilling = new Timeline(new KeyFrame(length, new KeyValue(ring.lengthProperty(), -360)));
+                ringFilling.play();
+            }
         } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
             stopFixation();
         }
@@ -84,6 +122,13 @@ public class Difference {
         if (fixation != null) {
             fixation.stop();
             fixation = null;
+        }
+        if (ringFilling != null) {
+            ringFilling.stop();
+            ringFilling = null;
+        }
+        if (ring != null) {
+            ring.setVisible(false);
         }
     }
 

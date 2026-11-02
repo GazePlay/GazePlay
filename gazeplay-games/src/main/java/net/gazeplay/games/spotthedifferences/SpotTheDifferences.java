@@ -31,7 +31,8 @@ import java.util.Objects;
  * Game "SpotDifference" (reviewed on 30/10/2026): two pictures side by side differ in 3, 5 or 7 places (the variant);
  * each difference found by a fixation is circled in green on both pictures. When all are found: "Bravo", then the next
  * picture (in an order drawn with the seed of the game, for the replay); the game does not stop by itself. After
- * {@link #HINT_DELAY} without finding, a difference left blinks. A round button skips the picture. The scenes are drawn
+ * {@link #HINT_DELAY} without finding, a difference left blinks. A round button skips the picture. A variant shows a
+ * ring during the fixation on a difference (2/11/2026; it tells where the difference is). The scenes are drawn
  * by gradle/images/make_spotdifferences_images.py, which writes instances.json.
  */
 @Slf4j
@@ -76,13 +77,31 @@ public class SpotTheDifferences implements GameLifeCycle {
     private String scene;
 
     /**
+     * Whether a ring shows the fixation on a difference (variant, 2/11/2026).
+     */
+    private final boolean ringShown;
+
+    /**
+     * Without the ring of the fixation.
+     *
      * @param gameSeed the seed of the game to replay, or a negative value for a new game
      */
     public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats,
                               final SpotTheDifferencesVariant variant, final double gameSeed) {
+        this(gameContext, stats, variant, false, gameSeed);
+    }
+
+    /**
+     * @param ringShown whether a ring shows the fixation on a difference
+     * @param gameSeed  the seed of the game to replay, or a negative value for a new game
+     */
+    public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats,
+                              final SpotTheDifferencesVariant variant, final boolean ringShown,
+                              final double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.variant = variant;
+        this.ringShown = ringShown;
         if (gameSeed < 0) {
             this.random = new ReplayablePseudoRandom();
             this.stats.setGameSeed(random.getSeed());
@@ -146,9 +165,13 @@ public class SpotTheDifferences implements GameLifeCycle {
             final List<TargetAOI> areas = List.of(new TargetAOI(leftX + x, y, (int) radius, now),
                 new TargetAOI(rightX + x, y, (int) radius, now));
             targetAOIList.addAll(areas);
-            differences.add(new Difference(gameContext, List.of(left, right), areas, this::differenceFound));
+            final Difference difference = new Difference(gameContext, List.of(left, right), areas, ringShown,
+                this::differenceFound);
+            differences.add(difference);
             layer.getChildren().addAll(left, right);
         }
+        // The rings above all the circles
+        differences.stream().map(Difference::getRing).filter(Objects::nonNull).forEach(layer.getChildren()::add);
 
         final double buttonSize = band * 0.8;
         nextButton = new GazeRoundButton(gameContext, buttonSize, "arrow_forward",

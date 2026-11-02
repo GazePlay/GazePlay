@@ -638,7 +638,8 @@ public class GameVariantDialog extends Stage {
         final Runnable show = () -> scroller.setContent(panes.getOrDefault(chosen[0] + "|" + chosen[1],
             createFlowPane()));
         // Under the variants: the groups, then the sub-groups just under them (maintainer's request of 30/10/2026: all
-        // the switches together at the bottom)
+        // the switches together at the bottom). A group or a sub-group alone has no switch (2/11/2026, Spot The
+        // Differences: one group only).
         final FlowPane groupRow = switches(groups, translator, value -> {
             chosen[0] = value;
             show.run();
@@ -648,11 +649,18 @@ public class GameVariantDialog extends Stage {
             chosen[1] = value;
             show.run();
         });
-        // A clear space between the two rows of switches (maintainer's request of 30/10/2026)
-        subGroupRow.setPadding(new Insets(SWITCH_ROWS_GAP, 0, 0, 0));
-        centerPane.getChildren().addAll(groupRow, subGroupRow);
-        // The window is taller by the second row and the space above it, so that the variants keep their room
-        extraHeight += SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT;
+        if (groups.size() > 1 && subGroups.size() > 1) {
+            // A clear space between the two rows of switches (maintainer's request of 30/10/2026)
+            subGroupRow.setPadding(new Insets(SWITCH_ROWS_GAP, 0, 0, 0));
+            centerPane.getChildren().addAll(groupRow, subGroupRow);
+            // The window is taller by the second row and the space above it, so that the variants keep their room
+            extraHeight += SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT;
+        } else if (groups.size() > 1) {
+            centerPane.getChildren().add(groupRow);
+        } else if (subGroups.size() > 1) {
+            subGroupRow.setPadding(new Insets(16, 0, 0, 0));
+            centerPane.getChildren().add(subGroupRow);
+        }
         show.run();
     }
 

@@ -251,6 +251,31 @@ class GameVariantDialogTest {
     }
 
     /**
+     * Variants in one group only (Spot The Differences, 2/11/2026): no switch for the group, the switches of the
+     * sub-groups under the variants.
+     */
+    @Test
+    void shouldShowNoSwitchForAGroupAlone() throws Exception {
+        IGameVariant easyHidden = new GroupedGameVariant("SpotDifference", "RingHidden", "Easy", null);
+        IGameVariant easyShown = new GroupedGameVariant("SpotDifference", "RingShown", "Easy", null);
+        IGameVariantGenerator generator = mock(IGameVariantGenerator.class);
+        when(generator.getVariants()).thenReturn(new LinkedHashSet<>(List.of(easyHidden, easyShown)));
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("SpotDifference").gameThumbnail("spotthedifference")
+            .build(), generator, mock(IGameLauncher.class));
+        GameVariantDialog dialog = openDialog(new BorderPane());
+
+        List<RadioButton> switches = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot()
+            .lookupAll(".radio-button").stream().map(RadioButton.class::cast).toList()).get();
+        assertEquals(List.of("RingHidden", "RingShown"), switches.stream().map(RadioButton::getText).toList());
+        VBox column = (VBox) switches.get(0).getParent().getParent();
+        assertEquals(1, column.getChildren().indexOf(switches.get(0).getParent()));
+
+        WaitForAsyncUtils.asyncFx(() -> switches.get(1).fire()).get();
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+        verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, easyShown);
+    }
+
+    /**
      * @return the window, open over a menu blurred and disabled as {@link GameMenuController#onGameSelection} does
      */
     private GameVariantDialog openDialog(final Parent menuRoot) throws Exception {

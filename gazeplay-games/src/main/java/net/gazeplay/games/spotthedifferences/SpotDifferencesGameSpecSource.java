@@ -4,11 +4,10 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
 
 /**
- * Declares the game "SpotDifference" to the menu: its name, thumbnail, categories, variants (easy, normal, hard) and
- * launcher (see {@code GameSpecSource}).
+ * Declares the game "SpotDifference" to the menu: its name, thumbnail, categories, variants (easy, normal, hard, with
+ * or without the ring of the fixation) and launcher (see {@code GameSpecSource}).
  */
 public class SpotDifferencesGameSpecSource implements GameSpecSource {
     @Override
@@ -18,7 +17,7 @@ public class SpotDifferencesGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new EnumGameVariantGenerator<>(SpotTheDifferencesVariant.values(), SpotTheDifferencesVariant::getLabel),
+            new SpotTheDifferencesVariantGenerator(),
             new SpotDifferencesGameLauncher());
     }
 }

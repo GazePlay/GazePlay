@@ -16,3 +16,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Facile : 3 grandes différences par image.
 - Normal : 5 différences.
 - Difficile : 7 différences, dont des petites (une couleur qui change, un petit objet).
+- En bas, « Sans anneau de fixation » : rien ne s'affiche pendant que tu regardes. « Avec anneau de fixation » : un anneau se remplit autour de la différence regardée (plus facile : il montre où elle est).
