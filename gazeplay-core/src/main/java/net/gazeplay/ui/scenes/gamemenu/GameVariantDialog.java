@@ -228,10 +228,6 @@ public class GameVariantDialog extends Stage {
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
             int indexOfTheVariant = 0;
-            if ((gameSpec.getGameSummary().getNameCode().equals("EggGame") || gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame")) && variant instanceof IntStringGameVariant eggVariant){
-                button.setText(String.valueOf(eggVariant.getNumber()));
-            }
-
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
@@ -297,13 +293,6 @@ public class GameVariantDialog extends Stage {
                     case "SmallBottles" -> 1;
                     default -> 0;
                 };
-            } else if (gameSpec.getGameSummary().getNameCode().equals("EggGame") || gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame")) {
-                button.setTextAlignment(TextAlignment.CENTER);
-                String variantString = ((IntStringGameVariant) variant).getStringValue();
-                indexOfTheVariant = switch (variantString) {
-                    case "ImageShrink" -> 1;
-                    default -> 0;
-                };
             } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
@@ -332,8 +321,6 @@ public class GameVariantDialog extends Stage {
             log.debug("nameGame : {}", gameSpec.getGameSummary().getNameCode());
 
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
-                gameSpec.getGameSummary().getNameCode().equals("EggGame") ||
-                gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame") ||
                 gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
@@ -363,11 +350,6 @@ public class GameVariantDialog extends Stage {
                     categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
                     categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
                     categories[5] = new RadioButton(translator.translate("InfinityCategory"));
-                }else if (gameSpec.getGameSummary().getNameCode().equals("EggGame") || gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame")) {
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("Classic"));
-                    categories[1] = new RadioButton(translator.translate("ImageShrink"));
-
                 } else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
                     categories = new RadioButton[6];
 

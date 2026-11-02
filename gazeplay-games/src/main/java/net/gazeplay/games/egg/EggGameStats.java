@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the games "EggGame" and "PersonalizeEggGame", with the info-game.csv file of the games where targets
+ * Statistics of the game "EggGame", with the info-game.csv file of the games where targets
  * are hit (see {@code ShootGamesStats}).
  */
 public class EggGameStats extends ShootGamesStats {

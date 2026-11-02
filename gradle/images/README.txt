@@ -74,6 +74,13 @@ pop2.wav, pop3.wav, picture.wav) made by make_bubbles_sounds.py, under the licen
 bubbles and the panes are drawn by the game. The thumbnail (gazeplay-core: data/common/Thumbnails/bubblecolor.png) is
 a capture of the game, 960 x 540.
 
+Images and sounds of Egg Game (gazeplay-games: data/egg): the meadow and its nest (images/meadow.png,
+nest-front.png) are drawn by make_egg_images.py (this folder) and the sounds (sounds/crack.wav, hatch.wav) made by
+make_egg_sounds.py, under the license of GazePlay Learning (GPL-3.0-or-later); the animals coming out of the eggs
+(images/animals) are OpenMoji (CC BY-SA 4.0). They replace (November 2026) three photos and two sounds of unknown
+license; the egg and its cracks are drawn by the game. The thumbnail (gazeplay-core: data/common/Thumbnails/egg.png)
+is a capture of the game, 960 x 540.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

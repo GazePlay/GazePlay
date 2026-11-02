@@ -73,7 +73,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/creamPie.png,oui,source 
 gazeplay-core/src/main/resources/data/common/Thumbnails/dice.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
 gazeplay-core/src/main/resources/data/common/Thumbnails/divisor.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"
 gazeplay-core/src/main/resources/data/common/Thumbnails/dottodot.png,oui,source inconnue,,2021-07-12,verafili,created preview
-gazeplay-core/src/main/resources/data/common/Thumbnails/egg.png,oui,source inconnue,,2020-01-13,kuhlkrein,reformat code eggGame + remove useless timeline
+gazeplay-core/src/main/resources/data/common/Thumbnails/egg.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet et OpenMoji (CC BY-SA 4.0),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/findTheOddOneOut.jpg,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/flowerOfNumbers.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,source inconnue,,2021-06-10,Iluvrog,add thumbnail picture
@@ -417,9 +417,22 @@ gazeplay-games/src/main/resources/data/divisor/rabbit/images/5.png,oui,source in
 gazeplay-games/src/main/resources/data/divisor/rabbit/images/6.png,oui,source inconnue,,2018-03-24,kuhlkrein,modifications for version 1.3 (adding ideas for alternative version of divisor with rabbits)
 gazeplay-games/src/main/resources/data/divisor/rabbit/images/7.png,oui,source inconnue,,2018-03-24,kuhlkrein,modifications for version 1.3 (adding ideas for alternative version of divisor with rabbits)
 gazeplay-games/src/main/resources/data/dottodot/background.png,oui,source inconnue,,2021-07-15,verafili,dots and background !
-gazeplay-games/src/main/resources/data/egg/images/egg1.jpg,oui,source inconnue,auteur dans les métadonnées : FRIEDMANN Chloe,2020-01-13,kuhlkrein,Re-add egg game
-gazeplay-games/src/main/resources/data/egg/images/egg2.jpg,oui,source inconnue,auteur dans les métadonnées : FRIEDMANN Chloe,2020-01-13,kuhlkrein,Re-add egg game
-gazeplay-games/src/main/resources/data/egg/images/egg3.jpg,oui,source inconnue,auteur dans les métadonnées : FRIEDMANN Chloe,2020-01-13,kuhlkrein,Re-add egg game
+gazeplay-games/src/main/resources/data/egg/images/animals/bird.png,oui,libre,"OpenMoji 1F426 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/chick.png,oui,libre,"OpenMoji 1F425 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/crocodile.png,oui,libre,"OpenMoji 1F40A (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/duck.png,oui,libre,"OpenMoji 1F986 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/flamingo.png,oui,libre,"OpenMoji 1F9A9 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/lizard.png,oui,libre,"OpenMoji 1F98E (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/owl.png,oui,libre,"OpenMoji 1F989 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/parrot.png,oui,libre,"OpenMoji 1F99C (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/penguin.png,oui,libre,"OpenMoji 1F427 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/sauropod.png,oui,libre,"OpenMoji 1F995 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/snake.png,oui,libre,"OpenMoji 1F40D (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/swan.png,oui,libre,"OpenMoji 1F9A2 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/t-rex.png,oui,libre,"OpenMoji 1F996 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/animals/turtle.png,oui,libre,"OpenMoji 1F422 (CC BY-SA 4.0), gradle/images/make_egg_images.py",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/meadow.png,oui,libre,"dessiné pour le projet (gradle/images/make_egg_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Egg Game
+gazeplay-games/src/main/resources/data/egg/images/nest-front.png,oui,libre,"dessiné pour le projet (gradle/images/make_egg_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Egg Game
 gazeplay-games/src/main/resources/data/findTheOddOneOut/images/animals/cat-2083492_1280.jpg,oui,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2019-03-26,Peter Bardawil,Creation of the game in process
 gazeplay-games/src/main/resources/data/findTheOddOneOut/images/animals/elephant-2870777_1280.jpg,oui,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2019-03-26,Peter Bardawil,Creation of the game in process
 gazeplay-games/src/main/resources/data/findTheOddOneOut/images/animals/fox-1883658_1280.jpg,oui,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2019-03-26,Peter Bardawil,Creation of the game in process

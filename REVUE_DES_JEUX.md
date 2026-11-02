@@ -36,8 +36,9 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
   cours est maintenant coupé (fait, voir sa fiche).
 - Point 4 : Flower Of Numbers revu (propositions validées, tout fait, voir sa fiche) ; reste l'essai du mainteneur.
   Ensuite : Opinions (revu le 2/11, essayé et validé par le mainteneur, commité `d82b754e2`) ; Sprint Finish :
-  revu, validé et commité le 2/11 (`31c7bb394`) ; Bubbles : revu le 2/11 (règle du mainteneur, voir sa fiche), en
-  attente de l'essai du mainteneur ; puis Egg Game.
+  revu, validé et commité le 2/11 (`31c7bb394`) ; Bubbles : revu, essayé et validé le 2/11, commité `e71b88a5b` ;
+  Egg Game : revu le 2/11 (règle du mainteneur, voir sa fiche), en attente de l'essai du mainteneur ; puis le
+  groupe 6 (jeux de tir et d'action).
   Un test de GazePlay Eval en échec une seule fois : point 8 ci-dessous, à surveiller.
 - Point 3 : clés `Spot all the differences` et `Differences found` retirées (décision du mainteneur), des deux
   `multilinguism.csv` (application et tests) ; aucun code ne les lisait.
@@ -62,7 +63,7 @@ SHA-256 `81c3bcaa…f0d2a6`, construit depuis `2e1957327` ; `gradlew generateWin
    (jeux de tir et d'action). Chaque jeu : les 8 étapes de la marche à suivre ci-dessous (état des lieux et
    propositions validées avant tout changement ; aide du jeu ; fenêtre des variantes des jeux revus ; un commit par
    jeu sur demande).
-5. Toujours à la fin de la revue : points 6 (refonte de l'engrenage), 7 (plantage de la JVM des tests du
+5. Toujours à la fin de la revue : points 6 (refonte de l'engrenage et de l'écran des statistiques), 7 (plantage de la JVM des tests du
    30/10 vers 11 h 19, pas revenu depuis) et 8 (test GazePlay Eval en échec une fois le 2/11) de la liste
    ci-dessous.
 
@@ -172,6 +173,10 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    taille, barre de progression, couleur de fond ; `GameContextFactory`, `GameContext.createControlPanel`). À
    préparer comme les autres étapes (état des lieux, propositions validées). Penser à la décision encore ouverte sur
    le temps du menu compté dans les durées (`MODERNIZATION.md` 2an).
+   **Au même niveau (demande du mainteneur du 2/11/2026)** : **refonte graphique de l'écran des statistiques** de fin
+   de partie (titre, chiffres, cartes de chaleur, courbes, boutons du bas : rejouer, dossier, menu, suivant ;
+   `StatsContext`), dans le style des menus et des jeux revus. Même marche à suivre : état des lieux, propositions
+   validées, sans changer les fichiers de résultats.
 7. **À surveiller, puis à chercher à la toute fin s'il revient** (décision du mainteneur du 30/10/2026) : le
    30/10/2026 vers 11 h 19, pendant un `build` complet, la JVM des tests de `gazeplay-core` s'est arrêtée dès le
    début du module (« Gradle Test Run :gazeplay-core:test FAILED », `MessageIOException: Could not write
@@ -220,7 +225,7 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
   | `magiccards` | Magic Cards, Memory |
   | `default` | Memory |
   | `portraits` | Cream Pie, Ladder, Whac-A-Mole (moles), Ninja, Divisor (plus Bubbles depuis le 2/11/2026) |
-  | `blocs` | Blocks, Egg Game, Letters |
+  | `blocs` | Blocks, Letters (plus Egg Game depuis le 2/11/2026) |
   | `opinions` | Casse-Brique (plus Opinions depuis le 2/11/2026) |
 
   Fait : Coloring (`files/images/Coloring`, variante « Palette personnalisée », 29/10/2026) ; Opinions (`files/images/Opinions`, variante unique « Mes images », 2/11/2026).
@@ -300,7 +305,7 @@ urgent (images non libres, jeux très joués) au plus simple ; le mainteneur peu
 10. **GazePlay Eval et GazePlay Eval Test** : en dernier (contrat avec le site GazePlay Eval, format de résultats
     versionné).
 
-Après chaque famille : `allGamesTest` complet (69 entrées depuis le 2/11/2026), et point avec le mainteneur.
+Après chaque famille : `allGamesTest` complet (68 entrées depuis le 2/11/2026), et point avec le mainteneur.
 
 ## Légende des images
 
@@ -327,7 +332,7 @@ Après chaque famille : `allGamesTest` complet (69 entrées depuis le 2/11/2026)
 | **Opinions** (`Opinions`) | **Retirées le 2/11** : les 9 images (photos d'aliments jamais montrées, visages brillants) ; le jeu ne joue que les images de l'utilisateur | ✔ 2/11 (image en carte au centre, boutons « J'aime » / « Je n'aime pas » à icônes, anneau) | ✔ 2/11 (règle du mainteneur : images de l'utilisateur une par une, réponses enregistrées dans `-opinions.csv`) |
 | **Sprint Finish** (`SprintFinish` ; `SprintFinishMouse` retiré, devenu une variante) | **Remplacées le 2/11** : chat, chien (recoloré) et poisson OpenMoji, prairie et gamelle dessinées ; haies, barrières, boutons, rondins dessinés par le jeu | ✔ 2/11 (plateau à l'échelle de l'écran, compte à rebours, chien regardé entouré, sons) | ✔ 2/11 (règle du mainteneur : seul au clavier ou au regard, à deux ; cartes au hasard ; 5 / 10 / 15 cartes) |
 | **Bubbles** (`Bubbles` ; `ColoredBubbles` et `PortraitBubbles` réunis) | **Remplacées le 2/11** : 3 paysages sous la mer dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (vraies bulles, vitres dépolies, compte 12 / 36) | ✔ 2/11 (règle du mainteneur : une carte, image à découvrir puis nouvelle image, éclater dès le regard ou après fixation) |
-| **Egg Game**, **Personalize Egg Game** | **Risque** : 3 photos d'œufs (auteur « FRIEDMANN Chloe » dans les métadonnées) | | |
+| **Egg Game** (`EggGame` ; `PersonalizeEggGame` réuni) | **Remplacées le 2/11** : œuf dessiné par le jeu, prairie et nid dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (nid, fêlures qui grandissent, éclosion animée, anneau) | ✔ 2/11 (règle du mainteneur : une carte, sans fin, rester sur l'œuf suffit, plus de « rétrécie ») |
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
 | Labyrinth (`Labyrinth`) | **Remplacé le 28/10** : animaux sans fond (OpenMoji) ; à confirmer : 19 dessins (souris, flèches, fromage) et 9 du dossier `common` des jeux | | |
@@ -1730,3 +1735,91 @@ fixes ; déroulé seconde par seconde, pointeur au centre ; planches `*-planche.
   rien compté pendant « Bravo » ; éclatement immédiat ou après fixation ; sens des bulles et retour ; « Mes images »
   cachées, sinon les paysages ; variantes et ancienne variante) ; `GameHelpTest` avec `Bubbles` ; captures en vraie
   fenêtre (`build/game-screenshots/essai1/bubbles/`). Pas d'essai au Tobii : à faire par le mainteneur.
+
+### Egg Game (`EggGame`, `PersonalizeEggGame`, code `egg`) — 2/11/2026
+
+**Étape 1 (état des lieux) faite le 2/11/2026.** Captures « avant » : `build/game-screenshots/avant/egg/` (1366 × 768,
+mode souris, français ; Jeu de l'œuf en 3 étapes, Jeu de l'œuf personnalisé en 4 étapes « Image rétrécie » ; le
+pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.png`). Pas d'essai avec le Tobii.
+
+- **Ce qu'il fait** (lecture du code : 8 classes, 521 lignes ; et captures) : **un seul œuf** au milieu ; chaque
+  fixation sur lui (durée des réglages, indicateur de JavaFX jaune qui finit par une coche « Terminé ») le fêle un peu
+  plus (« crac »), en 2 à 5 étapes selon la variante ; à la dernière, il s'ouvre et montre l'image cachée (son), puis
+  « Bravo » et **l'écran des statistiques : la partie s'arrête après un seul œuf**. Il faut sortir de l'œuf et y
+  revenir pour chaque étape. Variante « Image rétrécie » : l'œuf rapetisse à chaque étape.
+- **Deux entrées au catalogue** : **Jeu de l'œuf** (un poussin sort, photo) et **Jeu de l'œuf personnalisé** (une
+  image du dossier partagé `blocs` de l'utilisateur, sinon un des animaux par défaut). Fenêtre des variantes : 8
+  boutons « 2 » à « 5 » et deux boutons ronds « Classique » / « Image rétrécie ». Les deux jeux sont dans la liste du
+  rejeu.
+- **Défauts vus** :
+  - D1. **Une seule image par partie, puis les statistiques** : très court (moins de 15 s).
+  - D2. **Photos sur fond blanc** dans un écran noir : l'œuf est un rectangle blanc ; l'image personnalisée aussi
+    (un crabe OpenMoji sur un carré blanc).
+  - D3. Indicateur de fixation de JavaFX (camembert jaune, coche, mot « Terminé » minuscule) posé sur l'œuf.
+  - D4. Le jeu personnalisé lit l'ancien dossier partagé `blocs` (règle du 29/10 : à remplacer par une variante « Mes
+    images ») ; le tirage de l'image n'est pas rejouable (graine ignorée).
+  - D5. Taille liée à la scène entière (moitié de sa hauteur), pas à la zone de jeu ; « Image rétrécie » : l'œuf finit
+    petit (0,9 par étape).
+  - D6. Le texte de la fenêtre (« Choose number of steps... ») n'est traduit qu'en anglais, biélorusse et chinois.
+- **Images et sons (licences)** : **à risque**. Les 3 photos (œuf, œuf fêlé, poussin) portent l'autrice « FRIEDMANN
+  Chloe » dans leurs métadonnées, sans licence ; les 2 sons (`1.mp3`, `2.mp3`) sont de source inconnue ; vignette
+  sans source.
+- **Propositions** (à valider ✔ / refuser ✘ ; elles dépendent des questions plus bas) :
+  - Images et sons
+    - I1. **Œuf dessiné** par le jeu ou par script, avec des fêlures qui s'agrandissent à chaque étape, puis la
+      coquille qui s'ouvre en deux ; sur un fond doux (nid de paille, prairie), plus de rectangle blanc.
+    - I2. **Ce qui sort de l'œuf** : des animaux qui naissent vraiment d'un œuf, en OpenMoji (poussin, caneton,
+      tortue, crocodile, serpent, dinosaure, manchot...), ou les images de l'utilisateur (« Mes images », dossier
+      `files/images/EggGame`).
+    - I3. Sons faits par script : fêlure (« crac ») à chaque étape, éclosion joyeuse à la fin.
+  - Graphisme
+    - G1. Anneau de fixation de la couleur principale autour de l'œuf (comme les jeux revus) ; l'œuf qui tremble un
+      peu à chaque fêlure ; l'animal qui sort avec un petit saut.
+  - Gameplay
+    - P1. **Une seule carte « Jeu de l'œuf »** : le nombre d'étapes en boutons (2 à 5), en bas ce qui sort (animaux
+      ou mes images) et peut-être le mode « rétrécit ».
+    - P2. **Une série d'œufs** (par exemple 5, un animal différent chacun), puis « Bravo » et les statistiques ; ou
+      sans fin.
+    - P3. Option : rester sur l'œuf le fêle étape après étape (pas besoin de sortir et revenir), plus facile.
+  - Corrections
+    - P4. D4 (rejeu de l'image), D5 (taille de la zone de jeu), D6 (traductions).
+- **Questions au mainteneur** (la règle d'abord) :
+  1. **Combien d'œufs par partie ?** Un seul puis les statistiques (comme maintenant), une série (combien ?), ou
+     sans fin (un nouvel œuf après chaque éclosion, on quitte par l'engrenage) ?
+  2. **Une seule carte** avec « Animaux » / « Mes images » en variante ?
+  3. **Fêler l'œuf** : il faut sortir et revenir à chaque étape (comme maintenant), ou rester dessus suffit (une
+     fêlure à chaque durée de fixation) ?
+  4. **Le mode « Image rétrécie »** sert-il (quel but) ? Le garder ?
+  5. **Ce qui sort** : des animaux qui naissent d'un œuf (poussin, tortue, crocodile...) vous conviennent-ils ?
+- **Réponse du mainteneur (2/11/2026)** : **une seule carte** ; **sans fin** ; **rester sur l'œuf suffit** ; le mode
+  « Image rétrécie » n'est **pas gardé** ; d'accord pour les animaux qui naissent d'un œuf.
+- **Fait (2/11/2026)** :
+  - **Une seule entrée** `EggGame` (« Jeu de l'œuf ») : `PersonalizeEggGame` retiré du catalogue (68 entrées).
+    Variantes `GroupedGameVariant` : 2, 3, 4 ou 5 étapes en boutons ; en bas, « Animaux » ou **« Mes images »**
+    (dossier `files/images/EggGame`, ligne dans les réglages, message dans la fenêtre des variantes sans image). Une
+    ancienne variante (étapes et « Classique » ou « Image rétrécie ») garde son nombre d'étapes, avec les animaux.
+    **Rejeu** : une partie enregistrée du jeu personnalisé est rejouée avec « Mes images » et son nombre d'étapes
+    (`ReplayingGameFromJson.formerGame`) ; le jeu ne lit plus le dossier partagé `blocs`.
+  - **Déroulement** : l'œuf dessiné par le jeu (forme d'œuf, dégradé crème, taches) dans un nid de paille, le bord
+    avant du nid devant lui. Regarder l'œuf : l'anneau de la couleur principale en fait le tour ; à la fin, une
+    fêlure de plus (la ligne en zigzag grandit depuis le milieu, avec de petites branches), « crac », l'œuf tremble ;
+    **rester dessus relance la fixation** sans regarder ailleurs ; quitter l'œuf arrête l'anneau. À la dernière
+    étape : l'œuf se coupe le long de sa fêlure, le haut s'envole en tournant, l'animal (ou l'image de
+    l'utilisateur, dans un cadre rond) monte et sautille, son d'éclosion ; « Éclos : 3 » en haut ; 3,2 s après, un
+    nouvel œuf, **sans fin** (plus d'écran des statistiques après un œuf). Ce qui sort vient dans un ordre tiré au
+    hasard, rejouable. Un but à atteindre par étape, un but atteint par fixation réussie.
+  - Taille liée à la zone de jeu (D5) ; traductions des variantes ; les clés `PersonalizeEggGame`, `ImageShrink`
+    et « Choose number of steps » retirées ; branches propres à l'œuf retirées de `GameVariantDialog`.
+  - Images (`make_egg_images.py` : prairie avec nid, bord avant du nid, 14 animaux OpenMoji : poussin, canard,
+    tortue, crocodile, serpent, deux dinosaures, manchot, lézard, oiseau, chouette, perroquet, cygne, flamant) et sons
+    (`make_egg_sounds.py` : fêlure, éclosion) ; les 3 photos et les 2 sons retirés ; vignette refaite (capture,
+    960 × 540) ; aide (`EggGame-fra.txt`, `-eng.txt`) ; crédits ; inventaire.
+- **Vérifications** : `EggGameTest` (4 tests : éclosion après le nombre d'étapes puis nouvel œuf, sans statistiques ;
+  rester sur l'œuf le fait éclore, le quitter tout de suite ne le fêle pas ; « Mes images », sinon les animaux ;
+  variantes et ancienne variante) ; `ReplayingGameFromJsonTest` (ancien jeu personnalisé) ; `GameHelpTest` avec
+  `EggGame` ; captures en vraie fenêtre (`build/game-screenshots/essai1/egg/`, `essai2/egg/`). Pas d'essai au Tobii :
+  à faire par le mainteneur.
+- **Retour du mainteneur (2/11/2026)** : le jeu marche bien ; seul point, il fallait écrire « œuf » dans la barre
+  de recherche du menu pour le trouver (« oeuf » ne le trouvait pas). **Fait** pour tous les jeux : la recherche ne
+  tient plus compte des majuscules, des accents, de « œ » / « æ » (écrits « oe » / « ae ») ni de l'apostrophe
+  courbe (`HomeMenuScreen.searchable`, test `HomeMenuSearchTest`).

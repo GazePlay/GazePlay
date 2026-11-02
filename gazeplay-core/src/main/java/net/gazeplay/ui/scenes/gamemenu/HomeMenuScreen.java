@@ -35,8 +35,10 @@ import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -293,9 +295,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
      * only the favorite games (no row of their own: maintainer's decision of 28/10/2026).
      */
     private void filterGames(final Configuration config, final Translator translator) {
+        final String searched = searchable(searchBar.getText());
         final Predicate<GameButtonPane> visible = new GameCardVisiblePredicate(config).and(card ->
-            translator.translate(card.getGameSpec().getGameSummary().getNameCode()).toLowerCase()
-                .contains(searchBar.getText().toLowerCase()));
+            searchable(translator.translate(card.getGameSpec().getGameSummary().getNameCode())).contains(searched));
 
         final List<GameButtonPane> shownGames = gameCardsList.stream().filter(visible)
             .filter(card -> !onlyFavorites || isFavorite(card.getGameSpec(), config))
@@ -304,6 +306,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         allGamesPanel.getChildren().setAll(shownGames);
         noGameLabel.setText(translator.translate(onlyFavorites ? "NoFavoriteGame" : "NoGameFound"));
         setShown(noGameLabel, shownGames.isEmpty());
+    }
+
+    /**
+     * @return a text as compared by the search bar: lower case, without accents, "œ" and "æ" written "oe" and "ae"
+     * (2/11/2026: "oeuf" did not find "Jeu de l'œuf"), and the curly apostrophe as the straight one
+     */
+    static String searchable(final String text) {
+        final String lower = text.toLowerCase(Locale.ROOT).replace("œ", "oe").replace("æ", "ae").replace('’', '\'');
+        return Normalizer.normalize(lower, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
     }
 
     private static void setShown(final Node node, final boolean shown) {

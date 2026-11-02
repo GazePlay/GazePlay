@@ -56,7 +56,7 @@ Images qui ressemblent à des photos ou des illustrations professionnelles, sans
 | Room | 9 | Murs, flèches | — |
 | ~~Sprint Finish~~ | ~~6~~ | Chat et chien dessinés, boutons | **Remplacées le 2/11/2026** : chat, chien (recoloré) et poisson OpenMoji ; prairie et gamelle dessinées par script ; haies, barrières, boutons et rondins dessinés par le jeu |
 | ~~Bubble~~ | ~~3~~ | Fonds sous-marins | **Remplacés le 2/11/2026** : 3 paysages sous la mer dessinés par script ; animaux des bulles OpenMoji ; vignettes refaites (une seule carte) |
-| Egg | 3 | Photos d'œufs | Auteur « FRIEDMANN Chloe » dans les métadonnées |
+| ~~Egg~~ | ~~3~~ | Photos d'œufs | **Remplacées le 2/11/2026** : œuf dessiné par le jeu, prairie et nid dessinés par script, animaux OpenMoji |
 
 ### 3.2 Dessins des jeux, auteur probable : l'étudiant qui a créé le jeu (377)
 

@@ -73,6 +73,12 @@ public class ReplayingGameFromJson {
     static final String FORMER_HORSES_SIMPLIFIED = "Horses Simplified";
 
     /**
+     * Name of the egg game with the images of the user when it was a game of its own, in the files saved before
+     * 2/11/2026 (now the variant "My images" of "EggGame").
+     */
+    static final String FORMER_PERSONALIZE_EGG = "PersonalizeEggGame";
+
+    /**
      * The games of Memory saved before 30/10/2026, when it was 6 games: what their cards showed, and whether they were
      * face up.
      */
@@ -87,10 +93,22 @@ public class ReplayingGameFromJson {
     /**
      * @return the game and the variant of today of a game saved before it became a variant of another game, null for
      *   the other games: "Horses Simplified" (replayed on the simplified board of Horses, with 2 players, its variant
-     *   being no longer offered), and the 6 former games of Memory (their variant "DimensionDifficultyGameVariant",
+     *   being no longer offered), "PersonalizeEggGame" (the egg game with the images of the user, its number of
+     *   steps kept), and the 6 former games of Memory (their variant "DimensionDifficultyGameVariant",
      *   lines x columns and Normal or Dynamic, becomes a "GroupedGameVariant")
      */
     static String[] formerGame(final String nameCode, final String variant) {
+        if (FORMER_PERSONALIZE_EGG.equals(nameCode)) {
+            int steps = 3;
+            if (variant != null && variant.startsWith("IntStringGameVariant:")) {
+                try {
+                    steps = Integer.parseInt(variant.split(":")[1]);
+                } catch (final NumberFormatException e) {
+                    log.debug("Variant of {} not understood: {}", nameCode, variant);
+                }
+            }
+            return new String[]{"EggGame", "GroupedGameVariant:EggGame:EggMyImages:EggSteps" + steps + ":EggGame"};
+        }
         if (FORMER_HORSES_SIMPLIFIED.equals(nameCode)) {
             return new String[]{"Horses", "EnumGameVariant:net.gazeplay.games.horses.HorsesVariant:SIMPLIFIED_PLAYERS_2"};
         }
