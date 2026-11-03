@@ -211,10 +211,10 @@ class OpinionsGameTest {
     void shouldOfferOnlyTheImagesOfTheUser() {
         final List<IGameVariant> variants = new ArrayList<>(new OpinionsGameVariantGenerator().getVariants());
         assertEquals(1, variants.size());
-        assertEquals("Opinions", UserImagesVariant.folderOf(variants.getFirst()));
+        assertEquals("images", UserImagesVariant.folderOf(variants.getFirst()));
         assertEquals("OpinionsMyImages", variants.getFirst().getLabel(translator));
         final IGameVariant former = IGameVariant.toGameVariant(
             new EnumGameVariant<>(OpinionsGameVariant.ONHB).toString());
-        assertEquals("Opinions", UserImagesVariant.folderOf(former));
+        assertEquals("images", UserImagesVariant.folderOf(former));
     }
 }

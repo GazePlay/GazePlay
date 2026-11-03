@@ -11,7 +11,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class MagicCards implements GameLifeCycle {
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
+        imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), random);
     }
 
     public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats, double gameSeed) {
@@ -81,7 +81,7 @@ public class MagicCards implements GameLifeCycle {
 
         this.random = new ReplayablePseudoRandom(gameSeed);
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
+        imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), random);
     }
 
     @Override

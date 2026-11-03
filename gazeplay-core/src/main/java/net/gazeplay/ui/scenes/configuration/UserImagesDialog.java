@@ -34,7 +34,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
- * Window of the images given by the user for a game (folder images/&lt;game&gt; of the files folder of the profile, see
+ * Window of the images given by the user (the folder shared by all the games, or the one of the drawings to color, see
  * {@link UserImagesVariant}), in the look of the menus: the images, each with a button removing it, and a button adding
  * images (copied into the folder). Opened from the settings, or from the menu when a variant playing with the images of
  * the user is chosen while it has none: then a "Done" button, enabled once there is an image, starts the game.
@@ -67,8 +67,8 @@ public class UserImagesDialog extends Stage {
      * @param owner     the window it is opened over
      * @param menuRoot  the page below, blurred and disabled while the window is open (given back when it closes); may
      *                  be null
-     * @param folder    the folder of the images of the game (e.g. "Coloring")
-     * @param title     the title of the window (the name of the game)
+     * @param folder    the folder of the images, {@link UserImagesVariant#IMAGES} or {@link UserImagesVariant#COLORING}
+     * @param title     the title of the window (the name of the game, or of the setting)
      * @param onDone    what the "Done" button does (start the game); null for no such button (settings)
      */
     public UserImagesDialog(final Stage owner, final Parent menuRoot, final Translator translator, final String folder,

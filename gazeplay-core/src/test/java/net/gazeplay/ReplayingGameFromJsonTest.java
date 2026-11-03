@@ -31,7 +31,7 @@ class ReplayingGameFromJsonTest {
         assertArrayEquals(new String[]{"Memory", "GroupedGameVariant:MemoryContentImages:MemoryHidden:Dynamic:-"},
             ReplayingGameFromJson.formerGame("Memory", "DimensionDifficultyGameVariant:2:2:Dynamic"));
         assertEquals("Horses", ReplayingGameFromJson.formerGame("Horses Simplified", "IntGameVariant:3")[0]);
-        assertArrayEquals(new String[]{"EggGame", "GroupedGameVariant:EggGame:EggMyImages:EggSteps4:EggGame"},
+        assertArrayEquals(new String[]{"EggGame", "GroupedGameVariant:EggGame:EggMyImages:EggSteps4:images"},
             ReplayingGameFromJson.formerGame("PersonalizeEggGame", "IntStringGameVariant:4:ImageShrink"));
         // The egg game of before: its variant (a number of steps) is still read by the game
         assertNull(ReplayingGameFromJson.formerGame("EggGame", "IntStringGameVariant:3:Classic"));

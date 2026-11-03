@@ -65,7 +65,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/block.png,oui,source inc
 gazeplay-core/src/main/resources/data/common/Thumbnails/bottle.jpg,oui,source inconnue,,2020-06-30,PillouMatou,bottles height fixed
 gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
-gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,source inconnue,,2021-07-30,Iluvrog,picture
+gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,libre,"capture du jeu (3/11/2026) ; briques, fond et raquette dessinés par le jeu",2026-11-03,GazePlay Learning,revue du Casse-brique
 gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,source inconnue,,2024-04-24,Yaniissou,setup ColorBlendGame
 gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,libre,capture du jeu (octobre 2026) ; coloriage OpenMoji CC BY-SA 4.0,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/connect4.png,oui,source inconnue,,2023-03-09,HugolinBouhineau,Create Connect4 Skeleton
@@ -218,7 +218,6 @@ gazeplay-core/src/main/resources/data/common/images/home-button.png,oui,source i
 gazeplay-core/src/main/resources/data/common/images/large.png,oui,source inconnue,,2020-02-28,kuhlkrein,add new image for each section
 gazeplay-core/src/main/resources/data/common/images/logos/gazeplay-learning-top-logo.png,oui,libre,logo du projet (gradle/logo/make_logo.py),2026-10-23,Noars,"feat: GazePlay Learning (nom et logo), derniers restes d'AFSR et BERA retirés, R13 corrigé"
 gazeplay-core/src/main/resources/data/common/images/mute.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-06-01,WaffleBuffer,added button on volume icon to mute volume + added a muted icon
-gazeplay-core/src/main/resources/data/common/images/opinions.png,oui,source inconnue,,2020-06-02,PillouMatou,Improvement
 gazeplay-core/src/main/resources/data/common/images/pause.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-17,dark1wador,Added icons to music controls + fixes some things
 gazeplay-core/src/main/resources/data/common/images/play-button.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-17,dark1wador,Added icons to music controls + fixes some things
 gazeplay-core/src/main/resources/data/common/images/previous.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-17,dark1wador,Added icons to music controls + fixes some things

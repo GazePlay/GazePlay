@@ -329,10 +329,6 @@ ToBottom,,,зверху ўніз,从上到下,,,from top to bottom,,du haut vers
 ToRight,,,злева направа,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,слева направо,de la izquierda hacia la derecha,,
 ToLeft,,,справа налева,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,справа налево,de la derecha hacia la izquierda,,
 Fix,,,,,,,still,,immobiles,,,,,,,,,,,,
-Bloc,,,,,,,Bloc,,Bloc,,,,,,,,,,,,
-Space,,,,,,,Space Invader,,Space Invader,,,,,,,,,,,,
-Arc,,,,,,,Rainbow,,Arc-en-ciel,,,,,,,,,,,,
-Smiley,,,,,,,Smiley,,Sourire,,,,,,,,,,,,
 ConnectNumbers,,,,,,,Connect numbers,,Connecter des chiffres,,,,,,,,,,,,
 ConnectOrder,,,,,,,Connect in order,,Connecter dans l'ordre,,,,,,,,,,,,
 ConnectNumbersDynamic,,,,,,,Connect in order dynamic,,Connecter des chiffres dynamique,,,,,,,,,,,,
@@ -489,7 +485,6 @@ Dark,,,Цёмны,,,,Dark,,Sombre,,,,,,,,,Тёмный,Oscuro,,
 Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 
 # FOLDERS SETTINGS
-FileDir,Direktoria,دليل الملف,Каталог файлаў,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory,tallennuspaikka,Répertoire des fichiers,,Datoteka,Direktori Fail,Cartella,,Bestands locatie,Katalog plików,Diretório de Arquivos,Каталог файлов,Directorio,Thư mục,Direktori Fail
 ImportEval,,,,,,,Import eval,,Importer une eval,,,,,,,,,,,,
 MusicFolder,Direktoria e muzikës,ملف الموسيقى,Тэчка Музыка,音乐目录,Musikmappe,φάκελος μουσικής,music folder,musiikkikansio,Dossier musiques,,Datoteka Muzika,folder muzik,Cartella musica,,Muziek folder,folder muzyczny,*pasta de musica,Папка Музыка,Carpeta de música,Thư mục âm nhạc,Folder muzik
 WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,Дзе гэта? папка гульні,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? »,,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,« Waar is het » Spel bestandslocatie,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,Где это? папка игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game,« Di mana? » Arahan permainan
@@ -517,9 +512,6 @@ customFileChooser,,,Выбраць персаналізаваную тэчку,,
 importEvalChooser,,,,,,,Import Eval chooser,,Sélecteur d'eval personnalisés,,,,,,,,,,,,
 addNewEval,,,,,,,Add a new eval,,Ajouter un nouveau eval,,,,,,,,,,,,
 addNewImages,,,Дадаць выявы,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,Добавить изображения,Agregar nuevas imágenes ...,,
-addNewImagethumbup,,,Дадаць новую шчаслівую карцінку,,,,Add new image happy ...,,Ajouter de nouvelles image content ...,,,,,,,,,Добавить новую счастливую картинку,Añadir nuevo contenido de la imagen ...,,
-addNewImagethumbdown,,,Дадаць новую сумную карцінку,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,Добавить новую грустную картинку,Añade nuevas imágenes que no son felices ...,,
-addNewImagenocare,,,Дадаць новую карцінку абыякавасці,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,Добавить новую картинку безразличия,Añadir una nueva imagen no importa ...,,
 Remove,Dëshiron të fshish këtë përdorues?,هل تريد فعلا محو المستخدم؟,Вы сапраўды жадаеце выдаліць дадзенага карыстальніка?,确定删除用户,Wollen Sie diesen Benutzer wirklich löschen?,Θέλετε πραγματικά να διαγράψετε αυτόν τον χρήστη;,Do you really want to delete this user ?,poista,Voulez vous vraiment supprimer cet utilisateur ?,,Želiš li zaista obrisati ovog korisnika?,Adakah anda benar-benar mahu memadam pengguna ini?,Vuoi davvero eliminare questo utente?,,Ben je zeker dat je deze gebruiker wil verwijderen?,Czy na pewno chcesz usunąć tego użytkownika?,*Você realmente deseja excluir este usuário?,Вы действительно хотите удалить данного пользователя?,¿Realmente quieres eliminar a este usuario?,Bạn có muốn xóa người dùng này thật không,Adakah anda benar-benar mahu memadam pengguna ini?
 YesRemove,Po (fshi),نعم (محو),Так (выдаліць),确定（删除）,Ja (löschen),Ναι (Διαγραφή),Yes (delete),Kyllä poista,Oui (supprimer),,Da (obriši),Ya (padamkan),Si (rimuovi),,Ja (verwijder),Tak (usuń),*Sim (excluir),Да (удалить),Si (eliminar),Có (xóa),Ya (padamkan)
 NoCancel,Jo (anullo),لا (الغاء),Не (адмяніць),取消,Nein (Annullierer),Όχι (ακύρωση),No (cancel),Ei kumota,Non (annuler),,Ne (poništi),Tidak (membatalkan),No (annulla),,Nee (annuleer),Nie (anuluj),*Não (cancelar),Нет (отменить),No (anular),Không (quay Lại),Tidak (membatalkan)
@@ -569,7 +561,8 @@ SmallPalette,,,,,,,Small palette,,Petite palette,,,,,,,,,,,,
 MediumPalette,,,,,,,Medium palette,,Moyenne palette,,,,,,,,,,,,
 LargePalette,,,,,,,Large palette,,Grande palette,,,,,,,,,,,,
 CustomPalette,,,,,,,Custom palette,,Palette personnalisée,,,,,,,,,,,,
-SettingsGameImages,,,,,,,Images of the games,,Images des jeux,,,,,,,,,,,,
+UserImagesFolder,,,,,,,My images,,Mes images,,,,,,,,,,,,
+UserColoringFolder,,,,,,,Drawings to color,,Dessins à colorier,,,,,,,,,,,,
 ManageImages,,,,,,,Images…,,Images…,,,,,,,,,,,,
 AddImages,,,,,,,Add images,,Ajouter des images,,,,,,,,,,,,
 Images,,,,,,,Images,,Images,,,,,,,,,,,,
@@ -709,6 +702,19 @@ TowerDefenseMissileRole,,,,,,,Its missiles explode on all the monsters around.,,
 TowerDefenseCanonName,,,,,,,Blue tower (cannon),,Tour bleue (canon),,,,,,,,,,,,
 TowerDefenseCanonRole,,,,,,,Big slow balls but very strong.,,Gros boulets lents mais très forts.,,,,,,,,,,,,
 TowerDefenseLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
+
+# Casse-brique (reviewed on 3/11/2026)
+CasseBriqueBloc,,,,,,,Block,,Bloc,,,,,,,,,,,,
+CasseBriqueAlien,,,,,,,Alien,,Extraterrestre,,,,,,,,,,,,
+CasseBriqueArc,,,,,,,Rainbow,,Arc-en-ciel,,,,,,,,,,,,
+CasseBriqueSmiley,,,,,,,Smile,,Sourire,,,,,,,,,,,,
+CasseBriqueEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+CasseBriqueNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+CasseBriqueHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+CasseBriqueDrawn,,,,,,,Drawn background,,Fond dessiné,,,,,,,,,,,,
+CasseBriqueMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
+CasseBriqueScore,,,,,,,Bricks:,,Briques :,,,,,,,,,,,,
+CasseBriqueLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
 
 # Sprint to the finish name
 SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,

@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 class ConfigurationTest {
@@ -189,8 +190,6 @@ class ConfigurationTest {
     @Test
     void shouldReadAndSaveAFileWithTheRemovedQuitKey() throws IOException {
         assertEquals("Q", properties.getProperty("QUIT_KEY"));
-        assertEquals(properties.get("FILE_DIR"), configuration.getFileDir());
-
         configuration.setUserName("someone");
 
         Properties saved = new Properties();
@@ -201,20 +200,19 @@ class ConfigurationTest {
         assertEquals(properties.getProperty("EYE_TRACKER"), saved.getProperty("EYE_TRACKER"));
     }
 
+    /**
+     * The files folder of a profile was removed (3/11/2026: one folder of images for all the games): a file written
+     * before keeps its FILE_DIR, unused.
+     */
     @Test
-    void shouldGetFileDir() {
-        assertEquals(properties.get("FILE_DIR"), configuration.getFileDir());
-    }
-
-    @Test
-    void shouldSetFileDir() {
-        String oldDir = configuration.getFileDir();
-
-        String fileDir = "/some/path";
-        configuration.setFileDir(fileDir);
-        assertEquals(fileDir, configuration.getFileDir());
-
-        configuration.setFileDir(oldDir);
+    void shouldKeepTheRemovedFilesFolderInTheFile() throws IOException {
+        assertNotNull(properties.getProperty("FILE_DIR"));
+        configuration.setUserName("someone");
+        Properties saved = new Properties();
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
+            saved.load(is);
+        }
+        assertEquals(properties.getProperty("FILE_DIR"), saved.getProperty("FILE_DIR"));
     }
 
     @Test

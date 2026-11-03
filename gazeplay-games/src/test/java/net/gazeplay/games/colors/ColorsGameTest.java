@@ -111,9 +111,9 @@ class ColorsGameTest {
      */
     @Test
     void shouldPlayTheImagesOfTheUserInTheCustomPalette() throws Exception {
-        assertEquals("Coloring", UserImagesVariant.folderOf(new EnumGameVariant<>(ColoringVariant.CUSTOM)));
+        assertEquals("coloriages", UserImagesVariant.folderOf(new EnumGameVariant<>(ColoringVariant.CUSTOM)));
         assertNull(UserImagesVariant.folderOf(new EnumGameVariant<>(ColoringVariant.EASY)));
-        final File image = new File(UserImagesVariant.directory("Coloring"), "test-drawing.png");
+        final File image = new File(UserImagesVariant.directory(UserImagesVariant.COLORING), "test-drawing.png");
         try {
             Files.deleteIfExists(image.toPath());
             final ColorsGame empty = launchedGame(ColoringVariant.CUSTOM);

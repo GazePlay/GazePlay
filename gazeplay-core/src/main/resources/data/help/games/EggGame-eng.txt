@@ -15,4 +15,4 @@ Choose a variant (it is framed), then press "Start".
 - 2, 3, 4 or 5 steps: the number of fixations hatching an egg.
 - At the bottom, what comes out of the eggs:
 - Animals: animals born from an egg.
-- My images: your images. Add them in the settings (Folders, "Images of the games") or from the window of the variants.
+- My images: your images. Add them in the settings (Folders, "My images", shared by all the games) or from the window of the variants.

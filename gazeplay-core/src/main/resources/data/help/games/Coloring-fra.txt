@@ -17,4 +17,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Petite palette : des dessins simples, de 1 ou 2 zones à colorier (8 dessins).
 - Moyenne palette : de 3 à 6 zones (8 dessins).
 - Grande palette : 7 zones ou plus (8 dessins).
-- Palette personnalisée : tes propres dessins, à mettre dans les réglages (section Dossiers, « Images des jeux »).
+- Palette personnalisée : tes propres dessins, à mettre dans les réglages (section Dossiers, « Dessins à colorier »).

@@ -15,4 +15,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 2, 3, 4 ou 5 étapes : le nombre de fixations pour faire éclore un œuf.
 - En bas, ce qui sort des œufs :
 - Animaux : des animaux qui naissent d'un œuf.
-- Mes images : tes images. Ajoute-les dans les réglages (Dossiers, « Images des jeux ») ou depuis la fenêtre des variantes.
+- Mes images : tes images. Ajoute-les dans les réglages (Dossiers, « Mes images », communes à tous les jeux) ou depuis la fenêtre des variantes.

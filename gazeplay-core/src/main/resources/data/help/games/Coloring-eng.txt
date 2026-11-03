@@ -17,4 +17,4 @@ Choose a variant (it is framed), then press "Start".
 - Small palette: simple drawings, with 1 or 2 areas to color (8 drawings).
 - Medium palette: 3 to 6 areas (8 drawings).
 - Large palette: 7 areas or more (8 drawings).
-- Custom palette: your own drawings, to put in the settings (Folders section, "Images of the games").
+- Custom palette: your own drawings, to put in the settings (Folders section, "Drawings to color").

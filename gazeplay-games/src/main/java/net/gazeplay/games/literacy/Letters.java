@@ -25,7 +25,7 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
@@ -94,7 +94,7 @@ public class Letters implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
+        imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
         translator = gameContext.getTranslator();
 
         Locale locale = translator.currentLocale();
@@ -116,7 +116,7 @@ public class Letters implements GameLifeCycle {
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
+        imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
         translator = gameContext.getTranslator();
 
         Locale locale = translator.currentLocale();

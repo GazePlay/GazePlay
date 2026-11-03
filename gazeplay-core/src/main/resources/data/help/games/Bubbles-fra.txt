@@ -18,4 +18,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas aussi, ce qu'elles montrent :
 - Couleurs : des bulles de toutes les couleurs ; les images cachées sont des paysages sous la mer.
 - Animaux marins : un animal dans chaque bulle ; mêmes images cachées.
-- Mes images : tes images dans les bulles, et ce sont elles qui sont cachées. Ajoute-les dans les réglages (Dossiers, « Images des jeux ») ou depuis la fenêtre des variantes.
+- Mes images : tes images dans les bulles, et ce sont elles qui sont cachées. Ajoute-les dans les réglages (Dossiers, « Mes images », communes à tous les jeux) ou depuis la fenêtre des variantes.

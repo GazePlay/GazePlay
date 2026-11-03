@@ -107,7 +107,8 @@ public class ReplayingGameFromJson {
                     log.debug("Variant of {} not understood: {}", nameCode, variant);
                 }
             }
-            return new String[]{"EggGame", "GroupedGameVariant:EggGame:EggMyImages:EggSteps" + steps + ":EggGame"};
+            return new String[]{"EggGame", "GroupedGameVariant:EggGame:EggMyImages:EggSteps" + steps + ":"
+                + net.gazeplay.commons.gamevariants.UserImagesVariant.IMAGES};
         }
         if (FORMER_HORSES_SIMPLIFIED.equals(nameCode)) {
             return new String[]{"Horses", "EnumGameVariant:net.gazeplay.games.horses.HorsesVariant:SIMPLIFIED_PLAYERS_2"};

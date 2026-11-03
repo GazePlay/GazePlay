@@ -16,7 +16,7 @@ public enum EggContent {
     /**
      * The folder of the images of the user.
      */
-    public static final String USER_IMAGES_FOLDER = "EggGame";
+    public static final String USER_IMAGES_FOLDER = net.gazeplay.commons.gamevariants.UserImagesVariant.IMAGES;
 
     /**
      * Key of translation, and sub-group of the variants.

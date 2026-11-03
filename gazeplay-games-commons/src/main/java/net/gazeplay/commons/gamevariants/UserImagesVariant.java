@@ -1,6 +1,6 @@
 package net.gazeplay.commons.gamevariants;
 
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.File;
 import java.util.Arrays;
@@ -14,17 +14,28 @@ import java.util.Set;
  * maintainer, 29/10/2026: the images of the user are always a variant of their own). Such a variant gets, without code
  * of its own:
  * <ul>
- * <li>a folder of its own, images/&lt;folder&gt; of the files folder of the profile (e.g.
- * Documents\GazePlay_Learning\files\images\Coloring);</li>
- * <li>a setting adding and removing its images (settings, folders, "Images of the games");</li>
+ * <li>its images, in one folder shared by all the games and all the profiles, {@link #IMAGES}
+ * (Documents\GazePlay_Learning\images, maintainer's decision of 3/11/2026: an image is given once for all the games),
+ * or, for the drawings to color, {@link #COLORING} (Documents\GazePlay_Learning\coloriages);</li>
+ * <li>a setting adding and removing these images (settings, folders);</li>
  * <li>a window of the menu asking for images when it is chosen while the folder is empty.</li>
  * </ul>
  */
 public interface UserImagesVariant {
 
     /**
-     * @return the name of the folder of the images of the user, in the images folder (the name code of the game, e.g.
-     * "Coloring"); null if this value of the variants does not play with images of the user
+     * The folder of the images of the user, shared by all the games.
+     */
+    String IMAGES = GazePlayDirectories.IMAGES_FOLDER;
+
+    /**
+     * The folder of the drawings to color of the user (Coloring only: black outlines cut into zones, not photos).
+     */
+    String COLORING = GazePlayDirectories.COLORING_FOLDER;
+
+    /**
+     * @return the folder of the images of the user, {@link #IMAGES} or {@link #COLORING}; null if this value of the
+     * variants does not play with images of the user
      */
     String getUserImagesFolder();
 
@@ -48,11 +59,12 @@ public interface UserImagesVariant {
     Set<String> IMAGE_EXTENSIONS = Set.of("png", "jpg", "jpeg", "gif", "bmp");
 
     /**
-     * @return the folder of the images of the user of a game, in the images folder of the files folder of the profile;
-     * created if missing
+     * @return the folder of the images of the user, in the GazePlay folder: the drawings to color for
+     * {@link #COLORING}, else the images shared by all the games; created if missing
      */
     static File directory(final String folder) {
-        return Utils.getImagesSubdirectory(folder);
+        return COLORING.equals(folder) ? GazePlayDirectories.getColoringDirectory()
+            : GazePlayDirectories.getImagesDirectory();
     }
 
     /**

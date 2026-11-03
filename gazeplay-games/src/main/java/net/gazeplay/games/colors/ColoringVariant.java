@@ -18,7 +18,7 @@ public enum ColoringVariant implements UserImagesVariant {
     /**
      * Folder of the images given by the user for the custom palette, in the images folder.
      */
-    static final String USER_IMAGES_FOLDER = "Coloring";
+    static final String USER_IMAGES_FOLDER = UserImagesVariant.COLORING;
 
     /**
      * Folder of the coloring pages of the level, in data/colors/images; null for the images of the user.

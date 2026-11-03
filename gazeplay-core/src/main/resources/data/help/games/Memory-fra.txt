@@ -13,5 +13,5 @@ Quand toutes les paires sont trouvées : « Bravo », puis une nouvelle parti
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Les boutons, la taille : 4, 6 ou 12 cartes, ou Dynamique : le nombre de cartes change toutes les 3 parties selon tes essais (plus de cartes si tu trouves vite, moins si c'est difficile).
-- En bas, ce que montrent les cartes : Images, Lettres, Chiffres ou Mes images (tes propres images, à mettre dans les réglages, section Dossiers, « Images des jeux »).
+- En bas, ce que montrent les cartes : Images, Lettres, Chiffres ou Mes images (tes propres images, à mettre dans les réglages, section Dossiers, « Mes images », communes à tous les jeux).
 - Tout en bas : Cartes cachées (il faut se souvenir) ou Cartes visibles (toutes les cartes sont retournées : il suffit de trouver les paires).

@@ -1,65 +1,33 @@
 package net.gazeplay.commons.utils.games;
 
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UtilsTest {
-
-    @Mock
-    private Configuration mockConfiguration;
-
-    private final String sep = File.separator;
-    private final String localDataFolder =
-        System.getProperty("user.dir") + sep
-            + "src" + sep
-            + "test" + sep
-            + "resources" + sep;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.initMocks(this);
-        when(mockConfiguration.getFileDir()).thenReturn(localDataFolder);
-        ActiveConfigurationContext.setInstance(mockConfiguration);
-    }
-
-    @AfterEach
-    void restoreActiveConfiguration() {
-        ActiveConfigurationContext.switchToDefaultUser();
-    }
 
     @Test
     void shouldGetInputStream() {
         assertNotNull(Utils.getInputStream("data/biboule/images/gazeplayClassicLogo.png"));
     }
 
+    /**
+     * The images of the user: one folder for all the games and all the profiles, in the GazePlay folder, and one for
+     * the drawings to color (3/11/2026, instead of the files folder of each profile and its subfolders).
+     */
     @Test
-    void shouldGetFilesFolder() {
-        assertEquals(localDataFolder, Utils.getFilesFolder());
-    }
-
-    @Test
-    void shouldGetBaseImagesDirectory() {
-        assertEquals(new File(localDataFolder, "images"), Utils.getBaseImagesDirectory());
-    }
-
-    @Test
-    void shouldGetImagesSubdirectory() {
-        assertEquals(
-            new File(localDataFolder + "/images", "subdirectory"),
-            Utils.getImagesSubdirectory("subdirectory")
-        );
+    void shouldGiveTheFoldersOfTheImagesOfTheUserInTheGazePlayFolder() {
+        final File images = GazePlayDirectories.getImagesDirectory();
+        assertEquals(new File(GazePlayDirectories.getGazePlayFolder(), "images"), images);
+        assertTrue(images.isDirectory(), "created");
+        final File coloring = GazePlayDirectories.getColoringDirectory();
+        assertEquals(new File(GazePlayDirectories.getGazePlayFolder(), "coloriages"), coloring);
+        assertTrue(coloring.isDirectory(), "created");
     }
 
     @Test

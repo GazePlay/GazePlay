@@ -4,15 +4,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
 
-import java.io.*;
-import java.nio.file.Path;
-import java.util.*;
+import java.io.InputStream;
+import java.util.Enumeration;
 
 /**
- * Access to the files folder of GazePlay (FILE_DIR setting) and to a few system facilities.
+ * A few system facilities. The images of the user are in {@link GazePlayDirectories#getImagesDirectory()} (the "files"
+ * folder of each profile, with its subfolders, was removed on 3/11/2026).
  * <p>
  * Created by schwab on 23/12/2016.
  */
@@ -27,63 +25,6 @@ public class Utils {
     public static InputStream getInputStream(final String resource) {
         log.debug("Opening resource {}", resource);
         return ClassLoader.getSystemResourceAsStream(resource);
-    }
-
-    /**
-     * Provides the default GazePlay file directory. By default this will be the files folder of the GazePlay folder (see GazePlayDirectories),
-     * but can be overridden by the user in the app or in the GazePlay.properties file.
-     * @return GazePlay files directory
-     */
-    public static String getFilesFolder() {
-        final Configuration config = ActiveConfigurationContext.getInstance();
-        final String filesFolder = config.getFileDir();
-
-        if (new File(filesFolder).mkdirs()){
-            log.info("Folder files created !");
-        }else {
-            log.info("Folder files already created !");
-        }
-
-        log.info("filesFolder : {}", filesFolder);
-        return filesFolder;
-    }
-
-    /**
-     * @return The image directory within the GazePlay files directory
-     */
-    public static File getBaseImagesDirectory() {
-        final File filesDirectory = new File(getFilesFolder());
-        return new File(filesDirectory, "images");
-    }
-
-    /**
-     * @return a subdirectory of the images of the files folder (images/&lt;subdirectoryName&gt;), created if missing;
-     *   the users put their own images there (e.g. "portraits")
-     */
-    public static File getImagesSubdirectory(final String subdirectoryName) {
-        final File baseImagesDirectory = getBaseImagesDirectory();
-        createFolder(baseImagesDirectory, subdirectoryName);
-        log.info("baseImagesDirectory : {}", baseImagesDirectory);
-        log.info("subdirectoryName : {}", subdirectoryName);
-        return new File(baseImagesDirectory, subdirectoryName);
-    }
-
-    /**
-     * Creates the images directory and one of its subdirectories, if missing.
-     */
-    public static void createFolder(File baseImagesDirectory, String subdirectoryName){
-        if (baseImagesDirectory.mkdirs()){
-            log.info("Folder images created !");
-        }else {
-            log.info("Folder images already created !");
-        }
-
-        if (new File(getBaseImagesDirectory() + "/" + subdirectoryName).mkdirs()){
-            log.info(subdirectoryName + " created !");
-        }else {
-            log.info(subdirectoryName + " already created !");
-        }
-        // files/evals, for the evaluations of the removed BERA edition, is no longer created
     }
 
     /**

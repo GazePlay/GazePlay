@@ -18,4 +18,4 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom too, what they show:
 - Colors: bubbles of all colors; the hidden pictures are underwater scenes.
 - Sea animals: an animal in each bubble; the same hidden pictures.
-- My images: your images in the bubbles, and they are the hidden pictures. Add them in the settings (Folders, "Images of the games") or from the window of the variants.
+- My images: your images in the bubbles, and they are the hidden pictures. Add them in the settings (Folders, "My images", shared by all the games) or from the window of the variants.

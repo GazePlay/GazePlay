@@ -612,8 +612,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                         conf.setUserPicture(dst.getAbsolutePath());
                     }
 
-                    conf.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
-
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
                 } else {

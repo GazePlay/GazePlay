@@ -99,7 +99,7 @@ class MemoryTest {
         for (IGameVariant variant : variants) {
             assertEquals(variant, IGameVariant.toGameVariant(variant.toString()), variant.toString());
             GroupedGameVariant grouped = (GroupedGameVariant) variant;
-            assertEquals(grouped.getGroup().equals("MemoryContentUserImages") ? "Memory" : null,
+            assertEquals(grouped.getGroup().equals("MemoryContentUserImages") ? "images" : null,
                 UserImagesVariant.folderOf(variant));
         }
     }

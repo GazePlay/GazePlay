@@ -18,7 +18,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 /**
  * A round picture selected by a fixation: like {@link ProgressButton}, with the image fitted in the circle.
@@ -255,6 +255,6 @@ public class ProgressPortrait extends StackPane {
      * @return the library of the "portraits" folder of the images of the user, with the default images as fallback
      */
     public static ImageLibrary createImageLibrary(ReplayablePseudoRandom randomGenerator) {
-        return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
+        return ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
     }
 }

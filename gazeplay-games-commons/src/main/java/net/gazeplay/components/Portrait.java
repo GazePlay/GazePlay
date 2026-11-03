@@ -6,7 +6,7 @@ import lombok.Getter;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 /**
  * A circle filled with an image drawn from a library, at a random position (the bubbles of the "Bubbles" game, for
@@ -20,7 +20,7 @@ public class Portrait extends Circle {
      * @return the library of the "portraits" folder of the images of the user, with the default images as fallback
      */
     public static ImageLibrary createImageLibrary(ReplayablePseudoRandom randomGenerator) {
-        return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
+        return ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
     }
 
     @Getter

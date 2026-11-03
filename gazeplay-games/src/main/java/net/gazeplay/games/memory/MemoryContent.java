@@ -15,7 +15,7 @@ public enum MemoryContent {
     /**
      * Folder of the pictures of the user, in the images folder of the profile.
      */
-    static final String USER_IMAGES_FOLDER = "Memory";
+    static final String USER_IMAGES_FOLDER = net.gazeplay.commons.gamevariants.UserImagesVariant.IMAGES;
 
     /**
      * Key of the translation of the switch, also the group of the variants (GroupedGameVariant).

@@ -9,14 +9,14 @@ import javafx.scene.Node;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +25,9 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,17 +58,6 @@ class DivisorTest {
             + "src" + sep
             + "test" + sep
             + "resources" + sep;
-
-    private static void useActiveFilesDirectory(String filesDirectory) {
-        Configuration activeConfiguration = mock(Configuration.class);
-        when(activeConfiguration.getFileDir()).thenReturn(filesDirectory);
-        ActiveConfigurationContext.setInstance(activeConfiguration);
-    }
-
-    @AfterEach
-    void restoreActiveConfiguration() {
-        ActiveConfigurationContext.switchToDefaultUser();
-    }
 
     @BeforeEach
     void setup() {
@@ -112,24 +104,30 @@ class DivisorTest {
     }
 
     @Test
-    void shouldLaunchCustom() {
-        // Utils.getImagesSubdirectory("portraits") resolves to <files directory>/images/portraits
-        useActiveFilesDirectory(localDataFolder);
+    void shouldLaunchCustom() throws IOException {
+        // The images of the user: the folder shared by all the games (in the GazePlay folder of the tests)
+        final File image = new File(GazePlayDirectories.getImagesDirectory(), "biscuit.jpg");
+        Files.copy(new File(localDataFolder, "images" + sep + "portraits" + sep + "biscuit.jpg").toPath(),
+            image.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        try {
+            Divisor divisor = new Divisor(mockGameContext, mockStats, false);
 
-        Divisor divisor = new Divisor(mockGameContext, mockStats, false);
+            divisor.launch();
 
-        divisor.launch();
+            assertEquals(1, children.size());
 
-        assertEquals(1, children.size());
-
-        Target target = (Target) children.get(0);
-        assertTrue(target.getImgLib().pickRandomImage().getUrl().contains("biscuit"));
+            Target target = (Target) children.get(0);
+            assertTrue(target.getImgLib().pickRandomImage().getUrl().contains("biscuit"));
+        } finally {
+            assertTrue(image.delete());
+        }
     }
 
     @Test
     void shouldLaunchDefault() {
-        // An empty files directory in the temporary user.home (see build.gradle): no custom images
-        useActiveFilesDirectory(new File(System.getProperty("user.home"), "empty-files").getAbsolutePath());
+        // No images of the user: the default images
+        assertEquals(0, ImageUtils.listImageFiles(GazePlayDirectories.getImagesDirectory()).size(),
+            "no images left by another test");
 
         Divisor divisor = new Divisor(mockGameContext, mockStats, false);
 

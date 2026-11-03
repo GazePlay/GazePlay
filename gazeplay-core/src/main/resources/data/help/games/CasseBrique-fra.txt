@@ -1,0 +1,21 @@
+# Le principe
+Renvoie la balle avec la raquette pour casser toutes les briques du mur.
+
+# Comment jouer
+- La raquette va, en bas de l'écran, là où tu regardes ou là où est la souris. C'est le réglage des entrées qui décide : avec la souris seule, elle suit la souris ; avec l'oculomètre seul, elle suit le regard ; avec les deux, elle suit celui qui a bougé en dernier.
+- La balle attend un peu sur la raquette, puis part vers le haut. Plus elle touche la raquette loin de son milieu, plus elle repart sur le côté.
+- Une brique touchée par la balle se casse. En Difficile, certaines briques, plus foncées, se fendent au premier coup et se cassent au second.
+- La balle a 3 vies (les cœurs en haut à gauche). Si elle tombe sous la raquette, elle perd une vie et revient sur la raquette.
+- En haut à droite : les briques cassées et le nombre de briques du mur.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert.
+
+# Comment gagner
+Casse toutes les briques : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Bloc, Extraterrestre, Arc-en-ciel ou Sourire : le dessin des briques.
+- En bas, le fond. Fond dessiné : un fond doux, en couleurs. Mes images : une de tes images est cachée derrière les briques et se découvre quand elles se cassent. Ajoute-les dans les réglages (Dossiers, « Mes images », communes à tous les jeux) ou depuis la fenêtre des variantes.
+- En bas aussi, le niveau. Facile : une grande raquette (30 % de l'écran) et une balle lente.
+- Normal : une raquette moyenne (22 % de l'écran) et une balle plus rapide.
+- Difficile : une petite raquette (16 % de l'écran), une balle rapide, et une brique sur trois à toucher deux fois.

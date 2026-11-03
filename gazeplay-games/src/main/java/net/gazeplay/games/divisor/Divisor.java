@@ -11,7 +11,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -59,7 +59,7 @@ public class Divisor implements GameLifeCycle {
             imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images", randomGenerator);
             initBackground();
         } else {
-            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
+            imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
         }
 
         this.stats.notifyNewRoundReady();

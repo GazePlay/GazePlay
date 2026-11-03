@@ -68,7 +68,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_BACKGROUND_COLOR = "BACKGROUND_COLOR";
     /* Directories settings */
-    private static final String PROPERTY_NAME_FILE_DIR = "FILE_DIR";
+    // FILE_DIR, the files folder of a profile, no longer read (3/11/2026: the images of the user are in one folder,
+    // GazePlayDirectories.getImagesDirectory); kept in the files as it is
     private static final String PROPERTY_NAME_MUSIC_DIR = "MUSIC_DIR";
     private static final String PROPERTY_NAME_WHERE_IS_IT_DIR = "WHERE_IS_IT_DIR";
     /* Stats settings */
@@ -210,8 +211,6 @@ public class Configuration {
     private final StringProperty menuButtonsOrientationProperty;
     /* Directories settings */
     @Getter
-    private final StringProperty fileDirProperty;
-    @Getter
     private final StringProperty musicDirProperty;
     @Getter
     private final StringProperty whereIsItDirProperty;
@@ -312,7 +311,6 @@ public class Configuration {
         backgroundColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_COLOR, DEFAULT_VALUE_BACKGROUND_COLOR, propertyChangeListener);
 
         /* Directories settings */
-        fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILE_DIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
         musicDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_DIR, DEFAULT_VALUE_MUSIC_DIR, propertyChangeListener);
         whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHERE_IS_IT_DIR, DEFAULT_VALUE_WHERE_IS_IT_DIR, propertyChangeListener);
 
@@ -524,10 +522,6 @@ public class Configuration {
 
     /* Directories settings */
 
-    public String getFileDir() {
-        return fileDirProperty.getValue();
-    }
-
     public String getMusicDir() {
         return musicDirProperty.getValue();
     }
@@ -680,10 +674,6 @@ public class Configuration {
     }
 
     /* Directories settings */
-
-    public void setFileDir(final String fileDir) {
-        fileDirProperty.setValue(fileDir);
-    }
 
     public void setMusicDir(final String musicDir) {
         musicDirProperty.setValue(musicDir);

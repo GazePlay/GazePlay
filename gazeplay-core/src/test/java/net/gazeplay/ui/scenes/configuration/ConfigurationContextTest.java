@@ -151,7 +151,8 @@ class ConfigurationContextTest {
             assertInstanceOf(HBox.class, control(sections, "HeatMapColors"));
             assertEquals(List.of("HeatMapSettings"),
                 sections.getLast().groups().stream().map(SettingsPage.Group::titleKey).toList());
-            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation", "FileDir",
+            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation",
+                ConfigurationContext.USER_IMAGES_KEY, ConfigurationContext.USER_COLORING_KEY,
                 "ResultDir", "EnableAreaOfInterest", "EnableVideoRecording")) {
                 assertFalse(has(sections, gamesOnly), gamesOnly);
             }
@@ -190,8 +191,12 @@ class ConfigurationContextTest {
             assertInstanceOf(ChoiceBox.class, control(sections, "MenuOrientation"));
             assertInstanceOf(CheckBox.class, control(sections, "BackgroundEnabled"));
             assertFalse(has(sections, "DarkTh"));
-            // Folders: files, music, where is it
-            assertInstanceOf(Button.class, control(sections, "FileDir"));
+            // Folders: the images of the user (one folder for all the games), the drawings to color, music, where is
+            // it; no more files folder nor settings by game
+            assertInstanceOf(Button.class, control(sections, ConfigurationContext.USER_IMAGES_KEY));
+            assertInstanceOf(Button.class, control(sections, ConfigurationContext.USER_COLORING_KEY));
+            assertFalse(has(sections, "FileDir"));
+            assertFalse(has(sections, "Coloring"));
             assertInstanceOf(HBox.class, control(sections, "MusicFolder"));
             assertInstanceOf(HBox.class, control(sections, "WhereIsItDirectory"));
             // Statistics: results folder, then heatmap (disabled, opacity, colors), AOI (enabled), sequence and
@@ -371,19 +376,15 @@ class ConfigurationContextTest {
         Window mockWindow = mock(Window.class);
 
         Map<ConfigurationContext.DirectoryType, String> answers = Map.of(
-            ConfigurationContext.DirectoryType.FILE, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(),
             ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR,
             ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath()
         );
 
         when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
-        when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getFileDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getMusicDir()).thenAnswer(invocation -> fileDirProperty.getValue());
         when(mockConfig.getMusicDirProperty()).thenReturn(fileDirProperty);
         writeInto(fileDirProperty).when(mockConfig).setWhereIsItDir(anyString());
-        writeInto(fileDirProperty).when(mockConfig).setFileDir(anyString());
         writeInto(fileDirProperty).when(mockConfig).setMusicDir(anyString());
 
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);

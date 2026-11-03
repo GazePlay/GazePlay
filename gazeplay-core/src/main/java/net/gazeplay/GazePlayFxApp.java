@@ -91,7 +91,6 @@ public class GazePlayFxApp extends Application {
                         log.debug("userDirectoryCreated = {}", userDirectoryCreated);
 
                         conf.setUserName(user.getName());
-                        conf.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(user.getName()).getAbsolutePath());
 
                     } else {
                         ActiveConfigurationContext.switchToUser(userSelectionOptions.getUserid());

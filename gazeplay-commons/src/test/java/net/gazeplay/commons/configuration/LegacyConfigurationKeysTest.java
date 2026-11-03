@@ -63,7 +63,6 @@ class LegacyConfigurationKeysTest {
         Configuration configuration = ConfigurationSource.createFromPropertiesResource(file);
 
         assertEquals("mouse_control", configuration.getEyeTracker());
-        assertEquals("/Users/admin/GazePlay/files", configuration.getFileDir());
         assertEquals(900, configuration.getFixationLength());
         assertEquals("builtin:BLUE", configuration.getCssFile());
         assertTrue(configuration.isLatestNewsDisplayForced());

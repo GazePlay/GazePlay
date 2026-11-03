@@ -45,7 +45,7 @@ nouvelle Biboule). Commité et poussé : `efaee9596`. Point 3 : **Survive Agains
 une seule carte, 3 vies, 3 décors au hasard ; voir sa fiche), **essayé et validé par le mainteneur le 3/11**,
 commité et poussé (`e737d5465`). Puis, à la demande du mainteneur, **passe sur les 23 jeux revus** pour ses deux
 nouvelles règles (section « Deux règles de plus pour chaque jeu ») : aide de Frogs Race précisée, mode « seul au
-clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé (`ac18c2e01`). **Space Game**, maintenant « La bataille de l'espace » en français, revu (règle du mainteneur : 3 vies, boss de 15 / 30 / 50 points de vie, fond de nuit ; voir sa fiche), essayé et validé par le mainteneur, commité et poussé ; puis **Défendre le château** revu (règle du mainteneur, voir sa fiche), essayé et validé par le mainteneur (souris et Tobii), commité et poussé ; ensuite : Casse-brique.
+clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé (`ac18c2e01`). **Space Game**, maintenant « La bataille de l'espace » en français, revu (règle du mainteneur : 3 vies, boss de 15 / 30 / 50 points de vie, fond de nuit ; voir sa fiche), essayé et validé par le mainteneur, commité et poussé ; puis **Défendre le château** revu (règle du mainteneur, voir sa fiche), essayé et validé par le mainteneur (souris et Tobii), commité et poussé ; puis **le Casse-brique** revu (règle du mainteneur, voir sa fiche ; voile clair sur « Mes images », balle qui rebondit en haut de l'écran), et **un seul dossier d'images pour tous les jeux** (`images`, coloriages à part ; dossier `files` retiré, voir « Règles pour chaque jeu »), essayés et validés par le mainteneur, commités et poussés ; ensuite : Ninja.
 
 **À faire mardi, dans l'ordre** :
 
@@ -284,27 +284,30 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
 - **Images données par l'utilisateur (décision du mainteneur, 29/10/2026)** : elles sont **toujours une variante** du
   jeu, jamais un remplacement silencieux des images du jeu. Pour un jeu qui en lit (voir la liste ci-dessous) :
   1. ajouter une valeur de variante qui implémente `UserImagesVariant` (`gazeplay-games-commons`), avec pour dossier
-     le name code du jeu : le jeu reçoit alors **sans autre code** son dossier `files/images/<NameCode>` du profil, sa
-     ligne dans les réglages (Dossiers, « Images des jeux ») et la fenêtre d'erreur du menu quand la variante est
-     choisie sans image (`UserImagesDialog`) ; exemple : `ColoringVariant.CUSTOM` ;
+     `UserImagesVariant.IMAGES` : le jeu lit alors **sans autre code** le dossier d'images **commun à tous les jeux et
+     à tous les profils**, `Documents\GazePlay_Learning\images` (décision du mainteneur du 3/11/2026 : une image donnée
+     une seule fois sert à tous les jeux ; il remplace les dossiers `files/images/<NameCode>` d'un jour), réglé dans
+     les réglages (Dossiers, « Mes images »), avec la fenêtre d'erreur du menu quand la variante est choisie sans image
+     (`UserImagesDialog`). Seul le Coloriage a son propre dossier, `UserImagesVariant.COLORING`
+     (`Documents\GazePlay_Learning\coloriages`, réglage « Dessins à colorier ») : des contours à colorier, pas des
+     photos ;
   2. dans le jeu, lire les images avec `UserImagesVariant.images(dossier)`, et afficher un message si la liste est vide
      (jeu lancé sans passer par le menu) ;
   3. ne plus lire l'ancien dossier partagé ; ne pas reprendre les images qu'il contient : **pas de migration** (passage
      à GazePlay Learning 2.0, les utilisateurs remettent leurs images ; à dire dans les notes de version) ;
   4. ajouter les tests (variante, dossier vide) et vérifier la fenêtre d'erreur en vrai.
 
-  Anciens dossiers partagés de `files/images` encore lus (à retirer au fil de la revue ; quand plus aucun jeu ne les
-  lit, retirer aussi l'ancien réglage « Répertoire des fichiers » et sa fenêtre à 4 sections, `CustomFileChooser`) :
+  **Le dossier `files` et ses sous-dossiers sont retirés (3/11/2026, demande du mainteneur)** : plus de réglage
+  « Répertoire des fichiers » (`FILE_DIR`, gardé tel quel dans les fichiers de réglages existants, plus lu), plus de
+  fenêtre `CustomFileChooser`, plus de sous-dossiers `magiccards`, `portraits`, `blocs`, `opinions` ni par jeu. Les
+  jeux pas encore revus qui lisaient ces anciens dossiers en silence (Magic Cards ; Cream Pie, Ladder, Whac-A-Mole,
+  Ninja, Divisor par `Portrait`/`ProgressPortrait` ; Blocks, Letters) lisent désormais le dossier commun, toujours avec
+  repli sur leurs images par défaut quand il est vide ; ils passeront à une variante « Mes images » lors de leur
+  revue. Les raccourcis des jeux vont par défaut dans `Documents\GazePlay_Learning\raccourcis`. Le dossier `files` d'un
+  utilisateur n'est ni supprimé ni repris (pas de migration, 2.0).
 
-  | Ancien dossier | Jeux qui le lisent encore |
-  |---|---|
-  | `magiccards` | Magic Cards, Memory |
-  | `default` | Memory |
-  | `portraits` | Cream Pie, Ladder, Whac-A-Mole (moles), Ninja, Divisor (plus Bubbles depuis le 2/11/2026) |
-  | `blocs` | Blocks, Letters (plus Egg Game depuis le 2/11/2026) |
-  | `opinions` | Casse-Brique (plus Opinions depuis le 2/11/2026) |
-
-  Fait : Coloring (`files/images/Coloring`, variante « Palette personnalisée », 29/10/2026) ; Opinions (`files/images/Opinions`, variante unique « Mes images », 2/11/2026).
+  Jeux avec la variante : Coloring (« Palette personnalisée », dossier des coloriages), Opinions, Memory, Bubbles,
+  Egg Game, Casse-brique (dossier commun).
 
 ## Aide des jeux (demande du mainteneur du 30/10/2026, validée le 30/10/2026)
 
@@ -466,7 +469,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
 | Labyrinth (`Labyrinth`) | **Remplacé le 28/10** : animaux sans fond (OpenMoji) ; à confirmer : 19 dessins (souris, flèches, fromage) et 9 du dossier `common` des jeux | | |
 | **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
-| Blocks, Casse-Brique, Ninja, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
+| Blocks, Ninja, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
+| **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | Puzzle (`Puzzle`) | À confirmer : 36 images (Biboule, paysages) ; la Joconde est dans le domaine public | | |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
 | **Défendre le château** (`TowerDefense`) | **3/11** : les 23 images retirées ; tout dessiné par script (`make_towerdefense_images.py`), neige par le jeu | ✔ 3/11 (polices des jeux, pastilles des prix, cercle de choix aux couleurs des menus, vignette) | ✔ 3/11 (règle du mainteneur : vagues à la demande ou automatiques, Facile / Normal / Difficile, sans fin / 10 / 20 vagues, « Perdu ! », carte au hasard ; 4 tours, revente et blizzard gardés) |
@@ -2238,3 +2242,43 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   SHA-256) dans `data/biboulejump/menu/restart.png` ; recherche refaite sur les noms de dossiers et de fichiers de
   toutes les ressources retirées le 3/11 : aucun autre usage ; `allGamesTest` complet : 66 entrées, 0 échec.
   **Leçon** : après avoir retiré des ressources, lancer `allGamesTest` en entier, pas seulement le jeu revu.
+
+### Casse-brique (`CasseBrique`, code `cassebrique`) — 3/11/2026
+
+- **État des lieux (3/11/2026)** : une carte, 4 variantes (Bloc, « Space Invader », Arc-en-ciel, Sourire : le dessin
+  des briques). La raquette (40 % de la largeur) suit le regard ou la souris en bas ; la balle part après 5 s ; une
+  brique touchée disparaît ; tout cassé : « Bravo ». Balle tombée : revient sur la raquette, **sans vie ni défaite**.
+  Fond : une image au hasard de l'ancien dossier partagé `opinions` (noir sans image). Défauts : **la boucle de 15 ms
+  ne s'arrêtait jamais, même après la victoire, qu'elle relançait toutes les 15 ms** (« Bravo » et statistiques
+  répétés) ; balle de 8 pixels par pas sur tous les écrans ; pas de pause à l'engrenage ; raquette qui sortait de
+  l'écran ; collisions approximatives (traversées, plusieurs briques d'un coup) ; briques grises incassables prévues
+  mais jamais utilisées ; aucun but à atteindre compté ; écouteurs sur toute la scène jamais retirés ; pas d'aide ;
+  couleurs pures et criardes. Règle 2 déjà suivie ; règle 3 sans objet (pas de fixation). **Risque** : la variante
+  « Space Invader » reprenait le nom et le personnage d'un jeu existant (marque déposée).
+- **Règle du mainteneur (3/11/2026)** : **3 vies** ; gagné quand toutes les briques sont cassées ; Facile / Normal /
+  Difficile (raquette, vitesse, briques à toucher deux fois) ; **les 4 dessins gardés** (« Space Invader » renommé et
+  redessiné) ; **fond doux dessiné, et une variante « Mes images »** où l'image de l'utilisateur se découvre derrière
+  les briques ; briques arrondies aux couleurs douces, éclat quand elles cassent.
+- **Fait** : le jeu réécrit (`CasseBrique`, classe interne `Brick`) : une boucle en temps réel, vitesse d'animation
+  des réglages, arrêtée pendant l'engrenage **et à la fin** ; vitesses et tailles en hauteur d'écran ; petits pas
+  (la balle ne traverse plus une brique, une seule brique par pas) ; rebond sur le côté le plus proche de la brique ;
+  sur la raquette, l'angle dépend de l'endroit touché (60° au bord) ; raquette gardée dans l'écran ; balle sur la
+  raquette 3 s au départ, 1,5 s après une chute. Niveaux (`CasseBriqueLevel`) : raquette 30 %, 22 %, 16 % de la
+  largeur ; balle 0,55, 0,75, 0,95 hauteur d'écran par seconde ; en Difficile une brique sur trois, plus foncée, se
+  fend au premier coup. Dessins (`CasseBriqueMap`, lignes de chiffres) : Bloc, **Extraterrestre** (une tête ronde à
+  antenne, deux yeux, un sourire ; une première version ressemblait encore au personnage de Space Invaders, vue en
+  vraie fenêtre, redessinée), Arc-en-ciel, Sourire. Fond (`CasseBriqueBackground`) : dégradé lilas et ciel avec des
+  ronds doux, ou une image de l'utilisateur (`files/images/CasseBrique`, variante à part : ligne des réglages et
+  fenêtre sans image comme les autres) qui couvre l'écran derrière les briques. 3 cœurs, pastille « Briques : 4 /
+  73 » ; « Perdu ! » puis statistiques. Statistiques : un but à atteindre par brique cassable, un but atteint par
+  brique cassée. La raquette suit le regard (zone de jeu) et la souris (couche du jeu), plus la scène entière.
+  Variantes `GroupedGameVariant` (fond, niveau, dessin), 24 ; une ancienne variante se joue en Bloc, Normal, fond
+  dessiné. **L'ancien dossier `opinions` retiré** (plus aucun jeu ne le lit) : section de `CustomFileChooser` (les
+  sections suivent la liste des dossiers), ses boutons « J'aime / Je n'aime pas / Peu importe », leurs traductions
+  et l'icône `opinions.png`. Traductions (les clés `Bloc`, `Space`, `Arc`, `Smiley` remplacées), aide, vignette
+  (capture de l'Arc-en-ciel), inventaire.
+- **Vérifications** : `CasseBriqueTest` (8 tests : 3 vies ; rebond sur la raquette ; victoire une seule fois, buts
+  comptés ; briques à toucher deux fois en Difficile seulement ; brique cassée par la balle ; raquette qui suit la
+  souris et reste dans l'écran ; variantes, « Mes images », lignes des dessins ; tout retiré à la fin) ; `GameHelpTest`
+  avec le jeu ; captures en vraie fenêtre (souris) `build/game-screenshots/essai1/cassebrique/` et
+  `essai2/cassebrique/` (Bloc, Extraterrestre, Arc-en-ciel, « Mes images » avec une image de test).

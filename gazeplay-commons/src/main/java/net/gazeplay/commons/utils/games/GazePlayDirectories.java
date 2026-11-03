@@ -133,17 +133,49 @@ public class GazePlayDirectories {
     }
 
     /**
-     * @return the default files folder (FILE_DIR setting): the images and the shortcuts of the games
+     * Name of the folder of the images of the user, in the GazePlay folder.
      */
-    public static File getDefaultFileDirectoryDefaultValue() {
-        return new File(getGazePlayFolder(), "files");
+    public static final String IMAGES_FOLDER = "images";
+
+    /**
+     * Name of the folder of the drawings to color of the user (Coloring), in the GazePlay folder.
+     */
+    public static final String COLORING_FOLDER = "coloriages";
+
+    /**
+     * @return the folder of the images of the user, one for all the games and all the profiles, as the evaluations
+     * (maintainer's decision of 3/11/2026: the user gives an image once for all the games; it replaces the "files"
+     * folder of each profile, with its subfolders by game or by kind, e.g. images/portraits); created if missing
+     */
+    public static File getImagesDirectory() {
+        return createdFolder(new File(getGazePlayFolder(), IMAGES_FOLDER));
     }
 
     /**
-     * @return the default folder of the shortcuts of the games created from the settings
+     * @return the folder of the drawings to color of the user (black outlines on white, cut into zones: not the
+     * photos of the images folder; maintainer's decision of 3/11/2026); created if missing
+     */
+    public static File getColoringDirectory() {
+        return createdFolder(new File(getGazePlayFolder(), COLORING_FOLDER));
+    }
+
+    /**
+     * Creates a folder if missing (no log: this class is used by the launcher before the logs are set up; a folder
+     * that cannot be created shows as empty).
+     */
+    private static File createdFolder(final File folder) {
+        if (!folder.isDirectory()) {
+            folder.mkdirs();
+        }
+        return folder;
+    }
+
+    /**
+     * @return the default folder of the shortcuts of the games created from the settings (it was in the "files"
+     * folder, removed on 3/11/2026)
      */
     public static File getShortcutDirectory() {
-        return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "shortcut");
+        return new File(getGazePlayFolder(), "raccourcis");
     }
 
     /**
@@ -154,14 +186,7 @@ public class GazePlayDirectories {
     }
 
     /**
-     * @return the default files folder of a user profile
-     */
-    public static File getFileDirectoryUserValue(String user) {
-        return new File(getUserProfileDirectory(user), "files");
-    }
-
-    /**
-     * @return the folder of a user profile (its settings, statistics, files...)
+     * @return the folder of a user profile (its settings, statistics...)
      */
     public static File getUserProfileDirectory(String user) {
         return new File(getProfilesDirectory(), user);

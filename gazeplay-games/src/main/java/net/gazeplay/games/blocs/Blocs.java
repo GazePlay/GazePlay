@@ -17,7 +17,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
@@ -80,7 +80,7 @@ public class Blocs implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
+        imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
 
         enterEvent = buildEvent(gameContext, stats, useTrail);
 
@@ -97,7 +97,7 @@ public class Blocs implements GameLifeCycle {
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
+        imageLibrary = ImageUtils.createImageLibrary(GazePlayDirectories.getImagesDirectory(), randomGenerator);
 
         enterEvent = buildEvent(gameContext, this.stats, useTrail);
 

@@ -2,7 +2,7 @@
 Your own images are shown one by one: say whether you like each of them or not.
 
 # Before playing
-Add the images in the settings, section Folders, "Images of the games", line "Opinions" (or when choosing the game, if there is none yet). They are shown in the order of their names.
+Add the images in the settings, section Folders, "My images", shared by all the games (or when choosing the game, if there is none yet). They are shown in the order of their names.
 
 # How to play
 - The image is in the middle; above it, its number ("3 / 12").

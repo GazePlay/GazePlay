@@ -234,52 +234,33 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * @return the folders of the images, of the music and of "Where is it?"
      */
     private SettingsPage.Section foldersSection(Configuration config, Translator translator) {
-        final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
-            .add("FileDir", buildImageChooser(config, this, translator))
+        // The images of the user, shared by all the games, then the drawings to color (maintainer's decision of
+        // 3/11/2026: they replace the files folder and its subfolders by game)
+        return new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
+            .add(USER_IMAGES_KEY, buildUserImagesButton(translator, USER_IMAGES_KEY, UserImagesVariant.IMAGES))
+            .add(USER_COLORING_KEY, buildUserImagesButton(translator, USER_COLORING_KEY, UserImagesVariant.COLORING))
             .add("MusicFolder", buildDirectoryChooser(config, this, translator, DirectoryType.MUSIC))
-            .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT));
-        // The images of the games having a variant played with images of the user: one setting per game
-        final Map<String, String> userImageGames = userImageGames();
-        if (!userImageGames.isEmpty()) {
-            section.group("SettingsGameImages");
-            userImageGames.forEach((nameCode, folder) -> section.add(nameCode, buildUserImagesButton(translator,
-                nameCode, folder)));
-        }
-        return section.build();
+            .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT))
+            .build();
     }
 
     /**
-     * @return the games of the catalog having a variant played with images of the user (UserImagesVariant), in the
-     * order of the menu: name code of the game, folder of its images
+     * Settings of the images of the user and of the drawings to color.
      */
-    Map<String, String> userImageGames() {
-        final Map<String, String> result = new LinkedHashMap<>();
-        final GamesLocator gamesLocator = getGazePlay().getGamesLocator();
-        if (gamesLocator == null) {
-            return result;
-        }
-        for (final GameSpec game : AppMode.GAMES.filter(gamesLocator.listGames(getGazePlay().getTranslator()))) {
-            for (final IGameVariant variant : game.getGameVariantGenerator().getVariants()) {
-                final String folder = UserImagesVariant.folderOf(variant);
-                if (folder != null) {
-                    result.put(game.getGameSummary().getNameCode(), folder);
-                    break;
-                }
-            }
-        }
-        return result;
-    }
+    static final String USER_IMAGES_KEY = "UserImagesFolder";
+
+    static final String USER_COLORING_KEY = "UserColoringFolder";
 
     /**
-     * @return the button opening the window of the images of the user of a game
+     * @return the button opening the window of the images of the user (or of the drawings to color)
      */
-    private Node buildUserImagesButton(final Translator translator, final String nameCode, final String folder) {
+    private Node buildUserImagesButton(final Translator translator, final String titleKey, final String folder) {
         final Button button = new Button(translator.translate("ManageImages"));
         button.setOnAction(event -> {
             final Parent root = getGazePlay().getPrimaryScene().getRoot();
             root.setEffect(new GaussianBlur());
             new UserImagesDialog(getGazePlay().getPrimaryStage(), root, translator, folder,
-                translator.translate(nameCode), null).show();
+                translator.translate(titleKey), null).show();
         });
         return button;
     }
@@ -417,26 +398,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * Folders that can be chosen in the settings.
      */
     enum DirectoryType {
-        FILE, WHERE_IS_IT, MUSIC, SHORTCUT
-    }
-
-    /**
-     * @return the button opening the chooser of the images of the games (see {@link CustomFileChooser})
-     */
-    private Node buildImageChooser(Configuration configuration,
-                                   ConfigurationContext configurationContext,
-                                   Translator translator) {
-
-        final I18NButton selectButton = new I18NButton(translator, "Select");
-        Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
-
-        selectButton.setOnAction(e -> {
-            dialog.show();
-            dialog.sizeToScene();
-            getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
-        });
-
-        return selectButton;
+        WHERE_IS_IT, MUSIC, SHORTCUT
     }
 
     /**
@@ -485,11 +447,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 changeMusicFolder(configuration.getMusicDir(), configuration);
                 fileDir = configuration.getMusicDir();
                 break;
-            case SHORTCUT:
-                fileDir = configuration.getShortcutDir();
-                break;
             default:
-                fileDir = configuration.getFileDir();
+                fileDir = configuration.getShortcutDir();
         }
 
         buttonLoad = new Button(fileDir);
@@ -519,11 +478,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 case MUSIC:
                     currentFolder = new File(configuration.getMusicDir());
                     break;
-                case SHORTCUT:
-                    currentFolder = new File(configuration.getShortcutDir());
-                    break;
                 default:
-                    currentFolder = new File(configuration.getFileDir());
+                    currentFolder = new File(configuration.getShortcutDir());
             }
 
             if (currentFolder.isDirectory()) {
@@ -551,11 +507,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 case MUSIC:
                     changeMusicFolder(newPropertyValue, configuration);
                     break;
-                case SHORTCUT:
-                    configuration.setShortcutDir(newPropertyValue);
-                    break;
                 default:
-                    configuration.setFileDir(newPropertyValue);
+                    configuration.setShortcutDir(newPropertyValue);
             }
 
         });
@@ -578,19 +531,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         buttonLoad.textProperty().setValue(configuration.getMusicDir());
                     });
                 break;
-            case SHORTCUT:
+            default:
                 resetButton.setOnAction(
                     e -> {
                         String defaultValue = GazePlayDirectories.getShortcutDirectory().getAbsolutePath();
                         configuration.setShortcutDir(defaultValue);
-                        buttonLoad.textProperty().setValue(defaultValue);
-                    });
-                break;
-            default:
-                resetButton.setOnAction(
-                    e -> {
-                        String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
-                        configuration.setFileDir(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
         }

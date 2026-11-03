@@ -22,7 +22,7 @@ public enum OpinionsGameVariant implements UserImagesVariant {
     /**
      * Folder of the images given by the user, in the images folder.
      */
-    static final String USER_IMAGES_FOLDER = "Opinions";
+    static final String USER_IMAGES_FOLDER = UserImagesVariant.IMAGES;
 
     @Getter
     private final String label;
