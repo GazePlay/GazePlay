@@ -13,6 +13,6 @@ Une course de grenouilles sur la mare : attrape des insectes pour faire avancer
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Facile : les autres grenouilles sont lentes.
-- Normal : elles vont plus vite.
-- Difficile : elles vont vite ; il faut attraper les insectes sans attendre.
+- Facile : les autres grenouilles mettent entre 1 min 30 et 1 min 50 pour arriver ; tu as le temps (20 insectes à attraper).
+- Normal : elles mettent entre 1 min et 1 min 15 pour arriver ; il ne faut pas trop traîner.
+- Difficile : elles mettent entre 40 et 50 secondes pour arriver ; il faut attraper les insectes sans attendre.

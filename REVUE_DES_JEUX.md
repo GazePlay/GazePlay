@@ -43,7 +43,9 @@ souris), vignette `shootTheBiboules.png` refaite (capture du 3/11, nouvelle cage
 `ShooterGameTest` et `GameHelpTest` réussis. **Essai du mainteneur le 3/11 : tout est bon** (Tir validé, avec la
 nouvelle Biboule). Commité et poussé : `efaee9596`. Point 3 : **Survive Against Robots** revu (règle du mainteneur,
 une seule carte, 3 vies, 3 décors au hasard ; voir sa fiche), **essayé et validé par le mainteneur le 3/11**,
-commité et poussé ; puis Space Game.
+commité et poussé (`e737d5465`). Puis, à la demande du mainteneur, **passe sur les 23 jeux revus** pour ses deux
+nouvelles règles (section « Deux règles de plus pour chaque jeu ») : aide de Frogs Race précisée, mode « seul au
+clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé. Ensuite : Space Game.
 
 **À faire mardi, dans l'ordre** :
 
@@ -322,6 +324,31 @@ variante à la même place reste choisie. Les jeux pas encore revus gardent l'an
 boutons radio en haut). Tests : `GameVariantDialogTest`. Captures `3a-variantes-memory`, `3a-variantes-ou-est-l-animal`,
 `3a-variantes-petits-chevaux`. Les aides disent « En bas » pour ces boutons et expliquent « Commencer ». `build` : **610 tests, 0 échec**.
 
+## Deux règles de plus pour chaque jeu (demande du mainteneur du 3/11/2026, à la revue de Survive Against Robots)
+
+1. **L'aide dit ce que fait chaque niveau** (Facile, Normal, Difficile ou autre) : des valeurs concrètes (combien
+   d'images, de robots, de secondes…), pas seulement « plus difficile ».
+2. **Pas de choix de l'entrée dans les variantes** (ni « regard », ni « souris », ni « clavier ») : le jeu suit le
+   réglage des entrées (`EYE_TRACKER` : souris seule, Tobii seul, les deux). Un utilisateur en souris seule qui
+   choisissait « regard » sans y faire attention restait coincé. Un jeu qui écoute le regard et la souris sur ses
+   propres nœuds n'a rien à faire (la zone de jeu arrête la souris en « Tobii seul », aucun regard n'arrive en
+   « souris seule », avec les deux le dernier qui bouge mène) ; un jeu qui écoute toute la scène vérifie le mode
+   lui-même (`EyeTracker.acceptsMouse`). Un mode à deux joueurs (l'un au clavier, l'autre au regard) n'est pas un
+   choix de l'entrée : il reste.
+
+**Passe sur les jeux déjà revus (3/11/2026)**, les 23 qui ont une aide :
+- Règle 1 : seul **Frogs Race** disait seulement « lentes, plus vite, vite » ; l'aide donne maintenant le temps des
+  autres grenouilles (`RaceVariant` : 1 min 30 à 1 min 50, 1 min à 1 min 15, 40 à 50 s). Les autres disaient déjà
+  leurs valeurs (Spot The Differences : 3, 5, 7 différences ; Sprint Finish : 5, 10, 15 cartes ; Où est la couleur et
+  Où est la forme : 6, 11, 16 couleurs et 6, 13, 20 formes ; grilles de 2 à 9 images ; Memory et sa taille
+  dynamique ; Flower Of Numbers, Egg Game, Bubbles, Horses, Coloring : leurs choix décrits) ; Shooter, Pet, Opinions,
+  Sounds Of Life et Survive Against Robots (fait à sa revue) n'ont pas d'autre niveau.
+- Règle 2 : seul **Sprint Finish** faisait choisir (« seul, le chat suit le regard » ou « seul, le chat au
+  clavier ») : **le mode seul au clavier est retiré** ; « Seul » suit le regard ou la souris selon le réglage,
+  « À deux (clavier et regard) » reste ; 6 variantes au lieu de 9 ; une ancienne variante « seul au clavier » se
+  joue seule. Aide et traductions mises à jour. Les autres jeux revus n'utilisent ni le clavier ni la scène entière :
+  « dès qu'on regarde / après une fixation » (Tir, Bulles) est une façon de toucher, pas un choix de l'entrée.
+
 ## Marche à suivre pour chaque jeu
 
 Chaque jeu passe par les mêmes 8 étapes. Les étapes 1 et 2 ne changent rien : elles finissent par une proposition que
@@ -398,7 +425,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Pet** (`Pet`) | **Remplacées le 30/10** : 4 pièces dessinées, objets OpenMoji, bouche triste ; la Biboule du projet gardée | ✔ 30/10 (boutons ronds, jauges nommées, bulle) | ✔ 30/10 (2 min par jauge, Biboule triste, activités claires, plantage corrigé) |
 | **Flower Of Numbers** (`FlowerOfNumbers`) | **Remplacées le 2/11** : mains, dés, pièces et billets génériques dessinés par script ; fleur et auras dessinées par le jeu (avant : 21 images à risque, dont des reproductions de l'euro) | ✔ 2/11 (cartes de la couleur des pétales, anneau, plateau mis à l'échelle) | ✔ 2/11 (règle du mainteneur : total de tous les pétales, chaque valeur une fois ; modes Guidé, Libre, Tous les pétales ; jusqu'à 10 à 50 ; buts comptés) |
 | **Opinions** (`Opinions`) | **Retirées le 2/11** : les 9 images (photos d'aliments jamais montrées, visages brillants) ; le jeu ne joue que les images de l'utilisateur | ✔ 2/11 (image en carte au centre, boutons « J'aime » / « Je n'aime pas » à icônes, anneau) | ✔ 2/11 (règle du mainteneur : images de l'utilisateur une par une, réponses enregistrées dans `-opinions.csv`) |
-| **Sprint Finish** (`SprintFinish` ; `SprintFinishMouse` retiré, devenu une variante) | **Remplacées le 2/11** : chat, chien (recoloré) et poisson OpenMoji, prairie et gamelle dessinées ; haies, barrières, boutons, rondins dessinés par le jeu | ✔ 2/11 (plateau à l'échelle de l'écran, compte à rebours, chien regardé entouré, sons) | ✔ 2/11 (règle du mainteneur : seul au clavier ou au regard, à deux ; cartes au hasard ; 5 / 10 / 15 cartes) |
+| **Sprint Finish** (`SprintFinish` ; `SprintFinishMouse` retiré, devenu une variante) | **Remplacées le 2/11** : chat, chien (recoloré) et poisson OpenMoji, prairie et gamelle dessinées ; haies, barrières, boutons, rondins dessinés par le jeu | ✔ 2/11 (plateau à l'échelle de l'écran, compte à rebours, chien regardé entouré, sons) | ✔ 2/11 (règle du mainteneur : seul, à deux ; cartes au hasard ; 5 / 10 / 15 cartes) ; 3/11 : « seul au clavier » retiré (seul : regard ou souris selon le réglage) |
 | **Bubbles** (`Bubbles` ; `ColoredBubbles` et `PortraitBubbles` réunis) | **Remplacées le 2/11** : 3 paysages sous la mer dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (vraies bulles, vitres dépolies, compte 12 / 36) | ✔ 2/11 (règle du mainteneur : une carte, image à découvrir puis nouvelle image, éclater dès le regard ou après fixation) |
 | **Egg Game** (`EggGame` ; `PersonalizeEggGame` réuni) | **Remplacées le 2/11** : œuf dessiné par le jeu, prairie et nid dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (nid, fêlures qui grandissent, éclosion animée, anneau) | ✔ 2/11 (règle du mainteneur : une carte, sans fin, rester sur l'œuf suffit, plus de « rétrécie ») |
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |

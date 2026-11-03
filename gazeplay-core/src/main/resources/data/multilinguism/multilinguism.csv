@@ -675,9 +675,8 @@ SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,
 SprintEasy,,,,,,,Easy (5 maps),,Facile (5 cartes),,,,,,,,,,,,
 SprintNormal,,,,,,,Normal (10 maps),,Normal (10 cartes),,,,,,,,,,,,
 SprintHard,,,,,,,Hard (15 maps),,Difficile (15 cartes),,,,,,,,,,,,
-SprintSoloGaze,,,,,,,Alone: the cat follows the gaze,,Seul : le chat suit le regard,,,,,,,,,,,,
-SprintSoloKeyboard,,,,,,,Alone: the cat with the keyboard,,Seul : le chat au clavier,,,,,,,,,,,,
-SprintDuo,,,,,,,Two players,,À deux,,,,,,,,,,,,
+SprintSoloGaze,,,,,,,Alone,,Seul,,,,,,,,,,,,
+SprintDuo,,,,,,,Two players (keyboard and gaze),,À deux (clavier et regard),,,,,,,,,,,,
 SprintMap,,,,,,,Map,,Carte,,,,,,,,,,,,
 
 # GazeRace

@@ -4,6 +4,8 @@ import lombok.Getter;
 
 /**
  * How "Sprint Finish" is played (maintainer's rules of 2/11/2026), chosen at the bottom of the window of the variants.
+ * Alone, the cat follows the gaze or the mouse, as the setting of the inputs allows (3/11/2026, maintainer's rule: no
+ * choice of the input in the variants; the mode "alone with the keyboard" was removed, a saved one is played alone).
  * Alone, the dogs are much slower, so that the game stays fun without losing too often, and a button opens its fences
  * when the cat walks on it. With two players, one moves the cat with the keyboard and the other helps with the gaze:
  * a dog or a log looked at stops, a button looked at (a fixation) opens its fences.
@@ -12,7 +14,6 @@ import lombok.Getter;
 public enum SprintMode {
 
     SOLO_GAZE("SprintSoloGaze", false, true, 0.7, 1.0),
-    SOLO_KEYBOARD("SprintSoloKeyboard", true, false, 0.7, 1.0),
     DUO("SprintDuo", true, false, 1.6, 1.7);
 
     /**

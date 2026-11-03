@@ -5,10 +5,10 @@ The cat must reach its bowl, on the right, without being caught by the dogs. Pla
 - Each map starts with 3, 2, 1. At the top, "Map 3 / 10" tells where you are.
 - Hedges cannot be crossed. A wooden fence closes a way: it opens with the button of its color, and stays open.
 - Logs go up and down: they catch the cat like the dogs.
-- Alone, the cat follows the gaze: the cat goes where you look; against a hedge, it slides along it. It opens a fence by walking on its button.
-- Alone, the cat with the keyboard: arrows, or Z Q S D (AZERTY keyboard), or W A S D (QWERTY keyboard): all three work, without a setting. The cat opens a fence by walking on its button.
+- Alone: the cat goes where you look, or where the mouse is, as the setting of the inputs decides (with both, it follows the last that moved); against a hedge, it slides along it. It opens a fence by walking on its button.
+- With two players, the cat moves with the keyboard: arrows, or Z Q S D (AZERTY keyboard), or W A S D (QWERTY keyboard): all three work, without a setting.
 - Alone, the dogs and the logs go slowly.
-- Two players: one player moves the cat with the keyboard; the other helps with the gaze. A dog looked at stops (a red circle around it); a log looked at stops (it turns grey); a button looked at opens its fence (a ring goes round it, fixation length of the settings).
+- Two players: one player moves the cat with the keyboard; the other helps with the gaze (or the mouse, as the setting of the inputs decides). A dog looked at stops (a red circle around it); a log looked at stops (it turns grey); a button looked at opens its fence (a ring goes round it, fixation length of the settings).
 - Nothing moves while the menu of the gear is open.
 
 # How to win
@@ -17,4 +17,4 @@ The cat caught: the same map starts again. The bowl reached: the next map. After
 # The variants
 Choose a variant (it is framed), then press "Start".
 - Easy, Normal, Hard: 5, 10 or 15 maps to win. The maps are made at random and get harder along the game: first the meadow, then a hedge with a gap, a fence, the bowl in an enclosure, then the logs; more dogs in the second half.
-- At the bottom, how to play: alone, the cat follows the gaze; alone, the cat with the keyboard; two players.
+- At the bottom, how to play: alone (the cat follows the gaze or the mouse), or two players (one with the keyboard, the other with the gaze).

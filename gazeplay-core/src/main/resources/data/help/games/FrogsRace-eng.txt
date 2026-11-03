@@ -13,6 +13,6 @@ A race of frogs on the pond: catch bugs to make your frog move forward.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- Easy: the other frogs are slow.
-- Normal: they go faster.
-- Hard: they go fast; catch the bugs without waiting.
+- Easy: the other frogs take between 1 min 30 and 1 min 50 to arrive; you have time (20 bugs to catch).
+- Normal: they take between 1 min and 1 min 15 to arrive; do not dawdle.
+- Hard: they take between 40 and 50 seconds to arrive; catch the bugs without waiting.

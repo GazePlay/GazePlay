@@ -145,7 +145,7 @@ class SprintFinishTest {
      */
     @Test
     void shouldMoveTheCatWithBothKeyboards() throws Exception {
-        final SprintFinish game = launched(SprintMode.SOLO_KEYBOARD, SprintDifficulty.EASY);
+        final SprintFinish game = launched(SprintMode.DUO, SprintDifficulty.EASY);
         for (final KeyCode[] keys : new KeyCode[][]{{KeyCode.D, KeyCode.RIGHT}, {KeyCode.S, KeyCode.DOWN}}) {
             for (final KeyCode key : keys) {
                 final double[] before = fx(() -> new double[]{game.getCatX(), game.getCatY()});
@@ -236,7 +236,7 @@ class SprintFinishTest {
      */
     @Test
     void shouldEndAfterTheMapsOfTheDifficulty() throws Exception {
-        final SprintFinish game = launched(SprintMode.SOLO_KEYBOARD, SprintDifficulty.EASY);
+        final SprintFinish game = launched(SprintMode.DUO, SprintDifficulty.EASY);
         for (int map = 0; map < 5; map++) {
             assertEquals(map, (int) fx(game::getIndex));
             if (map == 4) {
@@ -255,7 +255,7 @@ class SprintFinishTest {
      */
     @Test
     void shouldOpenTheFencesByTheCatAloneAndByTheGazeWithTwoPlayers() throws Exception {
-        for (final SprintMode mode : new SprintMode[]{SprintMode.SOLO_KEYBOARD, SprintMode.DUO}) {
+        for (final SprintMode mode : new SprintMode[]{SprintMode.SOLO_GAZE, SprintMode.DUO}) {
             final SprintFinish game = launched(mode, SprintDifficulty.EASY);
             // The third map of an easy game: a hedge with a fence and its button
             winMap(game);
@@ -267,7 +267,7 @@ class SprintFinishTest {
                 game.step(0.01);
                 return game.getButtons().getFirst().isOpen();
             });
-            assertEquals(mode == SprintMode.SOLO_KEYBOARD, open, mode.name());
+            assertEquals(mode == SprintMode.SOLO_GAZE, open, mode.name());
             if (mode == SprintMode.DUO) {
                 fx(() -> {
                     game.getButtons().getFirst().open();
@@ -344,17 +344,20 @@ class SprintFinishTest {
     }
 
     /**
-     * 9 variants: easy, normal, hard, for each way of playing; a variant of before plays alone with the gaze.
+     * 6 variants: easy, normal, hard, alone or with two players (no choice of the input: 3/11/2026); a variant of
+     * before, or the removed "alone with the keyboard", plays alone.
      */
     @Test
     void shouldOfferTheDifficultiesForEachWayOfPlaying() {
         final List<IGameVariant> variants = new ArrayList<>(new SprintFinishVariantGenerator().getVariants());
-        assertEquals(9, variants.size());
+        assertEquals(6, variants.size());
         final GroupedGameVariant first = (GroupedGameVariant) variants.getFirst();
         assertEquals("SprintSoloGaze", first.getSubGroup());
         assertEquals("SprintEasy", first.getValue());
-        assertEquals(SprintMode.DUO, SprintFinishLauncher.modeOf(variants.get(7)));
-        assertEquals(SprintDifficulty.NORMAL, SprintFinishLauncher.difficultyOf(variants.get(7)));
+        assertEquals(SprintMode.DUO, SprintFinishLauncher.modeOf(variants.get(4)));
+        assertEquals(SprintDifficulty.NORMAL, SprintFinishLauncher.difficultyOf(variants.get(4)));
+        assertEquals(SprintMode.SOLO_GAZE, SprintFinishLauncher.modeOf(
+            new GroupedGameVariant("SprintFinish", "SprintSoloKeyboard", "SprintEasy", null)));
         assertEquals(SprintMode.SOLO_GAZE, SprintFinishLauncher.modeOf(new IntGameVariant(4)));
         assertEquals(SprintDifficulty.NORMAL, SprintFinishLauncher.difficultyOf(new IntGameVariant(4)));
         assertEquals(15, SprintDifficulty.HARD.getMaps());

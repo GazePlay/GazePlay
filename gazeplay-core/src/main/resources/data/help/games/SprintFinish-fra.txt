@@ -5,10 +5,10 @@ Le chat doit atteindre sa gamelle, à droite, sans se faire attraper par les chi
 - Chaque carte commence par 3, 2, 1. En haut, « Carte 3 / 10 » dit où tu en es.
 - Les haies ne se traversent pas. Une barrière en bois se ferme sur un passage : elle s'ouvre avec le bouton de sa couleur, et reste ouverte.
 - Les rondins montent et descendent : ils attrapent le chat comme les chiens.
-- Seul, chat au regard : le chat va là où tu regardes ; contre une haie, il glisse le long. Il ouvre une barrière en passant sur son bouton.
-- Seul, chat au clavier : flèches, ou Z Q S D (clavier AZERTY), ou W A S D (clavier QWERTY) : les trois marchent, sans réglage. Le chat ouvre une barrière en passant sur son bouton.
+- Seul : le chat va là où tu regardes, ou là où est la souris, selon le réglage des entrées (avec les deux, il suit celui qui a bougé en dernier) ; contre une haie, il glisse le long. Il ouvre une barrière en passant sur son bouton.
+- À deux, le chat se déplace au clavier : flèches, ou Z Q S D (clavier AZERTY), ou W A S D (clavier QWERTY) : les trois marchent, sans réglage.
 - Seul, les chiens et les rondins vont doucement.
-- À deux : un joueur déplace le chat au clavier ; l'autre l'aide avec le regard. Un chien regardé s'arrête (il s'entoure de rouge) ; un rondin regardé s'arrête (il devient gris) ; un bouton regardé ouvre sa barrière (un anneau en fait le tour, durée de fixation des réglages).
+- À deux : un joueur déplace le chat au clavier ; l'autre l'aide avec le regard (ou la souris, selon le réglage des entrées). Un chien regardé s'arrête (il s'entoure de rouge) ; un rondin regardé s'arrête (il devient gris) ; un bouton regardé ouvre sa barrière (un anneau en fait le tour, durée de fixation des réglages).
 - Rien ne bouge quand le menu de l'engrenage est ouvert.
 
 # Comment gagner
@@ -17,4 +17,4 @@ Le chat attrapé : la même carte recommence. La gamelle atteinte : la carte sui
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Facile, Normal, Difficile : 5, 10 ou 15 cartes à gagner. Les cartes sont tirées au hasard et deviennent plus difficiles au fil de la partie : d'abord la prairie, puis une haie avec un passage, une barrière, la gamelle dans un enclos, puis les rondins ; plus de chiens dans la seconde moitié.
-- En bas, la façon de jouer : seul, le chat suit le regard ; seul, le chat au clavier ; à deux.
+- En bas, la façon de jouer : seul (le chat suit le regard ou la souris), ou à deux (un joueur au clavier, l'autre au regard).
