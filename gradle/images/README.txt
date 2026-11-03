@@ -91,6 +91,13 @@ Red.png), mascot of the laboratory, are drawn by the same script since 3/11/2026
 thin outline, rosy cheeks) keeping the mouth and the wings of the original drawing, kept in biboule-originale/. The music "Talking Cute (Chiptune)" is by Pro Sensory (Alex McCulloch), OpenGameArt, CC0. The
 thumbnail (gazeplay-core: data/common/Thumbnails/shootTheBiboules.png) is a capture of the game, 960 x 540.
 
+Images of Survive Against Robots (gazeplay-games: data/surviveAgainstRobots/images): the three scenes (sky.png,
+garden.png, schoolyard.png, one drawn at random for each game) and the four bonuses (fire.png, shield.png, slow.png,
+heart.png) are drawn by make_survive_images.py (this folder), under the license of GazePlay Learning
+(GPL-3.0-or-later). They replace (3/11/2026) twelve drawings of unknown source; the Biboule and the robots of the game
+are those of the shooting game (data/shooter). The thumbnail (gazeplay-core:
+data/common/Thumbnails/surviveAgainstRobots.png, 960 x 540) is made of these pictures by the same script.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

@@ -73,7 +73,8 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | ~~Shooter~~ | ~~20~~ **Fait le 2/11/2026** : décors, robots, cage, soucoupe, éclairs, baguette et canon redessinés par script ; les 5 Biboules gardées (mascotte du laboratoire, dessinée par lui), puis **modernisées le 3/11/2026** par le même script (bouche et ailes d'origine ; originales dans `gradle/images/biboule-originale`) |
 | Labyrinth | 19 |
 | Follow | 13 |
-| Space, Survive Against Robots | 12 chacun |
+| Space | 12 |
+| ~~Survive Against Robots~~ | ~~12~~ **Fait le 3/11/2026** : les 12 dessins retirés ; 3 décors (ciel, jardin, cour de l'école) et 4 bonus dessinés par script (`make_survive_images.py`) ; le joueur et les robots sont ceux du Tir ; vignette composée des images du jeu |
 | Horses, Race | 11 chacun |
 | Divisor | 10 |
 | Biboule Jump, dossier `common` des jeux | 9 chacun |

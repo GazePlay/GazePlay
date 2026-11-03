@@ -293,21 +293,6 @@ public class GameVariantDialog extends Stage {
                     case "SmallBottles" -> 1;
                     default -> 0;
                 };
-            } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
-                button.setTextAlignment(TextAlignment.CENTER);
-                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
-                indexOfTheVariant = switch (variantString) {
-                    case "DIFFICULTY_EASY_AUTO_KEYBOARD", "DIFFICULTY_NORMAL_AUTO_KEYBOARD", "DIFFICULTY_HARD_AUTO_KEYBOARD" -> 1;
-                    default -> 0;
-                };
-            } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
-                button.setTextAlignment(TextAlignment.CENTER);
-                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
-                log.debug("variant robots: {}", variantString);
-                indexOfTheVariant = switch (variantString) {
-                    case "DIFFICULTY_EASY_AUTO_MOUSE", "DIFFICULTY_NORMAL_AUTO_MOUSE", "DIFFICULTY_HARD_AUTO_MOUSE" -> 1;
-                    default -> 0;
-                };
             } else if (variant instanceof IntStringGameVariant) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 indexOfTheVariant = ((IntStringGameVariant) variant).getNumber();
@@ -325,8 +310,6 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots") ||
-                gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("Simon") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
@@ -367,14 +350,6 @@ public class GameVariantDialog extends Stage {
                     categories[0] = new RadioButton("Classic");
                     categories[1] = new RadioButton("Simon Copy");
                     categories[2] = new RadioButton("Multiplayer");
-                }else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton("Normal");
-                    categories[1] = new RadioButton("Auto");
-                } else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton("Normal");
-                    categories[1] = new RadioButton("Auto");
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                     gameSpec.getGameSummary().getNameCode().equals("Ninja")

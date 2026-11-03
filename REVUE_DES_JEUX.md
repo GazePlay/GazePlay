@@ -41,7 +41,9 @@ mainteneur : les autres jeux gardent la Biboule d'origine pour l'instant ; voir 
 Tir regardé en vraie fenêtre avec tous les nouveaux dessins (`build/game-screenshots/essai2/shooter/`, Biboules,
 souris), vignette `shootTheBiboules.png` refaite (capture du 3/11, nouvelle cage, baguette et Biboules) ;
 `ShooterGameTest` et `GameHelpTest` réussis. **Essai du mainteneur le 3/11 : tout est bon** (Tir validé, avec la
-nouvelle Biboule).
+nouvelle Biboule). Commité et poussé : `efaee9596`. Point 3 : **Survive Against Robots** revu (règle du mainteneur,
+une seule carte, 3 vies, 3 décors au hasard ; voir sa fiche), **essayé et validé par le mainteneur le 3/11**,
+commité et poussé ; puis Space Game.
 
 **À faire mardi, dans l'ordre** :
 
@@ -409,7 +411,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Tower Defense (`TowerDefense`) | À confirmer : 23 dessins ; certaines icônes ressemblent à des émojis (cœur, vague, argent) : vérifier leur origine | | |
 | Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
 | **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
-| Survive Against Robots (et Mouse) | À confirmer : 12 dessins | | |
+| **Survive Against Robots** (`SurviveAgainstRobots` ; une seule carte depuis le 3/11, avant 2) | **3/11** : les 12 dessins retirés ; 3 décors et 4 bonus dessinés par script (`make_survive_images.py`) ; la Biboule et les robots du Tir | ✔ 3/11 (cœurs, pastilles, décor au hasard parmi 3, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min / 20 / 50 robots, souris ou regard selon le réglage des entrées, tir automatique ou vers l'avant, 3 niveaux, 4 bonus) |
 | Space Game (`SpaceGame`) | À confirmer : 12 dessins (aliens, vaisseaux) | | |
 | Cakes (`Cakes`) | À confirmer : 24 dessins | | |
 | Follow (`Follow`) | À confirmer : 13 dessins | | |
@@ -1987,3 +1989,64 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   335 × 250 : le jeu garde les proportions dans un cadre de 1,25 × la taille, le rapport exact du nouveau format.
   **Dans le Tir seulement** pour l'instant (décision du mainteneur) ; les autres jeux gardent la Biboule d'origine.
   Planche : `build/game-screenshots/propositions/biboule-A2.png`. Originales : `gradle/images/biboule-originale/`.
+
+### Survive Against Robots (`SurviveAgainstRobots`, `SurviveAgainstRobotsMouse`, code `surviveAgainstRobots`) — 3/11/2026
+
+- **État des lieux (3/11/2026)** : deux entrées (clavier ; regard ou souris), 6 variantes chacune (Facile, Normal,
+  Difficile ; tir « auto » ou non). Le joueur, une Biboule sans ailes, se déplace parmi des robots (1 au départ, un de
+  plus tous les 40 points, 3 au plus) ; au clavier il tirait dans le sens de la marche, seulement en bougeant ; au
+  regard, vers le point regardé ; en « auto », vers le robot le plus proche. **Une seule vie**. Score : 1 point toutes
+  les 3 s et 6 par robot (la boucle comptait 6 au lieu de 5). Bonus 1 fois sur 6 : tir rapide, bouclier, ralenti
+  (pas pour les robots arrivés ensuite). Défauts : temps compté en images (60 par seconde), jeu pas arrêté par
+  l'engrenage, départ toujours en (500, 500), placement des robots par appel récursif sans fin possible, touches tenues
+  ensemble mal gérées (← et → : lâcher → arrêtait le joueur), `setOnKeyReleased` de la scène remplacé, score en Arial
+  gris, pas d'aide. Images : 12 dessins de source inconnue (2023).
+- **Règle du mainteneur (3/11/2026)** : **une seule carte** ; **3 vies** ; fins **sans fin, 1 ou 3 minutes, 20 ou 50
+  robots** ; joueur : **la nouvelle Biboule du Tir** ; robots : **ceux du Tir** (uniformité) ; décor retravaillé
+  comme les autres jeux : des 3 propositions (planche `build/game-screenshots/propositions/survive-decors.png` : ciel,
+  jardin, cour de l'école), **les 3 gardées, une tirée au hasard à chaque partie**. Propositions validées : regard ou
+  clavier × tir automatique ou vers le regard (ou vers l'avant), Facile / Normal / Difficile (2, 3, 4 robots au plus ;
+  aucun, 1 sur 5, 1 sur 3 qui tirent : les rouges), un robot de plus tous les 5 détruits, score = robots détruits,
+  bonus gardés et redessinés, **cœur** ajouté (une vie de plus).
+- **Fait** :
+  - **Une seule entrée** `SurviveAgainstRobots` (catalogue : 66 entrées) : `SurviveAgainstRobotsMouse` et les deux
+    anciennes énumérations retirées ; les anciennes variantes enregistrées (classe retirée) se lisent comme aucune
+    variante : niveau Normal, regard, tir automatique, sans fin. Statistiques sous le même nom (`SurviveAgainstRobots`).
+    Les cas particuliers de `GameVariantDialog` retirés ; fenêtre des variantes des jeux revus (boutons : la fin ; en
+    bas : le niveau, puis la façon de jouer), 60 variantes (`SurviveLevel`, `SurviveControl`, `SurviveEnd`).
+  - **Le jeu réécrit** (`SurviveAgainstRobots`, classes internes `Robot`, `Shot`, `Bonus`) : une seule boucle en temps
+    réel, à la vitesse d'animation des réglages, arrêtée pendant le menu de l'engrenage (le temps aussi) ; tailles et
+    vitesses en hauteur d'écran ; départ au centre ; place d'un robot : la plus éloignée de 20 essais (plus de boucle
+    sans fin) ; un robot arrive en 0,6 s (inoffensif et pas visé pendant ce temps). Clavier : flèches, ZQSD, WASD,
+    touches tenues ensemble gérées (filtres ajoutés à la scène, retirés à la fin). Regard (ou souris) : la Biboule va
+    vers le point regardé ; en « tir vers le regard », **une fois arrivée elle tire vers l'avant** (sinon, le regard
+    sur elle, elle ne tirait plus : trouvé à l'essai en vraie fenêtre, 0 robot en 16 s).
+  - **3 vies** (cœurs en haut à gauche) : touchée par un robot ou une boule rouge, un cœur de moins et 2 s de
+    clignotement sans rien qui touche ; les 3 perdues : éclair, « Perdu ! » (carte des jeux), 2 s, les statistiques.
+    Fin atteinte : « Bravo » puis les statistiques. Pastilles : « Robots : 12 / 20 » en haut à droite, le temps au
+    milieu ; bonus en cours sous les cœurs, avec leurs secondes.
+  - **Bonus** (1 fois sur 6 par robot détruit, 8 s au sol, clignotant les 3 dernières) : éclair (tirs 2 fois plus
+    rapides), bouclier (bulle de la couleur principale), escargot (robots et leurs boules ralentis, y compris ceux qui
+    arrivent), 8 s ; cœur (une vie, proposé seulement si une vie manque).
+  - Images : `make_survive_images.py` (ciel, jardin, cour ; 4 bonus) ; Biboule, robots, éclairs et sons du Tir
+    (`data/shooter`) ; les 12 anciens dessins retirés ; vignette composée par le même script (ciel, Biboule, robots,
+    tirs, éclair, bonus). Traductions (anciennes clés retirées), aide (`SurviveAgainstRobots-fra.txt`, `-eng.txt`),
+    crédits, inventaire.
+- **Vérifications** : `SurviveAgainstRobotsTest` (12 tests : 3 vies et clignotement ; contact d'un robot ; tir
+  automatique compté ; fin à 20 robots ; fin à 1 minute et pas sans fin après 120 s ; robots selon le niveau, aucun
+  tireur en Facile ; boules d'un robot rouge ; bonus cœur, bouclier, bonus qui s'en va ; clavier et regard, tir une
+  fois arrivée ; décor au hasard parmi 3 ; variantes ; tout retiré à la fin) ; `GameHelpTest` avec le jeu. Captures en
+  vraie fenêtre (souris) : `build/game-screenshots/essai1/survive/` et `essai2/survive/` (jardin et cour tirés ; le ciel
+  pas sorti en 9 parties, tirage vérifié à part : chaque décor un tiers du temps sur 100 000 graines comme celles de
+  l'horloge). `build` complet : 707 tests, 0 échec ; `allGamesTest -PallGamesOnly=SurviveAgainstRobots -PallGamesRepeat=3` réussi. Pas d'essai au clavier en vraie fenêtre ni au Tobii : à faire par le mainteneur.
+- **Remarques du mainteneur sur la fenêtre des variantes (3/11/2026, avant son essai)** : dans l'aide, dire ce que
+  fait chaque niveau ; **retirer le choix regard / clavier**, ne garder que **tir automatique** et **tir vers
+  l'avant** ; le jeu s'adapte au réglage des entrées (souris, Tobii, les deux), car un utilisateur en souris seule qui
+  choisissait le regard sans y faire attention était coincé. **Fait** : `SurviveControl` remplacé par `SurviveShot`
+  (automatique, vers l'avant : dans le sens où va la Biboule, ou est allée en dernier), 30 variantes ; **le clavier
+  retiré** ; la Biboule suit la souris et le regard sans rien lire du réglage : avec la souris seule aucun regard
+  n'arrive, avec le Tobii seul la zone de jeu arrête la souris (`GameContextFactory.applyInputMode`), avec les deux
+  elle suit le dernier qui a bougé. Aide : une ligne par niveau (robots à la fois, robots qui tirent) et par tir, et
+  le rôle du réglage des entrées. Tests mis à jour (souris par un vrai `MouseEvent`, tir vers l'avant dans le sens
+  du dernier déplacement).
+- **Essai du mainteneur (3/11/2026)** : tout est bon ; commité et poussé.

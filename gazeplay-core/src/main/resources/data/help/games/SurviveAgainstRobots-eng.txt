@@ -1,0 +1,25 @@
+# The principle
+The Biboule flies among robots. It throws sparkles to destroy them: escape them and destroy as many as you can!
+
+# How to play
+- The Biboule goes where you look, or where the mouse is. The setting of the inputs decides: with the mouse only, it follows the mouse; with the eye tracker only, it follows the gaze; with both, it follows the last that moved.
+- It shoots by itself: at the nearest robot (automatic shots), or in front of it, the way it goes (shots forwards).
+- A robot hit by a sparkle is destroyed: a flash, a sound, one more robot.
+- The red robots shoot at the Biboule. Avoid their red balls, and do not touch the robots.
+- The Biboule has 3 lives (the hearts at the top left). Touched, it loses one and blinks: for 2 seconds, nothing can touch it.
+- A robot destroyed sometimes leaves a bonus. Fly on it to take it: the lightning (faster shots), the shield (nothing touches you), the snail (robots slowed), for 8 seconds, or the heart (one more life).
+- The more robots you destroy, the more come: one more every 5 robots destroyed, up to the number of the level.
+- The scene changes at each game: the sky, the garden or the schoolyard.
+- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+
+# How to win
+As chosen in the variant: without end (leave with the gear at the bottom left), 1 or 3 minutes of play, or 20 or 50 robots to destroy. At the end: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Without end, 1 minute, 3 minutes, 20 robots or 50 robots: the end of the game.
+- At the bottom, the level. Easy: up to 2 robots at a time, none shoots.
+- Normal: up to 3 robots at a time, 1 robot in 5 shoots (the red ones).
+- Hard: up to 4 robots at a time, 1 robot in 3 shoots (the red ones).
+- At the bottom too, the shots. Automatic shots: the Biboule aims by itself at the nearest robot; you only have to move to avoid the robots.
+- Shots forwards: the Biboule shoots in front of it; you have to go towards the robots to hit them.

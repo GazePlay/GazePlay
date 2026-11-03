@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the games "SurviveAgainstRobots" and "SurviveAgainstRobotsMouse" (see {@code SelectionGamesStats}).
+ * Statistics of the game "SurviveAgainstRobots" (see {@code SelectionGamesStats}): one goal reached for each robot
+ * destroyed, one goal to reach for each robot come.
  */
 public class SurviveAgainstRobotsStats extends SelectionGamesStats {
 

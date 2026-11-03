@@ -1,0 +1,25 @@
+# Le principe
+La Biboule vole au milieu de robots. Elle lance des étincelles pour les détruire : échappe-leur et détruis-en le plus possible !
+
+# Comment jouer
+- La Biboule va là où tu regardes, ou là où est la souris. C'est le réglage des entrées qui décide : avec la souris seule, elle suit la souris ; avec l'oculomètre seul, elle suit le regard ; avec les deux, elle suit celui qui a bougé en dernier.
+- Elle tire toute seule : sur le robot le plus proche (tir automatique), ou devant elle, dans le sens où elle va (tir vers l'avant).
+- Un robot touché par une étincelle est détruit : un éclair, un bruit, un robot de plus.
+- Les robots rouges tirent sur la Biboule. Évite leurs boules rouges, et ne touche pas les robots.
+- La Biboule a 3 vies (les cœurs en haut à gauche). Touchée, elle en perd une et clignote : pendant 2 secondes, rien ne peut la toucher.
+- Un robot détruit laisse parfois un bonus. Vole dessus pour le prendre : l'éclair (tirs plus rapides), le bouclier (rien ne te touche), l'escargot (robots ralentis), pendant 8 secondes, ou le cœur (une vie de plus).
+- Plus tu détruis de robots, plus il en vient : un de plus tous les 5 robots détruits, jusqu'au nombre du niveau.
+- Le décor change à chaque partie : le ciel, le jardin ou la cour de l'école.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert, et le temps s'arrête.
+
+# Comment gagner
+Selon la variante : sans fin (quitte par l'engrenage en bas à gauche), 1 ou 3 minutes de jeu, ou 20 ou 50 robots à détruire. À la fin : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Sans fin, 1 minute, 3 minutes, 20 robots ou 50 robots : la fin de la partie.
+- En bas, le niveau. Facile : jusqu'à 2 robots à la fois, aucun ne tire.
+- Normal : jusqu'à 3 robots à la fois, 1 robot sur 5 tire (les rouges).
+- Difficile : jusqu'à 4 robots à la fois, 1 robot sur 3 tire (les rouges).
+- En bas aussi, le tir. Tir automatique : la Biboule vise toute seule le robot le plus proche ; il suffit de se déplacer pour éviter les robots.
+- Tir vers l'avant : la Biboule tire devant elle ; il faut aller vers les robots pour les toucher.

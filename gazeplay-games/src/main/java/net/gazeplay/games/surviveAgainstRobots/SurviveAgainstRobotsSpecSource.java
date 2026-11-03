@@ -7,7 +7,8 @@ import net.gazeplay.GameSummary;
 
 /**
  * Declares the game "SurviveAgainstRobots" to the menu: its name, thumbnail, categories, variants and launcher (see
- * {@code GameSpecSource}).
+ * {@code GameSpecSource}). It replaces "SurviveAgainstRobots" and "SurviveAgainstRobotsMouse" (3/11/2026): the way of
+ * playing is now in the variants.
  */
 public class SurviveAgainstRobotsSpecSource implements GameSpecSource {
 

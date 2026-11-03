@@ -291,7 +291,7 @@ public class GameContextFactory implements Supplier<GameContext> {
     /**
      * Stops, at the entrance of the scene, the mouse and keyboard events meant for the game while the configuration
      * menu is open. The scene is the only place where all the games are covered: some of them listen to the mouse or
-     * the keyboard on the whole scene (GazeRace, SprintFinish, SurviveAgainstRobots), before any filter of the game
+     * the keyboard on the whole scene (GazeRace, SprintFinish), before any filter of the game
      * screen.
      */
     private void blockGameInputWhileMenuOpen(final Scene scene, final Pane root, final Node menu) {
