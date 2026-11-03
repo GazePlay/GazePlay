@@ -92,7 +92,9 @@ public class BottleGame implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        final String dataPath = "data/space";
+        // The button to play again of Biboule Jump: the same picture as the one of the space game, removed with the
+        // pictures of that game on 3/11/2026 (Bottle could no longer start)
+        final String dataPath = "data/biboulejump";
         final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
         restartImage.setFitHeight(dimension2D.getHeight() / 6);
         restartImage.setFitWidth(dimension2D.getHeight() / 6);
@@ -149,7 +151,9 @@ public class BottleGame implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        final String dataPath = "data/space";
+        // The button to play again of Biboule Jump: the same picture as the one of the space game, removed with the
+        // pictures of that game on 3/11/2026 (Bottle could no longer start)
+        final String dataPath = "data/biboulejump";
         final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
         restartImage.setFitHeight(dimension2D.getHeight() / 6);
         restartImage.setFitWidth(dimension2D.getHeight() / 6);

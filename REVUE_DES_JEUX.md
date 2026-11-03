@@ -2196,3 +2196,11 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `shouldShowTheTowerSoldOnItsSellPicture`.
   Puis (remarque du mainteneur) : les pièces paraissaient plus bas que la tour et la flèche ; le corps de la tour, la flèche et le milieu de la pile de pièces alignés sur une même ligne.
 - **Essai du mainteneur (3/11/2026)** : tout est bon (souris et Tobii) ; commité et poussé.
+- **Régression trouvée par la CI (3/11/2026, run 41638608554, job `all-games`)** : **le jeu des Bouteilles (`Bottle`)
+  ne démarrait plus** depuis `e56673de2` (La bataille de l'espace) : il chargeait le bouton « rejouer » dans
+  `data/space/menu/restart.png`, retiré avec les images de ce jeu (« Invalid URL or resource not found » dans
+  `BottleGame`). Mes `allGamesTest` du jour ne lançaient que le jeu revu ; la recherche des usages ne cherchait que
+  le chemin complet, que Bottle construit en deux morceaux. **Fait** : Bottle prend la même image (même empreinte
+  SHA-256) dans `data/biboulejump/menu/restart.png` ; recherche refaite sur les noms de dossiers et de fichiers de
+  toutes les ressources retirées le 3/11 : aucun autre usage ; `allGamesTest` complet : 66 entrées, 0 échec.
+  **Leçon** : après avoir retiré des ressources, lancer `allGamesTest` en entier, pas seulement le jeu revu.
