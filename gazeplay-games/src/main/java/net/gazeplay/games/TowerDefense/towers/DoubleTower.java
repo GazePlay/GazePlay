@@ -13,8 +13,8 @@ public class DoubleTower extends Tower {
 
     private boolean shootLeft;
 
-    public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";
-    private static final String SOUNDS_BUILD = "data/towerDefense/sounds/craftdouble.mp3";
+    public static final String SOUNDS_FIRE = "data/towerDefense/sounds/shot.wav";
+    private static final String SOUNDS_BUILD = "data/towerDefense/sounds/builddouble.wav";
 
     public DoubleTower(int col, int row, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
         super(col, row, projectiles, enemies);

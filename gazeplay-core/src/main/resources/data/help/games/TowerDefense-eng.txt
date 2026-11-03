@@ -1,0 +1,23 @@
+# The principle
+Little monsters follow the road to your castle. Build towers along the road to stop them!
+
+# How to play
+- The waves of monsters start from the arrow and follow the road. Each monster reaching the castle costs you a life (the heart at the top left).
+- Fixate a grey place by the road: 4 towers are shown around it, with their price. Look at a tower: a card beside says what it does (damage, range, one shot every how many seconds, price). Fixate the one you want to build it, if you have enough coins; a ring fills during the fixation.
+- The green tower shoots small balls (25 coins); the red one shoots twice as fast (50 coins); the blue one is a cannon: big slow balls, but very strong, from farther (35 coins); the grey one sends missiles that explode on several monsters, from far (25 coins).
+- Each monster destroyed gives you coins. Fixate a tower already built to see what it does, or to sell it (it gives its price back).
+- Fixate the snowflake at the top: the blizzard stops the monsters for 5 seconds. It comes back after 30 seconds.
+- The waves have 5 then 10 monsters, and get stronger every 2 waves. Every 5 waves come the big violet monsters, every 10 waves the small yellow fast ones.
+- The map (the way of the road) is drawn at random at each game, between two.
+- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open.
+
+# How to win
+As chosen in the variant: hold 10 or 20 waves, or without end (leave with the gear at the bottom left). The waves held: "Bravo", then the statistics. If all the lives are lost: "Lost!", then the statistics.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Without end, 10 waves or 20 waves: the end of the game.
+- At the bottom, the waves. On demand: a wave starts when you fixate the button "Send the next wave"; you play at your own pace. Automatic: a wave starts by itself 10 seconds after the end of the last one; the button sends it sooner.
+- At the bottom too, the level. Easy: 100 coins and 15 lives at the start; the monsters have 15 % more life every 2 waves.
+- Normal: 50 coins and 10 lives at the start; 25 % more life every 2 waves.
+- Hard: 40 coins and 5 lives at the start; 40 % more life every 2 waves.

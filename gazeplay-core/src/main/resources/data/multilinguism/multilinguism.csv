@@ -262,7 +262,7 @@ WhereIsTheShape,Ku është forma?,اين الشكل؟,Дзе форма?,形状�
 WhereIsTheSound,Çfarë është ky tingull?,ما هذا الصوت؟,Што гэта за гук?,这是什么声音？,Was ist das für ein Geräusch?,Τι είναι αυτός ο ήχος;,What is this sound?,Mikä tämä ääni on?,Quel est ce son ?,यह ध्वनि क्या है?,Kakav je ovo zvuk?,Suara apa ini?,Cos'è questo suono?,この音は何ですか？,Wat is dit geluid?,Co to za dźwięk?,O que é esse som?,Что это за звук?,¿Qué es este sonido?,Đây là âm thanh gì?,Apakah bunyi ini?
 Connect4,,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,,
 TrainSwitches,,,,,,,Train Switches,,Aiguillages,,,,,,,,,,,,
-TowerDefense,,,,,,,Tower Defense,,Défendre le chateau,,,,,,,,,,,,
+TowerDefense,,,,,,,Tower Defense,,Défendre le château,,,,,,,,,,,,
 colorblend,,,,,,,Color Blend,,Mélanger les couleurs,,,,,,,,,,,,
 
 # VARIANT CHOOSE TEXTS
@@ -404,8 +404,6 @@ PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pa
 InfiniteTrain,,,,,,,Trains are sent again if they reach the wrong station,,Les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
 UniqueTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
 Stations,,,,,,,Stations,,Gares,,,,,,,,,,,,
-Map1,,,,,,,Map 1,,Carte 1,,,,,,,,,,,,
-Map2,,,,,,,Map 2,,Carte 2,,,,,,,,,,,,
 
 # CONTEXT TITLES
 StatsTitle,Statistika,احصائيات,Статыстыка,游戏数据,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,विन्यास,Statistika,Statistik,Statistiche,統計,Statistieken,Statystyka,Estatística,Статистика,Estadísticas,Số liệu thống kê,Statistik
@@ -683,6 +681,35 @@ SpaceScore,,,,,,,Aliens:,,Extraterrestres :,,,,,,,,,,,,
 SpaceBoss,,,,,,,The boss!,,Le boss !,,,,,,,,,,,,
 SpaceLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
 
+# Tower Defense (reviewed on 3/11/2026)
+TowerDefenseEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+TowerDefenseNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+TowerDefenseHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+TowerDefenseEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+TowerDefenseWaves10,,,,,,,10 waves,,10 vagues,,,,,,,,,,,,
+TowerDefenseWaves20,,,,,,,20 waves,,20 vagues,,,,,,,,,,,,
+TowerDefenseWavesOnDemand,,,,,,,Waves on demand,,Vagues à la demande,,,,,,,,,,,,
+TowerDefenseWavesAutomatic,,,,,,,Automatic waves,,Vagues automatiques,,,,,,,,,,,,
+TowerDefenseNextWave,,,,,,,Next wave in,,Prochaine vague dans,,,,,,,,,,,,
+TowerDefenseNoMoney,,,,,,,Not enough money,,Pas assez d'argent,,,,,,,,,,,,
+TowerDefenseDamage,,,,,,,Damage:,,Dégâts :,,,,,,,,,,,,
+TowerDefenseRange,,,,,,,Range:,,Portée :,,,,,,,,,,,,
+TowerDefenseTiles,,,,,,,tiles,,cases,,,,,,,,,,,,
+TowerDefenseEvery,,,,,,,One shot every,,Un tir toutes les,,,,,,,,,,,,
+TowerDefensePrice,,,,,,,Price:,,Prix :,,,,,,,,,,,,
+TowerDefenseCoins,,,,,,,coins,,pièces,,,,,,,,,,,,
+TowerDefenseChooseHint,,,,,,,Look at a tower to know what it does then fixate it to build it.,,Regarde une tour pour savoir ce qu'elle fait puis fixe-la pour la construire.,,,,,,,,,,,,
+TowerDefenseSellHint,,,,,,,Fixate the coins to sell it and get back,,Fixe les pièces pour la revendre et récupérer,,,,,,,,,,,,
+TowerDefenseBasicName,,,,,,,Green tower,,Tour verte,,,,,,,,,,,,
+TowerDefenseBasicRole,,,,,,,Shoots small balls.,,Tire des petites boules.,,,,,,,,,,,,
+TowerDefenseDoubleName,,,,,,,Red tower (double),,Tour rouge (double),,,,,,,,,,,,
+TowerDefenseDoubleRole,,,,,,,Shoots twice as fast with its two barrels.,,Tire deux fois plus vite avec ses deux canons.,,,,,,,,,,,,
+TowerDefenseMissileName,,,,,,,Grey tower (missiles),,Tour grise (missiles),,,,,,,,,,,,
+TowerDefenseMissileRole,,,,,,,Its missiles explode on all the monsters around.,,Ses missiles explosent sur tous les monstres autour.,,,,,,,,,,,,
+TowerDefenseCanonName,,,,,,,Blue tower (cannon),,Tour bleue (canon),,,,,,,,,,,,
+TowerDefenseCanonRole,,,,,,,Big slow balls but very strong.,,Gros boulets lents mais très forts.,,,,,,,,,,,,
+TowerDefenseLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
+
 # Sprint to the finish name
 SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,
 SprintEasy,,,,,,,Easy (5 maps),,Facile (5 cartes),,,,,,,,,,,,
@@ -698,4 +725,4 @@ Play horizontally,,,,,,, Play horizontally ,, Jouer horizontalement
 Play vertically,,,,,,, Play vertically ,, Jouer verticalement
 
 # Tower Defense
-SendWave,,,,,,, Envoyer la vague suivante ,, Send next wave ,,,,,,,,,,,,
+SendWave,,,,,,,Send the next wave,,Envoyer la vague suivante,,,,,,,,,,,,

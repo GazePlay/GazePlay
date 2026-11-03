@@ -45,7 +45,7 @@ nouvelle Biboule). Commité et poussé : `efaee9596`. Point 3 : **Survive Agains
 une seule carte, 3 vies, 3 décors au hasard ; voir sa fiche), **essayé et validé par le mainteneur le 3/11**,
 commité et poussé (`e737d5465`). Puis, à la demande du mainteneur, **passe sur les 23 jeux revus** pour ses deux
 nouvelles règles (section « Deux règles de plus pour chaque jeu ») : aide de Frogs Race précisée, mode « seul au
-clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé (`ac18c2e01`). **Space Game**, maintenant « La bataille de l'espace » en français, revu (règle du mainteneur : 3 vies, boss de 15 / 30 / 50 points de vie, fond de nuit ; voir sa fiche), essayé et validé par le mainteneur, commité et poussé ; ensuite : Défendre le château (Tower Defense).
+clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé (`ac18c2e01`). **Space Game**, maintenant « La bataille de l'espace » en français, revu (règle du mainteneur : 3 vies, boss de 15 / 30 / 50 points de vie, fond de nuit ; voir sa fiche), essayé et validé par le mainteneur, commité et poussé ; puis **Défendre le château** revu (règle du mainteneur, voir sa fiche), essayé et validé par le mainteneur (souris et Tobii), commité et poussé ; ensuite : Casse-brique.
 
 **À faire mardi, dans l'ordre** :
 
@@ -435,7 +435,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Blocks, Casse-Brique, Ninja, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
 | Puzzle (`Puzzle`) | À confirmer : 36 images (Biboule, paysages) ; la Joconde est dans le domaine public | | |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
-| Tower Defense (`TowerDefense`) | À confirmer : 23 dessins ; certaines icônes ressemblent à des émojis (cœur, vague, argent) : vérifier leur origine | | |
+| **Défendre le château** (`TowerDefense`) | **3/11** : les 23 images retirées ; tout dessiné par script (`make_towerdefense_images.py`), neige par le jeu | ✔ 3/11 (polices des jeux, pastilles des prix, cercle de choix aux couleurs des menus, vignette) | ✔ 3/11 (règle du mainteneur : vagues à la demande ou automatiques, Facile / Normal / Difficile, sans fin / 10 / 20 vagues, « Perdu ! », carte au hasard ; 4 tours, revente et blizzard gardés) |
 | Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
 | **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
 | **Survive Against Robots** (`SurviveAgainstRobots` ; une seule carte depuis le 3/11, avant 2) | **3/11** : les 12 dessins retirés ; 3 décors et 4 bonus dessinés par script (`make_survive_images.py`) ; la Biboule et les robots du Tir | ✔ 3/11 (cœurs, pastilles, décor au hasard parmi 3, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min / 20 / 50 robots, souris ou regard selon le réglage des entrées, tir automatique ou vers l'avant, 3 niveaux, 4 bonus) |
@@ -2115,3 +2115,84 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   après 1 minute, aucun sans fin ; extraterrestres du niveau ; souris, fusée en bas ; variantes ; tout retiré à la
   fin) ; `GameHelpTest` avec le jeu ; capture en vraie fenêtre (souris) `build/game-screenshots/essai1/space/` ; `build` : 716 tests, 0 échec ; `allGamesTest -PallGamesOnly=SpaceGame -PallGamesRepeat=3` réussi.
 - **Essai du mainteneur (3/11/2026)** : tout est bon. **Nom français** demandé : « La bataille de l'espace » (colonne `fra` de `SpaceGame` ; les autres langues gardent leur nom).
+
+### Défendre le château (`TowerDefense`, code `TowerDefense`) — 3/11/2026
+
+- **État des lieux (3/11/2026)** : une carte, 2 variantes (Carte 1, Carte 2), pas de niveau. Les ennemis suivent la
+  route jusqu'au château, 10 vies ; vagues envoyées par une fixation sur un bouton (5 puis 10 ennemis, +25 % de vie
+  toutes les 2 vagues, gros ennemis toutes les 5, rapides toutes les 10) ; 4 tours (simple, double, missiles, canon :
+  25 ou 50 pièces, 50 au départ), revente ; blizzard (5 s, toutes les 30 s). Défauts : **la partie perdue montrait
+  l'animation de victoire**, pas d'autre fin ni d'écran des statistiques, aucun but compté ; revisionnage impossible
+  (statistiques enregistrées absentes) ; textes en dur en français (« Pas assez d'argent », « Dégâts », « Portée »,
+  « Vitesse ») ; prix affichés écrits à part ; argent « 20.0 » ; police « Agency FB » (Windows) ; déplacements
+  comptés en images, blizzard à l'horloge ; pas de pause à l'engrenage ; un missile qui explosait sans toucher
+  restait ; traduction du bouton inversée (« Send next wave » en français) ; « château » sans accent dans le nom.
+  Règle 2 déjà suivie. Images : 23 de source inconnue (tours et ennemis proches du pack de Kenney, CC0 : hypothèse ;
+  icônes proches de Flaticon : risque). La tour canon a les mêmes valeurs que la tour simple (seule l'image change).
+- **Règle du mainteneur (3/11/2026)** : fin « Perdu ! » à la dernière vie, victoire au choix sans fin, 10 ou 20 vagues
+  (« Bravo ») ; **les vagues restent à la demande** (que l'utilisateur ne soit pas submergé et joue à sa façon), avec
+  **une variante « vagues automatiques »** ; niveaux Facile / Normal / Difficile ; **le contenu gardé** (4 tours,
+  revente, blizzard : le cœur du jeu) ; tout redessiner. La carte est tirée au hasard (les variantes n'ont que trois
+  réglages, pris par la fin, le niveau et les vagues).
+- **Fait** : variantes `GroupedGameVariant` (`TowerDefenseWaves`, `TowerDefenseLevel`, `TowerDefenseEnd`), 18 ; une
+  ancienne variante (carte) se joue à la demande, en Normal, sans fin. Niveaux : 100 pièces et 15 vies, +15 % de vie
+  toutes les 2 vagues ; 50 et 10, +25 % ; 40 et 5, +40 %. Vagues automatiques : 10 s après la fin de la précédente,
+  « Prochaine vague dans 7 s » en haut, le bouton l'envoie plus tôt. Le jeu tourne par pas de 1/60 s de temps de jeu
+  (les valeurs d'avant gardées), à la vitesse d'animation des réglages, arrêté pendant l'engrenage, blizzard compris
+  (sa neige dessinée par le jeu, son délai en temps de jeu). « Perdu ! » puis statistiques ; victoire : « Bravo » puis
+  statistiques ; un but à atteindre par ennemi envoyé, un but atteint par ennemi détruit ; revisionnage réparé
+  (statistiques enregistrées, graine). Textes traduits, prix lus dans les tours (pastilles), argent en entier, polices
+  des jeux, cercle de choix aux couleurs des menus, missiles retirés après leur explosion. Traductions : bouton
+  remis à l'endroit, « château » accentué, clés `Map1`, `Map2` retirées. Images : `make_towerdefense_images.py`
+  (22 ; vignette `TowerDefense.png` composée) ; les 23 anciennes retirées ; les 3 sons de source inconnue remplacés (voir plus bas ; sons
+  non inventoriés). Aide (une ligne par niveau et par façon d'envoyer les vagues ; les tours verte et bleue décrites
+  comme identiques).
+- **Vérifications** : `TowerDefenseTest` (8 tests : perdu sans « Bravo » ; gagné après 10 vagues ; vagues à la demande
+  jamais seules, automatiques après 10 s et après la fin de la précédente, bouton plus tôt ; argent et vies du niveau ;
+  construire, manquer d'argent, revendre ; blizzard qui fige 5 s et attend son délai ; les deux cartes au hasard ;
+  variantes et statistiques du revisionnage) ; `GameHelpTest` avec le jeu ; capture en vraie fenêtre (souris, vagues
+  automatiques) `build/game-screenshots/essai1/towerdefense/` : compte à rebours trop petit, corrigé. SpotBugs : division entière signalée (vie des vagues), écrite de façon explicite. `build` : 725 tests, 0 échec ; `allGamesTest -PallGamesOnly=TowerDefense -PallGamesRepeat=3` réussi.
+- **Retours du mainteneur (3/11/2026, avant son essai)** : donner un rôle à part à la tour bleue ; question sur les
+  sons de source inconnue (réponse : pas grave tout de suite, mais un risque d'atteinte au droit d'auteur si un son
+  n'est pas libre, comme pour les images ; la GPL ne couvre que ce que le projet a le droit de distribuer). **Fait** :
+  **la tour bleue est un canon** (`CanonTower` : un tir toutes les 1,5 s au lieu de 0,67 s, 18 dégâts au lieu de 5,
+  portée 4 au lieu de 3, boulet gros, foncé et plus lent, 35 pièces) ; **les 3 sons remplacés** par 4 sons faits par
+  script (`gradle/images/make_towerdefense_sounds.py` : construction, construction de la tour double, tir, coup de
+  canon) ; aide mise à jour (le rôle et le prix de chaque tour) ; test `shouldGiveTheCannonARoleOfItsOwn`.
+  **À faire plus tard** (recommandation) : un inventaire des sons de tous les jeux, comme celui des images.
+- **Retours du mainteneur (3/11/2026, à l'essai)** : l'indicateur de progression était l'ancien (le cercle jaune qui se
+  remplit), il préfère **l'anneau** des jeux revus ; sur les emplacements tout à droite, **le magasin et le texte
+  d'information sortaient de l'écran** ; en jeu, **on ne savait pas ce que font les tours**. **Fait** : l'anneau de
+  Coloriage devient un composant commun (`net.gazeplay.components.FixationRing`, dans `gazeplay-games-commons` ;
+  Coloriage l'utilise, sans changement) ; dans Défendre le château, toutes les fixations passent par lui (bouton des
+  vagues, flocon, emplacements, tours du magasin, revente : `fixate`), plus aucun `ProgressIndicator`. Le magasin est
+  décalé pour rester entier dans l'écran (son centre gardé à 2,5 cases des bords), sa zone de sortie aussi. **Une fiche
+  à côté du magasin** (à droite, ou à gauche près du bord droit, toujours dans l'écran) dit ce que fait la tour
+  regardée : son nom, son rôle, ses dégâts, sa portée, un tir toutes les combien de secondes, son prix ; sur une tour
+  construite, la même fiche et ce que rend la revente. Les messages (« Pas assez d'argent ») restent dans l'écran.
+  Aide mise à jour. Test `shouldKeepTheShopAndItsCardInsideTheScreenAndSayWhatTheTowersDo` (il a trouvé la zone de
+  sortie qui dépassait d'une demi-case) ; capture en vraie fenêtre (souris, emplacement le plus à droite)
+  `build/game-screenshots/essai2/towerdefense/` : anneau, magasin entier, fiche, construction, revente.
+- **Retour du mainteneur (3/11/2026, à l'essai, souris)** : le magasin s'ouvrait, mais **se refermait dès que la souris
+  bougeait dedans** : impossible de choisir une tour. Cause : le magasin se fermait quand la souris « sortait » de sa
+  zone invisible, et JavaFX compte comme une sortie le passage sur une tour posée par-dessus (le regard, lui, teste
+  la forme de chaque nœud à part : pas touché). Mes tests et ma première capture avaient la souris immobile.
+  **Fait** : le magasin ne se ferme que si la souris est vraiment hors de sa zone (y compris en sortant par une tour) ;
+  test `shouldKeepTheShopOpenWhileTheMouseMovesOverItsTowers` ; capture en vraie fenêtre avec une souris qui bouge
+  (`build/game-screenshots/essai3/towerdefense/`, `m2-p00` à `p04`) : magasin ouvert pendant le passage d'une tour à
+  l'autre, fiche qui suit, tour construite. `build` : 728 tests, 0 échec.
+- **Retour du mainteneur (3/11/2026, à l'essai, Tobii)** : choix des emplacements parfait, mais **la fixation d'une tour
+  du magasin s'arrêtait en moins d'une seconde** ; et **l'icône de revente ne correspondait pas à l'action**. Cause du
+  premier : la zone de fixation de l'emplacement (2 cases autour de lui) reste sous le magasin et recouvre le bas des
+  icônes ; le regard est testé sur chaque nœud à part, et la sortie du regard de cette zone (il bouge un peu) arrêtait
+  l'anneau, celui de la tour compris (la souris, elle, ne voit pas cette zone, cachée par le magasin). **Fait** : seul
+  le nœud dont la fixation tourne arrête l'anneau (`ringOwner`) ; test
+  `shouldKeepTheFixationOfATowerWhenTheGazeLeavesThePlaceUnderTheShop`. Icône de revente redessinée : une tour, une
+  flèche, des pièces (la tour devient des pièces).
+- **Retour du mainteneur (3/11/2026)** : Tobii parfait maintenant ; nouvelle icône de revente bien mieux, mais **elle
+  doit montrer la tour vendue** (pas toujours la verte), pour ne pas perdre l'utilisateur. **Fait** : une icône par
+  tour (`sellBasic.png`, `sellDouble.png`, `sellMissile.png`, `sellCanon.png`, dessinées par le même script ;
+  `sellTower.png` retiré), le magasin montre celle de la tour de l'emplacement ; test
+  `shouldShowTheTowerSoldOnItsSellPicture`.
+  Puis (remarque du mainteneur) : les pièces paraissaient plus bas que la tour et la flèche ; le corps de la tour, la flèche et le milieu de la pile de pièces alignés sur une même ligne.
+- **Essai du mainteneur (3/11/2026)** : tout est bon (souris et Tobii) ; commité et poussé.

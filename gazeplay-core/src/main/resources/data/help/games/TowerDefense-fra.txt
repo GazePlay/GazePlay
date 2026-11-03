@@ -1,0 +1,23 @@
+# Le principe
+Des petits monstres suivent la route jusqu'à ton château. Construis des tours le long de la route pour les arrêter !
+
+# Comment jouer
+- Les vagues de monstres partent de la flèche et suivent la route. Chaque monstre qui arrive au château te coûte une vie (le cœur en haut à gauche).
+- Fixe un emplacement gris au bord de la route : 4 tours sont proposées autour, avec leur prix. Regarde une tour : une fiche, à côté, dit ce qu'elle fait (dégâts, portée, un tir toutes les combien de secondes, prix). Fixe celle que tu veux pour la construire, si tu as assez de pièces ; un anneau se remplit pendant la fixation.
+- La tour verte tire des petites boules (25 pièces) ; la rouge tire deux fois plus vite (50 pièces) ; la bleue est un canon : des gros boulets lents mais très forts, de plus loin (35 pièces) ; la grise lance des missiles qui explosent sur plusieurs monstres, de loin (25 pièces).
+- Chaque monstre détruit te donne des pièces. Fixe une tour déjà construite pour voir ce qu'elle fait, ou pour la revendre (elle rend son prix).
+- Fixe le flocon en haut : le blizzard arrête les monstres pendant 5 secondes. Il revient au bout de 30 secondes.
+- Les vagues ont 5 puis 10 monstres, et deviennent plus fortes toutes les 2 vagues. Toutes les 5 vagues viennent les gros monstres violets, toutes les 10 vagues les petits jaunes, rapides.
+- La carte (le chemin de la route) est tirée au hasard à chaque partie, parmi deux.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert.
+
+# Comment gagner
+Selon la variante : tenir 10 ou 20 vagues, ou sans fin (quitte par l'engrenage en bas à gauche). Les vagues tenues : « Bravo », puis les statistiques. Si toutes les vies sont perdues : « Perdu ! », puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Sans fin, 10 vagues ou 20 vagues : la fin de la partie.
+- En bas, les vagues. À la demande : une vague part quand tu fixes le bouton « Envoyer la vague suivante » ; tu joues à ton rythme. Automatiques : une vague part toute seule 10 secondes après la fin de la précédente ; le bouton l'envoie plus tôt.
+- En bas aussi, le niveau. Facile : 100 pièces et 15 vies au départ ; les monstres ont 15 % de vie en plus toutes les 2 vagues.
+- Normal : 50 pièces et 10 vies au départ ; 25 % de vie en plus toutes les 2 vagues.
+- Difficile : 40 pièces et 5 vies au départ ; 40 % de vie en plus toutes les 2 vagues.

@@ -146,6 +146,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (gradle/images/make_egg_images.py, make_egg_sounds.py), sous la licence du projet ; animaux d'OpenMoji
   (https://openmoji.org/), licence CC BY-SA 4.0. Ils remplacent depuis novembre 2026 des photos et des sons dont
   la licence n'était pas connue.
+- Images du jeu « Défendre le château » (data/towerDefense/images) : terrain, château, tours, monstres, missile,
+  explosion et icônes, et sons, faits pour GazePlay Learning (gradle/images/make_towerdefense_images.py,
+  make_towerdefense_sounds.py), sous la licence du
+  projet.
 - Images du jeu « Space Game » (data/space/images) : fond de nuit, fusée, soucoupes et boss faits pour GazePlay
   Learning (gradle/images/make_space_images.py), sous la licence du projet.
 - Images du jeu « Survivre contre des robots » (data/surviveAgainstRobots) : ciel, jardin, cour de l'école et

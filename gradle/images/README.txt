@@ -127,3 +127,12 @@ normal, hard) by their number of closed zones (October 2026). They replace 16
 drawings of unknown source and a Hello Kitty drawing (not free). The former arrows, palette and buttons of the game
 (next.png, prev.png, palette.png, error.png, add-button-inside-black-circle.png) were removed: the game uses the icons
 of data/icons (Material Symbols, Apache License 2.0).
+
+Images of Tower Defense (gazeplay-games: data/towerDefense/images): the tiles (grass, road, tower places, castle, the
+arrows of the start), the towers, the enemies, the missile, its explosion and the icons are drawn by
+make_towerdefense_images.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace
+(3/11/2026) 23 pictures of unknown source; the snow of the blizzard (an animated picture before) is drawn by the game.
+The thumbnail (gazeplay-core: data/common/Thumbnails/TowerDefense.png, 960 x 540) is made of these pictures by the
+same script. The sounds (data/towerDefense/sounds: build.wav, builddouble.wav, shot.wav, canon.wav) are made by
+make_towerdefense_sounds.py (this folder), under the same license; they replace (3/11/2026) three sounds of unknown
+source.

@@ -168,8 +168,13 @@ public class GameCanvas extends Canvas {
                     gc.drawImage(explosionImage, 96*missile.getFrameIndex(), 0, 96,96, projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), tileHeight.get()*1.5, tileWidth.get()*1.5);
                 }
             }else{
-                gc.setFill(Color.WHITE);
+                // The balls of the cannon are big and dark, the others small and white
+                final boolean cannonBall = projectile.getSize() >= CanonTower.BALL_SIZE;
+                gc.setFill(cannonBall ? Color.rgb(60, 60, 80) : Color.WHITE);
                 gc.fillOval(projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), projectile.getSize()*tileHeight.get(), projectile.getSize()*tileWidth.get());
+                gc.setStroke(cannonBall ? Color.rgb(20, 20, 30) : Color.rgb(120, 120, 140));
+                gc.setLineWidth(1.5);
+                gc.strokeOval(projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), projectile.getSize()*tileHeight.get(), projectile.getSize()*tileWidth.get());
             }
         }
     }

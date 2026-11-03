@@ -105,6 +105,13 @@ public abstract class Tower {
     }
 
     /**
+     * @return the ticks between two shots, less one (a shot every fireTickLimit + 1 ticks)
+     */
+    public double getFireTickLimit() {
+        return fireTickLimit;
+    }
+
+    /**
      * @return where the projectiles start
      */
     public Point2D getProjectileStart(){

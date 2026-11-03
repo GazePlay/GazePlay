@@ -21,6 +21,7 @@ import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
+import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 import net.gazeplay.components.GazeRoundButton;
 

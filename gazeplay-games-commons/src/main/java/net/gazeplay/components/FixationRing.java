@@ -1,4 +1,4 @@
-package net.gazeplay.games.colors;
+package net.gazeplay.components;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -13,10 +13,12 @@ import javafx.util.Duration;
 import lombok.Getter;
 
 /**
- * Ring following the gaze (or the mouse) on the drawing of the "Coloring" game: it fills in the main color during the
- * fixation, then the zone is filled. It replaces the progress indicator of the former versions.
+ * Ring of a fixation, shared by the reviewed games (first made for "Coloring", 29/10/2026; shared on 3/11/2026 for
+ * "Tower Defense"): it fills in the main color during the fixation, then the action runs. In "Coloring" it follows the
+ * gaze (or the mouse) on the drawing, and the zone is filled at the end. It replaces the progress indicator of the
+ * former versions (a yellow disc filling up).
  */
-class FixationRing extends Group {
+public class FixationRing extends Group {
 
     private final Circle background;
 
@@ -29,7 +31,7 @@ class FixationRing extends Group {
     @Getter
     private boolean running;
 
-    FixationRing() {
+    public FixationRing() {
         background = new Circle();
         background.setStyle("-fx-fill: rgba(255, 255, 255, 0.35); -fx-stroke: -gp-border; -fx-stroke-width: 2;");
         progressArc = new Arc();
@@ -48,7 +50,7 @@ class FixationRing extends Group {
     /**
      * Sets the diameter of the ring.
      */
-    void setSize(final double size) {
+    public void setSize(final double size) {
         final double ringWidth = Math.max(5, size * 0.12);
         background.setRadius(size / 2);
         progressArc.setRadiusX(size / 2 - ringWidth / 2);
@@ -59,7 +61,7 @@ class FixationRing extends Group {
     /**
      * Starts a fixation at a point: the ring fills during the given length, then runs the action.
      */
-    void start(final double x, final double y, final double lengthMs, final Runnable onFinished) {
+    public void start(final double x, final double y, final double lengthMs, final Runnable onFinished) {
         stop();
         moveTo(x, y);
         setVisible(true);
@@ -79,7 +81,7 @@ class FixationRing extends Group {
     /**
      * Moves the ring to a point.
      */
-    void moveTo(final double x, final double y) {
+    public void moveTo(final double x, final double y) {
         setLayoutX(x);
         setLayoutY(y);
     }
@@ -87,7 +89,7 @@ class FixationRing extends Group {
     /**
      * Stops the fixation and hides the ring.
      */
-    void stop() {
+    public void stop() {
         if (timeline != null) {
             timeline.stop();
         }

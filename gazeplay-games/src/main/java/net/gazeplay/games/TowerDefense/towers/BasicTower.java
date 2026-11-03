@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 public class BasicTower extends Tower {
 
-    public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";
-    private static final String SOUNDS_BUILD = "data/towerDefense/sounds/craft.mp3";
+    public static final String SOUNDS_FIRE = "data/towerDefense/sounds/shot.wav";
+    private static final String SOUNDS_BUILD = "data/towerDefense/sounds/build.wav";
 
     public BasicTower(int col, int row, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
         super(col, row, projectiles, enemies);

@@ -59,7 +59,7 @@ gazeplay-commons/src/test/resources/data/whereisit/some_valid/images/bears/grizz
 gazeplay-commons/src/test/resources/data/whereisit/some_valid/images/bears/polar-bear-2641842_1280.jpg,non,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2020-09-22,kuhlkrein,adding test ressources
 gazeplay-commons/src/test/resources/data/whereisit/some_valid/images/bears/polar-bear-404314_1280.jpg,non,libre probable,"Pixabay, publiée avant 2019 : CC0 à la publication (hypothèse sur la date)",2020-09-22,kuhlkrein,adding test ressources
 gazeplay-commons/src/testFixtures/resources/bear.jpg,non,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
-gazeplay-core/src/main/resources/data/common/Thumbnails/TowerDefense.png,oui,source inconnue,,2023-06-28,HugolinBouhineau,Tower Defense: change progressIndicator size and dwell-time to match config & change thumbnail
+gazeplay-core/src/main/resources/data/common/Thumbnails/TowerDefense.png,oui,libre,"composée des images du jeu (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
 gazeplay-core/src/main/resources/data/common/Thumbnails/biboulejump.png,oui,source inconnue,,2019-02-23,Teo Blachere,Biboule Jump: buggy physics
 gazeplay-core/src/main/resources/data/common/Thumbnails/block.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/bottle.jpg,oui,source inconnue,,2020-06-30,PillouMatou,bottles height fixed
@@ -761,29 +761,31 @@ gazeplay-games/src/main/resources/data/surviveAgainstRobots/images/schoolyard.pn
 gazeplay-games/src/main/resources/data/surviveAgainstRobots/images/shield.png,oui,libre,"dessiné pour le projet (gradle/images/make_survive_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Survive Against Robots
 gazeplay-games/src/main/resources/data/surviveAgainstRobots/images/sky.png,oui,libre,"dessiné pour le projet (gradle/images/make_survive_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Survive Against Robots
 gazeplay-games/src/main/resources/data/surviveAgainstRobots/images/slow.png,oui,libre,"dessiné pour le projet (gradle/images/make_survive_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Survive Against Robots
-gazeplay-games/src/main/resources/data/towerDefense/images/arrow1.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/arrow2.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/basicEnemy.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/basicTower.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/blizzard.gif,oui,source inconnue,,2023-06-29,HugolinBouhineau,Tower Defense: add a blizzard power that freezes enemies
-gazeplay-games/src/main/resources/data/towerDefense/images/blizzardIcon.png,oui,source inconnue,,2023-06-29,HugolinBouhineau,Tower Defense: add a blizzard power that freezes enemies
-gazeplay-games/src/main/resources/data/towerDefense/images/canonTower.png,oui,source inconnue,,2023-06-27,HugolinBouhineau,Tower Defense: add new tower types and improve tower aim
-gazeplay-games/src/main/resources/data/towerDefense/images/castle.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/dirt.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/doubleTower.png,oui,source inconnue,,2023-06-27,HugolinBouhineau,Tower Defense: add new tower types and improve tower aim
-gazeplay-games/src/main/resources/data/towerDefense/images/explosion.png,oui,source inconnue,,2023-06-27,HugolinBouhineau,Tower Defense: add new tower types and improve tower aim
-gazeplay-games/src/main/resources/data/towerDefense/images/fastEnemy.png,oui,source inconnue,,2024-04-18,Yaniissou,FastEnemy object
-gazeplay-games/src/main/resources/data/towerDefense/images/grass.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/heart.png,oui,source inconnue,,2023-06-22,HugolinBouhineau,"Tower Defense: add money, life and waves of monsters"
-gazeplay-games/src/main/resources/data/towerDefense/images/missile.png,oui,source inconnue,,2023-06-27,HugolinBouhineau,Tower Defense: add new tower types and improve tower aim
-gazeplay-games/src/main/resources/data/towerDefense/images/missileTower.png,oui,source inconnue,,2023-06-27,HugolinBouhineau,Tower Defense: add new tower types and improve tower aim
-gazeplay-games/src/main/resources/data/towerDefense/images/money.png,oui,source inconnue,,2023-06-22,HugolinBouhineau,"Tower Defense: add money, life and waves of monsters"
-gazeplay-games/src/main/resources/data/towerDefense/images/moneyGain.png,oui,source inconnue,,2023-06-22,HugolinBouhineau,"Tower Defense: add money, life and waves of monsters"
-gazeplay-games/src/main/resources/data/towerDefense/images/moneyLoss.png,oui,source inconnue,,2023-06-22,HugolinBouhineau,"Tower Defense: add money, life and waves of monsters"
-gazeplay-games/src/main/resources/data/towerDefense/images/sellTower.png,oui,source inconnue,,2023-06-28,HugolinBouhineau,Tower Defense: tower can now be sold for 100% of their cost
-gazeplay-games/src/main/resources/data/towerDefense/images/tankEnemy.png,oui,source inconnue,,2024-04-19,Yaniissou,added tankEnemy sprite
-gazeplay-games/src/main/resources/data/towerDefense/images/towerBase.png,oui,source inconnue,,2023-06-26,HugolinBouhineau,Tower Defense: new graphic theme
-gazeplay-games/src/main/resources/data/towerDefense/images/wave.png,oui,source inconnue,,2023-06-22,HugolinBouhineau,"Tower Defense: add money, life and waves of monsters"
+gazeplay-games/src/main/resources/data/towerDefense/images/arrow1.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/arrow2.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/basicEnemy.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/basicTower.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/blizzardIcon.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/canonTower.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/castle.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/dirt.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/doubleTower.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/explosion.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/fastEnemy.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/grass.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/heart.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/missile.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/missileTower.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/money.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/moneyGain.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/moneyLoss.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/sellBasic.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/sellCanon.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/sellDouble.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/sellMissile.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/tankEnemy.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/towerBase.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
+gazeplay-games/src/main/resources/data/towerDefense/images/wave.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
 gazeplay-games/src/main/resources/data/trainSwitches/images/background.png,oui,source inconnue,,2023-05-26,HugolinBouhineau,TrainSwitches: change background and thumbnail and add some comments
 gazeplay-games/src/main/resources/data/trainSwitches/images/blackLoco.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
 gazeplay-games/src/main/resources/data/trainSwitches/images/blackLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
