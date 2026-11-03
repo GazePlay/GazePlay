@@ -87,7 +87,8 @@ the sounds (biboule/sounds/shot1-3.wav, robot/sounds/shot1-3.wav) made by make_s
 of GazePlay Learning (GPL-3.0-or-later). They replace (November 2026) two backgrounds and six sounds of unknown
 source; the robots, the cage, the flying saucer, the flashes, the wand and the gun are drawn by the same script
 (they replace drawings of 2018 whose author was not known for sure). The Biboules (biboule/images/Blue.png to
-Red.png) are the mascot of the laboratory, drawn by it, kept. The music "Talking Cute (Chiptune)" is by Pro Sensory (Alex McCulloch), OpenGameArt, CC0. The
+Red.png), mascot of the laboratory, are drawn by the same script since 3/11/2026: a modernized version (soft shading,
+thin outline, rosy cheeks) keeping the mouth and the wings of the original drawing, kept in biboule-originale/. The music "Talking Cute (Chiptune)" is by Pro Sensory (Alex McCulloch), OpenGameArt, CC0. The
 thumbnail (gazeplay-core: data/common/Thumbnails/shootTheBiboules.png) is a capture of the game, 960 x 540.
 
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,

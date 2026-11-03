@@ -1,8 +1,13 @@
 La Biboule d'origine : copie de sauvegarde (2/11/2026)
 
 La Biboule est la mascotte du laboratoire, dessinée par lui. Le 2/11/2026, le mainteneur a choisi une version
-modernisée de la Biboule (proposition A, avec la bouche d'origine), pas encore appliquée. Il a demandé de garder une
-copie des dessins d'origine, pour pouvoir revenir en arrière.
+modernisée de la Biboule (proposition A, avec la bouche et les ailes d'origine). Il a demandé de garder une copie
+des dessins d'origine, pour pouvoir revenir en arrière.
+
+Le 3/11/2026, la version modernisée a été mise dans le jeu « Tir » seulement (dessinée par
+gradle/images/make_shooter_images.py, 500 x 400) ; les autres jeux gardent la Biboule d'origine pour l'instant
+(décision du mainteneur). Pour revenir en arrière dans le Tir : recopier shooter/*.png dans
+gazeplay-games/src/main/resources/data/shooter/biboule/images et retirer la boucle BIBOULES du script.
 
 Ce dossier contient ces dessins tels qu'ils étaient le 2/11/2026 (34 fichiers), rangés par jeu :
 - shooter/ : les 5 Biboules du jeu « Tir » (data/shooter/biboule/images, Blue.png à Red.png).

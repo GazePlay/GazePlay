@@ -1,7 +1,9 @@
 """Draws the pictures of the shooting game (gazeplay-games: data/shooter/biboule/images and data/shooter/robot/images),
 made for GazePlay Learning in November 2026 to replace pictures whose author was not known for sure (maintainer's
-decision: redrawn). Same license as GazePlay Learning (GPL-3.0-or-later). The Biboules (Blue.png to Red.png of
-biboule/images) are the mascot of the laboratory, drawn by it: kept, not drawn here.
+decision: redrawn). Same license as GazePlay Learning (GPL-3.0-or-later).
+- biboule/images/Blue.png to Red.png (500 x 400): the Biboule, mascot of the laboratory, modernized on 3/11/2026
+  (maintainer's choice: soft shading, thin outline, rosy cheeks, with the mouth and the wings of the original drawing;
+  the original pictures are kept in gradle/images/biboule-originale).
 - Background.png (1600 x 900): the classroom, the street.
 - robot/images/Blue.png to Red.png (500 x 400): a robot of each color, the target changing color on its way.
 - Flash.png (500 x 400): the target hit.
@@ -18,7 +20,7 @@ import os
 import random
 import sys
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 out = sys.argv[1]
 W, H, K = 1600, 900, 2
@@ -147,6 +149,99 @@ def robot(color):
     return picture
 
 
+INK = (30, 28, 40, 255)
+
+# The Biboule of each color: its body and the lower lip of its mouth (the colors of the lips are the original ones)
+BIBOULES = {'Blue': ((150, 210, 245), (160, 235, 150)), 'Green': ((175, 230, 140), (244, 181, 154)),
+            'Yellow': ((250, 235, 130), (244, 154, 193)), 'Orange': ((250, 190, 140), (240, 154, 230)),
+            'Red': ((245, 150, 160), (205, 154, 244))}
+
+
+def leaf_wing(draw, cx, cy, rx, ry, angle):
+    """The wing of the original: an oval leaf a little wider at its base, a dark blue outline, a central vein and side
+    veins that alternate, pointing to the tip."""
+    fill, line = (125, 205, 200, 255), (25, 60, 130, 255)
+    ca, sa = math.cos(angle), math.sin(angle)
+
+    def point(u, v):
+        return (cx + u * ca - v * sa) * K, (cy + u * sa + v * ca) * K
+
+    def half_width(u):
+        t = math.acos(max(-1.0, min(1.0, u / rx)))
+        return ry * math.sin(t) * (1 - 0.12 * math.cos(t))
+
+    outline = []
+    for i in range(90):
+        t = 2 * math.pi * i / 90
+        outline.append(point(rx * math.cos(t), ry * math.sin(t) * (1 - 0.12 * math.cos(t))))
+    draw.polygon(outline, fill=fill)
+    draw.line(outline + [outline[0]], fill=line, width=4 * K, joint='curve')
+    draw.line([point(-0.6 * rx, 0), point(0.72 * rx, 0)], fill=line, width=3 * K)
+    for u0, side in ((-0.35, 1), (-0.15, -1), (0.1, 1), (0.3, -1), (0.48, 1)):
+        u = u0 * rx
+        length = 0.55 * half_width(u + 0.25 * rx)
+        draw.line([point(u, 0), point(u + 1.1 * length, side * length)], fill=line, width=3 * K)
+
+
+def fluffy(cx, cy, r):
+    """The outline of a fluffy ball: twelve round puffs all around."""
+    points = []
+    for i in range(720):
+        a = math.radians(i / 2)
+        phase = (12 * a / (2 * math.pi)) % 1
+        rr = r * (1 + 0.07 * math.sqrt(max(0.0, 1 - (2 * phase - 1) ** 2)))
+        points.append(((cx + rr * math.cos(a)) * K, (cy + rr * math.sin(a) * 0.88) * K))
+    return points
+
+
+def biboule_mouth(draw, cx, top, lip):
+    """The mouth of the original: two small smiles meeting in a point in the middle (a "3" lying down), over a round
+    lower lip filled with a color."""
+    a, depth = 25, 17
+    left = []
+    for i in range(41):  # the lower half of an oval, from the outer end (a little raised) to the point in the middle
+        t = i / 40
+        left.append((cx - a + a * math.cos(math.pi - math.pi * t),
+                     top + depth * math.sin(math.pi * t) - 4 * (1 - t) ** 2 - 14 * t ** 4))
+    right = [(2 * cx - x, y) for x, y in reversed(left)]
+    start = 17  # the lip starts on each smile, a little before its lowest point
+    lx, ly = left[start]
+    bottom = [(cx + (cx - lx) * math.cos(math.radians(d)), ly + 25 * math.sin(math.radians(d)))
+              for d in range(0, 181, 4)]
+    draw.polygon([(x * K, y * K) for x, y in bottom + left[start:] + right[1:len(right) - start]], fill=lip)
+    for curve in (bottom, left, right):
+        draw.line([(x * K, y * K) for x, y in curve], fill=INK, width=4 * K, joint='curve')
+    for x, y in (left[0], right[-1], left[-1]):
+        draw.ellipse(s(x - 2, y - 2, x + 2, y + 2), fill=INK)
+
+
+def biboule(color, lip):
+    """The Biboule: a fluffy ball with a thin outline of its color, a soft light and shadow, big eyes, rosy cheeks, the
+    mouth and the leaf wings of the original drawing."""
+    picture, draw = sprite(500, 400)
+    leaf_wing(draw, 140, 110, 100, 48, math.radians(-140))
+    leaf_wing(draw, 360, 110, 100, 48, math.radians(-40))
+    draw.polygon(fluffy(250, 225, 128), fill=tuple(int(c * 0.78) for c in color) + (255,))
+    draw.polygon(fluffy(250, 225, 122), fill=color + (255,))
+    mask = Image.new('L', picture.size, 0)
+    ImageDraw.Draw(mask).polygon(fluffy(250, 225, 122), fill=255)
+    light = Image.new('RGBA', picture.size, (0, 0, 0, 0))
+    shading = ImageDraw.Draw(light)
+    shading.ellipse(s(140, 109, 274, 219), fill=(255, 255, 255, 110))
+    shading.ellipse(s(226, 255, 384, 371), fill=tuple(int(c * 0.75) for c in color) + (90,))
+    light = light.filter(ImageFilter.GaussianBlur(28 * K))
+    picture.paste(light, (0, 0), Image.composite(light, Image.new('RGBA', picture.size, (0, 0, 0, 0)), mask))
+    draw = ImageDraw.Draw(picture)
+    for ex in (207, 293):
+        draw.ellipse(s(ex - 34, 159, ex + 34, 251), fill=INK)
+        draw.ellipse(s(ex - 19, 173, ex - 2, 196), fill=(255, 255, 255, 255))
+        draw.ellipse(s(ex + 5, 217, ex + 15, 228), fill=(255, 255, 255, 255))
+    for cx in (163, 337):
+        draw.ellipse(s(cx - 20, 250, cx + 20, 268), fill=(255, 140, 160, 120))
+    biboule_mouth(draw, 250, 260, lip + (255,))
+    return picture
+
+
 def flash(fill, outline):
     """A burst of light: the target hit."""
     picture, draw = sprite(500, 400)
@@ -234,6 +329,8 @@ biboules = os.path.join(out, 'biboule', 'images')
 robots = os.path.join(out, 'robot', 'images')
 for name, color in COLORS.items():
     save(robot(color), 500, 400, os.path.join(robots, name + '.png'))
+for name, (color, lip) in BIBOULES.items():
+    save(biboule(color, lip), 500, 400, os.path.join(biboules, name + '.png'))
 save(flash((255, 245, 190, 255), (240, 190, 90, 255)), 500, 400, os.path.join(biboules, 'Flash.png'))
 save(flash((255, 120, 110, 255), (200, 60, 60, 255)), 500, 400, os.path.join(robots, 'Flash.png'))
 save(cage(), 300, 400, os.path.join(biboules, 'Cage.png'))

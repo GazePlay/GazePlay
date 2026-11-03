@@ -148,7 +148,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   la licence n'était pas connue.
 - Images et sons du jeu « Tir » (data/shooter) : salle de classe, rue et sons faits pour GazePlay Learning
   (gradle/images/make_shooter_images.py, make_shooter_sounds.py), sous la licence du projet, avec les robots,
-  la cage, la soucoupe, la baguette et le canon ; les Biboules sont la mascotte du laboratoire. Musique « Talking Cute (Chiptune) » de Pro
+  la cage, la soucoupe, la baguette et le canon ; les Biboules, mascotte du laboratoire, y sont redessinées
+  (version modernisée, novembre 2026). Musique « Talking Cute (Chiptune) » de Pro
   Sensory (Alex McCulloch), OpenGameArt, CC0.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
   data/whereIsTheSound/images) et 11 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine

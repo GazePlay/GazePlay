@@ -35,9 +35,17 @@ appliqué : à faire demain, sur sa demande. **Copie de sauvegarde de la Biboule
 c'est la mascotte, pouvoir revenir en arrière) : `gradle/images/biboule-originale/` (34 dessins de tous les jeux où
 elle apparaît, rangés par jeu, avec un `LISEZMOI.txt` ; non livrés, non commités pour l'instant).
 
+**Avancement du mardi 3/11/2026** (non commité) : CI des commits du 2/11 verte (run 41483667774). Point 1 fait : la
+version A avec la bouche et les ailes d'origine, validée par le mainteneur, est dans le Tir **seulement** (décision du
+mainteneur : les autres jeux gardent la Biboule d'origine pour l'instant ; voir la fiche du Tir). Point 2 en partie :
+Tir regardé en vraie fenêtre avec tous les nouveaux dessins (`build/game-screenshots/essai2/shooter/`, Biboules,
+souris), vignette `shootTheBiboules.png` refaite (capture du 3/11, nouvelle cage, baguette et Biboules) ;
+`ShooterGameTest` et `GameHelpTest` réussis. **Essai du mainteneur le 3/11 : tout est bon** (Tir validé, avec la
+nouvelle Biboule).
+
 **À faire mardi, dans l'ordre** :
 
-1. **Biboule** : refaire la version A avec la **bouche d'origine** et les **ailes d'origine** (détaillées), la montrer
+1. **[Fait le 3/11, Tir seulement]** **Biboule** : refaire la version A avec la **bouche d'origine** et les **ailes d'origine** (détaillées), la montrer
    au mainteneur ; une fois validée, la
    mettre dans le jeu « Tir » (`data/shooter/biboule/images/Blue.png` à `Red.png`, dessinée par
    `gradle/images/make_shooter_images.py`, aux mêmes proportions 500 × 400). **Demander** s'il faut aussi la mettre
@@ -234,6 +242,14 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    `:gazeplay-core:test` seul puis `build` complet réussis (575 tests). Cause inconnue. Si ça revient : noter
    l'heure, le dernier test écrit dans `gazeplay-core/build/test-results/test`, chercher un `hs_err_pid*.log` et
    `%LOCALAPPDATA%\CrashDumps`. Si rien ne revient d'ici la fin de la revue des jeux, chercher quand même à la fin.
+   **Revenu le 3/11/2026 à 9 h 43**, pendant un `build` complet (seuls des images et des documents avaient changé) :
+   « Process 'Gradle Test Executor 2' finished with non-zero exit value -1073741819 (NTSTATUS 0xC0000005) », 48 s
+   après le début ; dernier résultat écrit : `GazePlayModeTest` (4 tests réussis) ; pas de `hs_err`. **Vidages
+   Windows trouvés** : `java.exe.10072.dmp` et `java.exe(1).10072.dmp` (3/11, 9 h 43) et `java.exe.3524.dmp` (30/10,
+   11 h 19 : le premier plantage avait donc aussi laissé un vidage). **Hypothèse** : le même plantage audio que les
+   jeux du 28/10 (`MMDevAPI.dll` déchargée, arrêt dans `rpcrt4.dll` sans `hs_err`), que
+   `GazePlayLauncher.keepTheWindowsAudioLibraryLoaded` évite dans les jeux mais pas dans la JVM des tests. À vérifier
+   à la fin, en ouvrant les vidages (module fautif).
 8. **À surveiller, puis à chercher à la toute fin** (décision du mainteneur du 2/11/2026, comme le point 7) : le
    2/11/2026 vers 14 h 30, pendant un `build` complet, un test de GazePlay Eval a échoué une fois :
    `GazeplayEvalTest.shouldPlayAnEvaluationToItsEndAndWriteItsResults` (`gazeplay-games`), « Wanted but not
@@ -392,7 +408,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
 | Tower Defense (`TowerDefense`) | À confirmer : 23 dessins ; certaines icônes ressemblent à des émojis (cœur, vague, argent) : vérifier leur origine | | |
 | Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
-| **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
+| **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
 | Survive Against Robots (et Mouse) | À confirmer : 12 dessins | | |
 | Space Game (`SpaceGame`) | À confirmer : 12 dessins (aliens, vaisseaux) | | |
 | Cakes (`Cakes`) | À confirmer : 24 dessins | | |
@@ -1963,3 +1979,11 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   couleurs : tête, antenne, yeux et bouche de la couleur), soucoupe volante, cage dorée, éclairs (pâle pour les
   Biboules, rouge pour les robots), bras et baguette magique (étincelle au tir), canon (flamme au tir), dessinés par
   `make_shooter_images.py` aux mêmes proportions que les anciens ; les 5 Biboules gardées. Inventaire : tout « libre ».
+- **Biboule modernisée (3/11/2026, choix du mainteneur)** : version A de la planche du 2/11 (ombres douces, contour
+  fin de la couleur du corps, joues roses), avec **la bouche d'origine** (deux petits sourires qui se rejoignent en
+  pointe, sur une lèvre ronde de la couleur d'origine : verte sur la bleue, saumon sur la verte, rose sur la jaune,
+  rose-violet sur l'orange, violette sur la rouge) et **les ailes d'origine** (feuille ovale, contour bleu foncé,
+  nervure centrale et nervures latérales). Dessinée par `make_shooter_images.py` (`biboule`), en 500 × 400 au lieu de
+  335 × 250 : le jeu garde les proportions dans un cadre de 1,25 × la taille, le rapport exact du nouveau format.
+  **Dans le Tir seulement** pour l'instant (décision du mainteneur) ; les autres jeux gardent la Biboule d'origine.
+  Planche : `build/game-screenshots/propositions/biboule-A2.png`. Originales : `gradle/images/biboule-originale/`.
