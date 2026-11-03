@@ -98,6 +98,12 @@ heart.png) are drawn by make_survive_images.py (this folder), under the license 
 are those of the shooting game (data/shooter). The thumbnail (gazeplay-core:
 data/common/Thumbnails/surviveAgainstRobots.png, 960 x 540) is made of these pictures by the same script.
 
+Images of Space Game (gazeplay-games: data/space/images): the night (night.png), the rocket (ship.png), the aliens in
+their saucers (Blue.png to Red.png) and the boss (boss.png) are drawn by make_space_images.py (this folder), under the
+license of GazePlay Learning (GPL-3.0-or-later). They replace (3/11/2026) twelve pictures of unknown source (two
+ships, the boss, five aliens, the background, two lasers, a button); the lasers and the balls are drawn by the game.
+The thumbnail (gazeplay-core: data/common/Thumbnails/space.png, 960 x 540) is made of these pictures by the same script.
+
 Photos of Where Is The Animal and Where Is The Sound (gazeplay-games: data/whereIsTheAnimal/images,
 data/whereIsTheSound/images) and 11 sounds of Where Is The Sound: Wikimedia Commons, under CC0, public domain, CC BY
 or CC BY-SA 4.0 (October 2026, see REVUE_DES_JEUX.md). The author, licence and page of each file are in the

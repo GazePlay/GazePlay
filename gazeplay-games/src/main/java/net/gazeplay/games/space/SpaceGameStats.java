@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the game "SpaceGame" (see {@code Stats}).
+ * Statistics of the game "SpaceGame" (see {@code Stats}), named as before ("space-game"): one goal to reach for each
+ * alien come and for the boss, one goal reached for each of them destroyed (since 3/11/2026; before, the goals
+ * reached were the score, set at once).
  */
 public class SpaceGameStats extends Stats {
 
@@ -24,9 +26,4 @@ public class SpaceGameStats extends Stats {
         super(gameContextScene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         this.gameName = "space-game";
     }
-
-    public void incrementNumberOfGoalsReached(int increment) {
-        nbGoalsReached = increment;
-    }
-
 }

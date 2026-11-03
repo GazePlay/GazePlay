@@ -4,7 +4,8 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -15,9 +16,10 @@ import java.util.LinkedList;
 
 /**
  * Creates the game "SpaceGame" and its statistics, for a new game or for the replay of a saved one (see
- * {@code IGameLauncher}).
+ * {@code IGameLauncher}). Without a variant (or with one of before the review of 3/11/2026): normal level, without
+ * end.
  */
-public class SpaceGameLauncher implements IGameLauncher<SpaceGameStats, EnumGameVariant<SpaceGameVariant>> {
+public class SpaceGameLauncher implements IGameLauncher<SpaceGameStats, IGameVariant> {
 
     @Override
     public SpaceGameStats createNewStats(Scene scene) {
@@ -30,13 +32,21 @@ public class SpaceGameLauncher implements IGameLauncher<SpaceGameStats, EnumGame
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<SpaceGameVariant> gameVariant, SpaceGameStats stats) {
-        return new SpaceGame(gameContext, stats, gameVariant.getEnumValue());
+    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, SpaceGameStats stats) {
+        return new SpaceGame(gameContext, stats, levelOf(gameVariant), endOf(gameVariant));
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<SpaceGameVariant> gameVariant, SpaceGameStats stats, double gameSeed) {
-        return new SpaceGame(gameContext, stats, gameSeed, gameVariant.getEnumValue());
+    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, SpaceGameStats stats, double gameSeed) {
+        return new SpaceGame(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), gameSeed);
     }
 
+    static SpaceLevel levelOf(final IGameVariant gameVariant) {
+        return gameVariant instanceof GroupedGameVariant grouped ? SpaceLevel.of(grouped.getSubGroup())
+            : SpaceLevel.NORMAL;
+    }
+
+    static SpaceEnd endOf(final IGameVariant gameVariant) {
+        return gameVariant instanceof GroupedGameVariant grouped ? SpaceEnd.of(grouped.getValue()) : SpaceEnd.ENDLESS;
+    }
 }

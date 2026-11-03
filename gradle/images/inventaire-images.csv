@@ -111,7 +111,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheBiboules.png,oui
 gazeplay-core/src/main/resources/data/common/Thumbnails/simon.png,oui,source inconnue,,2023-06-07,iwa,Ajout du 3e mode multijoueur + miniature + traduction
 gazeplay-core/src/main/resources/data/common/Thumbnails/slidingpuzzle.png,oui,source inconnue,,2019-05-16,Peter Bardawil,Game step 2
 gazeplay-core/src/main/resources/data/common/Thumbnails/soundsOfLife.png,oui,libre,"capture du jeu (octobre 2026) ; décor dessiné pour le projet, animaux OpenMoji CC BY-SA 4.0",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-core/src/main/resources/data/common/Thumbnails/space.png,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
+gazeplay-core/src/main/resources/data/common/Thumbnails/space.png,oui,libre,"composée des images du jeu (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
 gazeplay-core/src/main/resources/data/common/Thumbnails/spotthedifference.png,oui,libre,"capture du jeu (octobre 2026) ; décor dessiné pour le projet, objets OpenMoji CC BY-SA 4.0",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/sprintToTheFinish.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet et OpenMoji (CC BY-SA 4.0),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/surviveAgainstRobots.png,oui,libre,"composée des images du jeu (gradle/images/make_survive_images.py) : décor et bonus dessinés pour le projet, Biboule et robots du jeu « Tir »",2026-11-03,GazePlay Learning,revue de Survive Against Robots
@@ -710,18 +710,14 @@ gazeplay-games/src/main/resources/data/soundsoflife/sea/dolphin.png,oui,libre,"O
 gazeplay-games/src/main/resources/data/soundsoflife/sea/fish.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
 gazeplay-games/src/main/resources/data/soundsoflife/sea/octopus.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
 gazeplay-games/src/main/resources/data/soundsoflife/sea/whale.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (data/soundsoflife/CREDITS.txt)",2026-10-30,GazePlay Learning,revue de Sounds Of Life
-gazeplay-games/src/main/resources/data/space/alien/Blue.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
-gazeplay-games/src/main/resources/data/space/alien/Green.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
-gazeplay-games/src/main/resources/data/space/alien/Orange.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
-gazeplay-games/src/main/resources/data/space/alien/Red.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
-gazeplay-games/src/main/resources/data/space/alien/Yellow.png,oui,source inconnue,,2024-04-18,lynirl,forgot to add the alien pictures..........
-gazeplay-games/src/main/resources/data/space/background/space_img.png,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
-gazeplay-games/src/main/resources/data/space/bullet/laserBlue01.png,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
-gazeplay-games/src/main/resources/data/space/bullet/laserRed01.png,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
-gazeplay-games/src/main/resources/data/space/enemy/boss.gif,oui,source inconnue,,2019-06-12,Hai Long Truong,Space Game complete
-gazeplay-games/src/main/resources/data/space/menu/restart.png,oui,source inconnue,,2019-03-14,Teo Blachere,Added score and end menu
-gazeplay-games/src/main/resources/data/space/spaceship/spaceship.gif,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
-gazeplay-games/src/main/resources/data/space/spaceship/spaceship3.gif,oui,source inconnue,,2019-06-11,Hai Long Truong,Complete Space Game (also another solution with multithreading)
+gazeplay-games/src/main/resources/data/space/images/Blue.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/Green.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/Orange.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/Red.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/Yellow.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/boss.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/night.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/space/images/ship.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
 gazeplay-games/src/main/resources/data/spotthedifferences/camp-easy.png,oui,libre,"dessiné pour le projet (gradle/images/make_spotdifferences_images.py), GPL-3.0-or-later ; objets OpenMoji, CC BY-SA 4.0",2026-10-30,GazePlay Learning,revue de Spot The Differences
 gazeplay-games/src/main/resources/data/spotthedifferences/camp-hard.png,oui,libre,"dessiné pour le projet (gradle/images/make_spotdifferences_images.py), GPL-3.0-or-later ; objets OpenMoji, CC BY-SA 4.0",2026-10-30,GazePlay Learning,revue de Spot The Differences
 gazeplay-games/src/main/resources/data/spotthedifferences/camp-normal.png,oui,libre,"dessiné pour le projet (gradle/images/make_spotdifferences_images.py), GPL-3.0-or-later ; objets OpenMoji, CC BY-SA 4.0",2026-10-30,GazePlay Learning,revue de Spot The Differences

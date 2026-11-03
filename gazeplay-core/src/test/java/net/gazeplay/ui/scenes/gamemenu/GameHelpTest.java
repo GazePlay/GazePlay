@@ -52,7 +52,7 @@ class GameHelpTest {
     @ValueSource(strings = {"WhereIsTheAnimal", "WhereIsTheSound", "WhereIsTheColor", "WhereIsTheFlag",
         "WhereIsTheLetter", "WhereIsTheNumber", "WhereIsTheShape", "FindTheOddOneOut", "WhereIsIt", "Coloring",
         "FrogsRace", "Horses", "Memory", "SoundsOfLife", "SpotDifference", "Pet", "FlowerOfNumbers", "Opinions", "SprintFinish", "Bubbles", "EggGame", "Shooter",
-        "SurviveAgainstRobots"})
+        "SurviveAgainstRobots", "SpaceGame"})
     void shouldExplainEachReviewedGameInFrenchAndInEnglish(String nameCode) {
         assertTrue(GameHelp.exists(nameCode));
         List<String> french = HelpDialog.read(GameHelp.FOLDER + nameCode + "-", "fra");

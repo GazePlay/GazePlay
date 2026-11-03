@@ -45,7 +45,7 @@ nouvelle Biboule). Commité et poussé : `efaee9596`. Point 3 : **Survive Agains
 une seule carte, 3 vies, 3 décors au hasard ; voir sa fiche), **essayé et validé par le mainteneur le 3/11**,
 commité et poussé (`e737d5465`). Puis, à la demande du mainteneur, **passe sur les 23 jeux revus** pour ses deux
 nouvelles règles (section « Deux règles de plus pour chaque jeu ») : aide de Frogs Race précisée, mode « seul au
-clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé. Ensuite : Space Game.
+clavier » de Sprint Finish retiré ; essayé et validé par le mainteneur, commité et poussé (`ac18c2e01`). **Space Game**, maintenant « La bataille de l'espace » en français, revu (règle du mainteneur : 3 vies, boss de 15 / 30 / 50 points de vie, fond de nuit ; voir sa fiche), essayé et validé par le mainteneur, commité et poussé ; ensuite : Défendre le château (Tower Defense).
 
 **À faire mardi, dans l'ordre** :
 
@@ -439,7 +439,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
 | **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
 | **Survive Against Robots** (`SurviveAgainstRobots` ; une seule carte depuis le 3/11, avant 2) | **3/11** : les 12 dessins retirés ; 3 décors et 4 bonus dessinés par script (`make_survive_images.py`) ; la Biboule et les robots du Tir | ✔ 3/11 (cœurs, pastilles, décor au hasard parmi 3, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min / 20 / 50 robots, souris ou regard selon le réglage des entrées, tir automatique ou vers l'avant, 3 niveaux, 4 bonus) |
-| Space Game (`SpaceGame`) | À confirmer : 12 dessins (aliens, vaisseaux) | | |
+| **Space Game** (`SpaceGame`) | **3/11** : les 12 images retirées ; fond, fusée, soucoupes et boss dessinés par script (`make_space_images.py`) | ✔ 3/11 (fond de nuit douce choisi, cœurs, pastilles, jauge du boss, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin ou boss après 1 / 3 min ou 20 / 50 extraterrestres, boss de 15 / 30 / 50 points de vie, 4 / 6 / 8 extraterrestres) |
 | Cakes (`Cakes`) | À confirmer : 24 dessins | | |
 | Follow (`Follow`) | À confirmer : 13 dessins | | |
 | **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
@@ -2077,3 +2077,41 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   le rôle du réglage des entrées. Tests mis à jour (souris par un vrai `MouseEvent`, tir vers l'avant dans le sens
   du dernier déplacement).
 - **Essai du mainteneur (3/11/2026)** : tout est bon ; commité et poussé.
+
+### Space Game (`SpaceGame`, code `space`) — 3/11/2026
+
+- **État des lieux (3/11/2026)** : une carte, Facile / Normal / Difficile, qui ne changeaient que la vitesse des
+  lasers du joueur (0,5 s, 2 s, 4 s pour traverser l'écran). Fusée en bas qui suit le regard ou la souris (règle 2
+  déjà suivie), tir tout seul ; 10 extraterrestres qui vont et viennent et tirent au hasard (1 chance sur 1 500 par
+  image) ; un boss de 125 points de vie au 24ᵉ extraterrestre ; score 1 par extraterrestre, 125 par boss ; **une
+  seule vie**, puis score, meilleur score (`space-game/highscore.dat`) et bouton pour rejouer, jamais l'écran des
+  statistiques. Défauts : revisionnage cassé (extraterrestres lus dans `space/biboule`, qui n'existe pas) ; à chaque
+  image, de nouveaux écouteurs de collision pour chaque paire laser–extraterrestre, jamais retirés (risque de
+  ralentissement, non mesuré) ; tirs comptés en images ; pas de pause à l'engrenage ; pas d'aide. Images : 12 de
+  source inconnue (les lasers portent les noms de fichiers de Kenney, CC0 : hypothèse non vérifiée), vignette qui
+  ressemble à une photo du commerce.
+- **Règle du mainteneur (3/11/2026)** : comme Survivre contre des robots : **3 vies**, fins sans fin, 1 ou 3 minutes,
+  20 ou 50 extraterrestres ; **le boss arrive à la fin du temps ou au nombre d'extraterrestres, et le battre fait
+  gagner** ; sans fin, pas de boss ; **boss de 15, 30 ou 50 points de vie** selon le niveau ; tout redessiner ;
+  d'accord pour retirer les niveaux par la vitesse des lasers. Planche `build/game-screenshots/propositions/
+  space-propositions.png` : **fond A (nuit douce) choisi** (pas le pastel) ; dessins, niveaux (4, 6, 8
+  extraterrestres ; un tir toutes les 6, 4, 2,5 s environ) et retrait du meilleur score validés.
+- **Fait** : le jeu réécrit (`SpaceGame`, classes internes `Alien`, `Boss`, `Shot` ; `Alien`, `Boss` et
+  `SpaceGameVariant` retirés) : une seule boucle en temps réel, vitesse d'animation des réglages, arrêtée pendant le
+  menu de l'engrenage ; collisions calculées à chaque pas (plus d'écouteurs) ; revisionnage réparé (même graine). La
+  fusée va en bas vers le regard ou la souris ; lasers toutes les 0,45 s, même vitesse à tous les niveaux. Un
+  extraterrestre arrive en 0,6 s (ni touché ni tireur pendant ce temps). Le boss : les autres extraterrestres
+  s'effacent, il descend en 1,5 s (ni touché pendant ce temps), va et vient, lâche 3 boules toutes les 1,3 s, jauge
+  de vie au-dessus de lui ; battu : éclair, « Bravo », statistiques. 3 cœurs, 2 s de clignotement ; « Perdu ! ».
+  Pastilles « Extraterrestres : 12 / 20 », le temps au milieu, puis « Le boss ! ». Statistiques : un but à atteindre
+  par extraterrestre venu et pour le boss, un but atteint par extraterrestre détruit et pour le boss (le nom
+  `space-game` gardé ; avant, les buts atteints valaient le score). **Le meilleur score n'est plus lu ni écrit** :
+  les fichiers `highscore.dat` déjà écrits restent sur le disque, sans servir. Variantes : `GroupedGameVariant`
+  (`SpaceLevel`, `SpaceEnd`), 15 ; une ancienne variante se joue en Normal, sans fin. Images : `make_space_images.py`
+  (nuit, fusée, 5 soucoupes, boss ; vignette composée) ; éclair et sons du Tir ; les 12 anciennes retirées.
+  Traductions, aide (une ligne par niveau : extraterrestres à la fois, tirs, vie du boss), crédits, inventaire.
+- **Vérifications** : `SpaceGameTest` (8 tests : 3 vies et clignotement ; laser qui détruit ; boss après 20
+  extraterrestres à chaque niveau, de 15, 30, 50 points de vie, pas touché en arrivant, battu : « Bravo » ; boss
+  après 1 minute, aucun sans fin ; extraterrestres du niveau ; souris, fusée en bas ; variantes ; tout retiré à la
+  fin) ; `GameHelpTest` avec le jeu ; capture en vraie fenêtre (souris) `build/game-screenshots/essai1/space/` ; `build` : 716 tests, 0 échec ; `allGamesTest -PallGamesOnly=SpaceGame -PallGamesRepeat=3` réussi.
+- **Essai du mainteneur (3/11/2026)** : tout est bon. **Nom français** demandé : « La bataille de l'espace » (colonne `fra` de `SpaceGame` ; les autres langues gardent leur nom).
