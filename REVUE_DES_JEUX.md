@@ -263,6 +263,12 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    `build` complet réussis (665 tests). **Hypothèse** : test dépendant d'un délai (l'écran des statistiques vient
    après une pause que le test n'attend pas toujours assez), machine chargée. Si ça revient : noter l'heure et le
    message, regarder le délai attendu par le test et celui du jeu avant `showRoundStats`.
+9. **À surveiller, puis à chercher à la toute fin** (comme les points 7 et 8) : le 3/11/2026 vers 14 h 40, pendant un
+   `build` complet (machine chargée par des captures en vraie fenêtre juste avant), un test du Jeu de l'œuf a échoué
+   une fois : `EggGameTest.shouldCrackAgainWhileStayingOnTheEgg`, « hatched without looking away ==> expected
+   HATCHED but was READY » (ligne 140), en 6,8 s. Le changement en cours (`ProgressButton`) ne touche pas ce jeu.
+   Relancé : le test seul 3 fois, puis le `build` complet réussis (733 tests). **Hypothèse** : test qui attend en
+   temps réel, trop juste quand la machine est chargée. Si ça revient : regarder les délais attendus par le test.
 
 ## Règles pour chaque jeu
 
@@ -348,6 +354,34 @@ boutons radio en haut). Tests : `GameVariantDialogTest`. Captures `3a-variantes-
   « À deux (clavier et regard) » reste ; 6 variantes au lieu de 9 ; une ancienne variante « seul au clavier » se
   joue seule. Aide et traductions mises à jour. Les autres jeux revus n'utilisent ni le clavier ni la scène entière :
   « dès qu'on regarde / après une fixation » (Tir, Bulles) est une façon de toucher, pas un choix de l'entrée.
+
+## Troisième règle : l'anneau de fixation (demande du mainteneur du 3/11/2026, après Défendre le château)
+
+Toute fixation d'un jeu revu montre **l'anneau** des jeux revus (couleur principale sur un disque clair), jamais
+l'ancien indicateur de progression (`ProgressIndicator` : le disque qui se remplit, de la couleur des réglages). Deux
+composants communs le dessinent, dans `gazeplay-games-commons` : `FixationRing` (un anneau posé où l'on veut ; Coloriage,
+Défendre le château) et `ProgressButton` (bouton rond choisi par une fixation).
+
+**Passe sur les jeux déjà revus (3/11/2026)** : recherche de `ProgressIndicator`, `ProgressButton`, `ProgressPortrait`,
+`ProgressPane`, `GazeIndicator`, `IGazeProgressIndicator` et `getProgressBarColor` dans les paquets des jeux revus et
+dans les composants communs qu'ils utilisent (`GazeRoundButton`, `DiceRoller`, `GameStyle`… : aucun indicateur). Seul
+**Les petits chevaux** gardait l'ancien indicateur, par `ProgressButton` (lancer du dé, choix des équipes, pions).
+**Fait** (choix du mainteneur : le composant commun plutôt que ce seul jeu) : **`ProgressButton` dessine l'anneau**
+(même délai de 300 ms, même durée de fixation, même taille d'indicateur des réglages ; pour un bouton dimensionné par sa
+largeur et sa hauteur sans disque, comme les écuries des Petits chevaux, l'anneau prend le bouton entier : à la
+première capture il n'était qu'un point) ; `assignIndicatorUpdatable` ne rend plus l'indicateur (aucun jeu ne s'en
+servait). **Les 9 jeux pas encore revus qui l'utilisent passent aussi à l'anneau** : Biboule Jump, Bouteilles, Gâteaux,
+Dés, Jeu de l'oie, Échelles, Potions magiques, Pierre-feuille-ciseaux, Morpion. Restent avec l'ancien indicateur,
+jusqu'à leur revue, les 18 jeux qui créent le leur ou utilisent les autres composants (paquets `colorblend`,
+`connect4`, `creampie`, `cups`, `dice` (en plus de ses `ProgressButton`), `dottodot`, `labyrinth`, `literacy`, `magiccards`,
+`math101`, `moles`, `ninja`, `order`, `pianosight`, `rushhour`, `simon`, `slidingpuzzle`, `trainSwitches`), par
+leur propre `ProgressIndicator` ou par `ProgressPortrait`, `ProgressPane`, `GazeIndicator`. Tests `ProgressButtonTest` (3) ; `allGamesTest` complet :
+66 entrées, 0 échec ; capture en vraie fenêtre (souris sur une écurie) `build/game-screenshots/essai2/progressbutton/`.
+**Retour du mainteneur (3/11/2026)** : l'anneau est bon, mais **l'image du dé ou du pion tremblait** pendant qu'il se
+remplissait. Cause : l'anneau prenait part à la mise en page du bouton (un `StackPane`), et les limites d'un arc
+changent un peu pendant qu'il se remplit (elles suivent ses courbes) ; le bouton recentrait son contenu à chaque
+changement (l'anneau de `FixationRing`, posé à part, n'a pas ce problème). **Fait** : l'anneau est hors de la mise en
+page, centré sur le bouton ; test `shouldKeepTheImageInItsPlaceWhileTheRingFills`.
 
 ## Marche à suivre pour chaque jeu
 
