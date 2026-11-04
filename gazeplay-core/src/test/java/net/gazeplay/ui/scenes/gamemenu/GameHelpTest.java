@@ -53,7 +53,7 @@ class GameHelpTest {
         "WhereIsTheLetter", "WhereIsTheNumber", "WhereIsTheShape", "FindTheOddOneOut", "WhereIsIt", "Coloring",
         "FrogsRace", "Horses", "Memory", "SoundsOfLife", "SpotDifference", "Pet", "FlowerOfNumbers", "Opinions", "SprintFinish", "Bubbles", "EggGame", "Shooter",
         "SurviveAgainstRobots", "SpaceGame",
-        "TowerDefense", "CasseBrique", "Ninja"})
+        "TowerDefense", "CasseBrique", "Ninja", "WhacAMole"})
     void shouldExplainEachReviewedGameInFrenchAndInEnglish(String nameCode) {
         assertTrue(GameHelp.exists(nameCode));
         List<String> french = HelpDialog.read(GameHelp.FOLDER + nameCode + "-", "fra");
@@ -69,7 +69,7 @@ class GameHelpTest {
 
     @Test
     void shouldHaveNoHelpForAGameNotReviewedYet() {
-        assertFalse(GameHelp.exists("WhacAMole"));
+        assertFalse(GameHelp.exists("BibJump"));
     }
 
     /**

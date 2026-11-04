@@ -8,14 +8,19 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 ## AVANCEMENT DU MERCREDI 4/11/2026 (commité et poussé)
 
 **Travail à faire après la revue des jeux** (en plus de la liste plus bas) : la mémoire des tests (section « Mémoire des
-tests de `gazeplay-games` »). Le blocage du regard pendant le temps avant sélection a été essayé au Tobii et validé par le
+tests de `gazeplay-games` ») ; **retirer les limiteurs de temps et de score** (décision du mainteneur du 4/11/2026 : le
+laboratoire ne s'en sert plus, chaque jeu revu a ses propres fins) : les 2 lignes des réglages, `startScoreLimiter`,
+`startTimeLimiter`, leurs appels dans les jeux, les clés `LIMITER_*` de `Configuration` (les anciens fichiers de réglages
+restent lisibles, comme pour `QUIT_KEY`) ; aucun fichier de résultats ne change. D'ici là, ne pas les rétablir dans Bulles,
+Egg Game, GazePlay Eval, Tir et La bataille de l'espace. Le blocage du regard pendant le temps avant sélection a été essayé au Tobii et validé par le
 mainteneur.
 
 CI de `28487a21b` : verte. **Ninja** revu (voir sa fiche), essayé et validé par le mainteneur. Quatrième règle (durée
 de fixation) : Dés et Lettres corrigés, clic de l'engrenage à 2 s. Tests : mémoire analysée et limite à 4 Go (section
 « Mémoire des tests », suite à décider) ; plantage audio de la JVM des tests (point 7) identifié et corrigé, à surveiller.
 Memory : anneau visible sur les cartes cachées. Cinquième et sixième règles (temps avant sélection, sens de l'anneau) ;
-le temps avant sélection ne s'applique qu'aux jeux qui avaient déjà ce blocage (décision du mainteneur). Ensuite : Taupes.
+le temps avant sélection ne s'applique qu'aux jeux qui avaient déjà ce blocage (décision du mainteneur). **Jeu de la
+taupe** revu (voir sa fiche), essayé et validé par le mainteneur. Ensuite : Biboule Jump, puis Gaze Race.
 
 ## REPRISE DU MERCREDI 4/11/2026 (bilan de la séance du mardi 3/11/2026)
 
@@ -366,7 +371,7 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
   utilisateur n'est ni supprimé ni repris (pas de migration, 2.0).
 
   Jeux avec la variante : Coloring (« Palette personnalisée », dossier des coloriages), Opinions, Memory, Bubbles,
-  Egg Game, Casse-brique, Ninja (dossier commun).
+  Egg Game, Casse-brique, Ninja, Jeu de la taupe (dossier commun).
 
 ## Aide des jeux (demande du mainteneur du 30/10/2026, validée le 30/10/2026)
 
@@ -606,7 +611,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Rush Hour (`RushHour`) | À confirmer : 4 images | | |
 | Tic Tac Toe (`TicTacToe`) | À confirmer : 3 images | | |
 | Order (`Order`) | À confirmer : 3 images | | |
-| Whac-A-Mole (`WhacAMole`) | À confirmer : 3 images (Biboule) | | |
+| **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
 | Simon (`Simon`) | À confirmer : 2 images | | |
 | Cups and Balls, Dice, Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
@@ -2357,6 +2362,28 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   SHA-256) dans `data/biboulejump/menu/restart.png` ; recherche refaite sur les noms de dossiers et de fichiers de
   toutes les ressources retirées le 3/11 : aucun autre usage ; `allGamesTest` complet : 66 entrées, 0 échec.
   **Leçon** : après avoir retiré des ressources, lancer `allGamesTest` en entier, pas seulement le jeu revu.
+
+### Jeu de la taupe (`WhacAMole`, code `moles`) — 4/11/2026
+
+- **État des lieux (lecture du code)** : 10 trous ; une Biboule ou une image sort, une fixation la tape. Ni fin, ni
+  niveaux, ni pénalité, pas de taupe. Défauts : cible dehors 2 à 4,5 s pour une fixation de 2 s par défaut (impossible à
+  partir de 4,5 s) ; une cible de plus toutes les 0,5 s, jusqu'à 10 à la fois ; rien d'arrêté pendant l'engrenage (buts
+  comptés quand même) ; minuterie `java.util.Timer` jamais arrêtée à la fin ; images déformées ; fixation qui survit à
+  la cible ; regard ignoré pendant la sortie ; vitesse d'animation partielle ; « Score: » non traduit ; ancien
+  indicateur ; repli silencieux sur les images par défaut ; ni aide ni test ; images et sons de source inconnue.
+- **Règle du mainteneur (4/11/2026, recommandations validées)** : voir le tableau ci-dessus. Pas de vies ni de pénalité.
+- **Fait** : le jeu réécrit (`Moles`, classe interne `Hole` ; `MolesChar` et `MolesGameVariant` retirés), une boucle en
+  temps réel, vitesse d'animation des réglages, arrêtée pendant l'engrenage. La zone qui reçoit le regard et la souris
+  ne bouge pas : elle couvre le trou et la place de la cible, un regard déjà là compte dès que la cible apparaît. Fixation
+  lue à chaque pas, sortie de moins de 0,3 s tolérée comme dans Ninja ; une fixation en cours n'est pas coupée par la fin du
+  temps dehors. Le dernier trou utilisé est exclu du tirage suivant. `info-game.csv` et les zones d'intérêt
+  (`TargetAOI`) gardés. Clé `UserP` retirée (seul ce jeu la lisait), `Biboule` gardée (Puzzle).
+- **Retour du mainteneur (souris)** : zone trop grande, depuis un trou du haut on sélectionnait celui du bas. **Fait** :
+  la zone suit ce qui est dessiné (largeur et hauteur de la cible, arrêt au bord avant du trou) et les rangées sont
+  légèrement décalées ; un test vérifie que les zones de deux trous ne se touchent jamais, pour les taupes, les Biboules et
+  « Mes images ».
+- **Vérifications** : `MolesTest` (17 tests) ; captures sans fenêtre (taupes, Biboules) ; `build` complet : **789 tests,
+  0 échec** ; `allGamesTest` complet réussi. **Essayé et validé par le mainteneur le 4/11/2026.**
 
 ### Ninja (`Ninja`, code `ninja`) — 4/11/2026
 

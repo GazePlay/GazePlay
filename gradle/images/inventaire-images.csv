@@ -92,7 +92,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,source i
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-numbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
-gazeplay-core/src/main/resources/data/common/Thumbnails/mole.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
+gazeplay-core/src/main/resources/data/common/Thumbnails/mole.png,oui,libre,"capture du jeu (4/11/2026) ; pré, trous et taupes dessinés pour le projet (make_moles_images.py)",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
 gazeplay-core/src/main/resources/data/common/Thumbnails/ninja.png,oui,libre,"capture du jeu (4/11/2026) ; verger et fruits dessinés pour le projet (make_ninja_images.py)",2026-11-04,GazePlay Learning,revue de Ninja
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
@@ -837,9 +837,9 @@ gazeplay-games/src/main/resources/data/trainSwitches/images/whiteStation.png,oui
 gazeplay-games/src/main/resources/data/trainSwitches/images/yellowLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
 gazeplay-games/src/main/resources/data/trainSwitches/images/yellowLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
 gazeplay-games/src/main/resources/data/trainSwitches/images/yellowStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/whackmole/images/bibouleMole.png,oui,source inconnue,,2018-05-15,MelanieCarriere,End of Whack a mole
-gazeplay-games/src/main/resources/data/whackmole/images/molesGround.jpg,oui,source inconnue,,2018-05-15,MelanieCarriere,End of Whack a mole
-gazeplay-games/src/main/resources/data/whackmole/images/molesGroundTransparent.png,oui,source inconnue,,2018-05-15,MelanieCarriere,End of Whack a mole
+gazeplay-games/src/main/resources/data/whackmole/images/field.png,oui,libre,"dessiné pour le projet (gradle/images/make_moles_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
+gazeplay-games/src/main/resources/data/whackmole/images/hole.png,oui,libre,"dessiné pour le projet (gradle/images/make_moles_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
+gazeplay-games/src/main/resources/data/whackmole/images/mole.png,oui,libre,"dessiné pour le projet (gradle/images/make_moles_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_2.jpg,oui,libre,"Wikimedia Commons, Malene Thyssen, CC BY 2.5",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/bear/bear_3.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)

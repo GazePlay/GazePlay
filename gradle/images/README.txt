@@ -98,6 +98,12 @@ heart.png) are drawn by make_survive_images.py (this folder), under the license 
 are those of the shooting game (data/shooter). The thumbnail (gazeplay-core:
 data/common/Thumbnails/surviveAgainstRobots.png, 960 x 540) is made of these pictures by the same script.
 
+Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
+(images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
+by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)
+three pictures and two sounds of unknown source; the Biboules are those of the shooting game (data/shooter). The thumbnail
+(gazeplay-core: data/common/Thumbnails/mole.png, 960 x 540) is a capture of the game.
+
 Images and sounds of Ninja (gazeplay-games: data/ninja): the orchard and the eight fruits (images/orchard.png,
 apple.png, pear.png, orange.png, lemon.png, strawberry.png, peach.png, plum.png, kiwi.png) are drawn by
 make_ninja_images.py and the sounds (sounds/slice1-3.wav) made by make_ninja_sounds.py (this folder), under the license

@@ -155,6 +155,9 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images du jeu « Survivre contre des robots » (data/surviveAgainstRobots) : ciel, jardin, cour de l'école et
   bonus faits pour GazePlay Learning (gradle/images/make_survive_images.py), sous la licence du projet ; la Biboule
   et les robots sont ceux du jeu « Tir ».
+- Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
+  (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
+  jeu « Tir ».
 - Images et sons du jeu « Ninja ! » (data/ninja) : verger, fruits et sons faits pour GazePlay Learning
   (gradle/images/make_ninja_images.py, make_ninja_sounds.py), sous la licence du projet.
 - Images et sons du jeu « Tir » (data/shooter) : salle de classe, rue et sons faits pour GazePlay Learning
