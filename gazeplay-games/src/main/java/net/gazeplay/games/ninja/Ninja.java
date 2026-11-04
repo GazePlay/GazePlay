@@ -182,6 +182,9 @@ public class Ninja implements GameLifeCycle {
           final NinjaCut cut, final NinjaEnd end, final NinjaTarget target, final double gameSeed) {
         this.gameContext = gameContext;
         this.configuration = gameContext.getConfiguration();
+        // The limits of score and of time of the settings
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.stats = stats;
         this.trajectory = trajectory;
         this.speed = speed;
