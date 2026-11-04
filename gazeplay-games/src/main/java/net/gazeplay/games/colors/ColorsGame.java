@@ -187,7 +187,7 @@ public class ColorsGame implements GameLifeCycle {
         root.widthProperty().addListener(resizeListener);
         root.heightProperty().addListener(resizeListener);
 
-        gameContext.onGameStarted(3000);
+        gameContext.onGameStarted();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
     }

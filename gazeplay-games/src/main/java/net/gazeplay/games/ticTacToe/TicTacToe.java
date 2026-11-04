@@ -87,7 +87,7 @@ public class TicTacToe extends Parent implements GameLifeCycle {
         button();
         player1 = true;
 
-        gameContext.onGameStarted(2000);
+        gameContext.onGameStarted();
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);

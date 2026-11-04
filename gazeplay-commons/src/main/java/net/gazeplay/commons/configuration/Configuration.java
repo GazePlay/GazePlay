@@ -41,6 +41,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_COUNTRY = "COUNTRY";
     /* Games settings */
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTION_LENGTH";
+    private static final String PROPERTY_NAME_GAME_START_DELAY = "GAME_START_DELAY";
     private static final String PROPERTY_NAME_QUESTION_REASKED_ON_FAIL = "QUESTION_REASKED_ON_FAIL";
     private static final String PROPERTY_NAME_REWARD_SOUND_ENABLED = "REWARD_SOUND_ENABLED";
     private static final String PROPERTY_NAME_LIMITER_TIME_ENABLED = "LIMITER_TIME_ENABLED";
@@ -119,6 +120,7 @@ public class Configuration {
     /* Eye-tracking settings */
     private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii_and_mouse.toString();
     public static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
+    private static final int DEFAULT_VALUE_GAME_START_DELAY = 1000;
     /* Graphics settings */
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
@@ -196,6 +198,11 @@ public class Configuration {
     private final StringProperty eyeTrackerProperty;
     @Getter
     private final IntegerProperty fixationLengthProperty;
+    /**
+     * The milliseconds during which nothing can be selected when a game or a round appears.
+     */
+    @Getter
+    private final IntegerProperty gameStartDelayProperty;
     /* Graphics settings */
     @Getter
     private final StringProperty cssFileProperty;
@@ -300,6 +307,7 @@ public class Configuration {
         /* Eye-tracking settings */
         eyeTrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYE_TRACKER, DEFAULT_VALUE_EYE_TRACKER, propertyChangeListener);
         fixationLengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATION_LENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
+        gameStartDelayProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_GAME_START_DELAY, DEFAULT_VALUE_GAME_START_DELAY, propertyChangeListener);
 
         /* Graphics settings */
         cssFileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSS_FILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
@@ -496,6 +504,10 @@ public class Configuration {
 
     public Integer getFixationLength() {
         return fixationLengthProperty.getValue();
+    }
+
+    public int getGameStartDelay() {
+        return gameStartDelayProperty.getValue();
     }
 
     /* Graphics settings */

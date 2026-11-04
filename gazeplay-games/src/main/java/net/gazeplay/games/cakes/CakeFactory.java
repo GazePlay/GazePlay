@@ -742,7 +742,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         this.gameContext.firstStart();
-        gameContext.onGameStarted(2000);
+        gameContext.onGameStarted();
     }
 
     @Override

@@ -176,6 +176,7 @@ class ConfigurationContextTest {
             // button leaves a game)
             assertFalse(has(sections, "QuitKey"));
             assertInstanceOf(Spinner.class, control(sections, "QuestionLength"));
+            assertInstanceOf(Spinner.class, control(sections, "GameStartDelay"));
             assertInstanceOf(CheckBox.class, control(sections, "ReaskQuestionOnFail"));
             assertInstanceOf(CheckBox.class, control(sections, "EnableRewardSound"));
             assertInstanceOf(HBox.class, control(sections, "Limiter Time"));

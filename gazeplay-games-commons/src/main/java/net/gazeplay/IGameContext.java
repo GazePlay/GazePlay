@@ -116,14 +116,11 @@ public interface IGameContext {
     void showRoundStats(Stats stats, GameLifeCycle currentGame);
 
     /**
-     * Does nothing (kept for the games that call it).
+     * Disables the game area while the round appears, so that nothing is selected by accident, for the time chosen in
+     * the settings (GAME_START_DELAY, 1 s by default, none at 0; maintainer's request of 4/11/2026: the games used to
+     * choose 2 or 3 s themselves).
      */
     void onGameStarted();
-
-    /**
-     * Disables the game area for {@code delay} ms, so that nothing can be selected while the round appears.
-     */
-    void onGameStarted(int delay);
 
     /**
      * Removes the fixation length control from the side panel, for the games that do not use it.

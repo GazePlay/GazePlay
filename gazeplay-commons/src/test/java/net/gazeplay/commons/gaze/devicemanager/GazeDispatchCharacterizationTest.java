@@ -213,6 +213,24 @@ class GazeDispatchCharacterizationTest {
 
         assertEquals(List.of(), eventTypes());
     }
+
+    /**
+     * While its parent is disabled (the game area, for the time before a selection when a game starts), a node receives
+     * nothing from the gaze; a look already there counts as soon as the parent is enabled again, at the next sample.
+     */
+    @Test
+    void shouldFireNothingWhileAParentIsDisabledThenEnterAtTheNextSample() throws InterruptedException {
+        startRecording();
+        onFxThread(() -> target.getParent().setDisable(true));
+
+        sample(125, 125, "gaze");
+        assertEquals(List.of(), eventTypes());
+
+        onFxThread(() -> target.getParent().setDisable(false));
+        sample(125, 125, "gaze");
+        assertEquals(List.of("GAZE_ENTERED"), eventTypes());
+    }
+
     /**
      * While the configuration menu of the game screen is open, the dispatch is paused: the node under the gaze
      * receives GAZE_EXITED at once (no fixation ends during the settings), and nothing more until the menu closes.

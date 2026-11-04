@@ -100,8 +100,7 @@ final class EvalTarget {
             rectangle.setArcHeight(arc);
             rectangle.setStrokeType(StrokeType.INSIDE);
             ring = rectangle;
-            double radius = arc / 2;
-            ringPerimeter = 2 * (bounds.getWidth() + bounds.getHeight()) - (8 - 2 * Math.PI) * radius;
+            ringPerimeter = GameStyle.clockwiseRing(rectangle);
         }
         ring.setFill(null);
         ring.setStrokeWidth(ringWidth);
@@ -109,8 +108,13 @@ final class EvalTarget {
         ring.setStyle("-fx-stroke: -gp-accent;");
         ring.setMouseTransparent(true);
         ring.setVisible(false);
-        progress.addListener((observable, before, value) ->
-            ring.getStrokeDashArray().setAll(Math.max(0.01, value.doubleValue() * ringPerimeter), ringPerimeter));
+        progress.addListener((observable, before, value) -> {
+            if (ring instanceof Rectangle rectangle) {
+                GameStyle.fillRing(rectangle, ringPerimeter, value.doubleValue());
+            } else {
+                ring.getStrokeDashArray().setAll(Math.max(0.01, value.doubleValue() * ringPerimeter), ringPerimeter);
+            }
+        });
         indicatorLayer.getChildren().add(ring);
 
         area.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> onEnter(EvalSessionRecorder.MOUSE, e.getX(), e.getY(), 0));

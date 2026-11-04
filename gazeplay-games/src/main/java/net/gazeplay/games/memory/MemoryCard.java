@@ -25,8 +25,9 @@ import net.gazeplay.components.GameStyle;
 
 /**
  * A card of Memory (reviewed on 30/10/2026): a rounded card of the colors of the menus showing a picture, a letter or a
- * digit, face down (a back of the main color with a "?") or face up. During a fixation, a ring of the main color goes
- * round the card; at its end, the card is chosen ({@link Memory#cardFixated}). It turns over with an animation, is
+ * digit, face down (a back of the main color with a "?") or face up. During a fixation, a ring goes round the card (of
+ * the main color, or of the color of the "?" on a back); at its end, the card is chosen
+ * ({@link Memory#cardFixated}). It turns over with an animation, is
  * framed in green with its pair, or in the color "danger" for a wrong pair.
  */
 public class MemoryCard extends Group {
@@ -118,9 +119,9 @@ public class MemoryCard extends Group {
         ring.setStrokeWidth(Math.max(5, Math.min(width, height) * 0.045));
         ring.setVisible(false);
         ring.setMouseTransparent(true);
-        ringPerimeter = 2 * (width + height) - (8 - 2 * Math.PI) * radius;
+        ringPerimeter = GameStyle.clockwiseRing(ring);
         fixationProgress.addListener((observable, oldValue, newValue) ->
-            ring.getStrokeDashArray().setAll(newValue.doubleValue() * ringPerimeter, ringPerimeter));
+            GameStyle.fillRing(ring, ringPerimeter, newValue.doubleValue()));
 
         getChildren().addAll(face, back, ring);
 
@@ -160,7 +161,9 @@ public class MemoryCard extends Group {
             return;
         }
         stopFixation();
-        ring.setStyle("-fx-stroke: -gp-accent;");
+        // On the back of a card, which has the main color, the ring would not be seen in that color (maintainer's remark
+        // of 4/11/2026): it takes the color of the "?"
+        ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-accent") + ";");
         ring.setVisible(true);
         fixationProgress.set(0);
         fixation = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
@@ -238,6 +241,20 @@ public class MemoryCard extends Group {
     void release() {
         stopFixation();
         gameContext.getGazeDeviceManager().removeEventFilter(this);
+    }
+
+    /**
+     * @return the ring of the fixation, mirrored to go clockwise
+     */
+    double getRingScaleX() {
+        return ring.getScaleX();
+    }
+
+    /**
+     * @return the style of the ring of the fixation
+     */
+    String getRingStyle() {
+        return ring.getStyle();
     }
 
     /**

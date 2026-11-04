@@ -102,7 +102,7 @@ public class MagicCards implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.onGameStarted(3000);
+        gameContext.onGameStarted();
     }
 
     @Override

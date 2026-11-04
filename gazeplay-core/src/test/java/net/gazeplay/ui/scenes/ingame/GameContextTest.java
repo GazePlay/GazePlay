@@ -104,6 +104,34 @@ class GameContextTest {
         when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
     }
 
+    /**
+     * The time before a selection is that of the settings, for every game (maintainer's request of 4/11/2026).
+     */
+    @Test
+    void shouldBlockTheGameAreaForTheDelayOfTheSettings() throws Exception {
+        when(mockRoot.getChildren()).thenReturn(mockList);
+        when(mockConfiguration.getGameStartDelay()).thenReturn(50);
+        GameContext gameContext = new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo,
+            mockHBox, mockGazeDeviceManager, mockSoundManager, mockConfigPane);
+
+        org.testfx.util.WaitForAsyncUtils.asyncFx(gameContext::onGameStarted).get();
+
+        verify(mockGamingRoot).setDisable(true);
+        verify(mockGamingRoot, timeout(5000)).setDisable(false);
+    }
+
+    @Test
+    void shouldNotBlockTheGameAreaWithoutDelay() throws Exception {
+        when(mockRoot.getChildren()).thenReturn(mockList);
+        when(mockConfiguration.getGameStartDelay()).thenReturn(0);
+        GameContext gameContext = new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo,
+            mockHBox, mockGazeDeviceManager, mockSoundManager, mockConfigPane);
+
+        org.testfx.util.WaitForAsyncUtils.asyncFx(gameContext::onGameStarted).get();
+
+        verify(mockGamingRoot, never()).setDisable(true);
+    }
+
     @Test
     void shouldInitialisePointersOnConstruction() {
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(true);

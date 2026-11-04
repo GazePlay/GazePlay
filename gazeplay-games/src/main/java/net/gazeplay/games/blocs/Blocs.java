@@ -174,7 +174,7 @@ public class Blocs implements GameLifeCycle {
       
         gameContext.setOffFixationLengthControl();
 
-        gameContext.onGameStarted(2000);
+        gameContext.onGameStarted();
     }
 
     @Override

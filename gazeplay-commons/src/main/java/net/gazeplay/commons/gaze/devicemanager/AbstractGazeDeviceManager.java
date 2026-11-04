@@ -254,7 +254,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
      */
     boolean eventFire(double positionX, double positionY, GazeInfos gi, String event, long sampleTime) {
         final Node node = gi.getNode();
-        if (node.isDisable()) {
+        // Disabled itself or through a parent: when a game starts, the game area is disabled for the time of the settings,
+        // which stopped the mouse but not the gaze (isDisable() only looks at the node; maintainer's remark of 4/11/2026)
+        if (node.isDisabled()) {
             return false;
         }
         final boolean gaze = event.equals("gaze");

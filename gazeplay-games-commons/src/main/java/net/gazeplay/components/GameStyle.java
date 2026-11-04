@@ -139,6 +139,28 @@ public final class GameStyle {
     }
 
     /**
+     * Prepares the ring of a fixation around a card, filled by {@link #fillRing}: it starts at the top center and goes
+     * clockwise, like the round rings of the games. The outline of a rounded rectangle starts at the top left and goes
+     * down (maintainer's remark of 4/11/2026, measured on a rendering): the ring is mirrored and its start shifted.
+     *
+     * @return the length of the outline of the ring
+     */
+    public static double clockwiseRing(final Rectangle ring) {
+        final double radius = ring.getArcWidth() / 2;
+        ring.setScaleX(-1);
+        ring.setStrokeDashOffset(ring.getWidth() / 2 - radius + Math.PI * radius / 2);
+        return 2 * (ring.getWidth() + ring.getHeight()) - (8 - 2 * Math.PI) * radius;
+    }
+
+    /**
+     * Fills a ring prepared by {@link #clockwiseRing}, from 0 to 1.
+     */
+    public static void fillRing(final Rectangle ring, final double perimeter, final double progress) {
+        final double filled = Math.max(0.01, progress * perimeter);
+        ring.getStrokeDashArray().setAll(filled, Math.max(0, perimeter - filled));
+    }
+
+    /**
      * @return a text in the title font on a rounded label (colors of the menus), its top left corner at (0, 0)
      */
     public static Group pill(final String content, final double fontSize) {

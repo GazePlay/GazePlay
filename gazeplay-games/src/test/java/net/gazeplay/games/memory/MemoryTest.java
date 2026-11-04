@@ -129,6 +129,27 @@ class MemoryTest {
     }
 
     /**
+     * The ring of the fixation stands out from the card: not of the main color on the back of a card, which has that
+     * color (maintainer's remark of 4/11/2026: it could not be seen), of the main color on a face.
+     */
+    @Test
+    void shouldShowTheRingOfTheFixationInAColorSeenOnTheCard() throws Exception {
+        Memory hidden = launchedGame("MemoryContentNumbers", MemoryGameVariantGenerator.HIDDEN, "2x2");
+        WaitForAsyncUtils.asyncFx(() -> javafx.event.Event.fireEvent(hidden.getCards().get(0),
+            new net.gazeplay.commons.gaze.devicemanager.GazeEvent(
+                net.gazeplay.commons.gaze.devicemanager.GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
+        assertEquals("-fx-stroke: -gp-on-accent;", hidden.getCards().get(0).getRingStyle());
+        assertEquals(-1, hidden.getCards().get(0).getRingScaleX(), "mirrored, to go clockwise");
+        WaitForAsyncUtils.asyncFx(hidden::dispose).get();
+
+        Memory visible = launchedGame("MemoryContentNumbers", MemoryGameVariantGenerator.VISIBLE, "2x2");
+        WaitForAsyncUtils.asyncFx(() -> javafx.event.Event.fireEvent(visible.getCards().get(0),
+            new net.gazeplay.commons.gaze.devicemanager.GazeEvent(
+                net.gazeplay.commons.gaze.devicemanager.GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
+        assertEquals("-fx-stroke: -gp-accent;", visible.getCards().get(0).getRingStyle());
+    }
+
+    /**
      * Two cards of a pair: framed in green, counted, then removed; no card can be chosen meanwhile.
      */
     @Test

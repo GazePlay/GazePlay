@@ -91,9 +91,9 @@ class ValueTarget extends Group {
         ring.setStyle("-fx-stroke: -gp-accent;");
         ring.setMouseTransparent(true);
         ring.setVisible(false);
-        ringPerimeter = 2 * (width + height) - (8 - 2 * Math.PI) * radius;
+        ringPerimeter = GameStyle.clockwiseRing(ring);
         progress.addListener((observable, oldValue, newValue) ->
-            ring.getStrokeDashArray().setAll(Math.max(0.01, newValue.doubleValue() * ringPerimeter), ringPerimeter));
+            GameStyle.fillRing(ring, ringPerimeter, newValue.doubleValue()));
 
         getChildren().addAll(background, content, ring);
 

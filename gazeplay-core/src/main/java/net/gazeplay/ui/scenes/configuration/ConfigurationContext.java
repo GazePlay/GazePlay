@@ -191,6 +191,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return new SettingsPage.SectionBuilder("SettingsGames", MenuIcon.GAMES)
             .add("QuestionLength", buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
                 0.5, config.getQuestionLengthProperty()))
+            .add("GameStartDelay", buildSpinner(0, 5, (double) config.getGameStartDelay() / 1000,
+                0.1, config.getGameStartDelayProperty()))
             .add("ReaskQuestionOnFail", buildCheckBox(config.getQuestionReaskedOnFailProperty()))
             .add("EnableRewardSound", buildCheckBox(config.getRewardSoundEnabledProperty()))
             .add("Limiter Time", buildLimiterTime(config, translator))

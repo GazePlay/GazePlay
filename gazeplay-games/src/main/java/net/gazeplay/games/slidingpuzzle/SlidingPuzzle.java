@@ -140,7 +140,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.onGameStarted(2000);
+        gameContext.onGameStarted();
     }
 
     @Override

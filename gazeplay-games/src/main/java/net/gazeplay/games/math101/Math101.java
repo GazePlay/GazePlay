@@ -229,7 +229,7 @@ public class Math101 implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach();
         gameContext.firstStart();
-        gameContext.onGameStarted(2000);
+        gameContext.onGameStarted();
     }
 
     @Override

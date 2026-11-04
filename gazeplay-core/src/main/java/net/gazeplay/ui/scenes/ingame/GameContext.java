@@ -539,19 +539,20 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void onGameStarted() {
-    }
-
-    public void setOffFixationLengthControl() {
-        leftControlPane.getChildren().remove(fixPan);
-    }
-
-    public void onGameStarted(int delay) {
+        final int delay = getConfiguration().getGameStartDelay();
+        if (delay <= 0) {
+            return;
+        }
         gamingRoot.setDisable(true);
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
         wait.setOnFinished(waitEvent -> {
             gamingRoot.setDisable(false);
         });
         wait.play();
+    }
+
+    public void setOffFixationLengthControl() {
+        leftControlPane.getChildren().remove(fixPan);
     }
 
 }

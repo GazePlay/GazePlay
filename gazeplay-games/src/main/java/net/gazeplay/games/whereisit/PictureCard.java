@@ -105,9 +105,9 @@ class PictureCard extends Group {
         ring.setStyle("-fx-stroke: -gp-accent;");
         ring.setVisible(false);
         ring.setMouseTransparent(true);
-        this.ringPerimeter = 2 * (width + height) - (8 - 2 * Math.PI) * radius;
+        this.ringPerimeter = GameStyle.clockwiseRing(ring);
         fixationProgress.addListener((observable, oldValue, newValue) ->
-            ring.getStrokeDashArray().setAll(newValue.doubleValue() * ringPerimeter, ringPerimeter));
+            GameStyle.fillRing(ring, ringPerimeter, newValue.doubleValue()));
 
         this.errorMark = createErrorMark(posX + width / 2, posY + height / 2, Math.min(width, height) * 0.18);
 
