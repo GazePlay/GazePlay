@@ -209,7 +209,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HBox controlButtonPane;
 
-        if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+        if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && (stats.getCurrentGameVariant().contains("NinjaAdaptive") || stats.getCurrentGameVariant().contains("DYNAMIC")))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
 
         else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))

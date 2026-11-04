@@ -93,7 +93,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,oui,so
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-numbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/mole.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
-gazeplay-core/src/main/resources/data/common/Thumbnails/ninja.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
+gazeplay-core/src/main/resources/data/common/Thumbnails/ninja.png,oui,libre,"capture du jeu (4/11/2026) ; verger et fruits dessinés pour le projet (make_ninja_images.py)",2026-11-04,GazePlay Learning,revue de Ninja
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
@@ -716,6 +716,15 @@ gazeplay-games/src/main/resources/data/space/images/Red.png,oui,libre,"dessiné 
 gazeplay-games/src/main/resources/data/space/images/Yellow.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
 gazeplay-games/src/main/resources/data/space/images/boss.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
 gazeplay-games/src/main/resources/data/space/images/night.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
+gazeplay-games/src/main/resources/data/ninja/images/apple.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/kiwi.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/lemon.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/orange.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/orchard.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/peach.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/pear.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/plum.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
+gazeplay-games/src/main/resources/data/ninja/images/strawberry.png,oui,libre,"dessiné pour le projet (gradle/images/make_ninja_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue de Ninja
 gazeplay-games/src/main/resources/data/space/images/ship.png,oui,libre,"dessiné pour le projet (gradle/images/make_space_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Space Game
 gazeplay-games/src/main/resources/data/spotthedifferences/camp-easy.png,oui,libre,"dessiné pour le projet (gradle/images/make_spotdifferences_images.py), GPL-3.0-or-later ; objets OpenMoji, CC BY-SA 4.0",2026-10-30,GazePlay Learning,revue de Spot The Differences
 gazeplay-games/src/main/resources/data/spotthedifferences/camp-hard.png,oui,libre,"dessiné pour le projet (gradle/images/make_spotdifferences_images.py), GPL-3.0-or-later ; objets OpenMoji, CC BY-SA 4.0",2026-10-30,GazePlay Learning,revue de Spot The Differences

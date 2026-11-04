@@ -5,6 +5,56 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## AVANCEMENT DU MERCREDI 4/11/2026 (commité et poussé)
+
+**Travail à faire après la revue des jeux** (en plus de la liste plus bas) : la mémoire des tests (section « Mémoire des
+tests de `gazeplay-games` »). Le blocage du regard pendant le temps avant sélection a été essayé au Tobii et validé par le
+mainteneur.
+
+CI de `28487a21b` : verte. **Ninja** revu (voir sa fiche), essayé et validé par le mainteneur. Quatrième règle (durée
+de fixation) : Dés et Lettres corrigés, clic de l'engrenage à 2 s. Tests : mémoire analysée et limite à 4 Go (section
+« Mémoire des tests », suite à décider) ; plantage audio de la JVM des tests (point 7) identifié et corrigé, à surveiller.
+Memory : anneau visible sur les cartes cachées. Cinquième et sixième règles (temps avant sélection, sens de l'anneau) ;
+le temps avant sélection ne s'applique qu'aux jeux qui avaient déjà ce blocage (décision du mainteneur). Ensuite : Taupes.
+
+## REPRISE DU MERCREDI 4/11/2026 (bilan de la séance du mardi 3/11/2026)
+
+**État laissé le 3/11/2026 au soir** : tout est commité et poussé sur `addClaudeCode`, dernier commit `28487a21b`.
+Rien en cours dans la copie de travail, à part ce bilan. Dernier `build` complet suivi de `allGamesTest` (66 entrées) :
+réussis, 0 échec (avant la correction du rebond du Casse-brique, vérifiée ensuite par ses tests et son lancement
+seul). CI : verte jusqu'à `8609c0f67` (run 41655428200) ; **celle de `28487a21b` (run 41668084609) était en cours :
+à vérifier à la reprise**.
+
+**Fait le 3/11/2026** (un commit par point, chacun essayé et validé par le mainteneur) :
+
+| Commit | Quoi |
+|---|---|
+| `efaee9596` | Tir : Biboule modernisée (version A, bouche et ailes d'origine), dans le Tir seulement ; vignette refaite |
+| `e737d5465` | Survivre contre des robots : une seule carte, 3 vies, 3 décors au hasard, modes sans fin / temps / nombre de robots |
+| `ac18c2e01` | Passe sur les jeux déjà revus pour les deux nouvelles règles (aide avec valeurs concrètes, pas de choix d'entrée dans les variantes) |
+| `e56673de2` | La bataille de l'espace (Space Game) : 3 vies, boss de 15 / 30 / 50 points de vie, fond de nuit, nom français |
+| `faf782014` | Défendre le château (Tower Defense) : fins de partie, niveaux, vagues gardées, anneau, boutique et rôle de la tour bleue |
+| `334114085` | Bouteilles : le jeu démarre de nouveau (image `restart.png` retirée avec Space Game) |
+| `8609c0f67` | `ProgressButton` dessine l'anneau de fixation (plus l'ancien cercle jaune) dans tous les jeux ; l'image ne tremble plus |
+| `28487a21b` | Casse-brique revu (3 vies, 3 niveaux, 4 dessins, fond dessiné ou « Mes images » sous un voile clair qui s'efface, balle qui rebondit en haut de l'écran) **et un seul dossier d'images pour tous les jeux** (`Documents\GazePlay_Learning\images`, réglage « Mes images » ; coloriages à part ; dossier `files`, `FILE_DIR` et `CustomFileChooser` retirés ; raccourcis dans `raccourcis`) |
+
+**Leçon du 3/11** : après avoir retiré des ressources, chercher par nom de dossier **et** de fichier, et lancer
+`allGamesTest` **complet** (les Bouteilles lisaient une image de Space Game).
+
+**À faire mercredi, dans l'ordre** :
+
+1. Vérifier la CI de `28487a21b`.
+2. **Continuer la revue, groupe 6** : **Ninja**, puis Taupes (Whac-A-Mole), Biboule Jump, Gaze Race. Pour chaque
+   jeu : état des lieux, **demander d'abord la règle voulue**, propositions validées, puis le travail ; appliquer les
+   règles de chaque jeu (aide avec valeurs concrètes, pas de choix d'entrée dans les variantes, anneau de fixation
+   partout) ; **variante « Mes images »** pour un jeu qui lit des images de l'utilisateur (Ninja lit déjà le dossier
+   commun par `Portrait`, avec repli sur ses images) ; un commit par jeu, sur demande.
+3. Jeux pas encore revus qui lisent le dossier commun sans variante (à leur passer une variante lors de leur revue) :
+   Cartes magiques, Tarte à la crème, Échelle, Taupes, Ninja, Diviseur, Blocs, Lettres.
+4. Toujours à la fin de la revue : refonte de l'engrenage des jeux **et** de l'écran des statistiques ; tests
+   instables (points 7, 8 et 9 : plantage d'une JVM de test, GazeplayEvalTest, `EggGameTest`) ; inventaire des sons ;
+   notes de version 2.0 (les utilisateurs remettent leurs images dans le nouveau dossier commun).
+
 ## REPRISE DU MARDI 3/11/2026 (bilan de la séance du lundi 2/11/2026)
 
 **État laissé le 2/11/2026 au soir** : tout est commité et poussé (demande du mainteneur), y compris le **jeu « Tir »**
@@ -254,6 +304,15 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    jeux du 28/10 (`MMDevAPI.dll` déchargée, arrêt dans `rpcrt4.dll` sans `hs_err`), que
    `GazePlayLauncher.keepTheWindowsAudioLibraryLoaded` évite dans les jeux mais pas dans la JVM des tests. À vérifier
    à la fin, en ouvrant les vidages (module fautif).
+   **Revenu le 4/11/2026 à 10 h 44** (`build` complet, même code de sortie, derniers résultats écrits : `AppModeTest`,
+   `GazePlayModeTest`, `MenuOrientationTest` ; vidages `java.exe.8768.dmp` et `java.exe(1).8768.dmp`). **Fait, vu dans le
+   journal Application de Windows (événement 1000)** : module fautif **`MMDevApi.dll`**, code 0xC0000005, processus 8768,
+   `java.exe`. Le module fautif de l'hypothèse est donc confirmé pour ce plantage ; il n'a rien à voir avec la mémoire.
+   **Correctif du 4/11/2026 (demande du mainteneur)** : `WindowsAudioLibrary.keepLoaded` (`gazeplay-commons`, code
+   déplacé de `GazePlayLauncher`) est aussi appelé dans les JVM de test de `gazeplay-commons`, `gazeplay-core` et
+   `gazeplay-games`, avant tout test, par `KeepWindowsAudioLoadedListener` (test fixtures) ; `WindowsAudioLibraryTest`
+   vérifie que l'écouteur s'est exécuté. Le plantage étant rare (3 fois en 6 jours), son absence ne se juge que dans la
+   durée : **à surveiller**.
 8. **À surveiller, puis à chercher à la toute fin** (décision du mainteneur du 2/11/2026, comme le point 7) : le
    2/11/2026 vers 14 h 30, pendant un `build` complet, un test de GazePlay Eval a échoué une fois :
    `GazeplayEvalTest.shouldPlayAnEvaluationToItsEndAndWriteItsResults` (`gazeplay-games`), « Wanted but not
@@ -307,7 +366,7 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
   utilisateur n'est ni supprimé ni repris (pas de migration, 2.0).
 
   Jeux avec la variante : Coloring (« Palette personnalisée », dossier des coloriages), Opinions, Memory, Bubbles,
-  Egg Game, Casse-brique (dossier commun).
+  Egg Game, Casse-brique, Ninja (dossier commun).
 
 ## Aide des jeux (demande du mainteneur du 30/10/2026, validée le 30/10/2026)
 
@@ -385,6 +444,61 @@ remplissait. Cause : l'anneau prenait part à la mise en page du bouton (un `Sta
 changent un peu pendant qu'il se remplit (elles suivent ses courbes) ; le bouton recentrait son contenu à chaque
 changement (l'anneau de `FixationRing`, posé à part, n'a pas ce problème). **Fait** : l'anneau est hors de la mise en
 page, centré sur le bouton ; test `shouldKeepTheImageInItsPlaceWhileTheRingFills`.
+
+## Mémoire des tests de `gazeplay-games` (analyse du 4/11/2026)
+
+**Faits mesurés** (sonde temporaire : mémoire occupée après un nettoyage complet, à la fin de chaque classe de tests) :
+la suite finit à **2 920 Mo** ; en libérant les objets simulés de Mockito après chaque classe
+(`Mockito.framework().clearInlineMocks()`), elle finit à **502 Mo**. Dans l'histogramme de fin, les tableaux d'octets
+pèsent environ 2 250 Mo. Les plus grosses marches : Flower Of Numbers 510 Mo, Survive 589 Mo, Where
+Is It 437 Mo, Spot The Differences 227 Mo, Tower Defense 222 Mo. **Déduction** : les objets simulés retiennent les jeux
+reçus en arguments, donc leurs images ; aucune chaîne de références n'a été suivie dans un vidage.
+
+**Limite** : `build.gradle` donne 4 Go aux tests depuis le 4/11/2026.
+
+**Si l'on libère les objets simulés, 5 tests échouent** (`DisabledMockException`) : une minuterie d'un jeu de la classe
+précédente se déclenche après la fin de ses tests (Casse-brique `lose`, Egg Game `hatch`, Space Game `lose`, Sprint Finish
+`startCountdown`) et l'erreur tombe sur le test suivant. Ces tests ne ferment pas leur partie. **Travail à faire après
+la revue des jeux (décision du mainteneur du 4/11/2026)** : fermer ces parties à la fin de leurs tests, ajouter la
+libération après chaque classe, revenir à 3 Go.
+
+## Quatrième règle : la durée de fixation (demande du mainteneur du 4/11/2026, à la revue de Ninja)
+
+Dans **tous les jeux**, la durée d'une fixation est **celle des réglages**, qui se change aussi **depuis le jeu**, par
+l'engrenage bleu (`FixationLengthControl`) : pas de durée propre à un jeu, et une valeur lue **à chaque fixation**, pas
+gardée depuis le début de la partie ou de la manche. Un jeu peut proposer de toucher « tout de suite » (sans fixation,
+comme le Tir ou les Bulles) ; dès qu'il y a une fixation, sa durée suit cette règle.
+
+**État au 4/11/2026** (recherche dans le code ; une durée écrite autrement a pu lui échapper) : presque tous les jeux
+lisaient déjà la valeur à chaque fixation. **Deux exceptions corrigées** (décision du mainteneur : tout de suite, sans
+attendre leur revue) : **Dés** (`ProgressPane`, 2 s écrites en dur) et **Lettres** (`Bloc`, valeur gardée à la création
+de la manche). Test `ProgressPaneTest`. **Clic sur la valeur dans l'engrenage** : il remet maintenant 2 s, la vraie valeur
+par défaut (il donnait 0,5 s ; `FixationLengthControlTest`). Champs copiés mais jamais lus, à retirer à la revue de leur
+jeu : `CakeFactory`, `Cup`, `Potion`, `Labyrinth`.
+
+**Fait vu en passant, non corrigé** : `GameContext.setOffFixationLengthControl()`, appelé par 6 jeux (Dessin, Blocs,
+Diviseur, Room, Frogs Race, Follow), ne fait rien : son champ `fixPan` n'est jamais rempli. Le réglage de fixation reste
+donc affiché dans leur engrenage. À voir à la refonte de l'engrenage.
+
+## Cinquième règle : le temps avant sélection (demande du mainteneur du 4/11/2026, à l'essai de Memory)
+
+Quand un jeu ou une manche apparaît, rien n'est sélectionnable pendant **le temps choisi dans les réglages** (Jeux,
+« Délai avant de pouvoir sélectionner au lancement d'un jeu », clé `GAME_START_DELAY`, **1 s par défaut**, de 0 à 5 s) :
+`IGameContext.onGameStarted()`, sans durée propre à un jeu (avant : 2 ou 3 s écrites dans 11 appels, rien dans Bouteilles
+dont l'appel était vide). Les autres jeux n'appellent pas ce blocage et n'attendent pas. Une nouvelle clé de réglages,
+sans effet sur les fichiers de résultats. Tests : `GameContextTest`, `ConfigurationContextTest`.
+**Retour du mainteneur (4/11/2026)** : le délai ne bloquait que la souris, pas le regard (`AbstractGazeDeviceManager`
+testait `isDisable()`, qui ignore le parent ; c'est maintenant `isDisabled()`). Les statistiques continuent d'enregistrer
+le regard pendant le délai. Test `GazeDispatchCharacterizationTest`.
+
+## Sixième règle : le sens de l'anneau (demande du mainteneur du 4/11/2026, à l'essai de Memory)
+
+« Anneau » = tout indicateur de fixation, autour d'une carte comme rond (décision du mainteneur). Tous partent **du haut
+et tournent dans le sens des aiguilles d'une montre**. Les contours de cartes allaient en sens inverse depuis le haut à
+gauche (mesuré sur un rendu) : `GameStyle.clockwiseRing` et `fillRing`, utilisés par Memory, Où est… (`PictureCard`),
+Flower Of Numbers, Opinions et GazePlay Eval. Les anneaux ronds sont des arcs de longueur négative (`FixationRing`,
+Bulles, Tir…) ou un cercle tourné de -90° (Sounds Of Life, GazePlay Eval). Test : `GameStyleRingTest`.
+**Memory** : sur une carte cachée, l'anneau prend la couleur du « ? » (`-gp-on-accent`), il était invisible.
 
 ## Marche à suivre pour chaque jeu
 
@@ -469,7 +583,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
 | Labyrinth (`Labyrinth`) | **Remplacé le 28/10** : animaux sans fond (OpenMoji) ; à confirmer : 19 dessins (souris, flèches, fromage) et 9 du dossier `common` des jeux | | |
 | **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
-| Blocks, Ninja, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
+| **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
+| Blocks, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | Puzzle (`Puzzle`) | À confirmer : 36 images (Biboule, paysages) ; la Joconde est dans le domaine public | | |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
@@ -2242,6 +2357,36 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   SHA-256) dans `data/biboulejump/menu/restart.png` ; recherche refaite sur les noms de dossiers et de fichiers de
   toutes les ressources retirées le 3/11 : aucun autre usage ; `allGamesTest` complet : 66 entrées, 0 échec.
   **Leçon** : après avoir retiré des ressources, lancer `allGamesTest` en entier, pas seulement le jeu revu.
+
+### Ninja (`Ninja`, code `ninja`) — 4/11/2026
+
+- **État des lieux (4/11/2026, lecture du code)** : une cible ronde avec une image bouge ; une fixation la coupe en 10
+  petites boules ; elle revient environ 2,1 s plus tard. Ni fin, ni score, ni pénalité. 10 variantes : 5 trajectoires ×
+  Statique ou Dynamique. Défauts : **« Dynamique » ne pouvait pas accélérer avec la fixation par défaut de 2 s** (il fallait
+  toucher en 1 s, chaque touche comptait comme lente, la cible ralentissait jusqu'à 12 s par trajet) ; Horizontal
+  Dynamique prenait X pour la hauteur (cible hors de l'écran) ; Hasard Dynamique changeait de vitesse à chaque point de
+  passage, et par paliers ; moitié de la cible hors de l'écran à droite et en bas ; fixation perdue si elle commençait
+  pendant la disparition ; animation de coupe non arrêtée à la fin. Images de l'utilisateur en silence, ancien
+  indicateur, pas d'aide, pas de test ; son de 2017 de source inconnue, vignette montrant une lame absente du jeu.
+- **Règle du mainteneur (4/11/2026, recommandations validées)** : un seul fruit à suivre des yeux, coupé en deux ; pas
+  de vies ni de pénalité ; couper dès qu'on touche ou après une fixation ; sans fin, 20 ou 50 ; trajectoire et vitesse
+  séparées ; **thème des fruits** ; variante « Mes images » ; **la durée de fixation est celle des réglages**, changée
+  aussi par l'engrenage (quatrième règle, pour tous les jeux).
+- **Fait** : le jeu réécrit (`Ninja`, `Target` retiré) : une boucle en temps réel, vitesse d'animation des réglages,
+  arrêtée pendant l'engrenage. Fruit (ou image en rond) gardé dans l'écran. Vitesses (`NinjaSpeed`) : hauteur d'écran en
+  5, 3 ou 2 s, à vitesse constante. Adaptative : part de 3 s, tous les 3 fruits plus rapide s'ils sont coupés en moins de
+  1 s, plus lente s'ils prennent plus de 3 s, **sans compter la fixation**, entre 8 et 1,5 s ; un niveau par fruit dans la
+  courbe des statistiques. Fixation comptée par le jeu, durée lue à chaque pas ; **une sortie de moins de 0,3 s n'arrête
+  que l'anneau** (ajout à essayer au Tobii : le fruit bouge et l'oculomètre tremble) ; un regard déjà là quand le fruit
+  apparaît compte. Après la coupe : lame claire, deux moitiés qui s'écartent et tombent, nouveau fruit 0,6 s plus tard.
+  `FixationRing` gagne `show` et `setProgress`. **`GroupedGameVariant` accepte d'autres rangées de boutons radio**
+  (`extras`, forme écrite inchangée pour les autres jeux), la fenêtre des variantes les affiche et reste plus petite que
+  l'écran. Traductions (les 5 clés « Dynamic » retirées, les trajectoires gardent les leurs), aide, vignette (capture),
+  inventaire, crédits. `info-game.csv` inchangé. **Pas de ressemblance voulue avec Fruit Ninja** : pas de lancers, de
+  bombes, de combos, de fond en bois ni d'éclaboussures.
+- **Vérifications** : `NinjaTest` (16 tests) ; `GameHelpTest`, `GameVariantDialogTest` (rangées supplémentaires) ;
+  captures du jeu sans fenêtre (fruit, anneau, coupe), vues et bonnes ; `build` complet : **771 tests, 0 échec** ;
+  `allGamesTest` : **66 entrées, 0 échec** (4/11/2026). **Essayé et validé par le mainteneur le 4/11/2026.**
 
 ### Casse-brique (`CasseBrique`, code `cassebrique`) — 3/11/2026
 

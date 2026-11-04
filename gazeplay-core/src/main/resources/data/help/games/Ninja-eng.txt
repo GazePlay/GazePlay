@@ -1,0 +1,21 @@
+# The principle
+A fruit wanders in the orchard. Follow it with your eyes and cut it in two!
+
+# How to play
+- Only one fruit at a time moves on the screen. When it is cut, another one appears elsewhere, a little more than half a second later.
+- As chosen at the bottom of the window, the fruit is cut as soon as you touch it, or after a fixation: a ring fills around it while it keeps moving. Its length is that of the settings, also changed with the gear at the bottom left.
+- If you leave the fruit for less than 0.3 seconds, the ring waits for you. After that, it starts again from zero.
+- At the top right, the number of fruits cut.
+- The speed also follows the animation speed of the settings. Nothing moves while the menu of the gear is open.
+
+# How to win
+There are no lives and no penalty: a fruit missed simply goes on. As you chose, the game has no end (leave with the gear at the bottom left), or stops after 20 or 50 fruits cut: "Bravo", then the statistics.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The way of the fruit: at random across the screen, vertical, horizontal, or on one of the two diagonals (back and forth).
+- At the bottom, Fruits or My images: your images, cut into a circle ("My images" folder of the settings).
+- At the bottom, the speed: Slow, the fruit goes through the height of the screen in 5 seconds; Normal, in 3 seconds; Fast, in 2 seconds.
+- Adaptive: starts as Normal. Every 3 fruits, it gets faster if all of them were cut in less than 1 second, and slower if all of them took more than 3 seconds, without counting the fixation. It stays between 8 seconds and 1.5 seconds to go through the height of the screen.
+- At the bottom, how to cut: as soon as touched, or after a fixation.
+- At the bottom, the end of the game: without end, 20 or 50 to cut.

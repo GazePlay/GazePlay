@@ -98,6 +98,12 @@ heart.png) are drawn by make_survive_images.py (this folder), under the license 
 are those of the shooting game (data/shooter). The thumbnail (gazeplay-core:
 data/common/Thumbnails/surviveAgainstRobots.png, 960 x 540) is made of these pictures by the same script.
 
+Images and sounds of Ninja (gazeplay-games: data/ninja): the orchard and the eight fruits (images/orchard.png,
+apple.png, pear.png, orange.png, lemon.png, strawberry.png, peach.png, plum.png, kiwi.png) are drawn by
+make_ninja_images.py and the sounds (sounds/slice1-3.wav) made by make_ninja_sounds.py (this folder), under the license
+of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026) a sound of unknown source and the default images. The
+thumbnail (gazeplay-core: data/common/Thumbnails/ninja.png, 960 x 540) is a capture of the game.
+
 Images of Space Game (gazeplay-games: data/space/images): the night (night.png), the rocket (ship.png), the aliens in
 their saucers (Blue.png to Red.png) and the boss (boss.png) are drawn by make_space_images.py (this folder), under the
 license of GazePlay Learning (GPL-3.0-or-later). They replace (3/11/2026) twelve pictures of unknown source (two

@@ -134,7 +134,7 @@ class GameVariantDialogTest {
             dialog.close();
         }).get();
 
-        gameSpec = new GameSpec(GameSummary.builder().nameCode("Ninja").gameThumbnail("ninja").build(),
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("WhacAMole").gameThumbnail("mole").build(),
             gameSpec.getGameVariantGenerator(), mock(IGameLauncher.class));
         GameVariantDialog withoutHelp = openDialog(new BorderPane());
         assertNull(withoutHelp.getHelpButton());
@@ -208,7 +208,7 @@ class GameVariantDialogTest {
      */
     @Test
     void shouldStartAGameNotReviewedYetAtOnce() throws Exception {
-        gameSpec = new GameSpec(GameSummary.builder().nameCode("Ninja").gameThumbnail("ninja").build(),
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("WhacAMole").gameThumbnail("mole").build(),
             gameSpec.getGameVariantGenerator(), mock(IGameLauncher.class));
         GameVariantDialog dialog = openDialog(new BorderPane());
         assertNull(dialog.getStartButton());
@@ -248,6 +248,36 @@ class GameVariantDialogTest {
         WaitForAsyncUtils.asyncFx(() -> switches.get(3).fire()).get();
         WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
         verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, lettersVisible);
+    }
+
+    /**
+     * More choices than two groups (Ninja, 4/11/2026): one more row of switches for each, in their order, and "Start"
+     * starts the variant matching all of them.
+     */
+    @Test
+    void shouldShowARowOfSwitchesForEachOtherChoice() throws Exception {
+        IGameVariant first = new GroupedGameVariant("Fruits", "Slow", "Random", null, "AtOnce", "Endless");
+        IGameVariant other = new GroupedGameVariant("Fruits", "Slow", "Random", null, "AtOnce", "Twenty");
+        IGameVariant wanted = new GroupedGameVariant("Fruits", "Slow", "Random", null, "Fixation", "Twenty");
+        IGameVariant last = new GroupedGameVariant("Fruits", "Slow", "Random", null, "Fixation", "Endless");
+        IGameVariantGenerator generator = mock(IGameVariantGenerator.class);
+        when(generator.getVariants()).thenReturn(new LinkedHashSet<>(List.of(first, other, wanted, last)));
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Ninja").gameThumbnail("ninja").build(), generator,
+            mock(IGameLauncher.class));
+        GameVariantDialog dialog = openDialog(new BorderPane());
+
+        List<RadioButton> switches = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot()
+            .lookupAll(".radio-button").stream().map(RadioButton.class::cast).toList()).get();
+        assertEquals(List.of("AtOnce", "Fixation", "Endless", "Twenty"),
+            switches.stream().map(RadioButton::getText).toList());
+        VBox column = (VBox) switches.get(0).getParent().getParent();
+        assertEquals(1, column.getChildren().indexOf(switches.get(0).getParent()));
+        assertEquals(2, column.getChildren().indexOf(switches.get(2).getParent()));
+
+        WaitForAsyncUtils.asyncFx(() -> switches.get(1).fire()).get();
+        WaitForAsyncUtils.asyncFx(() -> switches.get(3).fire()).get();
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+        verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, wanted);
     }
 
     /**

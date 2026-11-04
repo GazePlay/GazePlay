@@ -79,6 +79,31 @@ public class FixationRing extends Group {
     }
 
     /**
+     * Shows the empty ring at a point, for a game counting the fixation itself (see {@link #setProgress(double)}), as
+     * "Ninja", where a short look away only stops it for a moment.
+     */
+    public void show(final double x, final double y) {
+        stop();
+        moveTo(x, y);
+        setVisible(true);
+        toFront();
+    }
+
+    /**
+     * Fills the ring shown by {@link #show(double, double)}, from 0 to 1.
+     */
+    public void setProgress(final double progress) {
+        progressArc.setLength(-360 * Math.max(0, Math.min(1, progress)));
+    }
+
+    /**
+     * @return how much the ring is filled, from 0 to 1
+     */
+    public double getProgress() {
+        return -progressArc.getLength() / 360;
+    }
+
+    /**
      * Moves the ring to a point.
      */
     public void moveTo(final double x, final double y) {

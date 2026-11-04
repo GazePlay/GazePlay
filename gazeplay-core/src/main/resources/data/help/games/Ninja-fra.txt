@@ -1,0 +1,21 @@
+# Le principe
+Un fruit se promène dans le verger. Suis-le des yeux et coupe-le en deux !
+
+# Comment jouer
+- Un seul fruit à la fois se déplace à l'écran. Quand il est coupé, un autre apparaît ailleurs, un peu plus d'une demi-seconde plus tard.
+- Selon le choix fait en bas de la fenêtre, le fruit est coupé dès que tu le touches, ou après une fixation : un anneau se remplit autour de lui pendant qu'il continue d'avancer. Sa durée est celle des réglages, qui se change aussi par l'engrenage en bas à gauche.
+- Si tu quittes le fruit moins de 0,3 seconde, l'anneau t'attend. Après, il repart de zéro.
+- En haut à droite, le nombre de fruits coupés.
+- La vitesse suit aussi la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert.
+
+# Comment gagner
+Il n'y a ni vies ni pénalité : un fruit manqué continue simplement sa route. Selon ton choix, le jeu est sans fin (quitte par l'engrenage en bas à gauche), ou s'arrête après 20 ou 50 fruits coupés : « Bravo », puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le chemin du fruit : au hasard à travers l'écran, vertical, horizontal, ou sur l'une des deux diagonales (aller-retour).
+- En bas, Fruits ou Mes images : tes images, découpées en rond (dossier « Mes images » des réglages).
+- En bas, la vitesse : Lente, le fruit traverse la hauteur de l'écran en 5 secondes ; Normale, en 3 secondes ; Rapide, en 2 secondes.
+- Adaptative : commence comme Normale. Tous les 3 fruits, elle accélère s'ils ont tous été coupés en moins de 1 seconde, et ralentit s'ils ont tous pris plus de 3 secondes, sans compter la fixation. Elle reste entre 8 secondes et 1,5 seconde pour traverser la hauteur de l'écran.
+- En bas, comment couper : dès qu'on touche, ou après une fixation.
+- En bas, la fin de la partie : sans fin, 20 ou 50 à couper.

@@ -310,7 +310,6 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("Simon") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
@@ -351,8 +350,7 @@ public class GameVariantDialog extends Stage {
                     categories[1] = new RadioButton("Simon Copy");
                     categories[2] = new RadioButton("Multiplayer");
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
-                    gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                    gameSpec.getGameSummary().getNameCode().equals("Ninja")
+                    gameSpec.getGameSummary().getNameCode().contains("Memory")
                 ) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Static"));
@@ -517,8 +515,10 @@ public class GameVariantDialog extends Stage {
 
         setScene(scene);
         setWidth(primaryStage.getWidth() * 0.6);
-        // Taller by the row of the help button, so that the variants keep their room
-        setHeight(primaryStage.getHeight() * 0.65 + (helpButton == null ? 0 : HELP_ROW_HEIGHT) + extraHeight);
+        // Taller by the row of the help button, so that the variants keep their room, but never taller than the screen
+        // (4/11/2026, the four rows of switches of Ninja)
+        setHeight(Math.min(primaryStage.getHeight(),
+            primaryStage.getHeight() * 0.65 + (helpButton == null ? 0 : HELP_ROW_HEIGHT) + extraHeight));
     }
 
     /**
@@ -628,11 +628,17 @@ public class GameVariantDialog extends Stage {
                                     final GameSpec gameSpec, final Parent root, final Translator translator,
                                     final VBox topPane, final VBox centerPane, final ScrollPane scroller) {
         final Map<String, FlowPane> panes = new LinkedHashMap<>();
-        final Set<String> groups = new LinkedHashSet<>();
-        final Set<String> subGroups = new LinkedHashSet<>();
+        // The values of each row of switches: the groups, the sub-groups, then the other switches of the game
+        final int rowCount = variants.get(0).getSwitches().size();
+        final List<Set<String>> rows = new ArrayList<>();
+        for (int i = 0; i < rowCount; i++) {
+            rows.add(new LinkedHashSet<>());
+        }
         for (final GroupedGameVariant variant : variants) {
-            groups.add(variant.getGroup());
-            subGroups.add(variant.getSubGroup());
+            final List<String> values = variant.getSwitches();
+            for (int i = 0; i < rowCount; i++) {
+                rows.get(i).add(values.get(i));
+            }
             final Button button = variantButton(variant.getLabel(translator), primaryStage);
             register(button, variant, () -> {
                 close();
@@ -643,35 +649,37 @@ public class GameVariantDialog extends Stage {
                     gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
                 }
             });
-            panes.computeIfAbsent(variant.getGroup() + "|" + variant.getSubGroup(), key -> createFlowPane())
-                .getChildren().add(button);
+            panes.computeIfAbsent(String.join("|", values), key -> createFlowPane()).getChildren().add(button);
         }
-        final String[] chosen = {groups.iterator().next(), subGroups.iterator().next()};
-        final Runnable show = () -> scroller.setContent(panes.getOrDefault(chosen[0] + "|" + chosen[1],
+        final String[] chosen = new String[rowCount];
+        for (int i = 0; i < rowCount; i++) {
+            chosen[i] = rows.get(i).iterator().next();
+        }
+        final Runnable show = () -> scroller.setContent(panes.getOrDefault(String.join("|", chosen),
             createFlowPane()));
-        // Under the variants: the groups, then the sub-groups just under them (maintainer's request of 30/10/2026: all
-        // the switches together at the bottom). A group or a sub-group alone has no switch (2/11/2026, Spot The
-        // Differences: one group only).
-        final FlowPane groupRow = switches(groups, translator, value -> {
-            chosen[0] = value;
-            show.run();
-        });
-        groupRow.setPadding(new Insets(16, 0, 0, 0));
-        final FlowPane subGroupRow = switches(subGroups, translator, value -> {
-            chosen[1] = value;
-            show.run();
-        });
-        if (groups.size() > 1 && subGroups.size() > 1) {
-            // A clear space between the two rows of switches (maintainer's request of 30/10/2026)
-            subGroupRow.setPadding(new Insets(SWITCH_ROWS_GAP, 0, 0, 0));
-            centerPane.getChildren().addAll(groupRow, subGroupRow);
-            // The window is taller by the second row and the space above it, so that the variants keep their room
-            extraHeight += SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT;
-        } else if (groups.size() > 1) {
-            centerPane.getChildren().add(groupRow);
-        } else if (subGroups.size() > 1) {
-            subGroupRow.setPadding(new Insets(16, 0, 0, 0));
-            centerPane.getChildren().add(subGroupRow);
+        // Under the variants: the groups, then the sub-groups just under them, then the other switches (maintainer's
+        // request of 30/10/2026: all the switches together at the bottom). A row with one value has no switch
+        // (2/11/2026, Spot The Differences: one group only).
+        boolean first = true;
+        for (int i = 0; i < rowCount; i++) {
+            if (rows.get(i).size() < 2) {
+                continue;
+            }
+            final int row = i;
+            final FlowPane switchRow = switches(rows.get(i), translator, value -> {
+                chosen[row] = value;
+                show.run();
+            });
+            if (first) {
+                switchRow.setPadding(new Insets(16, 0, 0, 0));
+            } else {
+                // A clear space between two rows of switches (maintainer's request of 30/10/2026); the window is taller
+                // by the row and the space above it, so that the variants keep their room
+                switchRow.setPadding(new Insets(SWITCH_ROWS_GAP, 0, 0, 0));
+                extraHeight += SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT;
+            }
+            first = false;
+            centerPane.getChildren().add(switchRow);
         }
         show.run();
     }
