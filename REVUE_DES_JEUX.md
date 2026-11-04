@@ -20,7 +20,8 @@ de fixation) : Dés et Lettres corrigés, clic de l'engrenage à 2 s. Tests : m�
 « Mémoire des tests », suite à décider) ; plantage audio de la JVM des tests (point 7) identifié et corrigé, à surveiller.
 Memory : anneau visible sur les cartes cachées. Cinquième et sixième règles (temps avant sélection, sens de l'anneau) ;
 le temps avant sélection ne s'applique qu'aux jeux qui avaient déjà ce blocage (décision du mainteneur). **Jeu de la
-taupe** revu (voir sa fiche), essayé et validé par le mainteneur. Ensuite : Biboule Jump, puis Gaze Race.
+taupe** revu (voir sa fiche), essayé et validé par le mainteneur. **Biboule Jump** revu (voir sa fiche), essayé et
+validé par le mainteneur. Musique du Tir livrée avec le jeu. Ensuite : Gaze Race.
 
 ## REPRISE DU MERCREDI 4/11/2026 (bilan de la séance du mardi 3/11/2026)
 
@@ -602,7 +603,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Follow (`Follow`) | À confirmer : 13 dessins | | |
 | **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
 | Divisor, Rabbits | À confirmer : 10 dessins (lapins) | | |
-| Biboule Jump (`BibJump`) | À confirmer : 9 dessins (Biboule) | | |
+| **Biboule Jump** (`BibJump`) | **4/11** : ciel, nuages, tremplin et sons faits par script (`make_biboulejump_images.py`, `make_biboulejump_sounds.py`) ; Biboules du Tir | ✔ 4/11 (Biboule non déformée, ciel, nuages et tremplin plus grand, cœurs, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : 3 vies, retour sur un nouveau nuage avec les points gardés ; sans fin, 1 ou 3 min ; Facile / Normal / Difficile ; même saut sur tout écran ; plus de record) |
 | Rock Paper Scissors | À confirmer : 7 dessins (mains façon gant de dessin animé) | | |
 | Piano (`Piano`) | À confirmer : 6 images | | |
 | Math101 (×5 opérations) | À confirmer : 5 images ; OK : tableau (Openclipart, domaine public) | | |
@@ -2362,6 +2363,36 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   SHA-256) dans `data/biboulejump/menu/restart.png` ; recherche refaite sur les noms de dossiers et de fichiers de
   toutes les ressources retirées le 3/11 : aucun autre usage ; `allGamesTest` complet : 66 entrées, 0 échec.
   **Leçon** : après avoir retiré des ressources, lancer `allGamesTest` en entier, pas seulement le jeu revu.
+
+### Biboule Jump (`BibJump`, code `biboulejump`) — 4/11/2026
+
+- **État des lieux (lecture du code)** : la Biboule rebondit de nuage en nuage et suit le regard de côté ; une chute finit
+  la partie (score, record, bouton pour rejouer) ; 2 variantes, avec ou sans nuages mobiles. Défauts : physique en pixels
+  fixes (un saut monte 53 % d'un écran 1080p, 27 % d'un écran 4K, pour des nuages jusqu'à 45 % l'un de l'autre, donc
+  inaccessibles en 4K) ; le jeu continue derrière l'engrenage ; score arrondi à chaque image ; « Nouveau record ! » à
+  égalité, même à 0 ; Biboule déformée, nuage à moitié hors de l'écran à droite, tremplin minuscule ; nuages mobiles jamais
+  arrêtés ; durée comptée deux fois ; ni aide ni test ; images et sons de source inconnue.
+- **Règle du mainteneur (4/11/2026, recommandations validées)** : 3 vies ; après une chute, elle repart sur un nouveau
+  nuage et garde ses points ; sans fin, 1 ou 3 minutes ; Facile / Normal / Difficile (nuages de 1/5, 1/7, 1/9 de la largeur ;
+  écart maximal 30, 40, 45 % de la hauteur ; 0, 1 sur 4, 1 sur 2 nuages mobiles) ; la Biboule modernisée du Tir ; **record
+  retiré** ; pas de « Mes images » (le jeu n'en lisait pas).
+- **Fait** : le jeu réécrit (`BibouleJump`, classe interne `Cloud` ; `Platform`, `MovingPlatform`, `BibouleJumpVariant`
+  et `HighScores`, plus utilisé, retirés), une boucle en temps réel, tout en parts de l'écran, vitesse d'animation des
+  réglages, arrêt pendant l'engrenage, aucune animation qui survit au jeu. Attente de 3 s avant le premier saut, de 1,5 s après
+  une chute (temps arrêté). Après une chute tous les nuages sont refaits, pour qu'un chemin existe toujours. 1 point par
+  centième de hauteur gagné. Pas de fixation dans ce jeu, donc pas d'anneau : le bouton pour rejouer a laissé la place à
+  l'écran des statistiques. Les fichiers `highscores.dat` déjà écrits restent sur le disque, sans servir. Clés
+  `Highscore`, `New highscore!`, `With moving platforms` et `Without moving platforms` retirées. Les 5 anciennes Biboules du
+  dossier et `restart.png` restent pour le Jeu de l'oie et les Bouteilles, qui les lisent.
+- **Vérifications** : `BibouleJumpTest` (21 tests, dont un joueur simulé qui monte sans tomber à tous les niveaux, en
+  1366 × 768, 1080p et 4K) ; captures sans fenêtre ; `build` complet : **809 tests, 0 échec** ; `allGamesTest` complet : 66
+  entrées, 0 échec (après la livraison de la musique du Tir, voir ci-dessous). **Essayé et validé par le mainteneur le
+  4/11/2026.**
+- **Trouvé pendant `allGamesTest` (4/11/2026)** : le Tir télécharge sa musique sur opengameart.org
+  (`ShooterGameSpecSource`, `backgroundMusicUrl`), avec une attente de 10 s. Le serveur n'a pas répondu à temps (`Read timed out`, cause exacte inconnue), ce qui est journalisé
+  en erreur par `BackgroundMusicManager`, et le test a échoué ; le jeu, lui, n'a pas été arrêté. Une fois la musique en cache,
+  plus de téléchargement. **Décision du mainteneur (4/11/2026)** : musique livrée avec le jeu
+  (`data/shooter/music/TalkingCuteChiptune.mp3`, CC0 d'après sa page OpenGameArt), plus aucun accès au réseau.
 
 ### Jeu de la taupe (`WhacAMole`, code `moles`) — 4/11/2026
 

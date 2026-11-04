@@ -69,7 +69,7 @@ class GameHelpTest {
 
     @Test
     void shouldHaveNoHelpForAGameNotReviewedYet() {
-        assertFalse(GameHelp.exists("BibJump"));
+        assertFalse(GameHelp.exists("Piano"));
     }
 
     /**

@@ -134,7 +134,7 @@ class GameVariantDialogTest {
             dialog.close();
         }).get();
 
-        gameSpec = new GameSpec(GameSummary.builder().nameCode("BibJump").gameThumbnail("biboulejump").build(),
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Piano").gameThumbnail("piano").build(),
             gameSpec.getGameVariantGenerator(), mock(IGameLauncher.class));
         GameVariantDialog withoutHelp = openDialog(new BorderPane());
         assertNull(withoutHelp.getHelpButton());
@@ -208,7 +208,7 @@ class GameVariantDialogTest {
      */
     @Test
     void shouldStartAGameNotReviewedYetAtOnce() throws Exception {
-        gameSpec = new GameSpec(GameSummary.builder().nameCode("BibJump").gameThumbnail("biboulejump").build(),
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Piano").gameThumbnail("piano").build(),
             gameSpec.getGameVariantGenerator(), mock(IGameLauncher.class));
         GameVariantDialog dialog = openDialog(new BorderPane());
         assertNull(dialog.getStartButton());

@@ -316,8 +316,6 @@ Normal,Normale,طبيعي,Нармальны,普通的,Normal,Κανονικός
 Hard,Vështirë,الصعب,Цяжка,难的,Schwer,Σκληρός,Hard,Kovaa,Difficile,सख्त,Teško,Keras,Difficile,難しい,Moeilijk,Ciężko,Duro,Жесткий,Difícil,Cứng,Keras
 Word Comprehension,,,,,,,Word Comprehension,,Compréhension de mots,,,,,,,,,,,,
 Sentence Comprehension,,,,,,,Sentence Comprehension,,Compréhension de phrases,,,,,,,,,,,,
-With moving platforms,Me platforma lëvizëse,,З платформамі якія рухаюцца,移动平台,,,With moving platforms,,Avec les plateformes animées,,,,Con piattaforme mobili,,Met bewegende platformen,,,С движущимися платформами,,,
-Without moving platforms,Pa platforma lëvizëse,,Без платформаў якія рухаюцца,固定平台,,,Without moving platforms,,Sans les plateformes animées,,,,Senza piattaforme mobili,,Zonder bewegende platformen,,,Без двигающихся платформ,,,
 BigBottles,,,вялікія бутэлькі,,,,big bottles,,grosses bouteilles,,,,,,,,,большие бутылки,,,
 HighBottles,,,высокія бутэлькі,,,,high botles,,grandes bouteilles,,,,,,,,,высокие бутылки,,,
 NormalBottles,,,звычайныя бутэлькі,,,,normal bottles,,bouteilles normales,,,,,,,,,обычные бутылки,,,
@@ -360,6 +358,14 @@ AnimeLook the movement arrows around the character to move,, مع واجهة م�
 AnimeLook the movement arrows around the labyrinth to move the character,,مع واجهة متحركة. أنظر الى الأسهم حول المتاهات لتتحرت الشخصية,,,,,with animation. Look the movement arrows around the labyrinth to move the character,,Avec animation. Regarde les flèches de mouvement autour du labyrinthe pour bouger le personnage,,,,,,,,,,,,
 AnimeSelect the character then look at the house box to move,,مع واجهة متحركة. إختر الشخصية ثم أنظر إلى المنزل لتتحرك,,,,,with animation. Select the character then look at the house box to move,,Avec animation. Selectionne le personnage et après regarde la maison de destination pour bouger,,,,,,,,,,,,
 Biboule,,,,,,,Biboule,,Biboule,,,,,,,,,,,,
+BibouleJumpEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+BibouleJumpNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+BibouleJumpHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+BibouleJumpEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+BibouleJumpTime1,,,,,,,1 minute,,1 minute,,,,,,,,,,,,
+BibouleJumpTime3,,,,,,,3 minutes,,3 minutes,,,,,,,,,,,,
+BibouleJumpScore,,,,,,,Points:,,Points :,,,,,,,,,,,,
+BibouleJumpLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
 MolesMoles,,,,,,,The moles,,Les taupes,,,,,,,,,,,,
 MolesBiboules,,,,,,,The Biboules,,Les Biboules,,,,,,,,,,,,
 MolesMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
@@ -630,8 +636,6 @@ Scores,Rezultatet,درجات,вынікі,分数,Spielstände,Σκορ,Scores,Pi
 # SPOT THE DIFFERENCES GAME
 
 # BIBOULE JUMP AND SPACE GAME
-Highscore,Rekord,أعلى نتيجة,Лепшы вынік,最高得分,,,Highscore,,Meilleur score,,,,Record !,,Hoogste Score,,,Лучший результат,Récord,,
-New highscore!,Rekord i ri !,نتيجة عالية جديدة,Новы рэкорд!,新记录！,,,New highscore!,,Nouveau meilleur score!,,,,Nuovo record !,,Nieuwe hoogste score!,,,Новый рекорд!,Niuevo récord !,,
 
 # CONNECT4 GAME
 CurrentPlayer,,,,,,,Current player :,,Joueur actuel :,,,,,,,,,,,,

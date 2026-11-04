@@ -1,469 +1,656 @@
 package net.gazeplay.games.biboulejump;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import lombok.extern.slf4j.Slf4j;
+import javafx.scene.shape.SVGPath;
+import javafx.util.Duration;
+import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.games.HighScores;
-import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
-import net.gazeplay.components.ProgressButton;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GameStyle;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Welcome to the Biboule Jump source code. I would advise you to stay away from it, I myself, the creator would much
- * rather do literally anything else than get back into this mess. But if you are courageous (or stupid?) enough, and
- * still want to tinker with the abominable physics involved, then please come on in, I applaud your bravery.
+ * Biboule Jump (reviewed on 4/11/2026, maintainer's rules): the Biboule bounces from cloud to cloud and goes where the
+ * gaze or the mouse is, sideways. A point for each hundredth of the height of the screen climbed. Three lives: after a
+ * fall, she starts again on a new cloud and the points stay. The game has no end, or ends after 1 or 3 minutes; then the
+ * statistics. There is no high score any more.
+ * <p>
+ * Everything is measured in parts of the screen: a jump climbs the same part of it on every screen. One loop moves
+ * everything in real time, at the animation speed of the settings; nothing moves while the menu of the gear is open.
+ * (Before the review: pixels per millisecond, so that a jump climbed 53 % of a screen in 1080p and 27 % in 4K, with clouds
+ * up to 45 % apart; a score rounded down at each image; the game going on behind the menu of the gear; moving clouds never
+ * stopped; one fall ending the game; a square Biboule.)
  */
-@Slf4j
-public class BibouleJump extends AnimationTimer implements GameLifeCycle {
+public class BibouleJump implements GameLifeCycle {
 
-    private static final String DATA_PATH = "data/biboulejump";
+    static final int LIVES = 3;
+    /**
+     * The seconds before the first jump, and before the jump after a fall.
+     */
+    static final double FIRST_WAIT = 3;
+    static final double WAIT_AFTER_FALL = 1.5;
+    /**
+     * In heights of the screen per second (squared): a jump climbs 53 % of the screen, a springboard twice as fast.
+     */
+    static final double GRAVITY = 4.63;
+    static final double JUMP_SPEED = 2.22;
+    static final double SPRINGBOARD_SPEED = 4.44;
+    static final double FALL_SPEED = 0.74;
+    /**
+     * In widths of the screen per second: the Biboule going sideways, and a moving cloud.
+     */
+    static final double SIDE_SPEED = 0.37;
+    static final double CLOUD_SPEED = 0.18;
+    /**
+     * How far a moving cloud goes from its place, in widths of the screen.
+     */
+    static final double CLOUD_RANGE = 0.18;
+    /**
+     * The height of the screen above which the Biboule makes the clouds go down, in parts of the screen.
+     */
+    static final double SCROLL_LINE = 0.45;
+    static final double SPRINGBOARD_CHANCE = 0.2;
+    /**
+     * The height of the top of the cloud where she starts, in parts of the screen.
+     */
+    static final double START_LINE = 0.8;
+
+    /**
+     * The picture of the Biboule: its height in parts of the screen, its proportions, where its feet and its body are.
+     */
+    private static final double BIBOULE_HEIGHT = 0.16;
+    private static final double BIBOULE_RATIO = 1.25;
+    private static final double FEET_IN_PICTURE = 0.865;
+    private static final double BODY_IN_PICTURE = 0.27;
+    private static final double FEET_WIDTH = 0.2;
+
+    private static final String[] BIBOULE_COLORS = {"Blue", "Green", "Yellow", "Orange", "Red"};
+    private static final String DATA = "data/biboulejump/";
+    private static final Map<String, Image> GAME_IMAGES = new HashMap<>();
+
+    enum Phase { PLAY, OVER }
 
     private final IGameContext gameContext;
+    private final Configuration configuration;
     private final BibouleJumpStats stats;
-    private final Dimension2D dimensions;
-    private final ReplayablePseudoRandom randomGenerator;
-    private final Configuration config;
-    private final BibouleJumpVariant variant;
+    @Getter
+    private final BibouleJumpLevel level;
+    @Getter
+    private final BibouleJumpEnd end;
+    private final ReplayablePseudoRandom random;
 
-    private ImageLibrary bibouleImages;
-    private ImageLibrary cloudImages;
-
-    private Group backgroundLayer;
-    private Group middleLayer;
-    private Rectangle interactionOverlay;
-
-    private Point2D gazeTarget;
-    private Point2D velocity;
-    private final double terminalVelocity = 0.8;
-
-    private double platformWidth;
-    private double platformHeight;
-    private Rectangle highestPlatform;
-
-    private long lastTickTime = 0;
-    private long minFPS = 1000;
-
-    private Rectangle biboule;
-    private Text scoreText;
-    private ArrayList<Platform> platforms;
-
+    @Getter
+    private Phase phase = Phase.OVER;
+    @Getter
+    private int lives;
+    @Getter
     private int score;
+    @Getter
+    private double timeLeft;
+    @Getter
+    private double waiting;
+    @Getter
+    private double bibouleX;
+    @Getter
+    private double feetY;
+    @Getter
+    private double velocity;
+    @Getter
+    private double aimX;
+    private double climbed;
+    private double squash;
+    private double tilt;
+    private boolean blinking;
 
-    private Rectangle shade;
-    private ProgressButton restartButton;
-    private Text finalScoreText;
+    @Getter
+    private double width;
+    @Getter
+    private double height;
+    private double pictureWidth;
+    private double pictureHeight;
+    private Group layer;
+    private Group cloudsLayer;
+    private Group hud;
+    private Rectangle area;
+    private ImageView biboule;
+    private PauseTransition lostPause;
 
-    public BibouleJump(final IGameContext gameContext, final BibouleJumpStats stats, final BibouleJumpVariant variant) {
-        this.gameContext = gameContext;
-        this.stats = stats;
-        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
-        this.config = gameContext.getConfiguration();
-        this.variant = variant;
-    }
+    @Getter
+    private final List<Cloud> clouds = new ArrayList<>();
+    private Cloud highest;
 
-    public BibouleJump(final IGameContext gameContext, final BibouleJumpStats stats, final BibouleJumpVariant variant, double gameSeed) {
-        this.gameContext = gameContext;
-        this.stats = stats;
-        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.config = gameContext.getConfiguration();
-        this.variant = variant;
-    }
+    private final EventHandler<Event> aimHandler = this::aim;
+
+    private final AnimationTimer loop = new AnimationTimer() {
+        private long last = -1;
+
+        @Override
+        public void handle(final long now) {
+            final double seconds = last < 0 ? 0 : Math.min(0.05, (now - last) / 1e9);
+            last = now;
+            if (!Stats.isConfigMenuOpen()) {
+                step(seconds);
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            last = -1;
+        }
+    };
+    private boolean manual;
 
     /**
-     * Makes the biboule jump, with a sound; the stronger the platform, the higher the jump.
+     * @param gameSeed the seed of the game to replay, or a negative value for a new game
      */
-    private void bounce(final double intensity, final String soundName) {
-        velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
-        gameContext.getSoundManager().add(DATA_PATH + "/sounds/" + soundName);
+    BibouleJump(final IGameContext gameContext, final BibouleJumpStats stats, final BibouleJumpLevel level,
+                final BibouleJumpEnd end, final double gameSeed) {
+        this.gameContext = gameContext;
+        this.configuration = gameContext.getConfiguration();
+        this.stats = stats;
+        this.level = level;
+        this.end = end;
+        if (gameSeed < 0) {
+            random = new ReplayablePseudoRandom();
+            stats.setGameSeed(random.getSeed());
+        } else {
+            random = new ReplayablePseudoRandom(gameSeed);
+        }
     }
 
-    /**
-     * Adds the background image, if enabled in the settings.
-     */
-    void initBackground() {
-        if (gameContext.getConfiguration().isBackgroundEnabled()) {
-            Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+    @Override
+    public void launch() {
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        width = dimension.getWidth();
+        height = dimension.getHeight();
 
+        final Image sky = gameImage(DATA + "sky.png");
+        final ImageView background = new ImageView(sky);
+        // Covers the screen, keeping its proportions
+        final double scale = Math.max(width / Math.max(1, sky.getWidth()), height / Math.max(1, sky.getHeight()));
+        background.setFitWidth(sky.getWidth() * scale);
+        background.setFitHeight(sky.getHeight() * scale);
+        background.setLayoutX((width - background.getFitWidth()) / 2);
+        background.setLayoutY((height - background.getFitHeight()) / 2);
+        background.setMouseTransparent(true);
 
-            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
-                @Override
-                public Void visitLight() {
-                    ColorAdjust grayscale = new ColorAdjust();
-                    grayscale.setSaturation(-0.7);
-                    backgroundImage.setFill(Color.LIGHTSKYBLUE);
-                    backgroundImage.setEffect(grayscale);
-                    return null;
-                }
+        // The whole screen receives the gaze and the mouse, as the setting of the inputs allows
+        area = new Rectangle(0, 0, width, height);
+        area.setFill(Color.TRANSPARENT);
 
-                @Override
-                public Void visitDark() {
-                    backgroundImage.setFill(Color.SKYBLUE);
-                    return null;
-                }
-            });
-            this.backgroundLayer.getChildren().add(backgroundImage);
+        pictureHeight = height * BIBOULE_HEIGHT;
+        pictureWidth = pictureHeight * BIBOULE_RATIO;
+        biboule = new ImageView(gameImage("data/shooter/biboule/images/"
+            + BIBOULE_COLORS[random.nextInt(BIBOULE_COLORS.length)] + ".png"));
+        biboule.setFitWidth(pictureWidth);
+        biboule.setFitHeight(pictureHeight);
+        biboule.setMouseTransparent(true);
+
+        cloudsLayer = new Group();
+        cloudsLayer.setMouseTransparent(true);
+        hud = new Group();
+        hud.setMouseTransparent(true);
+        layer = new Group(background, area, cloudsLayer, biboule, hud);
+        // The next clouds wait above the screen, and the screenshots of the statistics must not show them
+        layer.setClip(new Rectangle(0, 0, width, height));
+        gameContext.getChildren().add(layer);
+
+        gameContext.getGazeDeviceManager().addEventFilter(area);
+        area.addEventFilter(GazeEvent.ANY, aimHandler);
+        layer.addEventFilter(MouseEvent.MOUSE_MOVED, aimHandler);
+        layer.addEventFilter(MouseEvent.MOUSE_DRAGGED, aimHandler);
+
+        gameContext.getGazeDeviceManager().addStats(stats);
+        stats.notifyNewRoundReady();
+
+        lives = LIVES;
+        score = 0;
+        climbed = 0;
+        timeLeft = end.getSeconds();
+        phase = Phase.PLAY;
+        startOnANewCloud(FIRST_WAIT);
+        showHud();
+        if (!manual) {
+            loop.start();
         }
     }
 
     /**
-     * Sets up a new game by emptying out all the layers, and setting everything back to their initial values
+     * @return an image of the game, loaded once
      */
-    @Override
-    public void launch() {
+    private static Image gameImage(final String path) {
+        return GAME_IMAGES.computeIfAbsent(path, Image::new);
+    }
 
-        gameContext.getChildren().clear();
+    private void aim(final Event event) {
+        if (event instanceof GazeEvent gaze && (gaze.getEventType() == GazeEvent.GAZE_MOVED
+            || gaze.getEventType() == GazeEvent.GAZE_ENTERED)) {
+            aimAt(gaze.getX());
+        } else if (event instanceof MouseEvent mouse) {
+            aimAt(mouse.getX());
+        }
+    }
 
-        bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules", randomGenerator);
-        cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds", randomGenerator);
+    /**
+     * The place looked at (or of the mouse), where the Biboule goes.
+     */
+    void aimAt(final double x) {
+        aimX = x;
+    }
 
-        this.backgroundLayer = new Group();
-        this.middleLayer = new Group();
-        final Group foregroundLayer = new Group();
-        this.gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
+    /**
+     * Puts the Biboule on a cloud in the middle of the screen, with new clouds above it, so that she can always go on;
+     * she jumps after a wait.
+     */
+    private void startOnANewCloud(final double wait) {
+        clouds.forEach(cloud -> cloudsLayer.getChildren().remove(cloud.node));
+        clouds.clear();
+        final double cloudWidth = width * level.getCloudWidth();
+        highest = addCloud(width / 2, height * START_LINE, cloudWidth, false, false);
+        feetY = highest.surface;
+        generateClouds();
+        bibouleX = width / 2;
+        aimX = bibouleX;
+        velocity = 0;
+        squash = 0;
+        tilt = 0;
+        waiting = wait;
+        placeBiboule();
+    }
 
-        this.platforms = new ArrayList<>();
-        this.platformHeight = dimensions.getHeight() / 10;
-        this.platformWidth = dimensions.getWidth() / 7;
-
-        initBackground();
-
-        scoreText = new Text(0, 50, "0");
-        scoreText.setTextAlignment(TextAlignment.CENTER);
-        scoreText.setFont(new Font(50));
-        scoreText.setWrappingWidth(dimensions.getWidth());
-        Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
-            @Override
-            public Color visitLight() {
-                return Color.BLACK;
+    /**
+     * New clouds above the highest one, up to one screen above the screen. Each one can be reached from the one under it:
+     * a jump climbs 53 % of the screen, and goes sideways while it lasts.
+     */
+    private void generateClouds() {
+        final double cloudWidth = width * level.getCloudWidth();
+        while (highest.surface > -height) {
+            final double gap = level.getMinGap() + (level.getMaxGap() - level.getMinGap()) * random.nextDouble();
+            final double shift = level.getMaxShift() * (2 * random.nextDouble() - 1);
+            double x = highest.x + shift * width;
+            // Stays inside the screen: goes the other way rather than against the edge
+            if (x < cloudWidth / 2 || x > width - cloudWidth / 2) {
+                x = highest.x - shift * width;
             }
+            x = Math.max(cloudWidth / 2, Math.min(width - cloudWidth / 2, x));
+            final boolean moving = random.nextDouble() < level.getMovingChance();
+            final boolean springboard = !moving && random.nextDouble() < SPRINGBOARD_CHANCE;
+            highest = addCloud(x, highest.surface - gap * height, cloudWidth, moving, springboard);
+        }
+    }
 
-            @Override
-            public Color visitDark() {
-                return Color.WHITE;
+    private Cloud addCloud(final double x, final double surface, final double cloudWidth, final boolean moving,
+                           final boolean springboard) {
+        final Cloud cloud = new Cloud(x, surface, cloudWidth, moving, springboard);
+        clouds.add(cloud);
+        cloudsLayer.getChildren().add(cloud.node);
+        return cloud;
+    }
+
+    /**
+     * One step of the game, of a duration in seconds.
+     */
+    void step(final double seconds) {
+        if (phase != Phase.PLAY || seconds <= 0) {
+            return;
+        }
+        final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
+        clouds.forEach(cloud -> cloud.move(scaled));
+        if (waiting > 0) {
+            waitToJump(seconds);
+            return;
+        }
+        moveSideways(scaled);
+        moveUpAndDown(scaled);
+        scrollIfHigh();
+        placeBiboule();
+        if (feetY - pictureHeight * FEET_IN_PICTURE > height) {
+            fall();
+            return;
+        }
+        if (end.getSeconds() > 0) {
+            final int before = (int) Math.ceil(timeLeft);
+            timeLeft = Math.max(0, timeLeft - seconds);
+            if (timeLeft <= 0) {
+                win();
+            } else if ((int) Math.ceil(timeLeft) != before) {
+                showHud();
             }
-        });
-        scoreText.setFill(textColor);
-        foregroundLayer.getChildren().add(scoreText);
+        }
+    }
 
-        // Menu
+    private void waitToJump(final double seconds) {
+        waiting -= seconds;
+        if (blinking) {
+            biboule.setOpacity(0.55 + 0.45 * Math.cos(waiting * 2 * Math.PI * 2.5));
+        }
+        if (waiting <= 0) {
+            waiting = 0;
+            blinking = false;
+            biboule.setOpacity(1);
+            jump(JUMP_SPEED, "bounce.wav");
+        }
+        placeBiboule();
+    }
 
-        shade = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-        shade.setFill(new Color(0, 0, 0, 0.75));
+    private void moveSideways(final double seconds) {
+        final double margin = pictureWidth * BODY_IN_PICTURE;
+        final double wanted = Math.max(margin, Math.min(width - margin, aimX));
+        final double most = SIDE_SPEED * width * seconds;
+        final double move = Math.max(-most, Math.min(most, wanted - bibouleX));
+        bibouleX += move;
+        final double aimedTilt = most > 0 ? 10 * move / most : 0;
+        tilt += (aimedTilt - tilt) * Math.min(1, seconds * 10);
+    }
 
-        restartButton = new ProgressButton();
-        final ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
-        restartImage.setFitHeight(dimensions.getHeight() / 6);
-        restartImage.setFitWidth(dimensions.getHeight() / 6);
-        restartButton.setImage(restartImage);
-        restartButton.setLayoutX(dimensions.getWidth() / 2 - dimensions.getHeight() / 12);
-        restartButton.setLayoutY(dimensions.getHeight() / 2 - dimensions.getHeight() / 12);
-        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
-
-        finalScoreText = new Text(0, dimensions.getHeight() / 4, "");
-        finalScoreText.setFill(Color.WHITE);
-        finalScoreText.setTextAlignment(TextAlignment.CENTER);
-        finalScoreText.setFont(new Font(50));
-        finalScoreText.setWrappingWidth(dimensions.getWidth());
-        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
-
-        this.gameContext.getGazeDeviceManager().addEventFilter(restartButton);
-
-        // Interaction
-        gazeTarget = new Point2D(dimensions.getWidth() / 2.0, dimensions.getHeight() / 2.0);
-
-        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-
-        final EventHandler<Event> movementEvent = (Event event) -> {
-            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-                gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
-            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+    /**
+     * Gravity, then the landing: only when falling, when the feet go through the top of a cloud or of a springboard during
+     * this step (a slow image cannot go through it unseen).
+     */
+    private void moveUpAndDown(final double seconds) {
+        velocity = Math.min(FALL_SPEED, velocity + GRAVITY * seconds);
+        final double before = feetY;
+        feetY += velocity * height * seconds;
+        squash = Math.max(0, squash - seconds / 0.15);
+        if (velocity <= 0) {
+            return;
+        }
+        final double feet = pictureWidth * FEET_WIDTH;
+        for (final Cloud cloud : clouds) {
+            if (cloud.springboard != null && crosses(before, cloud.springboardSurface())
+                && Math.abs(bibouleX - cloud.springboardX()) <= cloud.springboardWidth() / 2 + feet) {
+                feetY = cloud.springboardSurface();
+                jump(SPRINGBOARD_SPEED, "boing.wav");
+                return;
             }
-        };
+            if (crosses(before, cloud.surface) && Math.abs(bibouleX - cloud.x) <= cloud.width * 0.45 + feet) {
+                feetY = cloud.surface;
+                jump(JUMP_SPEED, "bounce.wav");
+                return;
+            }
+        }
+    }
 
-        interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
-        interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
-        interactionOverlay.setFill(Color.TRANSPARENT);
-        foregroundLayer.getChildren().add(interactionOverlay);
+    private boolean crosses(final double before, final double surface) {
+        return before <= surface && feetY >= surface;
+    }
 
-        this.gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
+    private void jump(final double speed, final String sound) {
+        velocity = -speed;
+        squash = 1;
+        gameContext.getSoundManager().add(DATA + "sounds/" + sound);
+    }
 
-        // hide end game menu
-        shade.setOpacity(0);
-        restartButton.disable();
-        finalScoreText.setOpacity(0);
+    /**
+     * Above the line, the clouds go down instead: this is what is climbed, and what gives the points.
+     */
+    private void scrollIfHigh() {
+        final double line = height * SCROLL_LINE;
+        if (feetY >= line) {
+            return;
+        }
+        final double difference = line - feetY;
+        feetY = line;
+        final Iterator<Cloud> iterator = clouds.iterator();
+        while (iterator.hasNext()) {
+            final Cloud cloud = iterator.next();
+            cloud.goDown(difference);
+            if (cloud.surface > height * 1.2) {
+                cloudsLayer.getChildren().remove(cloud.node);
+                iterator.remove();
+            }
+        }
+        generateClouds();
+        climbed += difference / height;
+        final int points = (int) (climbed * 100);
+        if (points != score) {
+            stats.incrementNumberOfGoalsReached(points - score);
+            score = points;
+            showHud();
+        }
+    }
 
-        interactionOverlay.setDisable(false);
+    private void placeBiboule() {
+        biboule.setLayoutX(bibouleX - pictureWidth / 2);
+        biboule.setLayoutY(feetY - pictureHeight * FEET_IN_PICTURE);
+        biboule.setRotate(tilt);
+        biboule.setScaleX(1 + 0.18 * squash);
+        biboule.setScaleY(1 - 0.18 * squash);
+    }
 
-        backgroundLayer.getChildren().removeAll(platforms);
-        platforms.clear();
+    /**
+     * Fallen under the screen: one life less; she starts again on a new cloud, or "Lost!" after the third.
+     */
+    void fall() {
+        if (phase != Phase.PLAY) {
+            return;
+        }
+        lives--;
+        if (lives <= 0) {
+            showHud();
+            lose();
+            return;
+        }
+        blinking = true;
+        startOnANewCloud(WAIT_AFTER_FALL);
+        showHud();
+    }
 
-        this.middleLayer.getChildren().clear();
-        biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 6,
-            dimensions.getHeight() / 6);
-        this.middleLayer.getChildren().add(biboule);
-        biboule.setFill(new ImagePattern(bibouleImages.pickRandomImage()));
+    private void showHud() {
+        hud.getChildren().clear();
+        final double fontSize = height * 0.035;
+        final double margin = height * 0.025;
+        final double heart = height * 0.055;
+        for (int i = 0; i < LIVES; i++) {
+            final SVGPath icon = GameStyle.icon(i < lives ? "favorite_fill1" : "favorite", heart);
+            icon.setFill(i < lives ? Color.rgb(235, 70, 95) : Color.rgb(120, 120, 130, 0.8));
+            icon.setStroke(Color.WHITE);
+            icon.setStrokeWidth(18);
+            icon.setLayoutX(margin + i * heart * 1.1);
+            icon.setLayoutY(margin * 0.6);
+            hud.getChildren().add(icon);
+        }
+        final Group pill = GameStyle.pill(gameContext.getTranslator().translate("BibouleJumpScore") + " " + score,
+            fontSize);
+        pill.setLayoutX(width - pill.getBoundsInLocal().getWidth() - margin);
+        pill.setLayoutY(margin * 0.6);
+        hud.getChildren().add(pill);
+        if (end.getSeconds() > 0) {
+            final int seconds = (int) Math.ceil(timeLeft);
+            final Group clock = GameStyle.pill(String.format("%d:%02d", seconds / 60, seconds % 60), fontSize);
+            clock.setLayoutX((width - clock.getBoundsInLocal().getWidth()) / 2);
+            clock.setLayoutY(margin * 0.6);
+            hud.getChildren().add(clock);
+        }
+    }
 
-        velocity = Point2D.ZERO;
-        score = 0;
-        lastTickTime = 0;
-        gazeTarget = new Point2D(dimensions.getWidth() / 2, 0);
-        createPlatform(biboule.getX() + biboule.getWidth() / 2, biboule.getY() + biboule.getHeight() + platformHeight,
-            false);
+    private void win() {
+        if (phase != Phase.PLAY) {
+            return;
+        }
+        phase = Phase.OVER;
+        loop.stop();
+        stats.takeScreenShot();
+        gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
+    }
 
-        generatePlatforms(dimensions.getHeight());
+    private void lose() {
+        phase = Phase.OVER;
+        loop.stop();
+        biboule.setVisible(false);
+        stats.takeScreenShot();
+        final Group card = GameStyle.card(gameContext.getTranslator().translate("BibouleJumpLost") + "\n"
+            + gameContext.getTranslator().translate("BibouleJumpScore") + " " + score, height * 0.06, width * 0.6);
+        card.setLayoutX(width / 2 - card.getBoundsInLocal().getWidth() / 2);
+        card.setLayoutY(height / 2 - card.getBoundsInLocal().getHeight() / 2);
+        hud.getChildren().add(card);
+        lostPause = new PauseTransition(Duration.seconds(2.5));
+        lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
+        lostPause.play();
+    }
 
-        this.start();
-        stats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(stats);
+    /**
+     * For the tests: the loop does not run, {@link #step(double)} is called instead.
+     */
+    void setManual() {
+        manual = true;
+        loop.stop();
+    }
+
+    /**
+     * @return half of the width on which the feet of the Biboule land
+     */
+    double getFeetWidth() {
+        return pictureWidth * FEET_WIDTH;
+    }
+
+    /**
+     * @return the picture of the Biboule
+     */
+    ImageView getBiboule() {
+        return biboule;
     }
 
     @Override
     public void dispose() {
-        stats.addRoundDuration();
-    }
-
-    /**
-     * It uses a dat file in the stat folder to save the highscores, the top 3 at the moment even though only the
-     * highest score is displayed, a leaderboard system could be implemented. It reads the top 3 from the file, inserts
-     * the new score, sorts it, and then takes the new top 3, and writes it in the file.
-     *
-     * @param score new score
-     * @return the highest score
-     */
-    private int getsetHighscore(final int score) {
-        return HighScores.addAndGetBest(
-            new File(new File(GazePlayDirectories.getUserStatsFolder(config.getUserName()), "biboule-jump"), "highscores.dat"), score);
-    }
-
-    /**
-     * Upon the end of a game, a menu is displayed with the highscore and a restart button
-     */
-    private void death() {
-        stats.addRoundDuration();
-        this.stop();
-        // Show end menu (restart, quit, score)
-        interactionOverlay.setDisable(true);
-        shade.setOpacity(1);
-        final int highscore = getsetHighscore(score);
-        final StringBuilder sb = new StringBuilder();
-        sb.append(MultilinguismFactory.getSingleton().getTranslation("Score", config.getLanguage()) + MultilinguismFactory.getSingleton().getTranslation("Colon", config.getLanguage())
-            + " " + score + "\n");
-        sb.append(MultilinguismFactory.getSingleton().getTranslation("Highscore", config.getLanguage())
-            + MultilinguismFactory.getSingleton().getTranslation("Colon", config.getLanguage()) + " " + highscore + "\n");
-        if (highscore <= score) {
-            sb.append(MultilinguismFactory.getSingleton().getTranslation("New highscore!", config.getLanguage()));
+        phase = Phase.OVER;
+        loop.stop();
+        if (lostPause != null) {
+            lostPause.stop();
         }
-        finalScoreText.setText(sb.toString());
-        finalScoreText.setOpacity(1);
-        restartButton.active();
-    }
-
-    /**
-     * A bouncepad is just a smaller platform with a higher bounce factor set on top of another platform
-     *
-     * @param platformX The other platform X position
-     * @param platformY The other platform Y position
-     */
-    private void createBouncepad(final double platformX, final double platformY) {
-        final Platform b = new Platform(
-            platformX + randomGenerator.nextInt((int) (platformWidth * 4 / 5)) - platformWidth / 2,
-            platformY - platformHeight / 3, platformWidth / 5, platformHeight / 3, "boing.wav", 6);
-        b.setFill(new ImagePattern(new Image(DATA_PATH + "/bouncepad.png")));
-        backgroundLayer.getChildren().add(b);
-        platforms.add(b);
-    }
-
-    /**
-     * Creates a cloud platform
-     *
-     * @param centerX The center position of the platform, the new X position must be calculated accordingly
-     * @param centerY Same as X
-     * @param moving  moving platform or not
-     */
-    private void createPlatform(final double centerX, final double centerY, final boolean moving) {
-        final Platform p;
-        if (!moving) {
-            p = new Platform(
-                centerX - platformWidth / 2, centerY - platformHeight / 2,
-                platformWidth, platformHeight,
-                "bounce.wav",
-                3,
-                0.5, 0, 0, 0
-            );
-        } else {
-            p = new MovingPlatform(
-                centerX - platformWidth / 2, centerY - platformHeight / 2,
-                platformWidth, platformHeight,
-                "bounce.wav",
-                dimensions.getWidth(),
-                0.5, 0, 0, 0,
-                3, gameContext.getAnimationSpeedRatioSource()
-            );
+        if (area != null) {
+            gameContext.getGazeDeviceManager().removeEventFilter(area);
         }
-        highestPlatform = p;
-        platforms.add(p);
-        p.setFill(new ImagePattern(cloudImages.pickRandomImage()));
-        backgroundLayer.getChildren().add(p);
+        clouds.clear();
+        highest = null;
+        if (layer != null) {
+            gameContext.getChildren().remove(layer);
+            layer = null;
+        }
     }
 
     /**
-     * Generates platforms from bottom to top, and outside the window to anticipate scrolling. The platforms are
-     * separated so they are not too far and reachable, and not too close and overlapping. At random times, a moving
-     * platform is created, a bouncepad can also added to the platform
+     * A cloud, moving or not, maybe with a springboard on it. The Biboule lands on its surface, a little below the top of
+     * its picture.
      */
-    private void generatePlatforms(final double bottomLimit) {
-        final double top = -dimensions.getHeight();
-        double bottom = bottomLimit;
-        while (bottom > top) {
-            double newPlatX;
-            double newPlatY;
-            do {
-                newPlatX = randomGenerator.nextInt((int) (dimensions.getWidth() - platformWidth / 2))
-                    + platformWidth / 2;
-                newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight() / 4));
-            } while (Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth() / 3);
+    final class Cloud {
+        private static final double RATIO = 3;
+        private static final double SURFACE_IN_PICTURE = 0.28;
+        private static final double SPRINGBOARD_WIDTH = 0.42;
 
-            if (variant.equals(BibouleJumpVariant.MOVING) && randomGenerator.nextInt(4) == 0) {
-                createPlatform(newPlatX, newPlatY, true);
+        @Getter
+        private double x;
+        @Getter
+        private double surface;
+        @Getter
+        private final double width;
+        @Getter
+        private final boolean moving;
+        private final double home;
+        private double direction;
+        private final Group node;
+        private final ImageView springboard;
+        private final double springboardOffset;
+
+        Cloud(final double x, final double surface, final double width, final boolean moving,
+              final boolean withSpringboard) {
+            this.x = x;
+            this.surface = surface;
+            this.width = width;
+            this.moving = moving;
+            this.home = x;
+            this.direction = random.nextInt(2) == 0 ? -1 : 1;
+            final double cloudHeight = width / RATIO;
+            final ImageView picture = new ImageView(gameImage(DATA + "clouds/cloud" + (1 + random.nextInt(3)) + ".png"));
+            picture.setFitWidth(width);
+            picture.setFitHeight(cloudHeight);
+            picture.setX(-width / 2);
+            picture.setY(-cloudHeight * SURFACE_IN_PICTURE);
+            node = new Group(picture);
+            if (withSpringboard) {
+                final double board = width * SPRINGBOARD_WIDTH;
+                springboardOffset = (width - board) * 0.35 * (2 * random.nextDouble() - 1);
+                springboard = new ImageView(gameImage(DATA + "bouncepad.png"));
+                springboard.setFitWidth(board);
+                springboard.setFitHeight(board / 2);
+                springboard.setX(springboardOffset - board / 2);
+                springboard.setY(-board / 2);
+                node.getChildren().add(springboard);
             } else {
-                createPlatform(newPlatX, newPlatY, false);
-                if (randomGenerator.nextInt(5) == 0) {
-                    createBouncepad(newPlatX, newPlatY);
-                }
+                springboardOffset = 0;
+                springboard = null;
             }
-
-            bottom = newPlatY - 2 * platformHeight;
+            place();
         }
-    }
 
-    /**
-     * Takes a list of platforms, and pushes them down to create the scrolling effect If the platform has left the
-     * window, it is removed
-     */
-    private void scrollList(final ArrayList<Platform> rects, final double difference) {
-        final Iterator<Platform> rectIter = rects.iterator();
-        while (rectIter.hasNext()) {
-            final Platform p = rectIter.next();
-            p.scroll(difference);
-            if (p.getY() >= dimensions.getHeight()) {
-                backgroundLayer.getChildren().remove(p);
-                rectIter.remove();
+        private void place() {
+            node.setLayoutX(x);
+            node.setLayoutY(surface);
+        }
+
+        /**
+         * A moving cloud goes left and right around its place, inside the screen.
+         */
+        void move(final double seconds) {
+            if (!moving) {
+                return;
             }
-        }
-    }
-
-    /**
-     * Main game loop This is called over and over, anytime it can be called, but the time between every call is not
-     * equal so we need to compute the elapsed time since the last call, annd move objects on screen according to that
-     * time in order to have smooth looking and consistent movement.
-     *
-     * @param now Time when handle is called
-     */
-    @Override
-    public void handle(final long now) {
-
-        if (lastTickTime == 0) {
-            lastTickTime = now;
-        }
-        double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10.0, 6.0); // in ms
-        lastTickTime = now;
-
-        if (1000 / timeElapsed < minFPS) {
-            minFPS = 1000 / (int) timeElapsed;
-        }
-        timeElapsed /= gameContext.getAnimationSpeedRatioSource().getDurationRatio();
-
-        // Movement
-        /// Gravity
-        final double gravity = 0.005;
-        velocity = velocity.add(0, gravity * timeElapsed);
-        if (velocity.getY() > terminalVelocity) {
-            velocity = new Point2D(velocity.getX(), terminalVelocity);
-        }
-
-        /// Lateral mouvement
-        final double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2));
-        final double direction = distance <= 5 ? 0
-            : (gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2)) / distance;
-        final double maxSpeed = 0.7;
-        if (distance > maxSpeed) {
-            velocity = new Point2D(maxSpeed * direction, velocity.getY());
-        } else {
-            velocity = new Point2D(distance * direction, velocity.getY());
-        }
-        /// Apply velocity
-        biboule.setY(biboule.getY() + velocity.getY() * timeElapsed);
-        biboule.setX(biboule.getX() + velocity.getX() * timeElapsed);
-
-        // Collision detection
-        if (velocity.getY() > 0) { // The biboule is falling
-            final Rectangle bibouleCollider = new Rectangle(biboule.getX() + biboule.getWidth() / 4,
-                biboule.getY() + biboule.getHeight() * 2 / 3, biboule.getWidth() / 2, biboule.getHeight() / 3);
-            for (final Platform p : platforms) {
-                if (p.isColliding(bibouleCollider)) {
-                    bounce(p.getBounceFactor(), p.getSoundFileLocation());
-                }
+            final double screen = BibouleJump.this.width;
+            final double left = Math.max(width / 2, home - CLOUD_RANGE * screen);
+            final double right = Math.min(screen - width / 2, home + CLOUD_RANGE * screen);
+            x += direction * CLOUD_SPEED * screen * seconds;
+            if (x <= left) {
+                x = left;
+                direction = 1;
+            } else if (x >= right) {
+                x = right;
+                direction = -1;
             }
-
+            place();
         }
 
-        // Scrolling
-        if (biboule.getY() <= dimensions.getHeight() / 3) {
-            final double difference = dimensions.getHeight() / 3 - biboule.getY();
-            updateScore(difference);
-            scrollList(platforms, difference);
-            biboule.setY(biboule.getY() + difference);
+        void goDown(final double difference) {
+            surface += difference;
+            place();
         }
 
-        if (highestPlatform.getY() >= -dimensions.getHeight() / 2) {
-            generatePlatforms(highestPlatform.getY());
+        boolean hasSpringboard() {
+            return springboard != null;
         }
 
-        // Fall out of screen
-        if (biboule.getY() >= dimensions.getHeight()) {
-            death();
+        double springboardX() {
+            return x + springboardOffset;
+        }
+
+        double springboardWidth() {
+            return width * SPRINGBOARD_WIDTH;
+        }
+
+        /**
+         * @return the height where the Biboule touches the springboard, above the surface of the cloud
+         */
+        double springboardSurface() {
+            return surface - width * SPRINGBOARD_WIDTH * 0.38;
         }
     }
-
-    /**
-     * Updates the score according to the pixel difference scrolled upwards by the player
-     */
-    private void updateScore(final double difference) {
-        final int inc = (int) (difference / dimensions.getHeight() * 100);
-        score += inc;
-        stats.incrementNumberOfGoalsReached(inc);
-        scoreText.setText(String.valueOf(score));
-        scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-    }
-
 }

@@ -98,6 +98,12 @@ heart.png) are drawn by make_survive_images.py (this folder), under the license 
 are those of the shooting game (data/shooter). The thumbnail (gazeplay-core:
 data/common/Thumbnails/surviveAgainstRobots.png, 960 x 540) is made of these pictures by the same script.
 
+Images and sounds of Biboule Jump (gazeplay-games: data/biboulejump): the sky, the clouds and the springboard (sky.png,
+clouds/cloud1-3.png, bouncepad.png) are drawn by make_biboulejump_images.py and the sounds (sounds/bounce.wav, boing.wav)
+made by make_biboulejump_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace
+(4/11/2026) pictures and sounds of unknown source; the Biboules of the game are those of the shooting game (data/shooter).
+The thumbnail (gazeplay-core: data/common/Thumbnails/biboulejump.png, 960 x 540) is a capture of the game.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

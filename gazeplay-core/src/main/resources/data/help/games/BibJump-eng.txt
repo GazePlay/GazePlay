@@ -1,0 +1,18 @@
+# The principle
+The Biboule bounces from cloud to cloud. Make her climb as high as you can without falling!
+
+# How to play
+- Look to the left or to the right of the Biboule: she goes towards your gaze, sideways only. She jumps by herself.
+- She only bounces when falling back on a cloud: she goes through it on the way up.
+- A red springboard sends her much higher, about two screens up.
+- You get 1 point each time she climbs a hundredth of the height of the screen.
+- At the top left, your lives; at the top right, your points; in the middle, the time left (variants in minutes).
+- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+
+# How to win
+You have 3 lives. If the Biboule falls under the screen, you lose a life: she starts again 1.5 seconds later on a new cloud and you keep your points. After the third fall, it is "Lost!" with your points. If the time is over before that, it is "Bravo". Then come the statistics.
+
+# The variants
+Choose a variant (it gets a frame), then press "Start".
+- Without end, 1 minute or 3 minutes: without end, the game lasts until the 3 lives are lost.
+- At the bottom, the level. Easy: wide clouds (a fifth of the screen), close, none moves. Normal: medium clouds (a seventh of the screen), further apart, 1 in 4 moves. Hard: small clouds (a ninth of the screen), the furthest apart, 1 in 2 moves.
