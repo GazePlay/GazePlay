@@ -11,12 +11,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 /**
- * A pane selected by a fixation of 2 seconds (fixed, not the length of the settings) of the gaze or of the mouse, shown
- * by a progress indicator. It used to react to the gaze only: with the mouse alone, the dice of the Dice game could not
- * be rolled one by one.
+ * A pane selected by a fixation of the gaze or of the mouse, of the length of the settings, shown by a progress
+ * indicator. It used to react to the gaze only: with the mouse alone, the dice of the Dice game could not be rolled one
+ * by one.
  */
 @Slf4j
 public class ProgressPane extends StackPane {
@@ -99,9 +100,9 @@ public class ProgressPane extends StackPane {
     }
 
     /**
-     * Sets the action run after a fixation of 2 seconds on the pane.
+     * Sets the action run after a fixation on the pane, of the length of the settings, read at each fixation.
      */
-    public void assignIndicator(final EventHandler<Event> enterEvent) {
+    public void assignIndicator(final EventHandler<Event> enterEvent, final IGameContext gameContext) {
         indicator.setMouseTransparent(true);
 
         indicator.setOpacity(0);
@@ -111,7 +112,8 @@ public class ProgressPane extends StackPane {
             timelineProgressBar = new Timeline();
 
             timelineProgressBar.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(indicator.progressProperty(), 1)));
+                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(indicator.progressProperty(), 1)));
 
             timelineProgressBar.onFinishedProperty().set(actionEvent -> {
                 enterEvent.handle(null);

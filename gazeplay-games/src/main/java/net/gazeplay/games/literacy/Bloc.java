@@ -26,8 +26,6 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public class Bloc extends Parent {
 
-    private final double fixationlength;
-
     private final String letterStr;
     private final Text letter;
 
@@ -56,15 +54,12 @@ public class Bloc extends Parent {
         String mainLetter,
         Letters gameInstance,
         Stats stats,
-        IGameContext gameContext,
-        int fixationlength
+        IGameContext gameContext
     ) {
 
         this.gameInstance = gameInstance;
         this.stats = stats;
         this.gameContext = gameContext;
-
-        this.fixationlength = fixationlength;
 
         this.width = width;
         this.height = height;
@@ -215,7 +210,7 @@ public class Bloc extends Parent {
                 currentTimeline.stop();
                 currentTimeline = new Timeline();
 
-                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
                 currentTimeline.setOnFinished(actionEvent -> {

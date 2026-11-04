@@ -118,7 +118,7 @@ public class Dice implements GameLifeCycle {
             pp.button.setCenter(dr);
             gridpane.add(pp, i, 0);
             final int finalI = i;
-            pp.assignIndicator(e -> rolls[finalI] = dr.roll(action -> addUp()));
+            pp.assignIndicator(e -> rolls[finalI] = dr.roll(action -> addUp()), gameContext);
         }
     }
 
@@ -196,7 +196,7 @@ public class Dice implements GameLifeCycle {
             pp.button.setCenter(dr);
             gridpane.add(pp, i, 0);
             final int finalI = i;
-            pp.assignIndicator(e -> rolls[finalI] = dr.roll(action -> addUp()));
+            pp.assignIndicator(e -> rolls[finalI] = dr.roll(action -> addUp()), gameContext);
         }
     }
 

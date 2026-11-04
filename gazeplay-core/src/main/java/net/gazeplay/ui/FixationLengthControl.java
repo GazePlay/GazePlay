@@ -84,8 +84,9 @@ public class FixationLengthControl {
 
         fixationLengthValueLabel.setText(formatValue(initialFixationLengthRatioValue));
 
-        // user can reset ratio to default just by clicking on the label
-        fixationLengthValueLabel.setOnMouseClicked(event -> slider.setValue(500));
+        // user can reset the length to the default one just by clicking on the label (it used to give 0.5 s, not the
+        // default of 2 s)
+        fixationLengthValueLabel.setOnMouseClicked(event -> slider.setValue(Configuration.DEFAULT_VALUE_FIXATION_LENGTH));
 
         slider.valueProperty().addListener((observable) -> {
             String labelText = formatValue(slider.getValue());

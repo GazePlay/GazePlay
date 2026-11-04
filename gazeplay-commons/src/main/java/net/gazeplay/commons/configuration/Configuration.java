@@ -118,7 +118,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_EVAL_SOUND_BLOCKS_SELECTION = true;
     /* Eye-tracking settings */
     private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii_and_mouse.toString();
-    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
+    public static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
     /* Graphics settings */
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;

@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.I18NText;
@@ -149,8 +148,6 @@ public class Letters implements GameLifeCycle {
     @Override
     public void launch() {
 
-        final Configuration config = gameContext.getConfiguration();
-
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final String mainLetter = pickRandomLetter();
@@ -190,7 +187,7 @@ public class Letters implements GameLifeCycle {
             double width = dimension2D.getWidth() / nbColomns;
             double height = dimension2D.getHeight() / nbLines;
 
-            createCards(mainLetter, width, height, config);
+            createCards(mainLetter, width, height);
             currentRoundDetails.remainingCount = correctCount;
 
             stats.notifyNewRoundReady();
@@ -214,12 +211,9 @@ public class Letters implements GameLifeCycle {
     /**
      * Creates the grid of blocks: the asked letter on some of them, other letters on the others.
      */
-    private Bloc[][] createCards(String mainLetter, double width, double height,
-                                 Configuration config) {
+    private Bloc[][] createCards(String mainLetter, double width, double height) {
         correctCount = 0;
         Bloc[][] blocs = new Bloc[nbLines][nbColomns];
-
-        final int fixationlength = config.getFixationLength();
 
         final int rowTrue = randomGenerator.nextInt(nbLines);
         final int colTrue = randomGenerator.nextInt(nbColomns);
@@ -243,7 +237,7 @@ public class Letters implements GameLifeCycle {
                 }
 
                 Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, currentLetter, mainLetter,
-                    this, stats, gameContext, fixationlength);
+                    this, stats, gameContext);
 
                 blocs[i][j] = bloc;
 
