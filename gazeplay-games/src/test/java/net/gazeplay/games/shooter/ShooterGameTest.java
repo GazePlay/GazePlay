@@ -204,4 +204,17 @@ class ShooterGameTest {
         assertEquals(180, ShooterEnd.TIME_3.getSeconds());
         assertEquals(100, ShooterEnd.SCORE_100.getTargets());
     }
+
+    /**
+     * The music is delivered with the game (4/11/2026): it used to be downloaded, so that there was none without internet.
+     */
+    @Test
+    void shouldHaveItsMusicWithoutInternet() throws Exception {
+        final String music = new ShooterGameSpecSource().getGameSpec().getGameSummary().getBackgroundMusicUrl();
+        org.junit.jupiter.api.Assertions.assertNotNull(music);
+        org.junit.jupiter.api.Assertions.assertFalse(music.startsWith("http"), music);
+        try (java.io.InputStream stream = new java.net.URI(music).toURL().openStream()) {
+            org.junit.jupiter.api.Assertions.assertTrue(stream.read() >= 0, "the file can be read");
+        }
+    }
 }
