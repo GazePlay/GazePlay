@@ -5,6 +5,40 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DES JEUDI 5/11 ET VENDREDI 6/11/2026 (bilan de la séance du mercredi 4/11/2026)
+
+**État laissé le 4/11/2026 au soir** : tout est commité et poussé sur `addClaudeCode`. Dernier `build` complet suivi de
+`allGamesTest` (avant le dernier commit, qui ne touche que la documentation) : **809 tests, 0 échec ; 66 entrées, 0 échec**.
+
+**Fait le 4/11/2026** (chaque jeu essayé et validé par le mainteneur) :
+
+| Commit | Quoi |
+|---|---|
+| `0e4ec384b` | Les Dés et les Lettres suivent la durée de fixation des réglages ; clic de l'engrenage à 2 s |
+| `4400fb833` | Tests : 4 Go de mémoire ; bibliothèque audio de Windows gardée chargée dans leur JVM |
+| `c25317d3e` | Réglage « temps avant sélection » (1 s par défaut, regard bloqué aussi) ; tous les anneaux partent du haut, sens des aiguilles d'une montre ; anneau visible sur les cartes cachées de Memory |
+| `11c1ab4ef` | Ninja : fruits à suivre et à couper en deux ; fenêtre des variantes à plusieurs rangées |
+| `965487856`, `789bb0f90` | Jeu de la taupe (taupes, Biboules ou Mes images ; zone de chaque trou resserrée après l'essai à la souris) ; limiteurs rendus à Ninja |
+| `eaae774c3` | Tir : musique livrée avec le jeu (elle était téléchargée à la première partie) |
+| `9f32d5a24` | Biboule Jump : 3 vies, niveaux, même saut sur tout écran, plus de record |
+
+**Jeudi 5/11/2026 : pas de revue des jeux.** Le mainteneur a reçu des retours d'utilisateurs sur **GazePlay Learning Eval
+et le site web** : on travaille là-dessus. Ces retours ne sont pas encore connus : **les lui demander d'abord**, sans rien
+supposer. Pour se repérer : `GazePlayEval.md`, et le site dans le dépôt `Documents\Tests\GazePlay-Eval` (en ligne sur
+lig-gazeplay.imag.fr). Son format est un contrat avec le lecteur (`EvalReader`). Les commits du site suivent les règles de
+son dépôt, à vérifier avant d'y toucher.
+
+**Vendredi 6/11/2026 : reprise de la revue, sur Gaze Race**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme
+toujours : état des lieux, **demander d'abord la règle voulue**, propositions validées, puis le travail ; un commit par jeu,
+sur demande. Pas de nouveau `.exe` sans demande.
+
+**À vérifier à la reprise** : la CI des commits du 4/11 au soir. Celle de `965487856` (run 41857896054) est en échec pour
+une seule raison : `package-macos` annulé après 15 min sans exécuter aucune étape (cause inconnue) ; les 6 autres jobs sont
+verts. Si le job macOS est de nouveau annulé sur les commits suivants, chercher pourquoi.
+
+**À faire après la revue des jeux** : voir la section suivante et la liste du 4/11 (mémoire des tests, retrait des
+limiteurs, refonte de l'engrenage et de l'écran des statistiques, tests instables, inventaire des sons, notes de version 2.0).
+
 ## AVANCEMENT DU MERCREDI 4/11/2026 (commité et poussé)
 
 **Travail à faire après la revue des jeux** (en plus de la liste plus bas) : la mémoire des tests (section « Mémoire des
