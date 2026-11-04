@@ -135,7 +135,9 @@ subprojects {
 
     tasks.withType(Test).configureEach {
         usesService(javaFxTestsLimiter)
-        maxHeapSize = "3g"
+        // 4 GB since 4/11/2026: with 3 GB, gazeplay-games ended with 2.9 GB still in use after a full collection (see
+        // REVUE_DES_JEUX.md)
+        maxHeapSize = "4g"
         // Same JVM options as GazePlay (see GazePlayLauncher.jvmOptions)
         jvmArgs '--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow'
 

@@ -17,8 +17,9 @@ dependencies {
         transitive = false
     }
 
-
-
+    // KeepWindowsAudioLoadedListener, loaded by JUnit in the JVM of the tests of the modules using the fixtures
+    testFixturesImplementation platform(libs.junit.bom)
+    testFixturesImplementation libs.junit.platform.launcher
 }
 
 // Captured here: the configuration cache cannot serialize a reference to the build script used when the jar is written
