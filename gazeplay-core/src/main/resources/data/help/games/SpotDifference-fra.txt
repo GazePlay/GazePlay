@@ -9,7 +9,7 @@ Deux images presque pareilles : trouve ce qui change entre les deux.
 - La flèche en bas à droite passe à l'image suivante.
 
 # Comment gagner
-Quand toutes les différences d'une image sont trouvées : « Bravo », puis une nouvelle image (8 scènes, dans le désordre). Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Quand toutes les différences d'une image sont trouvées : « Bravo », puis une nouvelle image (8 scènes, dans le désordre). Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

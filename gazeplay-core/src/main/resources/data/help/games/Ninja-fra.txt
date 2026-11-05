@@ -3,13 +3,13 @@ Un fruit se promène dans le verger. Suis-le des yeux et coupe-le en deux !
 
 # Comment jouer
 - Un seul fruit à la fois se déplace à l'écran. Quand il est coupé, un autre apparaît ailleurs, un peu plus d'une demi-seconde plus tard.
-- Selon le choix fait en bas de la fenêtre, le fruit est coupé dès que tu le touches, ou après une fixation : un anneau se remplit autour de lui pendant qu'il continue d'avancer. Sa durée est celle des réglages, qui se change aussi par l'engrenage en bas à gauche.
+- Selon le choix fait en bas de la fenêtre, le fruit est coupé dès que tu le touches, ou après une fixation : un anneau se remplit autour de lui pendant qu'il continue d'avancer. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Si tu quittes le fruit moins de 0,3 seconde, l'anneau t'attend. Après, il repart de zéro.
 - En haut à droite, le nombre de fruits coupés.
-- La vitesse suit aussi la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert.
+- La vitesse suit aussi la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Il n'y a ni vies ni pénalité : un fruit manqué continue simplement sa route. Selon ton choix, le jeu est sans fin (quitte par l'engrenage en bas à gauche), ou s'arrête après 20 ou 50 fruits coupés : « Bravo », puis les statistiques.
+Il n'y a ni vies ni pénalité : un fruit manqué continue simplement sa route. Selon ton choix, le jeu est sans fin (quitte par le menu (touche Échap)), ou s'arrête après 20 ou 50 fruits coupés : « Bravo », puis les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

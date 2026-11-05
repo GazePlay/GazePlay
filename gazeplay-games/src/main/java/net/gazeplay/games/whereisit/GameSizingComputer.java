@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 public class GameSizingComputer {
 
     /**
-     * Smallest size of the configuration button of the games (GameContextFactory.BUTTON_MIN_HEIGHT); it is a tenth of
-     * the width of the window, 30 pixels above the bottom (GameContext.updateConfigPane).
+     * Smallest size of the free corner left of the band: the place of the old configuration button (a tenth of the width
+     * of the window, 30 pixels above the bottom), kept for the layout until the redesign of the menu of the games.
      */
     private static final double CONFIG_BUTTON_MIN_SIZE = 64;
 
@@ -35,7 +35,7 @@ public class GameSizingComputer {
 
         final double gap = Math.max(8, Math.min(width, height) * 0.015);
         final double configButton = Math.max(width / 10, CONFIG_BUTTON_MIN_SIZE);
-        // The band holds the question, and leaves the configuration button out of the grid
+        // The band holds the question, and keeps the corner of the old configuration button out of the grid
         final double bandHeight = Math.min(height * 0.25,
             Math.max(height * 0.14, configButton + CONFIG_BUTTON_BOTTOM_MARGIN + gap));
         final double bandTop = height - bandHeight;

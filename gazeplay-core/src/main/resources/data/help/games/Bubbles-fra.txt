@@ -6,10 +6,10 @@ Une image est cachée sous des vitres. Des bulles passent : chaque bulle éclat�
 - Selon la variante, elle éclate dès que tu la regardes, ou après une fixation : un anneau en fait le tour (durée de fixation des réglages).
 - En haut, « 12 / 36 » compte les vitres enlevées.
 - La vitesse des bulles suit la vitesse d'animation des réglages.
-- Rien ne bouge quand le menu de l'engrenage est ouvert.
+- Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Quand les 36 vitres sont enlevées : « Bravo », puis une nouvelle image cachée. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Quand les 36 vitres sont enlevées : « Bravo », puis une nouvelle image cachée. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

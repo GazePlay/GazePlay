@@ -90,7 +90,7 @@ public class OpinionsGame implements GameLifeCycle {
         layer = new Group(background);
         gameContext.getChildren().add(layer);
 
-        // The answers on each side of the image, in the middle of the height (away from the gear at the bottom left)
+        // The answers on each side of the image, in the middle of the height (away from the bottom left corner)
         final double buttonWidth = Math.min(width * 0.17, height * 0.3);
         final double buttonHeight = Math.min(height * 0.42, buttonWidth * 1.4);
         final double margin = width * 0.03;

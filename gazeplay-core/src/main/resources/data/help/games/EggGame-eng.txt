@@ -8,7 +8,7 @@ An egg waits in its nest. Look at it: it cracks, then it hatches. Who will come 
 - At the top, "Hatched" counts the eggs hatched.
 
 # How to win
-Each egg hatched is a success: a new egg comes next. The game does not stop by itself: leave it by the gear at the bottom left.
+Each egg hatched is a success: a new egg comes next. The game does not stop by itself: leave it by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

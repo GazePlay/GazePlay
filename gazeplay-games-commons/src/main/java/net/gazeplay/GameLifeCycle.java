@@ -19,4 +19,11 @@ public interface GameLifeCycle {
      */
     void dispose();
 
+    /**
+     * @return whether the menu of the game screen may switch between full screen and windowed during this game
+     */
+    default boolean allowsFullScreenChange() {
+        return true;
+    }
+
 }

@@ -7,7 +7,7 @@ The Biboule bounces from cloud to cloud. Make her climb as high as you can witho
 - A red springboard sends her much higher, about two screens up.
 - You get 1 point each time she climbs a hundredth of the height of the screen.
 - At the top left, your lives; at the top right, your points; in the middle, the time left (variants in minutes).
-- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+- The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open, and the time stops.
 
 # How to win
 You have 3 lives. If the Biboule falls under the screen, you lose a life: she starts again 1.5 seconds later on a new cloud and you keep your points. After the third fall, it is "Lost!" with your points. If the time is over before that, it is "Bravo". Then come the statistics.

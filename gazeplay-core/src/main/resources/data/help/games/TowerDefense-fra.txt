@@ -9,10 +9,10 @@ Des petits monstres suivent la route jusqu'à ton château. Construis des tours 
 - Fixe le flocon en haut : le blizzard arrête les monstres pendant 5 secondes. Il revient au bout de 30 secondes.
 - Les vagues ont 5 puis 10 monstres, et deviennent plus fortes toutes les 2 vagues. Toutes les 5 vagues viennent les gros monstres violets, toutes les 10 vagues les petits jaunes, rapides.
 - La carte (le chemin de la route) est tirée au hasard à chaque partie, parmi deux.
-- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Selon la variante : tenir 10 ou 20 vagues, ou sans fin (quitte par l'engrenage en bas à gauche). Les vagues tenues : « Bravo », puis les statistiques. Si toutes les vies sont perdues : « Perdu ! », puis les statistiques.
+Selon la variante : tenir 10 ou 20 vagues, ou sans fin (quitte par le menu (touche Échap)). Les vagues tenues : « Bravo », puis les statistiques. Si toutes les vies sont perdues : « Perdu ! », puis les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

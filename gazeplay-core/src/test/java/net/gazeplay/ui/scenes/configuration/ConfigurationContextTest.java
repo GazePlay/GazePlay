@@ -136,7 +136,7 @@ class ConfigurationContextTest {
             assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
             assertFalse(has(sections, "DarkTh"));
             // Evaluations: imported evaluations, way of taking them, delay before selection, sound blocking the
-            // selection. No quit key (the gear button leaves an evaluation); the import and the results folder are on
+            // selection. No quit key (the menu leaves an evaluation); the import and the results folder are on
             // the menu of the evaluations only (maintainer's request of 29/10/2026)
             assertFalse(has(sections, "QuitKey"));
             VBox imported = assertInstanceOf(VBox.class, control(sections, "EvalImported"));
@@ -172,7 +172,7 @@ class ConfigurationContextTest {
                 "SettingsFolders", "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));
             assertEquals(Utils.isWindows(), has(sections, "CreateShortcut"));
-            // Games: question length, reask on fail, reward sound, limiters, piano tile colors (no quit key: the gear
+            // Games: question length, reask on fail, reward sound, limiters, piano tile colors (no quit key: the menu
             // button leaves a game)
             assertFalse(has(sections, "QuitKey"));
             assertInstanceOf(Spinner.class, control(sections, "QuestionLength"));

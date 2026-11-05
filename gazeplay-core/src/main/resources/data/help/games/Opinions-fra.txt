@@ -9,7 +9,7 @@ Ajoute les images dans les réglages, section Dossiers, « Mes images », comm
 - Regarde « J'aime » (à gauche) ou « Je n'aime pas » (à droite) : un anneau fait le tour du bouton (durée de fixation des réglages), puis la réponse s'entoure de sa couleur et l'image suivante arrive.
 
 # Comment gagner
-Il n'y a pas de bonne réponse : chaque avis compte. Après la dernière image : « Bravo », puis les statistiques. Pour arrêter avant, l'engrenage en bas à gauche.
+Il n'y a pas de bonne réponse : chaque avis compte. Après la dernière image : « Bravo », puis les statistiques. Pour arrêter avant, le menu (touche Échap).
 
 # Les réponses
 Elles sont écrites avec les statistiques du jeu, dans un fichier « ...-opinions.csv » : le nom de chaque image et le choix (« aime » ou « n'aime pas »). Une image sans réponse n'a pas de ligne.

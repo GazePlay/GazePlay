@@ -9,7 +9,7 @@ Une course de grenouilles sur la mare : attrape des insectes pour faire avancer
 # Comment gagner
 - Il faut 20 insectes pour arriver à la ligne d'arrivée à damier.
 - La première grenouille arrivée gagne. Le classement s'affiche, avec « Bravo » si tu as gagné, puis une nouvelle course commence.
-- Les courses s'enchaînent : quitte par l'engrenage en bas à gauche.
+- Les courses s'enchaînent : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

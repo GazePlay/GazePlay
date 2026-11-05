@@ -42,7 +42,7 @@ import java.util.List;
  * targets, or after 1 or 3 minutes (then "Bravo" and the statistics).
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves and the time does not
- * run while the menu of the gear is open.
+ * run while the menu of the game is open.
  */
 @Slf4j
 public class ShooterGame implements GameLifeCycle {

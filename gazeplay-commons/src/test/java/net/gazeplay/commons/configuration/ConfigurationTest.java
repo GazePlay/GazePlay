@@ -183,7 +183,7 @@ class ConfigurationTest {
     }
 
     /**
-     * The quit key setting was removed (30/10/2026: the gear button leaves a game or an evaluation). A file written
+     * The quit key setting was removed (30/10/2026: the menu leaves a game or an evaluation). A file written
      * before still has QUIT_KEY (as the test file does): it is read without error, its other settings are kept, and it
      * is saved again; the unknown key stays in the file, unused.
      */

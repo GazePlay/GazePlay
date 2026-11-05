@@ -9,7 +9,7 @@ A letter is asked for: find it among the others.
 # How to win
 - Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
 - Wrong answer: the picture is crossed out and greyed; look again (the question is said again if the settings ask for it).
-- The game does not stop by itself: leave with the gear at the bottom left, or set a time or score limit in the settings (Games section).
+- The game does not stop by itself: leave by the menu (Esc key), or set a time or score limit in the settings (Games section).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

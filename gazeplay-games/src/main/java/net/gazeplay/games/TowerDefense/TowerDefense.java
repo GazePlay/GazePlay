@@ -72,7 +72,7 @@ import java.util.function.DoubleSupplier;
  * money, the lives and how much stronger the enemies get; the game is won after 10 or 20 waves held, or never ("Bravo"
  * then the statistics), and lost when the lives are over ("Lost!" then the statistics; it used to show the animation
  * of a win). The map is drawn at random. The game runs in ticks of 1/60 s of game time, at the animation speed of the
- * settings, and stops while the menu of the gear is open (the blizzard too).
+ * settings, and stops while the menu of the game is open (the blizzard too).
  *
  * @author HugolinBouhineau, Yaniissou
  */

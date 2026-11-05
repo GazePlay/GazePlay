@@ -263,6 +263,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         menuHBox.getChildren().add(scrollPane);
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        toggleFullScreenButtonInGameScreen.setDisable(!allowsFullScreenChange(currentGame));
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
         homeButton = inReplayMode ? createHomeButtonInGameScreenWithoutHandler(gazePlay) : createHomeButtonInGameScreen(gazePlay, stats, currentGame);
@@ -284,6 +285,14 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
+    }
+
+    /**
+     * @param game the game of this screen, null if there is none
+     * @return whether the full screen button of the menu is active: not during an evaluation
+     */
+    static boolean allowsFullScreenChange(final GameLifeCycle game) {
+        return game == null || game.allowsFullScreenChange();
     }
 
     /**
@@ -360,6 +369,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         soundManager.clear();
         soundManager.destroy();
 
+        if (stats.isSavingDisabled()) {
+            // Nothing saved (GazePlay Eval Test, or an evaluation left on its participant form): no statistics to show
+            this.clear();
+            return;
+        }
         saveStats(stats);
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);

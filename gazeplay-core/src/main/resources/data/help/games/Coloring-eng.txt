@@ -10,7 +10,7 @@ Color a black and white drawing, area by area, with your gaze.
 - The file buttons load one of your pictures, save or print the drawing.
 
 # How to win
-There is no end: color as you like, then go to the next drawing. Each area colored counts one point. Leave with the gear at the bottom left.
+There is no end: color as you like, then go to the next drawing. Each area colored counts one point. Leave by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

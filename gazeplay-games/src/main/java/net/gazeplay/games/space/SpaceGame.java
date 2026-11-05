@@ -41,7 +41,7 @@ import java.util.Map;
  * statistics. Without end, no boss.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves and the time does not
- * run while the menu of the gear is open.
+ * run while the menu of the game is open.
  */
 public class SpaceGame implements GameLifeCycle {
 

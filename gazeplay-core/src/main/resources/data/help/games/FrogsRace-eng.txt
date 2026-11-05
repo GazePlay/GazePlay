@@ -9,7 +9,7 @@ A race of frogs on the pond: catch bugs to make your frog move forward.
 # How to win
 - It takes 20 bugs to reach the checkered finish line.
 - The first frog to arrive wins. The ranking is shown, with "Bravo" if you won, then a new race starts.
-- The races follow one another: leave with the gear at the bottom left.
+- The races follow one another: leave by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

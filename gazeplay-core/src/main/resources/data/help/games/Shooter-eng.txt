@@ -7,10 +7,10 @@ Biboules escape from their cage (or robots come out of their flying saucer). Hit
 - Depending on the variant, it is hit as soon as you look at it, or after a fixation: a ring goes round it (fixation length of the settings) and the target stops meanwhile.
 - At the bottom, the magic wand (or the gun) turns to what you look at.
 - At the top right, the score; at the top left, the time left (variants in minutes).
-- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+- The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open, and the time stops.
 
 # How to win
-Depending on the variant: without end (leave by the gear at the bottom left), 50 or 100 targets to hit, or 1 or 3 minutes of game. At the end: "Bravo", then the statistics.
+Depending on the variant: without end (leave by the menu (Esc key)), 50 or 100 targets to hit, or 1 or 3 minutes of game. At the end: "Bravo", then the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".

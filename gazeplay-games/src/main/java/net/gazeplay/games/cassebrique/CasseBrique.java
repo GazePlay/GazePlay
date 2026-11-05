@@ -41,7 +41,7 @@ import java.util.List;
  * user found little by little.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves while the menu of the
- * gear is open. (Before the review: a loop of 15 ms that never stopped, even after the win, which it started again
+ * game is open. (Before the review: a loop of 15 ms that never stopped, even after the win, which it started again
  * and again; a ball going 8 pixels at a time on every screen; no lives.)
  */
 public class CasseBrique implements GameLifeCycle {

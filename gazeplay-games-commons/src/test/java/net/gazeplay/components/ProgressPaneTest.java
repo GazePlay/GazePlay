@@ -46,7 +46,7 @@ class ProgressPaneTest {
         Thread.sleep(300);
         assertEquals(0, runs.get(), "a minute in the settings");
 
-        // Changed by the gear: the next fixation takes the new length
+        // Changed in the menu: the next fixation takes the new length
         when(gameContext.getConfiguration().getFixationLength()).thenReturn(100);
         WaitForAsyncUtils.asyncFx(() -> {
             Event.fireEvent(pane, new GazeEvent(GazeEvent.GAZE_EXITED, -1, 0, 0));

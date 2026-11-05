@@ -9,7 +9,7 @@ The cat must reach its bowl, on the right, without being caught by the dogs. Pla
 - With two players, the cat moves with the keyboard: arrows, or Z Q S D (AZERTY keyboard), or W A S D (QWERTY keyboard): all three work, without a setting.
 - Alone, the dogs and the logs go slowly.
 - Two players: one player moves the cat with the keyboard; the other helps with the gaze (or the mouse, as the setting of the inputs decides). A dog looked at stops (a red circle around it); a log looked at stops (it turns grey); a button looked at opens its fence (a ring goes round it, fixation length of the settings).
-- Nothing moves while the menu of the gear is open.
+- Nothing moves while the menu (Esc key) is open.
 
 # How to win
 The cat caught: the same map starts again. The bowl reached: the next map. After the last map of the difficulty: "Bravo", then the statistics.

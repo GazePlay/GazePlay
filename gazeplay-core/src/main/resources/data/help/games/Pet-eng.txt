@@ -12,7 +12,7 @@ Take care of the Biboule: feed it, wash it and play with it.
 - Each activity done fills its gauge by a quarter.
 
 # How to win
-There is nothing to win: keep the Biboule happy, as long as you like. The game does not stop by itself: leave with the gear at the bottom left.
+There is nothing to win: keep the Biboule happy, as long as you like. The game does not stop by itself: leave by the menu (Esc key).
 
 # The variants
 This game has no variant: press "Start the game".

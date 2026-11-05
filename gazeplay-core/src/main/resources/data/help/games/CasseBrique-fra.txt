@@ -7,7 +7,7 @@ Renvoie la balle avec la raquette pour casser toutes les briques du mur.
 - Une brique touchée par la balle se casse. En Difficile, certaines briques, plus foncées, se fendent au premier coup et se cassent au second.
 - La balle a 3 vies (les cœurs en haut à gauche). Si elle tombe sous la raquette, elle perd une vie et revient sur la raquette.
 - En haut à droite : les briques cassées et le nombre de briques du mur.
-- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Casse toutes les briques : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.

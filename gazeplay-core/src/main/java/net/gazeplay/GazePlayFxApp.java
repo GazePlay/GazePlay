@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -273,13 +274,29 @@ public class GazePlayFxApp extends Application {
     private void configurePrimaryStage(final Stage primaryStage) {
         primaryStage.setTitle("GazePlay Learning");
         // No "Press Esc to exit full screen" message in the middle of the screen when the full screen starts (seen
-        // by the participant at the start of an evaluation); Esc still leaves the full screen
+        // by the participant at the start of an evaluation)
         primaryStage.setFullScreenExitHint("");
+        // In a game, Esc opens the menu of the game, whose button changes the full screen. The menus keep the default
+        // key: the pages of the mode and of the profiles have no such button
+        if (startsAGame(options)) {
+            primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        }
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
         final String iconImagePath = "data/common/images/gazeplayicon.png";
         final Image icon = new Image(iconImagePath);
         primaryStage.getIcons().add(icon);
+    }
+
+    /**
+     * @return whether the command line asks for a game: this JVM is that of a game, not that of the menus
+     */
+    static boolean startsAGame(final ReusableOptions options) {
+        if (options == null || options.getGameSelectionOptions() == null) {
+            return false;
+        }
+        final GameSelectionOptions game = options.getGameSelectionOptions();
+        return game.getGameNameCode() != null || game.isRandomGame();
     }
 
     /**

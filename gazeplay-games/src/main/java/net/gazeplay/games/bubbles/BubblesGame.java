@@ -44,13 +44,13 @@ import java.util.List;
 /**
  * Game "Bubbles" (reviewed on 2/11/2026, maintainer's rules): a picture is hidden under {@value #TILES} panes of frosted
  * glass; 10 bubbles go across the screen (up, down, to the right, to the left, or stay still); each bubble burst takes
- * one pane away. The picture all found: "Bravo", then a new picture (the game goes on: it is left by the gear). A bubble
+ * one pane away. The picture all found: "Bravo", then a new picture (the game goes on: it is left by the menu). A bubble
  * bursts as soon as the gaze (or the mouse) enters it, or after a fixation, as chosen in the variants. The bubbles show
  * colors, sea animals (OpenMoji) or the images of the user; with the images of the user, the hidden pictures are theirs
  * too, else drawn underwater scenes.
  * <p>
  * One loop moves the bubbles, in real time, at the animation speed of the settings; nothing moves while the menu of the
- * gear is open.
+ * game is open.
  */
 @Slf4j
 public class BubblesGame implements GameLifeCycle {
@@ -524,7 +524,7 @@ public class BubblesGame implements GameLifeCycle {
                 default -> {
                     speed = 0;
                     stillTime = STILL_TIME / ratio * (along > 0 ? along : 1);
-                    // Not under the gear (bottom left) nor under the count (top), nor on another bubble
+                    // Not in the bottom left corner (old gear) nor under the count (top), nor on another bubble
                     int tries = 0;
                     do {
                         x = radius + (width - 2 * radius) * random.nextDouble();

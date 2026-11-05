@@ -33,6 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -132,6 +134,20 @@ class GameContextTest {
         verify(mockGamingRoot, never()).setDisable(true);
     }
 
+    /**
+     * Decision of the maintainer of 5/11/2026: the full screen button stays for the games, greyed for the evaluations.
+     */
+    @Test
+    void shouldAskTheGameWhetherTheFullScreenCanChange() {
+        when(mockGameLifeCycle.allowsFullScreenChange()).thenReturn(false);
+        assertFalse(GameContext.allowsFullScreenChange(mockGameLifeCycle));
+
+        when(mockGameLifeCycle.allowsFullScreenChange()).thenReturn(true);
+        assertTrue(GameContext.allowsFullScreenChange(mockGameLifeCycle));
+
+        assertTrue(GameContext.allowsFullScreenChange(null));
+    }
+
     @Test
     void shouldInitialisePointersOnConstruction() {
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(true);
@@ -172,6 +188,24 @@ class GameContextTest {
         } finally {
             BackgroundMusicManager.setInstance(new BackgroundMusicManager());
         }
+    }
+
+    /**
+     * Nothing saved (GazePlay Eval Test, an evaluation left on its participant form): no statistics to show before the
+     * replay; the statistics screen would read metrics images that do not exist.
+     */
+    @Test
+    void shouldNotShowTheStatisticsOfAReplayWhenNothingIsSaved() throws Exception {
+        when(mockRoot.getChildren()).thenReturn(mockList);
+        when(mockGamingRoot.getChildren()).thenReturn(mockList);
+        when(mockStats.isSavingDisabled()).thenReturn(true);
+        GameContext context = new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox,
+            mockGazeDeviceManager, mockSoundManager, mockConfigPane);
+
+        org.testfx.util.WaitForAsyncUtils.asyncFx(() -> context.exitReplayGame(mockStats, mockGazePlay, mockGameLifeCycle)).get();
+
+        verify(mockStats, never()).saveStats();
+        verify(mockGazePlay, never()).onDisplayStats(any());
     }
 
     @Test

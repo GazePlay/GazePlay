@@ -9,7 +9,7 @@ Une question demande un animal (« Où est le chat ? ») : trouve sa photo p
 # Comment gagner
 - Bonne réponse : l'image est entourée de vert, elle grandit, puis « Bravo » et une nouvelle question.
 - Mauvaise réponse : l'image est barrée et grisée ; cherche encore (la question est redite si le réglage le demande).
-- Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche, ou règle une limite de temps ou de score dans les réglages (section Jeux).
+- Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap), ou règle une limite de temps ou de score dans les réglages (section Jeux).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

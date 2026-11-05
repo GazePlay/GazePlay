@@ -2,15 +2,15 @@
 Des taupes sortent de leurs trous. Touche-les avec le regard avant qu'elles ne rentrent !
 
 # Comment jouer
-- Selon le choix fait en bas de la fenêtre, la cible est touchée dès que tu la regardes, ou après une fixation : un anneau se remplit sur elle. Sa durée est celle des réglages, qui se change aussi par l'engrenage en bas à gauche.
+- Selon le choix fait en bas de la fenêtre, la cible est touchée dès que tu la regardes, ou après une fixation : un anneau se remplit sur elle. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Si tu quittes la cible moins de 0,3 seconde, l'anneau t'attend. Après, il repart de zéro.
 - Tu peux regarder un trou à l'avance : ton regard compte dès que la cible apparaît.
 - Une cible touchée fait une étoile et un bruit, puis rentre dans son trou. Une nouvelle sort ailleurs, un peu plus tard.
 - En haut à droite, le nombre de cibles touchées ; en haut à gauche, le temps qui reste (variantes en minutes).
-- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert, et le temps s'arrête.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
 # Comment gagner
-Il n'y a ni vies ni pénalité : une cible manquée rentre simplement dans son trou. Selon ton choix, le jeu est sans fin (quitte par l'engrenage en bas à gauche), dure 1 ou 3 minutes, ou s'arrête après 20 ou 50 cibles touchées : « Bravo », puis les statistiques.
+Il n'y a ni vies ni pénalité : une cible manquée rentre simplement dans son trou. Selon ton choix, le jeu est sans fin (quitte par le menu (touche Échap)), dure 1 ou 3 minutes, ou s'arrête après 20 ou 50 cibles touchées : « Bravo », puis les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

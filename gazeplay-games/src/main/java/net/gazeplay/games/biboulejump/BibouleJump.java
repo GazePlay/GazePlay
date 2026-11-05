@@ -35,9 +35,9 @@ import java.util.Map;
  * statistics. There is no high score any more.
  * <p>
  * Everything is measured in parts of the screen: a jump climbs the same part of it on every screen. One loop moves
- * everything in real time, at the animation speed of the settings; nothing moves while the menu of the gear is open.
+ * everything in real time, at the animation speed of the settings; nothing moves while the menu of the game is open.
  * (Before the review: pixels per millisecond, so that a jump climbed 53 % of a screen in 1080p and 27 % in 4K, with clouds
- * up to 45 % apart; a score rounded down at each image; the game going on behind the menu of the gear; moving clouds never
+ * up to 45 % apart; a score rounded down at each image; the game going on behind the menu of the game; moving clouds never
  * stopped; one fall ending the game; a square Biboule.)
  */
 public class BibouleJump implements GameLifeCycle {

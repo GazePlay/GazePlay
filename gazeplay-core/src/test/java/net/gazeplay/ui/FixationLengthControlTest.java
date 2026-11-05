@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * The control of the fixation length in the menu of the gear.
+ * The control of the fixation length in the menu of the game.
  */
 @ExtendWith(ApplicationExtension.class)
 class FixationLengthControlTest {

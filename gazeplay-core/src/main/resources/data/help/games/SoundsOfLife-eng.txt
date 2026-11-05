@@ -7,7 +7,7 @@ Listen to the animals: each animal you look at makes its sound, and its name is 
 - Look at another animal, or at the same one to hear it again.
 
 # How to win
-There is nothing to win: you discover the animals and their sounds, as long as you like. The game does not stop by itself: leave with the gear at the bottom left.
+There is nothing to win: you discover the animals and their sounds, as long as you like. The game does not stop by itself: leave by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

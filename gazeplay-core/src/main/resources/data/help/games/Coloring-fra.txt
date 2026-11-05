@@ -10,7 +10,7 @@ Colorie un dessin en noir et blanc, zone par zone, avec le regard.
 - Les boutons de fichiers chargent une de tes images, sauvegardent ou impriment le dessin.
 
 # Comment gagner
-Il n'y a pas de fin : colorie comme tu veux, puis passe au dessin suivant. Chaque zone coloriée compte un point. Quitte par l'engrenage en bas à gauche.
+Il n'y a pas de fin : colorie comme tu veux, puis passe au dessin suivant. Chaque zone coloriée compte un point. Quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

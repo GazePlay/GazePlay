@@ -1,17 +1,10 @@
 package net.gazeplay.ui.scenes.ingame;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
 import javafx.event.Event;
 import javafx.event.EventDispatcher;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -27,13 +20,16 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Objects;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 import static net.gazeplay.ui.scenes.ingame.GameContext.updateConfigPane;
@@ -44,14 +40,21 @@ import static net.gazeplay.ui.scenes.ingame.GameContext.updateConfigPane;
 @Slf4j
 public class GameContextFactory implements Supplier<GameContext> {
 
+    /**
+     * Smallest room kept in the menu for its close button.
+     */
     static final double BUTTON_MIN_HEIGHT = 64;
 
     /**
-     * @return the size of the configuration button: a tenth of the width of the window
+     * With the gaze only, how long the mouse stays still before its pointer is hidden again.
      */
-    private static double computeButtonSize(Stage primaryStage) {
-        return primaryStage.getWidth() / 10;
-    }
+    private static final Duration CURSOR_IDLE_TIME = Duration.seconds(2);
+
+    /**
+     * With both inputs, how long the mouse keeps the lead after it moved, on top of the length of a fixation: something can
+     * be selected with a still mouse.
+     */
+    private static final long MOUSE_LEAD_AFTER_FIXATION_MILLIS = 2000;
 
     /**
      * @return the empty side panel of the game screen
@@ -75,23 +78,6 @@ public class GameContextFactory implements Supplier<GameContext> {
         return hbox;
     }
 
-    /**
-     * Sizes the configuration button for the width of the window (at least {@link #BUTTON_MIN_HEIGHT}).
-     */
-    private static void updateConfigButton(Button button, ImageView btnImg, Stage primaryStage) {
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < BUTTON_MIN_HEIGHT) {
-            buttonSize = BUTTON_MIN_HEIGHT;
-        }
-
-        btnImg.setFitWidth(buttonSize);
-        btnImg.setFitHeight(buttonSize);
-
-        button.setPrefHeight(buttonSize);
-        button.setPrefWidth(buttonSize);
-    }
-
     private final GazePlay gazePlay;
 
     private final Translator translator;
@@ -99,8 +85,6 @@ public class GameContextFactory implements Supplier<GameContext> {
     private final GazeDeviceManagerFactory gazeDeviceManagerFactory;
 
     private final SoundsManagerFactory soundsManagerFactory;
-
-    private boolean menuOpen = false;
 
     public GameContextFactory(final GazePlay gazePlay, final Translator translator,
                               final GazeDeviceManagerFactory gazeDeviceManagerFactory,
@@ -175,102 +159,41 @@ public class GameContextFactory implements Supplier<GameContext> {
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
-        double buttonSize = computeButtonSize(primaryStage);
-
-        ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
-        buttonImg.setFitWidth(buttonSize);
-        buttonImg.setFitHeight(buttonSize);
-
-        final Button bt = new Button();
-        bt.setMinHeight(BUTTON_MIN_HEIGHT);
-        bt.setGraphic(buttonImg);
-        bt.setStyle("-fx-background-color: transparent;");
-        updateConfigButton(bt, buttonImg, primaryStage);
-
         final HBox configPane = new HBox(2);
         configPane.setAlignment(Pos.CENTER_LEFT);
         primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(configPane, primaryStage));
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
         configPane.heightProperty().addListener((observable) -> updateConfigPane(configPane, primaryStage));
 
         final GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
 
-        EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
-            double from = 0;
-            double to = 1;
-            double angle = 360;
+        final Scene scene = gazePlay.getPrimaryScene();
+        final GameCursor cursor = gameCursor(scene, EyeTracker.fromConfigValue(config.getEyeTracker()),
+            () -> config.getFixationLength() + MOUSE_LEAD_AFTER_FIXATION_MILLIS);
 
-            if (menuOpen) {
-                from = 1;
-                to = 0;
-                angle = -1 * angle;
-            } else if (!configPane.getChildren().contains(controlPanel)) {
-                configPane.getChildren().add(controlPanel);
+        final GameMenuPanel menu = new GameMenuPanel(configPane, controlPanel, open -> {
+            setMenuOpen(open, gazeDeviceManager);
+            if (cursor != null) {
+                cursor.setMenuOpen(open);
             }
-            RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
-            rt.setByAngle(angle);
-            FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
-            ft.setFromValue(from);
-            ft.setToValue(to);
-            ParallelTransition pt = new ParallelTransition();
-            pt.getChildren().addAll(rt, ft);
-            controlPanel.setDisable(menuOpen);
-            controlPanel.setMouseTransparent(menuOpen);
-            controlPanel.setVisible(true);
-            setMenuOpen(!menuOpen, gazeDeviceManager);
-            pt.setOnFinished(actionEvent -> {
-                if (!menuOpen) {
-                    configPane.getChildren().remove(controlPanel);
-                }
-            });
-            pt.play();
-        };
-
-        // The menu closes when the mouse leaves it. This handler used to be added again at each opening of the menu,
-        // and ran even when the menu was closed
-        configPane.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-            if (!menuOpen) {
-                return;
-            }
-            RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
-            rt.setByAngle(-360);
-            FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
-            ft.setFromValue(1);
-            ft.setToValue(0);
-            ParallelTransition pt = new ParallelTransition();
-            pt.getChildren().addAll(rt, ft);
-            controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
-            controlPanel.setVisible(false);
-            controlPanel.setDisable(true);
-            controlPanel.setMouseTransparent(true);
-            setMenuOpen(false, gazeDeviceManager);
-            pt.setOnFinished(actionEvent -> {
-                if (!menuOpen) {
-                    configPane.getChildren().remove(controlPanel);
-                }
-            });
-            pt.play();
-            buttonTransparentHandler(bt);
         });
 
-        final Scene scene = gazePlay.getPrimaryScene();
+        final I18NButton closeButton = new I18NButton(translator, "Close");
+        closeButton.setMinWidth(Region.USE_PREF_SIZE);
+        closeButton.setOnAction(event -> menu.close());
+        controlPanel.getChildren().add(closeButton);
+
         if (scene != null) {
-            blockGameInputWhileMenuOpen(scene, root, configPane);
+            connectMenuToScene(scene, root, menu, configPane);
+        }
+        if (cursor != null) {
+            followTheScreenAndTheGaze(scene, root, cursor);
+            keepTheHiddenMouseOutOfTheGame(gamingRoot, cursor);
         }
 
         log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
         controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
-        controlPanel.setVisible(false);
-        controlPanel.setDisable(true);
-        controlPanel.setMouseTransparent(true);
         setMenuOpen(false, gazeDeviceManager);
 
-        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedControlPanelEventHandler);
-        bt.getStyleClass().add("button");
-
-        buttonTransparentHandler(bt);
-
-        configPane.getChildren().add(bt);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(configPane);
 
@@ -278,36 +201,87 @@ public class GameContextFactory implements Supplier<GameContext> {
     }
 
     /**
-     * Opens or closes the configuration menu of the game screen. While it is open, the game is left alone: the gaze is
-     * no longer dispatched to the game (see {@link GazeDeviceManager#setPaused(boolean)}), the mouse and the keyboard no
-     * longer reach it (see {@link #blocksGameInput}), and nothing is recorded in the statistics.
+     * @param mouseLeadMillis with both inputs, how long the mouse keeps the lead after it moved
+     * @return what manages the pointer of the mouse; null with the mouse alone, where it is always visible, or without
+     *   scene
      */
-    private void setMenuOpen(final boolean open, final GazeDeviceManager gazeDeviceManager) {
-        menuOpen = open;
+    static GameCursor gameCursor(final Scene scene, final EyeTracker eyeTracker, final LongSupplier mouseLeadMillis) {
+        if (scene == null || !eyeTracker.usesGaze()) {
+            return null;
+        }
+        return eyeTracker.acceptsMouse() ? GameCursor.forLastInput(scene, mouseLeadMillis)
+            : GameCursor.forGazeOnly(scene, CURSOR_IDLE_TIME);
+    }
+
+    /**
+     * The pointer is managed only on this game screen: the statistics screen, on the same scene, is used with the mouse.
+     * The positions of the gaze come as one event each on the root of the game (see {@link Stats}).
+     */
+    static void followTheScreenAndTheGaze(final Scene scene, final Pane root, final GameCursor cursor) {
+        scene.rootProperty().addListener((observable, oldRoot, newRoot) -> {
+            if (newRoot == root) {
+                cursor.start();
+            } else {
+                cursor.stop();
+            }
+        });
+        root.addEventFilter(GazeEvent.ANY, event -> {
+            if (event.getTarget() == root && event.getEventType() != GazeEvent.GAZE_EXITED) {
+                cursor.gazeUsed();
+            }
+        });
+    }
+
+    /**
+     * With both inputs, a hidden mouse does not play: something passing under it must not start a fixation (remark of the
+     * maintainer, 5/11/2026). The statistics, recorded on the root of the scene, still get its movements.
+     */
+    static void keepTheHiddenMouseOutOfTheGame(final Pane gamingRoot, final GameCursor cursor) {
+        gamingRoot.addEventFilter(MouseEvent.ANY, event -> {
+            if (cursor.isMouseOutOfTheGame()) {
+                event.consume();
+            }
+        });
+    }
+
+    /**
+     * Follows the opening or closing of the menu of the game screen. While it is open, the game is left alone: the gaze
+     * is no longer dispatched to the game (see {@link GazeDeviceManager#setPaused(boolean)}), the mouse and the keyboard
+     * no longer reach it (see {@link #blocksGameInput}), and nothing is recorded in the statistics.
+     */
+    private static void setMenuOpen(final boolean open, final GazeDeviceManager gazeDeviceManager) {
         Stats.setConfigMenuOpen(open);
         gazeDeviceManager.setPaused(open);
     }
 
     /**
-     * Stops, at the entrance of the scene, the mouse and keyboard events meant for the game while the configuration
-     * menu is open. The scene is the only place where all the games are covered: some of them listen to the mouse or
-     * the keyboard on the whole scene (GazeRace, SprintFinish), before any filter of the game
-     * screen.
+     * While this game screen is shown, gives the Esc key to the menu, and stops, at the entrance of the scene, the mouse
+     * and keyboard events meant for the game while the menu is open. The scene is the only place where all the games are
+     * covered: some of them listen to the mouse or the keyboard on the whole scene (GazeRace, SprintFinish), before any
+     * filter of the game screen. The menu closes when another screen replaces this one (home and replay buttons, end of
+     * the game), which used to be done by the mouse leaving the menu.
      */
-    private void blockGameInputWhileMenuOpen(final Scene scene, final Pane root, final Node menu) {
+    static void connectMenuToScene(final Scene scene, final Pane root, final GameMenuPanel menu,
+                                   final Node menuHolder) {
         final EventDispatcher sceneDispatcher = scene.getEventDispatcher();
         scene.setEventDispatcher((event, tail) -> {
             // Only while this game screen is shown: the statistics screen, shown on the same scene, is not concerned
-            if (scene.getRoot() == root && blocksGameInput(event, menuOpen, menu)) {
+            if (scene.getRoot() == root
+                && (menu.handleKey(event) || blocksGameInput(event, menu.isOpen(), menuHolder))) {
                 return null;
             }
             return sceneDispatcher.dispatchEvent(event, tail);
+        });
+        scene.rootProperty().addListener((observable, oldRoot, newRoot) -> {
+            if (newRoot != root) {
+                menu.close();
+            }
         });
     }
 
     /**
      * @param menuOpen whether the configuration menu is open
-     * @param menu     the configuration menu (its button and panel)
+     * @param menu     the holder of the configuration menu
      * @return whether an event must be stopped: while the menu is open, the mouse events outside of the menu and all
      *   the keyboard events
      */
@@ -330,42 +304,5 @@ public class GameContextFactory implements Supplier<GameContext> {
         }
         return false;
     }
-
-    /**
-     * Makes the configuration button fade out 2 seconds after it appears and when the mouse leaves it, and come back
-     * when the mouse is on it (unless the panel is open).
-     */
-    private void buttonTransparentHandler(Button bt) {
-        FadeTransition fd = new FadeTransition(Duration.millis(500), bt);
-        fd.setFromValue(1);
-        fd.setToValue(0.1);
-
-        FadeTransition initialFd = new FadeTransition(Duration.seconds(1), bt);
-        initialFd.setFromValue(1);
-        initialFd.setToValue(0.1);
-        initialFd.setDelay(Duration.seconds(2));
-
-        EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
-            if (!menuOpen) {
-                fd.stop();
-                initialFd.stop();
-                bt.setOpacity(1);
-            }
-        };
-
-        bt.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
-
-        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
-            if (!menuOpen) {
-                fd.play();
-            }
-        };
-
-        bt.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
-
-        initialFd.play();
-
-    }
-
 
 }

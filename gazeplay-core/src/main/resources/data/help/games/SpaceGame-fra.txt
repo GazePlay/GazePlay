@@ -8,10 +8,10 @@ Des extraterrestres dans leurs soucoupes volantes attaquent ! Ta fusée les dét
 - Les extraterrestres lâchent des boules rouges : évite-les en te déplaçant.
 - La fusée a 3 vies (les cœurs en haut à gauche). Touchée, elle en perd une et clignote : pendant 2 secondes, rien ne peut la toucher.
 - À la fin du temps, ou quand assez d'extraterrestres sont détruits, les autres s'en vont et le boss arrive. Il lâche trois boules à la fois. Sa jauge de vie, au-dessus de lui, baisse à chaque laser.
-- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert, et le temps s'arrête.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
 # Comment gagner
-Selon la variante : battre le boss, qui arrive après 1 ou 3 minutes de jeu, ou après 20 ou 50 extraterrestres détruits. Le boss battu : « Bravo », puis les statistiques. Sans fin : pas de boss, on quitte par l'engrenage en bas à gauche. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+Selon la variante : battre le boss, qui arrive après 1 ou 3 minutes de jeu, ou après 20 ou 50 extraterrestres détruits. Le boss battu : « Bravo », puis les statistiques. Sans fin : pas de boss, on quitte par le menu (touche Échap). Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

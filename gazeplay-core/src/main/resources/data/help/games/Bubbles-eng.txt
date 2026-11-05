@@ -6,10 +6,10 @@ A picture is hidden under panes of glass. Bubbles go by: each bubble burst takes
 - Depending on the variant, it bursts as soon as you look at it, or after a fixation: a ring goes round it (fixation length of the settings).
 - At the top, "12 / 36" counts the panes taken away.
 - The speed of the bubbles follows the animation speed of the settings.
-- Nothing moves while the menu of the gear is open.
+- Nothing moves while the menu (Esc key) is open.
 
 # How to win
-When the 36 panes are taken away: "Bravo", then a new hidden picture. The game does not stop by itself: leave it by the gear at the bottom left.
+When the 36 panes are taken away: "Bravo", then a new hidden picture. The game does not stop by itself: leave it by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

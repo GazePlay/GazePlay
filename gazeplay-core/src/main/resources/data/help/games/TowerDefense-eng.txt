@@ -9,10 +9,10 @@ Little monsters follow the road to your castle. Build towers along the road to s
 - Fixate the snowflake at the top: the blizzard stops the monsters for 5 seconds. It comes back after 30 seconds.
 - The waves have 5 then 10 monsters, and get stronger every 2 waves. Every 5 waves come the big violet monsters, every 10 waves the small yellow fast ones.
 - The map (the way of the road) is drawn at random at each game, between two.
-- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open.
+- The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
 
 # How to win
-As chosen in the variant: hold 10 or 20 waves, or without end (leave with the gear at the bottom left). The waves held: "Bravo", then the statistics. If all the lives are lost: "Lost!", then the statistics.
+As chosen in the variant: hold 10 or 20 waves, or without end (leave by the menu (Esc key)). The waves held: "Bravo", then the statistics. If all the lives are lost: "Lost!", then the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".

@@ -46,7 +46,7 @@ import java.util.Map;
  * missed goes on. The game has no end, or ends after 20 or 50 targets cut, with "Bravo" then the statistics.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves while the menu of the
- * gear is open. (Before the review: durations of 1 to 3 s whatever the length of the way, a target half out of the
+ * game is open. (Before the review: durations of 1 to 3 s whatever the length of the way, a target half out of the
  * screen or out of it, and a "dynamic" speed that could only slow down with the fixation of 2 s of the settings.)
  */
 public class Ninja implements GameLifeCycle {
@@ -480,7 +480,7 @@ public class Ninja implements GameLifeCycle {
     }
 
     /**
-     * The fixation: its length is that of the settings, read at each step, so that a change in the menu of the gear
+     * The fixation: its length is that of the settings, read at each step, so that a change in the menu of the game
      * counts at once. A short look away only stops the ring for a moment.
      */
     private void fixation(final double seconds) {

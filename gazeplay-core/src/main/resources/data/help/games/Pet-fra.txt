@@ -12,7 +12,7 @@ Occupe-toi de la Biboule : donne-lui à manger, lave-la et joue avec elle.
 - Chaque activité réussie remplit sa jauge d'un quart.
 
 # Comment gagner
-Il n'y a rien à gagner : il faut garder la Biboule heureuse, aussi longtemps qu'on veut. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Il n'y a rien à gagner : il faut garder la Biboule heureuse, aussi longtemps qu'on veut. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Ce jeu n'a pas de variante : appuie sur « Lancer le jeu ».

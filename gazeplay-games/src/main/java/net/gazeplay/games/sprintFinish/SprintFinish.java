@@ -58,7 +58,7 @@ import java.util.Set;
  * bowl reached: the next map; after the last one of the difficulty (5, 10 or 15 maps), "Bravo", then the statistics.
  * <p>
  * The board is a grid scaled to the screen: positions are in cells, all moves in cells per second (one loop, stopped
- * at the end of each map: no dog keeps running after it). Nothing moves while the menu of the gear is open.
+ * at the end of each map: no dog keeps running after it). Nothing moves while the menu of the game is open.
  */
 @Slf4j
 public class SprintFinish implements GameLifeCycle {

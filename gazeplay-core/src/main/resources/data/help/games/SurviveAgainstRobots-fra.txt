@@ -10,10 +10,10 @@ La Biboule vole au milieu de robots. Elle lance des étincelles pour les détrui
 - Un robot détruit laisse parfois un bonus. Vole dessus pour le prendre : l'éclair (tirs plus rapides), le bouclier (rien ne te touche), l'escargot (robots ralentis), pendant 8 secondes, ou le cœur (une vie de plus).
 - Plus tu détruis de robots, plus il en vient : un de plus tous les 5 robots détruits, jusqu'au nombre du niveau.
 - Le décor change à chaque partie : le ciel, le jardin ou la cour de l'école.
-- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert, et le temps s'arrête.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
 # Comment gagner
-Selon la variante : sans fin (quitte par l'engrenage en bas à gauche), 1 ou 3 minutes de jeu, ou 20 ou 50 robots à détruire. À la fin : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+Selon la variante : sans fin (quitte par le menu (touche Échap)), 1 ou 3 minutes de jeu, ou 20 ou 50 robots à détruire. À la fin : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

@@ -8,7 +8,7 @@ Find the pairs of identical cards.
 - At the top, "Pairs" shows how many pairs you found.
 
 # How to win
-When all the pairs are found: "Bravo", then a new game starts. The game does not stop by itself: leave with the gear at the bottom left.
+When all the pairs are found: "Bravo", then a new game starts. The game does not stop by itself: leave by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

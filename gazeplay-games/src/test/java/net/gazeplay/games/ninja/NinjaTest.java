@@ -205,7 +205,7 @@ class NinjaTest {
     }
 
     /**
-     * Maintainer's rule of 4/11/2026: the length is that of the settings, changed by the gear during a game.
+     * Maintainer's rule of 4/11/2026: the length is that of the settings, changed in the menu during a game.
      */
     @Test
     void shouldReadTheLengthOfTheFixationDuringTheGame() throws Exception {

@@ -45,7 +45,7 @@ import java.util.Map;
  * by flying on it: faster shots, a shield or the robots slowed for {@value #BONUS_EFFECT} s, or one life back.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves and the time does not
- * run while the menu of the gear is open.
+ * run while the menu of the game is open.
  */
 public class SurviveAgainstRobots implements GameLifeCycle {
 

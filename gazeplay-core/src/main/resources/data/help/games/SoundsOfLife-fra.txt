@@ -7,7 +7,7 @@
 - Regarde un autre animal, ou le même pour l'entendre encore.
 
 # Comment gagner
-Il n'y a rien à gagner : on découvre les animaux et leurs cris, aussi longtemps qu'on veut. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Il n'y a rien à gagner : on découvre les animaux et leurs cris, aussi longtemps qu'on veut. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

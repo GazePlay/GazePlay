@@ -10,7 +10,7 @@ A number is written in the heart of the flower. Make this number with all the pe
 - At the bottom, "Total" shows the sum of all the petals and the number to make; it turns red when it goes over.
 
 # How to win
-When the total makes the number (with the rule of the variant): "Bravo", then a new number. The game does not stop by itself: leave with the gear at the bottom left.
+When the total makes the number (with the rule of the variant): "Bravo", then a new number. The game does not stop by itself: leave by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

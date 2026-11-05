@@ -7,7 +7,7 @@ La Biboule rebondit de nuage en nuage. Fais-la monter le plus haut possible sans
 - Un tremplin rouge l'envoie beaucoup plus haut, environ deux écrans au-dessus.
 - Tu gagnes 1 point chaque fois qu'elle monte d'un centième de la hauteur de l'écran.
 - En haut à gauche, tes vies ; en haut à droite, tes points ; au milieu, le temps qui reste (variantes en minutes).
-- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu de l'engrenage est ouvert, et le temps s'arrête.
+- La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
 # Comment gagner
 Tu as 3 vies. Si la Biboule tombe sous l'écran, tu perds une vie : elle repart 1,5 seconde plus tard sur un nouveau nuage et tu gardes tes points. Après la troisième chute, c'est « Perdu ! » avec tes points. Si le temps est fini avant, c'est « Bravo ». Puis viennent les statistiques.

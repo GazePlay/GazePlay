@@ -2,15 +2,15 @@
 Moles come out of their holes. Touch them with your eyes before they go back!
 
 # How to play
-- As chosen at the bottom of the window, the target is touched as soon as you look at it, or after a fixation: a ring fills on it. Its length is that of the settings, also changed with the gear at the bottom left.
+- As chosen at the bottom of the window, the target is touched as soon as you look at it, or after a fixation: a ring fills on it. Its length is that of the settings, also changed in the menu (Esc key).
 - If you leave the target for less than 0.3 seconds, the ring waits for you. After that, it starts again from zero.
 - You can look at a hole in advance: your eyes count as soon as the target appears.
 - A target touched makes a star and a sound, then goes back in its hole. A new one comes out elsewhere, a little later.
 - At the top right, the number of targets touched; at the top left, the time left (variants in minutes).
-- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+- The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open, and the time stops.
 
 # How to win
-There are no lives and no penalty: a target missed simply goes back in its hole. As you chose, the game has no end (leave with the gear at the bottom left), lasts 1 or 3 minutes, or stops after 20 or 50 targets touched: "Bravo", then the statistics.
+There are no lives and no penalty: a target missed simply goes back in its hole. As you chose, the game has no end (leave by the menu (Esc key)), lasts 1 or 3 minutes, or stops after 20 or 50 targets touched: "Bravo", then the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".

@@ -8,7 +8,7 @@ Retrouve les paires de cartes identiques.
 - En haut, « Paires » montre combien de paires tu as trouvées.
 
 # Comment gagner
-Quand toutes les paires sont trouvées : « Bravo », puis une nouvelle partie commence. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Quand toutes les paires sont trouvées : « Bravo », puis une nouvelle partie commence. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

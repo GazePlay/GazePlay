@@ -9,7 +9,7 @@ Add the images in the settings, section Folders, "My images", shared by all the 
 - Look at "I like it" (left) or "I don't like it" (right): a ring goes round the button (fixation length of the settings), then the answer is framed in its color and the next image comes.
 
 # How to win
-There is no right answer: every opinion counts. After the last image: "Bravo", then the statistics. Leave earlier with the gear at the bottom left.
+There is no right answer: every opinion counts. After the last image: "Bravo", then the statistics. Leave earlier by the menu (Esc key).
 
 # The answers
 They are written with the statistics of the game, in a file "...-opinions.csv": the name of each image and the choice ("aime" or "n'aime pas"). An image not answered has no line.

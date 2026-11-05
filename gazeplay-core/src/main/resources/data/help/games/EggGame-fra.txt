@@ -8,7 +8,7 @@ Un œuf attend dans son nid. Regarde-le : il se fêle, puis il éclot. Qui va so
 - En haut, « Éclos » compte les œufs éclos.
 
 # Comment gagner
-Chaque œuf éclos est une réussite : un nouvel œuf arrive ensuite. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Chaque œuf éclos est une réussite : un nouvel œuf arrive ensuite. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

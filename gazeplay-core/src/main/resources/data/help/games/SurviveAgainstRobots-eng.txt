@@ -10,10 +10,10 @@ The Biboule flies among robots. It throws sparkles to destroy them: escape them 
 - A robot destroyed sometimes leaves a bonus. Fly on it to take it: the lightning (faster shots), the shield (nothing touches you), the snail (robots slowed), for 8 seconds, or the heart (one more life).
 - The more robots you destroy, the more come: one more every 5 robots destroyed, up to the number of the level.
 - The scene changes at each game: the sky, the garden or the schoolyard.
-- The speed follows the animation speed of the settings. Nothing moves while the menu of the gear is open, and the time stops.
+- The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open, and the time stops.
 
 # How to win
-As chosen in the variant: without end (leave with the gear at the bottom left), 1 or 3 minutes of play, or 20 or 50 robots to destroy. At the end: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics.
+As chosen in the variant: without end (leave by the menu (Esc key)), 1 or 3 minutes of play, or 20 or 50 robots to destroy. At the end: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".

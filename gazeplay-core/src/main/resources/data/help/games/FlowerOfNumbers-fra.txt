@@ -10,7 +10,7 @@ Un nombre est écrit au cœur de la fleur. Fais ce nombre avec tous les pétales
 - En bas, « Total » montre la somme de tous les pétales et le nombre à faire ; il devient rouge quand il dépasse.
 
 # Comment gagner
-Quand le total fait le nombre (avec la règle de la variante) : « Bravo », puis un nouveau nombre. Le jeu ne s'arrête pas tout seul : quitte par l'engrenage en bas à gauche.
+Quand le total fait le nombre (avec la règle de la variante) : « Bravo », puis un nouveau nombre. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

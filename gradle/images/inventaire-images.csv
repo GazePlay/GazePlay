@@ -206,7 +206,6 @@ gazeplay-core/src/main/resources/data/common/images/GazePlayLetters/spacing.png,
 gazeplay-core/src/main/resources/data/common/images/aoibtn.png,oui,source inconnue,,2019-05-23,sannara,Added missing photo
 gazeplay-core/src/main/resources/data/common/images/bravo.gif,oui,source inconnue,,2018-07-25,kuhlkrein,new bravo !
 gazeplay-core/src/main/resources/data/common/images/cards.png,oui,source inconnue,,2020-02-28,kuhlkrein,add new image for each section
-gazeplay-core/src/main/resources/data/common/images/configuration-button-alt4.png,oui,source inconnue,,2017-10-28,schwab,work on configuration
 gazeplay-core/src/main/resources/data/common/images/continue.png,oui,source inconnue,,2019-05-16,Teo Blachere,Inter-level stat screen
 gazeplay-core/src/main/resources/data/common/images/dice.png,oui,source inconnue,,2019-05-21,Teo Blachere,Start dice roll
 gazeplay-core/src/main/resources/data/common/images/error.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2017-02-08,schwab,first commit

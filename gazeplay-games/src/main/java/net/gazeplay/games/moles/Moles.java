@@ -46,7 +46,7 @@ import java.util.Map;
  * 50 targets, with "Bravo" then the statistics.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves while the menu of the
- * gear is open. (Before the review: a timer sending out a target every 0.5 s, up to 10 at a time, even with the menu
+ * game is open. (Before the review: a timer sending out a target every 0.5 s, up to 10 at a time, even with the menu
  * open and after the end of the game; targets out 2 to 4.5 s for a fixation of 2 s by default.)
  */
 public class Moles implements GameLifeCycle {
@@ -629,7 +629,7 @@ public class Moles implements GameLifeCycle {
 
         /**
          * The target can be hit as soon as it shows; it goes back after the time of the fixation, read at each step, so
-         * that a change in the menu of the gear counts at once, and the time of the level.
+         * that a change in the menu of the game counts at once, and the time of the level.
          */
         private void targetIsOut(final double seconds, final double ratio) {
             outSeconds += seconds;

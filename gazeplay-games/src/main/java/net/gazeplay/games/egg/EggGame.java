@@ -56,7 +56,7 @@ import java.util.List;
  * the main color goes round it during the fixation length of the settings): staying on it cracks it again and again,
  * there is no need to look away. After the number of fixations of the variant (2 to 5), it hatches: the top of the
  * shell flies off and what was inside comes out (an animal born from an egg, or an image of the user). Then a new egg,
- * without end (the game is left by the gear).
+ * without end (the game is left by the menu).
  */
 @Slf4j
 public class EggGame implements GameLifeCycle {
