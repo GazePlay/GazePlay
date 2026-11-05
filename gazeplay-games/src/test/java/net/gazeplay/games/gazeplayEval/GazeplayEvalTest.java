@@ -39,11 +39,13 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +53,12 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -67,6 +71,20 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(ApplicationExtension.class)
 class GazeplayEvalTest {
+
+    /** One screen, which ends by itself. */
+    private static final String QUICK_EVALUATION = """
+        [{"Type": "transition", "Mettre un temps avant passage à l'écran suivant": true, "Combien de temps": 0.1,
+          "Mettre une croix de fixation": true, "Mettre un temps de fixation": false,
+          "Combien de temps de fixation": 0}]
+        """;
+
+    /** One screen, which ends by itself, with an image that cannot be read. */
+    private static final String UNREADABLE_IMAGE_EVALUATION = """
+        [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": true, "Combien de temps": 0.5,
+          "Ajouter un media": true, "Type de media": "Image", "Nom du fichier": "illisible.png",
+          "Mettre un temps de fixation": false, "Combien de temps de fixation": 0}]
+        """;
 
     private Pane gameArea;
     private Scene scene;
@@ -131,6 +149,19 @@ class GazeplayEvalTest {
         }
     }
 
+    /**
+     * Decision of the maintainer of 5/11/2026: the full screen button of the menu is greyed during an evaluation, and
+     * during the test of an evaluation.
+     */
+    @Test
+    void shouldForbidChangingTheFullScreen() throws Exception {
+        createEvaluation("[]", "[]");
+        GazeplayEvalGameVariant variant = new GazeplayEvalGameVariant(evaluationName);
+
+        assertFalse(new GazeplayEval(gameContext, variant, stats).allowsFullScreenChange());
+        assertFalse(GazeplayEval.test(gameContext, variant, stats).allowsFullScreenChange());
+    }
+
     @Test
     void shouldPlayAnEvaluationToItsEndAndWriteItsResults() throws Exception {
         createEvaluation("[]", """
@@ -163,8 +194,10 @@ class GazeplayEvalTest {
 
         verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
         Path session = singleSession();
-        assertTrue(session.getFileName().toString().matches("Eval\\d+_" + LocalDate.now()
-            .format(DateTimeFormatter.ISO_LOCAL_DATE)), session.toString());
+        String day = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        assertEquals(day, session.getParent().getFileName().toString());
+        assertTrue(session.getFileName().toString().matches(day + "_\\d{2}-\\d{2}-\\d{2}_Test passation .*"),
+            session.toString());
         List<String> results = Files.readAllLines(session.resolve("resultats.csv"), StandardCharsets.UTF_8);
         assertEquals(3, results.size(), results.toString());
         assertTrue(results.get(1).startsWith("1;1;transition;"), results.get(1));
@@ -397,18 +430,279 @@ class GazeplayEvalTest {
         assertEquals(List.of(), newSessions());
     }
 
+    /**
+     * Decision of the maintainer of 5/11/2026: a folder per day, then a folder per session, sorted by date.
+     */
     @Test
-    void shouldNumberTheSessionsOfTheDay(@TempDir Path results) throws IOException {
-        LocalDate day = LocalDate.of(2026, 10, 27);
+    void shouldNameTheFoldersOfTheSessionsByDate(@TempDir Path results) throws IOException {
+        LocalDateTime start = LocalDateTime.of(2026, 11, 5, 9, 8, 7);
 
-        assertEquals(results.resolve("Eval1_2026-10-27"), GazeplayEval.createSessionFolder(results, day));
-        assertEquals(results.resolve("Eval2_2026-10-27"), GazeplayEval.createSessionFolder(results, day));
-        // The numbers start again the next day
-        assertEquals(results.resolve("Eval1_2026-10-28"), GazeplayEval.createSessionFolder(results, day.plusDays(1)));
-        assertEquals(results.resolve("Eval3_2026-10-27"), GazeplayEval.createSessionFolder(results, day));
-        // The results folder is created when it does not exist
+        Path day = results.resolve("2026-11-05");
+        assertEquals(day.resolve("2026-11-05_09-08-07_Mon test"),
+            GazeplayEval.createSessionFolder(results, start, "Mon test"));
+        // In the same second: another folder
+        assertEquals(day.resolve("2026-11-05_09-08-07_Mon test_2"),
+            GazeplayEval.createSessionFolder(results, start, "Mon test"));
+        assertEquals(results.resolve("2026-11-06").resolve("2026-11-06_09-08-07_Mon test"),
+            GazeplayEval.createSessionFolder(results, start.plusDays(1), "Mon test"));
+        // Without a name; the results folder is created when it does not exist
         Path absent = results.resolve("GazePlayLearning_Eval");
-        assertEquals(absent.resolve("Eval1_2026-10-27"), GazeplayEval.createSessionFolder(absent, day));
+        assertEquals(absent.resolve("2026-11-05").resolve("2026-11-05_09-08-07"),
+            GazeplayEval.createSessionFolder(absent, start, null));
+    }
+
+    @Test
+    void shouldKeepTheNameOfTheEvaluationUsableInAFolderName() {
+        assertEquals("Été_ test_1_2", GazeplayEval.safeFolderName("Été: test/1?2"));
+        assertEquals("fin", GazeplayEval.safeFolderName(" fin. . "));
+        assertEquals(40, GazeplayEval.safeFolderName("x".repeat(100)).length());
+        assertEquals("", GazeplayEval.safeFolderName("..."));
+    }
+
+    /**
+     * Each play of an evaluation has its folder: a replay does not write in the folder of the previous session.
+     */
+    @Test
+    void shouldCreateANewFolderForEachPlay() throws Exception {
+        createEvaluation("[]", QUICK_EVALUATION);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        verify(gameContext, timeout(10_000).times(1)).showRoundStats(stats, eval);
+        Path first = singleSession();
+
+        Platform.runLater(eval::launch);
+        verify(gameContext, timeout(10_000).times(2)).showRoundStats(stats, eval);
+
+        List<Path> created = newSessions();
+        assertEquals(2, created.size(), created.toString());
+        assertTrue(created.contains(first));
+        for (Path session : created) {
+            assertTrue(Files.exists(session.resolve("session.json")), session.toString());
+        }
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * A replay left on its participant form leaves the files of the previous session as they are.
+     */
+    @Test
+    void shouldNotTouchThePreviousSessionWhenAReplayIsLeftOnTheForm() throws Exception {
+        createEvaluation("[\"Prénom\"]", QUICK_EVALUATION);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
+        Platform.runLater(() -> {
+            find(TextField.class).get(0).setText("Léa");
+            startButton().fire();
+        });
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        Path session = singleSession();
+        String samplesBefore = Files.readString(session.resolve("echantillons.csv"));
+        String jsonBefore = Files.readString(session.resolve("session.json"));
+        assertTrue(jsonBefore.contains("\"terminee\": true"));
+        // The form of the previous session is gone from the screen before the replay
+        Platform.runLater(() -> gameArea.getChildren().clear());
+        WaitForAsyncUtils.waitForFxEvents();
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
+        Platform.runLater(() -> scene.getRoot().fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED, 321, 123, 321, 123,
+            MouseButton.NONE, 0, false, false, false, false, false, false, false, false, false, false, null)));
+        WaitForAsyncUtils.waitForFxEvents();
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(List.of(session), newSessions());
+        assertEquals(samplesBefore, Files.readString(session.resolve("echantillons.csv")));
+        assertEquals(jsonBefore, Files.readString(session.resolve("session.json")));
+    }
+
+    /**
+     * All the files of a session are in its folder (decision of the maintainer of 5/11/2026): only the images of the
+     * whole session come from the statistics, nothing goes to the statistics folder of the games. Without session,
+     * nothing is saved, and there is no statistics screen.
+     */
+    @Test
+    void shouldWriteTheStatisticsInTheFolderOfTheSession() throws Exception {
+        createEvaluation("[]", QUICK_EVALUATION);
+        File statisticsOfTheGame = new File(GazePlayDirectories.getUserStatsFolder(""), "GazePlayEval");
+        String[] filesBefore = statisticsOfTheGame.list();
+        GazeplayEvalGameStats evalStats = new GazeplayEvalGameStats(scene);
+        assertTrue(evalStats.isSavingDisabled());
+        assertFalse(evalStats.startsTheVideoWithTheGame());
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), evalStats);
+
+        Platform.runLater(() -> {
+            evalStats.start();
+            eval.launch();
+        });
+        verify(gameContext, timeout(10_000)).showRoundStats(evalStats, eval);
+        assertFalse(evalStats.isSavingDisabled());
+
+        WaitForAsyncUtils.waitForAsyncFx(10_000, () -> {
+            evalStats.stop();
+            try {
+                evalStats.saveStats();
+            } catch (IOException e) {
+                throw new java.io.UncheckedIOException(e);
+            }
+        });
+
+        Path session = singleSession();
+        assertEquals(session.toFile(), evalStats.getGameStatsOfTheDayDirectory());
+        Path heatmaps = session.resolve("heatmaps");
+        assertEquals(heatmaps.resolve("passation-regard-et-souris.png").toFile(),
+            evalStats.getSavedStatsInfo().getGazeMetricsFileMouseAndGaze());
+        assertTrue(Files.exists(heatmaps.resolve("passation-regard.png")));
+        assertTrue(Files.exists(heatmaps.resolve("passation-souris.png")));
+        assertTrue(Files.exists(heatmaps.resolve("passation-regard-et-souris.png")));
+        // No file of the games: neither in the session, nor in their statistics
+        try (Stream<Path> files = Files.list(session)) {
+            assertEquals(List.of(), files.map(file -> file.getFileName().toString())
+                .filter(name -> name.endsWith(".json") && !name.equals("session.json") || name.contains("info-game"))
+                .toList());
+        }
+        assertArrayEquals(filesBefore, statisticsOfTheGame.list());
+
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * A test of the evaluation says at once that a media cannot be read (decision of the maintainer of 5/11/2026).
+     */
+    @Test
+    void shouldTellAtOnceInATestThatAMediaCannotBeRead() throws Exception {
+        createEvaluationWithAnUnreadableImage();
+        Translator translator = gameContext.getTranslator();
+        when(translator.translate("EvalImageNotPlayable")).thenReturn("Illisible : {0}");
+        GazeplayEval eval = GazeplayEval.test(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS,
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().equals("Illisible : illisible.png")));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * In a real session the participant sees nothing during the screens: the examiner is told on the card of the end,
+     * shown longer to be read.
+     */
+    @Test
+    void shouldTellAtTheEndOfASessionThatAMediaCouldNotBeRead() throws Exception {
+        createEvaluationWithAnUnreadableImage();
+        Translator translator = gameContext.getTranslator();
+        when(translator.translate("EvalImageNotPlayable")).thenReturn("Illisible : {0}");
+        when(translator.translate("EvalOneMediaNotPlayable")).thenReturn("Non lu : {0}");
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> find(Text.class).stream()
+            .anyMatch(text -> text.getText().contains("Non lu : illisible.png")));
+        assertTrue(find(Text.class).stream().noneMatch(text -> text.getText().contains("Illisible")));
+        verify(gameContext, after(3000).never()).showRoundStats(stats, eval);
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        Path session = singleSession();
+        assertTrue(Files.readString(session.resolve("evenements.csv"), StandardCharsets.UTF_8).contains(";erreur_media;"));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * With "hide after selection", the heatmap shows the whole grid: its background is taken when the grid appears, not at
+     * its end, when the images selected are gone (decision of the maintainer of 5/11/2026).
+     */
+    @Test
+    void shouldKeepTheHiddenImagesInTheHeatmap() throws Exception {
+        createEvaluation("[]", """
+            [{"Type": "stimuli", "Nombre de lignes": 1, "Nombre de colonnes": 2,
+              "Mettre un temps avant passage à l'écran suivant": false, "Combien de temps": 10,
+              "Combien de temps de fixation": 0.2, "Choix de sélection": "Tout", "Combien à sélectionner": 1,
+              "Position stimuli aléatoire": false, "Caché stimuli après selection": true, "Mettre un son": false,
+              "Nom du fichier": "",
+              "Liste des stimuli": {"0": {"imageName": "rouge.png", "soundName": "", "goodAnswer": false},
+                                    "1": {"imageName": "bleu.png", "soundName": "", "goodAnswer": true}}}]
+            """);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> imageTargets().size() == 2);
+        Rectangle blue = imageTargets().get(1);
+        double x = blue.getBoundsInParent().getCenterX();
+        double y = blue.getBoundsInParent().getCenterY();
+        int cornerX = (int) blue.getBoundsInParent().getMinX() + 12;
+        int cornerY = (int) blue.getBoundsInParent().getMinY() + 12;
+        Platform.runLater(() -> {
+            scene.getRoot().fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED, x, y, x, y, MouseButton.NONE, 0, false,
+                false, false, false, false, false, false, false, false, false, null));
+            blue.fireEvent(mouse(MouseEvent.MOUSE_ENTERED));
+        });
+
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        BufferedImage heatmap = ImageIO.read(singleSession().resolve("heatmaps")
+            .resolve("ecran-01-stimuli-essai-1-souris.png").toFile());
+        java.awt.Color pixel = new java.awt.Color(heatmap.getRGB(cornerX, cornerY));
+        assertTrue(pixel.getBlue() > 100 && pixel.getRed() < 50, "The blue image is not in the heatmap: " + pixel);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * A video of the shape of its area does not change the size of its view when its image comes, and stayed in the top
+     * left corner (seen by the maintainer on 5/11/2026). The area of an 800 x 600 game is 680 x 510, at 45 from the top.
+     */
+    @Test
+    void shouldCenterAVideoOfTheShapeOfItsArea() throws Exception {
+        createEvaluation("[]", """
+            [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": true, "Combien de temps": 3,
+              "Ajouter un media": true, "Type de media": "Video", "Nom du fichier": "video.mp4",
+              "Mettre un temps de fixation": false, "Combien de temps de fixation": 0}]
+            """);
+        Path videos = EvalLibrary.evaluationFolder(evaluationName).resolve("videos");
+        Files.createDirectories(videos);
+        EvalVideoPlayerTest.writeVideo(videos.resolve("video.mp4").toFile(), 320, 240);
+        GazeplayEval eval = GazeplayEval.test(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS,
+            () -> find(ImageView.class).stream().anyMatch(view -> view.getImage() != null));
+        ImageView view = find(ImageView.class).get(0);
+        assertEquals(60, view.getLayoutX(), 1);
+        assertEquals(45, view.getLayoutY(), 1);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * On the participant form, no session yet: leaving it saves nothing and shows no statistics.
+     */
+    @Test
+    void shouldSaveNothingBeforeTheStartOfTheSession() throws Exception {
+        createEvaluation("[\"Prénom\"]", QUICK_EVALUATION);
+        GazeplayEvalGameStats evalStats = new GazeplayEvalGameStats(scene);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), evalStats);
+
+        Platform.runLater(() -> {
+            evalStats.start();
+            eval.launch();
+        });
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
+
+        assertTrue(evalStats.isSavingDisabled());
+        assertEquals(null, evalStats.saveStats());
+        Platform.runLater(() -> {
+            evalStats.stop();
+            eval.dispose();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(List.of(), newSessions());
     }
 
     @Test
@@ -417,6 +711,13 @@ class GazeplayEvalTest {
         Path results = GazePlayDirectories.getEvaluationResultsFolder().toPath();
         assertEquals("GazePlayLearning_Eval", results.getFileName().toString());
         assertTrue(results.startsWith(Path.of(System.getProperty("user.home"))), "Not in the test folder: " + results);
+    }
+
+    private void createEvaluationWithAnUnreadableImage() throws IOException {
+        createEvaluation("[]", UNREADABLE_IMAGE_EVALUATION);
+        Path images = EvalLibrary.evaluationFolder(evaluationName).resolve("images");
+        Files.createDirectories(images);
+        Files.writeString(images.resolve("illisible.png"), "not an image");
     }
 
     private void createEvaluation(String participantFields, String evalData) throws IOException {
@@ -439,12 +740,16 @@ class GazeplayEvalTest {
         ImageIO.write(image, "png", file.toFile());
     }
 
+    /**
+     * @return the folders of the sessions: in the results folder, in the folder of their day
+     */
     private static List<Path> sessions() throws IOException {
         Path results = GazePlayDirectories.getEvaluationResultsFolder().toPath();
         if (!Files.isDirectory(results)) {
             return List.of();
         }
-        try (Stream<Path> sessions = Files.list(results)) {
+        try (Stream<Path> sessions = Files.find(results, 2, (path, attributes) -> attributes.isDirectory()
+            && path.getNameCount() == results.getNameCount() + 2)) {
             return sessions.toList();
         }
     }

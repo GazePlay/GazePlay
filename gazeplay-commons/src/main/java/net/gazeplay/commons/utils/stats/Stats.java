@@ -436,6 +436,14 @@ public class Stats {
     }
 
     /**
+     * @return whether {@link #start()} starts the video recording; otherwise the game calls
+     *   {@link #startVideoRecording()} itself
+     */
+    protected boolean startsTheVideoWithTheGame() {
+        return true;
+    }
+
+    /**
      * Starts the round: starts the video recording if enabled, resets the recorded data, and puts on the root of the
      * scene the filters recording the gaze and the mouse.
      *
@@ -444,7 +452,7 @@ public class Stats {
     public void start() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
-        if (!savingDisabled && config.isVideoRecordingEnabled()) {
+        if (!savingDisabled && config.isVideoRecordingEnabled() && startsTheVideoWithTheGame()) {
             startVideoRecording();
         }
         lifeCycle.start(() -> {
@@ -681,8 +689,6 @@ public class Stats {
         if (savingDisabled) {
             return null;
         }
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
         final File todayDirectory = getGameStatsOfTheDayDirectory();
         final String now = DateUtils.dateTimeNow();
         final String heatmapFilePrefix = now + "-heatmap";
@@ -708,14 +714,6 @@ public class Stats {
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
 
-        final BufferedImage bImageMouse = newBufferImage(screenshotImage);
-        final BufferedImage bImageGaze = newBufferImage(screenshotImage);
-        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);
-
-        Graphics gMouse = initGazeMetricsImage(bImageMouse, screenshotImage);
-        Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
-        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
-
         try (BufferedWriter bf = Files.newBufferedWriter(replayDataFile.toPath(), Charset.defaultCharset())) {
             bf.write(buildSavedDataJSON(coordinateData).toString());
             bf.flush();
@@ -726,15 +724,46 @@ public class Stats {
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMapGrid != null) {
+            saveHeatMapAsCsv(heatMapGrid, heatMapCsvFile);
+            saveHeatMapAsCsv(gazeHeatMapGrid, gazeHeatMapCsvFile);
+            saveHeatMapAsCsv(mouseHeatMapGrid, mouseHeatMapCsvFile);
+        }
+
+        writeMetricsImages(screenshotImage, gazeMetricsFileMouse, gazeMetricsFileGaze, gazeMetricsFileMouseAndGaze);
+        return savedStatsInfo;
+    }
+
+    /**
+     * Writes only the three metrics images, read by the statistics screen, for a game keeping its data elsewhere
+     * (GazePlay Eval): the other files of {@link SavedStatsInfo} are then null.
+     */
+    protected final void saveMetricsImagesOnly(final File mouse, final File gaze, final File mouseAndGaze) throws IOException {
+        writeMetricsImages(SwingFXUtils.fromFXImage(gameScreenShot, null), mouse, gaze, mouseAndGaze);
+        this.savedStatsInfo = new SavedStatsInfo(null, mouse, gaze, mouseAndGaze, null, null, null);
+    }
+
+    /**
+     * Draws the heatmaps and the fixation sequences over the screenshot, and writes the three metrics images.
+     */
+    private void writeMetricsImages(final BufferedImage screenshotImage, final File mouse, final File gaze,
+                                    final File mouseAndGaze) throws IOException {
+        final Configuration config = ActiveConfigurationContext.getInstance();
+
+        final BufferedImage bImageMouse = newBufferImage(screenshotImage);
+        final BufferedImage bImageGaze = newBufferImage(screenshotImage);
+        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);
+
+        Graphics gMouse = initGazeMetricsImage(bImageMouse, screenshotImage);
+        Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
+        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
+
+        if (this.heatMapGrid != null) {
             final HeatMap hm = new HeatMap(heatMapGrid.counts(), config.getHeatMapOpacity(), config.getHeatMapColors());
             addHeatMapToMetrics(new HeatMap(mouseHeatMapGrid.counts(), config.getHeatMapOpacity(), config.getHeatMapColors()),
                 bImageMouse, gMouse, screenshotImage);
             addHeatMapToMetrics(new HeatMap(gazeHeatMapGrid.counts(), config.getHeatMapOpacity(), config.getHeatMapColors()),
                 bImageGaze, gGaze, screenshotImage);
             addHeatMapToMetrics(hm, bImageMouseAndGaze, gMouseAndGaze, screenshotImage);
-            saveHeatMapAsCsv(heatMapGrid, heatMapCsvFile);
-            saveHeatMapAsCsv(gazeHeatMapGrid, gazeHeatMapCsvFile);
-            saveHeatMapAsCsv(mouseHeatMapGrid, mouseHeatMapCsvFile);
         }
 
         if (this.fixationSequence != null) {
@@ -742,10 +771,9 @@ public class Stats {
             addFixationSequence(FixationSequence.GAZE_FIXATION_SEQUENCE, gGaze, gMouseAndGaze, screenshotImage);
         }
 
-        saveImageAsPng(bImageMouse, gazeMetricsFileMouse);
-        saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
-        saveImageAsPng(bImageMouseAndGaze, gazeMetricsFileMouseAndGaze);
-        return savedStatsInfo;
+        saveImageAsPng(bImageMouse, mouse);
+        saveImageAsPng(bImageGaze, gaze);
+        saveImageAsPng(bImageMouseAndGaze, mouseAndGaze);
     }
 
     public RoundsDurationReport getRoundsDurationReport() { return roundsDurationReport;}

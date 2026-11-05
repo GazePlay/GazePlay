@@ -6,7 +6,7 @@ Before a session, "Test an evaluation" checks the calibration of the eye tracker
 - "Launch an evaluation", then choose the evaluation.
 - Fill in the participant form, then press "Start".
 - The participant chooses a picture by looking at it: a ring fills around it during the fixation.
-- To leave before the end: the gear at the bottom left, then the home button. The results obtained so far are saved, and the session is marked as not finished. While the gear menu is open, the evaluation is paused.
+- To leave before the end: the menu (Esc key), then the home button. The results obtained so far are saved, and the session is marked as not finished. While the menu is open, the evaluation is paused.
 
 # Examiner keys
 During a screen (instruction, grid, transition):
@@ -16,7 +16,7 @@ On the "Restart / Continue" screen (after a grid, in every mode except Classic):
 - R or left arrow: restart the grid.
 - C or right arrow: continue.
 - Enter: confirm the choice proposed by the participant (otherwise: continue).
-To leave: the gear at the bottom left.
+To leave: the menu (Esc key).
 
 # Ways of taking an evaluation (settings, Evaluations section)
 - Classic: the screens follow one another without stopping.
@@ -30,10 +30,11 @@ To leave: the gear at the bottom left.
 - The fixation length (Eye tracker section) is how long a picture must be looked at to be chosen.
 
 # What is recorded
-Each session has its folder in Documents\GazePlayLearning_Eval ("Results of the evaluations" button):
+Each session has its folder, sorted by day: Documents\GazePlayLearning_Eval\date\date_time_evaluation. The "Results of the evaluations" button opens the general folder, and the folder button of the statistics screen opens that of the session. Playing again creates a new folder. Nothing is recorded when leaving on the form.
 - session.json: the participant, the evaluation and the settings of the session;
 - resultats.csv or .xlsx: the answers, screen by screen;
 - evenements.csv: each entry and exit of the gaze or the mouse on a picture, each selection, each key;
 - echantillons.csv: all the positions of the gaze and of the mouse;
-- heatmaps: the heat map of each screen.
+- heatmaps: the heat map of each screen and those of the whole session;
+- the video, if its recording is enabled in the settings (it starts after the form).
 The information about the participant is written in clear text: protect this folder.

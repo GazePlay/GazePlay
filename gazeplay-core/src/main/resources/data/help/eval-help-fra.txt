@@ -6,7 +6,7 @@ Avant une passation, « Tester une évaluation » permet de vérifier la calib
 - « Lancer une évaluation », puis choisissez l'évaluation.
 - Remplissez le formulaire du participant, puis appuyez sur « Commencer ».
 - Le participant choisit une image en la regardant : un anneau se remplit autour d'elle pendant la fixation.
-- Pour quitter en cours de route : l'engrenage en bas à gauche, puis le bouton d'accueil. Les résultats déjà obtenus sont enregistrés, et la passation est notée comme non terminée. Pendant que le menu de l'engrenage est ouvert, l'évaluation est en pause.
+- Pour quitter en cours de route : le menu (touche Échap), puis le bouton d'accueil. Les résultats déjà obtenus sont enregistrés, et la passation est notée comme non terminée. Pendant que le menu est ouvert, l'évaluation est en pause.
 
 # Touches de l'examinateur
 Pendant un écran (consigne, grille, transition) :
@@ -16,7 +16,7 @@ Sur l'écran « Recommencer / Continuer » (après une grille, modes autres qu
 - R ou flèche gauche : recommencer la grille.
 - C ou flèche droite : continuer.
 - Entrée : valider le choix proposé par le participant (sinon : continuer).
-Pour quitter : l'engrenage en bas à gauche.
+Pour quitter : le menu (touche Échap).
 
 # Modes de passation (réglages, section Évaluations)
 - Classique : les écrans s'enchaînent sans arrêt.
@@ -30,10 +30,11 @@ Pour quitter : l'engrenage en bas à gauche.
 - La durée de fixation (section Oculomètre) est le temps qu'il faut regarder une image pour la choisir.
 
 # Ce qui est enregistré
-Chaque passation a son dossier dans Documents\GazePlayLearning_Eval (bouton « Résultats des évaluations ») :
+Chaque passation a son dossier, rangé par jour : Documents\GazePlayLearning_Eval\date\date_heure_évaluation. Le bouton « Résultats des évaluations » ouvre le dossier général, et le bouton dossier de l'écran des statistiques celui de la passation. Rejouer crée un nouveau dossier. Si on quitte sur le formulaire, rien n'est enregistré.
 - session.json : le participant, l'évaluation et les réglages de la passation ;
 - resultats.csv ou .xlsx : les réponses, écran par écran ;
 - evenements.csv : chaque entrée et sortie du regard ou de la souris sur une image, chaque sélection, chaque touche ;
 - echantillons.csv : toutes les positions du regard et de la souris ;
-- heatmaps : la carte de chaleur de chaque écran.
+- heatmaps : la carte de chaleur de chaque écran et celles de toute la passation ;
+- la vidéo, si son enregistrement est activé dans les réglages (elle commence après le formulaire).
 Les informations du participant sont écrites en clair : protégez ce dossier.

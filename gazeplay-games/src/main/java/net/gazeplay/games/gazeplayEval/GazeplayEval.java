@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -30,7 +31,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
@@ -72,13 +72,18 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -109,6 +114,11 @@ public class GazeplayEval implements GameLifeCycle {
     /** Folder of the heatmaps of the screens, in the folder of the session. */
     static final String HEATMAPS_FOLDER = "heatmaps";
 
+    private static final DateTimeFormatter SESSION_FOLDER_TIME =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss", Locale.ROOT);
+
+    private static final int MAX_NAME_IN_SESSION_FOLDER = 40;
+
     /** Columns of the heatmaps, as those of GazePlay (Stats.HEAT_MAP_COLUMNS, format version 4). */
     private static final int HEAT_MAP_COLUMNS = 400;
 
@@ -133,6 +143,12 @@ public class GazeplayEval implements GameLifeCycle {
 
     private Phase phase = Phase.MESSAGE;
     private EvalSessionRecorder recorder;
+    /** Tells the current launch from one left while it was waiting for FFmpeg. */
+    private int launches;
+    /** The media of the session that could not be read, once each. */
+    private final Set<String> unreadableMedia = new LinkedHashSet<>();
+    /** Where the next message about a media goes on the screen; 0 for the first one. */
+    private double mediaErrorBannerTop;
     private Path sessionFolder;
     private ExecutorService screenshotWriter;
     private boolean resultsWritten;
@@ -147,8 +163,11 @@ public class GazeplayEval implements GameLifeCycle {
     private final Map<EvalTarget, GridCell> gridCells = new HashMap<>();
     private final List<Animation> timers = new ArrayList<>();
     private final List<MediaPlayer> players = new ArrayList<>();
+    private final List<EvalVideoPlayer> videos = new ArrayList<>();
     private Pane indicatorLayer;
     private Runnable replaySound;
+    /** The image under the heatmap of a grid whose selected images are hidden; null: the screen at its end. */
+    private WritableImage heatmapBackground;
     private boolean soundBlocksSelection;
     private boolean gridDone;
 
@@ -226,8 +245,21 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     @Override
+    public boolean allowsFullScreenChange() {
+        // The cells of a screen are placed for the size of the window, and the positions recorded depend on it
+        return false;
+    }
+
+    @Override
     public void launch() {
         cleanUp();
+        // A replay is a new session: leaving it before its start must not write again in the folder of the previous one
+        recorder = null;
+        sessionFolder = null;
+        unreadableMedia.clear();
+        if (stats instanceof GazeplayEvalGameStats evalStats) {
+            evalStats.endSession();
+        }
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
@@ -240,6 +272,25 @@ public class GazeplayEval implements GameLifeCycle {
         attempts.clear();
         layouts.clear();
         installHandlers();
+        if (!hasVideos()) {
+            begin();
+            return;
+        }
+        // The first screen waits for FFmpeg: its time must not run while a video gets ready (nor a message about it)
+        int thisLaunch = ++launches;
+        EvalVideoPlayer.preload().whenComplete((result, error) -> Platform.runLater(() -> {
+            if (thisLaunch == launches) {
+                begin();
+            }
+        }));
+    }
+
+    private boolean hasVideos() {
+        return definition.screens().stream().anyMatch(screen -> screen instanceof EvalScreen.Instruction instruction
+            && instruction.mediaType() == EvalScreen.MediaType.VIDEO);
+    }
+
+    private void begin() {
         if (test || definition.participantFields().isEmpty()) {
             startSession(new LinkedHashMap<>());
         } else {
@@ -358,14 +409,17 @@ public class GazeplayEval implements GameLifeCycle {
             showScreen();
             return;
         }
+        Path resultsFolder = GazePlayDirectories.getEvaluationResultsFolder().toPath();
+        LocalDateTime start = LocalDateTime.ofInstant(Instant.ofEpochMilli(recorder.getStartTime()), ZoneId.systemDefault());
         try {
-            sessionFolder = createSessionFolder(GazePlayDirectories.getEvaluationResultsFolder().toPath(),
-                LocalDate.now());
+            sessionFolder = createSessionFolder(resultsFolder, start, definition.name());
         } catch (IOException e) {
             // The results are tried again at the end, in the same place
             log.error("Cannot create the folder of the results of the evaluation", e);
-            sessionFolder = GazePlayDirectories.getEvaluationResultsFolder().toPath()
-                .resolve("Eval_" + EvalResultsWriter.sessionFolderName(recorder.getStartTime()));
+            sessionFolder = sessionFolderPath(resultsFolder, start, definition.name());
+        }
+        if (stats instanceof GazeplayEvalGameStats evalStats) {
+            evalStats.startSession(sessionFolder.toFile());
         }
         context.put("dossierResultats", sessionFolder.toAbsolutePath().toString());
         screenshotWriter = Executors.newSingleThreadExecutor(runnable -> {
@@ -379,23 +433,47 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     /**
-     * Creates the folder of a session in the results folder (created if needed): "Eval" + number + "_" + yyyy-MM-dd,
-     * the number starting from 1 each day and increasing with the sessions of the day (decision of the maintainer),
-     * e.g. Eval1_2026-10-27 then Eval2_2026-10-27. Same names as the version of the GazePlayLearning branch, whose
-     * folders are in the same place.
+     * @return the folder of a session in the results folder: a folder per day, and in it a folder named after the start
+     *   of the session and its evaluation, e.g. 2026-11-05\2026-11-05_10-38-02_Mon evaluation (decision of the
+     *   maintainer, 5/11/2026: the names "Eval1_2026-10-27" did not sort by date, and stay as they are). The day is that
+     *   of the start of the session, also when it ends after midnight
      */
-    static Path createSessionFolder(Path resultsFolder, LocalDate day) throws IOException {
-        Files.createDirectories(resultsFolder);
-        String suffix = "_" + day.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        for (int number = 1; ; number++) {
-            Path folder = resultsFolder.resolve("Eval" + number + suffix);
+    static Path sessionFolderPath(Path resultsFolder, LocalDateTime start, String evaluationName) {
+        String name = safeFolderName(evaluationName);
+        return resultsFolder.resolve(start.format(DateTimeFormatter.ISO_LOCAL_DATE))
+            .resolve(start.format(SESSION_FOLDER_TIME) + (name.isEmpty() ? "" : "_" + name));
+    }
+
+    /**
+     * Creates the folder of a session (see {@link #sessionFolderPath}), and its parents if needed.
+     */
+    static Path createSessionFolder(Path resultsFolder, LocalDateTime start, String evaluationName) throws IOException {
+        Path first = sessionFolderPath(resultsFolder, start, evaluationName);
+        Files.createDirectories(first.getParent());
+        Path folder = first;
+        for (int number = 2; ; number++) {
             try {
-                // Atomic: two sessions started at the same time get two different numbers
+                // Atomic: two sessions started in the same second get two different folders
                 return Files.createDirectory(folder);
             } catch (FileAlreadyExistsException e) {
-                // next number
+                folder = first.resolveSibling(first.getFileName() + "_" + number);
             }
         }
+    }
+
+    /**
+     * @return the name of an evaluation usable in a folder name on every system, shortened
+     */
+    static String safeFolderName(String name) {
+        if (name == null) {
+            return "";
+        }
+        String safe = name.replaceAll("[<>:\"/\\\\|?*\\p{Cntrl}]", "_").strip();
+        if (safe.codePointCount(0, safe.length()) > MAX_NAME_IN_SESSION_FOLDER) {
+            safe = safe.substring(0, safe.offsetByCodePoints(0, MAX_NAME_IN_SESSION_FOLDER));
+        }
+        // Windows does not allow a folder name ending with a point or a space
+        return safe.replaceAll("[. ]+$", "");
     }
 
     private void finishSession(boolean completed) {
@@ -434,8 +512,10 @@ public class GazeplayEval implements GameLifeCycle {
         phase = Phase.END;
         finishSession(true);
         // In a test, the game then ends without statistics screen (nothing saved: GameContext.showRoundStats)
-        gameContext.getChildren().add(centeredCard(translate(test ? "EvalTestFinished" : "EvalFinished"), unit() * 5));
-        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        boolean problem = !test && !unreadableMedia.isEmpty();
+        gameContext.getChildren().add(centeredCard(endOfSessionMessage(), unit() * (problem ? 3 : 5)));
+        // Long enough to read the list of the media that could not be read
+        PauseTransition pause = new PauseTransition(Duration.seconds(problem ? 6 : 2));
         pause.setOnFinished(e -> gameContext.showRoundStats(stats, this));
         pause.play();
     }
@@ -545,24 +625,22 @@ public class GazeplayEval implements GameLifeCycle {
                     }
                 }
                 case VIDEO -> {
-                    MediaPlayer player = play(MediaFolder.VIDEOS, instruction.content(), "video", token, null);
-                    if (player != null) {
-                        MediaView view = new MediaView(player);
-                        view.setPreserveRatio(true);
-                        view.setFitWidth(mediaWidth);
-                        view.setFitHeight(mediaHeight);
-                        view.setMouseTransparent(true);
-                        // Centred once the size of the video is known
-                        view.layoutBoundsProperty().addListener((observable, before, bounds) -> {
-                            view.setLayoutX((dimension.getWidth() - bounds.getWidth()) / 2);
-                            view.setLayoutY(mediaTop + (mediaHeight - bounds.getHeight()) / 2);
-                        });
-                        gameContext.getChildren().add(view);
-                        replaySound = () -> {
-                            player.seek(Duration.ZERO);
-                            player.play();
-                        };
-                    }
+                    EvalVideoPlayer video = playVideo(instruction.content(), mediaWidth, mediaHeight, token);
+                    ImageView view = video.getView();
+                    view.setPreserveRatio(true);
+                    view.setFitWidth(mediaWidth);
+                    view.setFitHeight(mediaHeight);
+                    view.setMouseTransparent(true);
+                    // Centred now, and again when the image changes the size: a video of the shape of the area does not
+                    Runnable center = () -> {
+                        Bounds bounds = view.getLayoutBounds();
+                        view.setLayoutX((dimension.getWidth() - bounds.getWidth()) / 2);
+                        view.setLayoutY(mediaTop + (mediaHeight - bounds.getHeight()) / 2);
+                    };
+                    view.layoutBoundsProperty().addListener((observable, before, bounds) -> center.run());
+                    center.run();
+                    gameContext.getChildren().add(view);
+                    replaySound = video::restart;
                 }
                 case SOUND -> {
                     double iconSize = Math.min(mediaWidth, mediaHeight) * 0.35;
@@ -656,6 +734,9 @@ public class GazeplayEval implements GameLifeCycle {
         recorder.describeGrid(stimuli.rows(), stimuli.columns(), stimuli.rule().siteValue(), stimuli.toSelect(),
             labels, expected);
         stats.incrementNumberOfGoalsToReach(stimuli.toSelect());
+        // The images selected will be hidden: its heatmap shows the whole grid (decision of the maintainer, 5/11/2026)
+        heatmapBackground = stimuli.hideAfterSelection() && sessionFolder != null
+            ? gameContext.getRoot().snapshot(null, null) : null;
 
         if (stimuli.screenSound() != null) {
             replaySound = () -> play(MediaFolder.AUDIO, stimuli.screenSound(), "son_ecran", token, null);
@@ -926,6 +1007,7 @@ public class GazeplayEval implements GameLifeCycle {
             player.setOnError(() -> {
                 recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null,
                     String.valueOf(player.getError()));
+                reportUnreadableMedia(folder, fileName, token);
                 ended.run();
             });
             recorder.event("debut_" + kind, EvalSessionRecorder.SYSTEM, fileName, null, null, "");
@@ -938,9 +1020,85 @@ public class GazeplayEval implements GameLifeCycle {
         } catch (RuntimeException e) {
             log.warn("Cannot play {}", fileName, e);
             recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null, e.toString());
+            reportUnreadableMedia(folder, fileName, token);
             Platform.runLater(ended);
             return null;
         }
+    }
+
+    /**
+     * Starts a video of an instruction, with its own player (see {@link EvalVideoPlayer}), and its events.
+     */
+    private EvalVideoPlayer playVideo(String fileName, double width, double height, int token) {
+        EvalVideoPlayer video = new EvalVideoPlayer(definition.media(MediaFolder.VIDEOS, fileName).toFile(), width, height,
+            () -> recorder.event("fin_video", EvalSessionRecorder.SYSTEM, fileName, null, null, ""),
+            error -> {
+                recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null, error);
+                reportUnreadableMedia(MediaFolder.VIDEOS, fileName, token);
+            });
+        videos.add(video);
+        recorder.event("debut_video", EvalSessionRecorder.SYSTEM, fileName, null, null, "");
+        if (menuOpen) {
+            video.pause();
+        }
+        video.start();
+        return video;
+    }
+
+    /**
+     * Tells the examiner about a media that cannot be read (decision of the maintainer, 5/11/2026): at once in a test of
+     * the evaluation, whose purpose is to find such problems; at the end of a real session, so that the participant never
+     * sees it.
+     */
+    private void reportUnreadableMedia(MediaFolder folder, String fileName, int token) {
+        unreadableMedia.add(fileName);
+        if (!test) {
+            return;
+        }
+        String message = switch (folder) {
+            case VIDEOS -> translate("EvalVideoNotPlayable");
+            case AUDIO -> translate("EvalSoundNotPlayable");
+            default -> translate("EvalImageNotPlayable");
+        };
+        // Later: the nodes of the screen, being built, must not cover the message
+        Platform.runLater(() -> {
+            if (token == screenToken) {
+                showMediaErrorBanner(message.replace("{0}", fileName));
+            }
+        });
+    }
+
+    /**
+     * Shows a message in the middle of the screen, under the previous ones of the screen, until the end of the screen.
+     * It takes neither the mouse nor the gaze.
+     */
+    private void showMediaErrorBanner(String message) {
+        Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Group banner = GameStyle.card(message, unit() * 3, dimension.getWidth() * 0.8);
+        Bounds bounds = banner.getLayoutBounds();
+        if (mediaErrorBannerTop == 0) {
+            mediaErrorBannerTop = (dimension.getHeight() - bounds.getHeight()) / 2;
+        }
+        banner.setLayoutX((dimension.getWidth() - bounds.getWidth()) / 2);
+        banner.setLayoutY(mediaErrorBannerTop);
+        banner.setMouseTransparent(true);
+        mediaErrorBannerTop += bounds.getHeight() + unit();
+        gameContext.getChildren().add(banner);
+    }
+
+    /**
+     * @return the message of the end of a session, with the media that could not be read
+     */
+    private String endOfSessionMessage() {
+        String finished = translate(test ? "EvalTestFinished" : "EvalFinished");
+        if (test || unreadableMedia.isEmpty()) {
+            return finished;
+        }
+        String files = String.join(", ", unreadableMedia);
+        String message = unreadableMedia.size() == 1
+            ? translate("EvalOneMediaNotPlayable").replace("{0}", files)
+            : translate("EvalMediaNotPlayable").replace("{0}", String.valueOf(unreadableMedia.size())).replace("{1}", files);
+        return finished + "\n\n" + message;
     }
 
     /**
@@ -953,6 +1111,7 @@ public class GazeplayEval implements GameLifeCycle {
             log.warn("Cannot read the image {}", fileName, image.getException());
             recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null,
                 String.valueOf(image.getException()));
+            reportUnreadableMedia(folder, fileName, screenToken);
             return null;
         }
         return new ImageView(image);
@@ -1074,8 +1233,12 @@ public class GazeplayEval implements GameLifeCycle {
         });
         players.clear();
         pausedPlayers.clear();
+        videos.forEach(EvalVideoPlayer::dispose);
+        videos.clear();
         deactivatedTargets.clear();
         replaySound = null;
+        heatmapBackground = null;
+        mediaErrorBannerTop = 0;
         indicatorLayer = null;
         gridDone = false;
         soundBlocksSelection = false;
@@ -1183,6 +1346,7 @@ public class GazeplayEval implements GameLifeCycle {
                     pausedPlayers.add(player);
                 }
             }
+            videos.forEach(EvalVideoPlayer::pause);
             deactivatedTargets.clear();
             for (EvalTarget target : targets) {
                 if (target.isActive()) {
@@ -1198,6 +1362,7 @@ public class GazeplayEval implements GameLifeCycle {
             pausedTimers.clear();
             pausedPlayers.forEach(MediaPlayer::play);
             pausedPlayers.clear();
+            videos.forEach(EvalVideoPlayer::resume);
             deactivatedTargets.stream().filter(target -> !target.isClosed()).forEach(target -> target.setActive(true));
             deactivatedTargets.clear();
         }
@@ -1219,7 +1384,8 @@ public class GazeplayEval implements GameLifeCycle {
                 return;
             }
             Configuration config = gameContext.getConfiguration();
-            BufferedImage screenshot = SwingFXUtils.fromFXImage(gameContext.getRoot().snapshot(null, null), null);
+            BufferedImage screenshot = SwingFXUtils.fromFXImage(
+                heatmapBackground != null ? heatmapBackground : gameContext.getRoot().snapshot(null, null), null);
             List<EvalSessionRecorder.Sample> samples = recorder.samplesOf(screen.getScreen(), screen.getAttempt());
             Path folder = sessionFolder.resolve(HEATMAPS_FOLDER);
             String prefix = String.format("ecran-%02d-%s-essai-%d", screen.getScreen(), screen.getType(),
@@ -1317,6 +1483,8 @@ public class GazeplayEval implements GameLifeCycle {
      */
     @Override
     public void dispose() {
+        // Left while FFmpeg was getting ready: the first screen must not come after that
+        launches++;
         if (phase != Phase.END && phase != Phase.MESSAGE) {
             finishSession(false);
         }

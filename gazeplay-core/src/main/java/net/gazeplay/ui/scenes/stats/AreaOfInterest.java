@@ -14,7 +14,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -197,11 +196,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             } catch (final Exception ex) {
                 log.warn("Cannot play the video of the areas of interest", ex);
             }
-        } else {
-            final SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            final javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
-            screenshot.setPreserveRatio(true);
-            screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
         }
 
         final GridPane grid = new GridPane();

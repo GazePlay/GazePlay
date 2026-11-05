@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -240,11 +239,4 @@ public final class EvalResultsWriter {
         return rowIndex + 1;
     }
 
-    /**
-     * @return the name of the folder of a session: its date and time
-     */
-    static String sessionFolderName(long startTime) {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss", Locale.ROOT)
-            .format(Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault()));
-    }
 }
