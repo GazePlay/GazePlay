@@ -1,0 +1,66 @@
+# Where the files are
+Each session has its folder: Documents\GazePlayLearning_Eval\date\date_time_evaluation. Playing an evaluation again creates a new folder. Nothing is recorded when leaving on the form.
+Times are in milliseconds (1,000 ms make 1 second), counted from the start of the session unless stated otherwise. The X and Y positions are in pixels of the game screen.
+The information about the participant is written in clear text in session.json and resultats.xlsx: protect this folder.
+
+# session.json: the card of the session
+A text file describing the session. To read to know who took what, when, and with which settings.
+- formatVersion: the version of the format of the files.
+- evaluation: the name of the evaluation.
+- debut, fin, dureeMs: the date and time of the start and the end, and the length.
+- terminee: true if the session went to its end, false if it was interrupted.
+- participant: the fields of the form.
+- nombreEcransEvaluation, ecransAffiches: the number of screens of the evaluation, and the number of screens really shown, repeated attempts included.
+- modePassation: Classique, Soutien Oral, Soutien Visuel or Autonomie Totale.
+- modeEntree: mouse_control (mouse), tobii (gaze) or tobii_and_mouse (both).
+- delaiAvantSelectionMs, dureeFixationChoixMs, sonBloqueSelection: the delay before a selection is possible, the fixation length of the choice buttons, and the blocking of the selections during a sound.
+- largeurZoneJeu, hauteurZoneJeu: the size of the game screen, in pixels.
+- graine: the value used for the random positions of the images.
+- dossierEvaluation, dossierResultats: the folders used.
+
+# resultats.csv or resultats.xlsx: the answers, screen by screen
+To open in a spreadsheet: it is the main file to analyze the answers. The format depends on the choice made on the website. There is one row per screen shown. The .xlsx file also holds the Session and Événements sheets.
+- Écran, Essai: the number of the screen, and the number of the attempt if the grid was restarted.
+- Type: instruction, transition (cross) or stimuli (grid of images).
+- Début, Fin, Durée (ms): when the screen started and ended, and how long it lasted.
+- Fin de l'écran: validé (validated), temps écoulé (time over), délai écoulé (delay over), fixation, passé par l'examinateur (skipped by the examiner) or interrompu (interrupted).
+- The next columns only concern the grids.
+- Lignes, Colonnes: the size of the grid.
+- Règle: Tout (any selection counts) or BonneReponse (only the right answers count).
+- À sélectionner: the number of selections asked.
+- Stimuli affichés: the images at their place. L1C2:image.png means row 1, column 2.
+- Réponses attendues: the right answers.
+- Réponses données: the images selected, in their order.
+- Sources des réponses: regard (gaze) or souris (mouse), for each answer.
+- Temps des réponses (ms): the time of each answer, counted from the start of the screen. The fixation is included.
+- Bonnes réponses, Mauvaises réponses: their number.
+- Validé: oui (yes) if the grid ended with the number of selections asked, non (no) otherwise (time over, for instance). A wrong answer can therefore be validated with the Tout rule: look at the Bonnes réponses and Mauvaises réponses columns too.
+- Première réponse (ms): the time of the first answer, counted from the start of the screen.
+
+# evenements.csv: all that happened, in order
+One row per event. To use for a fine analysis, for instance the time spent on each image. With the .xlsx format alone, this content is in the Événements sheet.
+- Columns: Temps (ms), Écran, Essai, Type d'écran, Événement, Source (regard, souris, clavier or systeme), Cible, X, Y, Détail.
+- entree, sortie: the gaze or the mouse enters a target, or leaves it. A mouse whose pointer has just been hidden leaves its target.
+- selection: an image is selected. The detail says bonne (right) or mauvaise (wrong) réponse.
+- fixation_validee: a fixation triggered a button or a cross.
+- debut_session, fin_session, debut_ecran, fin_ecran: the starts and ends. The detail of fin_session says terminée (completed) or interrompue (interrupted).
+- debut_video, fin_video, debut_son, fin_son, son_case, son_ecran: the media. A video cut by the end of its screen has no fin_video.
+- erreur_media: a file could not be read, with the reason in the detail.
+- touche: a key of the examiner.
+- ecran_choix, proposition, choix_option: the Restart or Continue screen, in the modes other than Classique.
+- menu_ouvert, menu_ferme: the menu opened with Esc, which pauses the session.
+
+# echantillons.csv: all the positions
+Always in .csv, as it can be very long. One row per position of the gaze and per movement of the mouse. It is the raw data: other computations can be made from it, like heat maps or fixations.
+- Temps (ms), Écran, Essai: when and on which screen.
+- Source: regard (gaze) or souris (mouse).
+- X, Y: the position, in pixels.
+- Cible: the image or the button under this point, or - if there is nothing.
+
+# The heatmaps folder: the images
+- ecran-NN-type-essai-K-regard.png and -souris.png: the heat map of each screen, for the gaze and for the mouse. Without any position on the screen, there is only the image of the screen.
+- The background is the screen at its end. If the option hiding the images is on, it is the whole grid, when it appeared.
+- passation-regard.png, passation-souris.png, passation-regard-et-souris.png: the whole session on one image, with the path and the numbered fixations. They are the images of the statistics screen. Their background is empty, as the screens are mixed on them.
+
+# The video of the screen
+If the video recording is on in the settings, an .avi file is added to the folder. It starts after the form, which is therefore not filmed.

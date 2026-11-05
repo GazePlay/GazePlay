@@ -1,0 +1,66 @@
+# Où sont les fichiers
+Chaque passation a son dossier : Documents\GazePlayLearning_Eval\date\date_heure_évaluation. Rejouer une évaluation crée un nouveau dossier. Si on quitte sur le formulaire, rien n'est enregistré.
+Les temps sont en millisecondes (1 000 ms font 1 seconde), comptés depuis le début de la passation, sauf indication contraire. Les positions X et Y sont en pixels de l'écran de jeu.
+Les informations du participant sont écrites en clair dans session.json et resultats.xlsx : protégez ce dossier.
+
+# session.json : la fiche de la passation
+Un fichier texte, qui décrit la passation. À lire pour savoir qui a passé quoi, quand, et avec quels réglages.
+- formatVersion : la version du format des fichiers.
+- evaluation : le nom de l'évaluation.
+- debut, fin, dureeMs : la date et l'heure de début et de fin, et la durée.
+- terminee : true si la passation est allée au bout, false si elle a été interrompue.
+- participant : les champs du formulaire.
+- nombreEcransEvaluation, ecransAffiches : le nombre d'écrans de l'évaluation, et le nombre d'écrans réellement affichés, essais répétés compris.
+- modePassation : Classique, Soutien Oral, Soutien Visuel ou Autonomie Totale.
+- modeEntree : mouse_control (souris), tobii (regard) ou tobii_and_mouse (les deux).
+- delaiAvantSelectionMs, dureeFixationChoixMs, sonBloqueSelection : le délai avant de pouvoir sélectionner, la durée de fixation des boutons de choix, et le blocage des sélections pendant un son.
+- largeurZoneJeu, hauteurZoneJeu : la taille de l'écran de jeu, en pixels.
+- graine : la valeur qui a servi au tirage au hasard de la position des images.
+- dossierEvaluation, dossierResultats : les dossiers utilisés.
+
+# resultats.csv ou resultats.xlsx : les réponses, écran par écran
+À ouvrir dans un tableur : c'est le fichier principal pour analyser les réponses. Le format dépend du choix fait sur le site. Il y a une ligne par écran affiché. Le fichier .xlsx contient aussi les feuilles Session et Événements.
+- Écran, Essai : le numéro de l'écran, et le numéro de l'essai si la grille a été recommencée.
+- Type : instruction (consigne), transition (croix) ou stimuli (grille d'images).
+- Début, Fin, Durée (ms) : quand l'écran a commencé et fini, et combien de temps il a duré.
+- Fin de l'écran : validé, temps écoulé, délai écoulé, fixation, passé par l'examinateur ou interrompu.
+- Les colonnes suivantes ne concernent que les grilles.
+- Lignes, Colonnes : la taille de la grille.
+- Règle : Tout (toute sélection compte) ou BonneReponse (seules les bonnes réponses comptent).
+- À sélectionner : le nombre de sélections demandées.
+- Stimuli affichés : les images à leur place. L1C2:image.png veut dire ligne 1, colonne 2.
+- Réponses attendues : les bonnes réponses.
+- Réponses données : les images sélectionnées, dans l'ordre.
+- Sources des réponses : regard ou souris, pour chaque réponse.
+- Temps des réponses (ms) : le temps de chaque réponse, compté depuis le début de l'écran. La fixation est comprise.
+- Bonnes réponses, Mauvaises réponses : leur nombre.
+- Validé : oui si la grille s'est terminée par le nombre de sélections demandé, non sinon (temps écoulé, par exemple). Une mauvaise réponse peut donc être validée avec la règle Tout : regardez aussi les colonnes Bonnes réponses et Mauvaises réponses.
+- Première réponse (ms) : le temps de la première réponse, compté depuis le début de l'écran.
+
+# evenements.csv : tout ce qui s'est passé, dans l'ordre
+Une ligne par événement. À utiliser pour une analyse fine, par exemple le temps passé sur chaque image. Avec le format .xlsx seul, ce contenu est dans la feuille Événements.
+- Colonnes : Temps (ms), Écran, Essai, Type d'écran, Événement, Source (regard, souris, clavier ou systeme), Cible, X, Y, Détail.
+- entree, sortie : le regard ou la souris entre sur une cible, ou en sort. Une souris dont le pointeur vient d'être caché sort de sa cible.
+- selection : une image est sélectionnée. Le détail dit bonne ou mauvaise réponse.
+- fixation_validee : une fixation a déclenché un bouton ou une croix.
+- debut_session, fin_session, debut_ecran, fin_ecran : les débuts et fins. Le détail de fin_session dit terminée ou interrompue.
+- debut_video, fin_video, debut_son, fin_son, son_case, son_ecran : les médias. Une vidéo coupée par la fin de son écran n'a pas de fin_video.
+- erreur_media : un fichier n'a pas pu être lu, avec la raison en détail.
+- touche : une touche de l'examinateur.
+- ecran_choix, proposition, choix_option : l'écran Recommencer ou Continuer, dans les modes autres que Classique.
+- menu_ouvert, menu_ferme : le menu ouvert avec Échap, qui met la passation en pause.
+
+# echantillons.csv : toutes les positions
+Toujours en .csv, car il peut être très long. Une ligne par position du regard et par déplacement de la souris. C'est la donnée brute : elle permet de refaire d'autres calculs, comme des cartes de chaleur ou des fixations.
+- Temps (ms), Écran, Essai : quand et sur quel écran.
+- Source : regard ou souris.
+- X, Y : la position, en pixels.
+- Cible : l'image ou le bouton sous ce point, ou - s'il n'y a rien.
+
+# Le dossier heatmaps : les images
+- ecran-NN-type-essai-K-regard.png et -souris.png : la carte de chaleur de chaque écran, pour le regard et pour la souris. Sans aucune position sur l'écran, il y a seulement l'image de l'écran.
+- Le fond est l'écran à sa fin. Si l'option de cacher les images est active, c'est la grille complète, à son affichage.
+- passation-regard.png, passation-souris.png, passation-regard-et-souris.png : toute la passation sur une seule image, avec le parcours et les fixations numérotées. Ce sont les images de l'écran des statistiques. Leur fond est vide, car les écrans y sont mélangés.
+
+# La vidéo de l'écran
+Si l'enregistrement vidéo est activé dans les réglages, un fichier .avi est ajouté dans le dossier. Il commence après le formulaire, qui n'est donc pas filmé.

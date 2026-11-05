@@ -180,6 +180,52 @@ class EvalMenuScreensTest {
     }
 
     /**
+     * A card explains the files of the results over the menu (maintainer's request of 5/11/2026); the menu comes back when
+     * it is closed.
+     */
+    @Test
+    void shouldExplainTheFilesOfTheResultsFromTheMenu() throws Exception {
+        when(gamesLocator.listGames(any())).thenReturn(List.of(evalSpec));
+        when(gazePlay.getTranslator().currentLocale()).thenReturn(Locale.of("fra", "FR"));
+
+        EvalMenuScreen menu = WaitForAsyncUtils.asyncFx(
+            () -> new EvalMenuScreen(gazePlay, gameMenuController, gamesLocator)).get();
+        EvalFilesHelpDialog help = WaitForAsyncUtils.asyncFx(() -> {
+            menu.getFilesHelpButton().fire();
+            return javafx.stage.Window.getWindows().stream().filter(EvalFilesHelpDialog.class::isInstance)
+                .map(EvalFilesHelpDialog.class::cast).findFirst().orElseThrow();
+        }).get();
+
+        assertTrue(menu.getRoot().isDisable(), "the menu waits for the window");
+        assertEquals("EvalFilesHelp", help.getTitle());
+
+        WaitForAsyncUtils.asyncFx(() -> help.getCloseButton().fire()).get();
+        assertFalse(help.isShowing());
+        assertFalse(menu.getRoot().isDisable());
+    }
+
+    /**
+     * Each file of a session and each column of the results is explained, in French and in English, with the same structure.
+     */
+    @Test
+    void shouldExplainEachFileAndColumnInBothLanguages() {
+        List<String> french = EvalFilesHelpDialog.read("fra");
+        List<String> english = EvalFilesHelpDialog.read("eng");
+
+        assertEquals(french.stream().map(EvalMenuScreensTest::kind).toList(),
+            english.stream().map(EvalMenuScreensTest::kind).toList(), "same headings, items and paragraphs");
+        for (List<String> lines : List.of(french, english)) {
+            String text = String.join("\n", lines);
+            for (String expected : List.of("session.json", "resultats.csv", "resultats.xlsx", "evenements.csv",
+                "echantillons.csv", "heatmaps", "formatVersion", "terminee", "Fin de l'écran", "Stimuli affichés",
+                "Réponses attendues", "Réponses données", "Sources des réponses", "Temps des réponses (ms)",
+                "Bonnes réponses", "Mauvaises réponses", "Validé", "Première réponse (ms)", "erreur_media", "Cible")) {
+                assertTrue(text.contains(expected), expected);
+            }
+        }
+    }
+
+    /**
      * The website card opens the GazePlay Eval website, at its fixed address (maintainer's request of 30/10/2026).
      */
     @Test

@@ -97,6 +97,9 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
     private final Button helpButton;
 
     @Getter
+    private final Button filesHelpButton;
+
+    @Getter
     private final Button websiteButton;
 
     /**
@@ -163,10 +166,14 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         helpButton = secondaryCard(MenuIcon.INFO, translator.translate("EvalHelp"));
         helpButton.setOnAction(e -> openHelp());
 
-        // Three cards, then two centered below (maintainer's request of 30/10/2026); each row wraps on a narrow window
+        // What the files of the results hold and what they are for (maintainer's request of 5/11/2026)
+        filesHelpButton = secondaryCard(MenuIcon.STATISTICS, translator.translate("EvalFilesHelp"));
+        filesHelpButton.setOnAction(e -> openFilesHelp());
+
+        // Two rows of three cards; each row wraps on a narrow window
         final FlowPane firstRow = new FlowPane(16, 16, testButton, importButton, resultsButton);
         firstRow.setAlignment(Pos.CENTER);
-        final FlowPane secondRow = new FlowPane(16, 16, websiteButton, helpButton);
+        final FlowPane secondRow = new FlowPane(16, 16, websiteButton, helpButton, filesHelpButton);
         secondRow.setAlignment(Pos.CENTER);
         final VBox secondaryButtons = new VBox(16, firstRow, secondRow);
 
@@ -273,6 +280,18 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
         root.setEffect(new BoxBlur());
         root.setDisable(true);
         final EvalHelpDialog dialog = new EvalHelpDialog(getGazePlay().getPrimaryStage(),
+            getGazePlay().getTranslator(), root);
+        dialog.show();
+        dialog.toFront();
+    }
+
+    /**
+     * Opens the window explaining the files of the results over the menu, which comes back when it closes.
+     */
+    void openFilesHelp() {
+        root.setEffect(new BoxBlur());
+        root.setDisable(true);
+        final EvalFilesHelpDialog dialog = new EvalFilesHelpDialog(getGazePlay().getPrimaryStage(),
             getGazePlay().getTranslator(), root);
         dialog.show();
         dialog.toFront();
