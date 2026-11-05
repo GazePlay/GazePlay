@@ -88,8 +88,9 @@ When the areas of interest are enabled, `Stats` also computes them during the ga
 (`AreaOfInterestRecording`, one for the gaze and one for the mouse, grouping with `AreaOfInterestGrouper`). The
 `AreaOfInterest` screen shows one source at a time; nothing is written to disk.
 
-GazePlay Eval writes, for each session, in `Documents/GazePlayLearning_Eval/Eval<n>_<yyyy-MM-dd>/` (the number
-starts from 1 each day; `GazePlayDirectories.getEvaluationResultsFolder`): `session.json` (its `formatVersion`, the
+GazePlay Eval writes everything of a session in
+`Documents/GazePlayLearning_Eval/<yyyy-MM-dd>/<yyyy-MM-dd>_<HH-mm-ss>_<evaluation>/`, and nothing in `statistics`
+(`GazePlayDirectories.getEvaluationResultsFolder`, `GazeplayEvalGameStats`): `session.json` (its `formatVersion`, the
 participant, the settings), `resultats.csv`/`resultats.xlsx` (one row per screen shown), `evenements.csv` (entries in
 and exits from the targets by source, selections, sounds, keys...), `echantillons.csv` (positions of the gaze and of
 the mouse with the target under them) and `heatmaps/`, the heatmap of the gaze and of the mouse of each screen

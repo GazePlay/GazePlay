@@ -462,13 +462,12 @@ Eval seulement) est maintenant modifiable dans les réglages.
 
 ### 12.4 Résultats d'une passation (format version 1)
 
-**Dossier** (décision du mainteneur du 27/10/2026) : `GazePlayLearning_Eval` dans Documents (créé s'il n'existe
-pas ; le dossier personnel s'il n'y a pas de Documents), puis un dossier par passation **`Eval<n>_<aaaa-mm-jj>`** :
-le numéro repart de 1 chaque jour et augmente avec les passations du jour (`Eval1_2026-10-27`, `Eval2_2026-10-27`…),
-toutes évaluations confondues. Ce sont l'emplacement et les noms de la version `GazePlayLearning` : les dossiers
-déjà présents (`Eval1_2026-06-29`…) restent à côté, intacts. Le nom de l'évaluation est dans `session.json` et le
-`.xlsx`. La création du dossier est atomique (deux passations simultanées reçoivent deux numéros). Pour les tests,
-le dossier Documents est remplacé (`gazeplay.documents`, `build.gradle`) : ils n'écrivent jamais dans le vrai.
+**Dossier** (décision du mainteneur du 27/10/2026 ; **noms remplacés le 5/11/2026, section 19**) : `GazePlayLearning_Eval`
+dans Documents (créé s'il n'existe pas ; le dossier personnel s'il n'y a pas de Documents), puis un dossier par jour et un
+dossier par passation : **`<aaaa-mm-jj>\<aaaa-mm-jj>_<hh-mm-ss>_<nom de l'évaluation>`**. Les dossiers déjà présents
+(`Eval1_2026-06-29`…) restent à côté, intacts. La création du dossier est atomique (deux passations dans la même seconde
+reçoivent deux dossiers). Pour les tests, le dossier Documents est remplacé (`gazeplay.documents`, `build.gradle`) : ils
+n'écrivent jamais dans le vrai.
 
 CSV en UTF-8 avec BOM, séparateur `;` (ouverture directe dans un tableur français). Temps en ms depuis le début de la session, positions en pixels de la
 zone de jeu. Sources : `regard`, `souris`, `clavier`, `systeme`.
@@ -481,12 +480,11 @@ zone de jeu. Sources : `regard`, `souris`, `clavier`, `systeme`.
 | `echantillons.csv` | Chaque position du regard (une par échantillon de l'appareil, datée à son acquisition) et chaque déplacement de la souris, avec la cible sous le point (héritage de `gazeplayEvalTest`, pour toute grille). Toujours en CSV |
 | `heatmaps\ecran-NN-<type>-essai-K-regard.png`, `…-souris.png` | **Carte de chaleur de chaque écran** (transitions, consignes et grilles), à sa fin : l'image de l'écran, la carte du regard ou de la souris par-dessus, et la légende. Même calcul et même rendu que les cartes de GazePlay (grille de 400 colonnes, `HeatMapGrid` ; couleurs et opacité des réglages). Une source sans position sur l'écran n'a pas de carte ; un écran sans aucune position a son image seule (`ecran-NN-<type>-essai-K.png`). Un écran quitté en cours a aussi la sienne |
 
-Les fichiers habituels de GazePlay (`replayData.json` v4, cartes de chaleur de toute la partie, `info-game.csv`)
-sont aussi écrits, dans `statistics\GazePlayEval\<date>\`, par `Stats`, qui n'a pas été modifié (seul un accesseur
-`Stats.isConfigMenuOpen()` a été ajouté ; `HeatMapGrid` est devenu public, sans changement de calcul).
+Jusqu'au 5/11/2026, les fichiers habituels de GazePlay (`replayData.json` v4, cartes de chaleur de toute la partie,
+`info-game.csv`) étaient aussi écrits dans `statistics\GazePlayEval\<date>\`. Ce n'est plus le cas : section 19.
 
 **Données personnelles** : les champs participant sont écrits en clair dans `session.json` et `resultats.xlsx`. Le
-nom du dossier ne contient que la date. Voir Q7.
+nom du dossier contient la date, l'heure et le nom de l'évaluation, rien sur le participant. Voir Q7.
 
 ### 12.5 Ce qui a été retiré
 
@@ -603,7 +601,7 @@ réglages, rejouer un `replayData.json`, flèches de défilement.
 |---|---|---|
 | Langue | oui | oui |
 | Créer un raccourci (Windows) | oui | non (des raccourcis vers une évaluation : plus tard, Q-M5) |
-| Touche pour quitter | retirée le 30/10/2026 (l'engrenage quitte un jeu ou une évaluation) | retirée |
+| Touche pour quitter | retirée le 30/10/2026 (on quitte par le menu, ouvert avec Échap depuis le 5/11/2026) | retirée |
 | Durée des questions, question reposée, son de récompense, limites de temps et de score, couleurs du piano | oui | non (Eval ne les lit pas) |
 | Mode d'entrée (souris, Tobii, les deux) | oui | oui |
 | Durée de fixation | oui | oui (boutons « Recommencer / Continuer ») |
@@ -938,3 +936,166 @@ cartes claires sous les images de la grille, **anneau de fixation de la couleur 
 (cercle autour de la croix) à la place du cercle de progression gris, haut-parleur au lieu de « ♪ ». **Les zones des
 cibles, les durées et les résultats (format 1) ne changent pas** ; aucun retour « bonne / mauvaise réponse » (couleur
 principale seulement). `data/gazeplayEvalTest` (ressources de l'ancien `gazeplayEvalTest`) retiré.
+
+## 18. Le menu des parties s'ouvre avec Échap (5/11/2026)
+
+**Retour d'utilisateur** : quand une évaluation affiche beaucoup d'images, l'engrenage bleu en cache une partie en bas à
+gauche. Il faisait 1/10 de la largeur de l'écran, et prenait la souris sur l'image (le regard l'atteignait quand même).
+
+**Décisions du mainteneur** :
+
+- L'engrenage est retiré de tous les jeux, des évaluations et du rejeu. **Échap** ouvre et ferme le menu (`GameMenuPanel`).
+- Aucun message à l'écran : le geste est expliqué dans l'aide.
+- Le panneau garde son contenu et son graphisme, avec un bouton « Fermer ». Il ne se ferme plus quand la souris en sort.
+  Sa refonte graphique reste à la fin de la revue des jeux.
+- Le bouton plein écran reste actif dans les jeux et il est grisé pendant une évaluation
+  (`GameLifeCycle.allowsFullScreenChange`) : la grille est placée pour la taille de la fenêtre, et les positions
+  enregistrées en dépendent.
+- PC avec clavier seulement. La tablette attend un appareil pour essayer : issue
+  [#1738](https://github.com/GazePlay/GazePlay/issues/1738). D'ici là, un poste sans clavier ne peut plus ouvrir le menu.
+
+**Fonctionnement** :
+
+- Dans la JVM d'une partie, Échap ne fait plus sortir du plein écran (`GazePlayFxApp.startsAGame`). Les menus gardent ce
+  comportement : l'écran des modes et celui des profils n'ont pas de bouton plein écran.
+- **Limite** : un rejeu lancé depuis le menu reste dans la JVM des menus, où Échap peut aussi faire sortir du plein écran.
+- Le jeu ne reçoit jamais Échap. Touche maintenue : le menu ne bascule qu'une fois.
+- Le menu se ferme quand un autre écran remplace la partie (boutons d'accueil et de rejeu, fin de partie). C'était la
+  sortie de la souris qui le faisait, sans quoi la partie suivante démarrerait en pause.
+- **Format de résultats inchangé** : `menu_ouvert` et `menu_ferme` restent enregistrés de la même façon.
+- `configuration-button-alt4.png` est retirée. Les coins gardés libres pour l'engrenage (Où est-ce, Bulles, Opinions, Fleur
+  des nombres) restent en place jusqu'à la refonte.
+
+## 19. Tous les fichiers d'une passation dans son dossier (5/11/2026)
+
+**Retours d'utilisateurs** : le bouton dossier de l'écran des statistiques ouvrait `statistics\GazePlayEval\<date>`, et non
+le dossier des résultats, et des fichiers y étaient écrits ; les dossiers `Eval<n>_<date>` ne se triaient pas par date (le
+numéro passait avant la date).
+
+**Décisions du mainteneur** :
+
+```
+GazePlayLearning_Eval\
+  2026-11-05\
+    2026-11-05_10-38-02_Tests sons et videos\
+      session.json, resultats.csv/.xlsx, evenements.csv, echantillons.csv
+      heatmaps\   ecran-NN-….png, passation-regard.png, passation-souris.png, passation-regard-et-souris.png
+      la vidéo, si elle est activée
+```
+
+- Le bouton de l'écran des statistiques ouvre le dossier de la passation ; celui du menu, le dossier général.
+- Plus rien dans `statistics` pour une évaluation. `GazeplayEvalGameStats` n'écrit que les 3 images de toute la passation,
+  lues par l'écran des statistiques et le parcours du regard. Les jeux ne changent pas.
+- Quitter sur le formulaire, ou sans évaluation importée : rien n'est écrit, pas d'écran de statistiques, retour au menu.
+- La vidéo démarre au début de la passation, dans son dossier : le formulaire n'est plus filmé.
+- Nom de l'évaluation dans le dossier : caractères interdits remplacés par `_`, 40 caractères au plus.
+- **Format** : `formatVersion` reste à 1. Le contenu des fichiers ne change pas, seuls l'emplacement et le nom des dossiers
+  changent. Les anciens dossiers (`Eval<n>_<date>`, `statistics\GazePlayEval`) ne sont ni déplacés ni supprimés. Le mainteneur
+  précise que la partie Eval n'est pas encore sortie officiellement.
+
+**Vérification des données retirées** : comparaison de `replayData.json` et `echantillons.csv` sur une vraie passation
+(5/11/2026, une seule passation, tolérance de 2 pixels et de 5 ms). Regard : les 2 401 points de `replayData.json` pendant la
+passation sont dans `echantillons.csv`, qui en a 79 de plus ; 211 autres points sont hors de la passation (122 avant, 89
+après). Souris : les 14 points de `echantillons.csv` sont dans `replayData.json`. La séquence de fixations n'est plus écrite :
+elle se recalcule depuis les points.
+
+**Rejouer** : chaque lancement crée un nouveau dossier (test `shouldCreateANewFolderForEachPlay`). Le lancement suivant oublie
+aussi la passation précédente, sinon quitter sur le nouveau formulaire réécrivait ses fichiers. Sans cette remise à zéro, le
+contenu n'a pas changé à l'essai (`EvalSessionRecorder.finish` ne fait rien la deuxième fois) : pas de donnée abîmée constatée.
+
+**Corrigés au passage** :
+
+- `AreaOfInterest` lisait la capture sans s'en servir : lecture retirée (elle aurait planté sans capture).
+- `GameContext.exitReplayGame` ne construit plus l'écran des statistiques quand rien n'est enregistré (cela concerne aussi
+  le bouton rejouer de GazePlay Eval Test, dont l'écran n'avait pas d'image à lire).
+
+**Reste un défaut connu, gardé** : l'image de fond des 3 images de toute la passation est blanche, car elle est prise au
+lancement, avant le formulaire.
+
+## 20. Médias illisibles (5/11/2026)
+
+**Retour** : certaines vidéos restaient figées. Aucune trace à l'écran, seulement `erreur_media` dans `evenements.csv`.
+
+**Message à l'examinateur (décision du mainteneur)** : dans « Tester une évaluation », un message au milieu de l'écran
+(`EvalVideoNotPlayable`, `EvalSoundNotPlayable`, `EvalImageNotPlayable`) ; dans une vraie passation, rien pendant les
+écrans, pour ne rien montrer au participant, et la liste sur la carte de fin, affichée 6 s au lieu de 2. Une passation
+interrompue n'a pas de carte de fin : l'erreur reste dans `evenements.csv`. Format de résultats inchangé.
+
+**Essais de lecture** (outil à part, sans fenêtre, son coupé, Windows 11 Famille, JavaFX 25.0.4 ; une lecture de 4 s par
+fichier ; « passe » veut dire que le temps de lecture avance, sans contrôle de l'image ni du son) :
+
+| Passe | Ne passe pas |
+|---|---|
+| MP4 ou M4V H.264 sans piste audio (Baseline, Main, High ; 480p à 4K ; 60 i/s) | **MP4 avec une piste audio, AAC ou MP3 : `ERROR_MEDIA_INVALID`** (aussi en JavaFX 21) |
+| MP3, WAV 16 bits, AIFF 16 bits | M4A ou AAC, WAV 24 bits, OGG, Opus, FLAC, WebM, MOV |
+
+L'AAC seul échoue aussi (« Failed to decode stream », dans `dshowwrapper`), le décodeur `msmpeg2adec.dll` étant présent et
+enregistré. **Hypothèse, non prouvée** : la mise à jour Windows du 14/10/2026, qui a remplacé ce décodeur ; le mainteneur dit
+que ces vidéos fonctionnaient avant. Non essayé sur un autre PC.
+
+**Échecs intermittents, même sans son** : sur 88 lectures répétées de vidéos H.264 sans son (720p, 360p, 1080p), 12 ont échoué
+dès le début : 8 `ERROR_MEDIA_INVALID` et 4 fins de lecture après 90 à 170 ms. Ces échecs sont groupés (5 à la suite puis 2 ;
+3 à la suite puis 2), sans cause trouvée. Dans les vraies passations, `49808` s'est aussi terminée trop tôt (77 ms, 4,5 s). La
+liste ci-dessus ne garantit donc pas une lecture à chaque fois. Tant que cela dure, une vidéo peut manquer à un participant.
+
+Un écran dont le temps est plus court que sa vidéo la coupe proprement (`délai écoulé`, vérifié sur les vraies passations).
+
+## 21. Les vidéos passent par FFmpeg (5/11/2026)
+
+**Décision du mainteneur** : changer de bibliothèque pour les vidéos, en gardant les messages de la section 20. Le symptôme
+ressemble à un défaut signalé de JavaFX sous Windows 11, sans correctif trouvé
+([openjfx-dev, juin 2025](https://mail.openjdk.org/pipermail/openjfx-dev/2025-June/054574.html),
+[JDK-8242076](https://bugs.openjdk.org/browse/JDK-8242076)).
+
+**Essai avant décision** (JavaCV 1.5.14, FFmpeg 8.1.2, sans fenêtre, décodage de 4 s de vidéo, mêmes fichiers) : 100 lectures,
+0 échec, dont les 2 vidéos qui échouaient toujours, l'AAC, le HEVC, le WebM et le MOV. 4 s de vidéo 2560×1440 décodées en
+environ 0,5 s sur ce PC. Licence de cette version de FFmpeg, lue à l'exécution : « LGPL version 3 or later ».
+
+**Réalisation** :
+
+- `EvalVideoPlayer` (`gazeplay-games`) : un fil lit le fichier ; le son va à une ligne `javax.sound` ; chaque image attend son
+  heure sur une horloge arrêtée pendant la pause, et une image en retard de plus de 100 ms n'est pas affichée. Images réduites
+  à la taille affichée. Pas de sortie son : la vidéo continue sans son (journal).
+- Seules les vidéos changent : sons des écrans et des cases, et tous les jeux, restent sur JavaFX Media.
+- Pause du menu, touche P, `debut_video`, `fin_video` et `erreur_media` gardés. Format de résultats inchangé.
+- FFmpeg est préparé en arrière-plan au lancement d'une évaluation qui a des vidéos, ses fichiers natifs dans
+  `<dossier GazePlay>\native-cache`. Le formulaire ou le premier écran attend la fin du chargement, pour que le temps d'un
+  écran ne coure pas avant que sa vidéo soit prête.
+- Chaque distribution ne garde que les fichiers de sa plateforme (`build.gradle`, `onlyJavaCvNativeFiles`) : tailles mesurées
+  des jars FFmpeg de 20,6 à 30,4 Mo selon la plateforme ; la version sans JRE garde les 5.
+
+**Essai réel du mainteneur (5/11/2026, Tobii, Windows 11)** : vidéos centrées et fluides, pause et reprise avec Échap, son
+entendu, coupure nette à la fin d'un écran ; passation de 14:03 sans aucune `erreur_media` sur 6 vidéos. **Non vérifié** : le
+lancement réel sur les autres plateformes que Windows (la CI lance les jeux, pas une vidéo d'évaluation).
+
+**Formats du site** : décision du mainteneur du 5/11/2026, on ne change rien sur le site. Les vidéos ne sont plus limitées par
+JavaFX ; les sons le restent (essais : `.mp3` et `.wav` 16 bits lus, `.m4a` et `.aac` non lus sur ce PC).
+
+## 22. Carte de chaleur et pointeur de la souris (5/11/2026)
+
+**Cartes de chaleur des grilles qui cachent les images** (décision du mainteneur) : quand `Caché stimuli après selection` est à
+`true`, le fond de la carte est pris à l'affichage de la grille, et non à la fin de l'écran, où les images sélectionnées ont
+disparu (`GazeplayEval.heatmapBackground`). Les autres écrans gardent l'image de leur fin. Les fichiers portent les mêmes noms,
+`formatVersion` reste à 1 ; seul le fond de ces images change.
+
+**Pointeur de la souris** (décision du mainteneur, pour ne pas distraire pendant une partie à l'oculomètre) : sur l'écran de
+toutes les parties, jeux et évaluations (`GameCursor`, `gazeplay-core`) :
+
+| Mode | Pointeur |
+|---|---|
+| `mouse_control` | Toujours visible |
+| `tobii` | Caché ; il revient dès que la souris bouge ou qu'on clique, puis se cache après 2 s sans mouvement |
+| `tobii_and_mouse` | Suit la dernière entrée utilisée : visible après la souris, caché à l'arrivée du regard. Le regard arrive en continu, même quand on utilise la souris : celle-ci garde la main pendant la durée de fixation + 2 s après son dernier mouvement, pour qu'une sélection à la souris immobile garde son pointeur, puis le regard la reprend. Sans regard (oculomètre absent), le pointeur reste visible. **Une fois cachée, la souris ne joue plus** (remarque du mainteneur dans Bulles) : elle sort de ce qu'elle survole, une cible qui passe dessous ne lance rien, et elle reprend la main dès qu'elle bouge. En évaluation, `evenements.csv` note alors une `sortie` et une `entree` de la souris |
+
+Dans tous les modes, il reste visible menu ouvert (Échap) et hors de l'écran de partie (statistiques, menus).
+
+**Écran des statistiques** (demande du mainteneur, jeux et évaluations) : un titre et un petit bouton « i » au-dessus de la carte
+de chaleur et du graphique, qui ouvre une fenêtre d'aide (`HelpDialog`, textes `data/help/stats-heatmap-*` et `stats-chart-*`). Le
+titre du graphique suit la vue affichée. Les boutons Souris et Regard sont sur la ligne du titre, pour garder la place. La carte et
+le graphique ont la même hauteur, 37,5 % de celle de l'écran (`StatDisplayUtils.VIEW_HEIGHT_RATIO`), avec une image contrôlée en
+1920×1080. Sur un petit écran (768 px de haut), ils peuvent frôler les boutons du bas (calcul, non essayé). Le reste de l'écran
+attend sa refonte.
+
+**Explication des fichiers** (demande du mainteneur) : une sixième carte du menu des évaluations, « Comprendre les fichiers de
+résultats » (`EvalFilesHelpDialog`, textes `data/help/eval-files-*`). Elle décrit chaque fichier, ses colonnes, ses valeurs et son
+usage. À tenir à jour avec `EvalResultsWriter`.

@@ -5,7 +5,70 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
-## REPRISE DES JEUDI 5/11 ET VENDREDI 6/11/2026 (bilan de la séance du mercredi 4/11/2026)
+## REPRISE DU VENDREDI 6/11/2026 (bilan de la séance du jeudi 5/11/2026)
+
+**État laissé le 5/11/2026 au soir** : tout est commité et poussé sur `addClaudeCode` (voir `git log`). Dernier `build` complet
+suivi de `allGamesTest` : **854 tests, 0 échec ; 66 entrées, 0 échec**. Le mainteneur a validé la séance.
+
+**Vendredi 6/11/2026 : reprise de la revue, sur Gaze Race**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme toujours : état
+des lieux, **demander d'abord la règle voulue**, propositions validées, puis le travail ; un commit par jeu, sur demande. Pas de
+nouveau `.exe` sans demande.
+
+**À vérifier à la reprise, la CI des commits du 5/11** :
+- FFmpeg (JavaCV) se charge-t-il sous Linux et macOS dans les tests ? C'est la première fois qu'il tourne ailleurs que sous Windows.
+- `package-macos` est-il encore annulé après 15 min sans étape (`965487856`, puis `6a1c5e3a1`) ? Si oui, chercher pourquoi.
+
+**Nouveautés à connaître pour la revue des jeux** :
+- Plus d'engrenage : le menu d'une partie s'ouvre avec Échap (`GameMenuPanel`). Les coins gardés libres pour l'engrenage (Où est-ce,
+  Bulles, Opinions, Fleur de nombres) sont à libérer à la refonte du menu.
+- Pointeur de la souris géré par l'écran de partie (`GameCursor`) : aucun jeu n'a à s'en occuper.
+- En mode Tobii + souris, le mélange des deux entrées sur une même cible n'est pas à gérer (décision du mainteneur) : dans Bulles et
+  `ProgressButton`, l'anneau repart de zéro quand la seconde entrée arrive, et c'est accepté.
+
+**Restent ouverts** :
+- La tablette : issue [#1738](https://github.com/GazePlay/GazePlay/issues/1738), à faire quand un appareil sera disponible.
+- Le message d'un média illisible sur la carte de fin d'une vraie passation n'a pas été vu en vrai (test automatique seulement).
+- Le lancement réel des vidéos par FFmpeg sur les plateformes autres que Windows.
+- Les sons des évaluations restent sur JavaFX Media : `.m4a` et `.aac` illisibles sur ce PC. On ne change rien sur le site (décision
+  du mainteneur) ; le message `EvalUnsupportedMedia` les annonce encore comme lisibles.
+- La cause des échecs de JavaFX Media (mise à jour Windows du 14/10/2026 : hypothèse non prouvée).
+
+**À faire après la revue des jeux** : refonte graphique du menu des jeux et de l'écran des statistiques, mémoire des tests, retrait
+des limiteurs, tests instables, inventaire des sons, notes de version 2.0 (détail dans les sections suivantes).
+
+## AVANCEMENT DU JEUDI 5/11/2026 : retours sur GazePlay Learning Eval (commité et poussé)
+
+**Retour 1 : l'engrenage cache des images** quand une évaluation en affiche beaucoup. Décisions du mainteneur : on retire
+l'engrenage de **tous les jeux et des évaluations** ; le menu s'ouvre et se ferme avec **Échap** ; aucun message à l'écran,
+le geste est expliqué dans l'aide ; plein écran changeable dans les jeux, **grisé dans les évaluations**. Pas de graphisme
+aujourd'hui : le panneau garde son contenu, avec un bouton « Fermer ». **Rien pour la tablette sans appareil pour essayer :
+issue [#1738](https://github.com/GazePlay/GazePlay/issues/1738)** ; d'ici là, un poste sans clavier ne peut plus ouvrir le
+menu. Détail : `GazePlayEval.md` section 18. **Essayé et validé par le mainteneur** (Bulles au Tobii seul : pause, menu,
+fermeture à la souris, reprise au regard, statistiques et carte de chaleur corrects ; évaluations sans souci).
+
+**Retours 2 et 3 : dossiers des passations.** Tout dans le dossier de la passation, plus rien dans `statistics` pour une
+évaluation ; bouton des statistiques vers la passation ; dossiers par jour puis `<date>_<heure>_<évaluation>`. Détail :
+`GazePlayEval.md` section 19. Essayé par le mainteneur (passation complète, interrompue, règles `Tout` et `BonneReponse`).
+
+**Retour 4 : médias illisibles.** Message à l'examinateur et lecture des vidéos par FFmpeg (`EvalVideoPlayer`) essayés et validés
+par le mainteneur au Tobii le 5/11/2026 (passation de 14:03 : 6 vidéos, aucune `erreur_media`, image centrée et fluide, pause,
+son calé, coupure nette ; message vu en mode test) ; `GazePlayEval.md` sections 20 et 21. Décision du
+mainteneur : on ne change rien sur le site. La relance automatique d'une vidéo n'est plus nécessaire pour l'instant. Reste à
+voir : le message sur la carte de fin d'une vraie passation.
+
+**Retour 5 : carte de chaleur et pointeur** (`GazePlayEval.md` section 22). Avec l'option de cacher les images, le fond de la
+carte est pris à l'affichage de la grille. Pointeur de la souris sur l'écran des parties, jeux et évaluations (`GameCursor`) :
+toujours visible en mode souris ; caché sauf quand elle bouge en mode `tobii` ; il suit la dernière entrée utilisée en mode
+`tobii_and_mouse`, et une souris cachée ne joue plus. Essayés et validés par le mainteneur.
+
+**Retour 6 : écran des statistiques** (`GazePlayEval.md` section 22). Titre et « i » d'explication au-dessus de la carte de chaleur
+et du graphique, même hauteur pour les deux. Essayé et validé par le mainteneur (« ça fait le travail »). Le
+reste de l'écran attend sa refonte.
+
+**Retour 7 : comprendre les fichiers de résultats.** Sixième carte du menu des évaluations, qui ouvre une fenêtre décrivant chaque
+fichier, ses colonnes, ses valeurs et son usage (`GazePlayEval.md` section 22). Validé par le mainteneur.
+
+## BILAN DE LA SÉANCE DU MERCREDI 4/11/2026
 
 **État laissé le 4/11/2026 au soir** : tout est commité et poussé sur `addClaudeCode`. Dernier `build` complet suivi de
 `allGamesTest` (avant le dernier commit, qui ne touche que la documentation) : **809 tests, 0 échec ; 66 entrées, 0 échec**.
@@ -22,15 +85,7 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 | `eaae774c3` | Tir : musique livrée avec le jeu (elle était téléchargée à la première partie) |
 | `9f32d5a24` | Biboule Jump : 3 vies, niveaux, même saut sur tout écran, plus de record |
 
-**Jeudi 5/11/2026 : pas de revue des jeux.** Le mainteneur a reçu des retours d'utilisateurs sur **GazePlay Learning Eval
-et le site web** : on travaille là-dessus. Ces retours ne sont pas encore connus : **les lui demander d'abord**, sans rien
-supposer. Pour se repérer : `GazePlayEval.md`, et le site dans le dépôt `Documents\Tests\GazePlay-Eval` (en ligne sur
-lig-gazeplay.imag.fr). Son format est un contrat avec le lecteur (`EvalReader`). Les commits du site suivent les règles de
-son dépôt, à vérifier avant d'y toucher.
-
-**Vendredi 6/11/2026 : reprise de la revue, sur Gaze Race**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme
-toujours : état des lieux, **demander d'abord la règle voulue**, propositions validées, puis le travail ; un commit par jeu,
-sur demande. Pas de nouveau `.exe` sans demande.
+La suite (retours du 5/11, reprise du 6/11) est dans les sections en haut de ce fichier.
 
 **À vérifier à la reprise** : la CI des commits du 4/11 au soir. Celle de `965487856` (run 41857896054) est en échec pour
 une seule raison : `package-macos` annulé après 15 min sans exécuter aucune étape (cause inconnue) ; les 6 autres jobs sont
@@ -320,9 +375,10 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
      ouverte par un objet simulé, jamais un vrai navigateur dans les tests), capture du menu.
    - **Décisions du mainteneur (30/10/2026)** : libellé « Créer une évaluation (site GazePlay Eval) » ; adresse
      **fixe dans le code** (pas de réglage).
-6. **Tâche de fin, après la revue de tous les jeux et leur acceptation** : refonte graphique **et fonctionnelle** de
-   l'engrenage bleu des jeux (bouton en bas à gauche et son panneau : musique, volume, durée de fixation, vitesse,
-   taille, barre de progression, couleur de fond ; `GameContextFactory`, `GameContext.createControlPanel`). À
+6. **Tâche de fin, après la revue de tous les jeux et leur acceptation** : refonte graphique du menu des jeux (son
+   panneau : musique, volume, durée de fixation, vitesse, taille, barre de progression, couleur de fond ;
+   `GameMenuPanel`, `GameContextFactory`, `GameContext.createControlPanel`). La partie fonctionnelle (Échap à la place
+   de l'engrenage) est faite depuis le 5/11/2026 ; à la refonte, libérer les coins gardés pour lui. À
    préparer comme les autres étapes (état des lieux, propositions validées). Penser à la décision encore ouverte sur
    le temps du menu compté dans les durées (`MODERNIZATION.md` 2an).
    **Au même niveau (demande du mainteneur du 2/11/2026)** : **refonte graphique de l'écran des statistiques** de fin
