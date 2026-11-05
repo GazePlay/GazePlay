@@ -24,6 +24,8 @@ public final class MenuStyle {
      */
     private static final Duration TOOLTIP_DELAY = Duration.millis(300);
 
+    private static final double SMALL_ROUND_BUTTON_SIZE = 30;
+
     private MenuStyle() {
     }
 
@@ -75,6 +77,21 @@ public final class MenuStyle {
                                      final Runnable action) {
         final Button button = iconButton(icon, 40, tooltip, action);
         button.getStyleClass().addAll("gp-round", "gp-round-" + color);
+        return button;
+    }
+
+    /**
+     * @return the same round button, small, next to a title where the room is short
+     */
+    public static Button smallRoundButton(final MenuIcon icon, final String color, final String tooltip,
+                                          final Runnable action) {
+        final Button button = iconButton(icon, 22, tooltip, action);
+        button.getStyleClass().addAll("gp-round", "gp-round-" + color);
+        button.setStyle("-fx-padding: 3;");
+        // Round: the height of the line of its hidden text must not stretch it
+        button.setMinSize(SMALL_ROUND_BUTTON_SIZE, SMALL_ROUND_BUTTON_SIZE);
+        button.setPrefSize(SMALL_ROUND_BUTTON_SIZE, SMALL_ROUND_BUTTON_SIZE);
+        button.setMaxSize(SMALL_ROUND_BUTTON_SIZE, SMALL_ROUND_BUTTON_SIZE);
         return button;
     }
 

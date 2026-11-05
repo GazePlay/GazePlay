@@ -23,6 +23,7 @@ import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.SystemFileManager;
+import net.gazeplay.ui.menus.HelpDialog;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,7 +94,7 @@ class StatsContextTest {
         }
 
         widthProperty.set(200);
-        verify(metrics).setFitWidth(200 * 0.35);
+        verify(metrics).setFitWidth(200 * StatDisplayUtils.VIEW_WIDTH_RATIO);
     }
 
     @Test
@@ -109,7 +110,40 @@ class StatsContextTest {
         }
 
         heightProperty.set(200);
-        verify(metrics).setFitHeight(200 * 0.35);
+        verify(metrics).setFitHeight(200 * StatDisplayUtils.VIEW_HEIGHT_RATIO);
+    }
+
+    /**
+     * Maintainer's request of 5/11/2026: the "i" next to the title of each view opens a text explaining it.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {"data/help/stats-heatmap-", "data/help/stats-chart-"})
+    void shouldHaveTheExplanationOfEachViewInFrenchAndEnglish(String prefix) {
+        for (String language : List.of("fra", "eng")) {
+            List<String> lines = HelpDialog.read(prefix, language);
+            assertNotNull(lines, prefix + language);
+            assertTrue(lines.stream().anyMatch(line -> line.startsWith("# ")), prefix + language);
+        }
+    }
+
+    /**
+     * The image and the chart have the same height (maintainer's request of 5/11/2026).
+     */
+    @Test
+    void shouldGiveTheChartTheSizeOfTheImage() {
+        BorderPane root = new BorderPane();
+        root.resize(1000, 800);
+        ImageView metrics = spy(new ImageView("bear.jpg"));
+        LineChart<?, ?>[] chart = new LineChart<?, ?>[1];
+        try (MockedStatic<StatDisplayUtils> statDisplayUtils = mockStatic(StatDisplayUtils.class, CALLS_REAL_METHODS)) {
+            statDisplayUtils.when(() -> StatDisplayUtils.buildGazeMetrics(any(), any())).thenReturn(metrics);
+            new StatsContext(mockGazePlay, root, mockStats, null);
+            chart[0] = StatDisplayUtils.buildLineChart(mockStats, root);
+        }
+
+        assertEquals(metrics.getFitHeight(), chart[0].getPrefHeight());
+        assertEquals(metrics.getFitHeight(), chart[0].getMaxHeight());
+        assertEquals(metrics.getFitWidth(), chart[0].getMaxWidth());
     }
 
     @SuppressWarnings("unchecked")
@@ -143,7 +177,8 @@ class StatsContextTest {
         HBox controlPane = (HBox) sidePane.getBottom();
         RadioButton colorBands = (RadioButton) controlPane.getChildren().get(1);
 
-        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(2);
+        // Under the title of the image, the image, and the title of the chart
+        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(3);
         assertTrue(centerPane.getChildren().contains(lineChart));
 
         colorBands.fire();

@@ -40,6 +40,17 @@ import static javafx.scene.chart.XYChart.Data;
 public class StatDisplayUtils {
 
     /**
+     * Width of the metrics image and of the charts on the statistics screen, in part of the width of the screen.
+     */
+    public static final double VIEW_WIDTH_RATIO = 0.4;
+
+    /**
+     * Height of the metrics image and of the charts, in part of the height of the screen: the same for both, as much as the
+     * title of the screen, the thin lines of their titles and the buttons at the bottom leave.
+     */
+    public static final double VIEW_HEIGHT_RATIO = 0.375;
+
+    /**
      * @return the home button of the statistics screen, which ends the JVM of the game (the menu is shown again by its
      *   own JVM)
      */
@@ -130,10 +141,7 @@ public class StatDisplayUtils {
 
         lineChart.setLegendVisible(false);
 
-        root.widthProperty().addListener((observable, oldValue, newValue) -> lineChart.setMaxWidth(newValue.doubleValue() * 0.4));
-        root.heightProperty().addListener((observable, oldValue, newValue) -> lineChart.setMaxHeight(newValue.doubleValue() * 0.4));
-        lineChart.setMaxWidth(root.getWidth() * 0.4);
-        lineChart.setMaxHeight(root.getHeight() * 0.4);
+        sizeLikeTheMetrics(lineChart, root);
 
         return lineChart;
     }
@@ -175,12 +183,7 @@ public class StatDisplayUtils {
 
             colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
 
-            root.widthProperty().addListener(
-                (observable, oldValue, newValue) -> colorBands.setMaxWidth(newValue.doubleValue() * 0.4));
-            root.heightProperty().addListener(
-                (observable, oldValue, newValue) -> colorBands.setMaxHeight(newValue.doubleValue() * 0.4));
-            colorBands.setMaxWidth(root.getWidth() * 0.4);
-            colorBands.setMaxHeight(root.getHeight() * 0.4);
+            sizeLikeTheMetrics(colorBands, root);
 
             return colorBands;
         } else
@@ -250,12 +253,27 @@ public class StatDisplayUtils {
 
             levelChart.setLegendVisible(false);
         }
-        root.widthProperty().addListener((observable, oldValue, newValue) -> levelChart.setMaxWidth(newValue.doubleValue() * 0.4));
-        root.heightProperty().addListener((observable, oldValue, newValue) -> levelChart.setMaxHeight(newValue.doubleValue() * 0.4));
-        levelChart.setMaxWidth(root.getWidth() * 0.4);
-        levelChart.setMaxHeight(root.getHeight() * 0.4);
+        sizeLikeTheMetrics(levelChart, root);
 
         return levelChart;
+    }
+
+    /**
+     * Gives a chart the size of the metrics image above it (decision of the maintainer, 5/11/2026: equal proportions).
+     */
+    private static void sizeLikeTheMetrics(final Region chart, final Region root) {
+        root.widthProperty().addListener((observable, oldValue, newValue) -> {
+            chart.setMaxWidth(newValue.doubleValue() * VIEW_WIDTH_RATIO);
+            chart.setPrefWidth(newValue.doubleValue() * VIEW_WIDTH_RATIO);
+        });
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+            chart.setMaxHeight(newValue.doubleValue() * VIEW_HEIGHT_RATIO);
+            chart.setPrefHeight(newValue.doubleValue() * VIEW_HEIGHT_RATIO);
+        });
+        chart.setMaxWidth(root.getWidth() * VIEW_WIDTH_RATIO);
+        chart.setPrefWidth(root.getWidth() * VIEW_WIDTH_RATIO);
+        chart.setMaxHeight(root.getHeight() * VIEW_HEIGHT_RATIO);
+        chart.setPrefHeight(root.getHeight() * VIEW_HEIGHT_RATIO);
     }
 
     /**

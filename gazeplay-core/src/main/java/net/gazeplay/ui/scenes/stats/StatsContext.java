@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.stats;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -8,6 +9,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
@@ -35,11 +38,16 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.SelectionGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.menus.HelpDialog;
+import net.gazeplay.ui.menus.MenuIcon;
+import net.gazeplay.ui.menus.MenuStyle;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -51,7 +59,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private final String COLON = "Colon";
 
-    private final double RATIO = 0.35;
+    private static final String METRICS_HELP = "data/help/stats-heatmap-";
+
+    private static final String CHART_HELP = "data/help/stats-chart-";
 
     /**
      * Builds the screen of a game.
@@ -78,19 +88,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         addAllToGrid(stats, translator, grid, alignLeft);
 
-        VBox centerPane = new VBox();
-        centerPane.setAlignment(Pos.CENTER);
+        VBox centerPane = new VBox(4);
+        centerPane.setAlignment(Pos.TOP_CENTER);
 
         ImageView displayedMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
-        root.widthProperty().addListener(
-            (observable, oldValue, newValue) -> displayedMetrics.setFitWidth(newValue.doubleValue() * RATIO));
-        root.heightProperty().addListener(
-            (observable, oldValue, newValue) -> displayedMetrics.setFitHeight(newValue.doubleValue() * RATIO));
+        root.widthProperty().addListener((observable, oldValue, newValue) ->
+            displayedMetrics.setFitWidth(newValue.doubleValue() * StatDisplayUtils.VIEW_WIDTH_RATIO));
+        root.heightProperty().addListener((observable, oldValue, newValue) ->
+            displayedMetrics.setFitHeight(newValue.doubleValue() * StatDisplayUtils.VIEW_HEIGHT_RATIO));
 
-        displayedMetrics.setFitWidth(root.getWidth() * RATIO);
-        displayedMetrics.setFitHeight(root.getHeight() * RATIO);
-
-        centerPane.getChildren().add(displayedMetrics);
+        displayedMetrics.setFitWidth(root.getWidth() * StatDisplayUtils.VIEW_WIDTH_RATIO);
+        displayedMetrics.setFitHeight(root.getHeight() * StatDisplayUtils.VIEW_HEIGHT_RATIO);
 
         // Only the inputs that played the game: a single image without choice for the mouse or the gaze alone
         final List<String> metricsShown = metricsShown(EyeTracker.fromConfigValue(config.getEyeTracker()));
@@ -102,10 +110,32 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             showMetrics(metricsShown.get(0), stats, displayedMetrics);
         }
         buttonSwitchMetrics.setAlignment(Pos.CENTER);
-        centerPane.getChildren().add(buttonSwitchMetrics);
+
+        // The title of each view, with a window explaining it (maintainer's request of 5/11/2026). The buttons of the image
+        // stay on the line of its title, to keep the room for the image
+        Label metricsTitle = new Label(translator.translate("StatsHeatmapTitle"));
+        HBox metricsHeader = new HBox(16, titleWithHelp(metricsTitle, "StatsHeatmapTitle", METRICS_HELP, translator),
+            buttonSwitchMetrics);
+        metricsHeader.setAlignment(Pos.CENTER);
+        centerPane.getChildren().addAll(metricsHeader, displayedMetrics);
+
+        Label chartTitle = new Label();
+        Map<Node, String> chartTitles = new HashMap<>();
+        centerPane.getChildren().add(titleWithHelp(chartTitle, "StatsChartDurations", CHART_HELP, translator));
 
         LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
+        chartTitles.put(lineChart, "StatsChartDurations");
         centerPane.getChildren().add(lineChart);
+        chartTitle.setText(translator.translate("StatsChartDurations"));
+        // The title follows the view shown (a zoomed chart keeps its place in the list)
+        centerPane.getChildren().addListener((ListChangeListener<Node>) change -> {
+            for (Node child : centerPane.getChildren()) {
+                String titleKey = chartTitles.get(child);
+                if (titleKey != null) {
+                    chartTitle.setText(translator.translate(titleKey));
+                }
+            }
+        });
         RadioButton colorBands = new RadioButton("Color Bands");
         RadioButton levelsInfo = new RadioButton("Levels Info");
         RadioButton chi2Info = new RadioButton("Chi2 Info");
@@ -117,6 +147,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
             LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
             TableView chi2Chart = StatDisplayUtils.buildTable(stats);
+            chartTitles.put(levelChart, "StatsChartLevels");
+            chartTitles.put(chi2Chart, "StatsChartChi2");
+            if (areaChart != null) {
+                chartTitles.put(areaChart, "StatsChartPositions");
+            }
 
             if(config.isDarkThemeEnabled())
             {
@@ -260,6 +295,23 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
         }
 
+    }
+
+    /**
+     * @return the title of a view of the screen on a thin line, with the "i" button opening its explanation, in the look of
+     *   the help of the games
+     */
+    private HBox titleWithHelp(Label title, String helpTitleKey, String helpPrefix, Translator translator) {
+        title.getStyleClass().add("gp-help-heading");
+        Button helpButton = MenuStyle.smallRoundButton(MenuIcon.INFO, "teal", translator.translate("StatsExplain"),
+            () -> new HelpDialog(getGazePlay().getPrimaryStage(), translator, translator.translate(helpTitleKey),
+                HelpDialog.read(helpPrefix, HelpDialog.language(translator.currentLocale())), null, null).show());
+        HBox line = new HBox(8, title, helpButton);
+        line.setAlignment(Pos.CENTER);
+        // Rules of the menus for this line only; the rest of the screen waits for its redesign
+        MenuStyle.applyTo(line);
+        line.setStyle("-fx-background-color: transparent;");
+        return line;
     }
 
     /**

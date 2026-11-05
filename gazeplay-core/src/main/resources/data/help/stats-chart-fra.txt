@@ -1,0 +1,16 @@
+# À quoi sert ce graphique
+Il montre le temps qu'il a fallu pour atteindre chaque objectif de la partie, par exemple une bulle éclatée, une cible touchée ou une image sélectionnée. Il permet de voir si le joueur va plus vite ou moins vite au fil de la partie.
+
+# Comment le lire
+- En bas : le numéro de l'objectif, dans l'ordre de la partie. Dans les jeux de tir, les durées sont triées, de la plus courte à la plus longue.
+- À gauche : le temps, en millisecondes (1 000 millisecondes font 1 seconde).
+- La courbe rouge : le temps pour chaque objectif. Plus elle est basse, plus l'objectif a été atteint vite.
+- La ligne verte : le temps moyen.
+- Les lignes grises : l'écart-type, autour de la moyenne. Plus elles sont éloignées de la ligne verte, plus les temps sont irréguliers.
+- Un clic sur le graphique l'agrandit, un autre clic le remet à sa place.
+
+# Les autres vues
+Selon le jeu, des boutons en bas de l'écran remplacent ce graphique :
+- Color Bands : la position des fixations au cours de la partie, en largeur (X) et en hauteur (Y).
+- Levels Info : le niveau atteint à chaque manche, dans les jeux dont le niveau s'adapte au joueur, avec sa moyenne et son écart-type.
+- Chi2 Info : un tableau de test statistique (khi-deux) sur les niveaux, pour les analyses.

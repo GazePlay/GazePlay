@@ -1,0 +1,20 @@
+# À quoi sert cette image
+Elle montre où s'est porté le regard, ou la souris, pendant la partie, sur une image de l'écran prise au début de la partie.
+
+# La carte de chaleur
+- Les taches de couleur sont les endroits regardés. Plus un endroit a été regardé longtemps, plus la couleur est chaude.
+- La légende à droite donne l'échelle : le nombre de positions enregistrées à cet endroit. Les couleurs et l'opacité se règlent dans les réglages.
+
+# Le parcours du regard
+- Les ronds numérotés sont les fixations, les endroits où le regard ou la souris s'est arrêté. Le numéro donne l'ordre : 1 pour la première.
+- Plus un rond est grand, plus la fixation a duré longtemps par rapport aux autres.
+- Les lignes relient les fixations dans l'ordre.
+- Les ronds sont bleus pour le regard et rouges pour la souris.
+- Ce parcours peut être désactivé dans les réglages.
+
+# Les boutons
+- Souris, Regard, Souris et Regard : choisissent ce qui est affiché, selon le mode d'entrée de la partie.
+- Un clic sur l'image l'agrandit, un autre clic la remet à sa place.
+
+# Pendant une évaluation
+Cette image rassemble toute la passation. Le dossier heatmaps de la passation contient en plus une carte pour chaque écran, sur l'image de cet écran.

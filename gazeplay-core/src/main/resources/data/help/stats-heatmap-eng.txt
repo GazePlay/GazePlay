@@ -1,0 +1,20 @@
+# What this image is for
+It shows where the gaze, or the mouse, went during the game, over a picture of the screen taken at the start of the game.
+
+# The heat map
+- The colored spots are the places looked at. The longer a place was looked at, the warmer its color.
+- The legend on the right gives the scale: the number of positions recorded at that place. The colors and the opacity can be changed in the settings.
+
+# The path of the gaze
+- The numbered circles are the fixations, the places where the gaze or the mouse stopped. The number gives the order: 1 for the first one.
+- The bigger a circle, the longer the fixation lasted compared with the others.
+- The lines join the fixations in their order.
+- The circles are blue for the gaze and red for the mouse.
+- This path can be turned off in the settings.
+
+# The buttons
+- Mouse, Gaze, Mouse and Gaze: choose what is shown, according to the input mode of the game.
+- A click on the image enlarges it, another click puts it back.
+
+# During an evaluation
+This image gathers the whole session. The heatmaps folder of the session also holds a map for each screen, over the image of that screen.
