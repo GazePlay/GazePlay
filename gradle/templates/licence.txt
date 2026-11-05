@@ -89,6 +89,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Icônes des menus et des jeux (data/icons) : Material Symbols de Google, Apache License 2.0
   (data/icons/MaterialSymbols-LICENSE.txt).
 - Oculomètre : TobiiStreamEngineForJava (https://github.com/GazePlay/TobiiStreamEngineForJava), GPL-3.0.
+- Vidéos des évaluations : JavaCV et JavaCPP (https://github.com/bytedeco), et FFmpeg (https://ffmpeg.org) en version
+  LGPL 3 ou ultérieure.
 - Bibliothèques Java : la liste et la licence de chacune sont dans le dossier dependency-license des
   distributions.
 - Images : les animaux par défaut (data/common/default/images : bear, dog, elephant, elephant2, fox, giraffe,

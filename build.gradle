@@ -198,6 +198,14 @@ def onlyJaveNativeBinary = { String platform ->
     }
 }
 
+// JavaCV (videos of GazePlay Eval) has its native files in one jar per platform, 20 to 30 MB each: same principle
+def onlyJavaCvNativeFiles = { String platform ->
+    return { FileTreeElement element ->
+        element.name ==~ /(javacpp|ffmpeg)-.*-(windows-x86_64|linux-x86_64|linux-arm64|macosx-x86_64|macosx-arm64)\.jar/ &&
+            !element.name.endsWith("-${platform}.jar")
+    }
+}
+
 // The distributions with a runtime use its JavaFX modules (Zulu FX, newer than the JavaFX API compiled against), which
 // take precedence over the JavaFX jars on the classpath: those jars are left out. The no-JRE distribution keeps them.
 // Matched by version, so that the runtime's own lib/jre/lib/javafx-swt.jar is kept.
@@ -233,6 +241,7 @@ distributions {
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('win64')
+            exclude onlyJavaCvNativeFiles('windows-x86_64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
             from("build/bin/gazeplay-learning-windows.bat") {
@@ -249,6 +258,7 @@ distributions {
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('linux64')
+            exclude onlyJavaCvNativeFiles('linux-x86_64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
             from("build/bin/gazeplay-learning-linux.sh") {
@@ -265,6 +275,7 @@ distributions {
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('linux-arm64')
+            exclude onlyJavaCvNativeFiles('linux-arm64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
             from("build/bin/gazeplay-learning-arm.sh") {
@@ -281,6 +292,7 @@ distributions {
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('osx64')
+            exclude onlyJavaCvNativeFiles('macosx-x86_64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
             from("build/bin/gazeplay-learning-macos.sh") {
@@ -298,6 +310,7 @@ distributions {
         contents {
             with distributions.main.contents
             exclude onlyJaveNativeBinary('osxm1')
+            exclude onlyJavaCvNativeFiles('macosx-arm64')
             exclude compileTimeJavaFxJars
             with licenseReportContents
             from("build/bin/gazeplay-learning-macos.sh") {

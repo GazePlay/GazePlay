@@ -6,6 +6,23 @@ dependencies {
     implementation libs.gson
     implementation libs.poi.ooxml
     implementation libs.guava
+    implementation(libs.javacv) {
+        transitive = false
+    }
+    implementation(libs.javacpp) {
+        transitive = false
+    }
+    implementation(libs.ffmpeg) {
+        transitive = false
+    }
+    ['windows-x86_64', 'linux-x86_64', 'linux-arm64', 'macosx-x86_64', 'macosx-arm64'].each { platform ->
+        runtimeOnly(variantOf(libs.javacpp) { classifier(platform) }) {
+            transitive = false
+        }
+        runtimeOnly(variantOf(libs.ffmpeg) { classifier(platform) }) {
+            transitive = false
+        }
+    }
 
     testImplementation project(':gazeplay-core')
     testImplementation testFixtures(project(':gazeplay-commons'))

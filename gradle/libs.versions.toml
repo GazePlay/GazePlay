@@ -18,6 +18,9 @@ monocle = "21.0.2"
 mockito = "5.24.0"
 # 4.x: the Windows 32 bits binary is gone, it is no longer needed (64 bits distributions only)
 jave = "4.2.0"
+# Videos of GazePlay Eval (JavaFX Media fails under Windows 11, GazePlayEval.md section 21)
+javacv = "1.5.14"
+ffmpeg = "8.1.2-1.5.14"
 
 [libraries]
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
@@ -44,6 +47,11 @@ jave-nativebin-linux64 = { module = "ws.schild:jave-nativebin-linux64", version.
 jave-nativebin-osx64 = { module = "ws.schild:jave-nativebin-osx64", version.ref = "jave" }
 jave-nativebin-osxm1 = { module = "ws.schild:jave-nativebin-osxm1", version.ref = "jave" }
 jave-nativebin-linux-arm64 = { module = "ws.schild:jave-nativebin-linux-arm64", version.ref = "jave" }
+# Not transitive: only FFmpeg is used, not OpenCV and the other libraries JavaCV depends on. The native files are in one
+# jar per platform; each distribution keeps its own (see build.gradle). The FFmpeg of these jars is under the LGPL 3
+javacv = { module = "org.bytedeco:javacv", version.ref = "javacv" }
+javacpp = { module = "org.bytedeco:javacpp", version.ref = "javacv" }
+ffmpeg = { module = "org.bytedeco:ffmpeg", version.ref = "ffmpeg" }
 # Bundles the Monte Screen Recorder classes (org.monte.*) used to record videos of the games
 video-recorder-core = { module = "com.automation-remarks:video-recorder-core", version = "2.0" }
 tobii-stream-engine = { module = "com.github.GazePlay:TobiiStreamEngineForJava", version = "5.0" }
