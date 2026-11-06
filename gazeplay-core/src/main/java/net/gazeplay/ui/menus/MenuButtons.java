@@ -21,6 +21,20 @@ public final class MenuButtons {
     }
 
     /**
+     * @return the button quitting GazePlay Learning from a menu page, after a question (user's feedback of 6/11/2026:
+     * everything must be launched again after it), which only a click accepts (maintainer's decision)
+     */
+    public static Button confirmedQuitButton(final GazePlay gazePlay, final Translator translator) {
+        return MenuStyle.quitButton(translator.translate("Exit"), () -> {
+            if (MenuMessageDialog.confirmByClick(gazePlay.getPrimaryStage(), translator.translate("QuitConfirmTitle"),
+                translator.translate("QuitConfirmMessage"), translator.translate("Exit"),
+                translator.translate("Cancel"), translator.translate("Close"))) {
+                gazePlay.quit();
+            }
+        });
+    }
+
+    /**
      * @return the round button switching the full screen (violet), its icon and tooltip following the state of the
      * window
      */

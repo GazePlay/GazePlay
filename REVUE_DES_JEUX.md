@@ -25,6 +25,16 @@ lisible et centré, gris correct. Fichiers de 0 octet (`test.mp4`, `test.png`) b
 la souris sur une consigne à image, sans déclenchement (il en faut 4 : 1 s de délai et 3 s de fixation). Sur les consignes à vidéo, le
 plus long séjour réel est de 3,9 s : même code, couvert par les tests avec une souris simulée. Commité et poussé le 6/11.
 
+**Retour d'un utilisateur, fait et essayé le 6/11/2026** : le bouton Quitter des 4 écrans de menus (choix du mode, profils, jeux,
+évaluations) demande « Voulez-vous vraiment quitter GazePlay Learning ? » (`MenuButtons.confirmedQuitButton`). Décision du mainteneur :
+seul le clic valide ; Entrée et Échap annulent, et le clavier n'atteint pas « Quitter » (`MenuMessageDialog.confirmByClick`). Alt+F4
+reste le moyen rapide de quitter ; si la question est ouverte, il ne ferme qu'elle.
+
+**CI de `79dd9d596`** : `package-macos` a réussi, sans rien changer : les annulations précédentes ne se sont pas reproduites.
+`test (26)` : installation apt expirée, tests non lancés. Le repli du script sur le miroir principal d'Ubuntu était sans effet, les
+machines passant par `mirror+file:/etc/apt/apt-mirrors.txt` (le journal le montre sur les 3 essais) : corrigé le 6/11, à revoir la
+prochaine fois que le miroir sera lent.
+
 **Puis la CI** (run `42058853255`, sur `629c2f3b0`) : `build`, `package-linux`, `package-windows`, `all-games` et `test (26)` ont
 réussi, donc FFmpeg se charge sous Linux. À revoir au prochain push :
 - `test (25)` : échec sur l'installation apt (expirée après 15 min, tests non lancés).

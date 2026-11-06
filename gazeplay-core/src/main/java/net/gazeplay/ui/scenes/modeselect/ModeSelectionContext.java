@@ -61,7 +61,7 @@ public class ModeSelectionContext extends GraphicalContext<BorderPane> {
 
         final Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        final Button exitButton = MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit);
+        final Button exitButton = MenuButtons.confirmedQuitButton(gazePlay, translator);
         final HBox topBar = new HBox(spacer, MenuButtons.themeButton(gazePlay, translator), exitButton);
         topBar.getStyleClass().add("gp-top-bar");
 

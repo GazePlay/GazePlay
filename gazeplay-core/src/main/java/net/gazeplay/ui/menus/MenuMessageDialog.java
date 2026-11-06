@@ -105,4 +105,21 @@ public final class MenuMessageDialog extends Stage {
         dialog.showAndWait();
         return dialog.isAccepted();
     }
+
+    /**
+     * Asks a question that only a click accepts, for what must not happen by a wrong key: Enter, Space and Escape
+     * cancel, and the keyboard cannot reach the "OK" button.
+     *
+     * @return whether the "OK" button was clicked
+     */
+    public static boolean confirmByClick(final Stage owner, final String title, final String message,
+                                         final String okText, final String cancelText, final String closeText) {
+        final MenuMessageDialog dialog = new MenuMessageDialog(owner, title, message, false, okText, cancelText,
+            closeText);
+        dialog.okButton.setDefaultButton(false);
+        dialog.okButton.setFocusTraversable(false);
+        dialog.cancelButton.setDefaultButton(true);
+        dialog.showAndWait();
+        return dialog.isAccepted();
+    }
 }

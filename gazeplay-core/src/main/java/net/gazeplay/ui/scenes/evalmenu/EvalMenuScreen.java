@@ -129,7 +129,7 @@ public class EvalMenuScreen extends GraphicalContext<BorderPane> {
             MenuButtons.fullScreenButton(gazePlay, translator),
             MenuButtons.themeButton(gazePlay, translator),
             MenuStyle.roundButton(MenuIcon.LOGOUT, "accent", translator.translate("Logout"), gazePlay::goToUserPage),
-            MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit));
+            MenuButtons.confirmedQuitButton(gazePlay, translator));
         topBar.getStyleClass().add("gp-top-bar");
 
         // Center: the mode, then launch, import, results

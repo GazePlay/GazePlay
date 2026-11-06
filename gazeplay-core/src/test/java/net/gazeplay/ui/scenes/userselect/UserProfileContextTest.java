@@ -20,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -28,6 +29,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.ui.menus.MenuMessageDialog;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -331,7 +334,7 @@ class UserProfileContextTest {
     }
 
     @Test
-    void shouldCreateExitButton() {
+    void shouldCreateExitButton() throws Exception {
         UserProfileContext context = new UserProfileContext(mockGazePlay);
         HBox topBar = (HBox) context.getRoot().getTop();
 
@@ -339,7 +342,19 @@ class UserProfileContextTest {
         Button exitButton = (Button) topBar.getChildren().get(3);
         assertTrue(exitButton.getStyleClass().contains("gp-quit"));
 
-        exitButton.fire();
+        // The question is shown and waited for, without owner: the stage of this test is not a real one
+        when(mockGazePlay.getPrimaryStage()).thenReturn(null);
+        when(mockTranslator.translate(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+        Platform.runLater(exitButton::fire);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> Window.getWindows().stream()
+            .anyMatch(MenuMessageDialog.class::isInstance));
+        verify(mockGazePlay, never()).quit();
+
+        MenuMessageDialog question = WaitForAsyncUtils.asyncFx(() -> Window.getWindows().stream()
+            .filter(MenuMessageDialog.class::isInstance).map(MenuMessageDialog.class::cast).findFirst().orElseThrow())
+            .get();
+        WaitForAsyncUtils.asyncFx(() -> question.getOkButton().fire()).get();
+        WaitForAsyncUtils.waitForFxEvents();
 
         verify(mockGazePlay).quit();
     }

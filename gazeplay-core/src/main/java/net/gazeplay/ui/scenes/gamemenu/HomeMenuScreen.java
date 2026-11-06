@@ -197,7 +197,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Button fullScreenButton = MenuButtons.fullScreenButton(gazePlay, translator);
         final Button logoutButton = MenuStyle.roundButton(MenuIcon.LOGOUT, "accent", translator.translate("Logout"),
             gazePlay::goToUserPage);
-        final Button exitButton = MenuStyle.quitButton(translator.translate("Exit"), gazePlay::quit);
+        final Button exitButton = MenuButtons.confirmedQuitButton(gazePlay, translator);
 
         // Settings first, as in the menu of the evaluations (maintainer's feedback of 28/10/2026)
         final HBox topBar = new HBox(logo, search, spacer, settingsButton, replayButton, fullScreenButton,

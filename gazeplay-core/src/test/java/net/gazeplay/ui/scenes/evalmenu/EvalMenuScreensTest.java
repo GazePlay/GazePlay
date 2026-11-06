@@ -93,6 +93,32 @@ class EvalMenuScreensTest {
         verify(gazePlay).chooseMode(AppMode.EVALUATIONS);
     }
 
+    /**
+     * The quit buttons of the choice of the mode and of the menu of the evaluations ask first (the profiles:
+     * UserProfileContextTest; what the question does: MenuButtonsTest).
+     */
+    @Test
+    void shouldAskBeforeQuittingFromTheModesAndTheEvaluations() throws Exception {
+        when(gamesLocator.listGames(any())).thenReturn(List.of(evalSpec));
+        ModeSelectionContext modes = WaitForAsyncUtils.asyncFx(() -> new ModeSelectionContext(gazePlay)).get();
+        EvalMenuScreen menu = WaitForAsyncUtils.asyncFx(
+            () -> new EvalMenuScreen(gazePlay, gameMenuController, gamesLocator)).get();
+
+        for (javafx.scene.Parent root : List.of(modes.getRoot(), menu.getRoot())) {
+            Button quit = (Button) root.lookup(".gp-quit");
+            javafx.application.Platform.runLater(quit::fire);
+            WaitForAsyncUtils.waitFor(5, java.util.concurrent.TimeUnit.SECONDS, () -> javafx.stage.Window.getWindows()
+                .stream().anyMatch(net.gazeplay.ui.menus.MenuMessageDialog.class::isInstance));
+            WaitForAsyncUtils.asyncFx(() -> javafx.stage.Window.getWindows().stream()
+                .filter(net.gazeplay.ui.menus.MenuMessageDialog.class::isInstance)
+                .map(net.gazeplay.ui.menus.MenuMessageDialog.class::cast).findFirst().orElseThrow().getCancelButton().fire())
+                .get();
+            WaitForAsyncUtils.waitForFxEvents();
+        }
+
+        verify(gazePlay, org.mockito.Mockito.never()).quit();
+    }
+
     @Test
     void shouldLaunchTheEvaluationChosenInTheWindow() throws Exception {
         BorderPane menuRoot = new BorderPane();
