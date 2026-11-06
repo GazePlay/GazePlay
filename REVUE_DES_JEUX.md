@@ -7,16 +7,34 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 
 ## REPRISE DU VENDREDI 6/11/2026 (bilan de la séance du jeudi 5/11/2026)
 
-**État laissé le 5/11/2026 au soir** : tout est commité et poussé sur `addClaudeCode` (voir `git log`). Dernier `build` complet
-suivi de `allGamesTest` : **854 tests, 0 échec ; 66 entrées, 0 échec**. Le mainteneur a validé la séance.
+**État laissé le 5/11/2026 au soir** : tout est poussé sur `addClaudeCode` jusqu'à `629c2f3b0`, **sauf les dernières règles des médias
+illisibles, codées après le push et NON COMMITÉES** (dans le dossier de travail, à ne pas perdre). Dernier `build` complet suivi de
+`allGamesTest`, sur ce code : **867 tests, 0 échec ; 66 entrées, 0 échec**.
 
-**Vendredi 6/11/2026 : reprise de la revue, sur Gaze Race**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme toujours : état
+**Vendredi 6/11/2026, d'abord : essais par le mainteneur des médias illisibles** (décidé le 5/11 au soir, avant de reprendre les jeux) :
+1. **Temps de passage court** : une vidéo illisible avec par exemple 2 s de temps de passage. Le message doit rester 5 s, et « Fin de
+   l'écran » dire `média illisible`.
+2. **Bouton grisé** : une consigne avec bouton de fixation, avec puis sans temps de passage. « Commencer » doit être grisé et ne rien
+   déclencher, au Tobii et à la souris (les tests ne l'ont déclenché que par des événements de souris simulés). Sans temps, seule
+   Espace fait continuer. Regarder aussi le rendu du gris (opacité 0,35).
+3. **Image de consigne illisible**, par exemple un fichier texte renommé en `.png` : mêmes règles que la vidéo et le son.
+4. **Mode test et vraie passation** : le même comportement dans les deux.
+
+**Fait et validé le 6/11/2026** (deux passations et le mode test, mainteneur ; fichiers relus) : les 4 points sont conformes, message
+lisible et centré, gris correct. Fichiers de 0 octet (`test.mp4`, `test.png`) bien signalés. Bouton fermé : 6,0 s au regard et 6,2 s à
+la souris sur une consigne à image, sans déclenchement (il en faut 4 : 1 s de délai et 3 s de fixation). Sur les consignes à vidéo, le
+plus long séjour réel est de 3,9 s : même code, couvert par les tests avec une souris simulée. Commité et poussé le 6/11.
+
+**Puis la CI** (run `42058853255`, sur `629c2f3b0`) : `build`, `package-linux`, `package-windows`, `all-games` et `test (26)` ont
+réussi, donc FFmpeg se charge sous Linux. À revoir au prochain push :
+- `test (25)` : échec sur l'installation apt (expirée après 15 min, tests non lancés).
+- `package-macos` : annulé après 15 min sans étape pour la 3ᵉ fois (`965487856`, `6a1c5e3a1`, `629c2f3b0`), alors que sa limite est de
+  30 min. Hypothèse : pas de machine `macos-latest` attribuée. Si cela recommence, essayer par exemple `macos-15`. FFmpeg sous macOS
+  reste donc non vérifié.
+
+**Puis reprise de la revue, sur Gaze Race**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme toujours : état
 des lieux, **demander d'abord la règle voulue**, propositions validées, puis le travail ; un commit par jeu, sur demande. Pas de
 nouveau `.exe` sans demande.
-
-**À vérifier à la reprise, la CI des commits du 5/11** :
-- FFmpeg (JavaCV) se charge-t-il sous Linux et macOS dans les tests ? C'est la première fois qu'il tourne ailleurs que sous Windows.
-- `package-macos` est-il encore annulé après 15 min sans étape (`965487856`, puis `6a1c5e3a1`) ? Si oui, chercher pourquoi.
 
 **Nouveautés à connaître pour la revue des jeux** :
 - Plus d'engrenage : le menu d'une partie s'ouvre avec Échap (`GameMenuPanel`). Les coins gardés libres pour l'engrenage (Où est-ce,
@@ -27,7 +45,6 @@ nouveau `.exe` sans demande.
 
 **Restent ouverts** :
 - La tablette : issue [#1738](https://github.com/GazePlay/GazePlay/issues/1738), à faire quand un appareil sera disponible.
-- Le message d'un média illisible sur la carte de fin d'une vraie passation n'a pas été vu en vrai (test automatique seulement).
 - Le lancement réel des vidéos par FFmpeg sur les plateformes autres que Windows.
 - Les sons des évaluations restent sur JavaFX Media : `.m4a` et `.aac` illisibles sur ce PC. On ne change rien sur le site (décision
   du mainteneur) ; le message `EvalUnsupportedMedia` les annonce encore comme lisibles.
@@ -36,7 +53,7 @@ nouveau `.exe` sans demande.
 **À faire après la revue des jeux** : refonte graphique du menu des jeux et de l'écran des statistiques, mémoire des tests, retrait
 des limiteurs, tests instables, inventaire des sons, notes de version 2.0 (détail dans les sections suivantes).
 
-## AVANCEMENT DU JEUDI 5/11/2026 : retours sur GazePlay Learning Eval (commité et poussé)
+## AVANCEMENT DU JEUDI 5/11/2026 : retours sur GazePlay Learning Eval (commité et poussé, sauf la fin du retour 4)
 
 **Retour 1 : l'engrenage cache des images** quand une évaluation en affiche beaucoup. Décisions du mainteneur : on retire
 l'engrenage de **tous les jeux et des évaluations** ; le menu s'ouvre et se ferme avec **Échap** ; aucun message à l'écran,
@@ -53,8 +70,11 @@ fermeture à la souris, reprise au regard, statistiques et carte de chaleur corr
 **Retour 4 : médias illisibles.** Message à l'examinateur et lecture des vidéos par FFmpeg (`EvalVideoPlayer`) essayés et validés
 par le mainteneur au Tobii le 5/11/2026 (passation de 14:03 : 6 vidéos, aucune `erreur_media`, image centrée et fluide, pause,
 son calé, coupure nette ; message vu en mode test) ; `GazePlayEval.md` sections 20 et 21. Décision du
-mainteneur : on ne change rien sur le site. La relance automatique d'une vidéo n'est plus nécessaire pour l'instant. Reste à
-voir : le message sur la carte de fin d'une vraie passation.
+mainteneur : on ne change rien sur le site. La relance automatique d'une vidéo n'est plus nécessaire pour l'instant. Même comportement en vraie passation et en mode test (décisions du mainteneur) :
+vidéo, son ou image d'une consigne, avec un temps de passage, message puis écran suivant après 5 s même si ce temps est plus court, bouton « Commencer » désactivé et grisé avec ou sans temps ; sans temps, le message reste et donne
+la touche Espace ; sur une grille, message 3 s et elle continue ; pas de message sur la carte de fin. **Cette règle n'est pas encore
+commitée, et ses derniers ajouts sont à essayer** (voir la reprise ci-dessus). Sous Windows, JavaFX Media peut garder ouvert un son
+illisible après `dispose()` : sans effet sur une passation, le nettoyage de `GazeplayEvalTest` réessaie donc pendant 10 s au plus.
 
 **Retour 5 : carte de chaleur et pointeur** (`GazePlayEval.md` section 22). Avec l'option de cacher les images, le fond de la
 carte est pris à l'affichage de la grille. Pointeur de la souris sur l'écran des parties, jeux et évaluations (`GameCursor`) :

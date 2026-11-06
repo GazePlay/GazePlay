@@ -23,7 +23,7 @@ Un fichier texte, qui décrit la passation. À lire pour savoir qui a passé quo
 - Écran, Essai : le numéro de l'écran, et le numéro de l'essai si la grille a été recommencée.
 - Type : instruction (consigne), transition (croix) ou stimuli (grille d'images).
 - Début, Fin, Durée (ms) : quand l'écran a commencé et fini, et combien de temps il a duré.
-- Fin de l'écran : validé, temps écoulé, délai écoulé, fixation, passé par l'examinateur ou interrompu.
+- Fin de l'écran : validé, temps écoulé, délai écoulé, fixation, passé par l'examinateur, média illisible (vidéo, son ou image d'une consigne avec un temps de passage, impossible à lire : un message s'affiche 5 secondes, même si le temps de passage est plus court, puis l'écran suivant arrive) ou interrompu.
 - Les colonnes suivantes ne concernent que les grilles.
 - Lignes, Colonnes : la taille de la grille.
 - Règle : Tout (toute sélection compte) ou BonneReponse (seules les bonnes réponses comptent).

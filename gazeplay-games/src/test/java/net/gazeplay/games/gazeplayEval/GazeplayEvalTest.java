@@ -33,6 +33,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
@@ -584,29 +587,24 @@ class GazeplayEvalTest {
         Platform.runLater(eval::launch);
 
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS,
-            () -> find(Text.class).stream().anyMatch(text -> text.getText().equals("Illisible : illisible.png")));
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().startsWith("Illisible : illisible.png")));
         Platform.runLater(eval::dispose);
         WaitForAsyncUtils.waitForFxEvents();
     }
 
     /**
-     * In a real session the participant sees nothing during the screens: the examiner is told on the card of the end,
-     * shown longer to be read.
+     * The same message in a session as in a test, and the error in the results (decision of the maintainer of 5/11/2026).
      */
     @Test
-    void shouldTellAtTheEndOfASessionThatAMediaCouldNotBeRead() throws Exception {
+    void shouldTellInASessionThatAnImageCannotBeRead() throws Exception {
         createEvaluationWithAnUnreadableImage();
-        Translator translator = gameContext.getTranslator();
-        when(translator.translate("EvalImageNotPlayable")).thenReturn("Illisible : {0}");
-        when(translator.translate("EvalOneMediaNotPlayable")).thenReturn("Non lu : {0}");
+        when(gameContext.getTranslator().translate("EvalImageNotPlayable")).thenReturn("Illisible : {0}");
         GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
 
         Platform.runLater(eval::launch);
 
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> find(Text.class).stream()
-            .anyMatch(text -> text.getText().contains("Non lu : illisible.png")));
-        assertTrue(find(Text.class).stream().noneMatch(text -> text.getText().contains("Illisible")));
-        verify(gameContext, after(3000).never()).showRoundStats(stats, eval);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS,
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().startsWith("Illisible : illisible.png")));
         verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
         Path session = singleSession();
         assertTrue(Files.readString(session.resolve("evenements.csv"), StandardCharsets.UTF_8).contains(";erreur_media;"));
@@ -678,6 +676,224 @@ class GazeplayEvalTest {
         assertEquals(45, view.getLayoutY(), 1);
         Platform.runLater(eval::dispose);
         WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * In a real session, a video that cannot be read shows the same message as in a test, long enough to be read, then goes
+     * to the next screen (maintainer's request of 5/11/2026), far before the 60 s of its screen.
+     */
+    @Test
+    void shouldTellThenSkipAVideoThatCannotBeReadInASession() throws Exception {
+        createEvaluationWithAnUnreadableVideo();
+        when(gameContext.getTranslator().translate("EvalVideoNotPlayable")).thenReturn("Illisible : {0}");
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS,
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().startsWith("Illisible : illisible.mp4")));
+        verify(gameContext, timeout(30_000)).showRoundStats(stats, eval);
+        Path session = singleSession();
+        List<String> results = Files.readAllLines(session.resolve("resultats.csv"), StandardCharsets.UTF_8);
+        assertTrue(results.get(1).contains(";média illisible;"), results.get(1));
+        // Time to read the message, and far from the 60 s of the screen
+        long length = Long.parseLong(results.get(1).split(";")[5]);
+        assertTrue(length >= 4900 && length < 30_000, results.get(1));
+        assertTrue(Files.readString(session.resolve("evenements.csv"), StandardCharsets.UTF_8).contains(";erreur_media;"));
+        assertTrue(Files.readString(session.resolve("session.json")).contains("\"terminee\": true"));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * A test of the evaluation does the same as a session: the message, then the next screen.
+     */
+    @Test
+    void shouldTellThenSkipAVideoThatCannotBeReadInATest() throws Exception {
+        createEvaluationWithAnUnreadableVideo();
+        when(gameContext.getTranslator().translate("EvalVideoNotPlayable")).thenReturn("Illisible : {0}");
+        GazeplayEval eval = GazeplayEval.test(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS,
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().startsWith("Illisible : illisible.mp4")));
+        verify(gameContext, timeout(30_000)).showRoundStats(stats, eval);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * The sound of an instruction without delay: nothing forces the next screen, the message gives the key to go on. The same
+     * in both modes (decision of the maintainer of 5/11/2026).
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldGiveTheKeyWhenASoundCannotBeReadWithoutDelay(boolean test) throws Exception {
+        createEvaluationWithAnUnreadableSound(false);
+        when(gameContext.getTranslator().translate("EvalSoundNotPlayable")).thenReturn("Illisible : {0}");
+        GazeplayEvalGameVariant variant = new GazeplayEvalGameVariant(evaluationName);
+        GazeplayEval eval = test ? GazeplayEval.test(gameContext, variant, stats)
+            : new GazeplayEval(gameContext, variant, stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> find(Text.class).stream()
+            .anyMatch(text -> text.getText().equals("Illisible : illisible.mp3 EvalMediaPressSpace")));
+        verify(gameContext, after(4000).never()).showRoundStats(stats, eval);
+        assertTrue(find(Text.class).stream().anyMatch(text -> text.getText().contains("EvalMediaPressSpace")),
+            "the message stays");
+
+        Platform.runLater(() -> key(KeyCode.SPACE));
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * With a delay: the message says that the evaluation goes on, and the next screen comes after it has been read.
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldGoOnWhenASoundCannotBeReadWithADelay(boolean test) throws Exception {
+        createEvaluationWithAnUnreadableSound(true);
+        when(gameContext.getTranslator().translate("EvalSoundNotPlayable")).thenReturn("Illisible : {0}");
+        GazeplayEvalGameVariant variant = new GazeplayEvalGameVariant(evaluationName);
+        GazeplayEval eval = test ? GazeplayEval.test(gameContext, variant, stats)
+            : new GazeplayEval(gameContext, variant, stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> find(Text.class).stream()
+            .anyMatch(text -> text.getText().equals("Illisible : illisible.mp3 EvalMediaContinuesAuto")));
+        verify(gameContext, timeout(30_000)).showRoundStats(stats, eval);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * A delay shorter than the message does not cut it, and the start button cannot skip it (decision of the maintainer of
+     * 5/11/2026): the screen ends by the message, 5 s after it, even with the button looked at.
+     */
+    @ParameterizedTest
+    @CsvSource({"Video, videos, illisible.mp4, EvalVideoNotPlayable", "Image, images, illisible.png, EvalImageNotPlayable"})
+    void shouldKeepTheMessageOfAnUnreadableMediaForItsWholeLength(String type, String folder, String file, String message)
+        throws Exception {
+        createEvaluationWithAStartButton("true", type, folder, file);
+        when(gameContext.getTranslator().translate(message)).thenReturn("Illisible : {0}");
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS,
+            () -> find(Text.class).stream().anyMatch(text -> text.getText().startsWith("Illisible : " + file)));
+        WaitForAsyncUtils.waitForFxEvents();
+        lookAtTheRectangles();
+        verify(gameContext, timeout(30_000)).showRoundStats(stats, eval);
+        List<String> results = Files.readAllLines(singleSession().resolve("resultats.csv"), StandardCharsets.UTF_8);
+        assertTrue(results.get(1).contains(";média illisible;"), results.get(1));
+        long length = Long.parseLong(results.get(1).split(";")[5]);
+        assertTrue(length >= 4900, results.get(1));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * Without delay, the start button does not work either, in both modes: only the key given by the message goes on.
+     */
+    @ParameterizedTest
+    @CsvSource({
+        "true, Video, videos, illisible.mp4, EvalVideoNotPlayable",
+        "false, Video, videos, illisible.mp4, EvalVideoNotPlayable",
+        "true, Image, images, illisible.png, EvalImageNotPlayable",
+        "false, Image, images, illisible.png, EvalImageNotPlayable"
+    })
+    void shouldCloseTheStartButtonWhenTheMediaCannotBeRead(boolean test, String type, String folder, String file, String message)
+        throws Exception {
+        createEvaluationWithAStartButton("false", type, folder, file);
+        when(gameContext.getTranslator().translate(message)).thenReturn("Illisible : {0}");
+        GazeplayEvalGameVariant variant = new GazeplayEvalGameVariant(evaluationName);
+        GazeplayEval eval = test ? GazeplayEval.test(gameContext, variant, stats)
+            : new GazeplayEval(gameContext, variant, stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> find(Text.class).stream()
+            .anyMatch(text -> text.getText().equals("Illisible : " + file + " EvalMediaPressSpace")));
+        WaitForAsyncUtils.waitForFxEvents();
+        lookAtTheRectangles();
+        verify(gameContext, after(3000).never()).showRoundStats(stats, eval);
+
+        Platform.runLater(() -> key(KeyCode.SPACE));
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * Without any error, the start button works. It also shows that looking at the rectangles does select the button, in the
+     * tests above.
+     */
+    @Test
+    void shouldLeaveTheStartButtonWorkingWithoutAnyError() throws Exception {
+        createEvaluation("[]", """
+            [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": false, "Combien de temps": 1,
+              "Ajouter un media": false,
+              "Mettre un temps de fixation": true, "Combien de temps de fixation": 0.2}]
+            """);
+        GazeplayEval eval = GazeplayEval.test(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> !find(Rectangle.class).isEmpty());
+        WaitForAsyncUtils.waitForFxEvents();
+        lookAtTheRectangles();
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    private void lookAtTheRectangles() {
+        Platform.runLater(() -> find(Rectangle.class).forEach(rectangle -> rectangle.fireEvent(mouse(MouseEvent.MOUSE_ENTERED))));
+    }
+
+    /**
+     * An instruction with a start button of 0.2 s, and a media that cannot be read.
+     *
+     * @param withDelay "true": a delay of 1 s, shorter than the message
+     */
+    private void createEvaluationWithAStartButton(String withDelay, String mediaType, String folder, String file)
+        throws IOException {
+        createEvaluation("[]", """
+            [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": %s, "Combien de temps": 1,
+              "Ajouter un media": true, "Type de media": "%s", "Nom du fichier": "%s",
+              "Mettre un temps de fixation": true, "Combien de temps de fixation": 0.2}]
+            """.formatted(withDelay, mediaType, file));
+        Path media = EvalLibrary.evaluationFolder(evaluationName).resolve(folder);
+        Files.createDirectories(media);
+        Files.writeString(media.resolve(file), "not readable");
+    }
+
+    private void createEvaluationWithAnUnreadableSound(boolean withDelay) throws IOException {
+        createEvaluation("[]", """
+            [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": %s, "Combien de temps": 60,
+              "Ajouter un media": true, "Type de media": "Son", "Nom du fichier": "illisible.mp3",
+              "Mettre un temps de fixation": false, "Combien de temps de fixation": 0}]
+            """.formatted(withDelay));
+        Path audio = EvalLibrary.evaluationFolder(evaluationName).resolve("audio");
+        Files.createDirectories(audio);
+        Files.writeString(audio.resolve("illisible.mp3"), "not a sound");
+    }
+
+    private void createEvaluationWithAnUnreadableVideo() throws IOException {
+        createEvaluation("[]", """
+            [{"Type": "instruction", "Mettre un temps avant passage à l'écran suivant": true, "Combien de temps": 60,
+              "Ajouter un media": true, "Type de media": "Video", "Nom du fichier": "illisible.mp4",
+              "Mettre un temps de fixation": false, "Combien de temps de fixation": 0}]
+            """);
+        Path videos = EvalLibrary.evaluationFolder(evaluationName).resolve("videos");
+        Files.createDirectories(videos);
+        Files.writeString(videos.resolve("illisible.mp4"), "not a video");
     }
 
     /**
@@ -823,7 +1039,27 @@ class GazeplayEvalTest {
         }
         try (Stream<Path> paths = Files.walk(folder)) {
             for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
+                deleteWhenFree(path);
+            }
+        }
+    }
+
+    /**
+     * Under Windows, JavaFX Media can keep a file it failed to read open for a while, even after the dispose of its player.
+     * It does not matter in a session (its JVM ends with it), only here, where the file is deleted at once.
+     */
+    private static void deleteWhenFree(Path path) throws IOException {
+        long deadline = System.currentTimeMillis() + 10_000;
+        while (true) {
+            try {
                 Files.delete(path);
+                return;
+            } catch (java.nio.file.FileSystemException e) {
+                if (System.currentTimeMillis() > deadline) {
+                    throw e;
+                }
+                System.gc();
+                WaitForAsyncUtils.sleep(200, TimeUnit.MILLISECONDS);
             }
         }
     }

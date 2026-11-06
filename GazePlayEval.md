@@ -1016,10 +1016,18 @@ lancement, avant le formulaire.
 
 **Retour** : certaines vidéos restaient figées. Aucune trace à l'écran, seulement `erreur_media` dans `evenements.csv`.
 
-**Message à l'examinateur (décision du mainteneur)** : dans « Tester une évaluation », un message au milieu de l'écran
-(`EvalVideoNotPlayable`, `EvalSoundNotPlayable`, `EvalImageNotPlayable`) ; dans une vraie passation, rien pendant les
-écrans, pour ne rien montrer au participant, et la liste sur la carte de fin, affichée 6 s au lieu de 2. Une passation
-interrompue n'a pas de carte de fin : l'erreur reste dans `evenements.csv`. Format de résultats inchangé.
+**Message à l'examinateur (décision du mainteneur)** : **le même comportement dans une vraie passation et dans « Tester une
+évaluation »**. Un message au milieu de l'écran (`EvalVideoNotPlayable`, `EvalSoundNotPlayable`, `EvalImageNotPlayable`). Dans une
+vraie passation, l'erreur est aussi dans `evenements.csv`. Pas de message sur la carte de fin (d'abord essayé, retiré le 5/11/2026).
+
+**Vidéo, son ou image d'une consigne illisible** (décisions du mainteneur, mêmes règles dans les deux modes) :
+
+- **Avec un temps de passage** : le message ajoute « L'évaluation continue automatiquement. » et l'écran passe au suivant après 5 s, même si le temps de passage réglé est plus court (le message doit pouvoir être lu). Avec ou sans temps de passage, le bouton « Commencer » à fixer de la consigne est désactivé et grisé.
+- **Sans temps de passage** : rien n'est forcé ; le message reste et ajoute « Appuyez sur la touche Espace pour continuer. ».
+
+Sur une grille, un son illisible (de l'écran ou d'une case) et une image illisible affichent le message 3 s, et la grille continue,
+pour ne pas faire perdre la question au participant. Quand un écran passe ainsi au suivant, « Fin de l'écran » prend alors une nouvelle valeur, `média illisible`. `formatVersion` reste à 1 : la colonne
+ne change pas, et la partie Eval n'est pas encore sortie.
 
 **Essais de lecture** (outil à part, sans fenêtre, son coupé, Windows 11 Famille, JavaFX 25.0.4 ; une lecture de 4 s par
 fichier ; « passe » veut dire que le temps de lecture avance, sans contrôle de l'image ni du son) :

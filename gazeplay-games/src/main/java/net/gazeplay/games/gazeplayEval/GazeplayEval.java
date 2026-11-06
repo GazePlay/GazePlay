@@ -79,11 +79,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -119,6 +117,18 @@ public class GazeplayEval implements GameLifeCycle {
 
     private static final int MAX_NAME_IN_SESSION_FOLDER = 40;
 
+    /** How long the message about a media that cannot be read stays, when its screen goes on. */
+    private static final int UNREADABLE_MEDIA_MESSAGE_MILLIS = 3000;
+
+    /** How long the message stays before the next screen, when the screen had a delay and its content cannot be read. */
+    private static final int UNREADABLE_MEDIA_NEXT_SCREEN_MILLIS = 5000;
+
+    /** The start button of an instruction whose media cannot be read: it does nothing any more. */
+    private static final double DISABLED_BUTTON_OPACITY = 0.35;
+
+    /** The kind, in the events, of the sound of an instruction: the content of its screen. */
+    private static final String INSTRUCTION_SOUND = "son";
+
     /** Columns of the heatmaps, as those of GazePlay (Stats.HEAT_MAP_COLUMNS, format version 4). */
     private static final int HEAT_MAP_COLUMNS = 400;
 
@@ -145,8 +155,6 @@ public class GazeplayEval implements GameLifeCycle {
     private EvalSessionRecorder recorder;
     /** Tells the current launch from one left while it was waiting for FFmpeg. */
     private int launches;
-    /** The media of the session that could not be read, once each. */
-    private final Set<String> unreadableMedia = new LinkedHashSet<>();
     /** Where the next message about a media goes on the screen; 0 for the first one. */
     private double mediaErrorBannerTop;
     private Path sessionFolder;
@@ -182,6 +190,12 @@ public class GazeplayEval implements GameLifeCycle {
     private final List<Animation> pausedTimers = new ArrayList<>();
     private final List<MediaPlayer> pausedPlayers = new ArrayList<>();
     private final List<EvalTarget> deactivatedTargets = new ArrayList<>();
+
+    /** The visible parts of the start button of the current instruction. */
+    private final List<Node> instructionButtonNodes = new ArrayList<>();
+
+    /** The video, the sound or the image of the current instruction cannot be read: its message decides of the end of the screen. */
+    private boolean instructionContentUnreadable;
 
     // Recording of the gaze and the mouse, and keys of the examiner
     private Parent sceneRoot;
@@ -256,7 +270,6 @@ public class GazeplayEval implements GameLifeCycle {
         // A replay is a new session: leaving it before its start must not write again in the folder of the previous one
         recorder = null;
         sessionFolder = null;
-        unreadableMedia.clear();
         if (stats instanceof GazeplayEvalGameStats evalStats) {
             evalStats.endSession();
         }
@@ -512,10 +525,8 @@ public class GazeplayEval implements GameLifeCycle {
         phase = Phase.END;
         finishSession(true);
         // In a test, the game then ends without statistics screen (nothing saved: GameContext.showRoundStats)
-        boolean problem = !test && !unreadableMedia.isEmpty();
-        gameContext.getChildren().add(centeredCard(endOfSessionMessage(), unit() * (problem ? 3 : 5)));
-        // Long enough to read the list of the media that could not be read
-        PauseTransition pause = new PauseTransition(Duration.seconds(problem ? 6 : 2));
+        gameContext.getChildren().add(centeredCard(translate(test ? "EvalTestFinished" : "EvalFinished"), unit() * 5));
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
         pause.setOnFinished(e -> gameContext.showRoundStats(stats, this));
         pause.play();
     }
@@ -541,7 +552,11 @@ public class GazeplayEval implements GameLifeCycle {
         }
         if (screen.autoAdvanceSeconds() != null) {
             EndReason reason = screen instanceof EvalScreen.Stimuli ? EndReason.TIME_ELAPSED : EndReason.DELAY_ELAPSED;
-            schedule(screen.autoAdvanceSeconds() * 1000, token, () -> endScreen(reason, token));
+            schedule(screen.autoAdvanceSeconds() * 1000, token, () -> {
+                if (!instructionContentUnreadable) {
+                    endScreen(reason, token);
+                }
+            });
         }
         activateAfterDelay(token);
     }
@@ -617,7 +632,7 @@ public class GazeplayEval implements GameLifeCycle {
                     gameContext.getChildren().add(text);
                 }
                 case IMAGE -> {
-                    ImageView view = imageView(MediaFolder.IMAGES, instruction.content(), mediaWidth, mediaHeight);
+                    ImageView view = imageView(MediaFolder.IMAGES, instruction.content(), mediaWidth, mediaHeight, true);
                     if (view != null) {
                         view.setLayoutX((dimension.getWidth() - view.getImage().getWidth()) / 2);
                         view.setLayoutY(mediaTop + (mediaHeight - view.getImage().getHeight()) / 2);
@@ -648,7 +663,7 @@ public class GazeplayEval implements GameLifeCycle {
                     speaker.setLayoutX((dimension.getWidth() - iconSize) / 2);
                     speaker.setLayoutY(mediaTop + (mediaHeight - iconSize) / 2);
                     gameContext.getChildren().add(speaker);
-                    replaySound = () -> play(MediaFolder.AUDIO, instruction.content(), "son", token, null);
+                    replaySound = () -> play(MediaFolder.AUDIO, instruction.content(), INSTRUCTION_SOUND, token, null);
                     replaySound.run();
                 }
             }
@@ -662,6 +677,8 @@ public class GazeplayEval implements GameLifeCycle {
             Rectangle button = roundedButton(x, y, width, height);
             Group label = buttonLabel("play_arrow_fill1", translate("EvalStartButton"), x, y, width, height);
             gameContext.getChildren().addAll(button, label);
+            instructionButtonNodes.add(button);
+            instructionButtonNodes.add(label);
             addTarget(button, "bouton", instruction.startButtonFixationSeconds() * 1000,
                 (target, source) -> {
                     recorder.event("fixation_validee", source, target.getName(), null, null, "");
@@ -699,7 +716,7 @@ public class GazeplayEval implements GameLifeCycle {
 
             List<Node> visuals = new ArrayList<>();
             Rectangle area = null;
-            ImageView view = cell.image() == null ? null : imageView(MediaFolder.IMAGES, cell.image(), width, height);
+            ImageView view = cell.image() == null ? null : imageView(MediaFolder.IMAGES, cell.image(), width, height, false);
             if (view != null) {
                 double imageWidth = view.getImage().getWidth();
                 double imageHeight = view.getImage().getHeight();
@@ -1007,7 +1024,7 @@ public class GazeplayEval implements GameLifeCycle {
             player.setOnError(() -> {
                 recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null,
                     String.valueOf(player.getError()));
-                reportUnreadableMedia(folder, fileName, token);
+                reportUnreadableMedia(folder, fileName, token, INSTRUCTION_SOUND.equals(kind));
                 ended.run();
             });
             recorder.event("debut_" + kind, EvalSessionRecorder.SYSTEM, fileName, null, null, "");
@@ -1020,7 +1037,7 @@ public class GazeplayEval implements GameLifeCycle {
         } catch (RuntimeException e) {
             log.warn("Cannot play {}", fileName, e);
             recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null, e.toString());
-            reportUnreadableMedia(folder, fileName, token);
+            reportUnreadableMedia(folder, fileName, token, INSTRUCTION_SOUND.equals(kind));
             Platform.runLater(ended);
             return null;
         }
@@ -1034,7 +1051,7 @@ public class GazeplayEval implements GameLifeCycle {
             () -> recorder.event("fin_video", EvalSessionRecorder.SYSTEM, fileName, null, null, ""),
             error -> {
                 recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null, error);
-                reportUnreadableMedia(MediaFolder.VIDEOS, fileName, token);
+                reportUnreadableMedia(MediaFolder.VIDEOS, fileName, token, true);
             });
         videos.add(video);
         recorder.event("debut_video", EvalSessionRecorder.SYSTEM, fileName, null, null, "");
@@ -1046,33 +1063,55 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     /**
-     * Tells the examiner about a media that cannot be read (decision of the maintainer, 5/11/2026): at once in a test of
-     * the evaluation, whose purpose is to find such problems; at the end of a real session, so that the participant never
-     * sees it.
+     * Says that a media cannot be read, in the same way in a test and in a session (decisions of the maintainer, 5/11/2026).
+     * The event is in the results too, when there are results.
+     * <ul>
+     * <li>The video, the sound or the image of an instruction with a delay: the message says that the evaluation goes on, and the next
+     * screen comes after it has been read, whatever the delay: an empty screen would look like a bug;</li>
+     * <li>the same without delay: nothing forces the next screen, and the message, which stays, gives the key to go on;</li>
+     * <li>in both cases, the start button of the instruction is closed and greyed, so that the message is read;</li>
+     * <li>a sound or an image of a grid: the message for a few seconds, and the screen goes on.</li>
+     * </ul>
+     *
+     * @param contentOfTheScreen whether the media is the video, the sound or the image of an instruction
      */
-    private void reportUnreadableMedia(MediaFolder folder, String fileName, int token) {
-        unreadableMedia.add(fileName);
-        if (!test) {
-            return;
-        }
-        String message = switch (folder) {
+    private void reportUnreadableMedia(MediaFolder folder, String fileName, int token, boolean contentOfTheScreen) {
+        String media = switch (folder) {
             case VIDEOS -> translate("EvalVideoNotPlayable");
             case AUDIO -> translate("EvalSoundNotPlayable");
             default -> translate("EvalImageNotPlayable");
         };
+        boolean withDelay = definition.screens().get(screenIndex) instanceof EvalScreen.Instruction instruction
+            && instruction.autoAdvanceSeconds() != null;
+        String next = !contentOfTheScreen ? translate("EvalMediaScreenContinues")
+            : withDelay ? translate("EvalMediaContinuesAuto") : translate("EvalMediaPressSpace");
+        String message = media.replace("{0}", fileName) + " " + next;
         // Later: the nodes of the screen, being built, must not cover the message
         Platform.runLater(() -> {
-            if (token == screenToken) {
-                showMediaErrorBanner(message.replace("{0}", fileName));
+            if (token != screenToken) {
+                return;
+            }
+            Group banner = showMediaErrorBanner(message);
+            if (!contentOfTheScreen) {
+                schedule(UNREADABLE_MEDIA_MESSAGE_MILLIS, token, () -> gameContext.getChildren().remove(banner));
+                return;
+            }
+            instructionContentUnreadable = true;
+            targets.forEach(EvalTarget::close);
+            instructionButtonNodes.forEach(node -> node.setOpacity(DISABLED_BUTTON_OPACITY));
+            if (withDelay) {
+                schedule(UNREADABLE_MEDIA_NEXT_SCREEN_MILLIS, token, () -> endScreen(EndReason.UNREADABLE_MEDIA, token));
             }
         });
     }
 
     /**
-     * Shows a message in the middle of the screen, under the previous ones of the screen, until the end of the screen.
-     * It takes neither the mouse nor the gaze.
+     * Shows a message in the middle of the screen, under the previous ones of the screen. It takes neither the mouse nor the
+     * gaze.
+     *
+     * @return the message, to be taken away
      */
-    private void showMediaErrorBanner(String message) {
+    private Group showMediaErrorBanner(String message) {
         Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Group banner = GameStyle.card(message, unit() * 3, dimension.getWidth() * 0.8);
         Bounds bounds = banner.getLayoutBounds();
@@ -1084,34 +1123,22 @@ public class GazeplayEval implements GameLifeCycle {
         banner.setMouseTransparent(true);
         mediaErrorBannerTop += bounds.getHeight() + unit();
         gameContext.getChildren().add(banner);
+        return banner;
     }
 
-    /**
-     * @return the message of the end of a session, with the media that could not be read
-     */
-    private String endOfSessionMessage() {
-        String finished = translate(test ? "EvalTestFinished" : "EvalFinished");
-        if (test || unreadableMedia.isEmpty()) {
-            return finished;
-        }
-        String files = String.join(", ", unreadableMedia);
-        String message = unreadableMedia.size() == 1
-            ? translate("EvalOneMediaNotPlayable").replace("{0}", files)
-            : translate("EvalMediaNotPlayable").replace("{0}", String.valueOf(unreadableMedia.size())).replace("{1}", files);
-        return finished + "\n\n" + message;
-    }
 
     /**
      * @return the image of the evaluation reduced to fit in the size, null when it cannot be read
      */
-    private ImageView imageView(MediaFolder folder, String fileName, double maxWidth, double maxHeight) {
+    private ImageView imageView(MediaFolder folder, String fileName, double maxWidth, double maxHeight,
+                                boolean contentOfTheScreen) {
         Image image = new Image(definition.media(folder, fileName).toUri().toString(), maxWidth, maxHeight, true,
             true, false);
         if (image.isError()) {
             log.warn("Cannot read the image {}", fileName, image.getException());
             recorder.event("erreur_media", EvalSessionRecorder.SYSTEM, fileName, null, null,
                 String.valueOf(image.getException()));
-            reportUnreadableMedia(folder, fileName, screenToken);
+            reportUnreadableMedia(folder, fileName, screenToken, contentOfTheScreen);
             return null;
         }
         return new ImageView(image);
@@ -1236,6 +1263,8 @@ public class GazeplayEval implements GameLifeCycle {
         videos.forEach(EvalVideoPlayer::dispose);
         videos.clear();
         deactivatedTargets.clear();
+        instructionButtonNodes.clear();
+        instructionContentUnreadable = false;
         replaySound = null;
         heatmapBackground = null;
         mediaErrorBannerTop = 0;

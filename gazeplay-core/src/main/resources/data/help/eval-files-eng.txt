@@ -23,7 +23,7 @@ To open in a spreadsheet: it is the main file to analyze the answers. The format
 - Écran, Essai: the number of the screen, and the number of the attempt if the grid was restarted.
 - Type: instruction, transition (cross) or stimuli (grid of images).
 - Début, Fin, Durée (ms): when the screen started and ended, and how long it lasted.
-- Fin de l'écran: validé (validated), temps écoulé (time over), délai écoulé (delay over), fixation, passé par l'examinateur (skipped by the examiner) or interrompu (interrupted).
+- Fin de l'écran: validé (validated), temps écoulé (time over), délai écoulé (delay over), fixation, passé par l'examinateur (skipped by the examiner), média illisible (a video, the sound or the image of an instruction with a delay, that cannot be read: a message shows for 5 seconds, even if the delay is shorter, then the next screen comes) or interrompu (interrupted).
 - The next columns only concern the grids.
 - Lignes, Colonnes: the size of the grid.
 - Règle: Tout (any selection counts) or BonneReponse (only the right answers count).

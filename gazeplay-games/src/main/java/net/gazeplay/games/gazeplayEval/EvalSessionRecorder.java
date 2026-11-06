@@ -45,6 +45,8 @@ public final class EvalSessionRecorder {
         FIXATION("fixation"),
         /** The examiner went to the next screen (space key). */
         EXAMINER("passé par l'examinateur"),
+        /** The video or the sound of the screen cannot be read: skipped after a message. */
+        UNREADABLE_MEDIA("média illisible"),
         /** The session was interrupted (game left). */
         INTERRUPTED("interrompu");
 
