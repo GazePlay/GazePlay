@@ -28,7 +28,6 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import mslinks.ShellLink;
 import net.gazeplay.AppMode;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
@@ -57,7 +56,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
@@ -573,8 +571,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         generateButton.setOpacity(0.5);
         MenuButton variantBox = new MenuButton(getGazePlay().getTranslator().translate("SelectVariant"));
 
-        String userOption = configuration.getUserName().length() == 0 ? "--default-user" : "--user " + configuration.getUserName();
-
         GamesLocator gamesLocator = getGazePlay().getGamesLocator();
         if (gamesLocator != null) {
             // Shortcuts to the games only (decision of the maintainer: no shortcut to an evaluation)
@@ -617,18 +613,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         generateButton.setOnAction(e3 -> {
             if (currentSelectedGame != null) {
-                String gameOption = "--game \"" + currentSelectedGame.getGameSummary().getNameCode() + "\"";
-                String variantOption = currentSelectedVariant == null ? "" : "--variant \"" + currentSelectedVariant.toString() + "\"";
-                Path currentRelativePath = Paths.get("");
-                String currentBinPath = currentRelativePath.toAbsolutePath().toString();
-                ShellLink slwithvariant = ShellLink.createLink(currentBinPath + "\\gazeplay-windows.bat")
-                    .setWorkingDir(currentBinPath)
-                    .setIconLocation(currentBinPath + "\\gazeplayicon.ico")
-                    .setCMDArgs(userOption + " " + gameOption + " " + variantOption);
-                slwithvariant.getHeader().setIconIndex(0);
-
+                String label = gameBox.getText() + (currentSelectedVariant == null ? "" : " - " + variantBox.getText());
                 try {
-                    slwithvariant.saveTo(configuration.getShortcutDir() + "\\" + gameBox.getText() + (currentSelectedVariant == null ? "" : (" - " + variantBox.getText())) + ".lnk");
+                    GameShortcut.create(new File(configuration.getShortcutDir()), label, configuration.getUserName(),
+                        currentSelectedGame.getGameSummary().getNameCode(), currentSelectedVariant);
                 } catch (IOException e) {
                     log.warn("Cannot create the shortcut of the game", e);
                 }
