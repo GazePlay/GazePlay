@@ -22,7 +22,6 @@ import net.gazeplay.ui.menus.HelpDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -144,10 +143,21 @@ public class GameMenuController {
         displayLoadingContextThread.start();
 
         try {
-            builder.inheritIO().start();
+            shareOutput(builder, GazePlayLauncher.runsWithoutConsole()).start();
         } catch (Exception e) {
             log.error("Cannot start the game process", e);
         }
+    }
+
+    /**
+     * The game writes in the terminal of the menu. Without a terminal its output is discarded (its logs are in the log
+     * file): inherited, it could end in pipes that nobody reads, which would block the game once they are full.
+     */
+    static ProcessBuilder shareOutput(ProcessBuilder builder, boolean withoutConsole) {
+        if (withoutConsole) {
+            return builder.redirectOutput(ProcessBuilder.Redirect.DISCARD).redirectError(ProcessBuilder.Redirect.DISCARD);
+        }
+        return builder.inheritIO();
     }
 
     /**
@@ -156,10 +166,7 @@ public class GameMenuController {
      *   window (none for the full screen)
      */
     public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width) {
-        String javaHome = System.getProperty("java.home");
-        String javaBin = javaHome +
-            File.separator + "bin" +
-            File.separator + "java";
+        String javaBin = GazePlayLauncher.javaProgram();
         String classpath = System.getProperty("java.class.path");
 
         LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-Djdk.gtk.version=2"));

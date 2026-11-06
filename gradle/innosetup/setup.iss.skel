@@ -14,6 +14,10 @@
 ; 4. All BACKSLASHES must be escaped 
 ;
 
+; The options of the Java command of gazeplay-learning-windows.bat, to keep the same; in a parameter of the script, a
+; quote is written twice
+#define LaunchParameters "-cp """"{app}\\lib\\*"""" -Xms256m -Xmx1g --enable-native-access=javafx.graphics,javafx.media,ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -Dlogging.appender.console.level=OFF net.gazeplay.GazePlayLauncher"
+
 [Setup]
 ; Not "GazePlay": GazePlay Learning is installed next to a former GazePlay, which is left as it is
 AppId=GazePlayLearning
@@ -50,12 +54,13 @@ Source: "..\\${unpackedDirectory}\\dependency-license\\*"; DestDir: "{app}\\lice
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\\GazePlay Learning"; Filename: "{app}\\bin\\gazeplay-learning-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"; Flags: runminimized
+; javaw, not the launch script: no terminal at all. The script stays in bin to see the output when looking for a problem
+Name: "{group}\\GazePlay Learning"; Filename: "{app}\\lib\\jre\\bin\\javaw.exe"; Parameters: "{#LaunchParameters}"; WorkingDir: "{app}\\bin"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
 Name: "{group}\\Uninstall GazePlay Learning"; Filename: "{uninstallexe}"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
-Name: "{commondesktop}\\GazePlay Learning"; Filename: "{app}\\bin\\gazeplay-learning-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
+Name: "{commondesktop}\\GazePlay Learning"; Filename: "{app}\\lib\\jre\\bin\\javaw.exe"; Parameters: "{#LaunchParameters}"; WorkingDir: "{app}\\bin"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
 
 [Run]
-Filename: "{app}\\bin\\gazeplay-learning-windows.bat"; Description: "{cm:LaunchProgram,GazePlay Learning}"; Flags: shellexec postinstall skipifsilent
+Filename: "{app}\\lib\\jre\\bin\\javaw.exe"; Parameters: "{#LaunchParameters}"; WorkingDir: "{app}\\bin"; Description: "{cm:LaunchProgram,GazePlay Learning}"; Flags: nowait postinstall skipifsilent
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

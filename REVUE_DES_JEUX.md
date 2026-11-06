@@ -30,6 +30,9 @@ plus long séjour réel est de 3,9 s : même code, couvert par les tests avec un
 seul le clic valide ; Entrée et Échap annulent, et le clavier n'atteint pas « Quitter » (`MenuMessageDialog.confirmByClick`). Alt+F4
 reste le moyen rapide de quitter ; si la question est ouverte, il ne ferme qu'elle.
 
+**Retour du mainteneur, fait et essayé le 6/11/2026** : plus aucun terminal avec l'installeur. Les raccourcis lancent `javaw.exe`, et les
+parties aussi. Installé et validé par le mainteneur : partie lancée du menu sans terminal, jeu des bulles joué au Tobii Eye Tracker 5.
+
 **CI de `79dd9d596`** : `package-macos` a réussi, sans rien changer : les annulations précédentes ne se sont pas reproduites.
 `test (26)` : installation apt expirée, tests non lancés. Le repli du script sur le miroir principal d'Ubuntu était sans effet, les
 machines passant par `mirror+file:/etc/apt/apt-mirrors.txt` (le journal le montre sur les 3 essais) : corrigé le 6/11, à revoir la

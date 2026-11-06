@@ -386,10 +386,7 @@ public class ReplayingGameFromJson {
      *   window
      */
     public ProcessBuilder createBuilder(int height, int width) {
-        String javaHome = System.getProperty("java.home");
-        String javaBin = javaHome +
-            File.separator + "bin" +
-            File.separator + "java";
+        String javaBin = GazePlayLauncher.javaProgram();
         String classpath = System.getProperty("java.class.path");
 
         // The same JVM options as a game started from the menu (GameMenuController): the replay JVM used to start

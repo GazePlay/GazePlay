@@ -108,4 +108,20 @@ class GameMenuControllerTest {
         assertEquals(List.of("--game", "WhereIsTheShape"), command.subList(command.size() - 2, command.size()));
     }
 
+    /**
+     * Started without a terminal (shortcuts of the Windows installer), nothing is inherited: the output of the game is
+     * discarded, not left in pipes that nobody reads.
+     */
+    @Test
+    void shouldDiscardTheOutputOfTheGameWithoutTerminal() {
+        ProcessBuilder withoutConsole = GameMenuController.shareOutput(new ProcessBuilder("java"), true);
+        assertEquals(ProcessBuilder.Redirect.DISCARD, withoutConsole.redirectOutput());
+        assertEquals(ProcessBuilder.Redirect.DISCARD, withoutConsole.redirectError());
+
+        ProcessBuilder withConsole = GameMenuController.shareOutput(new ProcessBuilder("java"), false);
+        assertEquals(ProcessBuilder.Redirect.INHERIT, withConsole.redirectOutput());
+        assertEquals(ProcessBuilder.Redirect.INHERIT, withConsole.redirectError());
+        assertEquals(ProcessBuilder.Redirect.INHERIT, withConsole.redirectInput());
+    }
+
 }

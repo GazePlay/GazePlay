@@ -15,6 +15,7 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -59,6 +60,30 @@ public class GazePlayLauncher {
         return List.of(
             "--enable-native-access=" + String.join(",", nativeAccess),
             "--sun-misc-unsafe-memory-access=allow");
+    }
+
+    /**
+     * @return the Java program starting the JVM of a game: javaw when this JVM is a javaw (the shortcuts of the Windows
+     *   installer), since java would open a terminal for each game when there is none to share; java otherwise
+     */
+    public static String javaProgram() {
+        return javaProgram(System.getProperty("java.home"), runsWithoutConsole());
+    }
+
+    static String javaProgram(String javaHome, boolean withoutConsole) {
+        return javaHome + File.separator + "bin" + File.separator + (withoutConsole ? "javaw" : "java");
+    }
+
+    /**
+     * @return whether this JVM was started by javaw, which has no terminal: nothing can show the output of a game, whose
+     *   logs are in the log file anyway
+     */
+    public static boolean runsWithoutConsole() {
+        return ProcessHandle.current().info().command().map(GazePlayLauncher::isJavaw).orElse(false);
+    }
+
+    static boolean isJavaw(String command) {
+        return command.toLowerCase(Locale.ROOT).endsWith("javaw.exe");
     }
 
     /**
