@@ -3,7 +3,8 @@
 #
 # On 2026-10-22, "apt-get update" hung twice on the Azure mirror of Ubuntu used by the runners (once for 2 hours, before
 # the jobs had a time limit). Retrying on the same mirror does not help: each attempt is limited in time, and the next
-# attempts use the main Ubuntu mirror.
+# attempts use the main Ubuntu mirror. On 2026-11-05 and 11-06 the mirror was very slow, and the 3 attempts stayed on it:
+# the runners now name it through a list of mirrors (mirror+file:/etc/apt/apt-mirrors.txt), which is replaced too.
 #
 # Usage: install-apt-packages.sh <package...>
 set -u
@@ -19,7 +20,8 @@ for attempt in 1 2 3; do
   # Ubuntu 24.04 lists its mirrors in ubuntu.sources (deb822 format), older versions in sources.list
   for sources in /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list; do
     if [ -f "$sources" ]; then
-      sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' "$sources"
+      sudo sed -i -e 's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
+        -e 's|mirror+file:/etc/apt/apt-mirrors.txt|http://archive.ubuntu.com/ubuntu|g' "$sources"
     fi
   done
   sleep 10
