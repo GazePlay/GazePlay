@@ -1107,3 +1107,18 @@ attend sa refonte.
 **Explication des fichiers** (demande du mainteneur) : une sixième carte du menu des évaluations, « Comprendre les fichiers de
 résultats » (`EvalFilesHelpDialog`, textes `data/help/eval-files-*`). Elle décrit chaque fichier, ses colonnes, ses valeurs et son
 usage. À tenir à jour avec `EvalResultsWriter`.
+
+## 23. Essais du 6/11/2026
+
+**Formats acceptés par le site** : évaluation « Test formats compatibles », préparée pendant le travail sur le contrôle des formats
+du site. PNG, JPG, GIF, BMP, WAV 16 bits et AIFF s'ouvrent dans la distribution ; une vidéo H.264 sans piste audio se joue en vraie
+passation, au Tobii, sans `erreur_media`. L'AIFF a été lu jusqu'au bout hors évaluation, pas encore entendu dans une passation. Une
+première version contenait une vidéo de 0 octet : le lecteur la signale à la passation, pas à la lecture de l'évaluation, qui ne
+regarde que les noms et les extensions. Le site refuse désormais les médias vides, d'après son terminal.
+
+**Première vidéo d'une passation** : `fin_video` arrive 5,4 s après `debut_video` pour une vidéo de 4 s. Hypothèse : le chargement de
+FFmpeg à la première ouverture, avant le départ de l'horloge de la vidéo (0,2 à 1,3 s à la première ouverture, puis environ 20 ms). À
+garder en tête si le début d'une vidéo doit être précis.
+
+**Anneau de fixation** (retour du mainteneur) : au moins 14 px sur le bord d'une cible, au lieu de 5 (`EvalTarget.ringWidth`). Sur
+« Commencer », il se confondait avec la bordure de 3 px de la même couleur. La croix de fixation garde son cercle.

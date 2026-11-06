@@ -5,22 +5,13 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
-## REPRISE DU VENDREDI 6/11/2026 (bilan de la séance du jeudi 5/11/2026)
+## REPRISE DU LUNDI 9/11/2026 (bilan de la séance du vendredi 6/11/2026)
 
-**État laissé le 5/11/2026 au soir** : tout est poussé sur `addClaudeCode` jusqu'à `629c2f3b0`, **sauf les dernières règles des médias
-illisibles, codées après le push et NON COMMITÉES** (dans le dossier de travail, à ne pas perdre). Dernier `build` complet suivi de
-`allGamesTest`, sur ce code : **867 tests, 0 échec ; 66 entrées, 0 échec**.
+**Lundi 9/11/2026 : reprise de la revue des jeux, sur Course du regard (Gaze Race)**, décalée de vendredi à lundi par le mainteneur.
+Vérifier d'abord la CI du dernier push du 6/11. Tout est poussé sur `addClaudeCode`. Dernier `build` complet : **883 tests, 0 échec**.
 
-**Vendredi 6/11/2026, d'abord : essais par le mainteneur des médias illisibles** (décidé le 5/11 au soir, avant de reprendre les jeux) :
-1. **Temps de passage court** : une vidéo illisible avec par exemple 2 s de temps de passage. Le message doit rester 5 s, et « Fin de
-   l'écran » dire `média illisible`.
-2. **Bouton grisé** : une consigne avec bouton de fixation, avec puis sans temps de passage. « Commencer » doit être grisé et ne rien
-   déclencher, au Tobii et à la souris (les tests ne l'ont déclenché que par des événements de souris simulés). Sans temps, seule
-   Espace fait continuer. Regarder aussi le rendu du gris (opacité 0,35).
-3. **Image de consigne illisible**, par exemple un fichier texte renommé en `.png` : mêmes règles que la vidéo et le son.
-4. **Mode test et vraie passation** : le même comportement dans les deux.
-
-**Fait et validé le 6/11/2026** (deux passations et le mode test, mainteneur ; fichiers relus) : les 4 points sont conformes, message
+**Médias illisibles, validés le 6/11/2026** (deux passations et le mode test, mainteneur ; fichiers relus) : temps de passage court,
+bouton grisé, image de consigne illisible, même comportement en mode test et en vraie passation. Message
 lisible et centré, gris correct. Fichiers de 0 octet (`test.mp4`, `test.png`) bien signalés. Bouton fermé : 6,0 s au regard et 6,2 s à
 la souris sur une consigne à image, sans déclenchement (il en faut 4 : 1 s de délai et 3 s de fixation). Sur les consignes à vidéo, le
 plus long séjour réel est de 3,9 s : même code, couvert par les tests avec une souris simulée. Commité et poussé le 6/11.
@@ -32,20 +23,27 @@ reste le moyen rapide de quitter ; si la question est ouverte, il ne ferme qu'el
 
 **Retour du mainteneur, fait et essayé le 6/11/2026** : plus aucun terminal avec l'installeur. Les raccourcis lancent `javaw.exe`, et les
 parties aussi. Installé et validé par le mainteneur : partie lancée du menu sans terminal, jeu des bulles joué au Tobii Eye Tracker 5.
+L'installeur sur le disque (6/11, 13:35) ne contient ni la correction des raccourcis de jeux, ni l'anneau ci-dessous.
 
-**CI de `79dd9d596`** : `package-macos` a réussi, sans rien changer : les annulations précédentes ne se sont pas reproduites.
-`test (26)` : installation apt expirée, tests non lancés. Le repli du script sur le miroir principal d'Ubuntu était sans effet, les
-machines passant par `mirror+file:/etc/apt/apt-mirrors.txt` (le journal le montre sur les 3 essais) : corrigé le 6/11, à revoir la
-prochaine fois que le miroir sera lent.
+**Raccourcis de jeux des réglages : reportés par le mainteneur, issue [#1740](https://github.com/GazePlay/GazePlay/issues/1740).**
+Correction commitée (`GameShortcut`, `52dec18f0`) et essayée sur de vrais `.lnk` ; restent le message du bouton « Générer » et les
+essais depuis ce bouton.
 
-**Puis la CI** (run `42058853255`, sur `629c2f3b0`) : `build`, `package-linux`, `package-windows`, `all-games` et `test (26)` ont
-réussi, donc FFmpeg se charge sous Linux. À revoir au prochain push :
-- `test (25)` : échec sur l'installation apt (expirée après 15 min, tests non lancés).
-- `package-macos` : annulé après 15 min sans étape pour la 3ᵉ fois (`965487856`, `6a1c5e3a1`, `629c2f3b0`), alors que sa limite est de
-  30 min. Hypothèse : pas de machine `macos-latest` attribuée. Si cela recommence, essayer par exemple `macos-15`. FFmpeg sous macOS
-  reste donc non vérifié.
+**Évaluation « Test formats compatibles », préparée dans un autre terminal pour les retours sur le site, 6/11/2026** : passation
+réussie au Tobii. Vidéo H.264 sans piste audio jouée sans erreur, image et `.wav` corrects. Le `.aiff` a été lu jusqu'au bout hors
+évaluation, mais pas entendu dans une passation (case rouge choisie, c'est la jaune qui le joue). À noter : `fin_video` arrive 5,4 s
+après `debut_video` pour une vidéo de 4 s. Hypothèse : chargement de FFmpeg à la première ouverture (0,2 à 1,3 s dans les passations
+du jour, puis environ 20 ms), pendant lequel la vidéo n'est pas encore affichée.
 
-**Puis reprise de la revue, sur Gaze Race**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme toujours : état
+**Anneau de fixation d'une évaluation, retour du mainteneur, fait et validé le 6/11/2026** : sur « Commencer », il faisait 5 px à côté
+d'une bordure de 3 px de la même couleur. Minimum de 14 px sur le bord d'une cible (boutons, cases des petites grilles), comme sur une
+grille 2×2 en plein écran (`EvalTarget.ringWidth`). La croix de fixation ne change pas.
+
+**CI** : verte sur les 7 jobs jusqu'à `52dec18f0` (run `42222833553`), `package-macos` compris. Le repli apt (`00f78624f`) vise
+`archive.ubuntu.com` dès le 2ᵉ essai : à revoir la prochaine fois que le miroir sera lent. Si `package-macos` est de nouveau annulé
+sans étape, essayer par exemple `macos-15` (hypothèse : pas de machine `macos-latest` attribuée).
+
+**Reprise de la revue, sur Course du regard (Gaze Race)**, dernier jeu du groupe 6, puis groupes 7 à 10. Comme toujours : état
 des lieux, **demander d'abord la règle voulue**, propositions validées, puis le travail ; un commit par jeu, sur demande. Pas de
 nouveau `.exe` sans demande.
 
