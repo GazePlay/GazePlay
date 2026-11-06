@@ -34,6 +34,9 @@ import java.util.function.BiConsumer;
  */
 final class EvalTarget {
 
+    private static final double MIN_EDGE_RING_WIDTH = 14;
+    private static final double MIN_CIRCLE_RING_WIDTH = 5;
+
     /**
      * Receives the entries and exits ("entree", "sortie") and the selection of the target.
      */
@@ -84,7 +87,7 @@ final class EvalTarget {
         this.listener = listener;
 
         Bounds bounds = area.getBoundsInParent();
-        double ringWidth = Math.max(5, Math.min(bounds.getWidth(), bounds.getHeight()) * 0.03);
+        double ringWidth = ringWidth(bounds.getWidth(), bounds.getHeight(), circleRing);
         if (circleRing) {
             double radius = Math.min(bounds.getWidth(), bounds.getHeight()) / 2 - ringWidth / 2;
             Circle circle = new Circle(bounds.getCenterX(), bounds.getCenterY(), radius);
@@ -122,6 +125,15 @@ final class EvalTarget {
         area.addEventHandler(GazeEvent.GAZE_ENTERED, e -> onEnter(EvalSessionRecorder.GAZE, e.getX(), e.getY(), e.getSampleTime()));
         area.addEventHandler(GazeEvent.GAZE_EXITED, e -> onExit(EvalSessionRecorder.GAZE, e.getX(), e.getY(), e.getSampleTime()));
         gameContext.getGazeDeviceManager().addEventFilter(area);
+    }
+
+    /**
+     * @return the thickness of the ring. On the edge of a target, at least that of a grid of 2 x 2 on a full HD screen:
+     *   on a start button, 5 pixels could hardly be told from its border of 3 pixels, of the same color (maintainer's
+     *   feedback of 6/11/2026)
+     */
+    static double ringWidth(double width, double height, boolean circleRing) {
+        return Math.max(circleRing ? MIN_CIRCLE_RING_WIDTH : MIN_EDGE_RING_WIDTH, Math.min(width, height) * 0.03);
     }
 
     private void onEnter(String source, double x, double y, long sampleTime) {
