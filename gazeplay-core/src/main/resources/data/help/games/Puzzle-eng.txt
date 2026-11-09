@@ -15,5 +15,5 @@ When the picture is back in order, its last piece comes back and the puzzle coun
 # The variants
 Choose a variant (it is circled), then press "Start".
 - 1 time, 3 times, 5 times or without end: the number of puzzles to solve.
-- At the bottom, what the pieces show: the numbers, the pictures of the game (another one at each puzzle) or My images (the images of the "My images" folder of the settings).
+- At the bottom, what the pieces show: the numbers, or the pictures of the game (another one at each puzzle).
 - At the bottom too, the level: Easy, 3 × 3 a little shuffled; Normal, 3 × 3 fully shuffled; Hard, 4 × 4.

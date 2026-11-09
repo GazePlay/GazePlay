@@ -389,18 +389,22 @@ class SlidingPuzzleTest {
     @Test
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new PuzzleGameVariantGenerator().getVariants();
-        assertEquals(36, variants.size());
-        final IGameVariant mine = new GroupedGameVariant(PuzzleContent.MY_IMAGES.getKey(), PuzzleLevel.HARD.getKey(),
-            PuzzleEnd.SOLVED_3.getKey(), UserImagesVariant.IMAGES);
-        assertTrue(variants.contains(mine));
-        assertEquals(UserImagesVariant.IMAGES, UserImagesVariant.folderOf(mine));
-        assertEquals(PuzzleContent.MY_IMAGES, PuzzleGameLauncher.contentOf(mine));
-        assertEquals(PuzzleLevel.HARD, PuzzleGameLauncher.levelOf(mine));
-        assertEquals(PuzzleEnd.SOLVED_3, PuzzleGameLauncher.endOf(mine));
+        assertEquals(24, variants.size());
+        assertTrue(variants.stream().allMatch(variant -> UserImagesVariant.folderOf(variant) == null),
+            "no images of the user (maintainer's decision of 9/11/2026)");
+        final IGameVariant pictures = new GroupedGameVariant(PuzzleContent.PICTURES.getKey(),
+            PuzzleLevel.HARD.getKey(), PuzzleEnd.SOLVED_3.getKey(), null);
+        assertTrue(variants.contains(pictures));
+        assertEquals(PuzzleContent.PICTURES, PuzzleGameLauncher.contentOf(pictures));
+        assertEquals(PuzzleLevel.HARD, PuzzleGameLauncher.levelOf(pictures));
+        assertEquals(PuzzleEnd.SOLVED_3, PuzzleGameLauncher.endOf(pictures));
         final IGameVariant numbers = new GroupedGameVariant(PuzzleContent.NUMBERS.getKey(), PuzzleLevel.EASY.getKey(),
             PuzzleEnd.ENDLESS.getKey(), null);
         assertTrue(variants.contains(numbers));
-        assertNull(UserImagesVariant.folderOf(numbers));
+        // The "My images" variant tried on 9/11/2026, before its removal: the pictures of the game
+        final IGameVariant mine = new GroupedGameVariant("PuzzleMyImages", PuzzleLevel.HARD.getKey(),
+            PuzzleEnd.SOLVED_3.getKey(), UserImagesVariant.IMAGES);
+        assertEquals(PuzzleContent.PICTURES, PuzzleGameLauncher.contentOf(mine));
     }
 
     @Test

@@ -20,14 +20,12 @@ import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +88,6 @@ public class SlidingPuzzle implements GameLifeCycle {
     @Getter
     private double waiting;
     private int lastPicture = -1;
-    private List<File> userImages = List.of();
 
     private double width;
     private double height;
@@ -187,14 +184,6 @@ public class SlidingPuzzle implements GameLifeCycle {
         gameContext.getChildren().add(layer);
         gameContext.getGazeDeviceManager().addStats(stats);
 
-        if (content == PuzzleContent.MY_IMAGES) {
-            userImages = UserImagesVariant.images(PuzzleContent.USER_IMAGES_FOLDER);
-            if (userImages.isEmpty()) {
-                // The game started without going through the menu, which asks for images
-                showMessage();
-                return;
-            }
-        }
         score = 0;
         showHud();
         newPuzzle();
@@ -229,11 +218,6 @@ public class SlidingPuzzle implements GameLifeCycle {
         Rectangle2D square = null;
         if (content != PuzzleContent.NUMBERS) {
             picture = nextPicture();
-            if (picture == null) {
-                showMessage();
-                phase = Phase.OVER;
-                return;
-            }
             final double smaller = Math.min(picture.getWidth(), picture.getHeight());
             square = new Rectangle2D((picture.getWidth() - smaller) / 2, (picture.getHeight() - smaller) / 2, smaller,
                 smaller);
@@ -266,35 +250,15 @@ public class SlidingPuzzle implements GameLifeCycle {
     }
 
     /**
-     * @return the picture of the next puzzle, another one than the last for the pictures of the game; null if no image
-     * of the user can be read
+     * @return the picture of the next puzzle, another one than the last
      */
     private Image nextPicture() {
-        if (content == PuzzleContent.PICTURES) {
-            int index = random.nextInt(PICTURES.length - (lastPicture < 0 ? 0 : 1));
-            if (lastPicture >= 0 && index >= lastPicture) {
-                index++;
-            }
-            lastPicture = index;
-            return new Image(DATA + PICTURES[index]);
+        int index = random.nextInt(PICTURES.length - (lastPicture < 0 ? 0 : 1));
+        if (lastPicture >= 0 && index >= lastPicture) {
+            index++;
         }
-        final List<File> left = new ArrayList<>(userImages);
-        while (!left.isEmpty()) {
-            final File file = left.remove(random.nextInt(left.size()));
-            final Image image = new Image(file.toURI().toString(), 1200, 1200, true, true);
-            if (!image.isError() && image.getWidth() > 0) {
-                return image;
-            }
-        }
-        return null;
-    }
-
-    private void showMessage() {
-        final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"), height * 0.035,
-            width * 0.5);
-        message.setLayoutX((width - message.getBoundsInLocal().getWidth()) / 2);
-        message.setLayoutY((height - message.getBoundsInLocal().getHeight()) / 2);
-        hud.getChildren().add(message);
+        lastPicture = index;
+        return new Image(DATA + PICTURES[index]);
     }
 
     /**

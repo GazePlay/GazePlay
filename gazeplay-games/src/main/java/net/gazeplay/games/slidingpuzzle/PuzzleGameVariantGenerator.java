@@ -11,8 +11,8 @@ import java.util.Set;
 
 /**
  * Gives the variants of the sliding puzzle (maintainer's choices of 9/11/2026): when it ends (buttons, see
- * {@link PuzzleEnd}), and at the bottom what the pieces show (see {@link PuzzleContent}; "My images" plays with the
- * images of the user) and the level (see {@link PuzzleLevel}).
+ * {@link PuzzleEnd}), and at the bottom what the pieces show (see {@link PuzzleContent}) and the level (see
+ * {@link PuzzleLevel}).
  */
 public class PuzzleGameVariantGenerator implements IGameVariantGenerator {
 
@@ -22,8 +22,7 @@ public class PuzzleGameVariantGenerator implements IGameVariantGenerator {
         for (final PuzzleContent content : PuzzleContent.values()) {
             for (final PuzzleLevel level : PuzzleLevel.values()) {
                 for (final PuzzleEnd end : PuzzleEnd.values()) {
-                    variants.add(new GroupedGameVariant(content.getKey(), level.getKey(), end.getKey(),
-                        content == PuzzleContent.MY_IMAGES ? PuzzleContent.USER_IMAGES_FOLDER : null));
+                    variants.add(new GroupedGameVariant(content.getKey(), level.getKey(), end.getKey(), null));
                 }
             }
         }

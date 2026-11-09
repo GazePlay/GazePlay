@@ -15,5 +15,5 @@ Quand l'image est remise en ordre, son dernier morceau revient et le taquin comp
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 fois, 3 fois, 5 fois ou sans fin : le nombre de taquins à réussir.
-- En bas, ce que montrent les morceaux : les chiffres, les images du jeu (une autre à chaque taquin) ou Mes images (les images du dossier « Mes images » des réglages).
+- En bas, ce que montrent les morceaux : les chiffres, ou les images du jeu (une autre à chaque taquin).
 - En bas aussi, le niveau : Facile, 3 × 3 un peu mélangé ; Normal, 3 × 3 tout mélangé ; Difficile, 4 × 4.
