@@ -57,8 +57,9 @@ nouveau `.exe` sans demande.
 **Restent ouverts** :
 - La tablette : issue [#1738](https://github.com/GazePlay/GazePlay/issues/1738), à faire quand un appareil sera disponible.
 - Le lancement réel des vidéos par FFmpeg sur les plateformes autres que Windows.
-- Les sons des évaluations restent sur JavaFX Media : `.m4a` et `.aac` illisibles sur ce PC. On ne change rien sur le site (décision
-  du mainteneur) ; le message `EvalUnsupportedMedia` les annonce encore comme lisibles.
+- Les sons des évaluations restent sur JavaFX Media. Depuis le 9/11/2026, `.m4a`, `.aac`, `.flv` et `.fxm` sont refusés à l'import :
+  même liste que le site, et le message `EvalUnsupportedMedia` la donne (`GazePlayEval.md` section 24). Reste un écart : le site
+  refuse les WAV autres que 16 bits, GazePlay Learning ne les contrôle pas.
 - La cause des échecs de JavaFX Media (mise à jour Windows du 14/10/2026 : hypothèse non prouvée).
 
 **À faire après la revue des jeux** : refonte graphique du menu des jeux et de l'écran des statistiques, mémoire des tests, retrait

@@ -181,6 +181,23 @@ class EvalReaderTest {
     }
 
     @Test
+    void shouldRefuseTheM4aAndAacSounds() throws IOException {
+        media("images", "a.png");
+        media("images", "b.png");
+        media("audio", "son.m4a");
+        media("audio", "son.aac");
+        write("[" + stimuli(1, 2, "\"Tout\"", 1,
+            "\"0\": {\"imageName\": \"a.png\", \"soundName\": \"son.m4a\", \"goodAnswer\": true},"
+                + "\"1\": {\"imageName\": \"b.png\", \"soundName\": \"son.aac\", \"goodAnswer\": false}") + "]");
+
+        EvalReader.Result result = EvalReader.read(folder);
+
+        assertNull(result.definition());
+        assertEquals(2, result.errors().stream().filter(p -> p.key().equals("EvalUnsupportedMedia")).count(),
+            result.problems().toString());
+    }
+
+    @Test
     void shouldReportAMissingKeyAndAnUnknownType() throws IOException {
         write("""
             [{"Type": "transition", "Combien de temps": 2},

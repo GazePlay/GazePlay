@@ -66,12 +66,15 @@ public final class EvalReader {
     static final String INFO_PARTICIPANT = "Informations participant";
 
     /**
-     * Extensions of the media that JavaFX can play or show, by folder.
+     * Extensions of the media that GazePlay can play or show, by folder. The sounds are played by JavaFX Media, which
+     * could not read M4A or AAC on the laboratory PC: they are refused (decision of the maintainer, 9/11/2026, also
+     * refused by the GazePlay Eval website). The videos are played by FFmpeg; FLV and FXM, never tried, are refused too,
+     * so that the list is the same as the one of the website.
      */
     static final Map<MediaFolder, Set<String>> SUPPORTED_EXTENSIONS = Map.of(
         MediaFolder.IMAGES, Set.of("png", "jpg", "jpeg", "gif", "bmp"),
-        MediaFolder.AUDIO, Set.of("mp3", "wav", "m4a", "aac", "aif", "aiff"),
-        MediaFolder.VIDEOS, Set.of("mp4", "m4v", "flv", "fxm")
+        MediaFolder.AUDIO, Set.of("mp3", "wav", "aif", "aiff"),
+        MediaFolder.VIDEOS, Set.of("mp4", "m4v")
     );
 
     /**

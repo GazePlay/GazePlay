@@ -1122,3 +1122,22 @@ garder en tête si le début d'une vidéo doit être précis.
 
 **Anneau de fixation** (retour du mainteneur) : au moins 14 px sur le bord d'une cible, au lieu de 5 (`EvalTarget.ringWidth`). Sur
 « Commencer », il se confondait avec la bordure de 3 px de la même couleur. La croix de fixation garde son cercle.
+
+## 24. Formats des médias alignés avec le site (9/11/2026)
+
+**Fait** : le site refuse désormais, à la sélection, les formats que GazePlay Learning ne lit pas : images PNG, JPG, JPEG, GIF, BMP ;
+sons MP3, WAV 16 bits, AIF, AIFF ; vidéos MP4, M4V. Il refuse aussi les fichiers vides et les images ou MP4 au contenu invalide. Les
+fichiers incompatibles déjà présents sont gardés et signalés : ils bloquent l'export `.zip`, pas le `.gpSave`.
+
+**Décisions du mainteneur** :
+- Images, fichiers vides, contenu invalide : rien ne change dans GazePlay Learning (contrôle des noms et des extensions seulement ;
+  un média vide ou illisible reste signalé pendant la passation, section 20).
+- **M4A et AAC sont retirés** de `EvalReader.SUPPORTED_EXTENSIONS` : JavaFX Media ne les lit pas sur le PC du laboratoire (section 20).
+  Un `.zip` qui en contient est maintenant refusé à l'import, au lieu d'un message pendant la passation. Test :
+  `EvalReaderTest.shouldRefuseTheM4aAndAacSounds`.
+- **FLV et FXM sont retirés** aussi : jamais essayés dans une passation (FXM est un format propre à JavaFX). Les deux listes sont
+  maintenant identiques, sans rien changer au site.
+- Le message `EvalUnsupportedMedia` donne la liste réelle : images PNG JPG JPEG GIF BMP ; sons MP3 WAV AIF AIFF ; vidéos MP4 M4V.
+
+**Risque** : GazePlay Learning ne contrôle pas le nombre de bits d'un WAV, alors que JavaFX Media n'a pas lu un WAV de 24 bits (section
+20). Le refus des WAV autres que 16 bits par le site est donc à garder.
