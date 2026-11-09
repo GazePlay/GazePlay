@@ -5,13 +5,49 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
-## REPRISE DU LUNDI 9/11/2026 (bilan de la séance du vendredi 6/11/2026)
+## REPRISE DU MARDI 10/11/2026 (bilan de la séance du lundi 9/11/2026)
+
+**Fait le lundi 9/11/2026** (fiches en bas) :
+- **GazePlay Eval** : formats des médias alignés sur le site GazePlay Eval (`246cf538c`, `GazePlayEval.md` 24 ; `.m4a`, `.aac`,
+  `.flv` et `.fxm` refusés à l'import).
+- **Course du regard (Gaze Race)** : revue, validée, commitée et poussée (`e049e3dbc`). Groupe 6 terminé.
+- **Groupe 7, trois jeux revus puis essayés par le mainteneur** :
+  - **Labyrinthe** (`a15cfcae7`) : vrai labyrinthe à couloirs (3 × 5, 5 × 7, 7 × 9), nouveau labyrinthe à chaque fromage, fin
+    après 3, 5 ou 10 fromages ou sans fin, 3 façons de déplacer. **Essai : rien à redire.**
+  - **Jeu de taquin** (`f0e496bdc`) : toujours une solution, vraie case vide, 3 × 3 / 3 × 3 / 4 × 4, modèle à côté, Joconde gardée
+    (domaine public, Wikimedia Commons). **Essai : « Mes images » retirée** (une image avec des parties transparentes donnait des
+    pièces impossibles à choisir) ; 24 variantes.
+  - **Embouteillage** (ancien « Rush Hour », nom d'un jeu commercial) : 90 parkings faits par script et classés par nombre de coups
+    minimum (Facile 3 à 8, Normal 9 à 16, Difficile 17 à 27), choisir un véhicule puis une case allumée, bouton « Recommencer ».
+    **Essai : la voiture à sortir porte une étoile, et les deux cases à atteindre sont marquées en rouge avec la même étoile.**
+    Les parkings forment un ensemble fixe (30 par niveau, `data/rushHour/levels.txt`), tirés au hasard, jamais deux fois de suite.
+- Test instable noté (point 10 des tests instables) : `GazeplayEvalTest.shouldCenterAVideoOfTheShapeOfItsArea`, un dépassement de
+  délai dans un `build` local, passé seul et au `build` suivant.
+- **Vérifications du soir** : `build` complet **959 tests, 0 échec** ; `allGamesTest` complet **66 entrées, 0 échec**.
+- **État git** : Labyrinthe, Jeu de taquin, retrait de « Mes images » du taquin, Embouteillage et ces notes commités et poussés
+  sur `addClaudeCode` le 9/11 au soir.
+
+**Ordre du jour du mardi 10/11/2026** :
+1. **Vérifier la CI** du push du 9/11 au soir (7 jobs, dont `all-games` et `package-macos`).
+2. **Suite du groupe 7 (jeux de réflexion), dans l'ordre** : **Aiguillages** (`TrainSwitches`, 43 dessins de source à confirmer),
+   puis Puissance 4 (`Connect4`), Morpion (`TicTacToe`), Simon, Ordre (`Order`), Pierre papier ciseaux (`RockPaperScissors`),
+   Gobelets Pass Pass (`CupsBalls`), Magic Potions (`MagicPotions`).
+3. Pour chaque jeu, comme toujours : état des lieux, **demander d'abord la règle voulue**, propositions validées, travail, essai du
+   mainteneur, puis un commit par jeu sur demande. Les essais peuvent être groupés par deux ou trois jeux, comme le 9/11.
+4. Ensuite : groupes 8 (calcul et lettres), 9 (création et divers), 10 (GazePlay Eval).
+
+**Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
+des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
+(#1740).
+
+## BILAN DE LA SÉANCE DU VENDREDI 6/11/2026 (reprise du lundi 9/11/2026)
 
 **Lundi 9/11/2026 : reprise de la revue des jeux, sur Course du regard (Gaze Race)**, décalée de vendredi à lundi par le mainteneur.
 **Fait le 9/11** : formats des médias d'Eval alignés sur le site (`GazePlayEval.md` 24) ; **Course du regard revue, validée,
 commitée et poussée** (fiche en bas) ; groupe 6 terminé. Groupe 7 (jeux de réflexion) : **Labyrinthe revu et commité**
-(`a15cfcae7`, pas poussé ; essai du mainteneur reporté à celui du jeu suivant), **Jeu de taquin revu** (à essayer).
-Suite : Rush Hour.
+(`a15cfcae7`), **Jeu de taquin revu et commité** (`f0e496bdc`), **Embouteillage (Rush Hour) revu** ; rien n'est poussé.
+**Suite (décision du mainteneur du 9/11/2026) : la phase d'essai de ces trois jeux par le mainteneur, avant tout autre
+jeu.** Ensuite : Train Switches.
 Vérifier d'abord la CI du dernier push du 6/11. Tout est poussé sur `addClaudeCode`. Dernier `build` complet : **883 tests, 0 échec**.
 
 **Médias illisibles, validés le 6/11/2026** (deux passations et le mode test, mainteneur ; fichiers relus) : temps de passage court,
@@ -183,7 +219,8 @@ seul). CI : verte jusqu'à `8609c0f67` (run 41655428200) ; **celle de `28487a21b
 3. Jeux pas encore revus qui lisent le dossier commun sans variante (à leur passer une variante lors de leur revue) :
    Cartes magiques, Tarte à la crème, Échelle, Taupes, Ninja, Diviseur, Blocs, Lettres.
 4. Toujours à la fin de la revue : refonte de l'engrenage des jeux **et** de l'écran des statistiques ; tests
-   instables (points 7, 8 et 9 : plantage d'une JVM de test, GazeplayEvalTest, `EggGameTest`) ; inventaire des sons ;
+   instables (points 7 à 10 : plantage d'une JVM de test, deux tests de GazeplayEvalTest dont celui des vidéos du
+   9/11, `EggGameTest`) ; inventaire des sons ;
    notes de version 2.0 (les utilisateurs remettent leurs images dans le nouveau dossier commun).
 
 ## REPRISE DU MARDI 3/11/2026 (bilan de la séance du lundi 2/11/2026)
@@ -460,6 +497,14 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
    HATCHED but was READY » (ligne 140), en 6,8 s. Le changement en cours (`ProgressButton`) ne touche pas ce jeu.
    Relancé : le test seul 3 fois, puis le `build` complet réussis (733 tests). **Hypothèse** : test qui attend en
    temps réel, trop juste quand la machine est chargée. Si ça revient : regarder les délais attendus par le test.
+10. **À chercher plus tard, avec les points 7 à 9** (demande du mainteneur du 9/11/2026) : le 9/11/2026 vers 14 h 27,
+   pendant un `build` complet sur le poste du mainteneur (pas dans la CI : machine chargée par les captures en vraie
+   fenêtre du Jeu de taquin), un test des vidéos d'évaluation lues par FFmpeg a échoué une fois :
+   `GazeplayEvalTest.shouldCenterAVideoOfTheShapeOfItsArea` (`gazeplay-games`), `java.util.concurrent.TimeoutException`
+   dans `WaitForAsyncUtils.waitFor` à la ligne 672 du test, après 15,5 s. Le changement en cours (Jeu de taquin) ne touche
+   pas GazePlay Eval. Relancé : la classe seule, puis le `build` complet réussis (941 tests). **Hypothèse** : l'attente de
+   la première image décodée par FFmpeg dépasse le délai du test quand la machine est chargée. Si ça revient (sur le
+   poste ou dans la CI) : noter l'heure, regarder ce qu'attend la ligne 672 et le temps de décodage de la première image.
 
 ## Règles pour chaque jeu
 
@@ -735,7 +780,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Math101 (×5 opérations) | À confirmer : 5 images ; OK : tableau (Openclipart, domaine public) | | |
 | Bottle (`Bottle`) | À confirmer : 5 images | | |
 | **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
-| Rush Hour (`RushHour`) | À confirmer : 4 images | | |
+| **Embouteillage** (`RushHour`, avant « Rush Hour ») | **9/11** : les 4 images et la vignette retirées ; camions et bus dessinés par script (`make_trafficjam_images.py`), voitures de la Course du regard, parking dessiné par le jeu ; les 33 parkings de source inconnue remplacés par 90 parkings faits par script (`make_trafficjam_levels.py`) | ✔ 9/11 (parking vu de dessus centré, véhicules de couleurs différentes, voiture rouge à sortir, ouverture et flèche, cases libres allumées, bouton « Recommencer », anneau, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : nouveau nom, nos propres parkings classés Facile 3-8 / Normal 9-16 / Difficile 17-30 coups, choisir le véhicule puis la case, « Recommencer », fin après 1 / 3 / 5 ou sans fin) — à essayer |
 | Tic Tac Toe (`TicTacToe`) | À confirmer : 3 images | | |
 | Order (`Order`) | À confirmer : 3 images | | |
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
@@ -2715,8 +2760,8 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   labyrinthe sur 4 écrans et 3 niveaux, choisir puis guider, pas de guidage à travers une haie, tout retiré à la fin,
   même labyrinthe rejoué, variantes, anciennes variantes) ; `GameHelpTest` avec le jeu ; captures en vraie fenêtre
   (souris) `build/game-screenshots/apres/labyrinth/` (les 3 façons, les 3 niveaux, souris et pingouin, creusement) ;
-  `build` complet : **924 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Reste l'essai du
-  mainteneur** (souris et Tobii).
+  `build` complet : **924 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Essai du
+  mainteneur (9/11/2026) : rien à redire.**
 
 ### Jeu de taquin (`Puzzle`, code `slidingpuzzle`) — 9/11/2026
 
@@ -2740,9 +2785,8 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   coups de la case vide depuis l'image en ordre, sans défaire le précédent (Facile 8, Difficile 40), ou ordre au hasard
   rendu soluble en échangeant deux pièces (Normal) ; jamais déjà résolu. Une pièce voisine de la case vide a un bord de
   couleur ; après son glissement, il faut regarder la suivante. Image résolue : la dernière pièce revient (étoile pour les
-  chiffres), 1,5 s, puis un nouveau taquin (une autre image du jeu à chaque fois) ou « Bravo ». Images de l'utilisateur
-  recadrées au carré au milieu ; sans image lisible, le message des autres jeux. Variantes `GroupedGameVariant`
-  (contenu, niveau, fin), 36 ; une ancienne variante joue les chiffres ou les images du jeu, en Normal, sans fin
+  chiffres), 1,5 s, puis un nouveau taquin (une autre image du jeu à chaque fois) ou « Bravo ». Variantes
+  `GroupedGameVariant` (contenu, niveau, fin), 24 depuis l'essai (voir plus bas) ; une ancienne variante joue les chiffres ou les images du jeu, en Normal, sans fin
   (l'enum `PuzzleGameVariant` est gardé, à sa place, pour les lire). Statistiques inchangées (`SlidingPuzzleStats`, nom
   « Sliding Puzzle », un but par taquin réussi ; une manche par taquin). Traductions (Numbers, Mona Lisa, Fish
   remplacés), aide, crédits, inventaire, vignette.
@@ -2757,3 +2801,55 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   GazePlay Eval, `shouldCenterAVideoOfTheShapeOfItsArea`, a dépassé son délai une fois, puis il est passé seul et au
   troisième `build`) ; `allGamesTest` complet : **66 entrées, 0 échec**. **Reste l'essai du mainteneur** (souris et
   Tobii, avec celui du Labyrinthe).
+- **Essai du mainteneur (9/11/2026)** : avec « Mes images », une image avec des parties transparentes (la pomme) donne
+  des pièces qu'on ne peut pas choisir (le regard passe à travers les parties transparentes) ; des images mal choisies
+  pourraient casser le jeu. **Décision : « Mes images » retirée du Jeu de taquin** (24 variantes au lieu de 36 ; une
+  variante « Mes images » déjà enregistrée joue les images du jeu). Les 4 images du jeu sont entièrement opaques.
+
+### Embouteillage (`RushHour`, code `rushhour`, avant « Rush Hour ») — 9/11/2026
+
+- **État des lieux (code, résolution des 33 parkings par calcul, captures `build/game-screenshots/avant/rushhour/`)** :
+  33 parkings de 6 × 6 écrits à la main (2 565 lignes), tous solubles (8 à 49 déplacements d'une case avant la sortie)
+  mais pas rangés par difficulté (le 3 en demande 19, le 4 en demande 7) ; la variante choisit le premier, puis le jeu
+  enchaîne sans fin. Un véhicule choisi par fixation avançait d'**une case à chaque sortie du regard** du côté voulu
+  (environ 40 allers-retours du regard dans un parking difficile ; code mêlant coordonnées de l'écran et de la scène).
+  Une seule image pour toutes les voitures, teintée en brun et semi-transparente, étirée pour les véhicules de 3 cases ;
+  la voiture à sortir était un taxi ; murs blancs d'une case, bandes noires, sortie en carré gris ; ancien indicateur ;
+  pas de délai ; limiteurs ; `dispose` vidant toute la scène ; ni fin, ni aide, ni test ; 4 images et la vignette de
+  source inconnue. **Risque** : « Rush Hour » est le nom (marque) d'un jeu de société commercial, et les 33 grilles
+  pouvaient venir de ses cartes (non vérifiable).
+- **Règle du mainteneur (9/11/2026, recommandations validées)** : nouveau nom (« Embouteillage », « Traffic Jam » ; nom
+  de code `RushHour` gardé) ; nos propres parkings faits par script et classés Facile 3 à 8 coups, Normal 9 à 16,
+  Difficile 17 à 30 (un coup : un véhicule glissé d'autant de cases qu'on veut) ; choisir le véhicule par fixation, puis
+  une case libre allumée de sa ligne ; bouton « Recommencer » ; la voiture rouge sort, un point, nouveau parking ; fin
+  après 1, 3 ou 5 parkings ou sans fin ; parking dessiné par le jeu, vraie voiture rouge, voitures de la Course du
+  regard, camions et bus dessinés ; anneau, durée de fixation lue à chaque pas, délai, Échap, plus de limiteurs.
+- **Fait** : le jeu réécrit (`RushHour`, classes internes `Car` et `Mark`, `Parking` pour les règles ; l'ancienne classe
+  `Car` retirée), une boucle en temps réel ; fixations comptées par le jeu ; rien ne se choisit avant le délai ; arrêt
+  pendant le menu ; tout retiré à la fin. Parkings : `make_trafficjam_levels.py` tire des parkings au hasard puis les
+  modifie peu à peu (un véhicule retiré, ajouté ou déplacé) en gardant ceux qui deviennent au moins aussi difficiles,
+  explore toutes les positions atteignables et le nombre de coups minimum de chacune ; 30 parkings par niveau, tous
+  différents, au plus 2 d'un niveau par recherche, étalés sur la fourchette (Facile 5 de chaque nombre de 3 à 8 ;
+  Normal 3 ou 4 de chaque de 9 à 16 ; Difficile de 17 à 27) ; graine fixe (`data/rushHour/levels.txt`). Un véhicule
+  choisi brille, les cases libres de sa ligne s'allument (la dernière case qu'il couvrirait), il reste choisi après son
+  glissement ; regarder un autre véhicule le choisit à sa place. Bouton rond « Recommencer » en bas à gauche du parking.
+  La voiture rouge arrivée à l'ouverture sort (1 s), puis 0,8 s, puis un nouveau parking (un autre que le précédent)
+  ou « Bravo ». Variantes `GroupedGameVariant` (un seul groupe, niveau, fin), 12 ; une ancienne variante (niveau 1 à 33)
+  joue Facile pour 1 à 11, Normal pour 12 à 22, Difficile pour 23 à 33, sans fin. Statistiques inchangées
+  (`RushHourStats`, un but par parking ; une manche par parking). Nom affiché changé en français et en anglais (les
+  autres langues gardent leur traduction de « Rush Hour »), traductions, aide, crédits, inventaire, vignette.
+- **Vérifications** : `RushHourTest` (16 tests : 30 parkings par niveau, tous différents et dans leur fourchette ; nombre
+  de coups minimum de chacun des 90 retrouvé par une autre recherche, en Java ; glissement d'autant de cases libres
+  qu'on veut, jamais à travers un véhicule ; délai des réglages ; choix d'un véhicule après une fixation de la durée des
+  réglages lue à chaque pas ; cases allumées et glissement ; fixation reprise après un regard ailleurs ;
+  « Recommencer » ; sortie de la voiture rouge, parking compté et nouveau ; « Bravo » après le dernier ; sans fin ;
+  parking centré et bouton dans l'écran sur 4 écrans ; même parking rejoué ; tout retiré à la fin ; variantes ;
+  anciennes variantes) ; `GameHelpTest` avec le jeu ; captures en vraie fenêtre (souris)
+  `build/game-screenshots/apres/rushhour/` (Facile et Difficile) ; SpotBugs (un flux non fermé corrigé) ; `build`
+  complet : **958 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Reste l'essai du mainteneur**
+  (souris et Tobii, avec le Labyrinthe et le Jeu de taquin).
+- **Essai du mainteneur (9/11/2026)** : il faut voir quelle voiture sortir et quelles cases atteindre. **Fait** : une
+  étoile rouge dans un disque blanc sur le toit de la voiture rouge ; les deux cases à atteindre, devant l'ouverture, en
+  rouge transparent bordé de tirets rouges, avec la même étoile (dessinées sous les véhicules). Aide (« le principe »)
+  complétée ; test `shouldMarkTheRedCarAndTheBoxesToReach` (17 tests) ; captures
+  `build/game-screenshots/apres/rushhour-marques/`.

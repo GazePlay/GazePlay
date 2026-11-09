@@ -224,7 +224,7 @@ Puzzle,Lojë ngacmuese,لعبة إغاظة,Мозайка,滑动拼图,Neckendes
 Rabbits,Lepurusha,الارانب,Трусы,兔子,Conejos,Κουνέλια,Rabbits,Jänis,Lapins,खरगोश,Zečevi,Arnab,Conigli,うさぎ,Konijnen,Króliki,Coelhos,Кролики,Conejos,Thỏ,Arnab
 RockPaperScissors,Gurë Letër gërshërë,حجر-ورق-مقص,Камък ножица хартия,石头、剪子、布 ,Schere Stein Papier,πέτρα ψαλίδι χαρτί,Rock paper scissors,Kivi paperi ja sakset,Pierre papier ciseaux,रॉक कागज कैंची,Kamen škare papir,Batu gunting kertas,Morra cinese,じゃんけん,Steen papier schaar,Papier kamień nożyce,Pedra papel e tesoura,Камень ножницы бумага,Piedra papel o tijera,Oẳn tù tì,Batu Gunting Kertas
 Room,Dhoma,الغرفة,Пакой,房间,Das Zimmer,Το δωμάτιο,The room,Huone,La pièce,कमरा,Soba,Bilik,La camera,部屋,De kamer,Pokój,A sala,Комната,La habitación,Căn phòng,Bilik
-RushHour,Ora e pikut,ساعة الذروة,Гадзіна пік,逃脱堵车,Rush Hour,Ώρα αιχμής,Rush Hour,Ruuhka-aika,Rush Hour,व्यस्त समय,Rush Hour,Masa yang sibuk,Rush Hour,ラッシュアワー,Rush Hour,Godziny szczytu,Rush Hour,Час пик,Rush Hour,Giờ cao điểm,Masa yang sibuk
+RushHour,Ora e pikut,ساعة الذروة,Гадзіна пік,逃脱堵车,Rush Hour,Ώρα αιχμής,Traffic Jam,Ruuhka-aika,Embouteillage,व्यस्त समय,Rush Hour,Masa yang sibuk,Rush Hour,ラッシュアワー,Rush Hour,Godziny szczytu,Rush Hour,Час пик,Rush Hour,Giờ cao điểm,Masa yang sibuk
 ScratchCard,Karta gërvishtëse,بطاقات للخدش,Латарэя,刮刮乐,Rubbellose,Επιτυχημένες αποκαλύψεις,ScratchCards,Raaputuskortti,Cartes à gratter,स्क्रैच कार्ड,Zagrebi i osvoji,Kartu Gores,Gratta e vinci,スクラッチカード,Kraskaart,Zdrapki,Raspadinhas,Лотерейка,Tarjetas para raspar,Thẻ cào,ScratchCards
 Scribble,Zhgarravina,سكريبل,Крамзолі,涂鸦,Kritzeln,Ζωγραφιά,Scribble,Raaputus,Gribouille,घसीटना,Škrabotine,Tulisan cakar ayam,Scarabocchio,落書き,Kribbel Krabbel,Bazgrać,Rabiscos,Каракули,Garabato,Nguệch ngoạc,Scribble
 Shooter,,,,,,,Shooting,,Tir,,,,,,,,,,,,
@@ -372,7 +372,6 @@ LabyrinthCheeses,,,,,,,Cheeses:,,Fromages :,,,,,,,,,,,,
 LabyrinthHouses,,,,,,,Houses:,,Maisons :,,,,,,,,,,,,
 PuzzleNumbers,,,,,,,Numbers,,Les chiffres,,,,,,,,,,,,
 PuzzlePictures,,,,,,,Pictures,,Les images,,,,,,,,,,,,
-PuzzleMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
 PuzzleEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
 PuzzleNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
 PuzzleHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
@@ -381,6 +380,14 @@ PuzzleSolved3,,,,,,,3 times,,3 fois,,,,,,,,,,,,
 PuzzleSolved5,,,,,,,5 times,,5 fois,,,,,,,,,,,,
 PuzzleEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
 PuzzleScore,,,,,,,Solved:,,Réussis :,,,,,,,,,,,,
+RushHourEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+RushHourNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+RushHourHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+RushHourSolved1,,,,,,,1 time,,1 fois,,,,,,,,,,,,
+RushHourSolved3,,,,,,,3 times,,3 fois,,,,,,,,,,,,
+RushHourSolved5,,,,,,,5 times,,5 fois,,,,,,,,,,,,
+RushHourEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+RushHourScore,,,,,,,Solved:,,Réussis :,,,,,,,,,,,,
 Biboule,,,,,,,Biboule,,Biboule,,,,,,,,,,,,
 BibouleJumpEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
 BibouleJumpNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,

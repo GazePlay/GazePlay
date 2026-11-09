@@ -1,0 +1,19 @@
+# Le principe
+Fais sortir la voiture rouge (celle avec l'étoile) du parking par l'ouverture à droite, en poussant les voitures, les camions et les bus qui la bloquent ! Elle doit arriver sur les cases rouges avec l'étoile, devant l'ouverture.
+
+# Comment jouer
+- Chaque véhicule avance ou recule seulement dans le sens où il est garé.
+- Fixe un véhicule pour le choisir : il brille, et les cases libres de sa ligne s'allument.
+- Fixe une case allumée : le véhicule y glisse d'un coup. Il reste choisi ; fixe un autre véhicule pour en changer.
+- Bloqué ? Fixe le bouton rond à gauche du parking : tout revient comme au départ.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, les parkings déjà réussis.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Quand la voiture rouge arrive à l'ouverture, elle sort du parking et le parking compte un point, puis un nouveau parking arrive. Après 1, 3 ou 5 parkings, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 1 fois, 3 fois, 5 fois ou sans fin : le nombre de parkings à réussir.
+- En bas, le niveau : Facile, de 3 à 8 coups au moins pour sortir ; Normal, de 9 à 16 coups ; Difficile, de 17 à 27 coups. Un coup, c'est un véhicule glissé d'autant de cases qu'on veut.

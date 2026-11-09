@@ -128,6 +128,14 @@ cropped by the same script. They replace (9/11/2026) 36 pictures of unknown sour
 thumbnail (gazeplay-core: data/common/Thumbnails/slidingpuzzle.png, 960 x 540) is made of these pictures by the same
 script.
 
+Images and parkings of "Embouteillage" (Traffic Jam, name code RushHour; gazeplay-games: data/rushHour): the trucks
+and the bus (truck-1.png, truck-2.png, bus.png) are drawn by make_trafficjam_images.py (this folder), under the license
+of GazePlay Learning (GPL-3.0-or-later); the cars are those of "Course du regard" and the parking is drawn by the game.
+They replace (9/11/2026) four pictures of unknown source. The parkings (levels.txt) are made by
+make_trafficjam_levels.py, which computes the fewest moves of each, in place of 33 parkings of unknown source. The
+thumbnail (gazeplay-core: data/common/Thumbnails/rushHour.png, 960 x 540) is made of these pictures by
+make_trafficjam_images.py.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

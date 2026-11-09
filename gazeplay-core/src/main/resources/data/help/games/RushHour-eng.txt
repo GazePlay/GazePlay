@@ -1,0 +1,19 @@
+# The principle
+Take the red car (the one with the star) out of the parking by the opening at the right, by pushing the cars, trucks and buses in its way! It must reach the red boxes with the star, in front of the opening.
+
+# How to play
+- Each vehicle only goes forward or backward, the way it is parked.
+- Fixate a vehicle to choose it: it shines, and the free boxes of its line light up.
+- Fixate a lit box: the vehicle slides there at once. It stays chosen; fixate another vehicle to change.
+- Stuck? Fixate the round button at the left of the parking: everything goes back as at the start.
+- A ring fills during a fixation; its length is the one of the settings.
+- At the top, the parkings already solved.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Esc key) is open.
+
+# How to win
+When the red car reaches the opening, it leaves the parking and the parking counts a point, then a new parking comes. After 1, 3 or 5 parkings, it is "Bravo", then the statistics. Without end, the game goes on until you leave it by the menu (Esc key).
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 1 time, 3 times, 5 times or without end: the number of parkings to solve.
+- At the bottom, the level: Easy, 3 to 8 moves at least to get out; Normal, 9 to 16 moves; Hard, 17 to 27 moves. A move is one vehicle slid by as many boxes as wanted.

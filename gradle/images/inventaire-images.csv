@@ -105,7 +105,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/pianosight.png,oui,sourc
 gazeplay-core/src/main/resources/data/common/Thumbnails/potions.jpg,oui,source inconnue,,2019-06-18,johzz-o2,thumbnail update
 gazeplay-core/src/main/resources/data/common/Thumbnails/rabbits.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/rockPaperScissors.png,oui,source inconnue,,2020-06-04,PillouMatou,"background debugged, replace images, multilinguism for the game"
-gazeplay-core/src/main/resources/data/common/Thumbnails/rushHour.png,oui,source inconnue,,2018-07-26,kuhlkrein,new images for gazeplay
+gazeplay-core/src/main/resources/data/common/Thumbnails/rushHour.png,oui,libre,"faite des images du jeu par make_trafficjam_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
 gazeplay-core/src/main/resources/data/common/Thumbnails/scratchcard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheBiboules.png,oui,libre,"capture du jeu (3/11/2026) ; décor, cage et baguette dessinés pour le projet ; Biboules modernisées pour le projet (make_shooter_images.py)",2026-11-03,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/simon.png,oui,source inconnue,,2023-06-07,iwa,Ajout du 3e mode multijoueur + miniature + traduction
@@ -611,10 +611,9 @@ gazeplay-games/src/main/resources/data/room/left.jpg,oui,source inconnue,,2018-0
 gazeplay-games/src/main/resources/data/room/right.jpg,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
 gazeplay-games/src/main/resources/data/room/stars.jpg,oui,libre,"ESA/Hubble, CC BY 4.0 : attribution à ajouter",2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
 gazeplay-games/src/main/resources/data/room/top_bottom.jpg,oui,source inconnue,,2018-05-10,DMyTryC,Adding the pictures for the walls
-gazeplay-games/src/main/resources/data/rushHour/carH.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
-gazeplay-games/src/main/resources/data/rushHour/carV.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
-gazeplay-games/src/main/resources/data/rushHour/taxiH.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
-gazeplay-games/src/main/resources/data/rushHour/taxiV.png,oui,source inconnue,,2020-01-13,Yann ROBERT,put back resources for game 'Rush Hour' that were deleted in a previous change
+gazeplay-games/src/main/resources/data/rushHour/bus.png,oui,libre,"dessiné pour le projet (gradle/images/make_trafficjam_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
+gazeplay-games/src/main/resources/data/rushHour/truck-1.png,oui,libre,"dessiné pour le projet (gradle/images/make_trafficjam_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
+gazeplay-games/src/main/resources/data/rushHour/truck-2.png,oui,libre,"dessiné pour le projet (gradle/images/make_trafficjam_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
 gazeplay-games/src/main/resources/data/shooter/biboule/images/Background.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
 gazeplay-games/src/main/resources/data/shooter/biboule/images/Blue.png,oui,libre,"Biboule, mascotte du laboratoire, modernisée pour le projet (gradle/images/make_shooter_images.py, bouche et ailes d'origine), GPL-3.0-or-later ; originale gardée dans gradle/images/biboule-originale",2026-11-03,GazePlay Learning,Biboule modernisée du jeu de tir
 gazeplay-games/src/main/resources/data/shooter/biboule/images/Cage.png,oui,libre,"dessiné pour le projet (gradle/images/make_shooter_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue du jeu de tir
