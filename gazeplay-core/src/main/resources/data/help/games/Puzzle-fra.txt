@@ -1,0 +1,19 @@
+# Le principe
+Remets l'image en ordre en faisant glisser ses morceaux dans la case vide !
+
+# Comment jouer
+- L'image apparaît d'abord en entier, puis ses morceaux se mélangent et une case se vide. Le mélange a toujours une solution.
+- Fixe un morceau voisin de la case vide (il a un bord de couleur) : il glisse dans la case vide.
+- Le modèle reste à côté du plateau pour t'aider.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, les taquins déjà réussis.
+- Rien ne peut être choisi pendant que l'image se montre et se mélange, ni avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Quand l'image est remise en ordre, son dernier morceau revient et le taquin compte un point, puis un nouveau taquin arrive. Après 1, 3 ou 5 taquins, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 1 fois, 3 fois, 5 fois ou sans fin : le nombre de taquins à réussir.
+- En bas, ce que montrent les morceaux : les chiffres, les images du jeu (une autre à chaque taquin) ou Mes images (les images du dossier « Mes images » des réglages).
+- En bas aussi, le niveau : Facile, 3 × 3 un peu mélangé ; Normal, 3 × 3 tout mélangé ; Difficile, 4 × 4.

@@ -9,7 +9,9 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 
 **Lundi 9/11/2026 : reprise de la revue des jeux, sur Course du regard (Gaze Race)**, décalée de vendredi à lundi par le mainteneur.
 **Fait le 9/11** : formats des médias d'Eval alignés sur le site (`GazePlayEval.md` 24) ; **Course du regard revue, validée,
-commitée et poussée** (fiche en bas) ; groupe 6 terminé. Suite : groupe 7 (jeux de réflexion), en commençant par Labyrinth.
+commitée et poussée** (fiche en bas) ; groupe 6 terminé. Groupe 7 (jeux de réflexion) : **Labyrinthe revu et commité**
+(`a15cfcae7`, pas poussé ; essai du mainteneur reporté à celui du jeu suivant), **Jeu de taquin revu** (à essayer).
+Suite : Rush Hour.
 Vérifier d'abord la CI du dernier push du 6/11. Tout est poussé sur `addClaudeCode`. Dernier `build` complet : **883 tests, 0 échec**.
 
 **Médias illisibles, validés le 6/11/2026** (deux passations et le mode test, mainteneur ; fichiers relus) : temps de passage court,
@@ -716,7 +718,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
 | Blocks, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
-| Puzzle (`Puzzle`) | À confirmer : 36 images (Biboule, paysages) ; la Joconde est dans le domaine public | | |
+| **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
 | **Défendre le château** (`TowerDefense`) | **3/11** : les 23 images retirées ; tout dessiné par script (`make_towerdefense_images.py`), neige par le jeu | ✔ 3/11 (polices des jeux, pastilles des prix, cercle de choix aux couleurs des menus, vignette) | ✔ 3/11 (règle du mainteneur : vagues à la demande ou automatiques, Facile / Normal / Difficile, sans fin / 10 / 20 vagues, « Perdu ! », carte au hasard ; 4 tours, revente et blizzard gardés) |
 | Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
@@ -2715,3 +2717,43 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   (souris) `build/game-screenshots/apres/labyrinth/` (les 3 façons, les 3 niveaux, souris et pingouin, creusement) ;
   `build` complet : **924 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Reste l'essai du
   mainteneur** (souris et Tobii).
+
+### Jeu de taquin (`Puzzle`, code `slidingpuzzle`) — 9/11/2026
+
+- **État des lieux (code et captures en vraie fenêtre, `build/game-screenshots/avant/puzzle/`)** : un taquin 3 × 3 ; les
+  8 pièces posées au hasard, sans vérifier que le mélange a une solution : **une partie sur deux ne peut pas être
+  gagnée** (capture : 3 6 5 / 4 8 □ / 7 2 1, 17 paires dans le désordre, impair, donc sans solution) ; la case vide est
+  une pièce avec une Biboule ; images découpées d'avance en 9 fichiers (ni autre taille, ni « Mes images ») ; plateau
+  décalé (343 px à gauche, 448 à droite, décalage de 60 px codé en dur) ; ancien indicateur de fixation ; pas de délai
+  au départ ; pas de modèle ; pas de fin ; 4 variantes (Chiffres, Joconde, Poisson, Biboule) ; ni aide ni test ; 37
+  images de source inconnue (la Joconde est dans le domaine public, mais pas ce fichier, de source inconnue).
+- **Règle du mainteneur (9/11/2026, recommandations validées)** : toujours une solution (mélange par des coups permis) ;
+  vraie case vide, la dernière pièce revient à la fin ; pièces découpées par le jeu, d'où « Mes images » ; Facile 3 × 3
+  (environ 8 coups), Normal 3 × 3 (tout mélangé), Difficile 4 × 4 (environ 40 coups) ; fin après 1, 3 ou 5 taquins, ou
+  sans fin ; modèle à côté du plateau ; anneau, durée de fixation lue à chaque pas, délai de départ, Échap, plateau
+  centré ; chiffres et images dessinés, la Biboule gardée, **la Joconde gardée si elle entre dans la licence** : elle y
+  entre (domaine public, compatible avec la GPL 3), reprise de Wikimedia Commons.
+- **Fait** : le jeu réécrit (`SlidingPuzzle`, classe interne `Piece` ; `SlidingPuzzleCard` retiré), une boucle en temps
+  réel ; fixations comptées par le jeu, durée des réglages lue à chaque pas, anneau `FixationRing` ; l'image se montre
+  entière 1,5 s, puis les pièces glissent à leur place mélangée (0,6 s) ; rien ne se choisit avant la fin du mélange ni
+  avant le délai des réglages (le plus long des deux) ; arrêt pendant le menu (Échap) ; tout retiré à la fin. Mélange :
+  coups de la case vide depuis l'image en ordre, sans défaire le précédent (Facile 8, Difficile 40), ou ordre au hasard
+  rendu soluble en échangeant deux pièces (Normal) ; jamais déjà résolu. Une pièce voisine de la case vide a un bord de
+  couleur ; après son glissement, il faut regarder la suivante. Image résolue : la dernière pièce revient (étoile pour les
+  chiffres), 1,5 s, puis un nouveau taquin (une autre image du jeu à chaque fois) ou « Bravo ». Images de l'utilisateur
+  recadrées au carré au milieu ; sans image lisible, le message des autres jeux. Variantes `GroupedGameVariant`
+  (contenu, niveau, fin), 36 ; une ancienne variante joue les chiffres ou les images du jeu, en Normal, sans fin
+  (l'enum `PuzzleGameVariant` est gardé, à sa place, pour les lire). Statistiques inchangées (`SlidingPuzzleStats`, nom
+  « Sliding Puzzle », un but par taquin réussi ; une manche par taquin). Traductions (Numbers, Mona Lisa, Fish
+  remplacés), aide, crédits, inventaire, vignette.
+- **Vérifications** : `SlidingPuzzleTest` (16 tests : taquins solubles ou non, dont celui de la capture d'avant ; 300
+  mélanges par niveau tous solubles et jamais résolus ; mélange Facile résolu en 8 coups au plus ; image entière, mélange
+  et délai ; fixation de la durée des réglages lue à chaque pas ; pas de glissement d'une pièce loin de la case vide ni
+  de fixation reprise après un regard ailleurs ; taquin compté, dernière pièce et nouveau taquin ; « Bravo » après le
+  dernier ; sans fin ; 4 × 4 ; plateau et modèle centrés dans 4 écrans ; même mélange rejoué ; tout retiré à la fin ;
+  variantes ; anciennes variantes ; images trouvées) ; `GameHelpTest` avec le jeu ; captures en vraie fenêtre (souris)
+  `build/game-screenshots/apres/puzzle/` (chiffres en Facile, images en Normal et Difficile) ; SpotBugs (4 remarques
+  sur le nouveau code corrigées) ; `build` complet : **941 tests, 0 échec** (au deuxième essai, un test vidéo de
+  GazePlay Eval, `shouldCenterAVideoOfTheShapeOfItsArea`, a dépassé son délai une fois, puis il est passé seul et au
+  troisième `build`) ; `allGamesTest` complet : **66 entrées, 0 échec**. **Reste l'essai du mainteneur** (souris et
+  Tobii, avec celui du Labyrinthe).

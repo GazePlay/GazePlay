@@ -119,6 +119,15 @@ folder), under the license of GazePlay Learning (GPL-3.0-or-later); the road is 
 (9/11/2026) four pictures of unknown source. The thumbnail (gazeplay-core: data/common/Thumbnails/gazeRace.png,
 960 x 540) is made of these pictures by the same script.
 
+Images of the sliding puzzle "Jeu de taquin" (gazeplay-games: data/sliding-puzzle): the sea, the hot-air balloons and
+the meadow of the Biboules (sea.png, balloons.png, biboules.png) are drawn by make_puzzle_images.py (this folder), under
+the license of GazePlay Learning (GPL-3.0-or-later), the Biboules being those of the shooting game; the numbers are
+drawn by the game. joconde.jpg is the top of the Mona Lisa of Leonardo da Vinci, public domain, from Wikimedia Commons
+(https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg, "Public domain"),
+cropped by the same script. They replace (9/11/2026) 36 pictures of unknown source, cut beforehand into 9 pieces. The
+thumbnail (gazeplay-core: data/common/Thumbnails/slidingpuzzle.png, 960 x 540) is made of these pictures by the same
+script.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

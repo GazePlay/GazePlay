@@ -370,6 +370,17 @@ LabyrinthGoals10,,,,,,,10 times,,10 fois,,,,,,,,,,,,
 LabyrinthEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
 LabyrinthCheeses,,,,,,,Cheeses:,,Fromages :,,,,,,,,,,,,
 LabyrinthHouses,,,,,,,Houses:,,Maisons :,,,,,,,,,,,,
+PuzzleNumbers,,,,,,,Numbers,,Les chiffres,,,,,,,,,,,,
+PuzzlePictures,,,,,,,Pictures,,Les images,,,,,,,,,,,,
+PuzzleMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
+PuzzleEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+PuzzleNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+PuzzleHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+PuzzleSolved1,,,,,,,1 time,,1 fois,,,,,,,,,,,,
+PuzzleSolved3,,,,,,,3 times,,3 fois,,,,,,,,,,,,
+PuzzleSolved5,,,,,,,5 times,,5 fois,,,,,,,,,,,,
+PuzzleEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+PuzzleScore,,,,,,,Solved:,,Réussis :,,,,,,,,,,,,
 Biboule,,,,,,,Biboule,,Biboule,,,,,,,,,,,,
 BibouleJumpEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
 BibouleJumpNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
@@ -423,9 +434,6 @@ BO3,Më i miri nga tre,أفضل من بين الثلاثة,У 2 пераможн
 BO5,Më i miri nga pesë,أفضل من خمسة,У 3 пераможных турах,在 3 组获胜,In 3 winning sets,Σε 3 νικηφόρα γύρους,In 3 winning sets,Paras viidestä,En 3 manches gagnantes,3 विजयी राउंड में,Najbolji od pet,Terbaik dari lima,Al meglio dei cinque,ベストオブファイブ,Best-of-five,W 3 zwycięskich rundach,Em 3 rodadas de vitórias,В 3 победных раундах,En 3 rondas ganadoras,Trong 3 vòng chiến thắng,Dalam 3 pusingan yang menang
 BO7,Më i miri nga shtatë,أفضل من بين سبعة,У 4 пераможных турах,在 4 组获胜,In 4 winning sets,Σε 4 νικηφόρα γύρους,In 4 winning sets,Paras seitsemästä,En 4 manches gagnantes,4 विजयी राउंड में,Najbolje od sedam,Terbaik dari tujuh,Al meglio dei sette,ベストオブセブン,Best-of-seven,W 4 zwycięskich rundach,Em 4 rodadas de vitórias,В 4 победных раундах,En 4 rondas ganadoras,Trong 4 vòng chiến thắng,Dalam 4 pusingan yang menang
 BO9,Më i miri nga nëntë,أفضل تسعة,У 5 пераможных турах,在 5 轮获胜,In 5 winning sets,Σε 5 νικηφόρους γύρους,In 5 winning sets,Paras yhdeksästä,En 5 manches gagnantes,5 विजेता राउंड में,Najbolji od devet,Terbaik dari sembilan,Al meglio dei nove,ベストオブナイン,Best-of-nine,W 5 zwycięskich rundach,Em 5 rodadas de vitórias,В 5 победных раундах,En 5 rondas ganadoras,Trong 5 vòng chiến thắng,Dalam 5 pusingan yang menang
-Numbers,Numra,,Цыфры,数字,,,Numbers,,Nombres,,,,Numeri,,Cijfers,,,Цифры,,,
-Mona Lisa,Mona Liza,,Мона Ліза,蒙娜丽莎,,,Mona Lisa,,Mona Lisa,,,,Mona Lisa,,Mona Lisa,,,Мона Лиза,,,
-Fish,Peshk,,Рыба,鱼,,,Fish,,Poisson,,,,Pesce,,Vis,,,Рыба,,,
 Farm,Fermë,مزرعة,Ферма,农场,Bauernhof,Αγρόκτημα,Farm,Maatila,Ferme,खेत,Farma,Tanah pertanian,Azienda agricola,農場,Boerderij,Gospodarstwo rolne,Fazenda,Ферма,Granja,Nông trại,Ladang
 Jungle,,,Джунглі,丛林,,,Jungle,,Jungle,,,,,,Jungle,,,Джунгли,,,
 Savanna,Savana,السافانا,Саванна,稀树草原,Savanne,Σαβάνα,Savanna,Savanni,Savane,लंबा-चौड़ा चरागाह,Savana,sabana,Savana,サバンナ,Savanne,Sawanna,Savana,Саванна,Sabana,Savanna,Savana

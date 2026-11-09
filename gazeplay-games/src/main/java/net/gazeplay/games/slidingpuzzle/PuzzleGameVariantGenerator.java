@@ -2,29 +2,46 @@ package net.gazeplay.games.slidingpuzzle;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * Gives the variants of the game "Puzzle" proposed in the menu.
+ * Gives the variants of the sliding puzzle (maintainer's choices of 9/11/2026): when it ends (buttons, see
+ * {@link PuzzleEnd}), and at the bottom what the pieces show (see {@link PuzzleContent}; "My images" plays with the
+ * images of the user) and the level (see {@link PuzzleLevel}).
  */
-public class PuzzleGameVariantGenerator extends EnumGameVariantGenerator<PuzzleGameVariantGenerator.PuzzleGameVariant> {
+public class PuzzleGameVariantGenerator implements IGameVariantGenerator {
 
-    public PuzzleGameVariantGenerator() {
-        super(PuzzleGameVariant.values(), PuzzleGameVariant::getLabel);
+    @Override
+    public Set<IGameVariant> getVariants() {
+        final Set<IGameVariant> variants = new LinkedHashSet<>();
+        for (final PuzzleContent content : PuzzleContent.values()) {
+            for (final PuzzleLevel level : PuzzleLevel.values()) {
+                for (final PuzzleEnd end : PuzzleEnd.values()) {
+                    variants.add(new GroupedGameVariant(content.getKey(), level.getKey(), end.getKey(),
+                        content == PuzzleContent.MY_IMAGES ? PuzzleContent.USER_IMAGES_FOLDER : null));
+                }
+            }
+        }
+        return variants;
     }
 
+    /**
+     * The 4 variants before the review of 9/11/2026, kept (with their name and place) so that the old variants (saved
+     * statistics, shortcuts) are still read: the numbers, or the pictures of the game, at the normal level, without end.
+     */
+    @Getter
     @RequiredArgsConstructor
     public enum PuzzleGameVariant {
-        NUMBERS("Numbers", "data/sliding-puzzle/tiles/tile"),
-        MONA_LISA("Mona Lisa", "data/sliding-puzzle/monalisa/p"),
-        FISH("Fish", "data/sliding-puzzle/fish/p"),
-        BIBOULE("Biboule", "data/sliding-puzzle/biboule/p");
+        NUMBERS(PuzzleContent.NUMBERS),
+        MONA_LISA(PuzzleContent.PICTURES),
+        FISH(PuzzleContent.PICTURES),
+        BIBOULE(PuzzleContent.PICTURES);
 
-        @Getter
-        private final String label;
-
-        @Getter
-        private final String resourcesPath;
-
+        private final PuzzleContent content;
     }
 }

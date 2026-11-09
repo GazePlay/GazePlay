@@ -164,6 +164,9 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (gradle/images/make_labyrinth_images.py), sous la licence du projet ; animaux d'OpenMoji (CC BY-SA 4.0).
 - Images de « Course du regard » (data/gazeRace) : voitures, barrière de travaux et choc faits pour GazePlay Learning
   (gradle/images/make_gazerace_images.py), sous la licence du projet.
+- Images du « Jeu de taquin » (data/sliding-puzzle) : mer, montgolfières et pré des Biboules faits pour GazePlay
+  Learning (gradle/images/make_puzzle_images.py), sous la licence du projet ; la Joconde de Léonard de Vinci, domaine
+  public (Wikimedia Commons, « Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg »).
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
   jeu « Tir ».
