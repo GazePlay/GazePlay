@@ -104,6 +104,12 @@ made by make_biboulejump_sounds.py (this folder), under the license of GazePlay 
 (4/11/2026) pictures and sounds of unknown source; the Biboules of the game are those of the shooting game (data/shooter).
 The thumbnail (gazeplay-core: data/common/Thumbnails/biboulejump.png, 960 x 540) is a capture of the game.
 
+Images of GazeRace (gazeplay-games: data/gazeRace): the car of the player, the five other cars, the barrier of works and
+the crash (car-player.png, car-1.png to car-5.png, barrier.png, crash.png) are drawn by make_gazerace_images.py (this
+folder), under the license of GazePlay Learning (GPL-3.0-or-later); the road is drawn by the game. They replace
+(9/11/2026) four pictures of unknown source. The thumbnail (gazeplay-core: data/common/Thumbnails/gazeRace.png,
+960 x 540) is made of these pictures by the same script.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

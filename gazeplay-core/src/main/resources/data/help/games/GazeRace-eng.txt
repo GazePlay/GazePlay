@@ -1,0 +1,19 @@
+# The principle
+Drive the blue car with white stripes on the road and avoid the other cars and the barriers of the works!
+
+# How to play
+- Look where you want to go: your car goes there, at its speed. It stays on the road.
+- On one side of the white line in the middle, the cars overtake you; on the other, they come the other way. You can go from one side to the other. On the line, the cars of both sides can touch you.
+- Every 12 seconds, a barrier of works comes on the white line in the middle.
+- The road goes faster and faster. You win 1 point every 3 seconds.
+- At the top left, your lives; at the top right, your points; in the middle, the time left (variants in minutes).
+- The speed follows the animation speed of the settings. At the start, nothing moves during the delay of the settings (1 second by default). Nothing moves while the menu (Esc key) is open, and the time stops.
+
+# How to win
+You have 3 lives. If you touch a car or a barrier, you lose a life: your car turns around, the road starts again slowly and, for 4 seconds, your car blinks and fears nothing. After the third life lost, it is "Lost!" with your points. If the time is over before, it is "Bravo". Then come the statistics.
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- Without end, 1 minute or 3 minutes: without end, the game lasts until the 3 lives are lost.
+- At the bottom, the road: horizontal (it goes from left to right) or vertical (it goes up).
+- At the bottom too, the level. Easy: 1 or 2 cars a second; at the start, the road crosses the screen in 8 seconds, and in 4 seconds at its fastest. Normal: 2 or 3 cars a second; 6.4 seconds at the start, 2.1 seconds at its fastest. Hard: 3 or 4 cars a second; 4.5 seconds at the start, 1.6 seconds at its fastest. The road reaches its top speed after 50 seconds without a hit.

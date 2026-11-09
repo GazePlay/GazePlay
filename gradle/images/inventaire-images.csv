@@ -78,7 +78,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/findTheOddOneOut.jpg,oui
 gazeplay-core/src/main/resources/data/common/Thumbnails/flowerOfNumbers.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,source inconnue,,2021-06-10,Iluvrog,add thumbnail picture
 gazeplay-core/src/main/resources/data/common/Thumbnails/frogsrace.png,oui,source inconnue,,2019-03-16,sannara,Added menu photo for frogRace
-gazeplay-core/src/main/resources/data/common/Thumbnails/gazeRace.png,oui,source inconnue,,2023-06-27,iwa,Ajout miniature + traduction
+gazeplay-core/src/main/resources/data/common/Thumbnails/gazeRace.png,oui,libre,"faite des images du jeu par make_gazerace_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,source inconnue,,2019-06-25,Teo Blachere,"Message translation, turn indicator, thumbnail, and game listing"
 gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
@@ -508,10 +508,14 @@ gazeplay-games/src/main/resources/data/follow/nothing.png,oui,source inconnue,,2
 gazeplay-games/src/main/resources/data/follow/ruby1RS.png,oui,source inconnue,,2021-07-05,Iluvrog,resize ruby picture + new variant
 gazeplay-games/src/main/resources/data/follow/slab1.png,oui,source inconnue,,2021-06-10,Iluvrog,dallage
 gazeplay-games/src/main/resources/data/follow/wall1.png,oui,source inconnue,,2021-06-09,Iluvrog,add contour + new picture
-gazeplay-games/src/main/resources/data/gazeRace/Flash.png,oui,source inconnue,,2023-06-23,iwa,"Création du jeu de courses, les voitures peuvent aller dans deux sens. Si le joueur va sur une voiture et qu'il n'a plus de point de vie, il perd la partie. La vitesse augmente petit à petit et si le joueur touche une voiture, il devient invincible tant qu'il a des points de vie. Lorsqu'il touche une voiture, la vitesse des voitures est rénitialisé."
-gazeplay-games/src/main/resources/data/gazeRace/carH.png,oui,source inconnue,,2023-06-27,iwa,Les deux variants fonctionnent
-gazeplay-games/src/main/resources/data/gazeRace/carV.png,oui,source inconnue,,2023-06-27,iwa,Les deux variants fonctionnent
-gazeplay-games/src/main/resources/data/gazeRace/cone-construction-road.png,oui,source inconnue,,2023-06-29,iwa,Ajout d'obstacle
+gazeplay-games/src/main/resources/data/gazeRace/barrier.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/car-1.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/car-2.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/car-3.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/car-4.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/car-5.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/car-player.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
+gazeplay-games/src/main/resources/data/gazeRace/crash.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VeloCorrectSecond.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VoitureFalseFirst.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/CeriseFalseSecond.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games

@@ -766,9 +766,17 @@ SprintDuo,,,,,,,Two players (keyboard and gaze),,À deux (clavier et regard),,,,
 SprintMap,,,,,,,Map,,Carte,,,,,,,,,,,,
 
 # GazeRace
-GazeRace,,,,,,, GazeRace ,, GazeRace ,,,,,,,,,,,,
-Play horizontally,,,,,,, Play horizontally ,, Jouer horizontalement
-Play vertically,,,,,,, Play vertically ,, Jouer verticalement
+GazeRace,,,,,,,Gaze Race,,Course du regard,,,,,,,,,,,,
+GazeRaceHorizontal,,,,,,,Horizontal road,,Route horizontale,,,,,,,,,,,,
+GazeRaceVertical,,,,,,,Vertical road,,Route verticale,,,,,,,,,,,,
+GazeRaceEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+GazeRaceNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+GazeRaceHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+GazeRaceEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+GazeRaceTime1,,,,,,,1 minute,,1 minute,,,,,,,,,,,,
+GazeRaceTime3,,,,,,,3 minutes,,3 minutes,,,,,,,,,,,,
+GazeRaceScore,,,,,,,Points:,,Points :,,,,,,,,,,,,
+GazeRaceLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
 
 # Tower Defense
 SendWave,,,,,,,Send the next wave,,Envoyer la vague suivante,,,,,,,,,,,,

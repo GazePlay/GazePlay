@@ -8,6 +8,8 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 ## REPRISE DU LUNDI 9/11/2026 (bilan de la séance du vendredi 6/11/2026)
 
 **Lundi 9/11/2026 : reprise de la revue des jeux, sur Course du regard (Gaze Race)**, décalée de vendredi à lundi par le mainteneur.
+**Fait le 9/11** : formats des médias d'Eval alignés sur le site (`GazePlayEval.md` 24) ; **Course du regard revue, validée,
+commitée et poussée** (fiche en bas) ; groupe 6 terminé. Suite : groupe 7 (jeux de réflexion), en commençant par Labyrinth.
 Vérifier d'abord la CI du dernier push du 6/11. Tout est poussé sur `addClaudeCode`. Dernier `build` complet : **883 tests, 0 échec**.
 
 **Médias illisibles, validés le 6/11/2026** (deux passations et le mode test, mainteneur ; fichiers relus) : temps de passage court,
@@ -730,7 +732,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Piano (`Piano`) | À confirmer : 6 images | | |
 | Math101 (×5 opérations) | À confirmer : 5 images ; OK : tableau (Openclipart, domaine public) | | |
 | Bottle (`Bottle`) | À confirmer : 5 images | | |
-| Gaze Race (`GazeRace`) | À confirmer : 4 images | | |
+| **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
 | Rush Hour (`RushHour`) | À confirmer : 4 images | | |
 | Tic Tac Toe (`TicTacToe`) | À confirmer : 3 images | | |
 | Order (`Order`) | À confirmer : 3 images | | |
@@ -2607,3 +2609,63 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   souris et reste dans l'écran ; variantes, « Mes images », lignes des dessins ; tout retiré à la fin) ; `GameHelpTest`
   avec le jeu ; captures en vraie fenêtre (souris) `build/game-screenshots/essai1/cassebrique/` et
   `essai2/cassebrique/` (Bloc, Extraterrestre, Arc-en-ciel, « Mes images » avec une image de test).
+
+### GazeRace (`GazeRace`, code `gazeRace`) — 9/11/2026
+
+- **État des lieux (lecture du code)** : une voiture bleue suit le regard ou la souris sur une route qui défile ; d'un
+  côté les voitures la doublent, de l'autre elles viennent en face ; toutes les 12 s une barrière à cônes sur la ligne du
+  milieu. 3 vies (une voiture touchée explose, le joueur tourne, invincible 4 s, la route revient à sa vitesse de départ) ;
+  1 point toutes les 3 s ; fin à la dernière vie. 2 variantes : horizontale, verticale. Règles 2 et 3 déjà suivies (mode
+  des entrées vérifié ; pas de fixation). Défauts : **vies jamais affichées** ; « Score : » écrit en dur (gris, Arial,
+  non traduit) ; vitesses en pixels par image et secondes comptées en 60 images (**hypothèse** : plus rapide ou plus lent
+  sur un écran qui ne tourne pas à 60 images par seconde) ; **animations jamais arrêtées à la fin** (voitures, route,
+  joueur) ; écouteurs du joueur sur toute la scène jamais retirés (après « Rejouer », l'ancien joueur suivait encore le
+  regard) ; tailles en pixels fixes ; placement des voitures relancé par récursion sans limite ; ancien style (fond noir,
+  couleurs vives) ; ni aide ni test ; 4 images et la vignette de source inconnue.
+- **Règle du mainteneur (9/11/2026, recommandations validées)** : 3 vies ; sans fin, 1 ou 3 minutes (« Bravo » si le temps
+  finit avant les 3 vies) ; Facile / Normal / Difficile ; une voiture touchée coûte une vie et ramène la route à sa vitesse
+  de départ ; 1 point toutes les 3 s (ce que les statistiques comptaient déjà) ; route horizontale et verticale gardées ;
+  **barrière à cônes gardée pour l'essai** : le mainteneur dira après ses essais s'il la retire.
+- **Fait** : le jeu réécrit (`GazeRace`, classe interne `Mobile` ; `Car` et `Player` retirés), une boucle en temps réel,
+  tout en parts de l'écran (voitures de 0,115 × 0,065 du plus petit côté ; route en longueurs de route par seconde),
+  vitesse d'animation des réglages, arrêtée pendant le menu (Échap), rien ne bouge pendant le délai des réglages au départ
+  (cinquième règle), aucune animation qui survit au jeu. Le jeu est calculé le long de la route et en travers, puis
+  montré de gauche à droite ou de bas en haut. Niveaux (`GazeRaceLevel`) : 1-2, 2-3, 3-4 voitures par seconde ; route
+  traversée en 8 / 6,4 / 4,5 s au départ et 4 / 2,1 / 1,6 s au plus vite, atteint après 50 s sans choc (Normal = le jeu
+  d'avant, sur un écran de 1920 pixels de large). Une voiture qui ne trouve pas de place après 8 essais n'est pas
+  ajoutée. Zone qui fait mal : 85 % de la voiture (coins arrondis et ombre des dessins). Le regard est reçu par une zone
+  de jeu et la souris par la couche du jeu, comme dans Biboule Jump : plus d'écouteur sur toute la scène. Variantes
+  `GroupedGameVariant` (route, niveau, fin), 18 ; une ancienne variante se joue sur sa route, en Normal, sans fin. Les
+  limiteurs (`setLimiterAvailable`, `updateScore`) ne sont plus appelés, comme dans les autres jeux d'action revus.
+  Cœurs, pastilles des points et du temps, « Perdu ! » puis statistiques. Dessins (`make_gazerace_images.py`) : voiture
+  du joueur bleu foncé à deux rayures blanches, 5 voitures aux couleurs douces, barrière rayée entre deux cônes, choc
+  jaune doux ; route dessinée par le jeu (herbe, asphalte gris, lignes blanches, pointillés) ; vignette faite par le
+  script. Traductions (`Play horizontally` et `Play vertically` remplacées), aide, inventaire, crédits. Pas de son
+  ajouté (le jeu n'en avait pas, et ce n'était pas dans les propositions).
+- **Vérifications** : `GazeRaceTest` (19 tests : même vitesse en parts de route sur 4 écrans ; délai des réglages ; 1 point
+  toutes les 3 s, à 30 comme à 144 images par seconde ; vie perdue, voiture retirée, vitesse de départ, invincibilité ;
+  barrière qui reste ; « Perdu ! » après 3 vies ; « Bravo » à la fin du temps ; sans fin ; vitesse la plus grande ;
+  vitesse d'animation ; voiture du joueur qui va vers le regard et reste sur la route ; voitures de chaque côté, jamais
+  l'une sur l'autre ; route verticale ; tout retiré à la fin ; même partie rejouée ; variantes, anciennes variantes,
+  niveaux) ; `GameHelpTest` avec le jeu ; captures en vraie fenêtre (souris) `build/game-screenshots/apres/gazerace/`
+  (horizontale 1 min, verticale sans fin) ; `build` complet : **904 tests, 0 échec** ; `allGamesTest` complet : **66
+  entrées, 0 échec** ; GazeRace lancé 5 fois de suite (`-PallGamesRepeat=5`) sans échec.
+- **Retours du mainteneur (9/11/2026, premier essai)** :
+  1. **Une seule des deux voies semblait avoir des voitures qui bougent.** Cause : les voitures d'en face reculaient à la
+     vitesse de la route, elles restaient donc immobiles sur l'asphalte (même défaut dans le jeu d'avant). **Fait** : elles
+     reculent deux fois plus vite que la route (sur l'asphalte, elles viennent vers le joueur à la vitesse de la route ;
+     celles qui doublent avancent à deux fois la vitesse de la route). Trois fois, pour l'égalité, ferait traverser
+     l'écran en 0,7 s à la vitesse la plus grande du niveau Normal. Test `shouldMoveTheCarsOfBothSidesOnTheRoad`.
+  2. **Sur la bande blanche du milieu, rien ne pouvait arriver** (sauf la barrière) : aucune voiture n'y roulait (même
+     défaut avant). **Choix du mainteneur : une ligne fine**, les voitures roulent jusqu'à elle, on change toujours de
+     côté. **Fait** : ligne de 1,2 % de la largeur de la route (au lieu d'une bande de 4,6 %). Mesure sur 4 000 voitures :
+     si elles ne font que toucher la ligne, un joueur posé dessus est touché par 4,4 % des voitures, contre 15,7 % au
+     milieu d'une voie (3,6 fois plus sûr) ; **elles peuvent donc couvrir la ligne d'un quart de leur largeur**
+     (`LINE_COVER`) : 10 % contre 14,9 %, autant des deux côtés. Test `shouldLeaveNoSafePlaceOnTheLineInTheMiddle`. Aide
+     (« ligne blanche », « les voitures des deux côtés peuvent te toucher ») et vignette mises à jour. Captures
+     `build/game-screenshots/essai2/gazerace/` (souris sur la ligne).
+  `build` complet : **906 tests, 0 échec** ; GazeRace lancé 5 fois de suite sans échec.
+- **Essai du mainteneur (9/11/2026)** : « nickel ». Demande : le nom affiché, « GazeRace » en français comme en anglais,
+  devient **« Course du regard »** en français et **« Gaze Race »** en anglais (`multilinguism.csv`, licence affichée).
+  Le nom de code `GazeRace` (fichiers de statistiques, catalogue, aide) ne change pas. **La barrière est gardée**
+  (décision du mainteneur). Validé, commité et poussé le 9/11/2026.

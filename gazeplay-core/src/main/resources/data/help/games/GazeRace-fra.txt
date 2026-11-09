@@ -1,0 +1,19 @@
+# Le principe
+Conduis la voiture bleue à rayures blanches sur la route et évite les autres voitures et les barrières de travaux !
+
+# Comment jouer
+- Regarde l'endroit où tu veux aller : ta voiture y va, à sa vitesse. Elle reste sur la route.
+- D'un côté de la ligne blanche du milieu, les voitures te doublent ; de l'autre, elles viennent en face. Tu peux passer d'un côté à l'autre. Sur la ligne, les voitures des deux côtés peuvent te toucher.
+- Toutes les 12 secondes, une barrière de travaux arrive sur la ligne blanche du milieu.
+- La route va de plus en plus vite. Tu gagnes 1 point toutes les 3 secondes.
+- En haut à gauche, tes vies ; en haut à droite, tes points ; au milieu, le temps qui reste (variantes en minutes).
+- La vitesse suit la vitesse d'animation des réglages. Au départ, rien ne bouge pendant le délai des réglages (1 seconde par défaut). Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
+
+# Comment gagner
+Tu as 3 vies. Si tu touches une voiture ou une barrière, tu perds une vie : ta voiture fait un tour, la route repart lentement et, pendant 4 secondes, ta voiture clignote et ne craint rien. Après la troisième vie perdue, c'est « Perdu ! » avec tes points. Si le temps est fini avant, c'est « Bravo ». Puis viennent les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Sans fin, 1 minute ou 3 minutes : sans fin, la partie dure jusqu'à la perte des 3 vies.
+- En bas, la route : horizontale (elle va de gauche à droite) ou verticale (elle monte).
+- En bas aussi, le niveau. Facile : 1 ou 2 voitures par seconde ; au départ, la route traverse l'écran en 8 secondes, et en 4 secondes au plus vite. Normal : 2 ou 3 voitures par seconde ; 6,4 secondes au départ, 2,1 secondes au plus vite. Difficile : 3 ou 4 voitures par seconde ; 4,5 secondes au départ, 1,6 seconde au plus vite. La route atteint sa plus grande vitesse après 50 secondes sans choc.
