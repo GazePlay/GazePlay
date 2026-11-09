@@ -1,0 +1,21 @@
+# The principle
+Guide the mouse to the cheese (or the animal to its house) in a labyrinth of hedges!
+
+# How to play
+- The labyrinth is dug before your eyes, then the mouse appears in a corner and the cheese further away. There is only one path between two boxes.
+- Arrows around the character: fixate an arrow next to the mouse, it goes one box that way. A gray arrow shows a hedge: it does nothing.
+- Arrows around the labyrinth: fixate one of the four big arrows around the labyrinth. Keep looking at it to go on.
+- Choose then guide: fixate the mouse to choose it (it shines), then look at the next box where it must go: it goes there at once. Looking further away lets it go.
+- A ring fills during a fixation; its length is the one of the settings.
+- At the top, the cheeses (or the houses) already reached.
+- Nothing can be chosen while the labyrinth is dug (1.5 seconds), nor before the delay of the settings. Nothing moves while the menu (Esc key) is open.
+
+# How to win
+Each cheese reached counts a point, then a new labyrinth is dug. After 3, 5 or 10 cheeses, it is "Bravo", then the statistics. Without end, the game goes on until you leave it by the menu (Esc key).
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 3 times, 5 times, 10 times or without end: the number of cheeses (or houses) to reach.
+- At the bottom, the character: the mouse and the cheese, or an animal at random and the house.
+- At the bottom too, the level: Easy, a labyrinth of 3 lines and 5 columns; Normal, 5 lines and 7 columns; Hard, 7 lines and 9 columns.
+- Last, the way of moving: arrows around the character, arrows around the labyrinth, or choose then guide.

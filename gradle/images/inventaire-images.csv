@@ -84,7 +84,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,sourc
 gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
-gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,source inconnue,,2018-05-29,MelanieCarriere,thumbnails of labyrinth game
+gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,"faite des images du jeu par make_labyrinth_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,source inconnue,,2021-09-03,Iluvrog,end of the game
 gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,source inconnue,,2019-05-24,Wafaa,Literacy Game Thumbnail
 gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
@@ -384,22 +384,22 @@ gazeplay-games/src/main/resources/data/colors/images/normal/draw-icecream.png,ou
 gazeplay-games/src/main/resources/data/colors/images/normal/draw-owl.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/colors/images/normal/draw-rocket.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/bear.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/chouette.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/crabe.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/chouette.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/crabe.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/dog.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/ecureuil.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/ecureuil.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/elephant.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/fox.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/frog.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/giraffe.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/herisson.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/herisson.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/hippo.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/lapin.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/lapin.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/lion.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/meduse.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/poulpe.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/renard.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/meduse.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/poulpe.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
+gazeplay-games/src/main/resources/data/common/default/images/noBackGround/penguin.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_labyrinth_images.py)",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/snake.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/common/default/images/noBackGround/tortue.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/turtle.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/creampie/images/gateau.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/creampie/images/hand.png,oui,source inconnue,,2017-02-08,schwab,first commit
@@ -531,25 +531,9 @@ gazeplay-games/src/main/resources/data/horses/rollImages/rollBLUE.png,oui,libre,
 gazeplay-games/src/main/resources/data/horses/rollImages/rollGREEN.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
 gazeplay-games/src/main/resources/data/horses/rollImages/rollRED.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
 gazeplay-games/src/main/resources/data/horses/rollImages/rollYELLOW.png,oui,libre,"dessiné pour le projet (gradle/images/make_horses_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Horses
-gazeplay-games/src/main/resources/data/labyrinth/images/TransparentArrow.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/labyrinth/images/cheese.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"
-gazeplay-games/src/main/resources/data/labyrinth/images/downArrow.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"
-gazeplay-games/src/main/resources/data/labyrinth/images/downArrowLight.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/house.png,oui,source inconnue,,2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
-gazeplay-games/src/main/resources/data/labyrinth/images/leftArrow.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"
-gazeplay-games/src/main/resources/data/labyrinth/images/leftArrowLight.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseBack.png,oui,source inconnue,,2018-05-23,MelanieCarriere,advancement of labyrinth game
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseBackBold.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseFront.png,oui,source inconnue,,2018-05-23,MelanieCarriere,advancement of labyrinth game
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseFrontBold.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseLeft.png,oui,source inconnue,,2018-05-23,MelanieCarriere,advancement of labyrinth game
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseLeftBold.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseRight.png,oui,source inconnue,,2018-05-23,MelanieCarriere,advancement of labyrinth game
-gazeplay-games/src/main/resources/data/labyrinth/images/mouseRightBold.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/rightArrow.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"
-gazeplay-games/src/main/resources/data/labyrinth/images/rightArrowLight.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
-gazeplay-games/src/main/resources/data/labyrinth/images/upArrow.png,oui,source inconnue,,2018-05-22,MelanieCarriere,"progression of labyrinth game & Mouse,cheese and arrows images"
-gazeplay-games/src/main/resources/data/labyrinth/images/upArrowLight.png,oui,source inconnue,,2018-05-25,MelanieCarriere,Labyrinth game : last Version and bugs corrections
+gazeplay-games/src/main/resources/data/labyrinth/images/cheese.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
+gazeplay-games/src/main/resources/data/labyrinth/images/house.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
+gazeplay-games/src/main/resources/data/labyrinth/images/mouse.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/ladder/Biboule.png,oui,source inconnue,,2021-09-02,Iluvrog,little graphical change
 gazeplay-games/src/main/resources/data/magiccards/images/blue-card-game.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/magiccards/images/red-card-game.png,oui,source inconnue,,2017-02-08,schwab,first commit

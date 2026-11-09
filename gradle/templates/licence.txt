@@ -160,6 +160,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images et sons de « Biboule Jump » (data/biboulejump) : ciel, nuages, tremplin et sons faits pour GazePlay Learning
   (gradle/images/make_biboulejump_images.py, make_biboulejump_sounds.py), sous la licence du projet ; les Biboules du jeu
   sont celles du jeu « Tir ».
+- Images du « Labyrinthe » (data/labyrinth) : souris, fromage et maison faits pour GazePlay Learning
+  (gradle/images/make_labyrinth_images.py), sous la licence du projet ; animaux d'OpenMoji (CC BY-SA 4.0).
 - Images de « Course du regard » (data/gazeRace) : voitures, barrière de travaux et choc faits pour GazePlay Learning
   (gradle/images/make_gazerace_images.py), sous la licence du projet.
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning

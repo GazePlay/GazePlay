@@ -1,0 +1,21 @@
+# Le principe
+Guide la souris jusqu'au fromage (ou l'animal jusqu'à sa maison) dans un labyrinthe de haies !
+
+# Comment jouer
+- Le labyrinthe se creuse sous tes yeux, puis la souris apparaît dans un coin et le fromage plus loin. Il n'y a qu'un seul chemin entre deux cases.
+- Flèches autour du personnage : fixe une flèche à côté de la souris, elle avance d'une case de ce côté. Une flèche grise montre une haie : elle ne fait rien.
+- Flèches autour du labyrinthe : fixe une des quatre grandes flèches autour du labyrinthe. Continue de la regarder pour avancer encore.
+- Choisir puis guider : fixe la souris pour la choisir (elle brille), puis regarde la case voisine où elle doit aller : elle y va tout de suite. Regarder plus loin la lâche.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, les fromages (ou les maisons) déjà atteints.
+- Rien ne peut être choisi pendant que le labyrinthe se creuse (1,5 seconde), ni avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Chaque fromage atteint compte un point, puis un nouveau labyrinthe se creuse. Après 3, 5 ou 10 fromages, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 3 fois, 5 fois, 10 fois ou sans fin : le nombre de fromages (ou de maisons) à atteindre.
+- En bas, le personnage : la souris et le fromage, ou un animal au hasard et la maison.
+- En bas aussi, le niveau : Facile, un labyrinthe de 3 lignes et 5 colonnes ; Normal, 5 lignes et 7 colonnes ; Difficile, 7 lignes et 9 colonnes.
+- Enfin, la façon de déplacer : flèches autour du personnage, flèches autour du labyrinthe, ou choisir puis guider.

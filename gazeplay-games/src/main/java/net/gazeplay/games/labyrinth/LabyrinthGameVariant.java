@@ -5,28 +5,31 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * A variant of the game "Labyrinth", chosen in the menu.
+ * The 16 variants of the Labyrinth before its review of 9/11/2026, kept so that the old variants (saved statistics,
+ * shortcuts) are still read: each one is played with its way of moving and its character, at the normal level, without
+ * end. "Anime" (the labyrinth dug before the eyes) is no longer a choice: every labyrinth is dug so.
  */
+@Getter
 @RequiredArgsConstructor
 public enum LabyrinthGameVariant {
-    LOOK_DESTINATION("Look at the destination box to move"),
-    LOOK_LOCAL_ARROWS("Look the movement arrows around the mouse to move"),
-    LOOK_GLOBAL_ARROWS("Look the movement arrows around the labyrinth to move"),
-    SELECT_THEN_LOOK_DESTINATION("Select the mouse then look at the destination box to move"),
-    ANLOOK_DESTINATION("AnimeLook at the destination box to move"),
-    ANLOOK_LOCAL_ARROWS("AnimeLook the movement arrows around the mouse to move"),
-    ANLOOK_GLOBAL_ARROWS("AnimeLook the movement arrows around the labyrinth to move"),
-    ANSELECT_THEN_LOOK_DESTINATION("AnimeSelect the mouse then look at the destination box to move"),
+    LOOK_DESTINATION(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.MOUSE),
+    LOOK_LOCAL_ARROWS(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.MOUSE),
+    LOOK_GLOBAL_ARROWS(LabyrinthMove.GLOBAL_ARROWS, LabyrinthCharacter.MOUSE),
+    SELECT_THEN_LOOK_DESTINATION(LabyrinthMove.SELECT_THEN_GUIDE, LabyrinthCharacter.MOUSE),
+    ANLOOK_DESTINATION(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.MOUSE),
+    ANLOOK_LOCAL_ARROWS(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.MOUSE),
+    ANLOOK_GLOBAL_ARROWS(LabyrinthMove.GLOBAL_ARROWS, LabyrinthCharacter.MOUSE),
+    ANSELECT_THEN_LOOK_DESTINATION(LabyrinthMove.SELECT_THEN_GUIDE, LabyrinthCharacter.MOUSE),
 
-    OTHER_LOOK_DESTINATION("Look at the house box to move"),
-    OTHER_LOOK_LOCAL_ARROWS("Look the movement arrows around the character to move"),
-    OTHER_LOOK_GLOBAL_ARROWS("Look the movement arrows around the labyrinth to move the character"),
-    OTHER_SELECT_THEN_LOOK_DESTINATION("Select the character then look at the house box to move"),
-    OTHER_ANLOOK_DESTINATION("AnimeLook at the house box to move"),
-    OTHER_ANLOOK_LOCAL_ARROWS("AnimeLook the movement arrows around the character to move"),
-    OTHER_ANLOOK_GLOBAL_ARROWS("AnimeLook the movement arrows around the labyrinth to move the character"),
-    OTHER_ANSELECT_THEN_LOOK_DESTINATION("AnimeSelect the character then look at the house box to move");
+    OTHER_LOOK_DESTINATION(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.ANIMAL),
+    OTHER_LOOK_LOCAL_ARROWS(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.ANIMAL),
+    OTHER_LOOK_GLOBAL_ARROWS(LabyrinthMove.GLOBAL_ARROWS, LabyrinthCharacter.ANIMAL),
+    OTHER_SELECT_THEN_LOOK_DESTINATION(LabyrinthMove.SELECT_THEN_GUIDE, LabyrinthCharacter.ANIMAL),
+    OTHER_ANLOOK_DESTINATION(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.ANIMAL),
+    OTHER_ANLOOK_LOCAL_ARROWS(LabyrinthMove.LOCAL_ARROWS, LabyrinthCharacter.ANIMAL),
+    OTHER_ANLOOK_GLOBAL_ARROWS(LabyrinthMove.GLOBAL_ARROWS, LabyrinthCharacter.ANIMAL),
+    OTHER_ANSELECT_THEN_LOOK_DESTINATION(LabyrinthMove.SELECT_THEN_GUIDE, LabyrinthCharacter.ANIMAL);
 
-    @Getter
-    private final String label;
+    private final LabyrinthMove move;
+    private final LabyrinthCharacter character;
 }

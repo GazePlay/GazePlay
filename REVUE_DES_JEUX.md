@@ -711,7 +711,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Egg Game** (`EggGame` ; `PersonalizeEggGame` réuni) | **Remplacées le 2/11** : œuf dessiné par le jeu, prairie et nid dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (nid, fêlures qui grandissent, éclosion animée, anneau) | ✔ 2/11 (règle du mainteneur : une carte, sans fin, rester sur l'œuf suffit, plus de « rétrécie ») |
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
 | Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
-| Labyrinth (`Labyrinth`) | **Remplacé le 28/10** : animaux sans fond (OpenMoji) ; à confirmer : 19 dessins (souris, flèches, fromage) et 9 du dossier `common` des jeux | | |
+| **Labyrinthe** (`Labyrinth`) | **9/11** : les 19 dessins retirés (la maison ressemblait à une image de banque d'images) ; souris, fromage et maison dessinés par script (`make_labyrinth_images.py`), haies dessinées par le jeu ; les 9 animaux sans fond de source inconnue remplacés par OpenMoji (renard et tortue, en double, retirés ; pingouin et grenouille ajoutés) ; vignette faite par le script | ✔ 9/11 (labyrinthe de haies vu de dessus, centré, murs fins entre les cases, anneau, flèches rondes, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : un vrai labyrinthe à chemin unique, nouveau à chaque fromage, fin après 3 / 5 / 10 ou sans fin, Facile 3 × 5 / Normal 5 × 7 / Difficile 7 × 9, 3 façons de déplacer, souris ou animal) — à essayer |
 | **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
 | **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
 | Blocks, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
@@ -2669,3 +2669,49 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   devient **« Course du regard »** en français et **« Gaze Race »** en anglais (`multilinguism.csv`, licence affichée).
   Le nom de code `GazeRace` (fichiers de statistiques, catalogue, aide) ne change pas. **La barrière est gardée**
   (décision du mainteneur). Validé, commité et poussé le 9/11/2026.
+
+### Labyrinthe (`Labyrinth`, code `labyrinth`) — 9/11/2026
+
+- **État des lieux (lecture du code)** : une souris va au fromage dans un labyrinthe de 4 × 6 cases, toujours la même
+  taille, décalé vers la droite (25 % du bord gauche) ; cases libres creusées au hasard en taches, pas de couloirs ; chaque
+  fromage compte un point et se replace ailleurs ; **pas de fin**. 16 variantes : 4 façons de déplacer (regarder la case
+  voisine par des flèches invisibles, flèches autour de la souris, flèches autour du labyrinthe, choisir la souris puis
+  la guider) × « Anime » (creusement visible, 20 ms par case) × « Autre » (un animal au hasard vers une maison).
+  Défauts : ancien indicateur de fixation (troisième règle) ; pas de délai au départ (cinquième règle) ; fromage plus grand
+  qu'une case (1/7 de l'écran pour des cases de 1/10) et décalé ; flèches autour du labyrinthe d'un quart de la hauteur de
+  l'écran ; `dispose()` vide (écouteurs et animations jamais retirés) ; `MouseV0` jamais utilisée, champ `fixationlength`
+  lu sans servir ; limiteurs lancés ; « Anime » reconnu par son libellé anglais ; ancien style ; ni aide ni test ; 19
+  images, la vignette et 9 animaux de source inconnue, la maison ressemblant à une image de banque d'images.
+- **Règle du mainteneur (9/11/2026, recommandations validées)** : un nouveau labyrinthe à chaque fromage ; fin après 3, 5
+  ou 10 fromages, ou sans fin ; un vrai labyrinthe à couloirs, Facile 3 × 5, Normal 5 × 7, Difficile 7 × 9, centré, un
+  chemin toujours possible ; 3 façons de déplacer (les flèches invisibles rejoignent les flèches autour du personnage) ;
+  le creusement n'est plus une variante (environ 1,5 s à chaque labyrinthe, pendant le délai de départ) ; souris et
+  fromage, ou animal et maison, tout redessiné ; pas de « Mes images ».
+- **Propositions validées** : murs fins entre les cases (les plus grandes cases pour le regard) ; départ dans un coin,
+  fromage au moins à la moitié du plus long chemin ; flèches vers une haie grisées et sans effet ; « choisir puis
+  guider » : fixation sur le personnage, puis une case voisine regardée suffit (comme avant) ; un but par fromage dans
+  les statistiques ; labyrinthe de haies vu de dessus ; anneau des jeux revus ; pastille « Fromages : 2 / 5 ».
+- **Fait** : le jeu réécrit (`Labyrinth`, classe interne `Arrow`, `Maze` pour le tirage ; `Mouse`, `MouseArrows`,
+  `MouseArrowsV2`, `MouseArrowsV3`, `MouseTransparentArrows`, `MouseV0`, `MouseV4`, `Cheese`, `GameBox` retirés), une
+  boucle en temps réel ; fixations comptées par le jeu, durée des réglages lue à chaque pas (quatrième règle), anneau
+  `FixationRing` ; rien ne se choisit pendant le creusement ni avant le délai des réglages (le plus long des deux) ;
+  arrêt pendant le menu (Échap) ; tout retiré à la fin. Labyrinthe parfait tiré par exploration au hasard avec retour en
+  arrière (`Maze`, tous les murs ouverts gardés dans l'ordre pour l'animation). Flèches autour du personnage : dans les
+  cases voisines (62 % d'une case), cachées hors du labyrinthe, grises vers une haie, à regarder de nouveau après chaque
+  pas ; flèches autour du labyrinthe : 12 % du plus petit côté de l'écran, on avance encore tant qu'on regarde ; choisir
+  puis guider : le personnage brille une fois choisi, une case voisine sans haie le fait avancer, une case plus loin le
+  lâche. Après un fromage : 1 s de joie (le but pulse), puis un nouveau labyrinthe ou « Bravo ». La souris se tourne dans
+  le sens de sa marche ; l'animal est tiré au hasard parmi 18 à chaque labyrinthe. Variantes `GroupedGameVariant`
+  (personnage, niveau, fin, façon de déplacer en rangée supplémentaire), 72 ; une ancienne variante garde sa façon de
+  déplacer et son personnage, en Normal, sans fin (l'enum `LabyrinthGameVariant` est gardé pour les lire). Les
+  limiteurs ne sont plus appelés. Statistiques inchangées (`LabyrinthStats`, un but par fromage ; une manche par
+  labyrinthe). Traductions (les 16 anciens libellés remplacés), aide, crédits, inventaire, vignette.
+- **Vérifications** : `LabyrinthTest` (17 tests : labyrinthe parfait à tous les niveaux sur 20 tirages, murs ouverts dans
+  les deux sens, départ dans un coin et fromage loin, creusement et délai, fixation de la durée des réglages lue à chaque
+  pas, pas de passage par une haie, fixation reprise après un regard ailleurs, fromage compté et nouveau labyrinthe,
+  « Bravo » après le dernier, sans fin, flèches autour du labyrinthe qui continuent, flèches dans l'écran et hors du
+  labyrinthe sur 4 écrans et 3 niveaux, choisir puis guider, pas de guidage à travers une haie, tout retiré à la fin,
+  même labyrinthe rejoué, variantes, anciennes variantes) ; `GameHelpTest` avec le jeu ; captures en vraie fenêtre
+  (souris) `build/game-screenshots/apres/labyrinth/` (les 3 façons, les 3 niveaux, souris et pingouin, creusement) ;
+  `build` complet : **924 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Reste l'essai du
+  mainteneur** (souris et Tobii).

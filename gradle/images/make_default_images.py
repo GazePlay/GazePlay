@@ -13,7 +13,8 @@ ANIMALS = {  # file name in GazePlay -> OpenMoji code point
 
 # PNG images of unknown source replaced on 30/10/2026 (review of Memory), same names; the fox and the turtle were twice
 # in the folder (renard.png, tortue.png): a penguin and a frog instead. The versions without background of the
-# labyrinth (noBackGround/chouette.png...) are other files, kept until the review of the labyrinth.
+# labyrinth (noBackGround/chouette.png...) are other files, replaced at the review of the labyrinth (9/11/2026) by
+# make_labyrinth_images.py.
 ANIMALS_PNG = {
     'chouette': '1F989', 'crabe': '1F980', 'ecureuil': '1F43F', 'herisson': '1F994', 'lapin': '1F407',
     'meduse': '1FABC', 'poulpe': '1F419', 'penguin': '1F427', 'frog': '1F438',

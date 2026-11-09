@@ -104,6 +104,15 @@ made by make_biboulejump_sounds.py (this folder), under the license of GazePlay 
 (4/11/2026) pictures and sounds of unknown source; the Biboules of the game are those of the shooting game (data/shooter).
 The thumbnail (gazeplay-core: data/common/Thumbnails/biboulejump.png, 960 x 540) is a capture of the game.
 
+Images of the Labyrinth (gazeplay-games: data/labyrinth/images): the mouse, the cheese and the house (mouse.png,
+cheese.png, house.png) are drawn by make_labyrinth_images.py (this folder), under the license of GazePlay Learning
+(GPL-3.0-or-later); the hedges and the paths are drawn by the game. They replace (9/11/2026) 19 pictures of unknown
+source, the house looking like a picture of an image bank. The animals without background of the game
+(gazeplay-games: data/common/default/images/noBackGround: chouette, crabe, ecureuil, herisson, lapin, meduse, poulpe,
+penguin, frog) are OpenMoji (https://openmoji.org/, color/618x618), CC BY-SA 4.0, made by the same script; they replace
+pictures of unknown source (renard.png and tortue.png, a second fox and a second turtle, are removed). The thumbnail
+(gazeplay-core: data/common/Thumbnails/labyrinth.png, 960 x 540) is made of these pictures by the same script.
+
 Images of GazeRace (gazeplay-games: data/gazeRace): the car of the player, the five other cars, the barrier of works and
 the crash (car-player.png, car-1.png to car-5.png, barrier.png, crash.png) are drawn by make_gazerace_images.py (this
 folder), under the license of GazePlay Learning (GPL-3.0-or-later); the road is drawn by the game. They replace

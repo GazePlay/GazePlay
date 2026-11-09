@@ -1,466 +1,755 @@
 package net.gazeplay.games.labyrinth;
 
-import javafx.animation.PauseTransition;
+import javafx.animation.AnimationTimer;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Parent;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.FixationRing;
+import net.gazeplay.components.GameStyle;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Game "Labyrinth": a mouse (or another character) must reach the cheese through a labyrinth drawn at random. The
- * variants change how the player moves it: by looking at the next box, at arrows around the mouse or around the
- * labyrinth, or by selecting the mouse then looking where it goes. Each cheese reached counts as a goal and moves the
- * cheese.
+ * The Labyrinth (reviewed on 9/11/2026, maintainer's rules): the mouse goes to the cheese (or an animal to the house) in
+ * a labyrinth of hedges drawn at random, where one path only joins two boxes. Each goal reached counts, then a new
+ * labyrinth is dug; the game ends after 3, 5 or 10 goals ("Bravo"), or never. The character starts in a corner, the goal
+ * at least half of the longest path away. The player moves the character by a fixation on an arrow next to it or around
+ * the labyrinth, or by a fixation on the character, then a look at a box next to it.
+ * <p>
+ * One loop, in real seconds: the fixations are counted by the game (length of the settings, read at each step), nothing
+ * can be chosen while a labyrinth is dug (about 1.5 s) or before the delay of the settings, and nothing moves while the
+ * menu of the game is open. (Before the review: 4 x 6 boxes in blocks, a cheese larger than a box, no end, the former
+ * progress indicator, arrows around the labyrinth a quarter of the screen high, nothing removed at the end.)
  */
-@Slf4j
-public class Labyrinth extends Parent implements GameLifeCycle {
+public class Labyrinth implements GameLifeCycle {
+
+    /**
+     * In seconds: the digging of a labyrinth, the joy after a goal reached.
+     */
+    static final double DIGGING = 1.5;
+    static final double JOY = 1.0;
+    /**
+     * In boxes per second: how fast the picture of the character follows its moves.
+     */
+    private static final double SLIDE = 6;
+
+    private static final String DATA = "data/labyrinth/images/";
+    private static final String ANIMALS = "data/common/default/images/noBackGround/";
+    private static final String[] ANIMAL_PICTURES = {"bear", "chouette", "crabe", "dog", "ecureuil", "elephant", "fox",
+        "frog", "giraffe", "herisson", "hippo", "lapin", "lion", "meduse", "penguin", "poulpe", "snake", "turtle"};
+    private static final Map<String, Image> GAME_IMAGES = new HashMap<>();
+
+    enum Phase { DIGGING, PLAY, JOY, OVER }
 
     private final IGameContext gameContext;
-    private final Stats stats;
-    public final double fixationlength;
-
-    private GameBox[][] walls;
-    private int[][] wallsPlacement;
-
-    final int nbBoxesLine = 4;
-    final int nbBoxesColumns = 6;
-
-    final double entiereRecX;
-    final double entiereRecY;
-    final double entiereRecWidth;
-    final double entiereRecHeight;
-
-    final double caseHeight;
-    final double caseWidth;
-    final double adjustmentCaseWidth;
-    final double adjustmentCaseHeight;
-
-    private Cheese cheese;
-    private Mouse mouse;
-
-    private final LabyrinthGameVariant variant;
-
-    /**
-     * The random generator of the game (labyrinth, cheese and character), saved for the replay.
-     */
+    private final Configuration configuration;
+    private final LabyrinthStats stats;
     @Getter
-    private final ReplayablePseudoRandom randomGenerator;
-    private List<Integer> listAnim = new ArrayList<Integer>();
+    private final LabyrinthCharacter character;
+    @Getter
+    private final LabyrinthLevel level;
+    @Getter
+    private final LabyrinthMove move;
+    @Getter
+    private final LabyrinthEnd end;
+    private final ReplayablePseudoRandom random;
 
-    private boolean doAnim;
+    @Getter
+    private Phase phase = Phase.OVER;
+    @Getter
+    private Maze maze;
+    @Getter
+    private int line;
+    @Getter
+    private int column;
+    @Getter
+    private int goalLine;
+    @Getter
+    private int goalColumn;
+    @Getter
+    private int score;
+    @Getter
+    private boolean selected;
+    private double elapsed;
+    @Getter
+    private double waiting;
+    private int opened;
+    private double shownX;
+    private double shownY;
 
-    public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
-        super();
+    private double width;
+    private double height;
+    @Getter
+    private double cell;
+    private double boardX;
+    private double boardY;
 
-        this.gameContext = gameContext;
-        this.gameContext.startScoreLimiter();
-        this.gameContext.startTimeLimiter();
-        this.stats = stats;
-
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
-
-        this.variant = variant;
-        final Configuration config = gameContext.getConfiguration();
-        fixationlength = config.getFixationLength();
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.debug("dimension2D = {}", dimension2D);
-
-        entiereRecX = dimension2D.getWidth() * 0.25;
-        entiereRecY = dimension2D.getHeight() * 0.15;
-        entiereRecWidth = dimension2D.getWidth() * 0.6;
-        entiereRecHeight = dimension2D.getHeight() * 0.7;
-
-        caseWidth = entiereRecWidth / nbBoxesColumns;
-        caseHeight = entiereRecHeight / nbBoxesLine;
-        adjustmentCaseWidth = caseWidth / 6;
-        adjustmentCaseHeight = caseHeight / 6;
-    }
-
-    public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant, double gameSeed) {
-        super();
-
-        this.gameContext = gameContext;
-        this.stats = stats;
-
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
-        this.variant = variant;
-        final Configuration config = gameContext.getConfiguration();
-        fixationlength = config.getFixationLength();
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.debug("dimension2D = {}", dimension2D);
-
-        entiereRecX = dimension2D.getWidth() * 0.25;
-        entiereRecY = dimension2D.getHeight() * 0.15;
-        entiereRecWidth = dimension2D.getWidth() * 0.6;
-        entiereRecHeight = dimension2D.getHeight() * 0.7;
-
-        caseWidth = entiereRecWidth / nbBoxesColumns;
-        caseHeight = entiereRecHeight / nbBoxesLine;
-        adjustmentCaseWidth = caseWidth / 6;
-        adjustmentCaseHeight = caseHeight / 6;
-
-    }
+    private Group layer;
+    private Group wallsLayer;
+    private Group boxesLayer;
+    private Group hud;
+    private ImageView characterView;
+    private ImageView goalView;
+    private FixationRing ring;
+    private final Map<String, Node> walls = new HashMap<>();
+    private final Map<Maze.Direction, Arrow> arrows = new EnumMap<>(Maze.Direction.class);
+    private Circle characterTarget;
+    private final List<Node> gazeNodes = new ArrayList<>();
 
     /**
-     * @return the box at a line and column
+     * What is looked at (an arrow, or the character to choose it), and how far its fixation is.
      */
-    public GameBox getBoxAt(final int i, final int j) {
-        return walls[i][j];
+    private Object looked;
+    @Getter
+    private double progress;
+
+    private final AnimationTimer loop = new AnimationTimer() {
+        private long last = -1;
+
+        @Override
+        public void handle(final long now) {
+            final double seconds = last < 0 ? 0 : Math.min(0.05, (now - last) / 1e9);
+            last = now;
+            if (!Stats.isConfigMenuOpen()) {
+                step(seconds);
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            last = -1;
+        }
+    };
+    private boolean manual;
+
+    /**
+     * @param gameSeed the seed of the game to replay, or a negative value for a new game
+     */
+    Labyrinth(final IGameContext gameContext, final LabyrinthStats stats, final LabyrinthCharacter character,
+              final LabyrinthLevel level, final LabyrinthMove move, final LabyrinthEnd end, final double gameSeed) {
+        this.gameContext = gameContext;
+        this.configuration = gameContext.getConfiguration();
+        this.stats = stats;
+        this.character = character;
+        this.level = level;
+        this.move = move;
+        this.end = end;
+        if (gameSeed < 0) {
+            random = new ReplayablePseudoRandom();
+            stats.setGameSeed(random.getSeed());
+        } else {
+            random = new ReplayablePseudoRandom(gameSeed);
+        }
     }
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        width = dimension.getWidth();
+        height = dimension.getHeight();
+        layOut();
 
-        final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
-        gameContext.getChildren().add(recJeu);
+        final Rectangle grass = new Rectangle(0, 0, width, height);
+        grass.setFill(Color.rgb(150, 196, 120));
+        final Rectangle floor = new Rectangle(boardX, boardY, cell * level.getColumns(), cell * level.getLines());
+        floor.setFill(Color.rgb(244, 232, 200));
+        floor.setArcWidth(cell * 0.3);
+        floor.setArcHeight(cell * 0.3);
+        boxesLayer = new Group();
+        wallsLayer = new Group();
+        wallsLayer.setMouseTransparent(true);
+        goalView = new ImageView();
+        goalView.setMouseTransparent(true);
+        characterView = new ImageView();
+        characterView.setMouseTransparent(true);
+        final Group arrowsLayer = new Group();
+        ring = new FixationRing();
+        hud = new Group();
+        hud.setMouseTransparent(true);
+        layer = new Group(grass, floor, boxesLayer, goalView, characterView, wallsLayer, arrowsLayer, ring, hud);
+        gameContext.getChildren().add(layer);
 
-        chooseAnim();
-
-        this.wallsPlacement = constructionWallMatrix();
-        walls = creationLabyrinth();
-
-        if (doAnim) {
-            //The animation of the creation of the labyrinthe
-            int delay = 20;     //The delay between each dig (in ms)
-            anim(delay);
+        if (move == LabyrinthMove.SELECT_THEN_GUIDE) {
+            for (int i = 0; i < level.getLines(); i++) {
+                for (int j = 0; j < level.getColumns(); j++) {
+                    final Rectangle box = new Rectangle(boardX + j * cell, boardY + i * cell, cell, cell);
+                    box.setFill(Color.TRANSPARENT);
+                    final int boxLine = i;
+                    final int boxColumn = j;
+                    listen(box, () -> lookAtBox(boxLine, boxColumn), () -> { });
+                    boxesLayer.getChildren().add(box);
+                }
+            }
+            characterTarget = new Circle(cell * 0.42, Color.TRANSPARENT);
+            listen(characterTarget, () -> lookAt(characterTarget), () -> lookAway(characterTarget));
+            boxesLayer.getChildren().add(characterTarget);
         } else {
-            // Creation of cheese
-            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 7, dimension2D.getHeight() / 7, this, randomGenerator);
+            final double size = move == LabyrinthMove.GLOBAL_ARROWS ? globalArrowSize() : cell * 0.62;
+            for (final Maze.Direction direction : Maze.Direction.values()) {
+                final Arrow arrow = new Arrow(direction, size);
+                arrows.put(direction, arrow);
+                arrowsLayer.getChildren().add(arrow.node);
+                listen(arrow.node, () -> lookAt(arrow), () -> lookAway(arrow));
+            }
+            if (move == LabyrinthMove.GLOBAL_ARROWS) {
+                placeGlobalArrows();
+            }
+        }
 
-            mouse = createMouse();
-
-            gameContext.getChildren().add(mouse);
-
-            // launch of cheese
-            cheese.beginCheese();
-            gameContext.getChildren().add(cheese);
-            gameContext.start();
-            stats.notifyNewRoundReady();
-            stats.incrementNumberOfGoalsToReach();
-            gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.getGazeDeviceManager().addStats(stats);
+        score = 0;
+        showHud();
+        newMaze();
+        if (!manual) {
+            loop.start();
         }
     }
 
     /**
-     * @return the mouse of the version of the variant
+     * Places the labyrinth in the middle of the screen, under the band of the score, with room around it for the arrows
+     * around the labyrinth.
      */
-    private Mouse createMouse() {
-        // Creation of the mouse
-        Mouse mouse;
-        switch (variant) {
-            case LOOK_DESTINATION:
-                mouse =new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case LOOK_LOCAL_ARROWS:
-                mouse =new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case LOOK_GLOBAL_ARROWS:
-                mouse=new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case SELECT_THEN_LOOK_DESTINATION:
-                mouse= new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANLOOK_DESTINATION:
-                mouse=new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANLOOK_LOCAL_ARROWS:
-                mouse= new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANLOOK_GLOBAL_ARROWS:
-                mouse= new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANSELECT_THEN_LOOK_DESTINATION:
-                mouse=new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
+    private void layOut() {
+        final double smaller = Math.min(width, height);
+        final double gap = smaller * 0.03;
+        final double top = height * 0.11;
+        final double around = move == LabyrinthMove.GLOBAL_ARROWS ? globalArrowSize() + 2 * gap : gap * 1.5;
+        final double topRoom = top + (move == LabyrinthMove.GLOBAL_ARROWS ? around : 0);
+        final double availableWidth = width - 2 * around;
+        final double availableHeight = height - topRoom - around;
+        cell = Math.min(availableWidth / level.getColumns(), availableHeight / level.getLines());
+        boardX = (width - cell * level.getColumns()) / 2;
+        boardY = topRoom + (availableHeight - cell * level.getLines()) / 2;
+    }
 
+    private double globalArrowSize() {
+        return Math.min(width, height) * 0.12;
+    }
 
-            case OTHER_LOOK_DESTINATION:
-                mouse =new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_LOOK_LOCAL_ARROWS:
-                mouse =new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_LOOK_GLOBAL_ARROWS:
-                mouse=new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_SELECT_THEN_LOOK_DESTINATION:
-                mouse= new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANLOOK_DESTINATION:
-                mouse=new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANLOOK_LOCAL_ARROWS:
-                mouse= new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANLOOK_GLOBAL_ARROWS:
-                mouse= new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANSELECT_THEN_LOOK_DESTINATION:
-                mouse=new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            default:
-                throw new IllegalArgumentException("Unsupported variant ID");
+    private void placeGlobalArrows() {
+        final double size = globalArrowSize();
+        final double gap = Math.min(width, height) * 0.03;
+        final double boardWidth = cell * level.getColumns();
+        final double boardHeight = cell * level.getLines();
+        arrows.get(Maze.Direction.UP).placeAt(boardX + boardWidth / 2, boardY - gap - size / 2);
+        arrows.get(Maze.Direction.DOWN).placeAt(boardX + boardWidth / 2, boardY + boardHeight + gap + size / 2);
+        arrows.get(Maze.Direction.LEFT).placeAt(boardX - gap - size / 2, boardY + boardHeight / 2);
+        arrows.get(Maze.Direction.RIGHT).placeAt(boardX + boardWidth + gap + size / 2, boardY + boardHeight / 2);
+    }
+
+    /**
+     * Makes a node receive the gaze and the mouse.
+     */
+    private void listen(final Node node, final Runnable enter, final Runnable exit) {
+        final EventHandler<Event> handler = event -> {
+            if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                enter.run();
+            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
+                || event.getEventType() == GazeEvent.GAZE_EXITED) {
+                exit.run();
+            }
+        };
+        node.addEventFilter(MouseEvent.ANY, handler);
+        node.addEventFilter(GazeEvent.ANY, handler);
+        gameContext.getGazeDeviceManager().addEventFilter(node);
+        gazeNodes.add(node);
+    }
+
+    /**
+     * @return an image of the game, loaded once
+     */
+    private static Image gameImage(final String path) {
+        return GAME_IMAGES.computeIfAbsent(path, Image::new);
+    }
+
+    /**
+     * A new labyrinth, all closed, which is dug before the eyes; the character starts in a corner, the goal is far.
+     */
+    private void newMaze() {
+        maze = new Maze(level.getLines(), level.getColumns(), random);
+        final int corner = random.nextInt(4);
+        line = corner < 2 ? 0 : level.getLines() - 1;
+        column = corner % 2 == 0 ? 0 : level.getColumns() - 1;
+        final int[][] distances = maze.distancesFrom(line, column);
+        int longest = 0;
+        for (final int[] row : distances) {
+            for (final int distance : row) {
+                longest = Math.max(longest, distance);
+            }
+        }
+        final int far = (int) Math.ceil(longest / 2.0);
+        final List<int[]> places = new ArrayList<>();
+        for (int i = 0; i < level.getLines(); i++) {
+            for (int j = 0; j < level.getColumns(); j++) {
+                if (distances[i][j] >= far && distances[i][j] > 0) {
+                    places.add(new int[]{i, j});
+                }
+            }
+        }
+        final int[] goal = places.get(random.nextInt(places.size()));
+        goalLine = goal[0];
+        goalColumn = goal[1];
+
+        final double size = cell * 0.78;
+        if (character == LabyrinthCharacter.MOUSE) {
+            characterView.setImage(gameImage(DATA + "mouse.png"));
+            goalView.setImage(gameImage(DATA + "cheese.png"));
+        } else {
+            characterView.setImage(gameImage(ANIMALS + ANIMAL_PICTURES[random.nextInt(ANIMAL_PICTURES.length)]
+                + ".png"));
+            goalView.setImage(gameImage(DATA + "house.png"));
+        }
+        characterView.setFitWidth(size);
+        characterView.setFitHeight(size);
+        characterView.setRotate(0);
+        characterView.setEffect(null);
+        goalView.setFitWidth(size);
+        goalView.setFitHeight(size);
+        goalView.setScaleX(1);
+        goalView.setScaleY(1);
+        goalView.setLayoutX(boxX(goalColumn) - size / 2);
+        goalView.setLayoutY(boxY(goalLine) - size / 2);
+        shownX = boxX(column);
+        shownY = boxY(line);
+        placeCharacter();
+        characterView.setVisible(false);
+        goalView.setVisible(false);
+
+        drawClosedWalls();
+        opened = 0;
+        elapsed = 0;
+        waiting = Math.max(DIGGING, configuration.getGameStartDelay() / 1000.0);
+        selected = false;
+        looked = null;
+        progress = 0;
+        ring.stop();
+        phase = Phase.DIGGING;
+        arrows.values().forEach(arrow -> arrow.node.setVisible(false));
+        stats.incrementNumberOfGoalsToReach();
+    }
+
+    /**
+     * Every wall between two boxes, and the hedge around the labyrinth.
+     */
+    private void drawClosedWalls() {
+        wallsLayer.getChildren().clear();
+        walls.clear();
+        final int lines = level.getLines();
+        final int columns = level.getColumns();
+        for (int i = 0; i < lines; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (j < columns - 1) {
+                    final double x = boardX + (j + 1) * cell;
+                    addWall(i + ":" + j + ":0", x, boardY + i * cell, x, boardY + (i + 1) * cell);
+                }
+                if (i < lines - 1) {
+                    final double y = boardY + (i + 1) * cell;
+                    addWall(i + ":" + j + ":1", boardX + j * cell, y, boardX + (j + 1) * cell, y);
+                }
+            }
+        }
+        final double right = boardX + columns * cell;
+        final double bottom = boardY + lines * cell;
+        addWall("top", boardX, boardY, right, boardY);
+        addWall("bottom", boardX, bottom, right, bottom);
+        addWall("left", boardX, boardY, boardX, bottom);
+        addWall("right", right, boardY, right, bottom);
+    }
+
+    /**
+     * A hedge from a point to another, with round ends.
+     */
+    private void addWall(final String key, final double x1, final double y1, final double x2, final double y2) {
+        final double thickness = Math.max(6, cell * 0.14);
+        final Rectangle dark = new Rectangle(Math.min(x1, x2) - thickness / 2, Math.min(y1, y2) - thickness / 2,
+            Math.abs(x2 - x1) + thickness, Math.abs(y2 - y1) + thickness);
+        dark.setArcWidth(thickness);
+        dark.setArcHeight(thickness);
+        dark.setFill(Color.rgb(64, 128, 70));
+        final double inset = thickness * 0.2;
+        final Rectangle light = new Rectangle(dark.getX() + inset, dark.getY() + inset,
+            dark.getWidth() - 2 * inset, dark.getHeight() - 2.5 * inset);
+        light.setArcWidth(thickness - 2 * inset);
+        light.setArcHeight(thickness - 2 * inset);
+        light.setFill(Color.rgb(100, 164, 94));
+        final Group hedge = new Group(dark, light);
+        walls.put(key, hedge);
+        wallsLayer.getChildren().add(hedge);
+    }
+
+    private double boxX(final int boxColumn) {
+        return boardX + (boxColumn + 0.5) * cell;
+    }
+
+    private double boxY(final int boxLine) {
+        return boardY + (boxLine + 0.5) * cell;
+    }
+
+    /**
+     * One step of the game, of a duration in seconds.
+     */
+    void step(final double seconds) {
+        if (phase == Phase.OVER || seconds <= 0) {
+            return;
+        }
+        final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
+        slideCharacter(scaled);
+        switch (phase) {
+            case DIGGING -> dig(seconds);
+            case PLAY -> fixate(seconds);
+            case JOY -> rejoice(seconds);
+            default -> {
+            }
         }
     }
+
+    /**
+     * Opens the walls in the order they were dug, over {@link #DIGGING} seconds; then the game can be played, once the
+     * delay of the settings is over too.
+     */
+    private void dig(final double seconds) {
+        elapsed += seconds;
+        final List<int[]> openings = maze.getOpenings();
+        final int wanted = (int) Math.min(openings.size(), Math.floor(openings.size() * elapsed / DIGGING));
+        while (opened < wanted) {
+            final int[] opening = openings.get(opened++);
+            wallsLayer.getChildren().remove(walls.remove(opening[0] + ":" + opening[1] + ":" + opening[2]));
+        }
+        if (elapsed >= waiting) {
+            while (opened < openings.size()) {
+                final int[] opening = openings.get(opened++);
+                wallsLayer.getChildren().remove(walls.remove(opening[0] + ":" + opening[1] + ":" + opening[2]));
+            }
+            characterView.setVisible(true);
+            goalView.setVisible(true);
+            phase = Phase.PLAY;
+            updateArrows();
+            stats.notifyNewRoundReady();
+        }
+    }
+
+    /**
+     * Counts the fixation on what is looked at, with the length of the settings read at each step.
+     */
+    private void fixate(final double seconds) {
+        if (looked == null) {
+            return;
+        }
+        if (!isEnabled(looked)) {
+            ring.stop();
+            progress = 0;
+            return;
+        }
+        if (!ring.isVisible()) {
+            // Looked at during the digging, or towards a wall before the last move
+            showRing(looked);
+        }
+        progress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
+        ring.setProgress(progress);
+        if (progress < 1) {
+            return;
+        }
+        final Object done = looked;
+        progress = 0;
+        ring.stop();
+        if (done instanceof Arrow arrow) {
+            // An arrow next to the character moves with it: it must be looked at again; one around the labyrinth can be
+            // looked at still for the next move
+            if (move == LabyrinthMove.LOCAL_ARROWS) {
+                looked = null;
+            }
+            go(arrow.direction);
+        } else {
+            looked = null;
+            selected = true;
+            final DropShadow glow = new DropShadow(cell * 0.25, Color.rgb(255, 214, 90));
+            glow.setSpread(0.5);
+            characterView.setEffect(glow);
+        }
+    }
+
+    private void rejoice(final double seconds) {
+        elapsed += seconds;
+        final double pulse = 1 + 0.25 * Math.sin(Math.min(1, elapsed / JOY) * Math.PI * 3);
+        goalView.setScaleX(pulse);
+        goalView.setScaleY(pulse);
+        if (elapsed >= JOY) {
+            if (end.getGoals() > 0 && score >= end.getGoals()) {
+                win();
+            } else {
+                newMaze();
+            }
+        }
+    }
+
+    private boolean isEnabled(final Object target) {
+        if (target instanceof Arrow arrow) {
+            return arrow.node.isVisible() && maze.canGo(line, column, arrow.direction);
+        }
+        return target == characterTarget && !selected;
+    }
+
+    /**
+     * The gaze (or the mouse) enters an arrow, or the character to choose it.
+     */
+    void lookAt(final Object target) {
+        if (looked == target) {
+            return;
+        }
+        looked = target;
+        progress = 0;
+        ring.stop();
+        if (phase == Phase.PLAY && isEnabled(target)) {
+            showRing(target);
+        }
+    }
+
+    private void showRing(final Object target) {
+        if (target instanceof Arrow arrow) {
+            ring.setSize(arrow.size * 1.1);
+            ring.show(arrow.x, arrow.y);
+        } else {
+            ring.setSize(cell * 0.9);
+            ring.show(boxX(column), boxY(line));
+        }
+    }
+
+    void lookAway(final Object target) {
+        if (looked == target) {
+            looked = null;
+            progress = 0;
+            ring.stop();
+        }
+    }
+
+    /**
+     * Once the character chosen, the gaze (or the mouse) entering a box next to it, without a wall between them, takes it
+     * there; looking further away lets it go.
+     */
+    void lookAtBox(final int boxLine, final int boxColumn) {
+        if (phase != Phase.PLAY || !selected || (boxLine == line && boxColumn == column)) {
+            return;
+        }
+        for (final Maze.Direction direction : Maze.Direction.values()) {
+            if (boxLine == line + direction.lines && boxColumn == column + direction.columns) {
+                if (maze.canGo(line, column, direction)) {
+                    go(direction);
+                }
+                return;
+            }
+        }
+        selected = false;
+        characterView.setEffect(null);
+    }
+
+    /**
+     * Moves the character one box in a direction, if no wall is in the way.
+     */
+    void go(final Maze.Direction direction) {
+        if (phase != Phase.PLAY || !maze.canGo(line, column, direction)) {
+            return;
+        }
+        line += direction.lines;
+        column += direction.columns;
+        if (character == LabyrinthCharacter.MOUSE) {
+            characterView.setRotate(direction.angle);
+        }
+        updateArrows();
+        if (line == goalLine && column == goalColumn) {
+            reach();
+        }
+    }
+
+    /**
+     * The goal is reached: one more point, a moment of joy, then a new labyrinth, or the end.
+     */
+    private void reach() {
+        phase = Phase.JOY;
+        elapsed = 0;
+        score++;
+        stats.incrementNumberOfGoalsReached();
+        selected = false;
+        characterView.setEffect(null);
+        looked = null;
+        progress = 0;
+        ring.stop();
+        arrows.values().forEach(arrow -> arrow.node.setVisible(false));
+        showHud();
+    }
+
+    /**
+     * Puts the arrows next to the character in the boxes around it (inside the labyrinth), gray towards a wall.
+     */
+    private void updateArrows() {
+        for (final Arrow arrow : arrows.values()) {
+            if (move == LabyrinthMove.LOCAL_ARROWS) {
+                final int arrowLine = line + arrow.direction.lines;
+                final int arrowColumn = column + arrow.direction.columns;
+                arrow.node.setVisible(maze.inside(arrowLine, arrowColumn));
+                arrow.placeAt(boxX(arrowColumn), boxY(arrowLine));
+            } else {
+                arrow.node.setVisible(true);
+            }
+            arrow.node.setOpacity(maze.canGo(line, column, arrow.direction) ? 1 : 0.35);
+        }
+        if (characterTarget != null) {
+            characterTarget.setCenterX(boxX(column));
+            characterTarget.setCenterY(boxY(line));
+        }
+    }
+
+    private void slideCharacter(final double seconds) {
+        final double targetX = boxX(column);
+        final double targetY = boxY(line);
+        final double most = SLIDE * cell * seconds;
+        final double distance = Math.hypot(targetX - shownX, targetY - shownY);
+        if (distance <= most) {
+            shownX = targetX;
+            shownY = targetY;
+        } else {
+            shownX += (targetX - shownX) / distance * most;
+            shownY += (targetY - shownY) / distance * most;
+        }
+        placeCharacter();
+    }
+
+    private void placeCharacter() {
+        characterView.setLayoutX(shownX - characterView.getFitWidth() / 2);
+        characterView.setLayoutY(shownY - characterView.getFitHeight() / 2);
+    }
+
+    private void showHud() {
+        hud.getChildren().clear();
+        final String text = gameContext.getTranslator().translate(character.getGoalsKey()) + " " + score
+            + (end.getGoals() > 0 ? " / " + end.getGoals() : "");
+        final Group pill = GameStyle.pill(text, height * 0.035);
+        pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
+        pill.setLayoutY(height * 0.02);
+        hud.getChildren().add(pill);
+    }
+
+    private void win() {
+        phase = Phase.OVER;
+        loop.stop();
+        stats.takeScreenShot();
+        gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
+    }
+
+    /**
+     * For the tests: the loop does not run, {@link #step(double)} is called instead.
+     */
+    void setManual() {
+        manual = true;
+        loop.stop();
+    }
+
+    /**
+     * @return the arrow of a direction, null when the character is chosen then guided
+     */
+    Object getArrow(final Maze.Direction direction) {
+        return arrows.get(direction);
+    }
+
+    /**
+     * @return what the gaze looks at to choose the character, null with the arrows
+     */
+    Object getCharacterTarget() {
+        return characterTarget;
+    }
+
+    /**
+     * @return whether the arrow of a direction is shown and can be chosen
+     */
+    boolean isArrowEnabled(final Maze.Direction direction) {
+        final Arrow arrow = arrows.get(direction);
+        return arrow != null && isEnabled(arrow);
+    }
+
+    /**
+     * @return the middle of the arrow of a direction on the screen
+     */
+    double[] arrowCenter(final Maze.Direction direction) {
+        final Arrow arrow = arrows.get(direction);
+        return new double[]{arrow.x, arrow.y, arrow.size};
+    }
+
+    /**
+     * @return the corners of the labyrinth on the screen: left, top, right, bottom
+     */
+    double[] board() {
+        return new double[]{boardX, boardY, boardX + cell * level.getColumns(), boardY + cell * level.getLines()};
+    }
+
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-    }
-
-    /**
-     * @return the horizontal position of a column, in pixels
-     */
-    protected double positionX(final int j) {
-        return entiereRecX + j * caseWidth;
-    }
-
-    /**
-     * @return the vertical position of a line, in pixels
-     */
-    protected double positionY(final int i) {
-        return entiereRecY + i * caseHeight;
-    }
-
-    /**
-     * @return the boxes of the labyrinth, walls or free
-     */
-    private GameBox[][] creationLabyrinth() {
-        final GameBox[][] walls = new GameBox[nbBoxesLine][nbBoxesColumns];
-        for (int i = 0; i < nbBoxesLine; i++) { // i = rows number = Coord Y
-            for (int j = 0; j < nbBoxesColumns; j++) { // j = columns number = Coord X
-                final GameBox g = new GameBox(caseHeight, caseWidth, entiereRecX + j * caseWidth,
-                    entiereRecY + i * caseHeight, wallsPlacement[i][j], j, i);
-                walls[i][j] = g;
-                gameContext.getChildren().add(g);
-            }
+        phase = Phase.OVER;
+        loop.stop();
+        if (ring != null) {
+            ring.stop();
         }
-        return walls;
-    }
-
-    /**
-     * @return a labyrinth drawn at random (1 for a wall, 0 for a free box): a digging robot opens paths between goals
-     *   spread over the grid, from the top left box
-     */
-    private int[][] constructionWallMatrix() {
-        //Initialisation
-        int[][] lab = new int[nbBoxesLine][nbBoxesColumns];
-        int[][] ret = new int[nbBoxesLine][nbBoxesColumns];
-        for (int i = 0; i < nbBoxesLine; i++) {
-            for (int j = 0; j < nbBoxesColumns; j++) {
-                lab[i][j] = 1;
-                ret[i][j] = 1;
-            }
-        }
-        lab[0][0] = 0;
-        ret[0][0] = 0;
-
-        //Goals to dig
-        int nbObj = (int) (1.5 * Math.cbrt(nbBoxesColumns * nbBoxesLine));
-        int objX, objY;     //My goal to reach
-        int robX, robY;     //My digger robot
-        int r;              //My rand var
-        int rmax = 10;      //My bond of my rand var
-        int noise = (int) (Math.sqrt(nbObj));
-        for (int i = 0; i < nbObj; i++) {
-            objX = (int) (nbBoxesLine * (i % (int) (Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
-            if (objX < 0) {
-                objX = 0;
-            }
-            if (objX >= nbBoxesLine) {
-                objX = nbBoxesLine - 1;
-            }
-            objY = (int) (nbBoxesColumns * ((int) (i / Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
-            if (objY < 0) {
-                objY = 0;
-            }
-            if (objY >= nbBoxesColumns) {
-                objY = nbBoxesColumns - 1;
-            }
-            robX = objX;
-            robY = objY;
-            while (lab[robX][robY] == 1) {
-                robX = randomGenerator.nextInt(nbBoxesLine);
-                robY = randomGenerator.nextInt(nbBoxesColumns);
-            }
-            while (lab[objX][objY] == 1) {
-                r = randomGenerator.nextInt(rmax);
-                if (r == 0) {    //Je m'éloigne en x
-                    if (robX > objX) {
-                        if (robX != nbBoxesLine - 1) {
-                            robX++;
-                        }
-                    } else {
-                        if (robX != 0) {
-                            robX--;
-                        }
-                    }
-                } else if (r == 1) {   //Je m'éloigne en y
-                    if (robY > objY) {
-                        if (robY != nbBoxesColumns - 1) {
-                            robY++;
-                        }
-                    } else {
-                        if (robY != 0) {
-                            robY--;
-                        }
-                    }
-                } else if (r < rmax / 2 + 1) {    //Je m'approche en x
-                    if (robX > objX) {
-                        if (robX != 0) {
-                            robX--;
-                        }
-                    } else {
-                        if (robX != nbBoxesLine - 1) {
-                            robX++;
-                        }
-                    }
-                } else {      //Je m'approche en y
-                    if (robY > objY) {
-                        if (robY != 0) {
-                            robY--;
-                        }
-                    } else {
-                        if (robY != nbBoxesColumns - 1) {
-                            robY++;
-                        }
-                    }
-                }
-                if (lab[robX][robY] == 1) {
-                    listAnim.add(robX);
-                    listAnim.add(robY);
-                }
-                lab[robX][robY] = 0;
-            }
-        }
-
-        //Return
-        if (doAnim) {
-            return ret;
-        }
-        return lab;
-    }
-
-    /**
-     * @return whether the mouse can go to a box (inside the labyrinth, not a wall)
-     */
-    boolean isFreeForMouse(final int i, final int j) {
-        if (i >= nbBoxesLine || j >= nbBoxesColumns) {
-            return false;
-        }
-        return (!walls[i][j].isAWall());
-    }
-
-    /**
-     * @return whether the cheese can be put on a box (not a wall, not the mouse)
-     */
-    boolean isFreeForCheese(final int i, final int j) {
-        return (!walls[i][j].isAWall() && !mouse.isTheMouse(i, j));
-    }
-
-    /**
-     * Counts a goal and moves the cheese when the mouse reaches it.
-     */
-    void testIfCheese(final int i, final int j) {
-        if (cheese.isTheCheese(i, j)) {
-            stats.incrementNumberOfGoalsReached();
-            gameContext.updateScore(stats, this);
-            cheese.moveCheese();
-            stats.incrementNumberOfGoalsToReach();
-            mouse.nbMove = 0;
+        gazeNodes.forEach(node -> gameContext.getGazeDeviceManager().removeEventFilter(node));
+        gazeNodes.clear();
+        arrows.clear();
+        walls.clear();
+        if (layer != null) {
+            gameContext.getChildren().remove(layer);
+            layer = null;
         }
     }
 
     /**
-     * Plays the next animation of the mouse, if any.
+     * An arrow: a round button with an arrow facing its direction.
      */
-    void anim(int delay) {
-        if (!listAnim.isEmpty()) {
-            PauseTransition wait = new PauseTransition(Duration.millis(delay));
-            wait.setOnFinished(waitEvent -> {
-                int x = listAnim.remove(0);
-                int y = listAnim.remove(0);
-                wallsPlacement[x][y] = 0;
-                final GameBox g = new GameBox(caseHeight, caseWidth, entiereRecX + y * caseWidth,
-                    entiereRecY + x * caseHeight, wallsPlacement[x][y], y, x);
-                walls[x][y] = g;
-                gameContext.getChildren().add(g);
-                anim(delay);
-            });
-            wait.play();
-        } else {
-            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+    private static final class Arrow {
+        private final Maze.Direction direction;
+        private final double size;
+        private final Group node;
+        private double x;
+        private double y;
 
-            // Creation of cheese
-            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 7, dimension2D.getHeight() / 7, this, randomGenerator);
-            mouse = createMouse();
+        Arrow(final Maze.Direction direction, final double size) {
+            this.direction = direction;
+            this.size = size;
+            final Circle button = new Circle(size / 2);
+            button.setFill(Color.rgb(255, 252, 244, 0.92));
+            button.setStroke(Color.rgb(90, 96, 110));
+            button.setStrokeWidth(Math.max(2, size * 0.03));
+            final double d = size;
+            final Polygon shape = new Polygon(0, -0.32 * d, 0.26 * d, -0.02 * d, 0.1 * d, -0.02 * d, 0.1 * d, 0.3 * d,
+                -0.1 * d, 0.3 * d, -0.1 * d, -0.02 * d, -0.26 * d, -0.02 * d);
+            shape.setStyle("-fx-fill: -gp-accent;");
+            shape.setRotate(direction.angle);
+            node = new Group(button, shape);
+            node.setVisible(false);
+        }
 
-            gameContext.getChildren().add(mouse);
-
-            // launch of cheese
-            cheese.beginCheese();
-            gameContext.getChildren().add(cheese);
-
-            gameContext.start();
-
-            stats.notifyNewRoundReady();
-            stats.incrementNumberOfGoalsToReach();
-            gameContext.getGazeDeviceManager().addStats(stats);
+        void placeAt(final double newX, final double newY) {
+            x = newX;
+            y = newY;
+            node.setLayoutX(newX);
+            node.setLayoutY(newY);
         }
     }
-
-    /**
-     * Enables the animations of the mouse in the "Anime" variants.
-     */
-    private void chooseAnim() {
-        doAnim = variant.getLabel().startsWith("Anime");
-    }
-
 }
