@@ -275,7 +275,7 @@ WhereIsTheLetter,Ku është letra?,اين الرسالة؟,Дзе ліст?,信�
 WhereIsTheNumber,Ku është numri?,اين الرقم؟,Дзе нумар?,号码在哪里？,Wo ist die Nummer?,Πού είναι ο αριθμός;,Where is the number?,Missä numero on?,Où est le chiffre ?,संख्या कहां है?,Gdje je broj?,Dimana nomornya?,Dov'è il numero?,番号はどこですか？,Waar is het nummer?,Gdzie jest numer?,Onde está o número?,Где номер?,¿Dónde está el número?,Số ở đâu?,Mana nombornya?
 WhereIsTheShape,Ku është forma?,اين الشكل؟,Дзе форма?,形状在哪里？,Wo ist die Form?,Πού είναι το σχήμα;,Where is the shape?,Missä muoto on?,Où est la forme ?,आकृति कहाँ है?,Gdje je oblik?,Dimana bentuknya?,Dov'è la forma?,形はどこ？,Waar is de vorm?,Gdzie jest kształt?,Onde está a forma?,Где форма?,¿Dónde está la forma?,Hình dạng ở đâu?,Di manakah bentuknya?
 WhereIsTheSound,Çfarë është ky tingull?,ما هذا الصوت؟,Што гэта за гук?,这是什么声音？,Was ist das für ein Geräusch?,Τι είναι αυτός ο ήχος;,What is this sound?,Mikä tämä ääni on?,Quel est ce son ?,यह ध्वनि क्या है?,Kakav je ovo zvuk?,Suara apa ini?,Cos'è questo suono?,この音は何ですか？,Wat is dit geluid?,Co to za dźwięk?,O que é esse som?,Что это за звук?,¿Qué es este sonido?,Đây là âm thanh gì?,Apakah bunyi ini?
-Connect4,,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,,
+Connect4,,,,,,,Four in a Row,,Quatre en ligne,,,,,,,,,,,,
 TrainSwitches,,,,,,,Train Switches,,Aiguillages,,,,,,,,,,,,
 TowerDefense,,,,,,,Tower Defense,,Défendre le château,,,,,,,,,,,,
 colorblend,,,,,,,Color Blend,,Mélanger les couleurs,,,,,,,,,,,,
@@ -399,6 +399,26 @@ TrainSwitchesTrains20,,,,,,,20 trains,,20 trains,,,,,,,,,,,,
 TrainSwitchesEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
 TrainSwitchesRight,,,,,,,Right stations:,,Bonnes gares :,,,,,,,,,,,,
 TrainSwitchesCount,,,,,,,Trains:,,Trains :,,,,,,,,,,,,
+Connect4Easy,,,,,,,Easy computer,,Ordi facile,,,,,,,,,,,,
+Connect4Normal,,,,,,,Medium computer,,Ordi moyen,,,,,,,,,,,,
+Connect4Hard,,,,,,,Hard computer,,Ordi difficile,,,,,,,,,,,,
+Connect4Duo,,,,,,,Two players,,À deux,,,,,,,,,,,,
+Connect4Games1,,,,,,,In 1 game,,En 1 partie,,,,,,,,,,,,
+Connect4Games3,,,,,,,In 3 games,,En 3 parties,,,,,,,,,,,,
+Connect4Games5,,,,,,,In 5 games,,En 5 parties,,,,,,,,,,,,
+Connect4Endless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+Connect4YourTurn,,,,,,,Your turn!,,À toi !,,,,,,,,,,,,
+Connect4ComputerTurn,,,,,,,The computer plays,,L'ordinateur joue,,,,,,,,,,,,
+Connect4Turn,,,,,,,To play:,,À jouer :,,,,,,,,,,,,
+Connect4You,,,,,,,You,,Toi,,,,,,,,,,,,
+Connect4Computer,,,,,,,Computer,,Ordinateur,,,,,,,,,,,,
+Connect4Red,,,,,,,Red,,Rouge,,,,,,,,,,,,
+Connect4Yellow,,,,,,,Yellow,,Jaune,,,,,,,,,,,,
+Connect4YouWin,,,,,,,You win!,,Tu as gagné !,,,,,,,,,,,,
+Connect4ComputerWins,,,,,,,The computer wins,,L'ordinateur a gagné,,,,,,,,,,,,
+Connect4RedWins,,,,,,,Red wins!,,Rouge a gagné !,,,,,,,,,,,,
+Connect4YellowWins,,,,,,,Yellow wins!,,Jaune a gagné !,,,,,,,,,,,,
+Connect4Draw,,,,,,,Draw,,Match nul,,,,,,,,,,,,
 Biboule,,,,,,,Biboule,,Biboule,,,,,,,,,,,,
 BibouleJumpEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
 BibouleJumpNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
@@ -458,8 +478,6 @@ Savanna,Savana,السافانا,Саванна,稀树草原,Savanne,Σαβάνα
 Sea,,,Мора,,,,Sea,,Mer,,,,,,,,,Море,,,
 Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
-PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
-AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
 
 # CONTEXT TITLES
 StatsTitle,Statistika,احصائيات,Статыстыка,游戏数据,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,विन्यास,Statistika,Statistik,Statistiche,統計,Statistieken,Statystyka,Estatística,Статистика,Estadísticas,Số liệu thống kê,Statistik
@@ -672,7 +690,6 @@ Scores,Rezultatet,درجات,вынікі,分数,Spielstände,Σκορ,Scores,Pi
 # BIBOULE JUMP AND SPACE GAME
 
 # CONNECT4 GAME
-CurrentPlayer,,,,,,,Current player :,,Joueur actuel :,,,,,,,,,,,,
 
 # TRAIN GAME
 

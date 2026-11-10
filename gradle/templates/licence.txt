@@ -173,6 +173,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Circuits et sons d'« Aiguillages » (data/trainSwitches) : circuits et sons faits pour GazePlay Learning
   (circuits.txt, gradle/images/make_trainswitches_sounds.py), sous la licence du projet ; trains, gares, rails et
   tunnel sont dessinés par le jeu.
+- Sons de « Quatre en ligne » (data/connect4) : faits pour GazePlay Learning
+  (gradle/images/make_connect4_sounds.py), sous la licence du projet ; grille et jetons dessinés par le jeu.
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
   jeu « Tir ».

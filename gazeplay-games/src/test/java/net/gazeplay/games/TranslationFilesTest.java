@@ -59,12 +59,14 @@ class TranslationFilesTest {
     @MethodSource("translationFiles")
     void shouldNotHaveMoreColumnsThanTheHeader(Path file) throws IOException {
         List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
-        // Same splitting as I18N
-        int headerColumns = lines.get(0).split(",").length;
+        // Every cell counted, the empty ones at the end too (10/11/2026: a comma inside "Computer, easy" moved the
+        // French text one column to the right, where it was not read; split(",") dropped the empty cells at the end,
+        // and the line did not look longer than the header)
+        int headerColumns = lines.get(0).split(",", -1).length;
 
         List<String> malformedLines = new ArrayList<>();
         for (String line : lines.subList(1, lines.size())) {
-            if (line.split(",").length > headerColumns) {
+            if (line.split(",", -1).length > headerColumns) {
                 malformedLines.add(line.split(",")[0]);
             }
         }

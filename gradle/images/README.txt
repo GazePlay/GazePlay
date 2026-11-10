@@ -143,6 +143,12 @@ make_trainswitches_sounds.py (this folder), all under the license of GazePlay Le
 (10/11/2026) 43 pictures and 5 sounds of unknown source. The thumbnail (gazeplay-core:
 data/common/Thumbnails/trainSwitches.png, 960 x 540) is a capture of the game, reduced by half.
 
+Sounds of "Quatre en ligne" (Four in a Row, name code Connect4; gazeplay-games: data/connect4): the grid and the tokens
+are drawn by the game; the sounds (sounds/drop.wav, win.wav, lose.wav) are made by make_connect4_sounds.py (this
+folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (10/11/2026) one sound of unknown
+source. The thumbnail (gazeplay-core: data/common/Thumbnails/connect4.png, 960 x 540) is a capture of the game, reduced
+by half.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

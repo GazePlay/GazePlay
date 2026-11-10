@@ -1,0 +1,20 @@
+# Le principe
+Aligne 4 jetons de ta couleur avant ton adversaire : en ligne, en colonne ou en diagonale ! Tu as les jetons rouges (avec une étoile), ton adversaire les jaunes (avec un rond).
+
+# Comment jouer
+- Fixe une colonne pour y lâcher un jeton : la colonne s'éclaire, ton jeton attend au-dessus, puis il tombe tout en bas de la colonne.
+- Une colonne pleine ne peut plus être choisie.
+- Contre l'ordinateur, son jeton passe d'une colonne à l'autre pendant qu'il réfléchit, puis il le lâche.
+- À deux, chacun joue à son tour avec le même regard ou la même souris : les rouges, puis les jaunes.
+- Celui qui commence change à chaque partie.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, à qui le tour, et le score.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Le premier qui aligne 4 jetons gagne la partie : ses 4 jetons sont entourés. Si la grille est pleine sans gagnant, c'est un match nul. Après 1, 3 ou 5 parties : si tu as gagné plus de parties que l'ordinateur, c'est « Bravo », puis les statistiques ; sinon, les statistiques tout de suite. À deux, c'est toujours « Bravo ». Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- En 1 partie, en 3 parties, en 5 parties ou sans fin : le nombre de parties du match.
+- En bas, l'adversaire : ordi facile (il gagne s'il le peut, sinon il joue au hasard) ; ordi moyen (il gagne s'il le peut, bloque tes alignements de 4 et évite de t'offrir la victoire) ; ordi difficile (il prévoit plusieurs coups à l'avance) ; ou à deux.

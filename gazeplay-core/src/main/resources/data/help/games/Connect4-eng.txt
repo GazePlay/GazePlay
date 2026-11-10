@@ -1,0 +1,20 @@
+# The principle
+Line up 4 tokens of your color before your opponent: in a row, a column or a diagonal! You have the red tokens (with a star), your opponent the yellow ones (with a ring).
+
+# How to play
+- Fixate a column to drop a token there: the column lights up, your token waits above it, then it falls to the bottom of the column.
+- A full column can no longer be chosen.
+- Against the computer, its token goes from column to column while it thinks, then it drops it.
+- With two players, each one plays in turn with the same gaze or the same mouse: red, then yellow.
+- Who starts changes at each game.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top, whose turn it is, and the score.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+The first one to line up 4 tokens wins the game: their 4 tokens are circled. If the grid is full with no winner, it is a draw. After 1, 3 or 5 games: if you won more games than the computer, it is "Bravo", then the statistics; if not, the statistics at once. With two players, it is always "Bravo". Without end, the game goes on until you leave it with the menu (Escape key).
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- In 1 game, in 3 games, in 5 games or without end: the number of games of the match.
+- At the bottom, the opponent: easy computer (it wins if it can, else it plays at random); medium computer (it wins if it can, blocks your lines of 4 and avoids giving you the win); hard computer (it looks several moves ahead); or two players.

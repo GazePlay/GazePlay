@@ -68,7 +68,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,source inc
 gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,libre,"capture du jeu (3/11/2026) ; briques, fond et raquette dessinés par le jeu",2026-11-03,GazePlay Learning,revue du Casse-brique
 gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,source inconnue,,2024-04-24,Yaniissou,setup ColorBlendGame
 gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,libre,capture du jeu (octobre 2026) ; coloriage OpenMoji CC BY-SA 4.0,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-core/src/main/resources/data/common/Thumbnails/connect4.png,oui,source inconnue,,2023-03-09,HugolinBouhineau,Create Connect4 Skeleton
+gazeplay-core/src/main/resources/data/common/Thumbnails/connect4.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue de Quatre en ligne
 gazeplay-core/src/main/resources/data/common/Thumbnails/creamPie.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/dice.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
 gazeplay-core/src/main/resources/data/common/Thumbnails/divisor.png,oui,source inconnue,,2018-07-18,kuhlkrein,"Icones part 3/3, new game RushHour"

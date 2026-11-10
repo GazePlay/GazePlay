@@ -43,7 +43,8 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   apt manque, épingler `ubuntu-24.04` ; si `package-macos` est de nouveau annulé sans étape, essayer `macos-15`.
 - **Aiguillages** (`TrainSwitches`) : revu (fiche en bas), puis retour du mainteneur (vitesse selon la durée de fixation,
   aperçu du prochain train avec le temps restant) ; **validé par le mainteneur le 10/11** ; pas encore commité.
-- **Puissance 4** (`Connect4`) : état des lieux.
+- **Quatre en ligne** (`Connect4`, ancien « Puissance 4 », nom d'un jeu commercial) : revu (fiche en bas), propositions
+  validées par le mainteneur ; **essayé et validé** (souris et Tobii), noms des niveaux de l'ordinateur corrigés.
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -796,7 +797,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
 | Simon (`Simon`) | À confirmer : 2 images | | |
 | Cups and Balls, Dice, Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
-| Connect4 (`Connect4`) | Pas d'image propre. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | | |
+| **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | Scribble (`Scribble`), Letters (`Letters`) | Pas d'image propre relevée | | |
 | GazePlay Eval, GazePlay Eval Test | Pas d'image propre ; le dossier `gazeplayEvalTest` (4 images des anciens jeux BERA) : vérifier s'il sert encore | | |
 
@@ -2935,3 +2936,61 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   aperçu dans l'écran pour les 9 circuits ; ce dernier test échoue bien sans la correction). Aide mise à jour.
   `build` complet : **983 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le
   mainteneur le 10/11/2026.**
+
+### Quatre en ligne (`Connect4`, code `connect4`, avant « Puissance 4 ») — 10/11/2026
+
+- **État des lieux (code, vignette)** : grille de 7 × 6 ; le joueur choisissait une colonne en fixant une bande verte
+  au-dessus de la grille ; l'ordinateur jouait **une colonne au hasard** 1 s plus tard ; 2 variantes (le joueur ou
+  l'ordinateur commence). Grille pleine sans gagnant : exception (`nextInt(0)`) au tour de l'ordinateur, partie
+  bloquée au tour du joueur ; « Bravo » même quand l'ordinateur gagnait, puis une nouvelle partie sans fin, toujours
+  avec le joueur en premier ; ni score ni but compté ; jetons encore jouables pendant l'animation de victoire ; jetons
+  gagnants non montrés ; ancien indicateur ; pas de délai ; durée de fixation lue une fois ; `dispose` vidant toute la
+  scène et laissant des écouteurs sur la taille de la fenêtre ; bleu pur, bandes vertes, fond noir, police par
+  défaut ; ni aide ni test ; un son et la vignette de source inconnue. **Risque** : « Puissance 4 » et « Connect 4 »
+  sont des noms de jeux commerciaux (marques), comme « Rush Hour ».
+- **Règle du mainteneur (10/11/2026, recommandations validées)** : nouveau nom (« Quatre en ligne », « Four in a Row » ;
+  nom de code `Connect4` gardé) ; grille classique de 7 × 6 seulement ; ordinateur facile, normal ou difficile, ou à
+  deux ; celui qui commence change à chaque partie ; match en 1, 3 ou 5 parties ou sans fin, avec un score ; match nul ;
+  jetons gagnants mis en valeur ; « Bravo » seulement si le joueur gagne le match ; toute la colonne comme cible, jeton
+  en attente au-dessus, anneau commun.
+- **Fait** : le jeu réécrit (`Connect4` ; `Connect4Board` pour les règles, lignes comptées depuis le bas ;
+  `Connect4Computer` ; `Connect4Opponent`, `Connect4End`), une boucle en temps réel ; fixations comptées par le jeu
+  (durée lue à chaque pas) ; rien ne se choisit avant le délai ; arrêt pendant le menu ; tout retiré à la fin.
+  **Ordinateur** : facile, il gagne s'il le peut, sinon au hasard ; normal, il gagne s'il le peut, bloque un
+  alignement de 4, ne donne pas la case au-dessus de son jeton quand il peut l'éviter, et préfère le centre (tirage
+  pondéré 4 au centre à 1 sur les bords) ; difficile, recherche à 6 coups (negamax, alpha-bêta, colonnes du centre
+  d'abord, score des lignes de 4 encore ouvertes et de la colonne du milieu) ; choix égaux tirés avec le générateur
+  du jeu (même partie au rejeu). **Écran** : grille bleue vue de face, percée de vrais trous (`Shape.subtract`, ombre
+  intérieure), jetons derrière elle ; jetons rouge à étoile blanche et jaune à rond blanc ; colonne regardée éclairée en
+  jaune pâle dans ses trous, jeton en attente au-dessus avec l'anneau ; chute avec un petit rebond et un son ; au tour
+  de l'ordinateur, son jeton passe sur deux colonnes tirées au hasard puis sur la sienne (1 s), rien ne se choisit ;
+  pastilles du tour (« À toi ! », « L'ordinateur joue », « À jouer : » et le jeton à deux) et du score ; fin d'une
+  partie : les 4 jetons entourés de blanc et clignotants, message au-dessus de la grille (« Tu as gagné ! »,
+  « L'ordinateur a gagné », « Match nul », « Rouge a gagné ! », « Jaune a gagné ! »), 2,5 s, puis grille vide. Fin du
+  match : « Bravo » puis statistiques si le joueur a gagné plus de parties que l'ordinateur (toujours à deux), sinon
+  statistiques tout de suite. Variantes `GroupedGameVariant` (un seul groupe, adversaire, fin), 16 ; une ancienne
+  variante (`Connect4GameVariant`, gardée pour la lecture) joue contre l'ordinateur facile, sans fin. Statistiques :
+  une partie terminée compte un but à atteindre, une partie gagnée par le joueur un but atteint (à deux, chaque partie
+  terminée) ; une manche par partie ; constructeur des statistiques enregistrées corrigé (il ignorait leurs données).
+  Sons faits par script (`make_connect4_sounds.py` : chute, victoire, défaite). Nom affiché changé en français et en
+  anglais ; traductions (3 clés retirées, 20 ajoutées), aide, crédits, inventaire, vignette (capture réduite).
+- **Vérifications** : `Connect4Test` (18 tests : alignements dans les 4 directions ; grille pleine sans gagnant, colonne
+  pleine refusée ; victoire immédiate prise aux 3 niveaux ; alignement de 4 toujours bloqué aux niveaux normal et
+  difficile sur 60 grilles tirées au hasard ; l'ordinateur normal ne donne pas la case au-dessus de son jeton ; matchs
+  entre ordinateurs : le difficile gagne au moins 9 parties sur 10 contre le facile et plus de parties qu'il n'en perd
+  contre le normal, le normal gagne nettement plus que le facile sur 30 parties ; délai ; jeton lâché après une
+  fixation de la durée des réglages lue à chaque pas, puis tour de l'ordinateur ; colonne pleine et tour de
+  l'ordinateur sans effet ; jetons entourés, partie comptée, celui qui commence change ; « Bravo » pour un match
+  gagné ; statistiques tout de suite pour un match perdu ; match nul ; à deux par fixations ; grille dans l'écran sur
+  4 écrans ; même ordinateur au rejeu ; tout retiré à la fin ; variantes et anciennes variantes) ; `GameHelpTest` avec
+  le jeu ; captures sans fenêtre regardées (colonne éclairée trop pâle : jaune pâle ; message déplacé au-dessus de la
+  grille pour ne pas cacher les jetons gagnants) ; `build` complet : **1 002 tests, 0 échec** ; `allGamesTest` complet :
+  **66 entrées, 0 échec**. **Reste l'essai du mainteneur** (souris et Tobii, dont le son de chute : plantage audio du
+  28/10), puis le commit sur demande.
+- **Essai du mainteneur (10/11/2026)** : le jeu est bon à la souris et au Tobii ; mais la fenêtre des variantes montrait
+  « Computer » trois fois, puis « À deux ». **Cause** : les textes anglais « Computer, easy » contenaient une virgule, le
+  séparateur du fichier des traductions : la ligne était décalée d'une colonne et le texte français tombait dans une
+  colonne vide. Le test `TranslationFilesTest` ne le voyait pas (`split(",")` enlève les cellules vides de la fin) : il
+  compte maintenant toutes les cellules et a trouvé exactement ces 3 lignes. **Fait** : noms demandés par le mainteneur,
+  « Ordi facile », « Ordi moyen », « Ordi difficile » (« Easy computer », « Medium computer », « Hard computer ») ;
+  aide alignée. Les autres langues affichent l'anglais (pas de traduction pour ces clés).
