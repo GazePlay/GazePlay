@@ -44,7 +44,10 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 - **Aiguillages** (`TrainSwitches`) : revu (fiche en bas), puis retour du mainteneur (vitesse selon la durée de fixation,
   aperçu du prochain train avec le temps restant) ; **validé par le mainteneur le 10/11** ; pas encore commité.
 - **Quatre en ligne** (`Connect4`, ancien « Puissance 4 », nom d'un jeu commercial) : revu (fiche en bas), propositions
-  validées par le mainteneur ; **essayé et validé** (souris et Tobii), noms des niveaux de l'ordinateur corrigés.
+  validées par le mainteneur ; **essayé et validé** (souris et Tobii), noms des niveaux de l'ordinateur corrigés ;
+  commité (`7b8b24941`).
+- **Morpion** (`TicTacToe`) : revu (fiche en bas), propositions validées par le mainteneur (ordi difficile : choix A) ;
+  **essayé et validé**, commité.
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -791,7 +794,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Bottle (`Bottle`) | À confirmer : 5 images | | |
 | **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
 | **Embouteillage** (`RushHour`, avant « Rush Hour ») | **9/11** : les 4 images et la vignette retirées ; camions et bus dessinés par script (`make_trafficjam_images.py`), voitures de la Course du regard, parking dessiné par le jeu ; les 33 parkings de source inconnue remplacés par 90 parkings faits par script (`make_trafficjam_levels.py`) | ✔ 9/11 (parking vu de dessus centré, véhicules de couleurs différentes, voiture rouge à sortir, ouverture et flèche, cases libres allumées, bouton « Recommencer », anneau, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : nouveau nom, nos propres parkings classés Facile 3-8 / Normal 9-16 / Difficile 17-30 coups, choisir le véhicule puis la case, « Recommencer », fin après 1 / 3 / 5 ou sans fin) — à essayer |
-| Tic Tac Toe (`TicTacToe`) | À confirmer : 3 images | | |
+| **Morpion** (`TicTacToe`) | **10/11** : les 3 images de source inconnue (croix, rond, case blanche) retirées, tout dessiné par le jeu ; 3 sons faits par script (`make_tictactoe_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (cases arrondies, croix rouge et rond bleu qui se dessinent, case regardée éclairée avec le symbole en attente et l'anneau, bande jaune sous les 3 symboles gagnants, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : ordi facile / moyen / difficile (parfait mais 1 erreur sur 5 coups, choix A) ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | Order (`Order`) | À confirmer : 3 images | | |
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
@@ -2994,3 +2997,46 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   compte maintenant toutes les cellules et a trouvé exactement ces 3 lignes. **Fait** : noms demandés par le mainteneur,
   « Ordi facile », « Ordi moyen », « Ordi difficile » (« Easy computer », « Medium computer », « Hard computer ») ;
   aide alignée. Les autres langues affichent l'anglais (pas de traduction pour ces clés).
+
+### Morpion (`TicTacToe`, code `noughtsandcrosses`) — 10/11/2026
+
+- **État des lieux (code)** : grille de 3 × 3, croix posées par fixation (`ProgressButton`), à deux ou contre
+  l'ordinateur ; 715 lignes, dont le code d'une case écrit 9 fois. **Le jeu se figeait à un match nul contre
+  l'ordinateur** : quand le joueur posait le 9ᵉ symbole, l'ordinateur était quand même appelé et cherchait une case
+  libre au hasard dans une grille pleine, sans fin, sur le fil de JavaFX (lecture du code ; à chaque match nul où le
+  joueur avait commencé, et il commençait toujours). Ordinateur au hasard ; ses victoires non montrées (grille vidée,
+  on rejouait jusqu'à une victoire du joueur) ; « Bravo » à la première victoire, même à deux ; aucun but compté ;
+  graine non enregistrée ; grille rouge sur fond blanc, prévue pour un écran plus large que haut ; pas de délai ; rien
+  ne s'arrêtait avec Échap ; 3 images et la vignette de source inconnue ; ni aide ni test. Le nom « Morpion » /
+  « Tic-tac-toe » est générique.
+- **Règle du mainteneur (10/11/2026, propositions validées, modèle de Quatre en ligne)** : ordi facile, moyen ou
+  difficile, ou à deux ; l'ordi difficile joue parfaitement mais se trompe environ une fois sur cinq coups (choix A ;
+  le choix B, imbattable, écarté) ; celui qui commence change à chaque partie ; match en 1, 3 ou 5 parties ou sans fin ;
+  match nul ; « Bravo » seulement si le joueur gagne le match ; tout dessiné par le jeu.
+- **Fait** : le jeu réécrit (`TicTacToe` ; `TicTacToeBoard`, cases numérotées de 0 à 8 ; `TicTacToeComputer` ;
+  `TicTacToeOpponent`, `TicTacToeEnd`), même boucle et mêmes règles communes que Quatre en ligne (durée de fixation lue à
+  chaque pas, délai, Échap, tout retiré à la fin). **Ordinateur** : facile, il gagne s'il le peut, sinon au hasard ;
+  moyen, il gagne, sinon il bloque, sinon le centre, sinon un coin ; difficile, recherche complète (negamax), une
+  erreur (un coup qui n'est pas parmi les meilleurs, s'il y en a) avec une chance sur cinq. **Mesure** : contre un
+  joueur parfait, l'ordi difficile perd 419 parties sur 1 000 et fait match nul dans les autres (sans erreur, il ne
+  perd jamais : vérifié sur toutes les parties possibles). **Écran** : 9 cases blanches arrondies sur le fond doux,
+  grille carrée centrée sur tout écran ; croix rouge et rond bleu qui se dessinent (0,35 s) ; case regardée éclairée en
+  jaune pâle, symbole en attente et anneau ; au tour de l'ordinateur, son rond passe sur deux cases libres puis sur la
+  sienne (1 s) ; fin d'une partie : bande jaune sous les 3 symboles gagnants (une ligne grise sur les croix se voyait
+  mal, vu sur les captures), message au-dessus de la grille ; pastilles du tour et du score. Variantes
+  `GroupedGameVariant` (16) ; une ancienne variante joue à deux (P2) ou contre l'ordi facile (IA), en 1 partie.
+  Statistiques au format inchangé (`TicTacToeStats`) : une partie terminée compte un but à atteindre, une partie
+  gagnée par le joueur un but atteint (à deux, chaque partie terminée) ; graine enregistrée. Sons faits par script
+  (`make_tictactoe_sounds.py` : symbole posé, victoire, défaite). Traductions (2 clés retirées, 20 ajoutées, sans
+  virgule), aide, crédits, inventaire, vignette (capture réduite).
+- **Vérifications** : `TicTacToeTest` (15 tests : lignes de 3 ; l'ordi difficile sans erreur ne perd jamais, qui que
+  soit le premier et quoi que fasse le joueur ; victoire immédiate aux 3 niveaux, blocage aux niveaux moyen et
+  difficile, centre puis coin au niveau moyen ; contre un joueur parfait, l'ordi difficile ne gagne jamais et perd
+  entre 10 et 120 parties sur 200 ; délai ; symbole posé après une fixation de la durée des réglages lue à chaque pas,
+  puis tour de l'ordinateur ; case prise et tour de l'ordinateur sans effet ; **match nul contre l'ordinateur quand le
+  joueur pose le 9ᵉ symbole** (l'ancien blocage) ; bande, partie comptée et « Bravo » ; match perdu ; à deux par
+  fixations ; grille carrée dans l'écran sur 4 écrans ; même ordinateur au rejeu ; tout retiré à la fin ; variantes et
+  anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées ; SpotBugs (deux divisions
+  entières voulues, le numéro de ligne d'une case, mises dans une variable entière) ; `build` complet : **1 018 tests,
+  0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec** (lancé juste avant la correction pour SpotBugs, qui ne
+  change pas le calcul). **Validé par le mainteneur le 10/11/2026.**

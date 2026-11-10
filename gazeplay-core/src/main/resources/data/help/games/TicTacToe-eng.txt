@@ -1,0 +1,20 @@
+# The principle
+Line up 3 crosses before your opponent lines up 3 noughts: in a row, a column or a diagonal! You have the red crosses, your opponent the blue noughts.
+
+# How to play
+- Fixate a free box to put your cross there: the box lights up, your cross shows there, pale, then it is drawn.
+- A box already taken can no longer be chosen.
+- Against the computer, its nought goes from box to box while it thinks, then it puts it down.
+- With two players, each one plays in turn with the same gaze or the same mouse: the crosses, then the noughts.
+- Who starts changes at each game.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top, whose turn it is, and the score.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+The first one to line up 3 marks wins the game: a yellow band joins them. If the grid is full with no winner, it is a draw. After 1, 3 or 5 games: if you won more games than the computer, it is "Bravo", then the statistics; if not, the statistics at once. With two players, it is always "Bravo". Without end, the game goes on until you leave it with the menu (Escape key).
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- In 1 game, in 3 games, in 5 games or without end: the number of games of the match.
+- At the bottom, the opponent: easy computer (it wins if it can, else it plays at random); medium computer (it wins if it can, else it blocks you, else it takes the middle or a corner); hard computer (it plays the best move, but makes a mistake about once in five moves: make the most of its mistakes to beat it); or two players.

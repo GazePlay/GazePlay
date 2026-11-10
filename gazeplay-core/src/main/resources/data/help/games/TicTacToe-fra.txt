@@ -1,0 +1,20 @@
+# Le principe
+Aligne 3 croix avant que ton adversaire aligne 3 ronds : en ligne, en colonne ou en diagonale ! Tu as les croix rouges, ton adversaire les ronds bleus.
+
+# Comment jouer
+- Fixe une case libre pour y mettre ta croix : la case s'éclaire, ta croix y apparaît en pâle, puis elle se dessine.
+- Une case déjà prise ne peut plus être choisie.
+- Contre l'ordinateur, son rond passe d'une case à l'autre pendant qu'il réfléchit, puis il le pose.
+- À deux, chacun joue à son tour avec le même regard ou la même souris : les croix, puis les ronds.
+- Celui qui commence change à chaque partie.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, à qui le tour, et le score.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Le premier qui aligne 3 symboles gagne la partie : une bande jaune les relie. Si la grille est pleine sans gagnant, c'est un match nul. Après 1, 3 ou 5 parties : si tu as gagné plus de parties que l'ordinateur, c'est « Bravo », puis les statistiques ; sinon, les statistiques tout de suite. À deux, c'est toujours « Bravo ». Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- En 1 partie, en 3 parties, en 5 parties ou sans fin : le nombre de parties du match.
+- En bas, l'adversaire : ordi facile (il gagne s'il le peut, sinon il joue au hasard) ; ordi moyen (il gagne s'il le peut, sinon il te bloque, sinon il prend le centre ou un coin) ; ordi difficile (il joue le meilleur coup, mais se trompe environ une fois sur cinq coups : à toi de profiter de ses erreurs pour le battre) ; ou à deux.

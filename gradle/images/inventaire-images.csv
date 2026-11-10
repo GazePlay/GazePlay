@@ -115,7 +115,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/space.png,oui,libre,"com
 gazeplay-core/src/main/resources/data/common/Thumbnails/spotthedifference.png,oui,libre,"capture du jeu (octobre 2026) ; décor dessiné pour le projet, objets OpenMoji CC BY-SA 4.0",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/sprintToTheFinish.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet et OpenMoji (CC BY-SA 4.0),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/surviveAgainstRobots.png,oui,libre,"composée des images du jeu (gradle/images/make_survive_images.py) : décor et bonus dessinés pour le projet, Biboule et robots du jeu « Tir »",2026-11-03,GazePlay Learning,revue de Survive Against Robots
-gazeplay-core/src/main/resources/data/common/Thumbnails/ticTacToe.png,oui,source inconnue,,2021-08-25,Iluvrog,translation + thumbnail
+gazeplay-core/src/main/resources/data/common/Thumbnails/ticTacToe.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue du Morpion
 gazeplay-core/src/main/resources/data/common/Thumbnails/trainSwitches.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Aiguillages
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsIt.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheAnimal.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -543,9 +543,6 @@ gazeplay-games/src/main/resources/data/math101/images/blackboard2.png,oui,source
 gazeplay-games/src/main/resources/data/math101/images/correct.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
 gazeplay-games/src/main/resources/data/math101/images/correct2.png,oui,source inconnue,,2019-04-06,Wafaa,fixing image ratio for error and validation
 gazeplay-games/src/main/resources/data/math101/images/note2.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
-gazeplay-games/src/main/resources/data/noughtsandcrosses/crosse.png,oui,source inconnue,,2021-08-24,Iluvrog,remove rectangles + add pictures + add first button
-gazeplay-games/src/main/resources/data/noughtsandcrosses/nought.png,oui,source inconnue,,2021-08-24,Iluvrog,remove rectangles + add pictures + add first button
-gazeplay-games/src/main/resources/data/noughtsandcrosses/white.png,oui,source inconnue,,2021-08-25,Iluvrog,white when 0 in the game + IA works + restart works + wait before IA and restart
 gazeplay-games/src/main/resources/data/order/images/fail.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
 gazeplay-games/src/main/resources/data/order/images/success.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
 gazeplay-games/src/main/resources/data/order/images/target.png,oui,source inconnue,,2018-05-15,Skullhack,Changed target image and added a progress bar to select a target
