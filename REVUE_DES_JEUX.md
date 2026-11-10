@@ -64,7 +64,9 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 - **Ordre** (`Order`) : revu à partir de 14 h 01 (fiche en bas), propositions validées par le mainteneur ; **essayé
   et validé**, commité (`d9e0c07f3`).
 - **Pierre papier ciseaux** (`RockPaperScissors`) : revu (fiche en bas), propositions validées par le mainteneur ;
-  **essayé et validé**, commité.
+  **essayé et validé**, commité (`aa9700baf`).
+- **Gobelets Pass Pass** (`CupsBalls`) : revu (fiche en bas), propositions validées par le mainteneur ; **essayé et
+  validé**, commité.
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -816,7 +818,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
 | **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
-| Cups and Balls, Dice, Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
+| Dice, Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
+| **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | Scribble (`Scribble`), Letters (`Letters`) | Pas d'image propre relevée | | |
 | GazePlay Eval, GazePlay Eval Test | Pas d'image propre ; le dossier `gazeplayEvalTest` (4 images des anciens jeux BERA) : vérifier s'il sert encore | | |
@@ -3174,3 +3177,39 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   chaque mode et anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées ; `build` complet :
   **1 061 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le mainteneur le
   10/11/2026.**
+
+### Gobelets Pass Pass (`CupsBalls`, code `cups`) — 10/11/2026
+
+- **État des lieux (code)** : une balle rouge montrée sous l'un des 3 ou 5 gobelets, puis un gobelet à la fois glisse
+  vers une case libre d'une grille invisible (le lanceur demandait 3 déplacements ; le code en prévoyait sinon 9 ou
+  25) ; le joueur fixe le gobelet de la balle. **On ne pouvait pas perdre** (un mauvais gobelet se soulevait à vide,
+  et on pouvait en choisir un autre jusqu'à la balle), « Bravo » à chaque manche, sans fin ; aucun but à atteindre
+  compté ; limiteurs de score et de temps ; petits gobelets dispersés ; ancien indicateur, sa taille divisée par 100 ;
+  durée de fixation lue une fois ; pas de délai ; titre de la fenêtre des variantes en anglais en dur ; une image et
+  la vignette de source inconnue ; ni aide ni test. **À garder** : les statistiques reçoivent les places de la balle
+  comme zones d'intérêt (`TargetAOI`), pour voir si le regard a suivi le bon gobelet.
+- **Règle du mainteneur (10/11/2026, propositions validées)** : gobelets en rangée, échangés deux par deux en arc ;
+  Facile 3 gobelets et 5 échanges lents, Normal 4 et 8, Difficile 5 et 12 rapides ; un seul essai par manche (un mauvais
+  gobelet se soulève vide, puis le bon montre la balle) ; 3 vies en cœurs ; fin après 3, 5 ou 10 balles trouvées, ou
+  sans fin ; zones d'intérêt gardées.
+- **Fait** : le jeu réécrit (`CupsAndBalls`, classe interne `Cup` ; `CupsLevel`, `CupsEnd` ; `Ball`, l'ancienne `Cup`,
+  `Action`, `PositionCup` et `Strategy` retirés), une boucle en temps réel (durée de fixation lue à chaque pas, délai,
+  Échap, plus de limiteurs, tout retiré à la fin). Table en bas ; gobelets rouges à deux rayures blanches, posés à
+  l'envers en rangée (largeur jusqu'à 26 % de la hauteur de l'écran) ; balle jaune sous le gobelet, vue quand il se
+  soulève ; balle montrée (0,45 s de montée, 0,9 s en haut, 0,45 s de descente) ; échanges de deux gobelets tirés au
+  hasard (0,9 / 0,7 / 0,5 s, à la vitesse des réglages), l'un passant devant (plus bas, un peu plus grand), l'autre
+  derrière (plus haut), départ et arrivée en douceur, avec un son ; rien ne se choisit pendant les échanges ; anneau
+  commun sur le gobelet regardé ; « Perdu ! » à la 3ᵉ erreur, puis les statistiques ; « Bravo » après les balles
+  visées. Zones d'intérêt : une à chaque place de la balle (montrée, puis après chaque échange de son gobelet), fermée à
+  la suivante, données aux statistiques à la fin comme avant. Variantes `GroupedGameVariant` (12) ; une ancienne
+  variante (3 ou 5 gobelets) joue Facile ou Difficile, sans fin. Statistiques au format inchangé (`CupsAndBallsStats`) :
+  une manche compte un but à atteindre, une balle trouvée un but atteint. Sons faits par script
+  (`make_cups_sounds.py`). Traductions (1 clé retirée, 9 ajoutées), aide, crédits, inventaire, vignette (capture
+  réduite).
+- **Vérifications** : `CupsAndBallsTest` (9 tests : balle montrée puis échanges à la vitesse des réglages, rien pendant
+  les échanges, un gobelet par place ; la balle suit son gobelet, zones d'intérêt données aux statistiques ; gobelet
+  choisi après une fixation de la durée des réglages lue à chaque pas ; mauvais gobelet : vie perdue, le bon montre la
+  balle, nouvelle manche ; « Perdu ! » après 3 erreurs ; « Bravo » après 3 balles ; rangée dans l'écran aux 3 niveaux ;
+  mêmes échanges au rejeu ; variantes et anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre
+  regardées ; `build` complet : **1 071 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé
+  par le mainteneur le 10/11/2026.**

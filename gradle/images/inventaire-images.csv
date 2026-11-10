@@ -99,7 +99,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,ou
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/opinions.jpg,oui,libre,"capture du jeu (novembre 2026) ; image d'exemple OpenMoji CC BY-SA 4.0, icônes Material Symbols Apache-2.0",2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Ordre
-gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
+gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue de Gobelets Pass Pass
 gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,libre,"capture du jeu (octobre 2026) ; pièce dessinée pour le projet, objets OpenMoji CC BY-SA 4.0, Biboule du projet",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/pianosight.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/potions.jpg,oui,source inconnue,,2019-06-18,johzz-o2,thumbnail update
@@ -403,7 +403,6 @@ gazeplay-games/src/main/resources/data/common/default/images/noBackGround/snake.
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/turtle.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/creampie/images/gateau.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/creampie/images/hand.png,oui,source inconnue,,2017-02-08,schwab,first commit
-gazeplay-games/src/main/resources/data/cups/images/cup.png,oui,source inconnue,,2018-02-06,DMyTryC,Adding the Cups and Balls ressources
 gazeplay-games/src/main/resources/data/dice/roll.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
 gazeplay-games/src/main/resources/data/divisor/images/Background.png,oui,source inconnue,,2018-04-12,kuhlkrein,Modifiying lapins and piano stats when look at tiles
 gazeplay-games/src/main/resources/data/divisor/images/coeur.png,oui,source inconnue,,2018-04-12,kuhlkrein,Modifiying lapins and piano stats when look at tiles

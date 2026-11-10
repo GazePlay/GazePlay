@@ -1,0 +1,20 @@
+# The principle
+A ball is hidden under a cup. Follow that cup with your eyes while the cups are exchanged, then find the ball!
+
+# How to play
+- A cup lifts to show the ball, then goes down again.
+- The cups are exchanged two by two: one passes in front of the other. Nothing can be chosen meanwhile.
+- Then fixate the cup hiding the ball. You have only one try per round.
+- The right cup lifts and shows the ball. A wrong one lifts empty, then the right one shows the ball, and you lose a life.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top left, the lives (a red heart for each life); in the middle, the balls found.
+- The cups move at the speed of the settings.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+After 3, 5 or 10 balls found, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left.
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 3 balls, 5 balls, 10 balls or without end: the number of balls to find.
+- At the bottom, the level: Easy, 3 cups and 5 slow exchanges; Normal, 4 cups and 8 exchanges; Hard, 5 cups and 12 fast exchanges.

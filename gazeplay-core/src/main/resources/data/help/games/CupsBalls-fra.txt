@@ -1,0 +1,20 @@
+# Le principe
+Une balle est cachée sous un gobelet. Suis bien ce gobelet des yeux pendant que les gobelets s'échangent, puis retrouve la balle !
+
+# Comment jouer
+- Un gobelet se soulève pour montrer la balle, puis se repose.
+- Les gobelets s'échangent deux par deux : l'un passe devant l'autre. Rien ne peut être choisi pendant ce temps.
+- Ensuite, fixe le gobelet qui cache la balle. Tu n'as qu'un essai par manche.
+- Le bon gobelet : il se soulève et montre la balle. Un mauvais : il se soulève vide, puis le bon montre la balle, et tu perds une vie.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut à gauche, les vies (un cœur rouge par vie) ; au milieu, les balles trouvées.
+- Les gobelets bougent à la vitesse des réglages.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Après 3, 5 ou 10 balles trouvées, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 3 balles, 5 balles, 10 balles ou sans fin : le nombre de balles à trouver.
+- En bas, le niveau : Facile, 3 gobelets et 5 échanges lents ; Normal, 4 gobelets et 8 échanges ; Difficile, 5 gobelets et 12 échanges rapides.
