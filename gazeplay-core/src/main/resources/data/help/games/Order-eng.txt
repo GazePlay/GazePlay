@@ -1,0 +1,20 @@
+# The principle
+Targets, all alike, appear one after the other. Remember the order they appeared in, then look at them in the same order!
+
+# How to play
+- The targets appear one by one, with a small sound, and stay in their place. Nothing can be chosen meanwhile.
+- Then fixate the first target that appeared, then the second one, and so on.
+- A right target turns green, with its number and a check.
+- A mistake: the target turns red, with its number and a cross, then every target shows its number for 2 seconds (the right answer). You lose a life, and a new round starts, at other places.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top left, the lives (a red heart for each life); in the middle, the rounds won; at the right, the number of targets.
+- The targets appear at the speed of the settings.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+A round is won when every target has been looked at in order. After 3, 5 or 10 rounds won, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left.
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 3 rounds, 5 rounds, 10 rounds or without end: the number of rounds to win.
+- At the bottom, the level: 3, 5 or 7 targets; or progressive (3 targets, then one more after each round won, up to 10).

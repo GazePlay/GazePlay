@@ -1,0 +1,20 @@
+# Le principe
+Des cibles, toutes pareilles, apparaissent l'une après l'autre. Retiens l'ordre où elles sont apparues, puis regarde-les dans le même ordre !
+
+# Comment jouer
+- Les cibles apparaissent une par une, avec un petit son, et restent à leur place. Rien ne peut être choisi pendant ce temps.
+- Fixe ensuite la première cible apparue, puis la deuxième, et ainsi de suite.
+- Une bonne cible devient verte, avec son numéro et une coche.
+- Une erreur : la cible devient rouge, avec son numéro et une croix, puis toutes les cibles montrent leur numéro pendant 2 secondes (la bonne réponse). Tu perds une vie, et une nouvelle manche commence, avec d'autres places.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut à gauche, les vies (un cœur rouge par vie) ; au milieu, les manches réussies ; à droite, le nombre de cibles.
+- Les cibles apparaissent à la vitesse des réglages.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Une manche est réussie quand toutes les cibles ont été regardées dans l'ordre. Après 3, 5 ou 10 manches réussies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 3 manches, 5 manches, 10 manches ou sans fin : le nombre de manches à réussir.
+- En bas, le niveau : 3, 5 ou 7 cibles ; ou progressif (3 cibles, puis une de plus après chaque manche réussie, jusqu'à 10).

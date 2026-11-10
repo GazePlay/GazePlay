@@ -82,7 +82,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Pianosight | 6 |
 | Bottle, Math101 | 5 chacun |
 | Gaze Race, Rush Hour, GazePlay Eval Test (anciens jeux BERA) | 4 chacun |
-| ~~Noughts and Crosses~~, Order, Whack-a-Mole | 3 chacun ; **Morpion fait le 10/11/2026** : ses 3 images retirées (croix, rond et case dessinés par le jeu), vignette faite d'une capture |
+| ~~Noughts and Crosses~~, ~~Order~~, Whack-a-Mole | 3 chacun ; **Morpion fait le 10/11/2026** : ses 3 images retirées (croix, rond et case dessinés par le jeu), vignette faite d'une capture ; **Ordre fait le 10/11/2026** : ses 3 images retirées (cibles dessinées par le jeu), vignette faite d'une capture |
 | Colorblend, Cream Pie, Magic Cards, ~~Simon~~ | 2 chacun ; **Simon (« Répète après moi ») fait le 10/11/2026** : ses 2 images retirées (tout dessiné par le jeu), vignette faite d'une capture ; ses 7 notes de source inconnue remplacées par des sons faits par script |
 | Cups, Dice, Dot to Dot, Goose Game, Ladder | 1 chacun |
 

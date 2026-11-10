@@ -98,7 +98,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/openMemory.png,oui,sourc
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/opinions.jpg,oui,libre,"capture du jeu (novembre 2026) ; image d'exemple OpenMoji CC BY-SA 4.0, icônes Material Symbols Apache-2.0",2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
+gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Ordre
 gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,libre,"capture du jeu (octobre 2026) ; pièce dessinée pour le projet, objets OpenMoji CC BY-SA 4.0, Biboule du projet",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/pianosight.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
@@ -543,9 +543,6 @@ gazeplay-games/src/main/resources/data/math101/images/blackboard2.png,oui,source
 gazeplay-games/src/main/resources/data/math101/images/correct.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
 gazeplay-games/src/main/resources/data/math101/images/correct2.png,oui,source inconnue,,2019-04-06,Wafaa,fixing image ratio for error and validation
 gazeplay-games/src/main/resources/data/math101/images/note2.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
-gazeplay-games/src/main/resources/data/order/images/fail.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
-gazeplay-games/src/main/resources/data/order/images/success.png,oui,source inconnue,,2018-05-16,Skullhack,Added feedback
-gazeplay-games/src/main/resources/data/order/images/target.png,oui,source inconnue,,2018-05-15,Skullhack,Changed target image and added a progress bar to select a target
 gazeplay-games/src/main/resources/data/pet/images/ball.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
 gazeplay-games/src/main/resources/data/pet/images/bathroom.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
 gazeplay-games/src/main/resources/data/pet/images/body.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-20,kuhlkrein,Adding the screen with different background for pet game

@@ -57,7 +57,12 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   Jump avaient déjà ces cœurs, chacun avec sa copie du code : ils utilisent le dessin commun (rien ne change à
   l'écran). Répète après moi : « Vies : 3 / 3 » remplacé par les cœurs. Défendre le château : cœurs en Difficile
   (5 vies), « 12 / 15 » et la barre en Facile (15) et Normal (10), à la place de son image de cœur et de « n / total »
-  (`heart.png` retiré). Test `GameStyleLivesTest` ; captures regardées.
+  (`heart.png` retiré). Test `GameStyleLivesTest` ; captures regardées. Validé par le mainteneur et commité
+  (`50af51bdc`), poussé avec Aiguillages, Quatre en ligne et Morpion ; CI verte sur les 7 jobs (run `42811913214` ;
+  `test (25)` en 15 min 39 à cause d'une installation des paquets Ubuntu lente, 6 min au lieu de 28 s : les tests
+  eux-mêmes ont duré le même temps qu'en Java 26).
+- **Ordre** (`Order`) : revu à partir de 14 h 01 (fiche en bas), propositions validées par le mainteneur ; **essayé
+  et validé**, commité.
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -805,7 +810,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
 | **Embouteillage** (`RushHour`, avant « Rush Hour ») | **9/11** : les 4 images et la vignette retirées ; camions et bus dessinés par script (`make_trafficjam_images.py`), voitures de la Course du regard, parking dessiné par le jeu ; les 33 parkings de source inconnue remplacés par 90 parkings faits par script (`make_trafficjam_levels.py`) | ✔ 9/11 (parking vu de dessus centré, véhicules de couleurs différentes, voiture rouge à sortir, ouverture et flèche, cases libres allumées, bouton « Recommencer », anneau, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : nouveau nom, nos propres parkings classés Facile 3-8 / Normal 9-16 / Difficile 17-30 coups, choisir le véhicule puis la case, « Recommencer », fin après 1 / 3 / 5 ou sans fin) — à essayer |
 | **Morpion** (`TicTacToe`) | **10/11** : les 3 images de source inconnue (croix, rond, case blanche) retirées, tout dessiné par le jeu ; 3 sons faits par script (`make_tictactoe_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (cases arrondies, croix rouge et rond bleu qui se dessinent, case regardée éclairée avec le symbole en attente et l'anneau, bande jaune sous les 3 symboles gagnants, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : ordi facile / moyen / difficile (parfait mais 1 erreur sur 5 coups, choix A) ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
-| Order (`Order`) | À confirmer : 3 images | | |
+| **Ordre** (`Order`) | **10/11** : les 3 images de source inconnue (cible, juste, faux) retirées, cibles dessinées par le jeu ; 3 sons faits par script (`make_order_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (cibles toutes pareilles qui apparaissent avec un rebond, numéro et coche (juste) ou croix (faux), bonne réponse montrée, anneau, vies en cœurs, pastilles) | ✔ 10/11 (règle du mainteneur : mémoire de l'ordre d'apparition, 3 vies, 3 / 5 / 7 cibles ou progressif jusqu'à 10, fin après 3 / 5 / 10 manches ou sans fin, plus de cibles qui se chevauchent) — validé le 10/11 |
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
 | **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
@@ -3095,3 +3100,36 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `GameHelpTest` avec le jeu ; captures sans fenêtre regardées (boutons éteints un peu éclaircis) ; `build` complet :
   **1 034 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le mainteneur le
   10/11/2026**, avec les vies en cœurs (voir l'avancement du 10/11 en haut).
+
+### Ordre (`Order`, code `order`) — 10/11/2026
+
+- **État des lieux (code)** : 3, 5 ou 7 cibles toutes pareilles apparaissent une par seconde et restent ; le joueur
+  les fixe dans l'ordre d'apparition (mémoire des positions). **Des cibles pouvaient se chevaucher** (écart minimal de
+  1,5 rayon pour une largeur de 2 rayons) ; pas de fin (une manche réussie relançait « Bravo » puis une autre manche,
+  sans écran des statistiques) ; une erreur relançait une manche sans montrer la bonne réponse ; ni vies ni score ;
+  limiteur de temps ; ancien indicateur ; durée de fixation lue une fois ; pas de délai ; titre de la fenêtre des
+  variantes en anglais en dur ; 3 images et la vignette de source inconnue ; ni aide ni test.
+- **Règle du mainteneur (10/11/2026, propositions validées)** : même principe (cibles toutes pareilles, à retenir dans
+  l'ordre d'apparition) ; bonne cible : numéro et coche ; erreur : croix, puis toutes les cibles montrent leur numéro
+  2 s, une vie perdue, une nouvelle manche ; 3 vies en cœurs ; 3, 5 ou 7 cibles, ou progressif (une de plus après
+  chaque manche réussie) ; fin après 3, 5 ou 10 manches réussies, ou sans fin.
+- **Fait** : le jeu réécrit (`Order`, classe interne `Target` ; `OrderLevel`, `OrderEnd` ; l'ancienne classe `Target`
+  retirée), une boucle en temps réel (durée de fixation lue à chaque pas, délai, Échap, plus de limiteur, tout retiré à
+  la fin). Cibles à anneaux de la couleur principale (rayon 6,5 % du petit côté de l'écran), au moins 2,6 rayons
+  d'écart, dans l'écran sous la bande des cœurs ; apparition toutes les secondes (à la vitesse des réglages) avec un
+  petit rebond et un son ; rien ne se choisit pendant l'apparition ; anneau commun ; bonne cible verte avec son numéro
+  et une coche ; mauvaise cible rouge avec son numéro et une croix (le numéro gardé après les captures : sinon la bonne
+  réponse était incomplète), les autres cibles grises avec leur numéro pendant 2 s ; nouvelle manche à d'autres places ;
+  progressif de 3 à 10 cibles, la même après une erreur ; « Perdu ! » à la 3ᵉ erreur, puis les statistiques ;
+  « Bravo » après les manches visées. Vies en cœurs (`GameStyle.lives`), pastilles des manches réussies et du nombre
+  de cibles. Variantes `GroupedGameVariant` (16) ; une ancienne variante (3, 5 ou 7) joue ce niveau sans fin.
+  Statistiques au format inchangé (`OrderStats`) : une manche compte un but à atteindre (avant : un par cible), une
+  manche réussie un but atteint. Sons faits par script (`make_order_sounds.py`). Traductions (1 clé retirée,
+  11 ajoutées), aide, crédits, inventaire, vignette (capture réduite).
+- **Vérifications** : `OrderTest` (12 tests : apparition une par une à la vitesse des réglages, rien pendant
+  l'apparition ; jamais deux cibles l'une sur l'autre ni hors de l'écran (10 cibles, 30 tirages, 4 écrans) ; cible
+  choisie après une fixation de la durée des réglages lue à chaque pas ; manche gagnée et comptée ; erreur : son, vie
+  perdue, bonne réponse complète, nouvelle manche à d'autres places ; « Perdu ! » après 3 erreurs sans « Bravo » ;
+  « Bravo » après 3 manches ; progressif ; délai ; mêmes places au rejeu ; tout retiré à la fin ; variantes et
+  anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées ; `build` complet : **1 050 tests,
+  0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le mainteneur le 10/11/2026.**
