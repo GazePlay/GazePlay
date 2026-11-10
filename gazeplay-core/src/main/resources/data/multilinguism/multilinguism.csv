@@ -291,7 +291,6 @@ cups,tasa,كؤوس,кубкі,,,,cups,,gobelets,,,,tazze,,Bekers,,,чашки,ta
 players,,,гульцы,玩家,,,players,,joueurs,,,,,,spelers,,,игроки,,,
 targets,shënjestra,أهداف,мэты,目标,,,targets,,objectifs,,,,bersagli,,Doelen,,,цели,objetivos,,
 NoEvalsFound,,,,,,,No evaluations found !,,Pas d'évaluations trouvées !,,,,,,,,,,,,
-NumberOfTrains,,,,,,,Number of trains,,Nombre de trains,,,,,,,,,,,,
 
 # VARIANT CATEGORIES
 Static,,,,,,,Static,,Statique,,,,,,,,,,,,
@@ -388,6 +387,18 @@ RushHourSolved3,,,,,,,3 times,,3 fois,,,,,,,,,,,,
 RushHourSolved5,,,,,,,5 times,,5 fois,,,,,,,,,,,,
 RushHourEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
 RushHourScore,,,,,,,Solved:,,Réussis :,,,,,,,,,,,,
+TrainSwitchesEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
+TrainSwitchesNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
+TrainSwitchesHard,,,,,,,Hard,,Difficile,,,,,,,,,,,,
+TrainSwitchesOneAtATime,,,,,,,One train at a time,,Un train à la fois,,,,,,,,,,,,
+TrainSwitchesPause,,,,,,,A pause at each switch,,Pause à chaque aiguillage,,,,,,,,,,,,
+TrainSwitchesContinuous,,,,,,,Trains one after the other,,Trains en continu,,,,,,,,,,,,
+TrainSwitchesTrains5,,,,,,,5 trains,,5 trains,,,,,,,,,,,,
+TrainSwitchesTrains10,,,,,,,10 trains,,10 trains,,,,,,,,,,,,
+TrainSwitchesTrains20,,,,,,,20 trains,,20 trains,,,,,,,,,,,,
+TrainSwitchesEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+TrainSwitchesRight,,,,,,,Right stations:,,Bonnes gares :,,,,,,,,,,,,
+TrainSwitchesCount,,,,,,,Trains:,,Trains :,,,,,,,,,,,,
 Biboule,,,,,,,Biboule,,Biboule,,,,,,,,,,,,
 BibouleJumpEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
 BibouleJumpNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
@@ -449,11 +460,6 @@ Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
 PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
 AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
-ClassicTrain,,,,,,,Classic,,Classique,,,,,,,,,,,,
-PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pause lorsqu'un train arrive à un aiguillage,,,,,,,,,,,,
-InfiniteTrain,,,,,,,Trains are sent again if they reach the wrong station,,Les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
-UniqueTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
-Stations,,,,,,,Stations,,Gares,,,,,,,,,,,,
 
 # CONTEXT TITLES
 StatsTitle,Statistika,احصائيات,Статыстыка,游戏数据,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,विन्यास,Statistika,Statistik,Statistiche,統計,Statistieken,Statystyka,Estatística,Статистика,Estadísticas,Số liệu thống kê,Statistik
@@ -669,7 +675,6 @@ Scores,Rezultatet,درجات,вынікі,分数,Spielstände,Σκορ,Scores,Pi
 CurrentPlayer,,,,,,,Current player :,,Joueur actuel :,,,,,,,,,,,,
 
 # TRAIN GAME
-ResumeButton,,,,,,,Resume the game,,Reprendre le jeu,,,,,,,,,,,,
 
 # ERROR MESSAGES
 WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,"Праверце тэчку для гульні ""Дзе гэта?""",查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι;,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,,Provjeri,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll ",,Controleer de « Waar is het » Spel bestandslocatie,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está?,"Проверьте папку для игры ""Где это?""","Verifica el directorio del juego ""¿Donde está?""""erifica el di ",Kiểm tra Thư mục game,Semak «Di mana? » Arahan permainan

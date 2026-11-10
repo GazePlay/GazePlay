@@ -66,7 +66,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Jeux | Images |
 |---|---|
 | Vignettes des jeux (`common/Thumbnails`) : captures d'écran des jeux (9 de la famille Where Is It et Coloring refaites le 29/10/2026, comptées comme libres) | 58 |
-| Train Switches | 43 |
+| ~~Train Switches~~ | ~~43~~ **Fait le 10/11/2026** (« Aiguillages ») : les 43 images retirées (les locomotives ressemblaient à l'emoji EmojiOne, les gares à une image de banque d'images) ; trains, gares, rails, aiguillages et tunnel dessinés par le jeu ; vignette faite d'une capture du jeu. Les 5 sons de source inconnue remplacés par 4 sons faits par script (`make_trainswitches_sounds.py`) |
 | Sliding Puzzle (dont la Joconde, domaine public) | 36 |
 | Cake | 24 |
 | ~~Tower Defense~~ | ~~23~~ **Fait le 3/11/2026** : les 23 images retirées (dont les icônes qui ressemblaient à des icônes Flaticon et le GIF du blizzard) ; terrain, château, tours, monstres, missile, explosion et icônes dessinés par script (`make_towerdefense_images.py`), neige du blizzard dessinée par le jeu ; vignette composée des images du jeu. Les 3 sons de source inconnue (`craft.mp3`, `craftdouble.mp3`, `piou.mp3`) remplacés par 4 sons faits par script (`make_towerdefense_sounds.py`) |

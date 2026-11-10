@@ -1,0 +1,21 @@
+# The principle
+Trains of colors come out of the tunnel: send each one to the station of its color by changing the switches! Each train carries the same symbol as its station (star, circle, square, heart…).
+
+# How to play
+- A switch is a disc on the rails. It shows its two ways: the one the trains will take is dark, with an arrow; the other one is grey.
+- Fixate a switch to change its way.
+- A train arriving at a switch takes the way shown at that moment.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top, the trains arrived at the right station, and the trains arrived.
+- On the hill of the tunnel, a disc shows the next train (its color and its symbol) and the seconds before it leaves: time to get the switches ready.
+- The trains go slowly enough to give time to fixate a switch before they reach it: the longer the fixation of the settings, the slower they go. They also follow the speed of the settings. A change made in the menu (Escape key) counts at once.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+A train arrived at the right station gives one point (a green check). At a wrong station, it is a mistake (a red cross), and the game goes on. Every 5 trains, a new circuit comes. After 5, 10 or 20 trains, it is "Bravo", then the statistics. Without end, the game goes on until you leave it with the menu (Escape key).
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 5 trains, 10 trains, 20 trains or without end: the number of trains of the game.
+- At the bottom, the level: Easy, 3 stations and 2 switches; Normal, 5 stations and 4 switches; Hard, 8 stations and 7 switches.
+- At the bottom too, the rhythm: one train at a time (the next one leaves when the last one has arrived); a pause at each switch (everything stops before each switch: change it if needed, then fixate the round button at the right to go on); trains one after the other (always at the same distance).

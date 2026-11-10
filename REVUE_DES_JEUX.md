@@ -36,6 +36,15 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    mainteneur, puis un commit par jeu sur demande. Les essais peuvent être groupés par deux ou trois jeux, comme le 9/11.
 4. Ensuite : groupes 8 (calcul et lettres), 9 (création et divers), 10 (GazePlay Eval).
 
+**Avancement du mardi 10/11/2026** :
+- **CI** du push du 9/11 au soir : verte sur les 7 jobs (run `42655120593`, `package-macos` compris), comme les trois autres
+  pushs du 9/11. Deux avertissements de GitHub : `ubuntu-latest` passe à Ubuntu 26 depuis le 19/10/2026, et les machines
+  macOS arm64 peuvent attendre longtemps. **Décision du mainteneur** : ne rien changer tant que rien ne casse ; si un paquet
+  apt manque, épingler `ubuntu-24.04` ; si `package-macos` est de nouveau annulé sans étape, essayer `macos-15`.
+- **Aiguillages** (`TrainSwitches`) : revu (fiche en bas), puis retour du mainteneur (vitesse selon la durée de fixation,
+  aperçu du prochain train avec le temps restant) ; **validé par le mainteneur le 10/11** ; pas encore commité.
+- **Puissance 4** (`Connect4`) : état des lieux.
+
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
 (#1740).
@@ -766,7 +775,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
 | **Défendre le château** (`TowerDefense`) | **3/11** : les 23 images retirées ; tout dessiné par script (`make_towerdefense_images.py`), neige par le jeu | ✔ 3/11 (polices des jeux, pastilles des prix, cercle de choix aux couleurs des menus, vignette) | ✔ 3/11 (règle du mainteneur : vagues à la demande ou automatiques, Facile / Normal / Difficile, sans fin / 10 / 20 vagues, « Perdu ! », carte au hasard ; 4 tours, revente et blizzard gardés) |
-| Train Switches (`TrainSwitches`) | À confirmer : 43 dessins (trains, gares) | | |
+| **Aiguillages** (`TrainSwitches`) | **10/11** : les 43 dessins et la vignette retirés (locomotives proches de l'emoji EmojiOne, gares de banque d'images probables) ; tout dessiné par le jeu (trains, gares, rails, aiguillages, tunnel), vignette faite d'une capture ; 5 sons remplacés par 4 faits par script (`make_trainswitches_sounds.py`) | ✔ 10/11 (vu de dessus, rails à coins arrondis, aiguillage montrant ses deux chemins, symbole par couleur sur le train et sa gare, anneau, pastilles, halo et bouton « Reprendre », aperçu du prochain train sur le tunnel) | ✔ 10/11 (règle du mainteneur : 9 circuits, 3 par niveau, Facile 3 / Normal 5 / Difficile 8 gares, nouveau circuit tous les 5 trains, fin après 5 / 10 / 20 trains ou sans fin, un à la fois / pause à chaque aiguillage / en continu, plus de zone de texte ; vitesse selon la durée de fixation) — validé le 10/11 |
 | **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
 | **Survive Against Robots** (`SurviveAgainstRobots` ; une seule carte depuis le 3/11, avant 2) | **3/11** : les 12 dessins retirés ; 3 décors et 4 bonus dessinés par script (`make_survive_images.py`) ; la Biboule et les robots du Tir | ✔ 3/11 (cœurs, pastilles, décor au hasard parmi 3, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min / 20 / 50 robots, souris ou regard selon le réglage des entrées, tir automatique ou vers l'avant, 3 niveaux, 4 bonus) |
 | **Space Game** (`SpaceGame`) | **3/11** : les 12 images retirées ; fond, fusée, soucoupes et boss dessinés par script (`make_space_images.py`) | ✔ 3/11 (fond de nuit douce choisi, cœurs, pastilles, jauge du boss, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin ou boss après 1 / 3 min ou 20 / 50 extraterrestres, boss de 15 / 30 / 50 points de vie, 4 / 6 / 8 extraterrestres) |
@@ -2853,3 +2862,76 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   rouge transparent bordé de tirets rouges, avec la même étoile (dessinées sous les véhicules). Aide (« le principe »)
   complétée ; test `shouldMarkTheRedCarAndTheBoxesToReach` (17 tests) ; captures
   `build/game-screenshots/apres/rushhour-marques/`.
+
+### Aiguillages (`TrainSwitches`, code `trainSwitches`) — 10/11/2026
+
+- **État des lieux (code, images)** : des trains de couleur sortent d'un tunnel, le joueur change les aiguillages par
+  fixation pour envoyer chacun à la gare de sa couleur. 3 circuits écrits dans le code (3 gares et 2 aiguillages, 8 et
+  7, 13 et 12) ; 4 modes (Classique, Pause, Infini, Un seul train) ; un nombre de trains tapé dans une zone de texte
+  ajoutée exprès dans la fenêtre des variantes (`GameVariantDialog` : une saisie non numérique empêchait la partie de
+  se lancer, 0 ou moins donnait une partie sans train et sans fin). `java.util.Timer` hors du fil de JavaFX ; ancien
+  indicateur de progression ; le jeu changeait la vitesse des réglages (0,75) ; un aiguillage ne montrait que le
+  chemin choisi ; voie vert foncé sur fond vert ; locomotives couchées ou à l'envers dans les virages ; cible d'un
+  aiguillage d'environ 54 px de rayon en 1080p ; trains repérés à 50 px quelle que soit la taille de l'écran ;
+  « Score: » en anglais en dur ; police par défaut ; chronomètre ; ni aide ni test. 43 images et la vignette de source
+  inconnue (**Hypothèse** : les locomotives ressemblent à l'emoji EmojiOne, les gares à une image de banque d'images, avec
+  « STATION » et « PLATFORM » en anglais) ; 5 sons de source inconnue.
+- **Règle du mainteneur (10/11/2026, propositions validées)** : même principe ; une mauvaise gare est une erreur, sans
+  vies ; fin après 5, 10 ou 20 trains ou sans fin, en variantes (plus de zone de texte) ; trois rythmes : un train à la
+  fois, pause à chaque aiguillage, trains en continu (le mode Infini est retiré : « sans fin » le remplace) ; niveaux
+  Facile 3 gares, Normal 5 (nouveau palier), Difficile 8 (le circuit à 13 gares est retiré) ; plusieurs circuits par
+  niveau tirés au hasard ; chronomètre retiré de l'écran (la durée reste dans les statistiques) ; pastilles ; tout
+  redessiné, vu de dessus ; un aiguillage montre ses deux chemins ; un symbole par couleur, sur le train et sa gare.
+- **Fait** : le jeu réécrit (`TrainSwitches`, classes internes `Train`, `SwitchView`, `Mark` ; `Circuit` lit les
+  circuits, `Route` donne les rails à coins arrondis ; `TrainColor`, `TrainSwitchesLevel`, `TrainSwitchesEnd`,
+  `TrainSwitchesRhythm` ; les classes `Section`, `Station`, `Switch`, `Train` et `TrainColors` retirées), une boucle en
+  temps réel ; fixations comptées par le jeu (durée lue à chaque pas) ; rien ne se choisit avant le délai ; arrêt
+  pendant le menu ; vitesse des réglages appliquée aux trains et au rythme, jamais modifiée ; tout retiré à la fin.
+  **Circuits** : 9 dessinés à la main, 3 par niveau (grilles 5 × 3, 6 × 4, 7 × 5 ; l'ancien circuit à 8 gares repris),
+  dans `data/trainSwitches/circuits.txt` (format décrit en tête du fichier). **Un nouveau circuit tous les 5 trains**
+  (un autre que le précédent, une manche par circuit), pour que le tirage au hasard serve dans une même partie. Couleurs
+  des gares tirées parmi 8 (rouge étoile, bleu rond, jaune carré, vert triangle, violet cœur, orange losange, rose croix,
+  noir hexagone) ; un train prend la couleur d'une gare, jamais deux fois de suite la même. **Dessin** : pré, rails
+  (ballast, traverses, deux rails) à coins arrondis, gares (quai, toit de la couleur, symbole), tunnel (colline de
+  rochers, entrée sombre tournée vers le circuit), trains vus de dessus (locomotive et wagon, symbole sur chacun) qui
+  suivent les virages ; aiguillage = disque montrant ses deux chemins (pris : foncé, souligné de jaune, avec une flèche ;
+  l'autre gris), zone du regard d'une case de diamètre ; anneau commun ; coche verte ou croix rouge sur la gare à
+  l'arrivée ; pastilles « Bonnes gares : n / arrivés » et « Trains : arrivés / total ». Rythmes : premier train 1 s après
+  le début du circuit ; un à la fois, le suivant 1 s après l'arrivée du précédent ; en continu, un train toutes les 4 s ;
+  avec pauses, même rythme, mais tout s'arrête quand un train arrive près d'un aiguillage (halo jaune autour de
+  l'aiguillage, bouton rond « Reprendre » à droite du circuit), une fois par aiguillage. Sons faits par script
+  (`make_trainswitches_sounds.py` : départ avec sifflet, clic, juste, faux ; le roulement continu de l'ancien jeu n'est
+  pas repris). Variantes `GroupedGameVariant` (un seul groupe, niveau, fin, rythme), 36 ; une ancienne variante joue
+  3 gares en Facile, 8 en Normal, 13 en Difficile, « Pause » avec pauses, « Unique » un à la fois, les autres en continu
+  (« Infinite » sans fin), le nombre de trains donnant la fin la plus proche (10 pour 0). Statistiques inchangées
+  (`TrainSwitchesStats`, un but par train à la bonne gare, une erreur à une mauvaise ; ajout du constructeur des
+  statistiques enregistrées, qui manquait). Code propre au jeu retiré de `GameVariantDialog` ; traductions (7 clés
+  retirées, 12 ajoutées), aide, crédits, inventaire, vignette (capture du jeu réduite de moitié).
+- **Vérifications** : `TrainSwitchesTest` (20 tests : 3 circuits par niveau, nombre de gares et d'aiguillages, chaque
+  gare atteinte, rails droits dans la grille, jamais deux fois entre deux cases, sans croisement ; circuit mal écrit
+  refusé ; coins arrondis ; délai des réglages ; premier train caché dans le tunnel puis dehors ; bonne et mauvaise
+  gare ; aiguillage changé après une fixation de la durée des réglages lue à chaque pas ; fixation reprise après un
+  regard ailleurs ; chaque gare atteinte en suivant les aiguillages, 3 niveaux × 6 tirages ; un à la fois ; en continu
+  et vitesse ; pauses et « Reprendre » ; nouveau circuit tous les 5 trains ; « Bravo » ; couleurs ; circuit et bouton
+  dans l'écran sur 4 écrans ; même circuit rejoué ; tout retiré à la fin ; variantes ; anciennes variantes) ;
+  `GameHelpTest` avec le jeu ; captures sans fenêtre (Monocle) des trois niveaux et des pauses, regardées (la locomotive
+  arrêtée mordait sur le disque de l'aiguillage : arrêt reculé à 0,85 case ; chemin gris foncé) ; SpotBugs (un
+  `instanceof` toujours vrai corrigé) ; `build` complet : **980 tests, 0 échec** ; `allGamesTest` complet : **66
+  entrées, 0 échec**. **Reste l'essai du mainteneur** (souris et Tobii), puis le commit sur demande.
+- **Retour du mainteneur (10/11/2026, avant l'essai)** : la vitesse des trains doit tenir compte de la durée de fixation
+  (elle n'est pas forcément celle par défaut, 2 s, et peut changer en cours de partie par le menu Échap), et il faut voir
+  quel train va sortir, avec le temps restant, pour s'adapter. **Fait** : un train avance au plus d'une case pendant une
+  fixation et 0,5 s de réaction, sans dépasser 0,9 case/s (0,4 case/s avec 2 s de fixation) ; en continu et avec pauses,
+  l'écart entre deux trains est compté en cases (3,6) et non plus en secondes ; avant chaque départ (premier train d'un
+  circuit, ou train suivant un à la fois), deux fixations et 1 s pour se préparer (5 s avec 2 s de fixation). Le prochain
+  train est montré sur la colline du tunnel : disque blanc avec le symbole de sa couleur, anneau de sa couleur qui se
+  vide jusqu'au départ, pastille des secondes restantes ; pâle et sans secondes tant que le train en route n'est pas
+  arrivé (un à la fois) ; caché après le dernier train du circuit. La durée de fixation est lue à chaque pas : un
+  changement dans le menu compte tout de suite. Place réservée au-dessus ou au-dessous du circuit pour un tunnel en
+  haut ou en bas. **Corrigé au passage** (vu sur les captures) : la colline d'un tunnel tourné vers la gauche ou vers
+  le haut était dessinée sur les rails, devant l'entrée (`setRotate` tourne autour du milieu du dessin ; rotation
+  autour de la case du tunnel), et la vignette refaite. Tests : 24 (vitesse et temps de préparation selon la fixation,
+  fixation changée en cours de partie, aperçu et secondes, écart en cases à toute vitesse, colline derrière l'entrée et
+  aperçu dans l'écran pour les 9 circuits ; ce dernier test échoue bien sans la correction). Aide mise à jour.
+  `build` complet : **983 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le
+  mainteneur le 10/11/2026.**

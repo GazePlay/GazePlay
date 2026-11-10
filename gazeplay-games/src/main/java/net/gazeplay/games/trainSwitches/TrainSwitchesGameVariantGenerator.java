@@ -1,32 +1,32 @@
 package net.gazeplay.games.trainSwitches;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Gives the variants of the game "TrainSwitches" proposed in the menu.
+ * Gives the variants of "Aiguillages" (maintainer's choices of 10/11/2026): when it ends (buttons, see
+ * {@link TrainSwitchesEnd}), and at the bottom the level (see {@link TrainSwitchesLevel}) and the rhythm of the trains
+ * (see {@link TrainSwitchesRhythm}). One group only: the window of the variants shows no switch for it. (Before the
+ * review: 12 variants, and a number of trains typed in the window of the variants.)
  */
 public class TrainSwitchesGameVariantGenerator implements IGameVariantGenerator {
+
+    static final String GROUP = "TrainSwitches";
+
     @Override
     public Set<IGameVariant> getVariants() {
-        return Sets.newLinkedHashSet(Lists.newArrayList(
-            new IntStringGameVariant(3, "ClassicTrain"),
-            new IntStringGameVariant(3, "PauseTrain"),
-            new IntStringGameVariant(3, "InfiniteTrain"),
-            new IntStringGameVariant(3, "UniqueTrain"),
-            new IntStringGameVariant(8, "ClassicTrain"),
-            new IntStringGameVariant(8, "PauseTrain"),
-            new IntStringGameVariant(8, "InfiniteTrain"),
-            new IntStringGameVariant(8, "UniqueTrain"),
-            new IntStringGameVariant(13, "ClassicTrain"),
-            new IntStringGameVariant(13, "PauseTrain"),
-            new IntStringGameVariant(13, "InfiniteTrain"),
-            new IntStringGameVariant(13, "UniqueTrain")
-        ));
+        final Set<IGameVariant> variants = new LinkedHashSet<>();
+        for (final TrainSwitchesLevel level : TrainSwitchesLevel.values()) {
+            for (final TrainSwitchesRhythm rhythm : TrainSwitchesRhythm.values()) {
+                for (final TrainSwitchesEnd end : TrainSwitchesEnd.values()) {
+                    variants.add(new GroupedGameVariant(GROUP, level.getKey(), end.getKey(), null, rhythm.getKey()));
+                }
+            }
+        }
+        return variants;
     }
 }

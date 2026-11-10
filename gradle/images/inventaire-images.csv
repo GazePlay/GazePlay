@@ -116,7 +116,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/spotthedifference.png,ou
 gazeplay-core/src/main/resources/data/common/Thumbnails/sprintToTheFinish.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet et OpenMoji (CC BY-SA 4.0),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/surviveAgainstRobots.png,oui,libre,"composée des images du jeu (gradle/images/make_survive_images.py) : décor et bonus dessinés pour le projet, Biboule et robots du jeu « Tir »",2026-11-03,GazePlay Learning,revue de Survive Against Robots
 gazeplay-core/src/main/resources/data/common/Thumbnails/ticTacToe.png,oui,source inconnue,,2021-08-25,Iluvrog,translation + thumbnail
-gazeplay-core/src/main/resources/data/common/Thumbnails/trainSwitches.png,oui,source inconnue,,2023-04-27,HugolinBouhineau,TrainSwitches game skeleton
+gazeplay-core/src/main/resources/data/common/Thumbnails/trainSwitches.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Aiguillages
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsIt.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheAnimal.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/whereIsTheColor.png,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -750,49 +750,6 @@ gazeplay-games/src/main/resources/data/towerDefense/images/sellMissile.png,oui,l
 gazeplay-games/src/main/resources/data/towerDefense/images/tankEnemy.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
 gazeplay-games/src/main/resources/data/towerDefense/images/towerBase.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
 gazeplay-games/src/main/resources/data/towerDefense/images/wave.png,oui,libre,"dessiné pour le projet (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
-gazeplay-games/src/main/resources/data/trainSwitches/images/background.png,oui,source inconnue,,2023-05-26,HugolinBouhineau,TrainSwitches: change background and thumbnail and add some comments
-gazeplay-games/src/main/resources/data/trainSwitches/images/blackLoco.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/blackLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/blackStation.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/brownLoco.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/brownLoco2.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/brownStation.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/cave.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: trains now come out of a cave
-gazeplay-games/src/main/resources/data/trainSwitches/images/check.png,oui,source inconnue,,2023-05-16,HugolinBouhineau,"TrainSwitches: add progressIndicator, label for train count, sound and images for train arrival"
-gazeplay-games/src/main/resources/data/trainSwitches/images/cross.png,oui,source inconnue,,2023-05-16,HugolinBouhineau,"TrainSwitches: add progressIndicator, label for train count, sound and images for train arrival"
-gazeplay-games/src/main/resources/data/trainSwitches/images/darkBlueLoco.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/darkBlueLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/darkBlueStation.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/darkGreenLoco.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/darkGreenLoco2.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/darkGreenStation.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/greenLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/greenLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/greenStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/greyLoco.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/greyLoco2.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/greyStation.png,oui,source inconnue,,2023-05-25,HugolinBouhineau,TrainSwitches: add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/lightBlueLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/lightBlueLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/lightBlueStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/orangeLoco.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/orangeLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/orangeStation.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/pinkLoco.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/pinkLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/pinkStation.png,oui,source inconnue,,2023-05-23,HugolinBouhineau,TrainSwitches: make level creation easier and add a new level
-gazeplay-games/src/main/resources/data/trainSwitches/images/purpleLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/purpleLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/purpleStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/redLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/redLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/redStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/whiteLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/whiteLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/whiteStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/yellowLoco.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/yellowLoco2.png,oui,source inconnue,,2023-05-24,HugolinBouhineau,TrainSwitches: add animations for trains
-gazeplay-games/src/main/resources/data/trainSwitches/images/yellowStation.png,oui,source inconnue,,2023-05-17,HugolinBouhineau,TrainSwitches: add images for station and trains
 gazeplay-games/src/main/resources/data/whackmole/images/field.png,oui,libre,"dessiné pour le projet (gradle/images/make_moles_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
 gazeplay-games/src/main/resources/data/whackmole/images/hole.png,oui,libre,"dessiné pour le projet (gradle/images/make_moles_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
 gazeplay-games/src/main/resources/data/whackmole/images/mole.png,oui,libre,"dessiné pour le projet (gradle/images/make_moles_images.py), GPL-3.0-or-later",2026-11-04,GazePlay Learning,revue du Jeu de la taupe

@@ -1,0 +1,21 @@
+# Le principe
+Des trains de couleur sortent du tunnel : envoie chacun à la gare de sa couleur en changeant les aiguillages ! Chaque train porte le même symbole que sa gare (étoile, rond, carré, cœur…).
+
+# Comment jouer
+- Un aiguillage est un disque sur les rails. Il montre ses deux chemins : celui que les trains prendront est foncé, avec une flèche ; l'autre est gris.
+- Fixe un aiguillage pour changer de chemin.
+- Un train qui arrive à un aiguillage prend le chemin montré à ce moment-là.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, les trains arrivés à la bonne gare, et les trains arrivés.
+- Sur la colline du tunnel, un disque montre le prochain train (sa couleur et son symbole) et les secondes avant son départ : de quoi préparer les aiguillages.
+- Les trains vont assez lentement pour qu'on ait le temps de fixer un aiguillage avant d'y arriver : plus la durée de fixation des réglages est longue, plus ils vont lentement. Ils suivent aussi la vitesse des réglages. Un changement fait dans le menu (touche Échap) compte tout de suite.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Un train arrivé à la bonne gare compte un point (une coche verte). À une mauvaise gare, c'est une erreur (une croix rouge), et la partie continue. Tous les 5 trains, un nouveau circuit arrive. Après 5, 10 ou 20 trains, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 5 trains, 10 trains, 20 trains ou sans fin : le nombre de trains de la partie.
+- En bas, le niveau : Facile, 3 gares et 2 aiguillages ; Normal, 5 gares et 4 aiguillages ; Difficile, 8 gares et 7 aiguillages.
+- En bas aussi, le rythme : un train à la fois (le suivant part quand le précédent est arrivé) ; pause à chaque aiguillage (tout s'arrête avant chaque aiguillage : change-le si besoin, puis fixe le bouton rond à droite pour repartir) ; trains en continu (les trains se suivent, toujours à la même distance).
