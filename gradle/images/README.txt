@@ -179,6 +179,11 @@ found.wav, missed.wav) are made by make_cups_sounds.py (this folder), under the 
 (GPL-3.0-or-later). The thumbnail (gazeplay-core: data/common/Thumbnails/passpass.png, 960 x 540) is a capture of the
 game, reduced by half.
 
+Sounds of "Magic Potions" (name code Potions; gazeplay-games: data/potions): the sounds (sounds/pour.wav, served.wav,
+boom.wav) are made by make_potions_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later),
+10/11/2026. The thumbnail (gazeplay-core: data/common/Thumbnails/potions.jpg, 960 x 540) is a capture of the game,
+reduced by half.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

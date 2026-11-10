@@ -1,0 +1,20 @@
+# Le principe
+Une Biboule veut une potion d'une couleur : prépare-la en versant les bonnes potions dans le chaudron ! Rouge et jaune font de l'orange, jaune et bleu du vert, rouge et bleu du violet, et les trois ensemble du marron.
+
+# Comment jouer
+- La bulle de la Biboule montre la couleur voulue, et son nom dessous. Avec la recette, les potions à verser sont montrées aussi.
+- Fixe une potion de la table (rouge, jaune ou bleue) : elle va au-dessus du chaudron et s'y verse. Le chaudron prend la couleur du mélange.
+- Chaque potion ne se verse qu'une fois par cliente ; l'ordre ne compte pas.
+- Le mélange est réussi : la Biboule boit sa potion et saute de joie. Une potion qui n'est pas dans la recette : le chaudron explose, et tu perds une vie. Puis une nouvelle cliente arrive.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut à gauche, les vies (un cœur rouge par vie) ; au milieu, les potions servies.
+- Les potions se versent à la vitesse des réglages.
+- Rien ne peut être choisi avant le délai des réglages, ni pendant qu'une potion se verse. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Après 3, 5 ou 10 potions servies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième explosion, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 3 potions, 5 potions, 10 potions ou sans fin : le nombre de potions à servir.
+- En bas, le niveau : avec la recette (les potions à verser sont montrées sous la bulle), ou sans la recette (à toi de savoir les mélanges).

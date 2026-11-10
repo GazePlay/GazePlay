@@ -66,7 +66,9 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 - **Pierre papier ciseaux** (`RockPaperScissors`) : revu (fiche en bas), propositions validées par le mainteneur ;
   **essayé et validé**, commité (`aa9700baf`).
 - **Gobelets Pass Pass** (`CupsBalls`) : revu (fiche en bas), propositions validées par le mainteneur ; **essayé et
-  validé**, commité.
+  validé**, commité (`13b5d9102`).
+- **Magic Potions** (`Potions`) : revu (fiche en bas), propositions validées par le mainteneur ; essayé (sélection
+  des fioles corrigée, 3 fioles gardées) et **validé**, commité. **Le groupe 7 est terminé.**
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -789,7 +791,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Bubbles** (`Bubbles` ; `ColoredBubbles` et `PortraitBubbles` réunis) | **Remplacées le 2/11** : 3 paysages sous la mer dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (vraies bulles, vitres dépolies, compte 12 / 36) | ✔ 2/11 (règle du mainteneur : une carte, image à découvrir puis nouvelle image, éclater dès le regard ou après fixation) |
 | **Egg Game** (`EggGame` ; `PersonalizeEggGame` réuni) | **Remplacées le 2/11** : œuf dessiné par le jeu, prairie et nid dessinés, animaux OpenMoji, sons refaits | ✔ 2/11 (nid, fêlures qui grandissent, éclosion animée, anneau) | ✔ 2/11 (règle du mainteneur : une carte, sans fin, rester sur l'œuf suffit, plus de « rétrécie ») |
 | **Frogs Race** (`FrogsRace`) | **Remplacées le 30/10** : grenouilles et mare dessinées pour le projet (`make_race_images.py`) ; `Racer.png` (non libre, inutilisé), le tube rouge et la cage retirés ; Biboules gardées (dessins du projet) | ✔ 30/10 (couloirs, « Toi », langue, pastille) | ✔ 30/10 (Facile/Normal/Difficile, classement, statistiques justes) |
-| Magic Potions (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) | | |
+| **Magic Potions** (`Potions`) | **Remplacé le 28/10** : fioles, chaudron, bulle, décor (dessinés par script), explosion (OpenMoji) ; **10/11** : sons faits par script (`make_potions_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (nom et recette sous la bulle, fiole qui va verser au-dessus du chaudron, chaudron de la couleur du mélange, explosion, cliente qui saute de joie, anneau, vies en cœurs, toute la fiole regardée) | ✔ 10/11 (règle du mainteneur : avec ou sans la recette, 3 vies, fin après 3 / 5 / 10 potions ou sans fin, les trois couleurs font du marron) — validé le 10/11 |
 | **Labyrinthe** (`Labyrinth`) | **9/11** : les 19 dessins retirés (la maison ressemblait à une image de banque d'images) ; souris, fromage et maison dessinés par script (`make_labyrinth_images.py`), haies dessinées par le jeu ; les 9 animaux sans fond de source inconnue remplacés par OpenMoji (renard et tortue, en double, retirés ; pingouin et grenouille ajoutés) ; vignette faite par le script | ✔ 9/11 (labyrinthe de haies vu de dessus, centré, murs fins entre les cases, anneau, flèches rondes, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : un vrai labyrinthe à chemin unique, nouveau à chaque fromage, fin après 3 / 5 / 10 ou sans fin, Facile 3 × 5 / Normal 5 × 7 / Difficile 7 × 9, 3 façons de déplacer, souris ou animal) — à essayer |
 | **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
 | **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
@@ -3213,3 +3215,45 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   mêmes échanges au rejeu ; variantes et anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre
   regardées ; `build` complet : **1 071 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé
   par le mainteneur le 10/11/2026.**
+
+### Magic Potions (`Potions`, code `potions`) — 10/11/2026
+
+- **État des lieux (code)** : une Biboule cliente demande une couleur (un rond de couleur dans sa bulle) ; on verse
+  les potions rouge, jaune et bleue dans le chaudron (orange, vert, violet à deux ; noir aux trois) ; une potion hors
+  recette fait exploser le chaudron. **Le temps de l'animation était compté en images d'écran, comme s'il y en avait
+  toujours 60 par seconde** : sur un écran à 120 ou 144 Hz, le résultat tombait avant la fin de l'animation. Pas de
+  fin (« Bravo » puis une autre cliente), ni vies ni score ; limiteurs ; aucune variante ; la demande n'était qu'un
+  rond de couleur ; un but à atteindre ajouté à chaque bonne potion d'un mélange ; durée de fixation lue une fois ; pas
+  de délai ; ni aide ni test. Images déjà remplacées le 28/10 (fioles, chaudron, décor, bulle par script ; explosion
+  OpenMoji ; la Biboule du laboratoire).
+- **Règle du mainteneur (10/11/2026, propositions validées)** : même principe ; la bulle avec la couleur et son nom ;
+  avec la recette (les potions à verser montrées) ou sans ; 3 vies en cœurs ; fin après 3, 5 ou 10 potions servies ou
+  sans fin ; les trois couleurs font du **marron** (comme les peintures), plus du noir.
+- **Fait** : le jeu réécrit (`MagicPotions` ; `PotionMix` avec ses recettes ; `PotionsLevel`, `PotionsEnd`,
+  `PotionsGameVariantGenerator` ; `Client`, `Explosion` et `Potion` retirés), une boucle en temps réel (durée de
+  fixation lue à chaque pas, délai, Échap, plus de limiteurs, tout retiré à la fin). Mêmes images : décor (ou fond uni
+  si le décor est désactivé), Biboule et sa bulle en haut à droite (la couleur demandée dessinée derrière le flacon
+  transparent, entièrement cachée par la bulle), sous la bulle le nom de la couleur et, avec la recette, les petites
+  fioles à verser séparées de « + » ; chaudron en bas à gauche, trois fioles en bas à droite. Une fixation sur une fiole
+  (anneau commun) : elle va au-dessus du chaudron, se penche et verse (à mi-chemin, le chaudron prend la couleur du
+  mélange, avec un son), puis revient, grisée pour cette cliente ; rien ne se choisit pendant ce temps. Recette
+  complète : la cliente saute de joie, une potion servie ; fiole hors recette : le chaudron devient gris, explosion
+  (l'animation commune, proportions gardées), une vie perdue ; puis une autre cliente, jamais la même couleur deux fois
+  de suite. Variantes `GroupedGameVariant` (8) ; une partie d'avant (sans variante) se joue avec la recette, sans fin.
+  Statistiques au format inchangé (`MagicPotionsStats`) : une cliente compte un but à atteindre, une potion servie un
+  but atteint. Sons faits par script (`make_potions_sounds.py` : versement, potion servie, explosion). Traductions
+  (15 ajoutées), aide, crédits, inventaire, vignette (capture réduite, en `.jpg` comme le menu l'attend).
+- **Vérifications** : `MagicPotionsTest` (11 tests : mélanges ; fiole versée après une fixation de la durée des
+  réglages lue à chaque pas, à la vitesse des réglages ; cliente servie dans n'importe quel ordre ; couleur du chaudron
+  (rouge, violet, marron) ; explosion et vie perdue ; pas deux fois la même fiole ni pendant un versement ; « Perdu ! »
+  après 3 explosions ; « Bravo » après 3 potions ; recette montrée seulement avec la recette ; tout retiré à la fin ;
+  variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées (couleur demandée qui dépassait sous la
+  bulle et couleur du chaudron qui dépassait du bord, corrigées ; l'explosion, une image animée, ne s'anime pas dans une
+  capture de test) ; `build` complet : **1 083 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**.
+  Essayé par le mainteneur (voir ci-dessous).
+- **Essai du mainteneur (10/11/2026)** : seule la partie ronde d'une fiole réagissait au regard, pas son col (l'image
+  est choisie par ses pixels dessinés). **Fait** : une zone invisible devant chaque fiole, toute la fiole et un peu plus
+  large, les zones voisines sans se toucher ; test `shouldLookAtTheWholeFlaskItsNeckToo`. Couleurs : rouge, vert, bleu
+  (lumière) ou une 4ᵉ fiole verte ont été discutés ; avec 3 fioles, rouge-jaune-bleu et rouge-vert-bleu donnent le même
+  nombre de couleurs (7), et une 4ᵉ fiole verte ne donnerait que 9 couleurs, le vert et le marron se faisant de
+  plusieurs façons. **Décision du mainteneur : on garde les 3 fioles rouge, jaune, bleu.** `build` complet : **1 084 tests, 0 échec**. **Validé par le mainteneur le 10/11/2026.**

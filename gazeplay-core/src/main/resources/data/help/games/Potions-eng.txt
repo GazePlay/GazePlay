@@ -1,0 +1,20 @@
+# The principle
+A Biboule wants a potion of a color: make it by pouring the right potions into the cauldron! Red and yellow make orange, yellow and blue green, red and blue purple, and the three together brown.
+
+# How to play
+- The bubble of the Biboule shows the color wanted, and its name under it. With the recipe, the potions to pour are shown too.
+- Fixate a potion of the table (red, yellow or blue): it goes above the cauldron and pours. The cauldron takes the color of the mixture.
+- Each potion is poured only once per client; the order does not matter.
+- The mixture is right: the Biboule drinks its potion and jumps for joy. A potion out of the recipe: the cauldron explodes, and you lose a life. Then a new client comes.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top left, the lives (a red heart for each life); in the middle, the potions served.
+- The potions are poured at the speed of the settings.
+- Nothing can be chosen before the delay of the settings, nor while a potion is poured. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+After 3, 5 or 10 potions served, it is "Bravo", then the statistics. You have 3 lives: at the third explosion, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left.
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 3 potions, 5 potions, 10 potions or without end: the number of potions to serve.
+- At the bottom, the level: with the recipe (the potions to pour shown under the bubble), or without the recipe (you have to know the mixtures).

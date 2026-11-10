@@ -17,6 +17,6 @@ public class PotionsGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new PotionsGameLauncher());
+            new PotionsGameVariantGenerator(), new PotionsGameLauncher());
     }
 }

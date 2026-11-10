@@ -186,6 +186,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   GazePlay Learning (gradle/images/make_rockpaperscissors_sounds.py), sous la licence du projet.
 - Sons de « Gobelets Pass Pass » (data/cups) : faits pour GazePlay Learning (gradle/images/make_cups_sounds.py),
   sous la licence du projet ; gobelets, balle et table dessinés par le jeu.
+- Sons de « Magic Potions » (data/potions) : faits pour GazePlay Learning (gradle/images/make_potions_sounds.py),
+  sous la licence du projet.
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
   jeu « Tir ».

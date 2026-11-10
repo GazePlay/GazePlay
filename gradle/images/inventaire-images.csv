@@ -102,7 +102,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,libre,"cap
 gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue de Gobelets Pass Pass
 gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,libre,"capture du jeu (octobre 2026) ; pièce dessinée pour le projet, objets OpenMoji CC BY-SA 4.0, Biboule du projet",2026-10-30,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/pianosight.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
-gazeplay-core/src/main/resources/data/common/Thumbnails/potions.jpg,oui,source inconnue,,2019-06-18,johzz-o2,thumbnail update
+gazeplay-core/src/main/resources/data/common/Thumbnails/potions.jpg,oui,libre,"capture du jeu (images de make_potions_images.py, explosion OpenMoji CC BY-SA 4.0)",2026-11-10,GazePlay Learning,revue de Magic Potions
 gazeplay-core/src/main/resources/data/common/Thumbnails/rabbits.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/rockPaperScissors.png,oui,libre,"capture du jeu (mains OpenMoji CC BY-SA 4.0, le reste dessiné par le jeu)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
 gazeplay-core/src/main/resources/data/common/Thumbnails/rushHour.png,oui,libre,"faite des images du jeu par make_trafficjam_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
