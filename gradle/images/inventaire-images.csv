@@ -88,7 +88,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,
 gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,source inconnue,,2021-09-03,Iluvrog,end of the game
 gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,source inconnue,,2019-05-24,Wafaa,Literacy Game Thumbnail
 gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
-gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
+gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,libre,"capture du jeu (tableau et cartes dessinés par le jeu, Biboule du Tir), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-numbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
@@ -536,12 +536,7 @@ gazeplay-games/src/main/resources/data/labyrinth/images/mouse.png,oui,libre,"des
 gazeplay-games/src/main/resources/data/ladder/Biboule.png,oui,source inconnue,,2021-09-02,Iluvrog,little graphical change
 gazeplay-games/src/main/resources/data/magiccards/images/blue-card-game.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/magiccards/images/red-card-game.png,oui,source inconnue,,2017-02-08,schwab,first commit
-gazeplay-games/src/main/resources/data/math101/images/biboule_hand.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
-gazeplay-games/src/main/resources/data/math101/images/blackboard.png,oui,libre,"Openclipart, domaine public (métadonnées)",2019-04-05,Wafaa,Added new Game Math101
-gazeplay-games/src/main/resources/data/math101/images/blackboard2.png,oui,source inconnue,,2019-04-07,Wafaa,fixed images out of screen issue #698
-gazeplay-games/src/main/resources/data/math101/images/correct.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
-gazeplay-games/src/main/resources/data/math101/images/correct2.png,oui,source inconnue,,2019-04-06,Wafaa,fixing image ratio for error and validation
-gazeplay-games/src/main/resources/data/math101/images/note2.png,oui,source inconnue,,2019-04-05,Wafaa,Added new Game Math101
+gazeplay-games/src/main/resources/data/math101/images/biboule.png,oui,libre,"Biboule jaune du Tir (mascotte du laboratoire modernisée pour le projet), recadrée par gradle/images/make_math101_images.py, GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
 gazeplay-games/src/main/resources/data/pet/images/ball.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
 gazeplay-games/src/main/resources/data/pet/images/bathroom.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet
 gazeplay-games/src/main/resources/data/pet/images/body.png,oui,libre,"dessin du projet (la Biboule de Biboule Jump), GPL-3.0-or-later ; gardé à la revue du 30/10/2026",2018-06-20,kuhlkrein,Adding the screen with different background for pet game

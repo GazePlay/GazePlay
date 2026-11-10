@@ -184,6 +184,12 @@ boom.wav) are made by make_potions_sounds.py (this folder), under the license of
 10/11/2026. The thumbnail (gazeplay-core: data/common/Thumbnails/potions.jpg, 960 x 540) is a capture of the game,
 reduced by half.
 
+Image and sounds of "Apprends les Maths" (name code Math101; gazeplay-games: data/math101): the blackboard and the
+cards are drawn by the game, in place of 6 pictures (5 of unknown source, 10/11/2026); images/biboule.png is the
+yellow Biboule of the shooting game, cut by make_math101_images.py, and the sounds (sounds/right.wav, wrong.wav) are
+made by make_math101_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). The
+thumbnail (gazeplay-core: data/common/Thumbnails/math101.png, 960 x 540) is a capture of the game, reduced by half.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

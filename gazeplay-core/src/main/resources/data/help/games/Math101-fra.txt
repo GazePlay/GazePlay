@@ -1,0 +1,23 @@
+# Le principe
+Une opération est écrite au tableau. Trouve la bonne réponse parmi les trois cartes !
+
+# Comment jouer
+- Au tableau, l'opération et un « ? » en jaune ; la Biboule est à côté.
+- En bas, trois cartes montrent des nombres : une seule est la bonne réponse ; les deux autres en sont proches.
+- Fixe une carte pour la choisir.
+- La bonne carte devient verte, avec une coche ; la réponse s'écrit au tableau, la Biboule saute de joie, puis une autre opération arrive.
+- Une erreur : la carte montre une croix. Selon la variante, elle devient grise et tu cherches encore ; ou tu perds une vie, la bonne réponse est montrée, puis une autre opération arrive.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut à gauche, les vies (un cœur rouge par vie), seulement avec les vies ; au milieu, les opérations réussies.
+- Jamais de 0 : ni dans les opérations, ni dans les réponses.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Après 5, 10 ou 20 opérations réussies, c'est « Bravo », puis les statistiques. Avec les vies, tu en as 3 : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue (avec les vies, jusqu'à ce que tu n'en aies plus).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Les boutons : le niveau. Additions et soustractions : jusqu'à 10, 20 ou 100 (la somme, ou le nombre dont on retire). Multiplications et divisions : une table (de 2 à 10), les tables de 2 à 5, ou toutes les tables ; les divisions tombent toujours juste. Toutes les opérations : facile, moyen ou difficile.
+- En bas, les opérations : additions, soustractions, les deux, multiplications, divisions, les deux, ou toutes.
+- Puis la fin : 5, 10 ou 20 opérations, ou sans fin.
+- Puis ce que fait une erreur : chercher jusqu'à trouver (pas de vies), ou 3 vies.

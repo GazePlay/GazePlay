@@ -5,6 +5,39 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU JEUDI 12/11/2026 (bilan de la séance du mardi 10/11/2026 ; mercredi 11/11 férié)
+
+**Fait le mardi 10/11/2026** (détail dans « Avancement du mardi 10/11/2026 » plus bas, et les fiches en bas) :
+- **CI** du push du 9/11 au soir : verte (run `42655120593`). Avertissements de GitHub (Ubuntu 26, file d'attente
+  macOS) : rien à changer tant que rien ne casse (décision du mainteneur).
+- **Groupe 7 (jeux de réflexion) terminé**, chaque jeu essayé et validé par le mainteneur, un commit par jeu :
+  Aiguillages (`8f54e8410`), Quatre en ligne, ancien Puissance 4 (`7b8b24941`), Morpion (`257a0dc3b`), Répète après
+  moi, ancien Simon, avec les **vies homogènes** `GameStyle.lives` dans tous les jeux revus (`50af51bdc`), Ordre
+  (`d9e0c07f3`), Pierre papier ciseaux (`aa9700baf`), Gobelets Pass Pass (`13b5d9102`), Magic Potions (`31501cf0b`).
+  Deux pushs, **CI verte sur les 7 jobs** les deux fois (runs `42811913214` et `42843394071`).
+- **Groupe 8 commencé : Apprends les Maths** (`Math101`) : **une seule carte** au lieu de 5 (catalogue : **62
+  entrées**), 7 sujets, niveaux jusqu'à 10 / 20 / 100 ou par tables, jamais de 0, mauvaises réponses proches, chercher
+  jusqu'à trouver ou 3 vies (au choix), fin après 5 / 10 / 20 opérations ou sans fin. **Essayé et validé**, commité et
+  poussé le 10/11 au soir avec ces notes.
+- **Tests en local** (demande du mainteneur, PC à 16 Go avec l'IDE et Tobii Experience ouverts) : un `build` suivi
+  d'`allGamesTest` a été arrêté faute de mémoire. Désormais en local : `gradlew --stop`, puis
+  `gradlew --no-parallel build` (13 min), puis `gradlew --no-parallel allGamesTest -PallGamesParallel=2` (10 min 30).
+  La CI garde 4 jeux à la fois (valeur par défaut).
+- **Vérifications du soir** : `build` complet **1 093 tests, 0 échec** ; `allGamesTest` complet **62 entrées, 0 échec**.
+- Leçons notées : jamais de virgule dans un texte de traduction (séparateur du CSV) ; `setRotate` tourne autour du
+  centre des limites (utiliser une transformation `Rotate`) ; mauvaises réponses jamais symétriques autour de la bonne.
+
+**Ordre du jour du jeudi 12/11/2026** :
+1. **Vérifier la CI** du push du 10/11 au soir (7 jobs, dont `all-games` avec 62 entrées et `package-macos`).
+2. **Suite du groupe 8 (calcul et lettres), dans l'ordre** : **Diviseur** (`Divisor`, 10 dessins de lapins de source à
+   confirmer, partagés avec Lapins), puis Lapins (`Rabbits`), Dés (`Dice`), Jeu de l'oie (`GooseGame`), Identifier
+   les lettres (`Letters`), Point par point (`DotToDot`).
+3. Pour chaque jeu, comme toujours : état des lieux, **demander d'abord la règle voulue**, propositions validées,
+   travail, essai du mainteneur, puis un commit par jeu sur demande.
+4. Ensuite : groupe 9 (Gribouille, Cartes à gratter, Cartes magiques, Tartes à la crème, La Fabrique à gâteaux,
+   Mélanger les couleurs, Piano, Bouteille, La pièce, Blocs, Échelle, Suivre le chemin), puis groupe 10 (GazePlay
+   Eval et Eval Test).
+
 ## REPRISE DU MARDI 10/11/2026 (bilan de la séance du lundi 9/11/2026)
 
 **Fait le lundi 9/11/2026** (fiches en bas) :
@@ -69,6 +102,15 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   validé**, commité (`13b5d9102`).
 - **Magic Potions** (`Potions`) : revu (fiche en bas), propositions validées par le mainteneur ; essayé (sélection
   des fioles corrigée, 3 fioles gardées) et **validé**, commité. **Le groupe 7 est terminé.**
+- **CI** du push du groupe 7 (`50af51bdc..31501cf0b`) : verte sur les 7 jobs (run `42843394071`).
+- **Groupe 8, Apprends les Maths** (`Math101`) : revu (fiche en bas), propositions validées par le mainteneur
+  (une seule carte, choix entre chercher jusqu'à trouver et 3 vies, jamais de 0) ; `build` complet **1 093 tests,
+  0 échec** ; `allGamesTest` complet **62 entrées, 0 échec** ; **essayé et validé** par le mainteneur, commité.
+- **Mémoire du PC** : un premier `build` suivi d'`allGamesTest` arrêté par Claude Code (mémoire vive du PC presque
+  pleine, IDE et Tobii Experience ouverts). **Demande du mainteneur** : moins de JVM en même temps en local, la CI
+  inchangée. `allGamesTest` prend `-PallGamesParallel=<n>` (4 par défaut, comme en CI) ; en local :
+  `gradlew --no-parallel build` (13 min 6 s) puis `gradlew --no-parallel allGamesTest -PallGamesParallel=2`
+  (10 min 28 s, au lieu d'environ 7 min à 4 jeux à la fois).
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -811,7 +853,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Biboule Jump** (`BibJump`) | **4/11** : ciel, nuages, tremplin et sons faits par script (`make_biboulejump_images.py`, `make_biboulejump_sounds.py`) ; Biboules du Tir | ✔ 4/11 (Biboule non déformée, ciel, nuages et tremplin plus grand, cœurs, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : 3 vies, retour sur un nouveau nuage avec les points gardés ; sans fin, 1 ou 3 min ; Facile / Normal / Difficile ; même saut sur tout écran ; plus de record) |
 | **Pierre papier ciseaux** (`RockPaperScissors`) | **10/11** : les 7 dessins retirés (gants de dessin animé proches d'un personnage commercial, parc, pouces) ; mains d'OpenMoji (`make_rockpaperscissors_images.py`), sons faits par script ; vignette faite d'une capture | ✔ 10/11 (trois cartes avec la main et son nom, poings qui se balancent pendant « Pierre… papier… ciseaux ! », main gagnante qui grossit, messages sous les mains, anneau, pastille du score) | ✔ 10/11 (règle du mainteneur : contre l'ordinateur en 2 / 3 / 5 manches gagnantes ou sans fin, l'ordinateur peut gagner ; apprendre la règle en 5 / 10 bonnes réponses ou sans fin, erreur expliquée) — validé le 10/11 |
 | Piano (`Piano`) | À confirmer : 6 images | | |
-| Math101 (×5 opérations) | À confirmer : 5 images ; OK : tableau (Openclipart, domaine public) | | |
+| **Apprends les Maths** (`Math101`, une seule carte depuis le 10/11, avant 5) | **10/11** : les 6 images retirées (5 de source inconnue, et le tableau d'Openclipart), tableau et cartes dessinés par le jeu, Biboule jaune du Tir ; 2 sons faits par script (`make_math101_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (tableau noir à la craie, réponse écrite en jaune, Biboule qui saute de joie, 3 grandes cartes, coche ou croix, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : une seule carte, 7 sujets, niveaux jusqu'à 10 / 20 / 100 ou par tables, jamais de 0, mauvaises réponses proches, chercher jusqu'à trouver ou 3 vies, fin après 5 / 10 / 20 opérations ou sans fin) — validé le 10/11 |
 | Bottle (`Bottle`) | À confirmer : 5 images | | |
 | **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
 | **Embouteillage** (`RushHour`, avant « Rush Hour ») | **9/11** : les 4 images et la vignette retirées ; camions et bus dessinés par script (`make_trafficjam_images.py`), voitures de la Course du regard, parking dessiné par le jeu ; les 33 parkings de source inconnue remplacés par 90 parkings faits par script (`make_trafficjam_levels.py`) | ✔ 9/11 (parking vu de dessus centré, véhicules de couleurs différentes, voiture rouge à sortir, ouverture et flèche, cases libres allumées, bouton « Recommencer », anneau, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : nouveau nom, nos propres parkings classés Facile 3-8 / Normal 9-16 / Difficile 17-30 coups, choisir le véhicule puis la case, « Recommencer », fin après 1 / 3 / 5 ou sans fin) — à essayer |
@@ -3257,3 +3299,49 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   (lumière) ou une 4ᵉ fiole verte ont été discutés ; avec 3 fioles, rouge-jaune-bleu et rouge-vert-bleu donnent le même
   nombre de couleurs (7), et une 4ᵉ fiole verte ne donnerait que 9 couleurs, le vert et le marron se faisant de
   plusieurs façons. **Décision du mainteneur : on garde les 3 fioles rouge, jaune, bleu.** `build` complet : **1 084 tests, 0 échec**. **Validé par le mainteneur le 10/11/2026.**
+
+### Apprends les Maths (`Math101`, une seule carte) — 10/11/2026
+
+- **État des lieux (code)** : 5 cartes du menu (additions, soustractions, multiplications, divisions, toutes les
+  opérations ; deux types « + et − » et « × et ÷ » écrits mais jamais proposés). Une opération au tableau, une
+  Biboule, 3 cartes dont une juste ; bonne carte : animation de victoire puis une autre opération ; mauvaise carte :
+  une erreur, la carte s'efface. **Nombres tirés à partir de 0** (« 0 × 7 », « 0 ÷ 5 ») ; la variante « 3 » des
+  multiplications voulait dire « facteurs jusqu'à 3 », pas « table de 3 » ; **mauvaises réponses tirées jusqu'à deux
+  fois le plus grand nombre**, souvent trop loin pour s'y tromper ; **une erreur comptée dès le début de la partie** ;
+  zones d'intérêt des cartes mal placées (hauteur calculée avec la largeur) ; police du Mac seulement ; pas de fin, ni
+  vies ni score ; limiteurs ; ancien indicateur ; pas de délai ; Échap n'arrêtait rien ; 6 images (dont 2 jamais
+  utilisées) et la vignette, de source inconnue sauf le tableau (Openclipart) ; ni son, ni aide, ni test.
+- **Règle du mainteneur (10/11/2026, propositions validées)** : **une seule carte** « Apprends les Maths » ; une
+  mauvaise réponse au choix : la carte grisée et on cherche encore (pas de vies), ou 3 vies (bonne réponse montrée) ;
+  **jamais de 0** ; niveaux : additions et soustractions jusqu'à 10, 20 ou 100, multiplications par table (de 2 à 10,
+  de 2 à 5, toutes), divisions inverses des tables (toujours justes), mélanges + et −, × et ÷, tout (facile, moyen,
+  difficile) ; mauvaises réponses proches ; fin après 5, 10 ou 20 opérations ou sans fin.
+- **Fait** : le jeu réécrit (`Math101`, classe interne `Card` ; `MathQuestion`, `MathTopic`, `MathLevel`, `MathEnd`,
+  `MathMistakes`, `Math101GameSpecSource`, `Math101GameVariantGenerator` ; retirés : `Card`, `Formula`,
+  `RoundDetails`, `MathGameType` et les 5 paires de cartes et de générateurs de variantes). Catalogue : **62 entrées**
+  (avant 66). Une boucle en temps réel (durée de fixation lue à chaque pas, délai, Échap, plus de limiteurs, tout
+  retiré à la fin). Tableau noir dessiné (cadre en bois, traces de craie, auget avec deux craies), opération écrite à
+  la craie avec les signes de l'école (−, ×, ÷) et un « ? » jaune, remplacé par la réponse ; Biboule jaune du Tir à
+  côté, qui saute de joie à une bonne réponse ; 3 grandes cartes blanches (éclairées quand on les regarde, anneau
+  commun) ; bonne carte verte avec une coche, les autres pâlies ; mauvaise carte : une croix, puis grisée et qui tremble
+  (chercher encore) ou rouge, la bonne montrée en vert et une vie perdue (3 vies). Fond de la couleur des anciens jeux
+  (bleu pour + et −, vert pour × et ÷, rose pour tout). Jamais deux fois la même opération de suite ; **mauvaises
+  réponses proches** (+ et − : 1 à 3 de plus ou de moins, 10 à partir de 15 ; × : les produits voisins dans les
+  tables, ou 1 de plus ou de moins ; ÷ : 1 ou 2 de plus ou de moins, ou le diviseur), jamais une de plus et une de
+  moins d'autant (après les captures : 75 / 85 / 95 laissait deviner la réponse du milieu). Variantes
+  `GroupedGameVariant` (360 : 45 niveaux des 7 sujets, 4 fins, 2 choix pour une erreur) : les niveaux en boutons, puis en bas le sujet, la fin et ce que fait une erreur ; une
+  autre variante joue les additions jusqu'à 10, sans fin, en cherchant encore. Statistiques au format inchangé
+  (`MathGamesStats`, dossier « Math 101 ») : une opération compte un but à atteindre, une opération réussie un but
+  atteint, une mauvaise carte une erreur (plus d'erreur au début) ; une zone d'intérêt par opération, sur la bonne
+  carte (avant : le tableau et les cartes, mal placées). Sons faits par script (`make_math101_sounds.py`). Traductions
+  (32 ajoutées, dont le nom « Apprends les Maths »), aide, crédits, inventaire, vignette (capture réduite). Les
+  raccourcis et la dernière variante gardés pour les 5 anciennes cartes ne servent plus (comme pour Memory).
+- **Vérifications** : `Math101Test` (8 tests : opérations de chaque sujet et de chaque niveau, 400 tirages chacun,
+  jamais de 0, sommes et tables dans le niveau, divisions justes, mauvaises réponses proches, différentes et jamais
+  de part et d'autre de la bonne ; choix après une fixation de la durée des réglages lue à chaque pas, après le délai ;
+  jamais deux fois la même opération ; mauvaise carte grisée qu'on ne peut plus choisir, sans vie perdue ; 3 vies,
+  bonne réponse montrée, « Perdu ! » sans « Bravo » ; « Bravo » après 5 opérations ; sans fin ; tout retiré à la fin
+  et zones d'intérêt fermées ; variantes, niveau d'un autre sujet et ancienne variante) ; `GameHelpTest` avec le jeu ;
+  captures sans fenêtre regardées (1920 × 1080 et 1024 × 768 ; « Perdu ! » qui cachait la carte du milieu, mis sur le
+  tableau) ; `build` complet : **1 093 tests, 0 échec** ; `allGamesTest` complet : **62 entrées, 0 échec**. **Validé
+  par le mainteneur le 10/11/2026.**

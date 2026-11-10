@@ -135,7 +135,7 @@ public class ReplayingGameFromJson {
             // replay OK but the resize of the game itself is bad:
             // "SpotDifference", "MediaPlayer","RockPaperScissors",
             //"Math101: Addition","Math101: All operations","Math101: Division",
-            //"Math101: Multiplication","Math101: Substraction"
+            //"Math101: Multiplication","Math101: Substraction" (one game "Math101" since 10/11/2026)
 
             // Replay offset was really clear here,due to the gameContext.getRoot() instead of gameContext
             // "Coloring"

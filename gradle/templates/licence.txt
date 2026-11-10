@@ -188,6 +188,9 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   sous la licence du projet ; gobelets, balle et table dessinés par le jeu.
 - Sons de « Magic Potions » (data/potions) : faits pour GazePlay Learning (gradle/images/make_potions_sounds.py),
   sous la licence du projet.
+- Sons d'« Apprends les Maths » (data/math101) : faits pour GazePlay Learning
+  (gradle/images/make_math101_sounds.py), sous la licence du projet ; tableau et cartes dessinés par le jeu, la
+  Biboule est celle du jeu « Tir ».
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
   jeu « Tir ».

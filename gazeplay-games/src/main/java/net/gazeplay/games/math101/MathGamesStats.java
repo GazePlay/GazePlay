@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the games "Math101: Addition", "Math101: All operations", "Math101: Division", "Math101:
- * Multiplication" and "Math101: Substraction" (see {@code SelectionGamesStats}).
+ * Statistics of "Apprends les Maths" (name code Math101; before the review of 10/11/2026, the 5 games "Math101:
+ * Addition", "Math101: All operations", "Math101: Division", "Math101: Multiplication" and "Math101: Substraction"), in
+ * the same folder "Math 101" as before (see {@code SelectionGamesStats}).
  */
 @Slf4j
 public class MathGamesStats extends SelectionGamesStats {

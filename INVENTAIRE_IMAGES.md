@@ -80,7 +80,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Biboule Jump, dossier `common` des jeux | 9 chacun |
 | ~~Rock Paper Scissors~~ | ~~7~~ **Fait le 10/11/2026** : les 7 images retirées (gants blancs de dessin animé à 4 doigts, proches du style d'un personnage commercial ; parc ; pouces) ; mains d'OpenMoji (CC BY-SA 4.0, `make_rockpaperscissors_images.py`), le reste dessiné par le jeu ; vignette faite d'une capture |
 | Pianosight | 6 |
-| Bottle, Math101 | 5 chacun |
+| Bottle, ~~Math101~~ | 5 chacun ; **Apprends les Maths fait le 10/11/2026** : ses 5 images de source inconnue retirées, avec le tableau d'Openclipart (tableau et cartes dessinés par le jeu, Biboule jaune du Tir), vignette faite d'une capture |
 | Gaze Race, Rush Hour, GazePlay Eval Test (anciens jeux BERA) | 4 chacun |
 | ~~Noughts and Crosses~~, ~~Order~~, Whack-a-Mole | 3 chacun ; **Morpion fait le 10/11/2026** : ses 3 images retirées (croix, rond et case dessinés par le jeu), vignette faite d'une capture ; **Ordre fait le 10/11/2026** : ses 3 images retirées (cibles dessinées par le jeu), vignette faite d'une capture |
 | Colorblend, Cream Pie, Magic Cards, ~~Simon~~ | 2 chacun ; **Simon (« Répète après moi ») fait le 10/11/2026** : ses 2 images retirées (tout dessiné par le jeu), vignette faite d'une capture ; ses 7 notes de source inconnue remplacées par des sons faits par script |

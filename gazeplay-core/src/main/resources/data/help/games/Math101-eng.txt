@@ -1,0 +1,23 @@
+# The principle
+An operation is written on the board. Find the right answer among the three cards!
+
+# How to play
+- On the board, the operation and a "?" in yellow; the Biboule is beside it.
+- At the bottom, three cards show numbers: only one is the right answer; the two others are close to it.
+- Fixate a card to choose it.
+- The right card turns green, with a check; the answer is written on the board, the Biboule jumps for joy, then another operation comes.
+- A mistake: the card shows a cross. Depending on the variant, it turns grey and you look again; or you lose a life, the right answer is shown, then another operation comes.
+- A ring fills during a fixation; it lasts the length of the settings.
+- At the top left, the lives (a red heart for each life), only with the lives; in the middle, the operations solved.
+- Never a 0: neither in the operations nor in the answers.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+After 5, 10 or 20 operations solved, it is "Bravo", then the statistics. With the lives, you have 3: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on (with the lives, until you have none left).
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- The buttons: the level. Additions and subtractions: up to 10, 20 or 100 (the sum, or the number taken from). Multiplications and divisions: one table (of 2 to 10), the tables of 2 to 5, or all the tables; the divisions always come out exact. All the operations: easy, medium or hard.
+- At the bottom, the operations: additions, subtractions, both, multiplications, divisions, both, or all.
+- Then the end: 5, 10 or 20 operations, or without end.
+- Then what a mistake does: look again until found (no lives), or 3 lives.
