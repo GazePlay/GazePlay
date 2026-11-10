@@ -188,6 +188,8 @@ tasks.register('allGamesTest', Test) {
     // To launch one game several times (an occasional failure): -PallGamesOnly=Connect4 -PallGamesRepeat=20
     systemProperty 'allGames.only', providers.gradleProperty('allGamesOnly').getOrElse('')
     systemProperty 'allGames.repeat', providers.gradleProperty('allGamesRepeat').getOrElse('1')
+    // Fewer games at the same time on a computer short of memory: -PallGamesParallel=2 (4 by default, as on the CI)
+    systemProperty 'allGames.parallel', providers.gradleProperty('allGamesParallel').getOrElse('4')
     doFirst {
         allGamesHome.deleteDir()
         allGamesHome.mkdirs()

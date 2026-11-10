@@ -41,7 +41,11 @@ class AllGamesLaunchTest {
 
     private static final long RUNNING_DELAY_SECONDS = 20;
 
-    private static final int PARALLEL_LAUNCHES = 4;
+    /**
+     * Games running at the same time, 4 unless the allGames.parallel property says otherwise (a computer short of
+     * memory: -PallGamesParallel=2, maintainer's request of 10/11/2026; the CI keeps 4).
+     */
+    private static final int PARALLEL_LAUNCHES = Math.max(1, Integer.getInteger("allGames.parallel", 4));
 
     private record Launch(String variant, GazePlayProcess.Result result) {
     }
@@ -68,7 +72,7 @@ class AllGamesLaunchTest {
                         arguments.addAll(List.of("--variant", variant));
                     }
                     // Folder recreated by the allGamesTest task at each run (see LaunchSmokeTest). Numbered: some
-                    // name codes are no valid folder names (e.g. "Math101: Addition")
+                    // name codes were no valid folder names (e.g. "Math101: Addition", before 10/11/2026)
                     File home = new File(System.getProperty("smoke.home"), "game-" + launches.size());
                     assertTrue(home.mkdirs(), "Cannot create " + home);
                     launches.put(repeat == 1 ? nameCode : nameCode + " #" + run, executor.submit(
