@@ -466,6 +466,33 @@ OrderEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
 OrderRounds,,,,,,,Rounds:,,Manches :,,,,,,,,,,,,
 OrderTargets,,,,,,,Targets:,,Cibles :,,,,,,,,,,,,
 OrderLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
+RpsVersus,,,,,,,Against the computer,,Contre l'ordinateur,,,,,,,,,,,,
+RpsLearn,,,,,,,Learn the rule,,Apprendre la règle,,,,,,,,,,,,
+RpsWins2,,,,,,,2 rounds to win,,2 manches gagnantes,,,,,,,,,,,,
+RpsWins3,,,,,,,3 rounds to win,,3 manches gagnantes,,,,,,,,,,,,
+RpsWins5,,,,,,,5 rounds to win,,5 manches gagnantes,,,,,,,,,,,,
+RpsAnswers5,,,,,,,5 right answers,,5 bonnes réponses,,,,,,,,,,,,
+RpsAnswers10,,,,,,,10 right answers,,10 bonnes réponses,,,,,,,,,,,,
+RpsEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+RpsRock,,,,,,,Rock,,Pierre,,,,,,,,,,,,
+RpsPaper,,,,,,,Paper,,Papier,,,,,,,,,,,,
+RpsScissors,,,,,,,Scissors,,Ciseaux,,,,,,,,,,,,
+RpsCount1,,,,,,,Rock...,,Pierre…,,,,,,,,,,,,
+RpsCount2,,,,,,,Paper...,,Papier…,,,,,,,,,,,,
+RpsCount3,,,,,,,Scissors!,,Ciseaux !,,,,,,,,,,,,
+RpsYou,,,,,,,You,,Toi,,,,,,,,,,,,
+RpsComputer,,,,,,,Computer,,Ordinateur,,,,,,,,,,,,
+RpsWin,,,,,,,You win!,,Gagné !,,,,,,,,,,,,
+RpsLose,,,,,,,You lose,,Perdu,,,,,,,,,,,,
+RpsDraw,,,,,,,Draw,,Égalité,,,,,,,,,,,,
+RpsQuestion,,,,,,,Which sign wins?,,Quel signe gagne ?,,,,,,,,,,,,
+RpsRuleRock,,,,,,,The rock breaks the scissors,,La pierre casse les ciseaux,,,,,,,,,,,,
+RpsRulePaper,,,,,,,The paper wraps the rock,,Le papier enveloppe la pierre,,,,,,,,,,,,
+RpsRuleScissors,,,,,,,The scissors cut the paper,,Les ciseaux coupent le papier,,,,,,,,,,,,
+RpsSameSign,,,,,,,The same sign is a draw,,Le même signe : égalité,,,,,,,,,,,,
+RpsAnswers,,,,,,,Right answers:,,Bonnes réponses :,,,,,,,,,,,,
+RpsYouWinMatch,,,,,,,You win the game!,,Tu gagnes la partie !,,,,,,,,,,,,
+RpsComputerWinsMatch,,,,,,,The computer wins the game,,L'ordinateur gagne la partie,,,,,,,,,,,,
 Biboule,,,,,,,Biboule,,Biboule,,,,,,,,,,,,
 BibouleJumpEasy,,,,,,,Easy,,Facile,,,,,,,,,,,,
 BibouleJumpNormal,,,,,,,Normal,,Normal,,,,,,,,,,,,
@@ -513,10 +540,6 @@ OuiNon Droite-Gauche,,,Так направа Не налева,,,,Yes to the rig
 Rounds3,,,,,,,In 3 winning sets,,En 3 manches gagnantes,,,,,,,,,,,,
 Rounds5,,,,,,,In 5 winning sets,,En 5 manches gagnantes,,,,,,,,,,,,
 Rounds10,,,,,,,In 10 winning sets,,En 10 manches gagnantes,,,,,,,,,,,,
-BO3,Më i miri nga tre,أفضل من بين الثلاثة,У 2 пераможных турах,在 2 组获胜,In 2 winning sets,Σε 2 νικηφόρα γύρους,In 2 winning sets,Paras kolmesta,En 2 manches gagnantes,2 विजयी राउंड में,Najbolje od tri,Terbaik dari tiga,Al meglio dei tre,ベストオブスリー,Best-of-three,W 2 zwycięskich rundach,Em 2 rodadas de vitórias,В 2 победных раундах,En 2 rondas ganadoras,Trong 2 vòng chiến thắng,Dalam 2 pusingan yang menang
-BO5,Më i miri nga pesë,أفضل من خمسة,У 3 пераможных турах,在 3 组获胜,In 3 winning sets,Σε 3 νικηφόρα γύρους,In 3 winning sets,Paras viidestä,En 3 manches gagnantes,3 विजयी राउंड में,Najbolji od pet,Terbaik dari lima,Al meglio dei cinque,ベストオブファイブ,Best-of-five,W 3 zwycięskich rundach,Em 3 rodadas de vitórias,В 3 победных раундах,En 3 rondas ganadoras,Trong 3 vòng chiến thắng,Dalam 3 pusingan yang menang
-BO7,Më i miri nga shtatë,أفضل من بين سبعة,У 4 пераможных турах,在 4 组获胜,In 4 winning sets,Σε 4 νικηφόρα γύρους,In 4 winning sets,Paras seitsemästä,En 4 manches gagnantes,4 विजयी राउंड में,Najbolje od sedam,Terbaik dari tujuh,Al meglio dei sette,ベストオブセブン,Best-of-seven,W 4 zwycięskich rundach,Em 4 rodadas de vitórias,В 4 победных раундах,En 4 rondas ganadoras,Trong 4 vòng chiến thắng,Dalam 4 pusingan yang menang
-BO9,Më i miri nga nëntë,أفضل تسعة,У 5 пераможных турах,在 5 轮获胜,In 5 winning sets,Σε 5 νικηφόρους γύρους,In 5 winning sets,Paras yhdeksästä,En 5 manches gagnantes,5 विजेता राउंड में,Najbolji od devet,Terbaik dari sembilan,Al meglio dei nove,ベストオブナイン,Best-of-nine,W 5 zwycięskich rundach,Em 5 rodadas de vitórias,В 5 победных раундах,En 5 rondas ganadoras,Trong 5 vòng chiến thắng,Dalam 5 pusingan yang menang
 Farm,Fermë,مزرعة,Ферма,农场,Bauernhof,Αγρόκτημα,Farm,Maatila,Ferme,खेत,Farma,Tanah pertanian,Azienda agricola,農場,Boerderij,Gospodarstwo rolne,Fazenda,Ферма,Granja,Nông trại,Ladang
 Jungle,,,Джунглі,丛林,,,Jungle,,Jungle,,,,,,Jungle,,,Джунгли,,,
 Savanna,Savana,السافانا,Саванна,稀树草原,Savanne,Σαβάνα,Savanna,Savanni,Savane,लंबा-चौड़ा चरागाह,Savana,sabana,Savana,サバンナ,Savanne,Sawanna,Savana,Саванна,Sabana,Savanna,Savana
@@ -727,8 +750,6 @@ MathDescDiv,,,Падзялі два чысла!,把两个数相除！,,,Divide t
 
 # ROCK PAPER SCISSORS
 Player,Lojtar,لاعب,Гулец,播放器,Spieler,Παίχτης,Player,Pelaaja,Joueur,खिलाड़ी,Igrač,Pemain,Giocatore,プレーヤー,Speler,Gracz,Jogador,Игрок,Jugador,Người chơi,Pemain
-Opponent,Kundërshtari,الخصم,Супернік,对手,Gegner,Αντίπαλος,Opponent,Vastustaja,Adversaire,प्रतिद्वंद्वी,Protivnik,Lawan,Avversario,相手,Tegenstander,Przeciwnik,Oponente,Противник,Adversario,Phản đối,Lawan
-Scores,Rezultatet,درجات,вынікі,分数,Spielstände,Σκορ,Scores,Pisteet,Scores,स्कोर,Rezultati,Skor,Punteggi,スコア,Scores,Wyniki,Pontuações,Результаты,Puntuaciones,Điểm,Markah
 
 # SPOT THE DIFFERENCES GAME
 

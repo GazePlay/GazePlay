@@ -1,0 +1,19 @@
+# Le principe
+Joue à pierre, papier, ciseaux contre l'ordinateur ! La pierre casse les ciseaux, le papier enveloppe la pierre, les ciseaux coupent le papier.
+
+# Comment jouer
+- En bas, trois cartes : la pierre, le papier et les ciseaux. Fixe une carte pour jouer son signe.
+- Contre l'ordinateur : après ton choix, « Pierre… papier… ciseaux ! » pendant que les deux poings se balancent, puis les deux signes se montrent. La main gagnante grossit : « Gagné ! », « Perdu » ou « Égalité ».
+- Pour apprendre la règle : le signe de l'ordinateur est montré ; choisis celui qui le bat. Une erreur dit pourquoi (par exemple « Le papier enveloppe la pierre ») et grise ta carte : réessaie.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- En haut, le score (ou les bonnes réponses).
+- Rien ne peut être choisi avant le délai des réglages, ni pendant que la manche se montre. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Contre l'ordinateur, le premier qui gagne 2, 3 ou 5 manches gagne la partie : si c'est toi, c'est « Bravo », puis les statistiques ; si c'est l'ordinateur, les statistiques tout de suite. Pour apprendre la règle, après 5 ou 10 bonnes réponses, c'est « Bravo ». Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- En bas, le mode : contre l'ordinateur (son signe est caché jusqu'au bout), ou apprendre la règle (son signe est montré).
+- Contre l'ordinateur : 2, 3 ou 5 manches gagnantes, ou sans fin.
+- Pour apprendre la règle : 5 ou 10 bonnes réponses, ou sans fin.

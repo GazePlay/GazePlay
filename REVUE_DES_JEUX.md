@@ -62,7 +62,9 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   `test (25)` en 15 min 39 à cause d'une installation des paquets Ubuntu lente, 6 min au lieu de 28 s : les tests
   eux-mêmes ont duré le même temps qu'en Java 26).
 - **Ordre** (`Order`) : revu à partir de 14 h 01 (fiche en bas), propositions validées par le mainteneur ; **essayé
-  et validé**, commité.
+  et validé**, commité (`d9e0c07f3`).
+- **Pierre papier ciseaux** (`RockPaperScissors`) : revu (fiche en bas), propositions validées par le mainteneur ;
+  **essayé et validé**, commité.
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -803,7 +805,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
 | Divisor, Rabbits | À confirmer : 10 dessins (lapins) | | |
 | **Biboule Jump** (`BibJump`) | **4/11** : ciel, nuages, tremplin et sons faits par script (`make_biboulejump_images.py`, `make_biboulejump_sounds.py`) ; Biboules du Tir | ✔ 4/11 (Biboule non déformée, ciel, nuages et tremplin plus grand, cœurs, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : 3 vies, retour sur un nouveau nuage avec les points gardés ; sans fin, 1 ou 3 min ; Facile / Normal / Difficile ; même saut sur tout écran ; plus de record) |
-| Rock Paper Scissors | À confirmer : 7 dessins (mains façon gant de dessin animé) | | |
+| **Pierre papier ciseaux** (`RockPaperScissors`) | **10/11** : les 7 dessins retirés (gants de dessin animé proches d'un personnage commercial, parc, pouces) ; mains d'OpenMoji (`make_rockpaperscissors_images.py`), sons faits par script ; vignette faite d'une capture | ✔ 10/11 (trois cartes avec la main et son nom, poings qui se balancent pendant « Pierre… papier… ciseaux ! », main gagnante qui grossit, messages sous les mains, anneau, pastille du score) | ✔ 10/11 (règle du mainteneur : contre l'ordinateur en 2 / 3 / 5 manches gagnantes ou sans fin, l'ordinateur peut gagner ; apprendre la règle en 5 / 10 bonnes réponses ou sans fin, erreur expliquée) — validé le 10/11 |
 | Piano (`Piano`) | À confirmer : 6 images | | |
 | Math101 (×5 opérations) | À confirmer : 5 images ; OK : tableau (Openclipart, domaine public) | | |
 | Bottle (`Bottle`) | À confirmer : 5 images | | |
@@ -3133,3 +3135,42 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   « Bravo » après 3 manches ; progressif ; délai ; mêmes places au rejeu ; tout retiré à la fin ; variantes et
   anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées ; `build` complet : **1 050 tests,
   0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le mainteneur le 10/11/2026.**
+
+### Pierre papier ciseaux (`RockPaperScissors`, code `rockPaperScissors`) — 10/11/2026
+
+- **État des lieux (code, images)** : mode « caché » (contre l'ordinateur au hasard, « BO3 » à « BO9 ») et mode
+  « visible » (le signe de l'ordinateur montré, choisir celui qui le bat ; un mauvais choix grisait le bouton) ;
+  3 boutons `ProgressButton` en bas. **En mode caché, l'ordinateur ne pouvait pas gagner le match** (rien quand il
+  atteignait le nombre de manches gagnantes : on continuait jusqu'à une victoire du joueur, puis « Bravo ») ; un but
+  atteint compté à chaque manche jouée, même perdue ; « Bravo » après chaque manche du mode visible ; égalité peu
+  visible ; « BO3 »… ; « Scores » et « Opponent » lus directement dans le fichier des traductions ; code propre au jeu
+  dans `GameVariantDialog` ; ni aide ni test. 7 images et la vignette de source inconnue. **Risque** : les mains
+  étaient des gants blancs de dessin animé à 4 doigts, très proches du style d'un personnage commercial.
+- **Règle du mainteneur (10/11/2026, propositions validées)** : deux modes, « Contre l'ordinateur » (premier à 2, 3 ou
+  5 manches gagnées, ou sans fin ; l'ordinateur peut gagner) et « Apprendre la règle » (5 ou 10 bonnes réponses ou
+  sans fin, pas de vies, erreur expliquée) ; mains d'OpenMoji avec leur nom ; compte à rebours ; main gagnante qui
+  grossit.
+- **Fait** : le jeu réécrit (`RockPaperScissorsGame` ; `HandSign` simplifié (règle, signe battu, signe gagnant,
+  explication) ; `RockPaperScissorsMode`, `RockPaperScissorsEnd` ; `RockPaperScissorsGameVariant` gardé pour lire les
+  anciennes variantes), une boucle en temps réel (durée de fixation lue à chaque pas, délai, Échap, tout retiré à la
+  fin). Trois cartes blanches en bas (main OpenMoji et nom), éclairées en jaune pâle quand on les regarde, grisées
+  quand elles sont écartées ; anneau commun ; en haut, « Toi » et « Ordinateur » avec un point d'interrogation ou leur
+  main. Contre l'ordinateur : « Pierre… », « Papier… », « Ciseaux ! » (0,5 s chacun, à la vitesse des réglages) avec un
+  son, les deux poings qui se balancent ; puis l'ordinateur tire son signe, la main gagnante à 125 %, la perdante à
+  80 %, « Gagné ! », « Perdu » ou « Égalité » (1,8 s) ; fin du match : « Tu gagnes la partie ! » puis « Bravo », ou
+  « L'ordinateur gagne la partie » puis les statistiques. Apprendre la règle : signe de l'ordinateur montré, « Quel
+  signe gagne ? » ; bonne réponse : l'explication (« Le papier enveloppe la pierre »), puis une autre ; mauvaise : sa
+  carte grisée et l'explication de pourquoi elle perd, ou « Le même signe : égalité ». Messages sous les mains (placés
+  là après les captures : les explications passaient sur les mains). Variantes `GroupedGameVariant` (7 : 4 contre
+  l'ordinateur, 3 pour apprendre) ; ancienne variante : « BO3 » à 2 manches gagnantes, « BO5 » à 3, « BO7 » et « BO9 »
+  à 5 ; visible en 3 ou 5 manches à 5 bonnes réponses, en 10 à 10. Statistiques au format inchangé : une manche compte
+  un but à atteindre ; une manche gagnée, ou une bonne réponse du premier coup, un but atteint. Code propre au jeu
+  retiré de `GameVariantDialog`. Sons faits par script (`make_rockpaperscissors_sounds.py`). Traductions (6 clés
+  retirées, 27 ajoutées), aide, crédits, inventaire, vignette (capture réduite).
+- **Vérifications** : `RockPaperScissorsTest` (10 tests : la règle ; signe choisi après une fixation de la durée des
+  réglages lue à chaque pas ; compte, signes montrés, manche comptée ; l'ordinateur peut gagner le match, sans
+  « Bravo » ; « Bravo » quand le joueur gagne ; apprendre : carte grisée et expliquée, but atteint seulement du premier
+  coup ; « Bravo » après 5 bonnes réponses ; cartes côte à côte dans l'écran ; tout retiré à la fin ; variantes de
+  chaque mode et anciennes variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées ; `build` complet :
+  **1 061 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le mainteneur le
+  10/11/2026.**

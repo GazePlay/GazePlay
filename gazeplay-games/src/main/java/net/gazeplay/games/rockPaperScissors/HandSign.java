@@ -3,52 +3,69 @@ package net.gazeplay.games.rockPaperScissors;
 import javafx.scene.image.Image;
 
 /**
- * The signs of rock paper scissors, and the hidden sign of the opponent before it plays.
+ * The signs of rock paper scissors: the rock breaks the scissors, the paper wraps the rock, the scissors cut the paper.
  */
 public enum HandSign {
-    ROCK, PAPER, SCISSORS, UNKNOWN;
+    ROCK("RpsRock"), PAPER("RpsPaper"), SCISSORS("RpsScissors");
+
+    /**
+     * Key of translation of its name.
+     */
+    private final String key;
+
+    HandSign(final String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
 
     /**
      * @return 1 when this sign beats the other one, -1 when it loses, 0 for a draw
      */
-    public int fight(HandSign opponentHandSign) {
-        return switch (this) {
-            case ROCK -> switch (opponentHandSign) {
-                case ROCK -> 0;
-                case PAPER -> -1;
-                case SCISSORS -> 1;
-                default -> 1;
-            };
-            case PAPER -> switch (opponentHandSign) {
-                case ROCK -> 1;
-                case PAPER -> 0;
-                case SCISSORS -> -1;
-                default -> 1;
-            };
-            case SCISSORS -> switch (opponentHandSign) {
-                case ROCK -> -1;
-                case PAPER -> 1;
-                case SCISSORS -> 0;
-                default -> 1;
-            };
-            default -> -1;
-        };
+    public int fight(final HandSign other) {
+        if (this == other) {
+            return 0;
+        }
+        return beaten() == other ? 1 : -1;
     }
 
     /**
-     * @return the horizontal position of the button of the sign, as a ratio of the width of the game area
+     * @return the sign this one beats
      */
-    public double getPosX() {
+    public HandSign beaten() {
         return switch (this) {
-            case ROCK -> 1.0 / 6.0;
-            case PAPER -> 3.0 / 6.0;
-            case SCISSORS -> 5.0 / 6.0;
-            default -> -1;
+            case ROCK -> SCISSORS;
+            case PAPER -> ROCK;
+            case SCISSORS -> PAPER;
         };
     }
 
     /**
-     * @return the picture of the sign
+     * @return the sign that beats this one
+     */
+    public HandSign winner() {
+        return switch (this) {
+            case ROCK -> PAPER;
+            case PAPER -> SCISSORS;
+            case SCISSORS -> ROCK;
+        };
+    }
+
+    /**
+     * @return the key of translation of why this sign beats the one it beats ("the paper wraps the rock")
+     */
+    public String ruleKey() {
+        return switch (this) {
+            case ROCK -> "RpsRuleRock";
+            case PAPER -> "RpsRulePaper";
+            case SCISSORS -> "RpsRuleScissors";
+        };
+    }
+
+    /**
+     * @return the picture of the sign (an emoji of OpenMoji)
      */
     public Image getImage() {
         return new Image("data/rockPaperScissors/" + this + ".png");

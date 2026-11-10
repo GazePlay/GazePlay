@@ -166,6 +166,13 @@ unknown source (10/11/2026); the sounds (sounds/appear.wav, right.wav, wrong.wav
 (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). The thumbnail (gazeplay-core:
 data/common/Thumbnails/ordre.png, 960 x 540) is a capture of the game, reduced by half.
 
+Images and sounds of "Pierre papier ciseaux" (Rock Paper Scissors; gazeplay-games: data/rockPaperScissors): the hands
+(rock.png, paper.png, scissors.png) are the emoji of OpenMoji (CC BY-SA 4.0), cropped by
+make_rockpaperscissors_images.py, in place of 7 pictures of unknown source (10/11/2026); the sounds (sounds/tick.wav,
+win.wav, lose.wav, draw.wav) are made by make_rockpaperscissors_sounds.py (this folder), under the license of GazePlay
+Learning (GPL-3.0-or-later). The thumbnail (gazeplay-core: data/common/Thumbnails/rockPaperScissors.png, 960 x 540)
+is a capture of the game, reduced by half.
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)

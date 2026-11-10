@@ -78,7 +78,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Horses, Race | 11 chacun |
 | Divisor | 10 |
 | Biboule Jump, dossier `common` des jeux | 9 chacun |
-| Rock Paper Scissors | 7 |
+| ~~Rock Paper Scissors~~ | ~~7~~ **Fait le 10/11/2026** : les 7 images retirées (gants blancs de dessin animé à 4 doigts, proches du style d'un personnage commercial ; parc ; pouces) ; mains d'OpenMoji (CC BY-SA 4.0, `make_rockpaperscissors_images.py`), le reste dessiné par le jeu ; vignette faite d'une capture |
 | Pianosight | 6 |
 | Bottle, Math101 | 5 chacun |
 | Gaze Race, Rush Hour, GazePlay Eval Test (anciens jeux BERA) | 4 chacun |

@@ -234,8 +234,6 @@ public class GameVariantDialog extends Stage {
             } else if (gameSpec.getGameSummary().getNameCode().equals("Horses")) {
                 // The normal board, or the simplified one (HorsesVariant SIMPLIFIED_...), chosen at the bottom
                 indexOfTheVariant = variant.toString().contains(":SIMPLIFIED_") ? 1 : 0;
-            } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
-                indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
             } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 1 : 0;
             } else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
@@ -277,7 +275,6 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
@@ -319,10 +316,6 @@ public class GameVariantDialog extends Stage {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("MouseCategory"));
                     categories[1] = new RadioButton(translator.translate("OtherCategory"));
-                } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("Hide"));
-                    categories[1] = new RadioButton(translator.translate("Visible"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
                     categories = new RadioButton[7];
                     categories[0] = new RadioButton(translator.translate("Farm"));

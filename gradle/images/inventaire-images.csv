@@ -104,7 +104,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/pet.png,oui,libre,"captu
 gazeplay-core/src/main/resources/data/common/Thumbnails/pianosight.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
 gazeplay-core/src/main/resources/data/common/Thumbnails/potions.jpg,oui,source inconnue,,2019-06-18,johzz-o2,thumbnail update
 gazeplay-core/src/main/resources/data/common/Thumbnails/rabbits.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
-gazeplay-core/src/main/resources/data/common/Thumbnails/rockPaperScissors.png,oui,source inconnue,,2020-06-04,PillouMatou,"background debugged, replace images, multilinguism for the game"
+gazeplay-core/src/main/resources/data/common/Thumbnails/rockPaperScissors.png,oui,libre,"capture du jeu (mains OpenMoji CC BY-SA 4.0, le reste dessiné par le jeu)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
 gazeplay-core/src/main/resources/data/common/Thumbnails/rushHour.png,oui,libre,"faite des images du jeu par make_trafficjam_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
 gazeplay-core/src/main/resources/data/common/Thumbnails/scratchcard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/shootTheBiboules.png,oui,libre,"capture du jeu (3/11/2026) ; décor, cage et baguette dessinés pour le projet ; Biboules modernisées pour le projet (make_shooter_images.py)",2026-11-03,,revue des jeux (REVUE_DES_JEUX.md)
@@ -588,13 +588,9 @@ gazeplay-games/src/main/resources/data/race/images/frog-orange-jump.png,oui,libr
 gazeplay-games/src/main/resources/data/race/images/frog-orange.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
 gazeplay-games/src/main/resources/data/race/images/frog-violet-jump.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
 gazeplay-games/src/main/resources/data/race/images/frog-violet.png,oui,libre,"dessiné pour le projet (gradle/images/make_race_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Frogs Race
-gazeplay-games/src/main/resources/data/rockPaperScissors/paper.png,oui,source inconnue,,2020-06-03,PillouMatou,first commit for the game PaperScissorsStone
-gazeplay-games/src/main/resources/data/rockPaperScissors/park.png,oui,source inconnue,,2020-06-03,PillouMatou,Implementation of the PaperScissorsStone games
-gazeplay-games/src/main/resources/data/rockPaperScissors/rock.png,oui,source inconnue,,2020-06-03,PillouMatou,first commit for the game PaperScissorsStone
-gazeplay-games/src/main/resources/data/rockPaperScissors/scissors.png,oui,source inconnue,,2020-06-03,PillouMatou,first commit for the game PaperScissorsStone
-gazeplay-games/src/main/resources/data/rockPaperScissors/thumbs-down.png,oui,source inconnue,,2022-08-30,Sakraft,Finished improve Rock Paper Scissors game
-gazeplay-games/src/main/resources/data/rockPaperScissors/thumbs-up.png,oui,source inconnue,,2022-08-30,Sakraft,Finished improve Rock Paper Scissors game
-gazeplay-games/src/main/resources/data/rockPaperScissors/unknown.png,oui,source inconnue,,2022-08-29,Sakraft,Added variants in game
+gazeplay-games/src/main/resources/data/rockPaperScissors/paper.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_rockpaperscissors_images.py)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
+gazeplay-games/src/main/resources/data/rockPaperScissors/rock.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_rockpaperscissors_images.py)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
+gazeplay-games/src/main/resources/data/rockPaperScissors/scissors.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_rockpaperscissors_images.py)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
 gazeplay-games/src/main/resources/data/room/arrowEast.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
 gazeplay-games/src/main/resources/data/room/arrowNorth.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
 gazeplay-games/src/main/resources/data/room/arrowSouth.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
