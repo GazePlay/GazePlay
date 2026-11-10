@@ -1,0 +1,20 @@
+# Le principe
+Écoute la mélodie de l'appareil, puis répète-la en regardant ses boutons ! Chaque bouton a sa couleur, son symbole (triangle, étoile, carré, rond) et sa note.
+
+# Comment jouer
+- Quand l'appareil joue (« Écoute » au milieu), ses boutons s'allument l'un après l'autre avec leur note. Rien ne peut être choisi pendant ce temps.
+- Quand c'est à toi (« À toi »), fixe les boutons dans le même ordre. Un bouton choisi s'allume et joue sa note.
+- Une erreur se voit tout de suite : un son grave, et le bon bouton clignote. Puis l'appareil rejoue la mélodie.
+- Après chaque mélodie réussie, l'appareil la rejoue avec une note de plus.
+- Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
+- Au milieu, le nombre de notes de la mélodie. En haut à gauche, les vies (un cœur rouge par vie) ; en haut, les notes.
+- Les notes vont à la vitesse des réglages.
+- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Quand la mélodie a 5, 8 ou 12 notes et que tu l'as répétée, c'est « Mélodie réussie ! », puis « Bravo » et les statistiques. En mode classique, tu as 3 vies : chaque erreur en coûte une ; à la troisième, la partie s'arrête et montre ta plus longue mélodie, puis les statistiques. Sans fin, la mélodie grandit jusqu'à ce que tu n'aies plus de vie.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- 5 notes, 8 notes, 12 notes ou sans fin : la longueur de la mélodie à atteindre.
+- En bas, le mode : classique (l'appareil choisit les notes, 3 vies) ; à deux (chacun son tour répète toute la mélodie, puis ajoute une note de son choix ; une erreur et l'autre joueur gagne) ; libre (tu choisis une note, l'appareil rejoue toute la mélodie ; aucune erreur possible, pour découvrir le jeu).

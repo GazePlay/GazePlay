@@ -101,7 +101,7 @@ public class TowerDefense implements GameLifeCycle {
     private I18NButton sendWaveButton;
     private final DoubleProperty tileWidth;
     private final DoubleProperty tileHeight;
-    private Label lifeLabel;
+    private Group lifeView;
     private Label moneyLabel;
     private Label waveCountLabel;
     private Label nextWaveLabel;
@@ -272,9 +272,12 @@ public class TowerDefense implements GameLifeCycle {
         topBar.setPadding(new Insets(10, 0, 0, 15));
         gameContext.getChildren().add(topBar);
 
-        lifeLabel = createLabel("", "data/towerDefense/images/heart.png");
+        // The lives as in the other reviewed games (maintainer's request of 10/11/2026): hearts up to 5 lives (hard
+        // level), else the lives left on the lives at the start and a green bar shorter at each life lost
+        lifeView = new Group();
         life.addListener(observable -> showLife());
-        topBar.getChildren().add(lifeLabel);
+        tileHeight.addListener(observable -> showLife());
+        topBar.getChildren().add(lifeView);
 
         moneyLabel = createLabel("", "data/towerDefense/images/money.png");
         money.addListener(observable -> showMoney());
@@ -727,7 +730,9 @@ public class TowerDefense implements GameLifeCycle {
     }
 
     private void showLife() {
-        lifeLabel.setText(life.get() + " / " + level.getLives());
+        // As big as the icons of the money and the waves (a tile); the map is the background: dark enough for white
+        lifeView.getChildren().setAll(GameStyle.lives(life.get(), level.getLives(), tileHeight.get(),
+            gameContext.getRoot().getWidth() * 0.35, true));
     }
 
     private void showMoney() {

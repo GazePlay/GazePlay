@@ -249,14 +249,6 @@ public class GameVariantDialog extends Stage {
                     case 6,7,8,9,10,11 -> 1;
                     default -> 0;
                 };
-            } else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
-                button.setTextAlignment(TextAlignment.CENTER);
-                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
-                indexOfTheVariant = switch(variantString){
-                    case "MODE2" -> 1;
-                    case "MODE3" -> 2;
-                    default -> 0;
-                };
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
@@ -285,7 +277,6 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                gameSpec.getGameSummary().getNameCode().equals("Simon") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
@@ -318,11 +309,6 @@ public class GameVariantDialog extends Stage {
 
                     log.debug("categories length : {}", categories.length);
 
-                }else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
-                    categories = new RadioButton[3];
-                    categories[0] = new RadioButton("Classic");
-                    categories[1] = new RadioButton("Simon Copy");
-                    categories[2] = new RadioButton("Multiplayer");
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory")
                 ) {

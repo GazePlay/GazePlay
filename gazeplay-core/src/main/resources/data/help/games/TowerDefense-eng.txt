@@ -2,7 +2,7 @@
 Little monsters follow the road to your castle. Build towers along the road to stop them!
 
 # How to play
-- The waves of monsters start from the arrow and follow the road. Each monster reaching the castle costs you a life (the heart at the top left).
+- The waves of monsters start from the arrow and follow the road. Each monster reaching the castle costs you a life (at the top left: the heart, the lives left, and a green bar shorter at each life lost).
 - Fixate a grey place by the road: 4 towers are shown around it, with their price. Look at a tower: a card beside says what it does (damage, range, one shot every how many seconds, price). Fixate the one you want to build it, if you have enough coins; a ring fills during the fixation.
 - The green tower shoots small balls (25 coins); the red one shoots twice as fast (50 coins); the blue one is a cannon: big slow balls, but very strong, from farther (35 coins); the grey one sends missiles that explode on several monsters, from far (25 coins).
 - Each monster destroyed gives you coins. Fixate a tower already built to see what it does, or to sell it (it gives its price back).

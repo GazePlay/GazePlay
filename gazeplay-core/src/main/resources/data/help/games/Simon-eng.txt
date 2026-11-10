@@ -1,0 +1,20 @@
+# The principle
+Listen to the melody of the device, then repeat it by looking at its buttons! Each button has its color, its symbol (triangle, star, square, circle) and its note.
+
+# How to play
+- While the device plays ("Listen" in the middle), its buttons light up one after the other with their notes. Nothing can be chosen meanwhile.
+- When it is your turn ("Your turn"), fixate the buttons in the same order. A button chosen lights up and plays its note.
+- A mistake shows at once: a low sound, and the right button blinks. Then the device plays the melody again.
+- After each melody repeated, the device plays it again with one more note.
+- A ring fills during a fixation; it lasts the length of the settings.
+- In the middle, the number of notes of the melody. At the top left, the lives (a red heart for each life); at the top, the notes.
+- The notes go at the speed of the settings.
+- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+
+# How to win
+When the melody has 5, 8 or 12 notes and you repeated it, it is "Melody complete!", then "Bravo" and the statistics. In the classic mode, you have 3 lives: each mistake costs one; at the third one, the game stops and shows your longest melody, then the statistics. Without end, the melody grows until you have no life left.
+
+# The variants
+Choose a variant (it is circled), then press "Start".
+- 5 notes, 8 notes, 12 notes or without end: the length of the melody to reach.
+- At the bottom, the mode: classic (the device chooses the notes, 3 lives); two players (each one in turn repeats the whole melody, then adds a note of their choice; a mistake and the other player wins); free (you choose a note, the device plays the whole melody again; no mistake possible, to discover the game).

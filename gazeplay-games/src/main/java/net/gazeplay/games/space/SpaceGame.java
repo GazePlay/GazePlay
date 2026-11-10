@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
@@ -452,15 +451,11 @@ public class SpaceGame implements GameLifeCycle {
         final double fontSize = height * 0.035;
         final double margin = height * 0.025;
         final double heart = height * 0.055;
-        for (int i = 0; i < LIVES; i++) {
-            final SVGPath icon = GameStyle.icon(i < lives ? "favorite_fill1" : "favorite", heart);
-            icon.setFill(i < lives ? Color.rgb(235, 70, 95) : Color.rgb(200, 200, 215, 0.8));
-            icon.setStroke(Color.WHITE);
-            icon.setStrokeWidth(18);
-            icon.setLayoutX(margin + i * heart * 1.1);
-            icon.setLayoutY(margin);
-            hud.getChildren().add(icon);
-        }
+        // The lives: the hearts shared by the reviewed games (GameStyle.lives)
+        final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, true);
+        hearts.setLayoutX(margin);
+        hearts.setLayoutY(margin);
+        hud.getChildren().add(hearts);
         String text = gameContext.getTranslator().translate("SpaceScore") + " " + destroyed;
         if (end.getAliens() > 0) {
             text += " / " + end.getAliens();

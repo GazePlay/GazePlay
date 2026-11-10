@@ -8,7 +8,7 @@ the other reviewed games). Same license as GazePlay Learning (GPL-3.0-or-later).
 - Enemies seen from above, going right (the game turns them): basicEnemy.png (a green slime), fastEnemy.png (a
   small yellow one), tankEnemy.png (a big violet armored one).
 - explosion.png (768 x 96): the explosion of a missile, 8 pictures of 96 x 96.
-- Icons (384 x 384): heart.png (the lives), money.png (coins), moneyGain.png and moneyLoss.png (coins, + and -),
+- Icons (384 x 384): money.png (coins), moneyGain.png and moneyLoss.png (coins, + and -),
   sellBasic.png, sellDouble.png, sellMissile.png, sellCanon.png (selling a tower: that tower, an arrow, coins),
   wave.png (a wave of enemies), blizzardIcon.png (a snowflake).
 - With one more argument, the thumbnail of the menu (gazeplay-core: data/common/Thumbnails/TowerDefense.png,
@@ -210,12 +210,7 @@ def coins(draw, x, y):
     draw.ellipse(s(x - 55, y - 68 - 22, x + 55, y - 68 + 22), outline=(255, 235, 150, 255), width=6 * K)
 
 
-picture, draw = icon_canvas()
-draw.ellipse(s(40, 60, 200, 220), fill=(240, 80, 100, 255))
-draw.ellipse(s(184, 60, 344, 220), fill=(240, 80, 100, 255))
-draw.polygon(s(48, 170, 336, 170, 192, 340), fill=(240, 80, 100, 255))
-draw.ellipse(s(80, 95, 135, 140), fill=(255, 180, 190, 255))
-save(picture, 384, 'heart.png')
+# heart.png (the lives) removed on 10/11/2026: the lives are drawn by the game, as in the other reviewed games
 
 picture, draw = icon_canvas()
 coins(draw, 192, 280)

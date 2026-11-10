@@ -2,7 +2,7 @@
 Des petits monstres suivent la route jusqu'à ton château. Construis des tours le long de la route pour les arrêter !
 
 # Comment jouer
-- Les vagues de monstres partent de la flèche et suivent la route. Chaque monstre qui arrive au château te coûte une vie (le cœur en haut à gauche).
+- Les vagues de monstres partent de la flèche et suivent la route. Chaque monstre qui arrive au château te coûte une vie (en haut à gauche : le cœur, les vies qui restent, et une barre verte qui raccourcit à chaque vie perdue).
 - Fixe un emplacement gris au bord de la route : 4 tours sont proposées autour, avec leur prix. Regarde une tour : une fiche, à côté, dit ce qu'elle fait (dégâts, portée, un tir toutes les combien de secondes, prix). Fixe celle que tu veux pour la construire, si tu as assez de pièces ; un anneau se remplit pendant la fixation.
 - La tour verte tire des petites boules (25 pièces) ; la rouge tire deux fois plus vite (50 pièces) ; la bleue est un canon : des gros boulets lents mais très forts, de plus loin (35 pièces) ; la grise lance des missiles qui explosent sur plusieurs monstres, de loin (25 pièces).
 - Chaque monstre détruit te donne des pièces. Fixe une tour déjà construite pour voir ce qu'elle fait, ou pour la revendre (elle rend son prix).

@@ -177,6 +177,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (gradle/images/make_connect4_sounds.py), sous la licence du projet ; grille et jetons dessinés par le jeu.
 - Sons du « Morpion » (data/noughtsandcrosses) : faits pour GazePlay Learning
   (gradle/images/make_tictactoe_sounds.py), sous la licence du projet ; grille, croix et ronds dessinés par le jeu.
+- Sons de « Répète après moi » (data/simonGame) : notes et sons faits pour GazePlay Learning
+  (gradle/images/make_simon_sounds.py), sous la licence du projet ; appareil dessiné par le jeu.
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
   jeu « Tir ».

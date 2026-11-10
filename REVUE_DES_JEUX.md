@@ -47,7 +47,17 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   validées par le mainteneur ; **essayé et validé** (souris et Tobii), noms des niveaux de l'ordinateur corrigés ;
   commité (`7b8b24941`).
 - **Morpion** (`TicTacToe`) : revu (fiche en bas), propositions validées par le mainteneur (ordi difficile : choix A) ;
-  **essayé et validé**, commité.
+  **essayé et validé**, commité (`257a0dc3b`).
+- **Répète après moi** (`Simon`, ancien « Simon », nom d'un jeu commercial) : revu (fiche en bas), propositions
+  validées par le mainteneur ; **essayé et validé**, commité.
+- **Vies homogènes dans les jeux revus (demande du mainteneur, 10/11/2026 ; à confirmer après ses essais)** : un seul
+  dessin, `GameStyle.lives` : **5 vies ou moins, des cœurs** (rouges pleins pour les vies restantes, vides pour les
+  vies perdues, en haut à gauche) ; **plus de 5, un cœur, « restantes / départ » et une barre verte** qui raccourcit à
+  chaque vie perdue. Course du regard, Casse-brique, Survivre contre des robots, La bataille de l'espace et Biboule
+  Jump avaient déjà ces cœurs, chacun avec sa copie du code : ils utilisent le dessin commun (rien ne change à
+  l'écran). Répète après moi : « Vies : 3 / 3 » remplacé par les cœurs. Défendre le château : cœurs en Difficile
+  (5 vies), « 12 / 15 » et la barre en Facile (15) et Normal (10), à la place de son image de cœur et de « n / total »
+  (`heart.png` retiré). Test `GameStyleLivesTest` ; captures regardées.
 
 **Restent pour plus tard** (inchangé) : tests instables (points 7 à 10), mémoire des tests, retrait des limiteurs, refonte du menu
 des jeux et de l'écran des statistiques, inventaire des sons, notes de version 2.0 ; tablette (#1738) ; raccourcis de jeux
@@ -798,7 +808,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Order (`Order`) | À confirmer : 3 images | | |
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
-| Simon (`Simon`) | À confirmer : 2 images | | |
+| **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
 | Cups and Balls, Dice, Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | Scribble (`Scribble`), Letters (`Letters`) | Pas d'image propre relevée | | |
@@ -3040,3 +3050,48 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   entières voulues, le numéro de ligne d'une case, mises dans une variable entière) ; `build` complet : **1 018 tests,
   0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec** (lancé juste avant la correction pour SpotBugs, qui ne
   change pas le calcul). **Validé par le mainteneur le 10/11/2026.**
+
+### Répète après moi (`Simon`, code `simonGame`, avant « Simon ») — 10/11/2026
+
+- **État des lieux (code)** : appareil rond de 4 boutons de couleur qui joue une mélodie, que le joueur répète par
+  fixations ; 5 variantes (Facile, Normal, Difficile : fin à 10, 22 ou 33 notes ; « Simon te copie » ; Multijoueur).
+  **3 secondes par note** (2 s allumée, 1 s de silence) ; **une erreur vue seulement à la fin de la mélodie**, puis la
+  même mélodie sans fin (en Difficile, 33 notes : une partie sans fin en pratique) ; 4 notes tirées au hasard parmi 7
+  (des enchaînements faux, la note d'une couleur changeant d'une partie à l'autre) ; une boucle de 16 ms qui créait une
+  minuterie à chaque passage et n'était jamais arrêtée ; appareil de 400 px quelle que soit la taille de l'écran ;
+  aucun but compté, et **les statistiques enregistrées dans le dossier « Piano »**, avec celles du jeu Piano ; textes
+  anglais en dur (« Player 1 turn », noms des modes dans la fenêtre des variantes) ; clés de traduction entourées
+  d'espaces ; ancien indicateur ; pas de délai ; 7 notes, 2 images et la vignette de source inconnue ; ni aide ni
+  test. **Risque** : « Simon » est le nom d'un jeu commercial (marque).
+- **Règle du mainteneur (10/11/2026, recommandations validées)** : nouveau nom (« Répète après moi », « Repeat After
+  Me » ; nom de code `Simon` gardé) ; une note fixe par couleur (do, mi, sol, do aigu) ; environ 0,6 s par note et
+  0,25 s de silence, à la vitesse des réglages ; erreur montrée tout de suite (son grave, le bon bouton clignote), puis
+  la même mélodie ; modes classique (3 vies ; à la 3ᵉ erreur, fin et plus longue mélodie), à deux (chacun son tour
+  répète toute la mélodie puis ajoute une note de son choix ; une erreur et l'autre gagne) et libre (« il te
+  copie », aucune erreur possible) ; fin à 5, 8 ou 12 notes ou sans fin ; « Bravo » si la mélodie visée est réussie.
+- **Fait** : le jeu réécrit (`Simon` ; `SimonMode`, `SimonEnd` ; `Borne` et `Bouton` retirés ; `SimonGameVariant`
+  gardé pour lire les anciennes variantes), une boucle en temps réel (durée de fixation lue à chaque pas, délai,
+  Échap, tout retiré à la fin). **Écran** : appareil rond à la taille de l'écran (rayon : moitié de la place sous les
+  pastilles), 4 quarts séparés par des fentes, aux couleurs douces, qui s'illuminent (plus vifs, halo) ; symbole
+  blanc par couleur (triangle vert, étoile rouge, carré jaune, rond bleu) ; au milieu, le nombre de notes et l'état
+  (« Écoute », « À toi », « Ajoute une note ») ; anneau commun sur le quart regardé ; rien ne se choisit pendant que
+  l'appareil joue ; pastilles des vies (classique), du joueur (à deux) et des notes ; fin : message au milieu (« Mélodie
+  réussie ! », « Plus longue mélodie : n », « Le joueur 1 a gagné ! »), 2,5 s, puis « Bravo » (mélodie réussie, et
+  toujours à deux) ou les statistiques. Variantes `GroupedGameVariant` (12) ; une ancienne variante : Facile en
+  classique à 8 notes, Normal à 12, Difficile sans fin, « Simon te copie » en libre à 12 notes, Multijoueur à deux sans
+  fin. **Statistiques** : même classe de base et mêmes fichiers (`ShooterGamesStats`) ; une mélodie à répéter compte
+  un but à atteindre, une mélodie répétée sans erreur un but atteint (en libre, chaque note ajoutée) ; **enregistrées
+  désormais dans le dossier « simon »** : les résultats déjà enregistrés de Simon restent dans le dossier « Piano »,
+  mêlés à ceux du Piano, sans être déplacés ni réécrits (aucun changement de format). Code propre au jeu retiré de
+  `GameVariantDialog`. Sons faits par script (`make_simon_sounds.py`). Nom affiché changé en français et en anglais ;
+  traductions (4 clés retirées, 18 ajoutées, la clé du nom réécrite sans les espaces), aide, crédits, inventaire,
+  vignette (capture réduite).
+- **Vérifications** : `SimonTest` (15 tests : délai ; mélodie jouée dans l'ordre puis répétée, une note de plus ;
+  durée d'une mélodie de 3 notes (0,8 s puis 0,85 s par note) et deux fois plus courte à la vitesse 2 ; bouton choisi
+  après une fixation de la durée des réglages lue à chaque pas ; rien pendant que l'appareil joue ; erreur : son, vie
+  perdue, le bon bouton clignote, la même mélodie ; fin après 3 erreurs sans « Bravo » ; « Bravo » à 5 notes ; à deux :
+  ajout, répétition, l'autre joueur gagne à une erreur ; libre jusqu'à 5 notes ; appareil dans l'écran sur 5 écrans ;
+  même mélodie au rejeu ; tout retiré à la fin ; variantes et anciennes variantes ; dossier des statistiques) ;
+  `GameHelpTest` avec le jeu ; captures sans fenêtre regardées (boutons éteints un peu éclaircis) ; `build` complet :
+  **1 034 tests, 0 échec** ; `allGamesTest` complet : **66 entrées, 0 échec**. **Validé par le mainteneur le
+  10/11/2026**, avec les vies en cœurs (voir l'avancement du 10/11 en haut).

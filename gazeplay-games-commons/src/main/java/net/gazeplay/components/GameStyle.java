@@ -1,6 +1,7 @@
 package net.gazeplay.components;
 
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
@@ -181,6 +182,87 @@ public final class GameStyle {
         text.setX(paddingX - text.getLayoutBounds().getMinX());
         text.setY(paddingY - text.getLayoutBounds().getMinY());
         return new Group(background, text);
+    }
+
+    /**
+     * The color of a life left, and of a life lost on a light or on a dark background.
+     */
+    public static final Color LIFE = Color.rgb(235, 70, 95);
+    public static final Color LIFE_LOST = Color.rgb(120, 120, 130, 0.8);
+    public static final Color LIFE_LOST_ON_DARK = Color.rgb(200, 200, 215, 0.8);
+
+    /**
+     * Up to this number of lives, they are shown as hearts; above, as a number and a bar.
+     */
+    public static final int MAX_HEARTS = 5;
+
+    /**
+     * The lives of a game, the same in every reviewed game (maintainer's request of 10/11/2026), from (0, 0): up to
+     * {@link #MAX_HEARTS} lives, a red heart for each life left and an empty heart for each life lost (rather than
+     * "3 / 3"); above, a red heart, the lives left on the lives at the start ("10 / 15") and a green bar shorter at
+     * each life lost.
+     *
+     * @param lives    the lives left
+     * @param total    the lives at the start
+     * @param size     the size of a heart (height * 0.055 in the games), smaller if the row would be wider than maxWidth
+     * @param maxWidth the widest the row may be
+     * @param onDark   whether the background is dark (the empty hearts lighter, the number white)
+     */
+    public static Group lives(final int lives, final int total, final double size, final double maxWidth,
+                              final boolean onDark) {
+        if (total > MAX_HEARTS) {
+            return livesBar(lives, total, Math.min(size, maxWidth / 6), onDark);
+        }
+        final double heart = Math.min(size, maxWidth / Math.max(1, total * 1.1));
+        final Group row = new Group();
+        for (int i = 0; i < total; i++) {
+            final SVGPath icon = icon(i < lives ? "favorite_fill1" : "favorite", heart);
+            icon.setFill(i < lives ? LIFE : onDark ? LIFE_LOST_ON_DARK : LIFE_LOST);
+            icon.setStroke(Color.WHITE);
+            // In the units of the icon (960 for its height)
+            icon.setStrokeWidth(18);
+            icon.setLayoutX(i * heart * 1.1);
+            row.getChildren().add(icon);
+        }
+        row.setMouseTransparent(true);
+        return row;
+    }
+
+    /**
+     * More than {@link #MAX_HEARTS} lives: a red heart, "lives / total", and a green bar shorter at each life lost.
+     */
+    private static Group livesBar(final int lives, final int total, final double size, final boolean onDark) {
+        final SVGPath heart = icon("favorite_fill1", size);
+        heart.setFill(LIFE);
+        heart.setStroke(Color.WHITE);
+        heart.setStrokeWidth(18);
+        final Text count = new Text(Math.max(0, lives) + " / " + total);
+        count.setFont(titleFont(size * 0.7));
+        count.setStyle(titleFontStyle(size * 0.7));
+        count.setFill(onDark ? Color.WHITE : Color.rgb(43, 33, 24));
+        if (onDark) {
+            count.setEffect(new javafx.scene.effect.DropShadow(4, Color.rgb(0, 0, 0, 0.6)));
+        }
+        count.setTextOrigin(javafx.geometry.VPos.CENTER);
+        count.setX(size * 1.2);
+        count.setY(size / 2);
+        final double barX = count.getX() + count.getLayoutBounds().getWidth() + size * 0.3;
+        final double barWidth = size * 3;
+        final double barHeight = size * 0.42;
+        final Rectangle back = new Rectangle(barX, (size - barHeight) / 2, barWidth, barHeight);
+        back.setArcWidth(barHeight);
+        back.setArcHeight(barHeight);
+        back.setFill(Color.rgb(40, 44, 52, onDark ? 0.55 : 0.18));
+        back.setStroke(Color.WHITE);
+        back.setStrokeWidth(Math.max(1, size * 0.04));
+        final double left = Math.max(0, Math.min(1, lives / (double) total));
+        final Rectangle bar = new Rectangle(barX, (size - barHeight) / 2, barWidth * left, barHeight);
+        bar.setArcWidth(barHeight);
+        bar.setArcHeight(barHeight);
+        bar.setFill(Color.web(SUCCESS_COLOR));
+        final Group group = new Group(heart, count, back, bar);
+        group.setMouseTransparent(true);
+        return group;
     }
 
     /**
