@@ -1,0 +1,20 @@
+# Le principe
+Des cartes sont retournées. Une seule cache une image : trouve-la !
+
+# Comment jouer
+- Regarde une carte : un anneau fait le tour de la carte. Quand il est plein, la carte se retourne. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Une mauvaise carte montre une croix et reste retournée, en gris : tu sais qu’elle est déjà vue.
+- La bonne carte montre l’image : les autres s’effacent, l’image grandit au milieu avec une étoile et « Bravo ! ». Puis d’autres cartes arrivent.
+- En Magique, l’image est d’abord montrée sur sa carte. Puis la carte se retourne et les cartes se mélangent sous tes yeux : suis bien la carte de l’image ! Quand elles s’arrêtent, retrouve-la.
+- Rien ne se choisit pendant que les cartes bougent.
+- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies : une mauvaise carte compte seulement une erreur dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images trouvées (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Chercher (l’image est cachée sous une carte) ou Magique (l’image est montrée, puis les cartes se mélangent).
+- Le nombre de cartes : 3 (sur une rangée), 4, 6 ou 9.
+- En bas, les images : des animaux, ou Mes images (les images du dossier commun, à ajouter dans les réglages, Dossiers, « Mes images »).
+- En bas, la fin : 3, 5 ou 10 images, ou sans fin.

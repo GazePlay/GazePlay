@@ -226,6 +226,14 @@ coating, its stars and question marks are drawn by the game; the pictures are th
 of the user. The thumbnail (gazeplay-core: data/common/Thumbnails/scratchcard.png, 960 x 540, 12/11/2026) is a
 capture of the game, reduced by half; it replaces a thumbnail of unknown source.
 
+"Cartes magiques" (name code MagicCards; gazeplay-games: data/magiccards): the cards (back, face, cross) are drawn
+by the game since 12/11/2026; the card back red-card-game.png and blue-card-game.png (read by no code), of unknown
+source, and the cross data/common/images/error.png (Flaticon, CC BY 3.0, read only by this game) are removed. The
+sound of a card turned over (data/magiccards/sounds/flip.wav) is made by make_magiccards_sounds.py (this folder),
+under the license of GazePlay Learning (GPL-3.0-or-later); the other sounds are those of the cups, of "Dés" and of
+the goose game. The thumbnail (gazeplay-core: data/common/Thumbnails/magicCard.png, 960 x 540) is a capture of the
+game, reduced by half; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

@@ -68,6 +68,9 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   SpotBugs sans alerte. **Essai du mainteneur** : découvrir à **90 %** au lieu de 60 % (« c'est le plaisir du jeu de
   gratter »), et **gratter avec une pièce** qu'on déplace ; fait, tests ciblés verts (`ScratchCardTest` 10) ;
   **essayé et validé par le mainteneur**, commité.
+- **Cartes magiques** (`MagicCards`) : propositions validées, avec le **mode Magique** demandé en plus (anciennes grilles
+  lues comme 4, 6, 6 et 9 cartes, Chercher, Animaux, sans fin), fait (fiche en bas), tests ciblés verts
+  (`MagicCardsTest` 8, `GameHelpTest` 51), SpotBugs sans alerte ; **essayé et validé par le mainteneur**, commité.
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -873,7 +876,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
 | **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
 | **Cartes à gratter** (`ScratchCard`) | **12/11** : pas d’image propre ; couche argentée, étoiles et points d’interrogation dessinés par le jeu ; animaux par défaut (OpenMoji) ou Mes images ; 2 sons faits par script (`make_scratchcard_sounds.py`) ; vignette faite d’une capture | ✔ 12/11 (carte aux proportions de l’image et aux coins arrondis, couche argentée brillante à motif, pièce dorée qui suit le regard et gratte sous elle, bord doux, pastille des cartes, étoile et « Bravo ! » en bas de la carte) | | ✔ 12/11 (règle du mainteneur : un vrai jeu à part de Blocs, une pièce déplacée par le regard, lissée, qui gratte tout le long du chemin, 90 % pour découvrir (essai du mainteneur : 60 % au début), petite / moyenne / grosse pièce, Animaux ou Mes images, fin après 3 / 5 / 10 cartes ou sans fin) — validé le 12/11 |
-| Blocks, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
+| **Cartes magiques** (`MagicCards`) | **12/11** : le dos des cartes et `blue-card-game.png` (inutilisé), de source inconnue, et la croix `error.png` (Flaticon, lue seulement par ce jeu) retirés ; cartes dessinées par le jeu ; son du retournement fait par script (`make_magiccards_sounds.py`), sons des Gobelets, de Dés et du Jeu de l’oie ; vignette faite d’une capture | ✔ 12/11 (cartes arrondies au dos de la couleur principale, anneau autour de la carte, retournement animé, mauvaise carte grisée avec une croix, image qui grandit au milieu, étoile et « Bravo ! », pastilles de la consigne et des images) | ✔ 12/11 (règle du mainteneur : Chercher ou **Magique** (l’image montrée, les cartes retournées et mélangées deux par deux sur des arcs, puis à retrouver), 3 / 4 / 6 / 9 cartes, erreur comptée sans vies, mauvaise carte qui reste retournée, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin) — validé le 12/11 |
+| Blocks, Cream Pie | Utilisent les images par défaut (voir Memory) ; Cream Pie : 2 dessins, à confirmer | | |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
@@ -3683,3 +3687,43 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   découverte. Variantes renommées « Petite / Moyenne / Grosse pièce » (mêmes clés), aide mise à jour, vignette refaite
   avec la pièce. `ScratchCardTest` : 10 tests (dont la carte encore couverte à 60 % et la pièce qui suit le grattoir) ;
   SpotBugs sans alerte. **Essayé et validé par le mainteneur le 12/11/2026.**
+
+### Cartes magiques (`MagicCards`) — 12/11/2026
+
+- **État des lieux (code)** : des cartes face cachée (2 × 2, 2 × 3, 3 × 2, 3 × 3), une seule cachant une image (dossier
+  commun, repli sur les animaux, sans variante) ; une fixation retourne une carte : une mauvaise montre une croix rouge
+  (`error.png`, Flaticon CC BY 3.0, attribution absente de la licence) puis s’efface en 2 s ; la bonne fait disparaître
+  les autres, grossit au centre, transition de victoire, nouvelle manche, sans fin. Dos des cartes `red-card-game.png`
+  de source inconnue (`blue-card-game.png` lu par aucun code). Cartes de 90 % de la hauteur plus 30 px par rangée :
+  **en 3 rangées la grille dépassait** sous 900 px de haut ; **lignes et colonnes des variantes inversées** (la
+  largeur passée comme nombre de lignes) ; zoom instantané de 10 % au survol, ancien `ProgressIndicator` ; aucun but à
+  atteindre, aucune erreur comptée ; animations non arrêtées par le menu, filtres de regard jamais retirés ; ni aide ni
+  test ; vignette de source inconnue.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : le style de Memory ; une mauvaise carte montre une face
+  vide avec une croix, compte une erreur (pas de vies) et reste retournée, grisée ; la bonne : les autres s’effacent,
+  l’image grandit au milieu, étoile et « Bravo ! », manche suivante ; **un mode Magique en plus** (l’image montrée sur
+  sa carte, les cartes retournées puis mélangées sous les yeux, à retrouver) ; 3 (nouveau, sur une rangée), 4, 6 ou 9
+  cartes ; Animaux ou Mes images ; fin après 3, 5 ou 10 images ou sans fin ; anciennes grilles lues comme 4, 6, 6 et 9
+  cartes, Chercher, Animaux, sans fin.
+- **Fait** : le jeu réécrit (`MagicCards`, classe interne `Card` ; `MagicCardsMode`, `MagicCardsPictures`,
+  `MagicCardsCount`, `MagicCardsEnd` ; `Card.java` retiré). Cartes de 3 de large pour 4 de haut, aussi grandes que
+  possible sous le bandeau (au plus 70 % de sa hauteur, pour la place des arcs), dessinées autour de leur centre ; dos
+  de Memory (couleur principale, cadre, « ? »), face claire avec l’image ou une croix ; anneau autour de la carte (de la
+  couleur du « ? » sur le dos) ; retournement en 0,35 s (la carte s’amincit, change de côté, s’élargit). Une boucle en
+  temps réel (fixation lue à chaque pas, délai, Échap) ; rien ne se choisit pendant que l’image est montrée, que les
+  cartes bougent ni pendant la récompense. Magique : l’image montrée 2 s (et pendant le délai du début), la carte se
+  retourne, puis 4, 5, 6 ou 7 échanges (selon 3, 4, 6 ou 9 cartes) de 0,55 s, deux cartes sur des arcs opposés, la
+  carte de l’image dans 60 % des échanges ; bandeau « Regarde bien la carte de l’image ! » puis « Où est l’image ? ».
+  Image trouvée : les autres s’effacent et l’image grandit au milieu en 0,6 s, étoile et « Bravo ! » dessous pendant
+  2 s. Sons : retournement (script), glissement des Gobelets, erreur de Dés, victoire du Jeu de l’oie. Statistiques
+  (« MagicCards », **format inchangé**) : un but à atteindre par manche, atteint quand l’image est trouvée, une erreur
+  par mauvaise carte ; les fichiers déjà produits ne changent pas. Variantes `GroupedGameVariant` (64 : le mode en
+  haut, le nombre de cartes en boutons, en bas les images et la fin). 17 clés ajoutées ; aide, crédits, licence,
+  inventaire, vignette (capture d’une partie en cours).
+- **Vérifications** : `MagicCardsTest` (8 tests : chaque grille dans l’écran sans chevauchement, retournement après la
+  fixation seulement et pas pendant le délai, mauvaise carte comptée qui reste retournée et ne se choisit plus, image
+  trouvée puis nouvelle manche face cachée, Magique (montrée, retournée, mélangée, rien de choisi pendant ce temps,
+  chaque carte à sa place à la fin), « Bravo » après 3 images, tout retiré à la fin, variantes et anciennes grilles) ;
+  `GameHelpTest` avec le jeu ; SpotBugs sans alerte ; captures sans fenêtre regardées (après la première : arcs du
+  mélange abaissés, ils passaient sous le bandeau, et la carte qui bouge passe devant les autres). **Essayé et validé
+  par le mainteneur le 12/11/2026.**

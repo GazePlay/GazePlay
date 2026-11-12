@@ -87,7 +87,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,oui
 gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,"faite des images du jeu par make_labyrinth_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,source inconnue,,2021-09-03,Iluvrog,end of the game
 gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,libre,"capture du jeu (12/11/2026) ; cartes et lettres dessinées par le jeu, un animal des images par défaut (OpenMoji, CC BY-SA 4.0)",2026-11-12,GazePlay Learning,revue d'Identifier les lettres
-gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
+gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,libre,"capture du jeu (12/11/2026) ; cartes dessinées par le jeu, animal OpenMoji (CC BY-SA 4.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Cartes magiques
 gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,libre,"capture du jeu (tableau et cartes dessinés par le jeu, Biboule du Tir), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-numbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
@@ -207,7 +207,6 @@ gazeplay-core/src/main/resources/data/common/images/bravo.gif,oui,source inconnu
 gazeplay-core/src/main/resources/data/common/images/cards.png,oui,source inconnue,,2020-02-28,kuhlkrein,add new image for each section
 gazeplay-core/src/main/resources/data/common/images/continue.png,oui,source inconnue,,2019-05-16,Teo Blachere,Inter-level stat screen
 gazeplay-core/src/main/resources/data/common/images/dice.png,oui,libre,"dessiné pour le projet (gradle/images/make_dice_images.py), GPL-3.0-or-later ; remplace une texture de source inconnue (12/11/2026)",2026-11-12,GazePlay Learning,revue de Dés
-gazeplay-core/src/main/resources/data/common/images/error.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2017-02-08,schwab,first commit
 gazeplay-core/src/main/resources/data/common/images/explosion.gif,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-06-18,johzz-o2,++ implems
 gazeplay-core/src/main/resources/data/common/images/fullscreen-enter.png,oui,source inconnue,,2018-01-10,Yann ROBERT,"using a BorderPane in order to separate the zone used for command and control, from the zone used for displaying the game itself"
 gazeplay-core/src/main/resources/data/common/images/fullscreen-exit.png,oui,source inconnue,,2018-01-25,Yann ROBERT,"change the icon and label of the toogle full screen button, for better user experience"
@@ -503,8 +502,6 @@ gazeplay-games/src/main/resources/data/labyrinth/images/cheese.png,oui,libre,"de
 gazeplay-games/src/main/resources/data/labyrinth/images/house.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/labyrinth/images/mouse.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/ladder/Biboule.png,oui,source inconnue,,2021-09-02,Iluvrog,little graphical change
-gazeplay-games/src/main/resources/data/magiccards/images/blue-card-game.png,oui,source inconnue,,2017-02-08,schwab,first commit
-gazeplay-games/src/main/resources/data/magiccards/images/red-card-game.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/math101/images/biboule.png,oui,libre,"Biboule jaune du Tir (mascotte du laboratoire modernisée pour le projet), recadrée par gradle/images/make_math101_images.py, GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
 gazeplay-games/src/main/resources/data/pet/images/ball.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
 gazeplay-games/src/main/resources/data/pet/images/bathroom.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet

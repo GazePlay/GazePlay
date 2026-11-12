@@ -1,0 +1,20 @@
+# The principle
+Cards are face down. Only one hides a picture: find it!
+
+# How to play
+- Look at a card: a ring goes around the card. When it is full, the card turns over. The length of the ring is that of the settings, also changed in the menu (Esc key).
+- A wrong card shows a cross and stays turned over, in grey: you know it is already seen.
+- The right card shows the picture: the others fade, the picture grows in the middle with a star and "Well done!". Then other cards come.
+- In Magic, the picture is first shown on its card. Then the card turns over and the cards are shuffled before your eyes: follow the card of the picture! When they stop, find it again.
+- Nothing is chosen while the cards move.
+- At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives: a wrong card only counts a mistake in the statistics. As you chose, the game stops after 3, 5 or 10 pictures found ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Search (the picture is hidden under a card) or Magic (the picture is shown, then the cards are shuffled).
+- The number of cards: 3 (in a row), 4, 6 or 9.
+- At the bottom, the pictures: animals, or My images (the images of the shared folder, added in the settings, Folders, "My images").
+- At the bottom, the end: 3, 5 or 10 pictures, or without end.
