@@ -86,7 +86,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source in
 gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,"faite des images du jeu par make_labyrinth_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,source inconnue,,2021-09-03,Iluvrog,end of the game
-gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,source inconnue,,2019-05-24,Wafaa,Literacy Game Thumbnail
+gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,libre,"capture du jeu (12/11/2026) ; cartes et lettres dessinées par le jeu, un animal des images par défaut (OpenMoji, CC BY-SA 4.0)",2026-11-12,GazePlay Learning,revue d'Identifier les lettres
 gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,libre,"capture du jeu (tableau et cartes dessinés par le jeu, Biboule du Tir), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
@@ -226,32 +226,6 @@ gazeplay-core/src/main/resources/data/common/images/seeFolder.png,oui,source inc
 gazeplay-core/src/main/resources/data/common/images/skip.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-17,dark1wador,Added icons to music controls + fixes some things
 gazeplay-core/src/main/resources/data/common/images/small.png,oui,source inconnue,,2020-02-28,kuhlkrein,add new image for each section
 gazeplay-core/src/main/resources/data/common/images/speaker.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2018-05-22,WaffleBuffer,added speaker icon + added music title + removed background sound on bravo effect
-gazeplay-core/src/main/resources/data/common/letters/A.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/B.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/C.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/D.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/E.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/F.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/G.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/H.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/I.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/J.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/K.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/L.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/M.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/N.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/O.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/P.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/Q.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/R.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/S.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/T.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/U.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/V.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/W.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/X.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/Y.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
-gazeplay-core/src/main/resources/data/common/letters/Z.jpg,oui,source inconnue,,2019-03-31,schwab,New game letter memory
 gazeplay-core/src/main/resources/data/common/numbers/0.jpg,oui,source inconnue,,2019-03-31,schwab,work on a new game : memory numbers
 gazeplay-core/src/main/resources/data/common/numbers/1.jpg,oui,source inconnue,,2019-03-31,schwab,work on a new game : memory numbers
 gazeplay-core/src/main/resources/data/common/numbers/2.jpg,oui,source inconnue,,2019-03-31,schwab,work on a new game : memory numbers

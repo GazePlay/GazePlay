@@ -46,6 +46,15 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   3 niveaux ; « Bravo » et le temps) ; lapins gardés après vérification de leur licence (fiche en bas) ; fait,
   `build` complet **1 110 tests, 0 échec**, `allGamesTest` du jeu 5 fois sans échec ; **essayé et validé par le mainteneur**, commité.
   Catalogue : 61 entrées. Lapins (`Rabbits`) n'est plus un jeu à revoir.
+- **Dés** et **Jeu de l’oie** : validés et commités (`1844aadde`, `4143aea76`) ; Diviseur, Dés et Jeu de l’oie poussés
+  à la demande du mainteneur. **CI** (run `43211702081`) : 6 jobs verts ; `test (26)` en échec sur
+  `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (`IndexOutOfBoundsException` dans `collect()` : le test
+  parcourt la scène hors du fil JavaFX pendant que le jeu la modifie ; vert sous Java 25, GazePlay Eval inchangé depuis
+  le 6/11) ; **job relancé : vert**. Test instable de plus, à ranger avec les points 7 à 10.
+- **Décision du mainteneur (12/11/2026)** : en local, seulement les tests ciblés de ce qu’on vient de faire ; les tests
+  généraux sur GitHub une fois poussé.
+- **Identifier les lettres** (`Letters`) : fait (fiche en bas), **validé par le mainteneur** ; voix gardées pour
+  l’instant, issue #1741 pour les remplacer.
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -880,7 +889,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Dot To Dot, Ladder | À confirmer : 1 image chacun | | |
 | **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
-| Scribble (`Scribble`), Letters (`Letters`) | Pas d'image propre relevée | | |
+| **Identifier les lettres** (`Letters`) | **12/11** : les 26 images de lettres inutilisées retirées ; cartes et lettres dessinées par le jeu ; vignette faite d’une capture ; **208 voix de source inconnue gardées en attendant** (format de services de synthèse vocale, hypothèse) | ✔ 12/11 (bandeau « Trouve la lettre » et la lettre en grand, haut-parleur pour réécouter, cartes arrondies aux couleurs douces, minuscules en Andika, anneau, carte fausse qui tremble en rouge, image découverte) | ✔ 12/11 (règle du mainteneur : un tiers des cartes de la lettre, Facile 6 / Normal 12 / Difficile 20 cartes avec les lettres qui se ressemblent, capitales / minuscules / les deux, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin, erreurs comptées) — validé le 12/11 ; voix : issue #1741 |
+| Scribble (`Scribble`) | Pas d'image propre relevée | | |
 | GazePlay Eval, GazePlay Eval Test | Pas d'image propre ; le dossier `gazeplayEvalTest` (4 images des anciens jeux BERA) : vérifier s'il sert encore | | |
 
 ## Hors jeux
@@ -3499,4 +3509,49 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   l’oie ; **la Biboule n’était pas centrée sur son socle**. Cause : le corps d’une Biboule est à 56 % de la hauteur de
   son image (les ailes au-dessus ; mesuré sur les 4 images), le calcul le mettait plus haut. **Fait** : le centre du corps
   sur le centre du socle ; test `shouldCenterTheBodyOfTheBibouleOnItsBase` (14 tests) ; vignette refaite. **Validé par
+  le mainteneur le 12/11/2026.**
+
+### Identifier les lettres (`Letters`) — 12/11/2026
+
+- **État des lieux (code)** : une lettre demandée (écrite, puis dite par une voix d’homme ou de femme), une grille de
+  2 × 2, 2 × 3 ou 3 × 3 blocs de couleur sur une image ; un bloc de la lettre disparaît après une fixation ; tout trouvé,
+  l’image puis une nouvelle manche, sans fin. **Un bloc se décalait d’une demi-taille chaque fois que le regard le
+  quittait** (animation de sortie fausse) ; environ 60 % des blocs de la lettre demandée ; rien pour un mauvais bloc
+  (ni retour, ni erreur) ; aucun but à atteindre ; statistiques dans le dossier « blocs », celui du jeu Blocs ; police
+  du Mac seulement, lettres de 250 pixels, couleurs tirées hors du rejeu, consigne placée de travers puis effacée,
+  « Choisissez la Lettre » ; ancien indicateur ; rien d’arrêté par le menu ; deux copies du jeu ; `dispose()` ne retirait
+  rien ; « Mes images » en silence ; ni aide ni test. 208 voix, la vignette et 26 images inutilisées de source inconnue.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : la lettre en grand dans un bandeau, dite, avec un bouton
+  pour réécouter ; une bonne carte se retourne et découvre un morceau de l’image ; une mauvaise tremble en rouge, dit sa
+  lettre et compte une erreur ; toutes trouvées : toute l’image, « Bravo » à la fin ; fin après 3, 5 ou 10 images ou
+  sans fin ; Facile 6 cartes et une lettre qui ne ressemble pas, Normal 12 cartes et 3 lettres, Difficile 20 cartes avec
+  les lettres qui se ressemblent ; capitales, minuscules (Andika) ou les deux ; Animaux ou Mes images ; dossier des
+  résultats « letters » ; **voix gardées si leur licence le permet** (voir ci-dessous).
+- **Voix (licence)** : **Fait** : les 208 fichiers sont en 22 050 Hz, mono, 48 kbit/s, encodés par LAME 3.99, ajoutés
+  par une contributrice en 2019 (« Literacy Game (with sounds) ») sans source ni licence. **Hypothèse** : c’est le format
+  de sortie de certains services de synthèse vocale (par exemple Amazon Polly, directement ou par un site tiers) ;
+  rien ne le prouve. **Risque** : les conditions d’un tel service ne permettent pas forcément de les redistribuer sous
+  GPL. La licence n’a donc pas pu être confirmée. **Décision du mainteneur (12/11/2026)** : on les garde pour
+  l’instant ; **issue #1741** pour les remplacer plus tard en restant dans la licence (enregistrement au laboratoire
+  sous CC0 ou CC BY, synthèse libre hors ligne par un script, eSpeak NG ou une voix Piper de licence vérifiée,
+  prononciations de Lingua Libre ; et une seule phrase « Trouve la lettre… » suivie de la lettre, pour 108 fichiers au
+  lieu de 208).
+- **Fait** : le jeu réécrit (`Letters`, classes internes `Spot` et `Card` ; `LettersLevel`, `LettersCase`,
+  `LettersPictures`, `LettersEnd` ; `Bloc` retiré). Une boucle en temps réel (fixation lue à chaque pas, délai, Échap).
+  Image coupée pour remplir la grille, sans déformation, sous des cartes arrondies aux couleurs douces (tirées dans le
+  rejeu) ; lettres en Fredoka (capitales) ou Andika (minuscules, « a » et « g » comme à l’école) ; une carte fausse ne
+  se rechoisit qu’après avoir été quittée. Lettres qui se ressemblent : une table pour les minuscules (b d p q, m n, u v
+  w…) et une pour les capitales (C G O Q, E F, P R B, M N W…), selon l’écriture choisie (les deux pour « capitales et
+  minuscules ») ; **à la première capture, un « G » était proposé avec des « O » en Facile** (la table ne connaissait
+  que les minuscules), corrigé et testé. Une lettre jamais deux fois de suite. Statistiques (format inchangé,
+  `LettersGamesStats`) : dossier « letters » (avant « blocs », les anciens résultats y restent), un but à atteindre et
+  atteint par image, une erreur par mauvaise carte. Variantes `GroupedGameVariant` (72 : les niveaux en boutons, puis en
+  bas les images, l’écriture et la fin) ; une ancienne variante « DimensionGameVariant » donne un niveau (2 × 2 facile,
+  2 × 3 normal, 3 × 3 difficile). Clé « Choose the Letter » retirée, 11 ajoutées ; aide, crédits, inventaire, vignette.
+  Le son de la fin est celui du Jeu de l’oie (`data/goosegame/sounds/win.wav`).
+- **Vérifications** : `LettersTest` (12 tests : cartes et lettres de chaque niveau, lettres qui se ressemblent selon
+  l’écriture, écriture des cartes, question dite et redite, carte trouvée après la fixation des réglages, erreur puis
+  carte rechoisie seulement après l’avoir quittée, image découverte puis nouvelle lettre, « Bravo » après 3 images,
+  délai, Mes images vide, tout retiré à la fin, variantes et anciennes variantes) ; `GameHelpTest` avec le jeu ; captures
+  sans fenêtre regardées (Normal en minuscules, Difficile en capitales et minuscules, vignette). **Essayé et validé par
   le mainteneur le 12/11/2026.**

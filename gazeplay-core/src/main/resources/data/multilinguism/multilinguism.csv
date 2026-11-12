@@ -747,7 +747,6 @@ yellow,,,зялёны,黄,,,yellow,,jaune,,,,,,geel,,,зелёный,,,
 green,,,жоўты,绿,,,green,,vert,,,,,,groen,,,жёлтый,,,
 
 # LETTERS GAME
-Choose the Letter,Zgjidh shkronjën,,Выберы букву,选择字母,,,Choose the Letter,,Choisissez la Lettre,,,,Scegli la lettera,,Kies de letter,,,Выберите букву,,,
 
 # MATHS GAME
 From,,,Ад,从,,,From,,De,,,,,,Van,,,От,,,
@@ -986,3 +985,16 @@ GooseBack,,,,,,,Back to the start for {0},,Retour au départ pour {0},,,,,,,,,,,
 GooseWins,,,,,,,{0} wins!,,{0} a gagné !,,,,,,,,,,,,
 GooseYouWin,,,,,,,You win!,,Tu as gagné !,,,,,,,,,,,,
 GooseComputerWins,,,,,,,The computer wins,,L'ordinateur a gagné,,,,,,,,,,,,
+
+# Identifier les lettres (reviewed on 12/11/2026)
+LettersAnimals,,,,,,,Animals,,Animaux,,,,,,,,,,,,
+LettersMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
+LettersCapitals,,,,,,,Capitals,,Capitales,,,,,,,,,,,,
+LettersSmall,,,,,,,Small letters,,Minuscules,,,,,,,,,,,,
+LettersBoth,,,,,,,Capitals and small letters,,Capitales et minuscules,,,,,,,,,,,,
+LettersEnd3,,,,,,,3 pictures,,3 images,,,,,,,,,,,,
+LettersEnd5,,,,,,,5 pictures,,5 images,,,,,,,,,,,,
+LettersEnd10,,,,,,,10 pictures,,10 images,,,,,,,,,,,,
+LettersEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+LettersFind,,,,,,,Find the letter,,Trouve la lettre,,,,,,,,,,,,
+LettersPictures,,,,,,,Pictures:,,Images :,,,,,,,,,,,,

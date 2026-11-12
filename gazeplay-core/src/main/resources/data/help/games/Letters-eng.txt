@@ -1,0 +1,20 @@
+# The principle
+A letter is asked. Find all the cards of this letter: they turn over and a picture appears.
+
+# How to play
+- The letter asked is written large in the band at the top, and it is said. Look at the loudspeaker, at the right of the band, to hear it again.
+- Look at a card: a ring fills. Its length is that of the settings, also changed in the menu (Esc key).
+- A card of the right letter turns over and shows a part of the picture, and the letter is said.
+- A card of another letter shakes in red and says its letter. Look away, then at another card.
+- When all the cards of the letter are found, the whole picture appears, then a new letter is asked.
+- At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no penalty: a wrong card only counts a mistake in the statistics. As you chose, the game stops after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The level. Easy: 6 cards, the letter asked and another letter which does not look like it. Normal: 12 cards, 3 other letters. Hard: 20 cards, with the letters which look alike (b, d, p, q; m, n; u, v...). About a third of the cards show the letter asked.
+- At the bottom, the hidden pictures: Animals, or My images ("My images" folder of the settings).
+- At the bottom, the writing: capitals, small letters (written as at school), or both (the "A" asked is found as "A" or "a").
+- At the bottom, the end: 3, 5 or 10 pictures, or without end.

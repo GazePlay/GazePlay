@@ -11,19 +11,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Statistics of the game "Letters", with the info-game.csv file of the games where items are found (see
+ * Statistics of "Identifier les lettres" (folder "letters" since 12/11/2026: before, "blocs", the folder of the game
+ * Blocs), with the info-game.csv file of the games where items are found (see
  * {@code HiddenItemsGamesStats}).
  */
 public class LettersGamesStats extends HiddenItemsGamesStats {
     public LettersGamesStats(Scene scene) {
 
         super(scene);
-        gameName = "blocs";
+        gameName = "letters";
     }
 
     public LettersGamesStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
 
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        gameName = "blocs";
+        gameName = "letters";
     }
 }
