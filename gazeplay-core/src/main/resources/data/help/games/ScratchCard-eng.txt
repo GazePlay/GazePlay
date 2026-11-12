@@ -1,0 +1,19 @@
+# The principle
+A card is covered with a silver coating. Scratch it with a coin you move with your eyes to find the picture hidden under it!
+
+# How to play
+- A coin waits in the middle of the card. Look at the card: the coin follows your gaze, and where it goes, the silver coating goes away. You hear it scratch.
+- The coin follows your gaze smoothly, so that small trembling does not show, and it scratches all along the way.
+- The coin lifts when your gaze leaves the card, or when the eye tracker loses you for a moment (a blink).
+- When almost all the card is scratched (90 %), the rest of the coating melts by itself: the picture shows with a star and "Well done!". Then another card comes.
+- With the mouse, the coin follows the pointer, without clicking.
+- At the start, nothing is scratched during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no mistakes: each card uncovered counts. As you chose, the game stops after 3, 5 or 10 cards ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The pictures: animals, or My images (the images of the shared folder, added in the settings, Folders, "My images").
+- The size of the coin: small, medium or large. The larger it is, the faster the card is scratched.
+- At the bottom, the end: 3, 5 or 10 cards, or without end.

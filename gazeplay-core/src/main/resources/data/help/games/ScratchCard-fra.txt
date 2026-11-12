@@ -1,0 +1,19 @@
+# Le principe
+Une carte est couverte d’une couche argentée. Gratte-la avec une pièce que tu déplaces avec tes yeux pour découvrir l’image cachée dessous !
+
+# Comment jouer
+- Une pièce attend au milieu de la carte. Regarde la carte : la pièce suit ton regard, et là où elle passe, la couche argentée s’en va. On entend gratter.
+- La pièce suit ton regard en douceur, pour que les petits tremblements ne se voient pas, et elle gratte tout le long du chemin.
+- La pièce se lève quand ton regard quitte la carte, ou quand l’oculomètre te perd un instant (un clignement).
+- Quand presque toute la carte est grattée (90 %), le reste de la couche fond tout seul : l’image apparaît avec une étoile et « Bravo ! ». Puis une autre carte arrive.
+- Avec la souris, la pièce suit le pointeur, sans cliquer.
+- Au début, rien ne se gratte pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a ni vies ni erreurs : chaque carte découverte compte. Selon ton choix, la partie s’arrête après 3, 5 ou 10 cartes (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Les images : des animaux, ou Mes images (les images du dossier commun, à ajouter dans les réglages, Dossiers, « Mes images »).
+- La taille de la pièce : petite, moyenne ou grosse. Plus elle est grosse, plus la carte se gratte vite.
+- En bas, la fin : 3, 5 ou 10 cartes, ou sans fin.

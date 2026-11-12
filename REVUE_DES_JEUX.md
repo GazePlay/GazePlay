@@ -61,7 +61,13 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   demande du mainteneur (on pousse à la fin d’un groupe ou quand il part). **CI** (run `43226700659`) : **verte sur les
   7 jobs** ; 1 166 tests sous Java 25 (rapports de la CI : 192 + 293 + 607 + 53 + 6 + 15), 0 échec, 2 ignorés.
 - **Groupe 9 commencé : Gribouille** (`Scribble`) : propositions validées par le mainteneur, fait (fiche en bas), tests
-  ciblés verts (`ScribbleTest` 11, `GameHelpTest` 49, `ConfigurationContextTest` 26) ; **essayé et validé par le mainteneur**, commité.
+  ciblés verts (`ScribbleTest` 11, `GameHelpTest` 49, `ConfigurationContextTest` 26) ; **essayé et validé par le mainteneur**, commité
+  (`64cb86e24`, non poussé).
+- **Cartes à gratter** (`ScratchCard`) : propositions validées (60 % gardé, couche argentée seulement, sans variante :
+  Animaux, grattoir moyen, sans fin), fait (fiche en bas), tests ciblés verts (`ScratchCardTest` 8, `GameHelpTest` 50),
+  SpotBugs sans alerte. **Essai du mainteneur** : découvrir à **90 %** au lieu de 60 % (« c'est le plaisir du jeu de
+  gratter »), et **gratter avec une pièce** qu'on déplace ; fait, tests ciblés verts (`ScratchCardTest` 10) ;
+  **essayé et validé par le mainteneur**, commité.
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -866,7 +872,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Labyrinthe** (`Labyrinth`) | **9/11** : les 19 dessins retirés (la maison ressemblait à une image de banque d'images) ; souris, fromage et maison dessinés par script (`make_labyrinth_images.py`), haies dessinées par le jeu ; les 9 animaux sans fond de source inconnue remplacés par OpenMoji (renard et tortue, en double, retirés ; pingouin et grenouille ajoutés) ; vignette faite par le script | ✔ 9/11 (labyrinthe de haies vu de dessus, centré, murs fins entre les cases, anneau, flèches rondes, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : un vrai labyrinthe à chemin unique, nouveau à chaque fromage, fin après 3 / 5 / 10 ou sans fin, Facile 3 × 5 / Normal 5 × 7 / Difficile 7 × 9, 3 façons de déplacer, souris ou animal) — à essayer |
 | **Memory** (une seule carte depuis le 30/10, avant 6) | **Remplacées le 30/10** : les 9 images par défaut à risque (OpenMoji, 8 jeux en profitent), dos de carte dessiné par le jeu ; lettres et chiffres dessinés (Fredoka) | ✔ 30/10 (cartes, anneau, retournement, cadres, pastille) | ✔ 30/10 (une carte, Mes images, Dynamique corrigé, 1,5 s) |
 | **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
-| Blocks, Scratch Card, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
+| **Cartes à gratter** (`ScratchCard`) | **12/11** : pas d’image propre ; couche argentée, étoiles et points d’interrogation dessinés par le jeu ; animaux par défaut (OpenMoji) ou Mes images ; 2 sons faits par script (`make_scratchcard_sounds.py`) ; vignette faite d’une capture | ✔ 12/11 (carte aux proportions de l’image et aux coins arrondis, couche argentée brillante à motif, pièce dorée qui suit le regard et gratte sous elle, bord doux, pastille des cartes, étoile et « Bravo ! » en bas de la carte) | | ✔ 12/11 (règle du mainteneur : un vrai jeu à part de Blocs, une pièce déplacée par le regard, lissée, qui gratte tout le long du chemin, 90 % pour découvrir (essai du mainteneur : 60 % au début), petite / moyenne / grosse pièce, Animaux ou Mes images, fin après 3 / 5 / 10 cartes ou sans fin) — validé le 12/11 |
+| Blocks, Magic Cards, Cream Pie | Utilisent les images par défaut (voir Memory) ; Magic Cards et Cream Pie : 2 dessins chacun, à confirmer | | |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
@@ -3634,3 +3641,45 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `ConfigurationContextTest` (ligne « Mes dessins » en mode Jeux, absente en mode Évaluations) ; captures sans fenêtre
   regardées (barre d’outils centrée en Arc-en-ciel après la première capture) ; SpotBugs sans alerte (2 corrigées : division
   entière et test d’imparité). **Essayé et validé par le mainteneur le 12/11/2026**, commité.
+
+### Cartes à gratter (`ScratchCard`) — 12/11/2026
+
+- **État des lieux (code)** : pas de jeu à lui : `ScratchCardGameLauncher` lançait **Blocs** avec d’autres réglages,
+  une grille de **100 × 100 rectangles** (10 000 nœuds) de la couleur du thème (blanc ou noir) sur tout l’écran ; le
+  regard ou la souris retirait un disque d’environ 10 cases autour de la case où il **entrait** : disque **écrasé en
+  ovale** (cases de 19 × 11 px en 1920 × 1080), rien de gratté entre deux points éloignés ; cases retirées seulement
+  poussées hors de l’écran (les 10 000 nœuds restaient, chacun avec son filtre de regard ; lourd, hypothèse non
+  mesurée) ; à 60 % la transition de victoire et une autre image, sans fin ; **aucun but à atteindre compté** (« Nb Goals »
+  à 0 dans `info-game.csv`) ; ni délai, ni pause, `dispose()` vide, limiteurs non démarrés au rejeu ; images du dossier
+  commun avec repli sur les animaux, sans variante ; ni son, ni aide, ni test ; vignette de source inconnue.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : un vrai jeu à part (Blocs reste tel quel jusqu’à sa
+  revue) ; une carte à gratter au centre, couche argentée seulement ; un grattoir rond qui suit le regard, lissé, et
+  gratte tout le long du chemin ; **60 %** gardé ; le reste fond, étoile et « Bravo ! », carte suivante ; un but par
+  carte ; variantes Animaux ou Mes images, petit / moyen / gros grattoir, fin après 3 / 5 / 10 cartes ou sans fin ; sans
+  variante (ancien raccourci) : Animaux, grattoir moyen, sans fin ; les règles habituelles.
+- **Fait** : le jeu écrit (`ScratchCard`, classe interne `Pen` ; `ScratchCardPictures`, `ScratchCardBrush`,
+  `ScratchCardEnd`, `ScratchCardGameVariantGenerator` ; `ScratchcardGamesStats` gardé, Blocs inchangé). Carte aux
+  proportions de l’image (entre 0,6 et 2,2, sinon recadrée), coins arrondis, sous la pastille « Cartes : n / total ».
+  La couche est peinte une fois (dégradé argenté, grain fin, étoiles et « ? ») puis gardée en image : **le grattoir rend
+  ses pixels transparents**, avec un bord doux d’un pixel et demi (première version par `clearRect` dans une découpe :
+  rien n’était effacé avec le rendu des tests). Lissage comme dans Gribouille (regard 0,35, souris 0,8), un disque tous
+  les 0,3 rayon le long du chemin, grattoir levé après 0,35 s sans point ou à la sortie de la carte ; rayon de 4,5 %,
+  7 % ou 10 % de la hauteur de l’écran. Part grattée comptée sur une grille de 64 colonnes (centres des cases
+  découverts). Son de grattage au plus toutes les 0,2 s pendant qu’on gratte, son de découverte ; la couche fond en
+  0,5 s, puis étoile et « Bravo ! » en bas de la carte pendant 2 s (après les captures : au milieu, ils cachaient
+  l’image découverte). Une boucle en temps réel (délai des réglages, Échap). Statistiques (« Scratchcard », **format
+  inchangé**) : un but à atteindre par carte (« Nb Goals » et les colonnes « shot » sont maintenant remplis), un but
+  atteint par carte découverte ; les fichiers déjà produits ne changent pas. Variantes `GroupedGameVariant` (24 : les
+  images en haut, la taille du grattoir en boutons, la fin en bas). 11 clés ajoutées ; aide, crédits, inventaire,
+  vignette (capture d’une carte à moitié grattée).
+- **Vérifications** : `ScratchCardTest` (8 tests : délai, grattage lissé tout le long du chemin et grattoir rond, levé
+  après un silence, carte découverte à 60 % (pas toute la carte grattée), fonte, récompense puis nouvelle carte couverte,
+  son de grattage espacé, « Bravo » après 3 cartes, tout retiré à la fin, variantes et ancien raccourci) ; `GameHelpTest`
+  avec le jeu ; SpotBugs sans alerte ; captures sans fenêtre regardées.
+- **Essai du mainteneur (12/11/2026)** : la carte se découvrait trop tôt (« c'est le plaisir du jeu de gratter ») et il
+  voulait contrôler une pièce pour gratter. **Fait** : `TO_UNCOVER` à **90 %** ; une **pièce dorée** dessinée par le jeu
+  (dégradé, bord cranté, étoile frappée, reflet, ombre douce, un peu penchée), du rayon du grattoir, qui attend au milieu
+  de chaque nouvelle carte puis suit le grattoir (position lissée) et gratte exactement sous elle ; cachée pendant la
+  découverte. Variantes renommées « Petite / Moyenne / Grosse pièce » (mêmes clés), aide mise à jour, vignette refaite
+  avec la pièce. `ScratchCardTest` : 10 tests (dont la carte encore couverte à 60 % et la pièce qui suit le grattoir) ;
+  SpotBugs sans alerte. **Essayé et validé par le mainteneur le 12/11/2026.**

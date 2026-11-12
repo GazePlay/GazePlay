@@ -6,8 +6,8 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
 /**
- * Declares the game "ScratchCard" to the menu: its name, thumbnail, categories, variants and launcher (see
- * {@code GameSpecSource}).
+ * Declares "Cartes à gratter" (name code ScratchCard) to the menu: its name, thumbnail, categories, variants (see
+ * {@link ScratchCardGameVariantGenerator}) and launcher (see {@code GameSpecSource}).
  */
 public class ScratchCardGameSpecSource implements GameSpecSource {
     @Override
@@ -15,6 +15,6 @@ public class ScratchCardGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("ScratchCard").gameThumbnail("scratchcard")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
-            new ScratchCardGameLauncher());
+            new ScratchCardGameVariantGenerator(), new ScratchCardGameLauncher());
     }
 }

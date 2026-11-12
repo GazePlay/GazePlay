@@ -220,6 +220,12 @@ eraser and the lines are drawn by the game, the icons of the buttons are the Mat
 data/common/Thumbnails/gribouille.png, 960 x 540, 12/11/2026) is a capture of the game, reduced by half; it replaces
 a thumbnail of unknown source.
 
+Sounds of "Cartes à gratter" (name code ScratchCard; gazeplay-games: data/scratchcard/sounds): made by
+make_scratchcard_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). The coin, the silver
+coating, its stars and question marks are drawn by the game; the pictures are the default images (OpenMoji) or those
+of the user. The thumbnail (gazeplay-core: data/common/Thumbnails/scratchcard.png, 960 x 540, 12/11/2026) is a
+capture of the game, reduced by half; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices
