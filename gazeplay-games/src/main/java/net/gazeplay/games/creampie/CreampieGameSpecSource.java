@@ -6,7 +6,8 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
 /**
- * Declares the game "Creampie" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * Declares "Tartes à la crème" (name code Creampie) to the menu: its name, thumbnail, categories, variants (see
+ * {@link CreamPieGameVariantGenerator}) and launcher (see
  * {@code GameSpecSource}).
  */
 public class CreampieGameSpecSource implements GameSpecSource {
@@ -20,6 +21,6 @@ public class CreampieGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.ACTION_REACTION)
                 .absolutePriority(2)
                 .build(),
-            new CreampieGameLauncher());
+            new CreamPieGameVariantGenerator(), new CreampieGameLauncher());
     }
 }

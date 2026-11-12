@@ -1,0 +1,20 @@
+# The principle
+Throw cream pies at the pictures! Look at a target: the hand at the bottom of the screen throws a pie at it.
+
+# How to play
+- A round target with a picture appears. Look at it: a ring fills around it. When it is full, the hand throws the pie. The length of the ring is that of the settings, also changed in the menu (Esc key).
+- With the variant "As soon as it is looked at", the pie goes at once, without a ring.
+- The pie flies on an arc and splats on the picture: lots of cream, drips and a cherry! The picture shakes, then fades, and another target appears elsewhere.
+- With the moving targets, the target glides slowly: follow it with your eyes.
+- At the start, nothing is thrown during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no mistakes: each pie thrown counts. As you chose, the game stops after 10, 20 or 30 pies ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The pictures: animals, or My images (the images of the shared folder, added in the settings, Folders, "My images"): photos of the family or of the school are even funnier.
+- The size of the targets: small, medium or large.
+- At the bottom, the throw: after a fixation, or as soon as the target is looked at.
+- At the bottom, the targets: still, or moving.
+- At the bottom, the end: 10, 20 or 30 pies, or without end.

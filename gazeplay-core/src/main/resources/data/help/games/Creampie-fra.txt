@@ -1,0 +1,20 @@
+# Le principe
+Lance des tartes à la crème sur les images ! Regarde une cible : la main en bas de l’écran lui envoie une tarte.
+
+# Comment jouer
+- Une cible ronde avec une image apparaît. Regarde-la : un anneau se remplit autour. Quand il est plein, la main lance la tarte. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Avec la variante « Dès qu’on regarde », la tarte part tout de suite, sans anneau.
+- La tarte vole en arc et s’écrase sur l’image : plein de crème, des coulures et une cerise ! L’image tremble, puis s’efface, et une autre cible apparaît ailleurs.
+- Avec les cibles qui bougent, la cible glisse doucement : suis-la du regard.
+- Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a ni vies ni erreurs : chaque tarte lancée compte. Selon ton choix, la partie s’arrête après 10, 20 ou 30 tartes (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Les images : des animaux, ou Mes images (les images du dossier commun, à ajouter dans les réglages, Dossiers, « Mes images ») : des photos de la famille ou de l’école, c’est encore plus drôle.
+- La taille des cibles : petites, moyennes ou grandes.
+- En bas, le lancer : après une fixation, ou dès qu’on regarde la cible.
+- En bas, les cibles : immobiles, ou qui bougent.
+- En bas, la fin : 10, 20 ou 30 tartes, ou sans fin.

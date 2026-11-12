@@ -71,6 +71,10 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 - **Cartes magiques** (`MagicCards`) : propositions validées, avec le **mode Magique** demandé en plus (anciennes grilles
   lues comme 4, 6, 6 et 9 cartes, Chercher, Animaux, sans fin), fait (fiche en bas), tests ciblés verts
   (`MagicCardsTest` 8, `GameHelpTest` 51), SpotBugs sans alerte ; **essayé et validé par le mainteneur**, commité.
+- **Tartes à la crème** (`Creampie`) : propositions validées, avec les deux variantes demandées en plus (dès qu’on
+  regarde, cibles qui bougent ; sans variante : Animaux, cibles moyennes, après une fixation, immobiles, sans fin),
+  fait (fiche en bas), tests ciblés verts (`CreamPieTest` 8, `GameHelpTest` 52), SpotBugs sans alerte ; **essayé et validé
+  par le mainteneur**, commité.
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -877,7 +881,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Ninja** (`Ninja`) | **4/11** : verger et 8 fruits dessinés par script (`make_ninja_images.py`), sons refaits (`make_ninja_sounds.py`), vignette refaite ; plus d'images par défaut | ✔ 4/11 (fruits, lame et moitiés, anneau, pastille) | ✔ 4/11 (règle du mainteneur : un fruit à suivre, couper dès qu'on touche ou après fixation, sans fin / 20 / 50, Lente / Normale / Rapide / Adaptative, Mes images) |
 | **Cartes à gratter** (`ScratchCard`) | **12/11** : pas d’image propre ; couche argentée, étoiles et points d’interrogation dessinés par le jeu ; animaux par défaut (OpenMoji) ou Mes images ; 2 sons faits par script (`make_scratchcard_sounds.py`) ; vignette faite d’une capture | ✔ 12/11 (carte aux proportions de l’image et aux coins arrondis, couche argentée brillante à motif, pièce dorée qui suit le regard et gratte sous elle, bord doux, pastille des cartes, étoile et « Bravo ! » en bas de la carte) | | ✔ 12/11 (règle du mainteneur : un vrai jeu à part de Blocs, une pièce déplacée par le regard, lissée, qui gratte tout le long du chemin, 90 % pour découvrir (essai du mainteneur : 60 % au début), petite / moyenne / grosse pièce, Animaux ou Mes images, fin après 3 / 5 / 10 cartes ou sans fin) — validé le 12/11 |
 | **Cartes magiques** (`MagicCards`) | **12/11** : le dos des cartes et `blue-card-game.png` (inutilisé), de source inconnue, et la croix `error.png` (Flaticon, lue seulement par ce jeu) retirés ; cartes dessinées par le jeu ; son du retournement fait par script (`make_magiccards_sounds.py`), sons des Gobelets, de Dés et du Jeu de l’oie ; vignette faite d’une capture | ✔ 12/11 (cartes arrondies au dos de la couleur principale, anneau autour de la carte, retournement animé, mauvaise carte grisée avec une croix, image qui grandit au milieu, étoile et « Bravo ! », pastilles de la consigne et des images) | ✔ 12/11 (règle du mainteneur : Chercher ou **Magique** (l’image montrée, les cartes retournées et mélangées deux par deux sur des arcs, puis à retrouver), 3 / 4 / 6 / 9 cartes, erreur comptée sans vies, mauvaise carte qui reste retournée, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin) — validé le 12/11 |
-| Blocks, Cream Pie | Utilisent les images par défaut (voir Memory) ; Cream Pie : 2 dessins, à confirmer | | |
+| **Tartes à la crème** (`Creampie`) | **12/11** : la main, la tarte (`gateau.png`) et le son `missile.mp3`, de source inconnue, remplacés par des dessins et 2 sons faits par script (`make_creampie_images.py`) ; crème dessinée par le jeu ; vignette faite d’une capture | ✔ 12/11 (cible ronde au cadre de la couleur principale, anneau, main en bas avec sa tarte, tarte qui vole en arc en tournant, crème avec coulures et cerise, image qui tremble, pastille des tartes) | ✔ 12/11 (règle du mainteneur : la tarte s’écrase vraiment, après une fixation ou dès qu’on regarde, cibles immobiles ou qui bougent, petites / moyennes / grandes, Animaux ou Mes images, fin après 10 / 20 / 30 tartes ou sans fin) — validé le 12/11 |
+| Blocks | Utilise les images par défaut (voir Memory) | | |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
 | Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
@@ -3727,3 +3732,41 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `GameHelpTest` avec le jeu ; SpotBugs sans alerte ; captures sans fenêtre regardées (après la première : arcs du
   mélange abaissés, ils passaient sous le bandeau, et la carte qui bouge passe devant les autres). **Essayé et validé
   par le mainteneur le 12/11/2026.**
+
+### Tartes à la crème (`Creampie`) — 12/11/2026
+
+- **État des lieux (code)** : une cible ronde avec une image (dossier commun, repli sur les animaux, sans variante)
+  apparaît au hasard dans les 80 % du haut ; après la fixation (ancien indicateur de `ProgressPortrait`), une main en
+  bas lance une tarte qui vole 2 s ; **pendant ces 2 s la cible grossit, fait 3 tours et disparaît** : la tarte arrive
+  quand la cible n’est plus là, on ne la voit jamais s’écraser ; puis une autre cible, sans fin. Main (`hand.png`),
+  tarte (`gateau.png`) et son (`missile.mp3`) de source inconnue ; tailles en pixels (main 100 px, tarte 40 à 200 px) ;
+  cible à la taille du réglage « taille des éléments » ; zone d’intérêt de la première cible jamais enregistrée ;
+  `removeEventHandler` sans effet, écouteurs de la taille de la fenêtre jamais retirés, `dispose()` qui ne retirait
+  rien ; animations non arrêtées par le menu ; ni variante, ni fin, ni aide, ni test ; vignette de source inconnue.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : la tarte s’écrase vraiment sur l’image (crème,
+  coulures, l’image tremble), la cible reste couverte un moment, s’efface, une autre apparaît ailleurs ; dessins et sons
+  faits par script ; Animaux ou Mes images ; petites, moyennes ou grandes cibles ; fin après 10, 20 ou 30 tartes ou sans
+  fin ; **en plus** : lancer dès qu’on regarde (pour les plus petits) et cibles qui bougent ; sans variante (ancien
+  raccourci) : Animaux, cibles moyennes, après une fixation, immobiles, sans fin.
+- **Fait** : le jeu réécrit (`CreamPie` ; `CreamPiePictures`, `CreamPieSize`, `CreamPieThrow`, `CreamPieMotion`,
+  `CreamPieEnd`, `CreamPieGameVariantGenerator` ; `Hand` et `Target` retirés ; `RandomPositionGenerator.
+  newRandomBoundedPositionCreamPie` n’est plus appelée). Tarte vue de dessus (pâte dorée cannelée, crème, cerise) et
+  main ouverte faites par script (`make_creampie_images.py`, contours d’abord puis la peau, pour qu’aucun trait ne coupe
+  la main) ; sons du lancer et de l’écrasement par le même script. Cible de rayon 9 %, 13 % ou 18 % de la hauteur de
+  l’écran, image recadrée en carré dans un disque, cadre de la couleur principale ; elle apparaît en 0,25 s, sous la
+  pastille « Tartes : n / total » et au-dessus de la main, à plus de 2,5 rayons de la précédente. Cibles qui bougent :
+  12 % de la hauteur par seconde, rebond sur les bords de leur espace, arrêt au lancer. Anneau de fixation qui suit la
+  cible ; « dès qu’on regarde » : lancer immédiat (aussi si le regard est déjà sur la cible quand elle devient
+  visable). Tarte en arc (courbe de Bézier) en 0,6 s, en tournant et en grandissant jusqu’à la taille de la cible ; la
+  main pousse vers le haut. Écrasement : crème (taches ombrées, 4 coulures, gouttes autour, cerise), l’image tremble
+  0,35 s, reste 1,1 s, s’efface en 0,35 s. Une boucle en temps réel (délai, Échap). Statistiques (« creampie », **format
+  inchangé**) : un but à atteindre par cible, atteint à l’écrasement ; zones d’intérêt gardées (`setTargetAOIList`), y
+  compris la première cible (position à l’apparition). Variantes `GroupedGameVariant` (96 : les images en haut, la
+  taille en boutons, en bas le lancer, le mouvement et la fin). 14 clés ajoutées ; aide, crédits, licence, inventaire,
+  vignette (capture de la tarte en vol).
+- **Vérifications** : `CreamPieTest` (8 tests : délai, lancer après la fixation seulement, tarte en arc qui grandit puis
+  crème sur l’image, but compté, zone d’intérêt fermée, cible suivante ailleurs, cibles qui bougent toujours dans leur
+  espace (sous le bandeau, au-dessus de la main), arrêt au lancer, « Bravo » après 10 tartes, tout retiré à la fin avec
+  les zones d’intérêt, variantes et ancien raccourci) ; `GameHelpTest` avec le jeu ; SpotBugs sans alerte ; captures
+  sans fenêtre regardées (après la première : crème moins couvrante et ombre plus foncée, vignette sur la tarte en vol).
+  **Essayé et validé par le mainteneur le 12/11/2026.**

@@ -234,6 +234,13 @@ under the license of GazePlay Learning (GPL-3.0-or-later); the other sounds are 
 the goose game. The thumbnail (gazeplay-core: data/common/Thumbnails/magicCard.png, 960 x 540) is a capture of the
 game, reduced by half; it replaces a thumbnail of unknown source.
 
+Pictures and sounds of "Tartes à la crème" (name code Creampie; gazeplay-games: data/creampie): the pie and the
+hand (images/pie.png, images/hand.png) and the two sounds (sounds/throw.wav, sounds/splat.wav) are made by
+make_creampie_images.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later); the cream on the
+picture is drawn by the game. They replace (12/11/2026) a hand, a pie (gateau.png) and a sound (missile.mp3) of
+unknown source. The thumbnail (gazeplay-core: data/common/Thumbnails/creamPie.png, 960 x 540) is a capture of the
+game, reduced by half; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices
