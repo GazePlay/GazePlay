@@ -1,0 +1,19 @@
+# The principle
+The goose game: each player in turn rolls two dice and moves their Biboule along a path in a spiral. The first one on square 63 wins.
+
+# How to play
+- It is your turn when your Biboule is at the top left with "You" (or your color with several players). Look at the round "Roll" button, at the bottom right: a ring fills, then the dice roll. Its length is that of the settings, also changed in the menu (Esc key).
+- The Biboule moves by the total of the two dice. The computer rolls its dice by itself.
+- Square 63 must be reached exactly: if the throw goes further, the Biboule moves back by the squares too many.
+- A goose (green squares): the Biboule moves again by the same number.
+- Classic rules only: the bridge (square 7) leads to square 32; the inn (19) makes it sleep 2 turns; the well (31) and the prison (52) keep the Biboule until another one comes or passes by; the arrow (58) sends it back to the start. If all the Biboules wait, they are all freed.
+- At the top, a sentence tells what happens. At the start, nothing rolls during the delay of the settings (Games, "Delay before a selection is possible when a game starts").
+- The speed of the Biboules follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
+
+# How to win
+The first Biboule on square 63 wins: "Bravo" when it is a person, then the statistics.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- Who plays: you against 1, 2 or 3 computers, or 2, 3 or 4 players taking turns with the eye tracker or the mouse.
+- At the bottom, the rules: classic (all the special squares) or simple (the geese only, for the youngest).

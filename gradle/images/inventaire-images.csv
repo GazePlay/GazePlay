@@ -79,7 +79,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/flowerOfNumbers.png,oui,
 gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,source inconnue,,2021-06-10,Iluvrog,add thumbnail picture
 gazeplay-core/src/main/resources/data/common/Thumbnails/frogsrace.png,oui,source inconnue,,2019-03-16,sannara,Added menu photo for frogRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/gazeRace.png,oui,libre,"faite des images du jeu par make_gazerace_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
-gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,source inconnue,,2019-06-25,Teo Blachere,"Message translation, turn indicator, thumbnail, and game listing"
+gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,libre,"capture du jeu (12/11/2026) ; plateau dessiné pour le projet, Biboules du Tir, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
 gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
@@ -402,7 +402,6 @@ gazeplay-games/src/main/resources/data/common/default/images/noBackGround/snake.
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/turtle.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/creampie/images/gateau.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/creampie/images/hand.png,oui,source inconnue,,2017-02-08,schwab,first commit
-gazeplay-games/src/main/resources/data/dice/roll.png,oui,source inconnue,"encore lu par le Jeu de l'oie (bouton du lancer) ; retiré de Dés le 12/11/2026",2019-05-22,Teo Blachere,"Dice roll, done"
 gazeplay-games/src/main/resources/data/divisor/images/Background.png,oui,libre,"dessin du projet (Photoshop, document créé en 2018, documents insérés tous créés dans Photoshop de janvier à mars 2018), GPL-3.0-or-later ; gardé à la revue de Diviseur du 12/11/2026",2018-04-12,kuhlkrein,Modifiying lapins and piano stats when look at tiles
 gazeplay-games/src/main/resources/data/divisor/rabbit/images/1.png,oui,libre,"dessin du projet (Photoshop, document créé en 2018, documents insérés tous créés dans Photoshop de janvier à mars 2018), GPL-3.0-or-later ; gardé à la revue de Diviseur du 12/11/2026",2018-03-24,kuhlkrein,modifications for version 1.3 (adding ideas for alternative version of divisor with rabbits)
 gazeplay-games/src/main/resources/data/divisor/rabbit/images/2.png,oui,libre,"dessin du projet (Photoshop, document créé en 2018, documents insérés tous créés dans Photoshop de janvier à mars 2018), GPL-3.0-or-later ; gardé à la revue de Diviseur du 12/11/2026",2018-03-24,kuhlkrein,modifications for version 1.3 (adding ideas for alternative version of divisor with rabbits)
@@ -516,7 +515,7 @@ gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VeloCorrectSec
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VoitureFalseFirst.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/CeriseFalseSecond.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/OursCorrectFirst.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
-gazeplay-games/src/main/resources/data/goosegame/gooseboard.png,oui,source inconnue,,2019-06-20,Teo Blachere,Changed goose game to a circular board
+gazeplay-games/src/main/resources/data/goosegame/gooseboard.png,oui,libre,"dessiné pour le projet (gradle/images/make_goose_images.py, sur les centres de positions.json), GPL-3.0-or-later ; remplace un plateau de source inconnue (12/11/2026)",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
 gazeplay-games/src/main/resources/data/horses/biboules/BLUE.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/GREEN.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/RED.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash

@@ -195,9 +195,17 @@ by "Dés" (Dice), the horses and the goose game: the texture of the six faces is
 sound of the roll made by make_dice_sounds.py (this folder), under the license of GazePlay Learning
 (GPL-3.0-or-later). They replace (12/11/2026) a texture and a sound of unknown source. The sounds of "Dés"
 (gazeplay-games: data/dice/sounds/right.wav, wrong.wav) are made by the same script; the button picture roll.png
-(unknown source) is no longer read by "Dés" (the button is drawn by the game), but still by the goose game. The thumbnail (gazeplay-core:
+(unknown source) is removed, the buttons of "Dés" and of the goose game being drawn by the games. The thumbnail (gazeplay-core:
 data/common/Thumbnails/dice.png, 960 x 540) is made of the faces by make_dice_images.py: the 3D die of the game is
 not drawn by the captures without window.
+
+Board and sounds of the goose game "Jeu de l'oie" (name code GooseGame; gazeplay-games: data/goosegame): the board
+(gooseboard.png, same size as before, on the centers of the squares of positions.json) is drawn by make_goose_images.py
+and the sounds (sounds/mvmt0-5.wav, goose.wav, trap.wav, win.wav) made by make_goose_sounds.py (this folder), under the
+license of GazePlay Learning (GPL-3.0-or-later). They replace (12/11/2026) a board and six sounds of unknown source. The
+pawns are the Biboules of the shooting game (data/shooter); the former Biboules (data/biboulejump/biboules) are kept for
+the bottles game. The thumbnail (gazeplay-core: data/common/Thumbnails/goosegame.png, 960 x 540) is a capture of the
+game, reduced by half.
 
 Images of "Diviseur" (name code Divisor; gazeplay-games: data/divisor): the 7 rabbits (rabbit/images/1.png to 7.png)
 and the meadow (images/Background.png) are drawings of the project, kept (12/11/2026): drawn in Photoshop from a new

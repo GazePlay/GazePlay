@@ -194,6 +194,9 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Dé des jeux « Dés », « Petits chevaux » et « Jeu de l'oie » (data/common/images/dice.png,
   data/common/sounds/diceRollSound.wav) et sons de « Dés » (data/dice) : faits pour GazePlay Learning
   (gradle/images/make_dice_images.py, make_dice_sounds.py), sous la licence du projet.
+- Plateau et sons du « Jeu de l'oie » (data/goosegame) : faits pour GazePlay Learning
+  (gradle/images/make_goose_images.py, make_goose_sounds.py), sous la licence du projet ; les Biboules sont celles du
+  jeu « Tir ».
 - Images du jeu « Diviseur » (data/divisor) : lapins et prairie, dessins du projet (2018), sous la licence du
   projet ; les sons sont ceux du jeu « Bulles ».
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning

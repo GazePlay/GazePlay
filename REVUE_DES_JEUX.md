@@ -876,7 +876,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
 | **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
 | **Dés** (`Dice`) | **12/11** : `roll.png` plus lu (bouton dessiné par le jeu ; encore lu par le Jeu de l’oie) ; texture des faces du dé et son du lancer redessinés par script (`make_dice_images.py`, `make_dice_sounds.py`, communs avec les Petits chevaux et le Jeu de l’oie), 2 sons faits par script ; vignette composée par le script | ✔ 12/11 (tapis de jeu vert, dés 3D avec une ombre, bouton rond « Lancer », total en grand, 3 grandes cartes, coche ou croix, anneau partout, vies en cœurs) | ✔ 12/11 (règle du mainteneur : deux modes, Compter les points (1 / 2 / 3 dés, mauvais totaux proches, chercher jusqu’à trouver ou 3 vies, fin après 5 / 10 / 20 ou sans fin) et Lancer les dés (1 à 6, un dé seul relancé par une fixation) ; rien ne se relance pendant un lancer) — validé le 12/11 |
-| Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
+| **Jeu de l’oie** (`GooseGame`) | **12/11** : plateau redessiné par script sur les mêmes centres de cases (`make_goose_images.py` : chemin en spirale, cases rondes numérotées, oies, pont, auberge, puits, prison, flèche du retour, étoile de la fin, drapeau du départ) ; 6 sons refaits et 3 ajoutés (`make_goose_sounds.py`) ; `roll.png` retiré ; Biboules du Tir sur un socle ; vignette faite d’une capture | ✔ 12/11 (bandeau du tour et des messages, une phrase à la fois, socle de la couleur du pion, bouton rond « Lancer », dés 3D sur une carte au milieu, anneau) | ✔ 12/11 (règle du mainteneur : contre 1 à 3 ordinateurs ou 2 à 4 joueurs, règles classiques ou simples (les oies seulement), tous libérés si tous attendent, « Bravo » si une personne gagne puis les statistiques) — validé le 12/11 |
+| Dot To Dot, Ladder | À confirmer : 1 image chacun | | |
 | **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | Scribble (`Scribble`), Letters (`Letters`) | Pas d'image propre relevée | | |
@@ -3442,7 +3443,7 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   elle n’affiche que les rangées du mode choisi qui ont au moins deux valeurs (en mode Lancer, ni fin ni erreurs), et
   la variante lancée garde la valeur unique des rangées cachées ; aucun changement pour les autres jeux (même
   disposition, tests existants verts). Texture des faces (`common/images/dice.png`) et son du lancer redessinés par
-  script, 2 sons du jeu ; `roll.png` plus lu par Dés (le Jeu de l’oie le lit encore : retiré à sa revue) ; clé « Choose number of dices » retirée ; 22 traductions, aide, crédits,
+  script, 2 sons du jeu ; `roll.png` plus lu par Dés (le Jeu de l’oie le lisait encore : retiré à sa revue, le même jour) ; clé « Choose number of dices » retirée ; 22 traductions, aide, crédits,
   inventaire. Vignette composée par `make_dice_images.py` : **les captures sans fenêtre (Monocle) ne dessinent pas
   les dés 3D** (fait constaté ; ils s’affichent dans une vraie fenêtre, comme aux Petits chevaux).
 - **Vérifications** : `DiceTest` (14 tests : mauvais totaux proches pour 1 à 3 dés, lancer après la fixation des
@@ -3452,3 +3453,50 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   ancienne variante) ; `GameVariantDialogTest.shouldShowOnlyTheRowsOfTheChosenGroup` ; `GameHelpTest` avec le jeu ;
   captures sans fenêtre regardées (tapis, bouton, anneau, cartes, total ; sans les dés 3D). **Essayé et validé par le
   mainteneur le 12/11/2026.**
+
+### Jeu de l’oie (`GooseGame`) — 12/11/2026
+
+- **État des lieux (code)** : plateau en spirale de 63 cases, 2 à 5 personnes à tour de rôle (pas d’ordinateur), 2 dés
+  3D lancés par une fixation, pions Biboules (les anciennes de Biboule Jump) ; oies (rejouer le même nombre), pont
+  7 → 32, auberge 19 (2 tours), puits 31 et prison 52 (jusqu’au passage d’un autre pion), tête de mort 58 (départ),
+  63 exactement. **La partie se bloquait après une victoire** (`winner` → `dispose()`, ni statistiques ni tour suivant) ;
+  **tous les pions bloqués : `launch()` rappelé, tout ajouté une deuxième fois** ; la somme des dés ajoutée aux buts
+  atteints, aucun but à atteindre ; messages « Joueur 2 » empilés (4,3 s chacun) dans la police du système, 3 s
+  d’animation à chaque tour ; rien d’arrêté par le menu, pas de délai ; décalage des pions en pixels fixes ; deux copies
+  du jeu ; `dispose()` retirait « le dernier élément » ; « Choose number of players » en anglais. Plateau, vignette,
+  6 sons et `roll.png` de source inconnue (2019).
+- **Règle du mainteneur (12/11/2026, propositions validées)** : contre 1 à 3 ordinateurs ou 2 à 4 joueurs, comme aux
+  Petits chevaux ; règles classiques (les cases spéciales actuelles, tous libérés si tous attendent) ou simples (les oies
+  et la fin exacte) ; « Bravo » si une personne gagne, puis les statistiques ; un message à la fois, avec la couleur du
+  pion ; plateau redessiné par script sur les mêmes positions, flèche du retour à la place de la tête de mort ; Biboules
+  du Tir ; bouton dessiné ; sons refaits ; arrêt pendant le menu, délai, anneau.
+- **Fait** : le jeu réécrit (`GooseGame`, classe interne `Pawn` ; `GooseBoard` (les cases et le chemin, avec le recul
+  après 63), `GooseRules`, `GoosePlayers` ; retirés : `Square` et ses 6 sous-classes, `Pawn`, `GooseGameStats`). Une boucle
+  en temps réel : tours, sauts de case en case (0,28 s, en arc, à la vitesse d’animation des réglages), saut du pont et
+  du retour, ordinateur qui lance après 1 s, durée du lancer comptée par le jeu, pause pendant le menu. Le pion qui arrive
+  sur le puits ou la prison, ou qui y passe, libère celui qui attendait (règle classique). Bandeau en haut : la Biboule du
+  tour et son nom (« Toi » contre l’ordinateur), et une seule phrase (« À toi : lance les dés ! », « Une oie ! Bleu avance
+  encore de 4 »…). Pions sur un socle blanc cerclé de leur couleur, plus petits et autour du centre quand ils partagent
+  une case. Fin : « Tu as gagné ! », « L’ordinateur a gagné » ou « Bleu a gagné ! » 2,4 s, puis « Bravo » (une personne)
+  et les statistiques. Statistiques (« goosegame », format inchangé) : un but à atteindre par tour d’une personne, un but
+  atteint par son lancer (avant : la somme des dés). Variantes `GroupedGameVariant` (12 : qui joue en boutons, les règles
+  en bas) ; une ancienne variante « IntGameVariant:n » donne n personnes (4 au plus), règles classiques. `roll.png`
+  retiré ; 12 anciennes clés de traduction retirées, 31 ajoutées ; aide, crédits, inventaire, vignette (capture). Les
+  anciennes Biboules (`data/biboulejump/biboules`) restent pour les Bouteilles.
+- **Vérifications** : `GooseGameTest` (13 tests : chemin et recul après 63, cases des deux règles, lancer après la
+  fixation des réglages puis tour suivant, oies en chaîne (1 + 4 → 17), pont et retour au départ, auberge (2 tours
+  passés), puits libéré au passage d’un autre pion, tous libérés quand tous attendent, pièges ignorés en règles simples,
+  63 exactement puis « Bravo », l’ordinateur lance seul et gagne sans « Bravo », tout retiré à la fin, variantes et
+  ancienne variante) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées (plateau, pions sur leur socle,
+  bandeau, bouton et anneau ; sans les dés 3D). `build` complet local arrêté faute de mémoire (12/11) : d’abord un
+  `OutOfMemoryError` des tests de `gazeplay-games` (4 Go), d’où **une seule texture de dé pour tous les dés**
+  (`DiceRoller` la chargeait deux fois par dé, environ 13 Mo chaque fois) et le plateau du Jeu de l’oie chargé une
+  fois ; puis le PC lui-même à court de mémoire. **Décision du mainteneur (12/11/2026)** : en local, seulement les tests
+  ciblés de ce qu’on vient de faire ; les tests généraux sur GitHub une fois poussé. Tests ciblés verts (Jeu de l’oie,
+  Dés, Petits chevaux, `DiceRollerTest`, `gazeplay-games-commons`) ; `allGamesTest` du Jeu de l’oie, des Petits chevaux
+  et de Dés : 3 lancements chacun, 0 échec.
+- **Essai du mainteneur (12/11/2026)** : le nouveau dé (texture, son) va bien dans les Petits chevaux et le Jeu de
+  l’oie ; **la Biboule n’était pas centrée sur son socle**. Cause : le corps d’une Biboule est à 56 % de la hauteur de
+  son image (les ailes au-dessus ; mesuré sur les 4 images), le calcul le mettait plus haut. **Fait** : le centre du corps
+  sur le centre du socle ; test `shouldCenterTheBodyOfTheBibouleOnItsBase` (14 tests) ; vignette refaite. **Validé par
+  le mainteneur le 12/11/2026.**

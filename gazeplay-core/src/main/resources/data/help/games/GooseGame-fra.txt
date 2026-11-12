@@ -1,0 +1,19 @@
+# Le principe
+Le jeu de l’oie : chaque joueur à son tour lance deux dés et avance sa Biboule sur un chemin en spirale. Le premier arrivé sur la case 63 gagne.
+
+# Comment jouer
+- C’est à toi quand ta Biboule est en haut à gauche avec « Toi » (ou ta couleur à plusieurs). Regarde le bouton rond « Lancer », en bas à droite : un anneau se remplit, puis les dés roulent. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- La Biboule avance d’autant de cases que les deux dés. L’ordinateur lance ses dés tout seul.
+- Il faut arriver pile sur la case 63 : si le lancer va plus loin, la Biboule recule des cases en trop.
+- Une oie (cases vertes) : la Biboule avance encore du même nombre.
+- Règles classiques seulement : le pont (case 7) mène à la case 32 ; l’auberge (19) fait dormir 2 tours ; le puits (31) et la prison (52) gardent la Biboule jusqu’à ce qu’une autre arrive ou passe ; la flèche (58) renvoie au départ. Si toutes les Biboules attendent, elles sont toutes libérées.
+- En haut, une phrase dit ce qui se passe. Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »).
+- La vitesse des Biboules suit la vitesse d’animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+La première Biboule sur la case 63 gagne : « Bravo » si c’est une personne, puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Qui joue : toi contre 1, 2 ou 3 ordinateurs, ou 2, 3 ou 4 joueurs qui se passent l’oculomètre ou la souris.
+- En bas, les règles : classiques (toutes les cases spéciales) ou simples (les oies seulement, pour les plus jeunes).

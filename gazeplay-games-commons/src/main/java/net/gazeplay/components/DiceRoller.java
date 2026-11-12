@@ -24,9 +24,22 @@ import java.util.ArrayList;
 @Slf4j
 public class DiceRoller extends MeshView {
 
+    /**
+     * The texture of the six faces, loaded once for all the dice (12/11/2026: each die loaded it twice, about 13 MB each
+     * time, which took the memory of the tests).
+     */
+    private static Image sharedTexture;
+
     private final ReplayablePseudoRandom random;
     private final ArrayList<Rotate> rotations;
     private final SoundManager soundManager;
+
+    private static synchronized Image texture() {
+        if (sharedTexture == null) {
+            sharedTexture = new Image("data/common/images/dice.png");
+        }
+        return sharedTexture;
+    }
 
     /**
      * @param dieWidth        half of the side of the die
@@ -65,9 +78,10 @@ public class DiceRoller extends MeshView {
         setMesh(mesh);
 
         final PhongMaterial mat = new PhongMaterial();
-        mat.setSelfIlluminationMap(new Image("data/common/images/dice.png"));
+        final Image texture = texture();
+        mat.setSelfIlluminationMap(texture);
         mat.setDiffuseColor(Color.BLACK);
-        mat.setSpecularMap(new Image("data/common/images/dice.png"));
+        mat.setSpecularMap(texture);
         setMaterial(mat);
 
         rotations.add(new Rotate(0, Rotate.X_AXIS));
