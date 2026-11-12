@@ -58,7 +58,10 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   voix gardées pour l’instant, issue #1741 pour les remplacer.
 - **Point par point** (`DotToDot`) : fait (fiche en bas), validé par le mainteneur, commité. **Groupe 8 terminé**
   (Apprends les Maths, Diviseur avec Lapins, Dés, Jeu de l’oie, Identifier les lettres, Point par point), poussé à la
-  demande du mainteneur (on pousse à la fin d’un groupe ou quand il part).
+  demande du mainteneur (on pousse à la fin d’un groupe ou quand il part). **CI** (run `43226700659`) : **verte sur les
+  7 jobs** ; 1 166 tests sous Java 25 (rapports de la CI : 192 + 293 + 607 + 53 + 6 + 15), 0 échec, 2 ignorés.
+- **Groupe 9 commencé : Gribouille** (`Scribble`) : propositions validées par le mainteneur, fait (fiche en bas), tests
+  ciblés verts (`ScribbleTest` 11, `GameHelpTest` 49, `ConfigurationContextTest` 26) ; **essayé et validé par le mainteneur**, commité.
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -895,7 +898,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | **Identifier les lettres** (`Letters`) | **12/11** : les 26 images de lettres inutilisées retirées ; cartes et lettres dessinées par le jeu ; vignette faite d’une capture ; **208 voix de source inconnue gardées en attendant** (format de services de synthèse vocale, hypothèse) | ✔ 12/11 (bandeau « Trouve la lettre » et la lettre en grand, haut-parleur pour réécouter, cartes arrondies aux couleurs douces, minuscules en Andika, anneau, carte fausse qui tremble en rouge, image découverte) | ✔ 12/11 (règle du mainteneur : un tiers des cartes de la lettre, Facile 6 / Normal 12 / Difficile 20 cartes avec les lettres qui se ressemblent, capitales / minuscules / les deux, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin, erreurs comptées) — validé le 12/11 ; voix : issue #1741 |
-| Scribble (`Scribble`) | Pas d'image propre relevée | | |
+| **Gribouille** (`Scribble`) | **12/11** : pas d'image propre ; feuille, boutons, gomme et traits dessinés par le jeu (icônes « add » et « save » des menus) ; vignette faite d’une capture | ✔ 12/11 (feuille claire ou tableau noir aux coins arrondis, barre d’outils de boutons ronds à droite, bouton choisi entouré, anneau, trait lissé aux bouts ronds, message « Dessin gardé ») | ✔ 12/11 (règle du mainteneur : dessiner au regard, crayon levé hors de la feuille, 8 couleurs ou arc-en-ciel, gomme, 3 épaisseurs, « Nouvelle feuille », « Garder mon dessin » dans `dessins`, un but par feuille dessinée, sans fin) — validé le 12/11 |
 | GazePlay Eval, GazePlay Eval Test | Pas d'image propre ; le dossier `gazeplayEvalTest` (4 images des anciens jeux BERA) : vérifier s'il sert encore | | |
 
 ## Hors jeux
@@ -3595,3 +3598,39 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   autre, aide en Facile seulement, progressif qui monte après 3 dessins sans erreur, proportions gardées en 4:3, délai,
   « Bravo » après 3 dessins, tout retiré à la fin, variantes et anciennes variantes) ; `GameHelpTest` avec le jeu ;
   captures sans fenêtre regardées. **Essayé et validé par le mainteneur le 12/11/2026. Le groupe 8 est terminé.**
+
+### Gribouille (`Scribble`) — 12/11/2026
+
+- **État des lieux (code)** : un cadre noir des deux tiers de la fenêtre (dimensionné sur toute la fenêtre, pas sur la
+  zone de jeu), dans lequel le regard ou la souris trace des segments : **un point de regard sur cinq**, sans lissage,
+  d’où un trait en ligne brisée ; la couleur changeait à chaque entrée dans le cadre (arc-en-ciel), et **chaque entrée
+  comptait un but** ; rien d’autre à faire : ni couleur à choisir, ni gomme, ni épaisseur, ni nouvelle feuille, ni moyen
+  de garder le dessin ; pas de délai, rien d’arrêté par le menu ; ni variante, ni aide, ni test ; vignette de source
+  inconnue. Classes `DrawApplication`, `DrawBuilder` et 3 « pickers » de couleur (dont un aléatoire jamais utilisé).
+- **Règle du mainteneur (12/11/2026, propositions validées)** : une feuille claire qui remplit la zone de jeu ; une
+  barre d’outils de boutons ronds choisis par fixation (8 couleurs, gomme, 3 épaisseurs, « Nouvelle feuille », « Garder
+  mon dessin ») ; le crayon se lève quand le regard quitte la feuille ; trait lissé avec tous les points du regard ;
+  variantes Palette ou Arc-en-ciel, feuille blanche ou tableau noir ; un but par feuille finie ; dessins gardés dans un
+  dossier `dessins` du dossier GazePlay, avec un réglage ; les règles habituelles (Échap, délai, anneau, aide, tests,
+  vignette).
+- **Fait** : le jeu réécrit (`Scribble`, classes internes `Pen` et `Tool` ; `ScribbleMode`, `ScribbleBackground`,
+  `ScribbleGameVariantGenerator` ; `DrawApplication`, `DrawBuilder`, `ColorPicker`, `RainbowColorPicker` et
+  `RandomColorPicker` retirés). Un `Canvas` aux dimensions entières (l’image gardée a la taille de la feuille), coins
+  arrondis ; barre d’outils de 2 colonnes à droite, centrée en hauteur (7 rangées en Palette, 3 en Arc-en-ciel). Lissage
+  par moyenne mobile exponentielle, à part pour le regard (0,35) et la souris (0,8) ; nouveau trait après 0,35 s sans
+  point (un clignement) ou à la sortie de la feuille ; la gomme peint la couleur du papier, deux fois plus large ; en
+  Arc-en-ciel, la teinte avance avec la distance tracée. Une boucle en temps réel (fixation lue à chaque pas, délai des
+  réglages, Échap). « Garder mon dessin » : PNG `gribouille_aaaa-mm-jj_hh-mm-ss.png` (suffixe `-2`, `-3`… si le nom
+  existe) dans `Documents\GazePlay_Learning\dessins` (`GazePlayDirectories.getDrawingsDirectory`), écrit par ImageIO
+  sans `javafx.swing` ; son de victoire du Jeu de l’oie et message 2,5 s. Réglages, Dossiers : ligne « Mes dessins
+  (Gribouille) » avec un bouton « voir dossier » (mode Jeux seulement). Statistiques (« Scribble », format inchangé) :
+  un but à atteindre par feuille, atteint une fois si elle a été dessinée (nouvelle feuille ou dessin gardé).
+  Variantes `GroupedGameVariant` (4 : la feuille en boutons, en bas le dessin) ; sans variante (ancien raccourci) :
+  Palette sur feuille blanche. 8 clés ajoutées ; aide, inventaire, vignette (capture d’une maison au soleil).
+- **Vérifications** : `ScribbleTest` (11 tests : délai, trait lissé de la couleur de l’encre, crayon levé après un
+  silence, regard et souris séparés, outil choisi après la fixation et pas si le regard part, gomme sur tableau noir,
+  couleur qui change en Arc-en-ciel, une feuille dessinée comptée une fois, dessin gardé dans `dessins` (nom, taille,
+  couleurs, message) puis effacé, tout retiré à la fin, variantes) ; `GameHelpTest` avec le jeu ;
+  `ConfigurationContextTest` (ligne « Mes dessins » en mode Jeux, absente en mode Évaluations) ; captures sans fenêtre
+  regardées (barre d’outils centrée en Arc-en-ciel après la première capture) ; SpotBugs sans alerte (2 corrigées : division
+  entière et test d’imparité). **Essayé et validé par le mainteneur le 12/11/2026**, commité.

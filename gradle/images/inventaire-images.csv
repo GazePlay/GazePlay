@@ -80,7 +80,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,source in
 gazeplay-core/src/main/resources/data/common/Thumbnails/frogsrace.png,oui,source inconnue,,2019-03-16,sannara,Added menu photo for frogRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/gazeRace.png,oui,libre,"faite des images du jeu par make_gazerace_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,libre,"capture du jeu (12/11/2026) ; plateau dessiné pour le projet, Biboules du Tir, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
-gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
+gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,libre,"capture du jeu (12/11/2026) ; tout dessiné par le jeu, icônes Material Symbols (Apache-2.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Gribouille
 gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push

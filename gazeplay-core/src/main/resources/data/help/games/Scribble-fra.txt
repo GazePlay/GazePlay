@@ -1,0 +1,19 @@
+# Le principe
+Dessine avec tes yeux ! Ton regard est un crayon : là où tu regardes sur la feuille, un trait se dessine.
+
+# Comment jouer
+- Regarde la feuille : le trait suit ton regard. Il est lissé, pour que les petits tremblements ne se voient pas.
+- Le crayon se lève quand ton regard quitte la feuille, ou quand l’oculomètre te perd un instant (un clignement). Il se pose de nouveau là où tu regardes.
+- À droite, les boutons ronds se choisissent en les regardant : un anneau se remplit. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Les couleurs (en Palette), la gomme, trois épaisseurs de trait, « Nouvelle feuille » (le plus) et « Garder mon dessin » (la disquette). Le bouton choisi est entouré.
+- « Garder mon dessin » enregistre une image dans le dossier des dessins de GazePlay (Documents, GazePlay_Learning, dessins). Il s’ouvre depuis les réglages, Dossiers, « Mes dessins (Gribouille) ».
+- Avec la souris, le trait suit le pointeur, sans cliquer.
+- Au début, rien ne se dessine ni ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a rien à gagner ni à perdre : chaque feuille dessinée compte dans les statistiques. La partie est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- La feuille : une feuille blanche ou un tableau noir.
+- En bas, le dessin. Palette : tu choisis la couleur parmi 8. Arc-en-ciel : la couleur change toute seule le long du trait.

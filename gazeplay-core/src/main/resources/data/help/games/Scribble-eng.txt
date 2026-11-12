@@ -1,0 +1,19 @@
+# The principle
+Draw with your eyes! Your gaze is a pencil: where you look on the sheet, a line is drawn.
+
+# How to play
+- Look at the sheet: the line follows your gaze. It is smoothed, so that small trembling does not show.
+- The pencil lifts when your gaze leaves the sheet, or when the eye tracker loses you for a moment (a blink). It goes down again where you look.
+- On the right, the round buttons are chosen by looking at them: a ring fills. The length of the ring is that of the settings, also changed in the menu (Esc key).
+- The colors (Palette), the eraser, three widths of line, "New sheet" (the plus) and "Keep my drawing" (the floppy disk). The button chosen is framed.
+- "Keep my drawing" saves a picture in the drawings folder of GazePlay (Documents, GazePlay_Learning, dessins). It opens from the settings, Folders, "My drawings (Scribble)".
+- With the mouse, the line follows the pointer, without clicking.
+- At the start, nothing is drawn nor chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There is nothing to win or lose: each sheet drawn counts in the statistics. The game has no end (leave by the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The sheet: a white sheet or a blackboard.
+- At the bottom, the drawing. Palette: you choose the color among 8. Rainbow: the color changes by itself along the line.

@@ -153,7 +153,7 @@ class ConfigurationContextTest {
                 sections.getLast().groups().stream().map(SettingsPage.Group::titleKey).toList());
             for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation",
                 ConfigurationContext.USER_IMAGES_KEY, ConfigurationContext.USER_COLORING_KEY,
-                "ResultDir", "EnableAreaOfInterest", "EnableVideoRecording")) {
+                ConfigurationContext.DRAWINGS_KEY, "ResultDir", "EnableAreaOfInterest", "EnableVideoRecording")) {
                 assertFalse(has(sections, gamesOnly), gamesOnly);
             }
         }).get();
@@ -196,6 +196,8 @@ class ConfigurationContextTest {
             // it; no more files folder nor settings by game
             assertInstanceOf(Button.class, control(sections, ConfigurationContext.USER_IMAGES_KEY));
             assertInstanceOf(Button.class, control(sections, ConfigurationContext.USER_COLORING_KEY));
+            // The drawings kept in "Gribouille" (12/11/2026): a button opening their folder
+            assertInstanceOf(Button.class, control(sections, ConfigurationContext.DRAWINGS_KEY));
             assertFalse(has(sections, "FileDir"));
             assertFalse(has(sections, "Coloring"));
             assertInstanceOf(HBox.class, control(sections, "MusicFolder"));

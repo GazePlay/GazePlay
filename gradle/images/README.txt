@@ -214,6 +214,12 @@ background.png (unknown source, read by no code) is removed. The sounds are thos
 dot) and of the goose game (the drawing finished). The thumbnail (gazeplay-core: data/common/Thumbnails/dottodot.png,
 960 x 540) is a capture of the game, reduced by half.
 
+"Gribouille" (name code Scribble; gazeplay-games: games/draw) has no image of its own: the sheet, the buttons, the
+eraser and the lines are drawn by the game, the icons of the buttons are the Material Symbols of the menus
+(Apache-2.0), the sound of a drawing kept is that of the goose game. The thumbnail (gazeplay-core:
+data/common/Thumbnails/gribouille.png, 960 x 540, 12/11/2026) is a capture of the game, reduced by half; it replaces
+a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

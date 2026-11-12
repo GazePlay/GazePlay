@@ -160,6 +160,19 @@ public class GazePlayDirectories {
     }
 
     /**
+     * Name of the folder of the drawings made in "Gribouille" and kept by the user, in the GazePlay folder.
+     */
+    public static final String DRAWINGS_FOLDER = "dessins";
+
+    /**
+     * @return the folder of the drawings kept in "Gribouille" (maintainer's decision of 12/11/2026), next to the images
+     * of the user; created if missing
+     */
+    public static File getDrawingsDirectory() {
+        return createdFolder(new File(getGazePlayFolder(), DRAWINGS_FOLDER));
+    }
+
+    /**
      * Creates a folder if missing (no log: this class is used by the launcher before the logs are set up; a folder
      * that cannot be created shows as empty).
      */

@@ -239,6 +239,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
             .add(USER_IMAGES_KEY, buildUserImagesButton(translator, USER_IMAGES_KEY, UserImagesVariant.IMAGES))
             .add(USER_COLORING_KEY, buildUserImagesButton(translator, USER_COLORING_KEY, UserImagesVariant.COLORING))
+            // The drawings kept in "Gribouille" (12/11/2026)
+            .add(DRAWINGS_KEY, buildOpenFolderButton(translator, GazePlayDirectories::getDrawingsDirectory))
             .add("MusicFolder", buildDirectoryChooser(config, this, translator, DirectoryType.MUSIC))
             .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT))
             .build();
@@ -250,6 +252,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     static final String USER_IMAGES_KEY = "UserImagesFolder";
 
     static final String USER_COLORING_KEY = "UserColoringFolder";
+
+    static final String DRAWINGS_KEY = "DrawingsFolder";
+
+    /**
+     * @return the button opening a folder of GazePlay in the file manager of the system
+     */
+    private Node buildOpenFolderButton(final Translator translator, final java.util.function.Supplier<File> folder) {
+        final Button button = new Button(translator.translate("SeeFolder"));
+        button.setOnAction(event -> SystemFileManager.openFolder(folder.get()));
+        return button;
+    }
 
     /**
      * @return the button opening the window of the images of the user (or of the drawings to color)
