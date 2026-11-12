@@ -1,0 +1,20 @@
+# Le principe
+Relie les points dans l’ordre, 1, 2, 3… ou A, B, C… Un dessin apparaît : devine ce que c’est !
+
+# Comment jouer
+- Commence par le premier point (1 ou A). Regarde-le : un anneau se remplit, le point se colore. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Regarde ensuite le point suivant : un trait le relie au précédent.
+- Un mauvais point tremble en rouge et compte une erreur. Les points déjà reliés ne comptent plus.
+- Après le dernier point, le trait vers le premier se trace tout seul, le dessin se colore et son nom s’affiche (« C’est un poisson ! »). Puis un autre dessin arrive.
+- En Facile, le point suivant grossit doucement pour t’aider.
+- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a ni vies ni pénalité : une erreur compte seulement dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 dessins (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le niveau. Facile : 4 à 7 points, le point suivant aide. Normal : 8 à 12 points. Difficile : 13 à 20 points. Progressif : commence en Facile et passe au niveau suivant après 3 dessins de suite sans erreur.
+- En bas, les points : des nombres (1, 2, 3…) ou des lettres (A, B, C…).
+- En bas, la fin : 3, 5 ou 10 dessins, ou sans fin.
+- 24 dessins : un cerf-volant, une maison, un poisson, une étoile, un chat, une fusée, un château, un papillon, un bonhomme de neige…

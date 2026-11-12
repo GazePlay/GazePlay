@@ -207,6 +207,13 @@ pawns are the Biboules of the shooting game (data/shooter); the former Biboules 
 the bottles game. The thumbnail (gazeplay-core: data/common/Thumbnails/goosegame.png, 960 x 540) is a capture of the
 game, reduced by half.
 
+Figures of "Point par point" (name code DotToDot; gazeplay-games: data/dottodot/figures.json): 24 named figures (8 for
+each level) made by make_dottodot_figures.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later);
+the dots, the lines and the fill are drawn by the game. They replace (12/11/2026) 40 figures without names; the white
+background.png (unknown source, read by no code) is removed. The sounds are those of Bubbles (pops), of "Dés" (a wrong
+dot) and of the goose game (the drawing finished). The thumbnail (gazeplay-core: data/common/Thumbnails/dottodot.png,
+960 x 540) is a capture of the game, reduced by half.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

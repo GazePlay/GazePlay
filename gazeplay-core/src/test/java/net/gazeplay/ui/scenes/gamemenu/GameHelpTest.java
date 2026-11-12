@@ -55,7 +55,7 @@ class GameHelpTest {
         "SurviveAgainstRobots", "SpaceGame",
         "TowerDefense", "CasseBrique", "Ninja", "WhacAMole", "GazeRace", "Labyrinth", "Puzzle", "RushHour",
         "TrainSwitches", "Connect4", "TicTacToe", "Simon", "Order", "RockPaperScissors",
-        "CupsBalls", "Potions", "Math101", "Divisor", "Dice", "GooseGame", "Letters"})
+        "CupsBalls", "Potions", "Math101", "Divisor", "Dice", "GooseGame", "Letters", "DotToDot"})
     void shouldExplainEachReviewedGameInFrenchAndInEnglish(String nameCode) {
         assertTrue(GameHelp.exists(nameCode));
         List<String> french = HelpDialog.read(GameHelp.FOLDER + nameCode + "-", "fra");

@@ -53,8 +53,12 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   le 6/11) ; **job relancé : vert**. Test instable de plus, à ranger avec les points 7 à 10.
 - **Décision du mainteneur (12/11/2026)** : en local, seulement les tests ciblés de ce qu’on vient de faire ; les tests
   généraux sur GitHub une fois poussé.
-- **Identifier les lettres** (`Letters`) : fait (fiche en bas), **validé par le mainteneur** ; voix gardées pour
-  l’instant, issue #1741 pour les remplacer.
+- **Identifier les lettres** (`Letters`) : fait (fiche en bas), **validé par le mainteneur**, commité en deux fois
+  (`252114cf9`, les suppressions seules : un `git add` arrêté par un chemin déjà supprimé ; puis `b7648db96`, le reste) ;
+  voix gardées pour l’instant, issue #1741 pour les remplacer.
+- **Point par point** (`DotToDot`) : fait (fiche en bas), validé par le mainteneur, commité. **Groupe 8 terminé**
+  (Apprends les Maths, Diviseur avec Lapins, Dés, Jeu de l’oie, Identifier les lettres, Point par point), poussé à la
+  demande du mainteneur (on pousse à la fin d’un groupe ou quand il part).
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -886,7 +890,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
 | **Dés** (`Dice`) | **12/11** : `roll.png` plus lu (bouton dessiné par le jeu ; encore lu par le Jeu de l’oie) ; texture des faces du dé et son du lancer redessinés par script (`make_dice_images.py`, `make_dice_sounds.py`, communs avec les Petits chevaux et le Jeu de l’oie), 2 sons faits par script ; vignette composée par le script | ✔ 12/11 (tapis de jeu vert, dés 3D avec une ombre, bouton rond « Lancer », total en grand, 3 grandes cartes, coche ou croix, anneau partout, vies en cœurs) | ✔ 12/11 (règle du mainteneur : deux modes, Compter les points (1 / 2 / 3 dés, mauvais totaux proches, chercher jusqu’à trouver ou 3 vies, fin après 5 / 10 / 20 ou sans fin) et Lancer les dés (1 à 6, un dé seul relancé par une fixation) ; rien ne se relance pendant un lancer) — validé le 12/11 |
 | **Jeu de l’oie** (`GooseGame`) | **12/11** : plateau redessiné par script sur les mêmes centres de cases (`make_goose_images.py` : chemin en spirale, cases rondes numérotées, oies, pont, auberge, puits, prison, flèche du retour, étoile de la fin, drapeau du départ) ; 6 sons refaits et 3 ajoutés (`make_goose_sounds.py`) ; `roll.png` retiré ; Biboules du Tir sur un socle ; vignette faite d’une capture | ✔ 12/11 (bandeau du tour et des messages, une phrase à la fois, socle de la couleur du pion, bouton rond « Lancer », dés 3D sur une carte au milieu, anneau) | ✔ 12/11 (règle du mainteneur : contre 1 à 3 ordinateurs ou 2 à 4 joueurs, règles classiques ou simples (les oies seulement), tous libérés si tous attendent, « Bravo » si une personne gagne puis les statistiques) — validé le 12/11 |
-| Dot To Dot, Ladder | À confirmer : 1 image chacun | | |
+| **Point par point** (`DotToDot`) | **12/11** : `background.png` (blanc, inutilisé) et les 40 figures sans nom retirés ; 24 figures nommées faites par script (`make_dottodot_figures.py`) ; vignette faite d’une capture | ✔ 12/11 (grands disques numérotés, traits de la couleur principale qui se tracent, dessin qui se colore avec son nom, point suivant qui grossit en Facile, anneau, proportions gardées) | ✔ 12/11 (règle du mainteneur : nombres ou lettres, Facile 4-7 / Normal 8-12 / Difficile 13-20 points / Progressif, erreur comptée, points reliés ignorés, dernier trait automatique, fin après 3 / 5 / 10 dessins ou sans fin) — validé le 12/11 |
+| Ladder | À confirmer : 1 image | | |
 | **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | **Identifier les lettres** (`Letters`) | **12/11** : les 26 images de lettres inutilisées retirées ; cartes et lettres dessinées par le jeu ; vignette faite d’une capture ; **208 voix de source inconnue gardées en attendant** (format de services de synthèse vocale, hypothèse) | ✔ 12/11 (bandeau « Trouve la lettre » et la lettre en grand, haut-parleur pour réécouter, cartes arrondies aux couleurs douces, minuscules en Andika, anneau, carte fausse qui tremble en rouge, image découverte) | ✔ 12/11 (règle du mainteneur : un tiers des cartes de la lettre, Facile 6 / Normal 12 / Difficile 20 cartes avec les lettres qui se ressemblent, capitales / minuscules / les deux, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin, erreurs comptées) — validé le 12/11 ; voix : issue #1741 |
@@ -3555,3 +3560,38 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   délai, Mes images vide, tout retiré à la fin, variantes et anciennes variantes) ; `GameHelpTest` avec le jeu ; captures
   sans fenêtre regardées (Normal en minuscules, Difficile en capitales et minuscules, vignette). **Essayé et validé par
   le mainteneur le 12/11/2026.**
+
+### Point par point (`DotToDot`) — 12/11/2026
+
+- **État des lieux (code)** : des points numérotés à relier dans l’ordre par des fixations, en revenant au 1 ; 40
+  figures de 3 à 11 points en 8 niveaux, sans fin ; 4 variantes : nombres, ordre et leur version dynamique (niveau qui
+  monte avec peu d’erreurs). **« Nombres » et « ordre » étaient le même jeu** (aucune différence dans le code) ;
+  **regarder un point déjà relié comptait une erreur**, une vraie erreur ne montrait rien ; on pouvait commencer au
+  point 2 ; figures déformées hors 16:9 (largeur et hauteur mises à l’échelle séparément), points et nombres de taille
+  fixe sur les traits ; aucune récompense ; deux buts à atteindre par figure ; rejeu avec une autre graine ; le
+  dynamique ne redescendait jamais au niveau 0 ; ancien indicateur ; rien d’arrêté par le menu ; ni aide ni test.
+  Figures pauvres (triangles, carrés, trois poissons presque identiques), sans nom ; `background.png` tout blanc et
+  inutilisé ; vignette de source inconnue.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : un bon point trace le trait, un mauvais tremble et
+  compte une erreur (pas de vies), les points reliés sont ignorés, le dernier trait se trace seul ; le dessin se colore
+  et son nom s’affiche ; nombres ou lettres ; Facile 4 à 7 points (le suivant aide), Normal 8 à 12, Difficile 13 à 20 ;
+  **un niveau progressif** (Facile, puis le niveau suivant après 3 dessins de suite sans erreur) ; fin après 3, 5 ou 10
+  dessins ou sans fin ; liste des figures validée.
+- **Fait** : le jeu réécrit (`DotToDot`, classe interne `Dot` ; `DotFigure` (lecture de `figures.json`), `DotLevel`,
+  `DotLabels`, `DotEnd` ; `DotEntity` retiré ; `DotToDotGameVariant` gardé seulement pour lire les anciennes variantes).
+  24 figures nommées faites par script (8 par niveau : cerf-volant, maison, diamant, glace, bateau, sapin, poisson,
+  drapeau ; étoile, cœur, champignon, fusée, camionnette, chat, feuille, chalet ; grand sapin, voiture, château,
+  papillon, étoile magique, avion, fleur, bonhomme de neige ; le bonhomme de neige refait après la première planche, il
+  ressemblait à une bouteille). Une boucle en temps réel (fixation lue à chaque pas, délai, Échap). Figure dans une
+  boîte qui garde ses proportions, entre le bandeau du score et le nom du dessin (après les captures : le nom couvrait le
+  bas du cœur, des points sortaient de l’écran) ; disques aussi grands que possible sans se toucher ; traits qui se
+  tracent (0,25 s) ; dessin qui se colore en 0,6 s et « C’est un poisson ! ». Statistiques (« dotToDot », format
+  inchangé) : un but à atteindre et atteint par dessin, une erreur par mauvais point. Variantes `GroupedGameVariant`
+  (32 : les niveaux en boutons, puis en bas nombres ou lettres et la fin) ; anciennes variantes : normal, ou progressif
+  pour les « dynamiques ». 4 anciennes clés retirées, 33 ajoutées ; aide, crédits, inventaire, vignette (capture d’un
+  dessin fini). Sons repris des Bulles (point relié), de Dés (mauvais point) et du Jeu de l’oie (dessin fini).
+- **Vérifications** : `DotToDotTest` (11 tests : 24 figures nommées, 8 par niveau, points dans leur boîte, premier point
+  après la fixation des réglages puis trait, mauvais point compté et point relié ignoré, dessin fini et nommé puis un
+  autre, aide en Facile seulement, progressif qui monte après 3 dessins sans erreur, proportions gardées en 4:3, délai,
+  « Bravo » après 3 dessins, tout retiré à la fin, variantes et anciennes variantes) ; `GameHelpTest` avec le jeu ;
+  captures sans fenêtre regardées. **Essayé et validé par le mainteneur le 12/11/2026. Le groupe 8 est terminé.**

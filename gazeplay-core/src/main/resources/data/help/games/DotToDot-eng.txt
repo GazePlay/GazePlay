@@ -1,0 +1,20 @@
+# The principle
+Join the dots in order, 1, 2, 3... or A, B, C... A drawing appears: guess what it is!
+
+# How to play
+- Start with the first dot (1 or A). Look at it: a ring fills, the dot gets colored. The length of the ring is that of the settings, also changed in the menu (Esc key).
+- Then look at the next dot: a line joins it to the previous one.
+- A wrong dot shakes in red and counts a mistake. The dots already joined do not count any more.
+- After the last dot, the line to the first one draws itself, the drawing gets colored and its name shows ("It's a fish!"). Then another drawing comes.
+- Easy: the next dot grows gently to help you.
+- At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no penalty: a mistake only counts in the statistics. As you chose, the game stops after 3, 5 or 10 drawings ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The level. Easy: 4 to 7 dots, the next dot helps. Normal: 8 to 12 dots. Hard: 13 to 20 dots. Progressive: starts easy and goes to the next level after 3 drawings in a row without a mistake.
+- At the bottom, the dots: numbers (1, 2, 3...) or letters (A, B, C...).
+- At the bottom, the end: 3, 5 or 10 drawings, or without end.
+- 24 drawings: a kite, a house, a fish, a star, a cat, a rocket, a castle, a butterfly, a snowman...

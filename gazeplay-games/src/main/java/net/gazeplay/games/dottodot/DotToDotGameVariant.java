@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * A variant of the game "DotToDot", chosen in the menu.
+ * The variants of "DotToDot" before its review of 12/11/2026, kept only to read the variants saved then (shortcuts,
+ * last variant): see {@link DotToDotGameLauncher}. The menu offers the variants of {@link DotToDotGameVariantGenerator}.
  */
 @RequiredArgsConstructor
 public enum DotToDotGameVariant {
