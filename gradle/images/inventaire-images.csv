@@ -70,7 +70,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,sourc
 gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,libre,capture du jeu (octobre 2026) ; coloriage OpenMoji CC BY-SA 4.0,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/connect4.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue de Quatre en ligne
 gazeplay-core/src/main/resources/data/common/Thumbnails/creamPie.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
-gazeplay-core/src/main/resources/data/common/Thumbnails/dice.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
+gazeplay-core/src/main/resources/data/common/Thumbnails/dice.png,oui,libre,"composée par gradle/images/make_dice_images.py (faces du dé dessinées pour le projet), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Dés
 gazeplay-core/src/main/resources/data/common/Thumbnails/divisor.png,oui,libre,"capture du jeu (12/11/2026), lapins et prairie dessins du projet, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Diviseur
 gazeplay-core/src/main/resources/data/common/Thumbnails/dottodot.png,oui,source inconnue,,2021-07-12,verafili,created preview
 gazeplay-core/src/main/resources/data/common/Thumbnails/egg.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet et OpenMoji (CC BY-SA 4.0),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
@@ -206,7 +206,7 @@ gazeplay-core/src/main/resources/data/common/images/aoibtn.png,oui,source inconn
 gazeplay-core/src/main/resources/data/common/images/bravo.gif,oui,source inconnue,,2018-07-25,kuhlkrein,new bravo !
 gazeplay-core/src/main/resources/data/common/images/cards.png,oui,source inconnue,,2020-02-28,kuhlkrein,add new image for each section
 gazeplay-core/src/main/resources/data/common/images/continue.png,oui,source inconnue,,2019-05-16,Teo Blachere,Inter-level stat screen
-gazeplay-core/src/main/resources/data/common/images/dice.png,oui,source inconnue,,2019-05-21,Teo Blachere,Start dice roll
+gazeplay-core/src/main/resources/data/common/images/dice.png,oui,libre,"dessiné pour le projet (gradle/images/make_dice_images.py), GPL-3.0-or-later ; remplace une texture de source inconnue (12/11/2026)",2026-11-12,GazePlay Learning,revue de Dés
 gazeplay-core/src/main/resources/data/common/images/error.png,oui,libre,"Flaticon (Smashicons, Google), CC BY 3.0 : attribution dans le code, à ajouter à la licence",2017-02-08,schwab,first commit
 gazeplay-core/src/main/resources/data/common/images/explosion.gif,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-06-18,johzz-o2,++ implems
 gazeplay-core/src/main/resources/data/common/images/fullscreen-enter.png,oui,source inconnue,,2018-01-10,Yann ROBERT,"using a BorderPane in order to separate the zone used for command and control, from the zone used for displaying the game itself"
@@ -402,7 +402,7 @@ gazeplay-games/src/main/resources/data/common/default/images/noBackGround/snake.
 gazeplay-games/src/main/resources/data/common/default/images/noBackGround/turtle.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2022-06-23,Karine BENHAIMI,Labyrinth Game Customization #1323 il manque la traduction
 gazeplay-games/src/main/resources/data/creampie/images/gateau.png,oui,source inconnue,,2017-02-08,schwab,first commit
 gazeplay-games/src/main/resources/data/creampie/images/hand.png,oui,source inconnue,,2017-02-08,schwab,first commit
-gazeplay-games/src/main/resources/data/dice/roll.png,oui,source inconnue,,2019-05-22,Teo Blachere,"Dice roll, done"
+gazeplay-games/src/main/resources/data/dice/roll.png,oui,source inconnue,"encore lu par le Jeu de l'oie (bouton du lancer) ; retiré de Dés le 12/11/2026",2019-05-22,Teo Blachere,"Dice roll, done"
 gazeplay-games/src/main/resources/data/divisor/images/Background.png,oui,libre,"dessin du projet (Photoshop, document créé en 2018, documents insérés tous créés dans Photoshop de janvier à mars 2018), GPL-3.0-or-later ; gardé à la revue de Diviseur du 12/11/2026",2018-04-12,kuhlkrein,Modifiying lapins and piano stats when look at tiles
 gazeplay-games/src/main/resources/data/divisor/rabbit/images/1.png,oui,libre,"dessin du projet (Photoshop, document créé en 2018, documents insérés tous créés dans Photoshop de janvier à mars 2018), GPL-3.0-or-later ; gardé à la revue de Diviseur du 12/11/2026",2018-03-24,kuhlkrein,modifications for version 1.3 (adding ideas for alternative version of divisor with rabbits)
 gazeplay-games/src/main/resources/data/divisor/rabbit/images/2.png,oui,libre,"dessin du projet (Photoshop, document créé en 2018, documents insérés tous créés dans Photoshop de janvier à mars 2018), GPL-3.0-or-later ; gardé à la revue de Diviseur du 12/11/2026",2018-03-24,kuhlkrein,modifications for version 1.3 (adding ideas for alternative version of divisor with rabbits)

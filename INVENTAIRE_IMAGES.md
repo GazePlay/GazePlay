@@ -84,7 +84,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Gaze Race, Rush Hour, GazePlay Eval Test (anciens jeux BERA) | 4 chacun |
 | ~~Noughts and Crosses~~, ~~Order~~, Whack-a-Mole | 3 chacun ; **Morpion fait le 10/11/2026** : ses 3 images retirées (croix, rond et case dessinés par le jeu), vignette faite d'une capture ; **Ordre fait le 10/11/2026** : ses 3 images retirées (cibles dessinées par le jeu), vignette faite d'une capture |
 | Colorblend, Cream Pie, Magic Cards, ~~Simon~~ | 2 chacun ; **Simon (« Répète après moi ») fait le 10/11/2026** : ses 2 images retirées (tout dessiné par le jeu), vignette faite d'une capture ; ses 7 notes de source inconnue remplacées par des sons faits par script |
-| Cups, Dice, Dot to Dot, Goose Game, Ladder | 1 chacun |
+| Cups, ~~Dice~~, Dot to Dot, Goose Game, Ladder | 1 chacun ; **Dés fait le 12/11/2026** : `roll.png` plus lu par Dés (bouton dessiné par le jeu), encore lu par le Jeu de l’oie, texture des faces du dé (`common/images/dice.png`, commune avec les Petits chevaux et le Jeu de l’oie) et son du lancer redessinés par script (`make_dice_images.py`, `make_dice_sounds.py`), vignette composée par le même script |
 
 ### 3.3 Sans originalité ou domaine public (166)
 

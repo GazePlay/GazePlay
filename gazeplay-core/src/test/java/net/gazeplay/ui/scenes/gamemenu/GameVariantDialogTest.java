@@ -281,6 +281,44 @@ class GameVariantDialogTest {
     }
 
     /**
+     * Groups with different choices (Dice, 12/11/2026: the end and the mistakes only in the counting mode): the rows
+     * shown are those of the chosen group with two values or more; a row with one value in a group has no switch, and
+     * its value is the one of the variant started.
+     */
+    @Test
+    void shouldShowOnlyTheRowsOfTheChosenGroup() throws Exception {
+        IGameVariant countFive = new GroupedGameVariant("Count", "Five", "Easy", null, "Again");
+        IGameVariant countEndless = new GroupedGameVariant("Count", "Endless", "Easy", null, "Again");
+        IGameVariant countLives = new GroupedGameVariant("Count", "Five", "Easy", null, "Lives");
+        IGameVariant throwTwo = new GroupedGameVariant("Throw", "Endless", "TwoDice", null, "Again");
+        IGameVariantGenerator generator = mock(IGameVariantGenerator.class);
+        when(generator.getVariants()).thenReturn(new LinkedHashSet<>(List.of(countFive, countEndless, countLives,
+            throwTwo)));
+        gameSpec = new GameSpec(GameSummary.builder().nameCode("Dice").gameThumbnail("dice").build(), generator,
+            mock(IGameLauncher.class));
+        GameVariantDialog dialog = openDialog(new BorderPane());
+
+        List<RadioButton> switches = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot()
+            .lookupAll(".radio-button").stream().map(RadioButton.class::cast).toList()).get();
+        assertEquals(List.of("Count", "Throw", "Five", "Endless", "Again", "Lives"),
+            switches.stream().map(RadioButton::getText).toList());
+        VBox column = (VBox) switches.get(0).getParent().getParent();
+        assertEquals(1, column.getChildren().indexOf(switches.get(0).getParent()));
+        assertEquals(2, column.getChildren().indexOf(switches.get(2).getParent()));
+        assertEquals(3, column.getChildren().indexOf(switches.get(4).getParent()));
+
+        WaitForAsyncUtils.asyncFx(() -> switches.get(1).fire()).get();
+        List<String> throwing = WaitForAsyncUtils.asyncFx(() -> dialog.getScene().getRoot()
+            .lookupAll(".radio-button").stream().map(RadioButton.class::cast).map(RadioButton::getText).toList()).get();
+        assertEquals(List.of("Count", "Throw"), throwing);
+        Button twoDice = WaitForAsyncUtils.asyncFx(() -> (Button) dialog.getScene().getRoot()
+            .lookup(".gp-variant")).get();
+        WaitForAsyncUtils.asyncFx(twoDice::fire).get();
+        WaitForAsyncUtils.asyncFx(() -> dialog.getStartButton().fire()).get();
+        verify(gameMenuController).chooseAndStartNewGameProcess(gazePlay, gameSpec, throwTwo);
+    }
+
+    /**
      * Variants in one group only (Spot The Differences, 2/11/2026): no switch for the group, the switches of the
      * sub-groups under the variants.
      */

@@ -596,51 +596,106 @@ public class GameVariantDialog extends Stage {
         for (int i = 0; i < rowCount; i++) {
             chosen[i] = rows.get(i).iterator().next();
         }
+        // The values of the other rows within each group: a game whose modes have different choices (12/11/2026, Dice:
+        // the end and the mistakes only in the counting mode) shows, for the chosen group, only its rows with at least
+        // two values
+        final Map<String, List<Set<String>>> rowsOfGroup = new LinkedHashMap<>();
+        for (final GroupedGameVariant variant : variants) {
+            final List<Set<String>> groupRows = rowsOfGroup.computeIfAbsent(variant.getGroup(), key -> {
+                final List<Set<String>> list = new ArrayList<>();
+                for (int i = 0; i < rowCount; i++) {
+                    list.add(new LinkedHashSet<>());
+                }
+                return list;
+            });
+            final List<String> values = variant.getSwitches();
+            for (int i = 0; i < rowCount; i++) {
+                groupRows.get(i).add(values.get(i));
+            }
+        }
         final Runnable show = () -> scroller.setContent(panes.getOrDefault(String.join("|", chosen),
             createFlowPane()));
         // Under the variants: the groups, then the sub-groups just under them, then the other switches (maintainer's
         // request of 30/10/2026: all the switches together at the bottom). A row with one value has no switch
         // (2/11/2026, Spot The Differences: one group only).
-        boolean first = true;
-        for (int i = 0; i < rowCount; i++) {
-            if (rows.get(i).size() < 2) {
-                continue;
+        final boolean groupSwitches = rows.get(0).size() >= 2;
+        // The rows of the chosen group, put in the column just after the switches of the groups
+        final List<FlowPane> otherRows = new ArrayList<>();
+        final int[] otherRowsIndex = new int[1];
+        final Runnable showOtherRows = () -> {
+            centerPane.getChildren().removeAll(otherRows);
+            otherRows.clear();
+            final List<Set<String>> groupRows = rowsOfGroup.get(chosen[0]);
+            boolean firstRow = !groupSwitches;
+            for (int i = 1; i < rowCount; i++) {
+                final Set<String> values = groupRows.get(i);
+                if (!values.contains(chosen[i])) {
+                    chosen[i] = values.iterator().next();
+                }
+                if (values.size() < 2) {
+                    continue;
+                }
+                final int row = i;
+                final FlowPane switchRow = switches(values, chosen[i], translator, value -> {
+                    chosen[row] = value;
+                    show.run();
+                });
+                // A clear space between two rows of switches (maintainer's request of 30/10/2026)
+                switchRow.setPadding(new Insets(firstRow ? 16 : SWITCH_ROWS_GAP, 0, 0, 0));
+                firstRow = false;
+                otherRows.add(switchRow);
             }
-            final int row = i;
-            final FlowPane switchRow = switches(rows.get(i), translator, value -> {
-                chosen[row] = value;
+            centerPane.getChildren().addAll(otherRowsIndex[0], otherRows);
+        };
+        if (groupSwitches) {
+            final FlowPane switchRow = switches(rows.get(0), chosen[0], translator, value -> {
+                chosen[0] = value;
+                showOtherRows.run();
                 show.run();
             });
-            if (first) {
-                switchRow.setPadding(new Insets(16, 0, 0, 0));
-            } else {
-                // A clear space between two rows of switches (maintainer's request of 30/10/2026); the window is taller
-                // by the row and the space above it, so that the variants keep their room
-                switchRow.setPadding(new Insets(SWITCH_ROWS_GAP, 0, 0, 0));
-                extraHeight += SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT;
-            }
-            first = false;
+            switchRow.setPadding(new Insets(16, 0, 0, 0));
             centerPane.getChildren().add(switchRow);
         }
+        otherRowsIndex[0] = centerPane.getChildren().size();
+        // The window is taller by each row beyond the first one and the space above it, for the group with the most
+        // rows, so that the variants keep their room
+        int mostRows = 0;
+        for (final List<Set<String>> groupRows : rowsOfGroup.values()) {
+            int shown = groupSwitches ? 1 : 0;
+            for (int i = 1; i < rowCount; i++) {
+                if (groupRows.get(i).size() >= 2) {
+                    shown++;
+                }
+            }
+            mostRows = Math.max(mostRows, shown);
+        }
+        if (mostRows > 1) {
+            extraHeight += (mostRows - 1) * (SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT);
+        }
+        showOtherRows.run();
         show.run();
     }
 
     /**
-     * @return a row of switches, one per value (key of translation), the first one selected
+     * @return a row of switches, one per value (key of translation), the one given selected (the first one if absent)
      */
-    private static FlowPane switches(final Set<String> values, final Translator translator,
+    private static FlowPane switches(final Set<String> values, final String selected, final Translator translator,
                                      final java.util.function.Consumer<String> onChosen) {
         final FlowPane row = new FlowPane(10, 10);
         row.getStyleClass().add("gp-variant-groups");
         row.setAlignment(Pos.CENTER);
         final ToggleGroup toggles = new ToggleGroup();
+        RadioButton toSelect = null;
         for (final String value : values) {
             final RadioButton radio = new RadioButton(translator.translate(value));
             radio.setToggleGroup(toggles);
             radio.setOnAction(e -> onChosen.accept(value));
             row.getChildren().add(radio);
+            if (value.equals(selected)) {
+                toSelect = radio;
+            }
         }
-        ((RadioButton) row.getChildren().get(0)).setSelected(true);
+        (toSelect != null ? toSelect : (RadioButton) row.getChildren().get(0)).setSelected(true);
         return row;
     }
 

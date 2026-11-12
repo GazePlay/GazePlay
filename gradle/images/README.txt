@@ -190,6 +190,15 @@ yellow Biboule of the shooting game, cut by make_math101_images.py, and the soun
 made by make_math101_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). The
 thumbnail (gazeplay-core: data/common/Thumbnails/math101.png, 960 x 540) is a capture of the game, reduced by half.
 
+Image and sounds of the die (gazeplay-core: data/common/images/dice.png, data/common/sounds/diceRollSound.wav), shared
+by "Dés" (Dice), the horses and the goose game: the texture of the six faces is drawn by make_dice_images.py and the
+sound of the roll made by make_dice_sounds.py (this folder), under the license of GazePlay Learning
+(GPL-3.0-or-later). They replace (12/11/2026) a texture and a sound of unknown source. The sounds of "Dés"
+(gazeplay-games: data/dice/sounds/right.wav, wrong.wav) are made by the same script; the button picture roll.png
+(unknown source) is no longer read by "Dés" (the button is drawn by the game), but still by the goose game. The thumbnail (gazeplay-core:
+data/common/Thumbnails/dice.png, 960 x 540) is made of the faces by make_dice_images.py: the 3D die of the game is
+not drawn by the captures without window.
+
 Images of "Diviseur" (name code Divisor; gazeplay-games: data/divisor): the 7 rabbits (rabbit/images/1.png to 7.png)
 and the meadow (images/Background.png) are drawings of the project, kept (12/11/2026): drawn in Photoshop from a new
 document from January to April 2018, the other documents put in them all being Photoshop documents created from

@@ -1,0 +1,21 @@
+# The principle
+Dice on a game table. Count their points and find the right total, or just throw them for a board game.
+
+# How to play
+- Look at the round "Roll" button: a ring fills, then the dice roll. Its length is that of the settings, also changed in the menu (Esc key).
+- Count the points: when the dice have stopped, three cards show numbers. Look at the card of the right total: it turns green with a check, then you roll the dice again.
+- A wrong card shows a cross. As you chose, it turns grey and you look again, or you lose one of 3 lives and the right total is shown.
+- Throw the dice: the total is shown at the top when the dice have stopped. Look at one die to roll it alone.
+- Nothing rolls while the dice are rolling. At the start, nothing rolls during the delay of the settings (Games, "Delay before a selection is possible when a game starts").
+- Nothing moves while the menu (Esc key) is open.
+
+# How to win
+Count the points: as you chose, the game stops after 5, 10 or 20 totals found ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)). With lives, it also stops when the 3 lives are lost ("Lost!").
+Throw the dice has no end: it is a tool to play a board game.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- At the bottom, the mode: Count the points or Throw the dice.
+- Count the points, the level: Easy, 1 die (1 to 6 points); Normal, 2 dice (2 to 12); Hard, 3 dice (3 to 18). The wrong totals are always close to the right one.
+- Count the points, at the bottom: the end (5, 10 or 20 totals, or without end) and what a mistake does (look again until found, or 3 lives).
+- Throw the dice: 1 to 6 dice.

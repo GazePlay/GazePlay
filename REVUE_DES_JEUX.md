@@ -875,7 +875,8 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
 | colorblend (`colorblend`) | À confirmer : 2 images | | |
 | **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
-| Dice, Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
+| **Dés** (`Dice`) | **12/11** : `roll.png` plus lu (bouton dessiné par le jeu ; encore lu par le Jeu de l’oie) ; texture des faces du dé et son du lancer redessinés par script (`make_dice_images.py`, `make_dice_sounds.py`, communs avec les Petits chevaux et le Jeu de l’oie), 2 sons faits par script ; vignette composée par le script | ✔ 12/11 (tapis de jeu vert, dés 3D avec une ombre, bouton rond « Lancer », total en grand, 3 grandes cartes, coche ou croix, anneau partout, vies en cœurs) | ✔ 12/11 (règle du mainteneur : deux modes, Compter les points (1 / 2 / 3 dés, mauvais totaux proches, chercher jusqu’à trouver ou 3 vies, fin après 5 / 10 / 20 ou sans fin) et Lancer les dés (1 à 6, un dé seul relancé par une fixation) ; rien ne se relance pendant un lancer) — validé le 12/11 |
+| Dot To Dot, Goose Game, Ladder | À confirmer : 1 image chacun | | |
 | **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | Scribble (`Scribble`), Letters (`Letters`) | Pas d'image propre relevée | | |
@@ -3410,3 +3411,44 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   (`build/game-screenshots/apres/divisor`).
   `build` complet : **1 110 tests, 0 échec** ; `allGamesTest -PallGamesOnly=Divisor -PallGamesRepeat=5` : **5 lancements,
   0 échec** (12/11/2026). **Essayé et validé par le mainteneur le 12/11/2026.**
+
+### Dés (`Dice`) — 12/11/2026
+
+- **État des lieux (code)** : un outil de lancer, 1 à 6 dés 3D (`DiceRoller`, commun avec les Petits chevaux et le Jeu
+  de l’oie) ; une fixation sur le bouton lance tous les dés, une fixation sur un dé ne relance que lui ; le total en
+  grand. Ni but, ni fin, ni aide, ni test. **Un dé pouvait être relancé pendant que tous roulaient** (total affiché
+  deux fois, bouton réactivé trop tôt) ; un but atteint par lancer mais aucun à atteindre ; ancien indicateur sur les
+  dés (`ProgressPane`), anneau sur le bouton ; total dans la police du système ; rien d’arrêté par le menu, pas de
+  délai ; deux copies du jeu (nouvelle partie et rejeu) ; `dispose()` vide ; variante « Choose number of dices » en
+  anglais. `roll.png`, la vignette, la texture des faces et le son du lancer de source inconnue (2019).
+- **Règle du mainteneur (12/11/2026, propositions validées)** : deux modes sur une carte, **Compter les points** (un
+  vrai jeu : les dés roulent, 3 cartes, le bon total ; comme Apprends les Maths : mauvais totaux proches, chercher
+  jusqu’à trouver ou 3 vies, fin après 5 / 10 / 20 ou sans fin ; Facile 1 dé, Normal 2, Difficile 3) et **Lancer les
+  dés** (l’outil, 1 à 6 dés, un dé seul relancé en mode Lancer seulement) ; rien ne se relance pendant un lancer ;
+  anneau partout ; arrêt pendant le menu, délai ; dés 3D gardés sur un tapis dessiné ; total en grande carte ; bouton
+  dessiné ; ressources refaites, **texture des faces comprise** (commune avec les Petits chevaux et le Jeu de l’oie,
+  même disposition des faces).
+- **Fait** : le jeu réécrit (`Dice`, classes internes `Spot` et `Card` ; `DiceMode`, `DiceLevel`, `DiceEnd`,
+  `DiceMistakes` ; `DiceGameVariantGenerator` et `DiceGameLauncher` refaits). Une boucle en temps réel (fixation lue à
+  chaque pas, délai, Échap, durée du lancer comptée par le jeu : 1,6 s). Tapis vert dessiné (plus clair au milieu,
+  surpiqûre), ombre sous chaque dé, bouton rond orange avec un dé et « Lancer » dessous ; en mode Lancer, « Total : n »
+  en grand en haut ; en mode Compter, « Combien de points ? » puis 3 grandes cartes (éclairées quand on les regarde,
+  coche verte, croix et carte grisée qui tremble, ou rouge et une vie perdue avec le bon total montré), « Trouvés : n /
+  total », cœurs ; « Perdu ! » puis les statistiques, « Bravo » à la fin. Mauvais totaux à 1 à 4 du bon, dans les
+  totaux possibles, jamais de part et d’autre de lui d’autant. Statistiques (« dice », format inchangé) : en mode
+  Compter, un but à atteindre par lancer, un but atteint par total trouvé, une erreur par mauvaise carte ; en mode
+  Lancer, un but à atteindre et atteint par lancer. Variantes `GroupedGameVariant` (24 pour compter, 6 pour lancer) ;
+  une ancienne variante « IntGameVariant:n » lance n dés. **Fenêtre des variantes** (`GameVariantDialog`, commune) :
+  elle n’affiche que les rangées du mode choisi qui ont au moins deux valeurs (en mode Lancer, ni fin ni erreurs), et
+  la variante lancée garde la valeur unique des rangées cachées ; aucun changement pour les autres jeux (même
+  disposition, tests existants verts). Texture des faces (`common/images/dice.png`) et son du lancer redessinés par
+  script, 2 sons du jeu ; `roll.png` plus lu par Dés (le Jeu de l’oie le lit encore : retiré à sa revue) ; clé « Choose number of dices » retirée ; 22 traductions, aide, crédits,
+  inventaire. Vignette composée par `make_dice_images.py` : **les captures sans fenêtre (Monocle) ne dessinent pas
+  les dés 3D** (fait constaté ; ils s’affichent dans une vraie fenêtre, comme aux Petits chevaux).
+- **Vérifications** : `DiceTest` (14 tests : mauvais totaux proches pour 1 à 3 dés, lancer après la fixation des
+  réglages et 3 cartes avec le bon total, délai, carte grisée et chercher encore, 3 vies puis « Perdu ! » sans
+  « Bravo », « Bravo » après 5 totaux, chaque face d’un dé sortie en 60 lancers, rien ne se relance pendant un lancer,
+  un dé seul en mode Lancer et pas en mode Compter, fixation lue à chaque pas, tout retiré à la fin, variantes et
+  ancienne variante) ; `GameVariantDialogTest.shouldShowOnlyTheRowsOfTheChosenGroup` ; `GameHelpTest` avec le jeu ;
+  captures sans fenêtre regardées (tapis, bouton, anneau, cartes, total ; sans les dés 3D). **Essayé et validé par le
+  mainteneur le 12/11/2026.**
