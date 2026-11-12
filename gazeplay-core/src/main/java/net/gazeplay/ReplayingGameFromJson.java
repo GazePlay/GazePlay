@@ -141,7 +141,7 @@ public class ReplayingGameFromJson {
             // "Coloring"
 
             // replay cursor coordinates issue, can lead to different display:
-            // "Ninja","Piano","Divisor","Rabbits", "ColoredBubbles","PortraitBubbles",
+            // "Ninja","Piano","Divisor","Rabbits" (one game "Divisor" since 12/11/2026), "ColoredBubbles","PortraitBubbles",
             // "RushHour","FrogsRace",
             // "WhacAMole"
 

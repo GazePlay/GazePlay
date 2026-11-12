@@ -1,0 +1,21 @@
+# Le principe
+Une grande image rebondit dans la prairie. Regarde-la : elle éclate en deux images plus petites, qui partent chacune de leur côté. Fais-les toutes éclater !
+
+# Comment jouer
+- Les images rebondissent sur les bords de l'écran. Chaque image touchée éclate en deux plus petites, jusqu'à la dernière division ; les plus petites disparaissent.
+- Selon le choix fait en bas de la fenêtre, une image éclate dès que tu la touches, ou après une fixation : un anneau se remplit autour d'elle pendant qu'elle continue d'avancer. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Si tu quittes l'image moins de 0,3 seconde, l'anneau t'attend. Après, il repart de zéro.
+- Une image qui vient de naître ne peut pas éclater pendant 0,6 seconde : ton regard est encore là où était la grande.
+- Au début, rien n'éclate pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »).
+- En haut à droite, le nombre d'images éclatées sur le nombre total.
+- La vitesse suit aussi la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n'y a ni vies ni pénalité. Quand toutes les images ont éclaté, le temps mis s'affiche (sans compter le délai du début ni le temps où le menu était ouvert) : « Bravo », puis les statistiques.
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le niveau. Facile : 2 divisions, 7 images à faire éclater, qui traversent la hauteur de l'écran en 5 secondes. Normal : 3 divisions, 15 images, en 3 secondes. Difficile : 4 divisions, 31 images, en 2 secondes.
+- La première image fait un tiers de la hauteur de l'écran. Chaque division rend les images un peu plus petites, sans descendre sous un dixième de la hauteur de l'écran.
+- En bas, ce que montrent les images : Lapins, Animaux, ou Mes images : tes images, découpées en rond (dossier « Mes images » des réglages).
+- En bas, comment les faire éclater : dès qu'on touche, ou après une fixation.

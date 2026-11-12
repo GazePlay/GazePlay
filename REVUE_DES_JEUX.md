@@ -38,6 +38,19 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    Mélanger les couleurs, Piano, Bouteille, La pièce, Blocs, Échelle, Suivre le chemin), puis groupe 10 (GazePlay
    Eval et Eval Test).
 
+**Avancement du jeudi 12/11/2026** :
+- **CI** du push du 10/11 au soir (run `42856046722`) : 6 jobs verts sur 7 ; `package-macos` jamais lancé (aucune
+  machine macOS trouvée par GitHub, rien dans le code). **Décision du mainteneur** : macOS n'est pas prioritaire, on
+  regarde à la CI du prochain push.
+- **Diviseur** (`Divisor`) : propositions validées (une seule carte, Lapins devenu un thème ; fixation ou contact ;
+  3 niveaux ; « Bravo » et le temps) ; lapins gardés après vérification de leur licence (fiche en bas) ; fait,
+  `build` complet **1 110 tests, 0 échec**, `allGamesTest` du jeu 5 fois sans échec ; **essayé et validé par le mainteneur**, commité.
+  Catalogue : 61 entrées. Lapins (`Rabbits`) n'est plus un jeu à revoir.
+- **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
+  Diviseur) dans une copie de travail à part, supprimée ensuite ;
+  `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
+  `741f8282…cf8015`).
+
 ## REPRISE DU MARDI 10/11/2026 (bilan de la séance du lundi 9/11/2026)
 
 **Fait le lundi 9/11/2026** (fiches en bas) :
@@ -849,7 +862,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Cakes (`Cakes`) | À confirmer : 24 dessins | | |
 | Follow (`Follow`) | À confirmer : 13 dessins | | |
 | **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
-| Divisor, Rabbits | À confirmer : 10 dessins (lapins) | | |
+| **Diviseur** (`Divisor`, une seule carte depuis le 12/11, avant 2 : Lapins est un thème) | **12/11** : les 7 lapins et la prairie gardés comme dessins du projet (métadonnées Photoshop : dessinés de janvier à avril 2018, documents insérés tous créés pendant le travail sur le jeu ; commités par kuhlkrein, comme les Biboules) ; `coeur.png` et `explosion.png` (inutilisés) retirés ; sons des Bulles ; vignette faite d'une capture, celle de Lapins retirée | ✔ 12/11 (lapins entiers sans déformation, images en rond avec un bord blanc, confettis et son à l'éclatement, anneau, pastille, temps à la fin) | ✔ 12/11 (règle du mainteneur : une seule carte, Lapins / Animaux / Mes images, dès qu'on touche ou après fixation, Facile 2 / Normal 3 / Difficile 4 divisions (7 / 15 / 31 cibles, hauteur de l'écran en 5 / 3 / 2 s), plus petite cible à un dixième de la hauteur, « Bravo » et le temps) — validé le 12/11 |
 | **Biboule Jump** (`BibJump`) | **4/11** : ciel, nuages, tremplin et sons faits par script (`make_biboulejump_images.py`, `make_biboulejump_sounds.py`) ; Biboules du Tir | ✔ 4/11 (Biboule non déformée, ciel, nuages et tremplin plus grand, cœurs, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : 3 vies, retour sur un nouveau nuage avec les points gardés ; sans fin, 1 ou 3 min ; Facile / Normal / Difficile ; même saut sur tout écran ; plus de record) |
 | **Pierre papier ciseaux** (`RockPaperScissors`) | **10/11** : les 7 dessins retirés (gants de dessin animé proches d'un personnage commercial, parc, pouces) ; mains d'OpenMoji (`make_rockpaperscissors_images.py`), sons faits par script ; vignette faite d'une capture | ✔ 10/11 (trois cartes avec la main et son nom, poings qui se balancent pendant « Pierre… papier… ciseaux ! », main gagnante qui grossit, messages sous les mains, anneau, pastille du score) | ✔ 10/11 (règle du mainteneur : contre l'ordinateur en 2 / 3 / 5 manches gagnantes ou sans fin, l'ordinateur peut gagner ; apprendre la règle en 5 / 10 bonnes réponses ou sans fin, erreur expliquée) — validé le 10/11 |
 | Piano (`Piano`) | À confirmer : 6 images | | |
@@ -3345,3 +3358,55 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   captures sans fenêtre regardées (1920 × 1080 et 1024 × 768 ; « Perdu ! » qui cachait la carte du milieu, mis sur le
   tableau) ; `build` complet : **1 093 tests, 0 échec** ; `allGamesTest` complet : **62 entrées, 0 échec**. **Validé
   par le mainteneur le 10/11/2026.**
+
+### Diviseur (`Divisor`, une seule carte avec Lapins) — 12/11/2026
+
+- **État des lieux (code)** : 2 cartes du menu, Diviseur et Lapins, un seul jeu (`Divisor`, `isRabbit`). Une grande
+  image ronde rebondit ; touchée par le regard ou la souris, elle éclate en deux plus petites, 3 fois (15 cibles) ;
+  tout éclaté : « Score : 12s », puis les statistiques. Ni variante, ni aide, ni fixation, ni vies. Diviseur montrait
+  « Mes images » et en silence les animaux par défaut sans image ; Lapins, 7 dessins sur une prairie (si le fond était
+  activé). **Vitesses en pixels** (4 à 6 pixels toutes les 10 ms : deux fois plus vite, en part de l'écran, sur un
+  écran 1080p que sur un 4K) ; **les deux nouvelles cibles nées l'une sur l'autre** ; images étirées dans le cercle ;
+  **rien d'arrêté** : animations des cibles éclatées jusqu'à la fin, un écouteur de la vitesse d'animation ajouté par
+  cible et jamais retiré (un changement de vitesse relançait les cibles disparues), rien d'arrêté par l'engrenage ;
+  « Score » écrit en dur ; temps compté avec les attentes ; explosion de 30 points de 2 pixels ; correction de position
+  sans effet dans `createChildren` ; `coeur.png` et `explosion.png` lus par aucun code ; vignettes anciennes.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : **une seule carte** « Diviseur », Lapins devient un
+  thème (Lapins, Animaux, Mes images) ; éclater dès qu'on touche ou après une fixation ; Facile 2 divisions (7 cibles,
+  hauteur de l'écran en 5 s), Normal 3 (15, 3 s), Difficile 4 (31, 2 s), la plus petite cible à au moins un dixième de
+  la hauteur de l'écran ; « Bravo » et le temps à la fin, pas de vies ni de pénalité ; **lapins gardés s'ils respectent
+  la licence** (voir Images).
+- **Images (licence)** : les métadonnées Photoshop des 7 lapins et de la prairie disent qu'ils ont été dessinés à partir
+  d'un document neuf (créé le 25/01/2018, la prairie le 27/01/2018) jusqu'en avril 2018, et que les autres documents
+  insérés sont tous des documents Photoshop créés entre le 27/01 et le 24/03/2018, pendant le travail sur le jeu (les
+  lapins sont commités le 24/03/2018 à 21 h 55 par kuhlkrein, contributeur de GazePlay). **Fait** : aucun document
+  d'un autre logiciel ni d'une autre période. **Hypothèse** : dessins faits pour le projet, comme les Biboules du même
+  auteur, gardées le 30/10 ; une image recopiée à la main ou collée depuis un navigateur ne laisserait pas de trace.
+  **Risque** : faible, le même que pour les Biboules. Crédités comme dessins du projet (`gradle/images/README.txt`,
+  licence affichée, inventaire).
+- **Fait** : le jeu réécrit (`Divisor`, classe interne `Target` ; `DivisorTheme`, `DivisorTouch`, `DivisorLevel`,
+  `DivisorGameVariantGenerator` ; retirés : `Target`, `RabbitsGameSpecSource`, `RabbitsGameLauncher`, `coeur.png`,
+  `explosion.png`, la vignette `rabbits.png`). Catalogue : **61 entrées** (avant 62). Une boucle en temps réel (vitesse
+  en part de la hauteur de l'écran, vitesse d'animation des réglages, arrêt pendant l'engrenage, délai des réglages au
+  début, durée de fixation lue à chaque pas, sortie de moins de 0,3 s tolérée comme dans Ninja, tout retiré à la fin).
+  Rebonds bornés à l'écran. Une cible qui vient de naître ne peut pas éclater pendant 0,6 s (le regard est encore là
+  où était la grande). Les deux moitiés partent en sens opposés, en travers du chemin de la grande, écartées dès leur
+  naissance. Tailles : rayon 1/6 de la hauteur, × 0,7 à chaque division, jamais sous 1/20 (un dixième de la hauteur
+  de diamètre). Lapins dessinés entiers (proportions gardées, un peu agrandis : les dessins ont des marges
+  transparentes) ; animaux et Mes images en rond avec un bord blanc, sans déformation ; prairie pour tous les thèmes,
+  sans le réglage du fond. Éclatement : l'image grossit et s'efface, 14 confettis, un « pop » des Bulles. Pastille
+  « Éclatées : n / total » en haut à droite ; à la fin, « Temps : n s » (temps de jeu, sans le délai ni l'engrenage),
+  « Bravo » puis les statistiques. Plus de limiteurs. Variantes `GroupedGameVariant` (18 : les niveaux en boutons, puis
+  en bas le thème et la façon d'éclater) ; sans variante (anciens raccourcis) : Lapins, dès qu'on touche, Normal.
+  Statistiques au format inchangé (`DivisorStats`, dossier « divisor », comme avant pour les deux cartes) : un but à
+  atteindre par cible, un but atteint par cible éclatée. Traductions (7 ajoutées), aide, crédits, inventaire, vignette
+  (capture, lapins placés à la main). Les raccourcis et la dernière variante gardés pour la carte Lapins ne servent plus
+  (comme pour Memory et Apprends les Maths).
+- **Vérifications** : `DivisorTest` (21 tests : cibles de chaque niveau, tailles jamais trop petites, vitesse en part
+  de l'écran quelle que soit sa taille, cibles toujours dans l'écran, moitiés écartées en sens opposés, éclatement dès
+  qu'on touche, attente de 0,6 s d'une nouvelle cible, délai des réglages, fixation des réglages lue à chaque pas,
+  courte sortie tolérée, fin avec « Bravo » et le temps, lapins non déformés, animaux en rond, Mes images vide ou non,
+  tout retiré à la fin, variantes) ; `GameHelpTest` avec le jeu ; captures sans fenêtre regardées
+  (`build/game-screenshots/apres/divisor`).
+  `build` complet : **1 110 tests, 0 échec** ; `allGamesTest -PallGamesOnly=Divisor -PallGamesRepeat=5` : **5 lancements,
+  0 échec** (12/11/2026). **Essayé et validé par le mainteneur le 12/11/2026.**

@@ -6,8 +6,8 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
 /**
- * Declares the game "Divisor" to the menu: its name, thumbnail, categories, variants and launcher (see
- * {@code GameSpecSource}).
+ * Declares the game "Diviseur" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * {@code GameSpecSource}). Since 12/11/2026, "Lapins" is one of its themes, no longer a game of its own.
  */
 public class DivisorGameSpecSource implements GameSpecSource {
     @Override
@@ -15,6 +15,6 @@ public class DivisorGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("Divisor").gameThumbnail("divisor")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
-            new DivisorGameLauncher());
+            new DivisorGameVariantGenerator(), new DivisorGameLauncher());
     }
 }

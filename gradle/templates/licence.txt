@@ -191,6 +191,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Sons d'« Apprends les Maths » (data/math101) : faits pour GazePlay Learning
   (gradle/images/make_math101_sounds.py), sous la licence du projet ; tableau et cartes dessinés par le jeu, la
   Biboule est celle du jeu « Tir ».
+- Images du jeu « Diviseur » (data/divisor) : lapins et prairie, dessins du projet (2018), sous la licence du
+  projet ; les sons sont ceux du jeu « Bulles ».
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
   jeu « Tir ».

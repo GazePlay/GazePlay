@@ -1,0 +1,21 @@
+# The principle
+A big picture bounces in the meadow. Look at it: it bursts into two smaller pictures, going apart. Make them all burst!
+
+# How to play
+- The pictures bounce on the sides of the screen. Each picture touched bursts into two smaller ones, until the last division; the smallest ones disappear.
+- As chosen at the bottom of the window, a picture bursts as soon as you touch it, or after a fixation: a ring fills around it while it keeps moving. Its length is that of the settings, also changed in the menu (Esc key).
+- If you leave the picture for less than 0.3 seconds, the ring waits for you. After that, it starts again from zero.
+- A picture just born cannot burst for 0.6 seconds: your gaze is still where the big one was.
+- At the start, nothing bursts during the delay of the settings (Games, "Delay before a selection is possible when a game starts").
+- At the top right, the number of pictures burst out of the total.
+- The speed also follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no penalty. When all the pictures have burst, the time taken is shown (without the delay of the start nor the time the menu was open): "Bravo", then the statistics.
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The level. Easy: 2 divisions, 7 pictures to burst, going through the height of the screen in 5 seconds. Normal: 3 divisions, 15 pictures, in 3 seconds. Hard: 4 divisions, 31 pictures, in 2 seconds.
+- The first picture is a third of the height of the screen. Each division makes the pictures a little smaller, never under a tenth of the height of the screen.
+- At the bottom, what the pictures show: Rabbits, Animals, or My images: your images, cut into a circle ("My images" folder of the settings).
+- At the bottom, how to burst them: as soon as touched, or after a fixation.

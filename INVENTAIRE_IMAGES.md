@@ -76,7 +76,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | ~~Space~~ | ~~12~~ **Fait le 3/11/2026** : les 12 images retirées (vaisseaux, boss, extraterrestres, fond, lasers, bouton) ; fond de nuit douce, fusée, 5 soucoupes et boss dessinés par script (`make_space_images.py`) ; vignette composée des images du jeu |
 | ~~Survive Against Robots~~ | ~~12~~ **Fait le 3/11/2026** : les 12 dessins retirés ; 3 décors (ciel, jardin, cour de l'école) et 4 bonus dessinés par script (`make_survive_images.py`) ; le joueur et les robots sont ceux du Tir ; vignette composée des images du jeu |
 | Horses, Race | 11 chacun |
-| Divisor | 10 |
+| ~~Divisor~~ | ~~10~~ **Fait le 12/11/2026** (Diviseur, une seule carte avec Lapins) : les 7 lapins et la prairie gardés comme **dessins du projet**, comme les Biboules (dessinés dans Photoshop de janvier à avril 2018, tous les documents insérés créés dans Photoshop du 27/1 au 24/3/2018, d'après leurs métadonnées ; commités par kuhlkrein) ; `coeur.png` et `explosion.png`, lus par aucun code, retirés ; vignette faite d'une capture, celle de Lapins retirée |
 | Biboule Jump, dossier `common` des jeux | 9 chacun |
 | ~~Rock Paper Scissors~~ | ~~7~~ **Fait le 10/11/2026** : les 7 images retirées (gants blancs de dessin animé à 4 doigts, proches du style d'un personnage commercial ; parc ; pouces) ; mains d'OpenMoji (CC BY-SA 4.0, `make_rockpaperscissors_images.py`), le reste dessiné par le jeu ; vignette faite d'une capture |
 | Pianosight | 6 |

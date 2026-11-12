@@ -933,3 +933,12 @@ GazeRaceLost,,,,,,,Lost!,,Perdu !,,,,,,,,,,,,
 
 # Tower Defense
 SendWave,,,,,,,Send the next wave,,Envoyer la vague suivante,,,,,,,,,,,,
+
+# Diviseur (reviewed on 12/11/2026)
+DivisorRabbits,,,,,,,Rabbits,,Lapins,,,,,,,,,,,,
+DivisorAnimals,,,,,,,Animals,,Animaux,,,,,,,,,,,,
+DivisorMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
+DivisorAtOnce,,,,,,,Burst as soon as touched,,Éclater dès qu'on touche,,,,,,,,,,,,
+DivisorFixation,,,,,,,Burst after a fixation,,Éclater après une fixation,,,,,,,,,,,,
+DivisorBurst,,,,,,,Burst:,,Éclatées :,,,,,,,,,,,,
+DivisorTime,,,,,,,Time:,,Temps :,,,,,,,,,,,,

@@ -190,6 +190,14 @@ yellow Biboule of the shooting game, cut by make_math101_images.py, and the soun
 made by make_math101_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). The
 thumbnail (gazeplay-core: data/common/Thumbnails/math101.png, 960 x 540) is a capture of the game, reduced by half.
 
+Images of "Diviseur" (name code Divisor; gazeplay-games: data/divisor): the 7 rabbits (rabbit/images/1.png to 7.png)
+and the meadow (images/Background.png) are drawings of the project, kept (12/11/2026): drawn in Photoshop from a new
+document from January to April 2018, the other documents put in them all being Photoshop documents created from
+27/1 to 24/3/2018 (their metadata), and committed by a contributor of GazePlay (kuhlkrein), as the Biboules. coeur.png and explosion.png, read by no code, are removed. The sounds are the
+pops of Bubbles (data/bubble/sounds/pop1-3.wav). The thumbnail (gazeplay-core: data/common/Thumbnails/divisor.png,
+960 x 540) is a capture of the game, the rabbits placed by hand, reduced by half; the thumbnail of the former game
+"Rabbits" is removed with it (one game since 12/11/2026).
+
 Images and sounds of the moles game (gazeplay-games: data/whackmole): the meadow, the hole and the mole
 (images/field.png, hole.png, mole.png) are drawn by make_moles_images.py and the sounds (sounds/hit1.wav, hit2.wav) made
 by make_moles_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (4/11/2026)
