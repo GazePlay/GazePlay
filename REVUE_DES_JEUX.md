@@ -5,6 +5,58 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU VENDREDI 13/11/2026 (bilan de la séance du jeudi 12/11/2026)
+
+**Fait le jeudi 12/11/2026** (détail dans « Avancement du jeudi 12/11/2026 » plus bas, et les fiches en bas) :
+- **Groupe 8 terminé**, poussé, **CI verte sur les 7 jobs** (run `43226700659` ; 1 166 tests sous Java 25, 0 échec) :
+  Diviseur avec Lapins devenu un thème (`14c916d0c`), Dés (`1844aadde`), Jeu de l’oie (`4143aea76`), Identifier les
+  lettres (`252114cf9` + `b7648db96` ; voix de source inconnue gardées, issue #1741), Point par point (`5117d578a`).
+- **Décision du mainteneur** : en local, seulement les tests ciblés de ce qu’on vient de faire ; le build complet et
+  `all-games` sur GitHub une fois poussé.
+- **Groupe 9 commencé**, chaque jeu essayé et validé par le mainteneur, un commit par jeu, **poussés le 12/11 au soir**
+  à la demande du mainteneur (CI run `43249868413`, **à vérifier le 13/11**) :
+  - **Gribouille** (`64cb86e24`) : dessiner au regard, crayon levé hors de la feuille, 8 couleurs ou arc-en-ciel,
+    gomme, 3 épaisseurs, « Garder mon dessin » dans le nouveau dossier `Documents\GazePlay_Learning\dessins`
+    (réglage Dossiers « Mes dessins ») ;
+  - **Cartes à gratter** (`6f790a2a7`) : un vrai jeu à part de Blocs, une **pièce** déplacée par le regard qui gratte,
+    image découverte à **90 %** (retour d’essai : 60 % au début) ;
+  - **Cartes magiques** (`697204b74`) : Chercher ou **Magique** (l’image montrée, les cartes mélangées sous les yeux) ;
+  - **Tartes à la crème** (`ea643a12b`) : la tarte s’écrase vraiment, après une fixation ou dès qu’on regarde, cibles
+    immobiles ou qui bougent.
+- **La Fabrique à gâteaux** (`Cakes`) : **fait mais NON COMMITÉ** (fiche en bas) : tout dessiné par le jeu (24 images
+  et 3 sons retirés), parcours guidé sans menus, Copier le modèle (Facile / Normal / Difficile) ou **Libre** ; retour
+  d’essai traité : bonbons seulement sur le dernier étage, **accessoire** (ruban, perles, cœurs) autour des étages du
+  dessous. Tests ciblés verts (`CakesTest` 10, `GameHelpTest` 53), SpotBugs sans alerte.
+- Diapos du projet (artefact) : 18 diapos, les crochets du comité d’utilisateurs et de l’extension restent à remplir.
+
+**Point sur La Fabrique à gâteaux (remarque du mainteneur, 12/11 au soir)** : **revoir les couleurs des gâteaux,
+certaines sont assez proches**. Constat à vérifier sur une planche : gâteau rose (250, 150, 150) et nappage rose
+(236, 92, 150), gâteau chocolat (130, 78, 52) et nappage chocolat (108, 66, 36), nappage rouge (220, 36, 48) et nappage
+rose ; sur le modèle en petit, ces écarts se voient encore moins. Proposition à faire : une planche de toutes les
+couleurs (gâteaux et nappages, en grand et à la taille du modèle), des teintes bien séparées (par exemple gâteau
+vanille, chocolat, fraise, pistache ; nappages chocolat blanc, caramel, framboise, myrtille, citron), à valider avant
+de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
+
+**Ordre du jour du vendredi 13/11/2026** :
+1. **La Fabrique à gâteaux** : planche des couleurs, proposition de couleurs bien distinctes, validation du mainteneur,
+   correction (code, captures, vignette), essai du mainteneur, puis **commit** (avec ces notes). **13/11 : couleurs
+   faites (proposition C, fiche en bas), essayé et validé par le mainteneur, commité.** Fait aussi le 13/11 : diapos
+   refondues d’après les retours reçus (captures avant/après des jeux et des menus), inventaire des images recompté
+   et commité (`655ae66e1`).
+2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend`), Piano, Bouteille (`Bottle`), La pièce
+   (`Room`), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
+   chemin (`Follow`).
+3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
+   travail, tests ciblés, essai du mainteneur, puis un commit par jeu sur demande.
+0. **D’abord : vérifier la CI** du push du 12/11 au soir (run `43249868413`, `5117d578a..ea643a12b` : Gribouille,
+   Cartes à gratter, Cartes magiques, Tartes à la crème ; build complet et `all-games` avec les nouvelles variantes ;
+   `package-macos` pas prioritaire).
+4. **Pousser** à la fin du groupe 9 ou quand le mainteneur part (il le dit) : La Fabrique à gâteaux et la suite, puis
+   vérifier la CI.
+5. Ensuite : groupe 10 (GazePlay Eval et Eval Test). Après la revue : mémoire des tests, retrait des limiteurs, test
+   instable `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26), refonte graphique
+   du menu des jeux et de l’écran des statistiques.
+
 ## REPRISE DU JEUDI 12/11/2026 (bilan de la séance du mardi 10/11/2026 ; mercredi 11/11 férié)
 
 **Fait le mardi 10/11/2026** (détail dans « Avancement du mardi 10/11/2026 » plus bas, et les fiches en bas) :
@@ -75,6 +127,11 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
   regarde, cibles qui bougent ; sans variante : Animaux, cibles moyennes, après une fixation, immobiles, sans fin),
   fait (fiche en bas), tests ciblés verts (`CreamPieTest` 8, `GameHelpTest` 52), SpotBugs sans alerte ; **essayé et validé
   par le mainteneur**, commité.
+- **La Fabrique à gâteaux** (`Cakes`) : propositions validées (mode Libre gardé, toutes les images remplacées ;
+  anciennes variantes lues comme Copier le modèle au même niveau, sans fin), fait (fiche en bas), tests ciblés verts
+  (`CakesTest` 10, `GameHelpTest` 53), SpotBugs sans alerte. **Essai du mainteneur** : bonbons
+  seulement sur le dernier étage (cachés sur les autres), un accessoire autour des étages du dessous ; fait ; **à
+  réessayer**.
 - **Installeur Windows** fait à la demande du mainteneur, pour l'envoyer : construit depuis `cd0d45d8b` (sans
   Diviseur) dans une copie de travail à part, supprimée ensuite ;
   `build\installeur-a-envoyer\gazeplay-learning-windows-x64-1.11.10-installer.exe` (332 078 749 octets, SHA-256
@@ -891,7 +948,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
 | **Survive Against Robots** (`SurviveAgainstRobots` ; une seule carte depuis le 3/11, avant 2) | **3/11** : les 12 dessins retirés ; 3 décors et 4 bonus dessinés par script (`make_survive_images.py`) ; la Biboule et les robots du Tir | ✔ 3/11 (cœurs, pastilles, décor au hasard parmi 3, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min / 20 / 50 robots, souris ou regard selon le réglage des entrées, tir automatique ou vers l'avant, 3 niveaux, 4 bonus) |
 | **Space Game** (`SpaceGame`) | **3/11** : les 12 images retirées ; fond, fusée, soucoupes et boss dessinés par script (`make_space_images.py`) | ✔ 3/11 (fond de nuit douce choisi, cœurs, pastilles, jauge du boss, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin ou boss après 1 / 3 min ou 20 / 50 extraterrestres, boss de 15 / 30 / 50 points de vie, 4 / 6 / 8 extraterrestres) |
-| Cakes (`Cakes`) | À confirmer : 24 dessins | | |
+| **La Fabrique à gâteaux** (`Cakes`) | **12/11** : les 24 images (faites dans Photoshop en 2018, auteur non prouvé) et les 3 sons de source inconnue retirés ; gâteaux, plat et table dessinés par le jeu (Biboules ailées redessinées) ; 2 sons faits par script (`make_cakes_sounds.py`) ; vignette faite d’une capture | ✔ 12/11 (étages en cylindre aux 4 couleurs, 5 nappages qui coulent, 3 accessoires autour des étages du dessous (ruban, perles, cœurs), 3 sortes de bonbons sur le dernier étage, parapluies ou Biboules ailées, modèle sur une carte à droite, partie fausse encadrée de rouge qui clignote, onglets des étapes, boutons qui montrent le résultat, anneau, étoile et « Bravo ! ») — à réessayer | ✔ 12/11 (règle du mainteneur : parcours guidé sans menus, Copier le modèle Facile 1 étage / Normal 3 étages / Difficile modèle caché avec « Voir le modèle », choix faux posé quand même et compté, **mode Libre** jusqu’à 3 étages, fin après 1 / 3 / 5 gâteaux ou sans fin ; essai : bonbons seulement sur le dernier étage, accessoire sur les autres) — à réessayer |
 | Follow (`Follow`) | À confirmer : 13 dessins | | |
 | **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
 | **Diviseur** (`Divisor`, une seule carte depuis le 12/11, avant 2 : Lapins est un thème) | **12/11** : les 7 lapins et la prairie gardés comme dessins du projet (métadonnées Photoshop : dessinés de janvier à avril 2018, documents insérés tous créés pendant le travail sur le jeu ; commités par kuhlkrein, comme les Biboules) ; `coeur.png` et `explosion.png` (inutilisés) retirés ; sons des Bulles ; vignette faite d'une capture, celle de Lapins retirée | ✔ 12/11 (lapins entiers sans déformation, images en rond avec un bord blanc, confettis et son à l'éclatement, anneau, pastille, temps à la fin) | ✔ 12/11 (règle du mainteneur : une seule carte, Lapins / Animaux / Mes images, dès qu'on touche ou après fixation, Facile 2 / Normal 3 / Difficile 4 divisions (7 / 15 / 31 cibles, hauteur de l'écran en 5 / 3 / 2 s), plus petite cible à un dixième de la hauteur, « Bravo » et le temps) — validé le 12/11 |
@@ -3770,3 +3827,65 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   les zones d’intérêt, variantes et ancien raccourci) ; `GameHelpTest` avec le jeu ; SpotBugs sans alerte ; captures
   sans fenêtre regardées (après la première : crème moins couvrante et ombre plus foncée, vignette sur la tarte en vol).
   **Essayé et validé par le mainteneur le 12/11/2026.**
+
+### La Fabrique à gâteaux (`Cakes`) — 12/11/2026
+
+- **État des lieux (code)** : un gâteau à construire pour reproduire un modèle tiré au hasard, affiché à droite, dans
+  les trois variantes (Facile 1 étage, Normal 3 étages, Difficile 3 étages avec un modèle qui s’efface après 5 s) ;
+  un menu principal de 4 boutons (gâteau, nappage, bonbons, décoration) ouvrant chacun une page de choix avec un bouton
+  « retour », la couleur du fond changeant à chaque page ; un nouvel étage apporté par une pince **seulement si l’étage
+  en cours était juste** ; nappage projeté par deux aérographes (3 s), pince 2,5 s ; tout juste : le modèle réapparaît,
+  victoire, nouveau modèle, sans fin. **24 images et 3 sons de source inconnue** (images faites dans Photoshop en 2018,
+  commitées par l’auteur du jeu ; ses dessins, hypothèse non prouvée ; `menu4.png` et `validate.png` lus par aucun
+  code). **En Difficile, le modèle ne réapparaissait qu’au survol de la souris**, jamais au regard. Aucun but à
+  atteindre ; à la sortie, un but compté par élément identique au modèle sur 3 étages, même en Facile. Boutons de
+  largeur / 8, champ `fixationLength` copié jamais lu, rien d’arrêté par le menu, ni aide ni test, vignette de source
+  inconnue.
+- **Règle du mainteneur (12/11/2026, propositions validées)** : tout dessiné par le jeu ; un parcours guidé à la place
+  des menus (Gâteau, Nappage, Bonbons, puis Décoration sur le dernier étage), une rangée de boutons ronds et des onglets ;
+  en copiant le modèle, un choix différent est posé quand même, la partie du modèle clignote en rouge, l’erreur compte
+  (pas de vies), on choisit à nouveau ; Facile, Normal, Difficile (modèle caché après 5 s, bouton « Voir le modèle »
+  3 s) ; **mode Libre** gardé (jusqu’à 3 étages, « Encore un étage » ou « Décorer ») ; fin après 1, 3 ou 5 gâteaux ou
+  sans fin ; anciennes variantes lues comme Copier le modèle au même niveau, sans fin.
+- **Fait** : le jeu réécrit (`CakeFactory`, classes internes `Layer` et `Choice` ; `CakesMode`, `CakesLevel`,
+  `CakesEnd`, `CakesGameVariantGenerator` ; `ScreenCake` retiré ; `CakeGameVariant` gardé pour lire les anciennes
+  variantes). Dessins du jeu : étage en cylindre (dégradé, dessus clair), 4 couleurs de gâteau, 5 nappages avec 7
+  coulures, 3 sortes de bonbons (perles, vermicelles, petits cookies) posés au hasard d’une graine fixe, deux
+  décorations (deux parapluies à cocktail, trois Biboules ailées redessinées) ; étages de plus en plus étroits (−18 %),
+  sur un plat, devant une table douce ; étage pas encore choisi en pointillés. Les boutons montrent l’étage tel qu’il
+  serait avec ce choix. Onglets : l’étage (« Étage 2 / 3 ») et les étapes, l’étape en cours de la couleur principale.
+  Modèle sur une carte à droite ; une erreur encadre en rouge l’étage concerné du modèle, qui clignote 1 s (et se montre
+  en Difficile). Nouvel étage qui descend en 0,5 s (rien ne se choisit pendant ce temps). Gâteau fini : il pulse, étoile
+  et « Bravo ! » 2,2 s, le modèle se montre. Une boucle en temps réel (fixation lue à chaque pas, délai, Échap). Sons :
+  pose (« plop ») et nappage (script), erreur de Dés, victoire du Jeu de l’oie. Statistiques (« Cakes », **format
+  inchangé**) : un but à atteindre par gâteau, atteint quand il est fini, une erreur par choix différent du modèle ; les
+  fichiers déjà produits ne changent pas. Variantes `GroupedGameVariant` (16 : le mode en haut, le niveau en boutons, la
+  fin en bas). 22 clés ajoutées ; aide, crédits, licence, inventaire, vignette (capture d’une copie en cours).
+- **Vérifications** : `CakesTest` (10 tests : délai et fixation, choix de chaque étape, choix différent du modèle compté
+  puis l’étape à nouveau, les 3 étages du modèle (rien de choisi pendant l’arrivée d’un étage, décoration sur le
+  dernier seulement) puis un autre gâteau, modèle caché et son bouton (et montré par une erreur), mode Libre de 3 étages
+  sans erreur comptée, Libre décoré après un étage, « Bravo » après 3 gâteaux, tout retiré à la fin, variantes et
+  anciennes variantes) ; `GameHelpTest` avec le jeu ; SpotBugs sans alerte ; captures sans fenêtre regardées (après la
+  première : coulures plus fines et plus longues, plus d’écart entre les deux boutons du mode Libre). **Premier essai du
+  mainteneur.**
+- **Essai du mainteneur (12/11/2026)** : sur un modèle à 3 étages, les bonbons de chaque dessus d’étage étaient cachés
+  par l’étage suivant ; les bonbons seulement sur le dernier étage, et un accessoire à la place. **Fait** : les étages
+  du dessous ont une étape **Accessoire** (3 choix, autour du côté de l’étage, bien visibles : un ruban avec un nœud,
+  une guirlande de perles, une rangée de cœurs), le dernier étage les Bonbons puis la Décoration ; en Libre, « Et
+  ensuite ? » arrive après le nappage (« Encore un étage » : l’accessoire puis un nouvel étage ; « Décorer » : les
+  bonbons puis la décoration). Une clé ajoutée (`CakesStepAccessory`), aide mise à jour, vignette refaite.
+  `CakesTest` (10 tests, adaptés : bonbons seulement sur le dernier étage du modèle, accessoire sur les autres, parcours
+  du mode Libre) ; SpotBugs sans alerte ; captures regardées. **À réessayer par le mainteneur.**
+- **Couleurs des gâteaux (remarque du mainteneur du 12/11, faite le 13/11/2026)** : certaines couleurs se
+  confondaient (gâteau et nappage chocolat : écart CIEDE2000 de 6 ; gâteau et nappage rose ; nappages rouge et rose).
+  Planche des 20 combinaisons gâteau + nappage, en vision normale et en deutéranopie simulée (Machado 2009), avec
+  l’écart le plus petit de chaque groupe ; recherche parmi des teintes de pâtisserie
+  (`build/game-screenshots/apres/cakes-couleurs/planche-gateaux.png`). **Proposition C retenue par le mainteneur** :
+  gâteaux vanille (240, 214, 150), chocolat (150, 95, 60), fraise (245, 165, 185), myrtille (120, 160, 235) ; nappages
+  chocolat blanc (250, 246, 236), chocolat noir (70, 40, 25), caramel (235, 140, 40), cassis (120, 45, 150), menthe
+  (60, 150, 140), adoucie pour que son dessus éclairci ne soit pas fluo. Écart le plus petit : 17 (12 en deutéranopie),
+  au lieu de 6 (5). Plus de nappage rouge. `SPONGE` et `CREAM` de `CakeFactory` changés (même nombre de couleurs :
+  variantes, statistiques et tests inchangés) ; captures sans fenêtre refaites (`apres/cakes-couleurs/`, avec la
+  feuille de style claire des jeux), vignette refaite ; `CakesTest` vert. **Remarque** : le ruban de l’accessoire
+  (bleu, 90, 170, 230) est proche du gâteau myrtille (déjà le cas avec l’ancien gâteau bleu), et les cœurs roses
+  proches du gâteau fraise : à voir à l’essai. **Essayé et validé par le mainteneur le 13/11/2026, commité.**

@@ -1,0 +1,19 @@
+# Le principe
+Fabrique un gâteau étage par étage : le gâteau, le nappage, un accessoire autour des étages du dessous, puis les bonbons et la décoration sur le dernier étage. Copie le modèle, ou invente ton propre gâteau !
+
+# Comment jouer
+- En bas, des boutons ronds montrent les choix de l’étape : chaque bouton montre l’étage tel qu’il serait. Regarde un bouton : un anneau se remplit, puis le choix se pose sur le gâteau. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- En haut, l’étage et l’étape en cours : Gâteau, Nappage, puis Accessoire (un ruban, des perles ou des cœurs autour de l’étage) pour les étages du dessous, ou Bonbons et Décoration pour le dernier étage.
+- En copiant le modèle : si un choix n’est pas celui du modèle, la partie du modèle clignote en rouge ; choisis à nouveau. Un bon choix passe à l’étape suivante, puis un nouvel étage arrive.
+- En Difficile, le modèle se cache au bout de 5 secondes : regarde le bouton « Voir le modèle » pour le revoir 3 secondes.
+- En Libre, après le nappage : « Encore un étage » (l’accessoire, puis un nouvel étage, jusqu’à 3) ou « Décorer » (les bonbons et la décoration, pour finir).
+- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies : un choix différent du modèle compte seulement une erreur dans les statistiques. Le gâteau fini brille, avec une étoile et « Bravo ! ». Selon ton choix, la partie s’arrête après 1, 3 ou 5 gâteaux (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Copier le modèle, ou Libre (ton propre gâteau).
+- Pour copier le modèle : Facile (1 étage), Normal (3 étages) ou Difficile (3 étages, modèle caché).
+- En bas, la fin : 1, 3 ou 5 gâteaux, ou sans fin.

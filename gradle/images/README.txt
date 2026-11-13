@@ -241,6 +241,14 @@ picture is drawn by the game. They replace (12/11/2026) a hand, a pie (gateau.pn
 unknown source. The thumbnail (gazeplay-core: data/common/Thumbnails/creamPie.png, 960 x 540) is a capture of the
 game, reduced by half; it replaces a thumbnail of unknown source.
 
+"La Fabrique à gâteaux" (name code Cakes; gazeplay-games: data/cake): the cakes (layers, creams, sweets, umbrellas
+and winged Biboules), the plate and the table are drawn by the game since 12/11/2026; the 24 pictures of
+data/cake/images (made in Photoshop in 2018, author not proven) are removed. The sounds (data/cake/sounds: plop.wav,
+cream.wav) are made by make_cakes_sounds.py (this folder), under the license of GazePlay Learning
+(GPL-3.0-or-later); they replace three sounds of unknown source. A wrong choice and a cake finished take the sounds
+of "Dés" and of the goose game. The thumbnail (gazeplay-core: data/common/Thumbnails/cakes.png, 960 x 540) is a
+capture of the game, reduced by half; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

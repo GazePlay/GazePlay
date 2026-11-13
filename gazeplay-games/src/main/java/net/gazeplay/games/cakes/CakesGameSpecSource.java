@@ -6,7 +6,8 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
 /**
- * Declares the game "Cakes" to the menu: its name, thumbnail, categories, variants and launcher (see
+ * Declares "La Fabrique à gâteaux" (name code Cakes) to the menu: its name, thumbnail, categories, variants (see
+ * {@link CakesGameVariantGenerator}) and launcher (see
  * {@code GameSpecSource}).
  */
 public class CakesGameSpecSource implements GameSpecSource {
