@@ -61,7 +61,7 @@ gazeplay-commons/src/test/resources/data/whereisit/some_valid/images/bears/polar
 gazeplay-commons/src/testFixtures/resources/bear.jpg,non,libre,"OpenMoji, CC BY-SA 4.0 (remplacement du 28/10/2026)",2019-07-20,schwab,new default images
 gazeplay-core/src/main/resources/data/common/Thumbnails/TowerDefense.png,oui,libre,"composée des images du jeu (gradle/images/make_towerdefense_images.py), GPL-3.0-or-later",2026-11-03,GazePlay Learning,revue de Tower Defense
 gazeplay-core/src/main/resources/data/common/Thumbnails/biboulejump.png,oui,libre,"capture du jeu (4/11/2026) ; ciel, nuages et tremplin dessinés pour le projet (make_biboulejump_images.py)",2026-11-04,GazePlay Learning,revue de Biboule Jump
-gazeplay-core/src/main/resources/data/common/Thumbnails/block.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
+gazeplay-core/src/main/resources/data/common/Thumbnails/block.png,oui,libre,"capture du jeu « Blocs » (13/11/2026) ; blocs dessinés par le jeu, manchot OpenMoji CC BY-SA 4.0",2026-11-13,GazePlay Learning,revue de Blocs
 gazeplay-core/src/main/resources/data/common/Thumbnails/bottle.jpg,oui,libre,"capture du jeu (13/11/2026) ; stand et bouteilles dessinés par le jeu, GPL-3.0-or-later",2026-11-13,GazePlay Learning,revue de Bouteille
 gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,libre,"capture du jeu (12/11/2026) ; gâteaux dessinés par le jeu, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de La Fabrique à gâteaux

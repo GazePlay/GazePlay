@@ -109,6 +109,20 @@ EvalMissingMedia,,,,,,,Screen {0}: the file {1} is missing from the archive.,,É
 EvalUnsupportedMedia,,,,,,,Screen {0}: the format of {1} cannot be read by GazePlay (images: PNG JPG JPEG GIF BMP; sounds: MP3 WAV AIF AIFF; videos: MP4 M4V).,,Écran {0} : le format de {1} n'est pas lisible par GazePlay (images : PNG JPG JPEG GIF BMP ; sons : MP3 WAV AIF AIFF ; vidéos : MP4 M4V).,,,,,,,,,,,,
 BibJump,Biboule Jump,بيبول يقذف,Скачок Бібуль,比布尔跳,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,बिबौल जंप,Biboule Jump,Biboule Jump,Biboule Jump,ビブールジャンプ,Biboule Jump,Biboule Jump,Biboule Jump,Бибул Прыжок,Biboule Jump,Biboule Jump,Biboule Jump
 Blocks,Blloqe,مكعبات,Блокі,色块,Blöcke,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,ब्लाकों,Blokovi,Blok,Blocchi,ブロック,Blokken,Bloki,Bloco,Блоки,Bloques,Các hình khối,Blok
+BlocsGaze,,,,,,,Vanish as soon as looked at,,Disparaissent dès qu'on les regarde,,,,,,,,,,,,
+BlocsFixation,,,,,,,Vanish after a fixation,,Disparaissent après une fixation,,,,,,,,,,,,
+BlocsEasy,,,,,,,Easy (3 × 3),,Facile (3 × 3),,,,,,,,,,,,
+BlocsNormal,,,,,,,Normal (5 × 5),,Normal (5 × 5),,,,,,,,,,,,
+BlocsHard,,,,,,,Hard (8 × 8),,Difficile (8 × 8),,,,,,,,,,,,
+BlocsEnd3,,,,,,,3 pictures,,3 images,,,,,,,,,,,,
+BlocsEnd5,,,,,,,5 pictures,,5 images,,,,,,,,,,,,
+BlocsEnd10,,,,,,,10 pictures,,10 images,,,,,,,,,,,,
+BlocsEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+BlocsAnimals,,,,,,,The animals,,Les animaux,,,,,,,,,,,,
+BlocsMyImages,,,,,,,My images,,Mes images,,,,,,,,,,,,
+BlocsRemoved,,,,,,,Blocks:,,Blocs :,,,,,,,,,,,,
+BlocsPicturesDone,,,,,,,Pictures:,,Images :,,,,,,,,,,,,
+BlocsWell,,,,,,,Well done!,,Bravo !,,,,,,,,,,,,
 Bottle,Shishe,زجاجة,Бутэлька,瓶子,Flasche,Μπουκάλι,Bottle,Pullo,Bouteille,बोतल,Boca,Botol,Bottiglia,ボトル,Fles,Butelka,Garrafa,Бутылка,Botella,Chai,Botol
 BottleBreakAll,,,,,,,Break them all,,Tout casser,,,,,,,,,,,,
 BottleColorMode,,,,,,,The right color,,La bonne couleur,,,,,,,,,,,,

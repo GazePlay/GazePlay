@@ -285,6 +285,13 @@ former room in 3D (data/room, 9 pictures of unknown source, 2018) and stars.jpg 
 code). The thumbnail (gazeplay-core: data/common/Thumbnails/home.png, 960 x 540) is a capture of the game, reduced; it
 replaces a thumbnail of unknown source (a magnifying glass and a compass).
 
+"Blocs" (name code Blocks; gazeplay-games: data/blocs): the blocks are drawn by the game since 13/11/2026, over the
+default images (OpenMoji, CC BY-SA 4.0) or the images of the user. The sound of a block that vanishes
+(data/blocs/sounds/pop.wav) is made by make_blocs_sounds.py (this folder), under the license of GazePlay Learning
+(GPL-3.0-or-later); a picture uncovered takes the sound of the goose game. The thumbnail (gazeplay-core:
+data/common/Thumbnails/block.png, 960 x 540) is a capture of the game, reduced; it replaces a thumbnail of unknown
+source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

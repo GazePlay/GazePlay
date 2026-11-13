@@ -46,7 +46,7 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
 2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend` ; **13/11 : fait, essayé et validé par le mainteneur,
    commité**, fiche en bas), Piano (**13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas),
    Bouteille (`Bottle` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), La pièce
-   (`Room` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
+   (`Room` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Blocs (`Blocks` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Échelle (`Ladder`), Suivre le
    chemin (`Follow`).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
    travail, tests ciblés, essai du mainteneur, puis un commit par jeu sur demande.
@@ -941,7 +941,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Cartes à gratter** (`ScratchCard`) | **12/11** : pas d’image propre ; couche argentée, étoiles et points d’interrogation dessinés par le jeu ; animaux par défaut (OpenMoji) ou Mes images ; 2 sons faits par script (`make_scratchcard_sounds.py`) ; vignette faite d’une capture | ✔ 12/11 (carte aux proportions de l’image et aux coins arrondis, couche argentée brillante à motif, pièce dorée qui suit le regard et gratte sous elle, bord doux, pastille des cartes, étoile et « Bravo ! » en bas de la carte) | | ✔ 12/11 (règle du mainteneur : un vrai jeu à part de Blocs, une pièce déplacée par le regard, lissée, qui gratte tout le long du chemin, 90 % pour découvrir (essai du mainteneur : 60 % au début), petite / moyenne / grosse pièce, Animaux ou Mes images, fin après 3 / 5 / 10 cartes ou sans fin) — validé le 12/11 |
 | **Cartes magiques** (`MagicCards`) | **12/11** : le dos des cartes et `blue-card-game.png` (inutilisé), de source inconnue, et la croix `error.png` (Flaticon, lue seulement par ce jeu) retirés ; cartes dessinées par le jeu ; son du retournement fait par script (`make_magiccards_sounds.py`), sons des Gobelets, de Dés et du Jeu de l’oie ; vignette faite d’une capture | ✔ 12/11 (cartes arrondies au dos de la couleur principale, anneau autour de la carte, retournement animé, mauvaise carte grisée avec une croix, image qui grandit au milieu, étoile et « Bravo ! », pastilles de la consigne et des images) | ✔ 12/11 (règle du mainteneur : Chercher ou **Magique** (l’image montrée, les cartes retournées et mélangées deux par deux sur des arcs, puis à retrouver), 3 / 4 / 6 / 9 cartes, erreur comptée sans vies, mauvaise carte qui reste retournée, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin) — validé le 12/11 |
 | **Tartes à la crème** (`Creampie`) | **12/11** : la main, la tarte (`gateau.png`) et le son `missile.mp3`, de source inconnue, remplacés par des dessins et 2 sons faits par script (`make_creampie_images.py`) ; crème dessinée par le jeu ; vignette faite d’une capture | ✔ 12/11 (cible ronde au cadre de la couleur principale, anneau, main en bas avec sa tarte, tarte qui vole en arc en tournant, crème avec coulures et cerise, image qui tremble, pastille des tartes) | ✔ 12/11 (règle du mainteneur : la tarte s’écrase vraiment, après une fixation ou dès qu’on regarde, cibles immobiles ou qui bougent, petites / moyennes / grandes, Animaux ou Mes images, fin après 10 / 20 / 30 tartes ou sans fin) — validé le 12/11 |
-| Blocks | Utilise les images par défaut (voir Memory) | | |
+| **Blocs** (`Blocks`) | **13/11** : pas d’image propre ; blocs dessinés par le jeu sur les animaux par défaut (OpenMoji) ou Mes images ; vignette refaite (capture) | ✔ 13/11 (blocs de couleurs douces en damier, disparition animée, cadre, anneau, pastilles) | ✔ 13/11 (règle du mainteneur : au regard ou par fixation, 3 × 3 / 5 × 5 / 8 × 8, 3 / 5 / 10 images ou sans fin, blocs restants qui clignotent après 5 s) |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
 | **La pièce** (`Room`) | **13/11** : les 9 images des murs et des flèches (source inconnue) et le ciel ESA/Hubble (lu par aucun code) retirés ; murs et meubles dessinés par le jeu, 32 objets OpenMoji (CC BY-SA 4.0) ; vignette refaite (capture) | ✔ 13/11 (vue en 2D mur par mur, 4 pièces de couleur, flèches rondes, boussole, carte de la question, anneau) | ✔ 13/11 (règle du mainteneur : Cherche ou Explorer, 4 pièces ou toutes, avec l’image ou le mot seul, 5 / 10 / 20 objets ou sans fin, aide après 15 s) |
@@ -4051,3 +4051,37 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `allGamesTest -PallGamesOnly=Room -PallGamesRepeat=3` réussi ; captures sans fenêtre des 16 murs regardées
   (`build/game-screenshots/apres/room/` ; après la première : dans la cuisine, étagères remontées au-dessus du plan de
   travail, boussole qui débordait à droite). **Essayé et validé par le mainteneur le 13/11/2026, commité.**
+
+### Blocs (`Blocks`) — 13/11/2026
+
+- **État des lieux (code)** : une image (Mes images, sinon les animaux par défaut) cachée sous une grille de blocs aux
+  couleurs tirées au hasard en RVB (souvent criardes), de 2 × 2 à 9 × 9 (8 variantes) ; un bloc disparaît dès que le
+  regard entre (sans fixation) ; tous les blocs enlevés : victoire, une autre image, sans fin. Les derniers petits blocs
+  difficiles à trouver, aucune aide ; un bloc disparaît d’un coup, sans son ; code jamais utilisé (blocs blancs ou
+  noirs, pourcentage à découvrir, « traînée » qui enlève les voisins : le lanceur fixait toujours couleurs, 100 %, sans
+  traînée) ; limiteurs lancés par un seul des deux constructeurs, graine oubliée au rejeu, `dispose()` vide ; Mes
+  images sans variante ; vignette `block.png` de source inconnue. Jeu proche de Bulles et de Cartes à gratter, mais le
+  plus simple : un jeu d’initiation (le regard agit).
+- **Règle du mainteneur (13/11/2026)** : le garder et le refaire ; les deux façons de faire disparaître un bloc au
+  choix ; 3 niveaux ; fin après 3, 5 ou 10 images, ou sans fin ; propositions validées (blocs restants qui clignotent,
+  sans « Gros pinceau »).
+- **Fait** : le jeu réécrit (`Blocs`, `BlocsMode`, `BlocsLevel`, `BlocsEnd`, `BlocsPictures`,
+  `BlocsGameVariantGenerator` ; statistiques « Blocks », **format inchangé** ; plus de limiteurs, comme les jeux revus
+  depuis le 12/11). Image dans un cadre, à ses proportions, sous le score ; grille de 3 × 3, 5 × 5 ou 8 × 8 blocs en
+  damier de deux nuances d’une couleur douce (5 couleurs, jamais la même deux fois de suite), en léger relief ; **Au
+  regard** : un bloc disparaît dès que le regard entre ; **Par fixation** : anneau commun puis le bloc disparaît ; il
+  rétrécit en tournant et s’efface, avec un « pop » (script). Après 5 s sans enlever un bloc, ceux qui restent
+  clignotent doucement. Image découverte : étoile et « Bravo ! », l’image entière 2 s, une autre (jamais la même deux
+  fois de suite) ; fin après 3, 5 ou 10 images, ou sans fin. En haut « Blocs : 12 / 25 » et « Images : 1 / 5 ».
+  Animaux par défaut ou Mes images en variante (message si le dossier est vide). Boucle en temps réel (fixation lue à
+  chaque pas, délai, Échap). 48 variantes (le mode en haut, le niveau en boutons, la fin et les images en bas) ;
+  anciennes variantes (2 × 2 à 9 × 9) lues au niveau le plus proche, au regard, sans fin. 14 clés ajoutées ; aide en
+  français et en anglais ; son `pop.wav` par `make_blocs_sounds.py` ; crédits, licence, inventaire (1 048 images, 189
+  de source inconnue), vignette.
+- **Vérifications** : `BlocsTest` (8 tests : grille de chaque niveau, bloc enlevé au regard après le délai seulement,
+  par fixation seulement en mode fixation, blocs qui clignotent après 5 s, image découverte puis une autre, « Bravo »
+  après 3 images, tout retiré à la fin, variantes et anciennes variantes) ; `GameHelpTest` (58), `TranslationFilesTest`
+  (22) ; SpotBugs sans alerte ; `allGamesTest -PallGamesOnly=Blocks -PallGamesRepeat=3` réussi ; captures sans fenêtre
+  regardées (`build/game-screenshots/apres/blocs/`). Retour du mainteneur (13/11) : les deux modes nommés comme dans
+  Bulles, « Disparaissent dès qu’on les regarde » et « Disparaissent après une fixation » (avant : « Au regard », « Par
+  fixation »), aide adaptée. **Essayé et validé par le mainteneur le 13/11/2026, commité.**

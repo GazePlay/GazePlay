@@ -1,0 +1,18 @@
+# The principle
+A picture is hidden under colored blocks. Make all the blocks vanish with your gaze to uncover it!
+
+# How to play
+- Vanish as soon as looked at: a block vanishes as soon as you look at it. Move your gaze around the screen to remove them all.
+- Vanish after a fixation: look at a block, a ring fills, then the block vanishes. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- If you remove no block for 5 seconds, those left blink softly so that you find them.
+- At the top, the blocks removed and the pictures uncovered.
+- At the start, nothing happens during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no mistakes. When all the blocks have vanished, a star and "Well done!": the whole picture stays 2 seconds, then another picture comes. As you chose, the game stops after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The blocks: vanish as soon as looked at, or after a fixation.
+- The level: Easy (3 × 3 blocks), Normal (5 × 5) or Hard (8 × 8).
+- At the bottom, the end (3, 5 or 10 pictures, or no end) and the pictures: the animals, or My images (the folder "My images" of the settings).

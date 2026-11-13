@@ -1,0 +1,18 @@
+# Le principe
+Une image est cachée sous des blocs de couleur. Fais disparaître tous les blocs avec ton regard pour la découvrir !
+
+# Comment jouer
+- Disparaissent dès qu’on les regarde : un bloc disparaît dès que tu le regardes. Promène ton regard sur l’écran pour les enlever tous.
+- Disparaissent après une fixation : regarde un bloc, un anneau se remplit, puis le bloc disparaît. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Si tu n’enlèves plus de blocs pendant 5 secondes, ceux qui restent clignotent doucement pour que tu les trouves.
+- En haut, les blocs enlevés et les images découvertes.
+- Au début, rien ne se passe pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies ni d’erreurs. Quand tous les blocs ont disparu, une étoile et « Bravo ! » : l’image reste en entier 2 secondes, puis une autre image arrive. Selon ton choix, le jeu s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Les blocs : disparaissent dès qu’on les regarde, ou après une fixation.
+- Le niveau : Facile (3 × 3 blocs), Normal (5 × 5) ou Difficile (8 × 8).
+- En bas, la fin (3, 5 ou 10 images, ou sans fin) et les images : les animaux, ou Mes images (le dossier « Mes images » des réglages).

@@ -211,6 +211,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   Beethoven, Joyeux anniversaire), écrits note par note pour GazePlay Learning ; le clavier est dessiné par le jeu.
 - Sons de « Bouteille » (data/bottle/sounds) : faits pour GazePlay Learning (gradle/images/make_bottle_sounds.py),
   sous la licence du projet ; le stand et les bouteilles sont dessinés par le jeu.
+- Son de « Blocs » (data/blocs/sounds/pop.wav) : fait pour GazePlay Learning (gradle/images/make_blocs_sounds.py),
+  sous la licence du projet ; les blocs sont dessinés par le jeu.
 - Dessins du jeu « Point par point » (data/dottodot/figures.json) : faits pour GazePlay Learning
   (gradle/images/make_dottodot_figures.py), sous la licence du projet.
 - Images du jeu « Diviseur » (data/divisor) : lapins et prairie, dessins du projet (2018), sous la licence du
