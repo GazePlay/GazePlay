@@ -21,21 +21,34 @@ Pour chacune des 1 256 images suivies par git (PNG, JPEG, GIF, SVG ; 1 186 livr�
 **Limites** (à garder en tête) : une image sans métadonnées ni nom parlant reste « source inconnue », même si elle est
 libre ; le contenu de l'image ne dit rien de sa licence. Les sons et musiques n'ont pas été inventoriés.
 
-## 2. Résultat pour les 1 186 images livrées (mis à jour le 30/10/2026 : 1 191, d'après `inventaire-images.csv`)
+## 2. Résultat pour les images livrées (1 186 le 28/10/2026, 1 039 au recompte du 13/11/2026)
 
-| Catégorie | Nombre | Détail |
+**Recompte du 13/11/2026** : images présentes dans les dossiers `src/main` (suivies par git ou nouvelles, La Fabrique à
+gâteaux comprise, revue faite mais pas encore commitée : 24 images retirées), avec la catégorie de chaque image donnée
+par `inventaire-images.csv`, tenu à jour à chaque jeu revu. 13 icônes Material Symbols (`data/icons`, Apache-2.0),
+ajoutées par la refonte des menus, manquaient dans le CSV : comptées libres. Le nombre d'images livrées baisse parce que
+beaucoup de jeux revus dessinent maintenant leurs images eux-mêmes.
+
+| Catégorie | Nombre au 13/11 | Détail |
 |---|---|---|
-| **Libre, source connue** | 452 (110 le 28/10) | Images de Frogs Race et Horses, décors de Sounds Of Life, scènes de Spot The Differences et pièces de Pet (dessinés pour le projet, 30/10/2026), Biboule de Pet (dessin du projet), images par défaut (revue de Memory), animaux de Sounds Of Life et objets de Spot The Differences et de Pet (OpenMoji, CC BY-SA 4.0, 30/10/2026), coloriages de Coloring (OpenMoji, CC BY-SA 4.0, 29/10/2026), photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) |
+| **Libre, source connue** | 670 (110 le 28/10, 452 le 30/10) | Images de Frogs Race et Horses, décors de Sounds Of Life, scènes de Spot The Differences et pièces de Pet (dessinés pour le projet, 30/10/2026), Biboule de Pet (dessin du projet), images par défaut (revue de Memory), animaux de Sounds Of Life et objets de Spot The Differences et de Pet (OpenMoji, CC BY-SA 4.0, 30/10/2026), coloriages de Coloring (OpenMoji, CC BY-SA 4.0, 29/10/2026), photos de Where Is The Animal et Where Is The Sound (Wikimedia Commons, 29/10/2026, voir `CREDITS.txt` de chaque jeu), triangle dessiné pour le projet, icônes des menus (Material Symbols, Apache-2.0), animaux et explosion (OpenMoji, CC BY-SA 4.0), Magic Potions (dessinées pour le projet), logo du projet, icônes Flaticon (CC BY 3.0), ciel de Room (ESA/Hubble, CC BY 4.0), tableau de Math101 (Openclipart, domaine public), harpe (Metropolitan Museum, CC0) ; depuis le 30/10, les images des jeux revus ensuite (dessinées par script, OpenMoji, Wikimedia Commons : fiches de `REVUE_DES_JEUX.md` et `gradle/images/README.txt`) |
 | **Libre probable** | 153 | 128 photos Pixabay publiées avant 2019 (Find the Odd One Out, Where Is The Animal Dynamic), alors sous CC0 ; 25 drapeaux de Wikimedia Commons (domaine public en général) |
 | **Non libre, certain** | 0 (7 le 28/10) | Le coloriage Hello Kitty (Colors) est retiré le 29/10/2026 ; les 5 photos iStock / Getty (Where Is The Sound) et la photo CC BY-NC-SA (castor) ont été remplacées le 29/10/2026 |
 | **Non libre, probable** | 0 (1 le 28/10) | `race/images/Racer.png` (clipart de www.cutecolors.com, site commercial) : lu par aucun code, retiré le 30/10/2026 avec la revue de Frogs Race, dont la grenouille et le décor (source inconnue) sont redessinés |
-| **Source inconnue** | 586 (915 le 28/10) | Détail en section 3 |
+| **Source inconnue** | 216 (915 le 28/10, 586 le 30/10) | 130 dessins simples des jeux « Où est… » (44 drapeaux, 34 formes, 26 lettres, 16 couleurs, 10 chiffres) ; 34 images communes (`common/images` 14, `common/Thumbnails` 10, `common/numbers` 10) ; 52 dans les jeux pas encore revus (Suivre le chemin, La pièce, Piano, Bouteille, Mélanger les couleurs, Échelle) et les Biboules (Biboule Jump, Horses, Frogs Race). Détail du 28/10 en section 3 |
+| **Total** | 1 039 | 64 % libres, 15 % libres probables, 0 non libre, 21 % de source inconnue (13/11) |
+
+**À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
+« source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
+corriger. Les sons ne sont toujours pas inventoriés.
 
 **Hypothèse** (Pixabay) : Pixabay a quitté la licence CC0 en janvier 2019. Une image publiée avant reste sous CC0 ; la
 date est estimée par le numéro de l'image (inférieur à 3 900 000 environ). Aucune image Pixabay plus récente n'a été
 trouvée.
 
 ## 3. Les 915 images de source inconnue, par niveau de risque
+
+État du 28/10/2026, barré au fil des remplacements ; il en reste 216 au 13/11/2026 (section 2).
 
 ### 3.1 Risque élevé : photos et illustrations venues d'ailleurs (372)
 
@@ -68,7 +81,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | Vignettes des jeux (`common/Thumbnails`) : captures d'écran des jeux (9 de la famille Where Is It et Coloring refaites le 29/10/2026, comptées comme libres) | 58 |
 | ~~Train Switches~~ | ~~43~~ **Fait le 10/11/2026** (« Aiguillages ») : les 43 images retirées (les locomotives ressemblaient à l'emoji EmojiOne, les gares à une image de banque d'images) ; trains, gares, rails, aiguillages et tunnel dessinés par le jeu ; vignette faite d'une capture du jeu. Les 5 sons de source inconnue remplacés par 4 sons faits par script (`make_trainswitches_sounds.py`) |
 | Sliding Puzzle (dont la Joconde, domaine public) | 36 |
-| Cake | 24 |
+| ~~Cake~~ | ~~24~~ **Fait le 12/11/2026** (« La Fabrique à gâteaux ») : les 24 images retirées (étages, nappages, bonbons, décorations, aérographe, pince, fond, icônes des menus ; faites dans Photoshop en 2018, auteur non prouvé) ; tout est dessiné par le jeu (les Biboules ailées redessinées) ; les 3 sons de source inconnue remplacés par 2 sons faits par script (`make_cakes_sounds.py`) ; vignette faite d’une capture |
 | ~~Tower Defense~~ | ~~23~~ **Fait le 3/11/2026** : les 23 images retirées (dont les icônes qui ressemblaient à des icônes Flaticon et le GIF du blizzard) ; terrain, château, tours, monstres, missile, explosion et icônes dessinés par script (`make_towerdefense_images.py`), neige du blizzard dessinée par le jeu ; vignette composée des images du jeu. Les 3 sons de source inconnue (`craft.mp3`, `craftdouble.mp3`, `piou.mp3`) remplacés par 4 sons faits par script (`make_towerdefense_sounds.py`) |
 | ~~Shooter~~ | ~~20~~ **Fait le 2/11/2026** : décors, robots, cage, soucoupe, éclairs, baguette et canon redessinés par script ; les 5 Biboules gardées (mascotte du laboratoire, dessinée par lui), puis **modernisées le 3/11/2026** par le même script (bouche et ailes d'origine ; originales dans `gradle/images/biboule-originale`) |
 | Labyrinth | 19 |

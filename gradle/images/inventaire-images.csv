@@ -64,7 +64,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/biboulejump.png,oui,libr
 gazeplay-core/src/main/resources/data/common/Thumbnails/block.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/bottle.jpg,oui,source inconnue,,2020-06-30,PillouMatou,bottles height fixed
 gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,source inconnue,,2018-07-12,kuhlkrein,Some new icons for games
+gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,libre,"capture du jeu (12/11/2026) ; gâteaux dessinés par le jeu, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de La Fabrique à gâteaux
 gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,libre,"capture du jeu (3/11/2026) ; briques, fond et raquette dessinés par le jeu",2026-11-03,GazePlay Learning,revue du Casse-brique
 gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,source inconnue,,2024-04-24,Yaniissou,setup ColorBlendGame
 gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,libre,capture du jeu (octobre 2026) ; coloriage OpenMoji CC BY-SA 4.0,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -83,20 +83,20 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,libre,
 gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,libre,"capture du jeu (12/11/2026) ; tout dessiné par le jeu, icônes Material Symbols (Apache-2.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Gribouille
 gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
-gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
+gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,non,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,"faite des images du jeu par make_labyrinth_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,source inconnue,,2021-09-03,Iluvrog,end of the game
 gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,libre,"capture du jeu (12/11/2026) ; cartes et lettres dessinées par le jeu, un animal des images par défaut (OpenMoji, CC BY-SA 4.0)",2026-11-12,GazePlay Learning,revue d'Identifier les lettres
 gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,libre,"capture du jeu (12/11/2026) ; cartes dessinées par le jeu, animal OpenMoji (CC BY-SA 4.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Cartes magiques
 gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,libre,"capture du jeu (tableau et cartes dessinés par le jeu, Biboule du Tir), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
-gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
-gazeplay-core/src/main/resources/data/common/Thumbnails/memory-numbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
+gazeplay-core/src/main/resources/data/common/Thumbnails/memory-letter.png,non,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
+gazeplay-core/src/main/resources/data/common/Thumbnails/memory-numbers.png,non,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/memory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
 gazeplay-core/src/main/resources/data/common/Thumbnails/mole.png,oui,libre,"capture du jeu (4/11/2026) ; pré, trous et taupes dessinés pour le projet (make_moles_images.py)",2026-11-04,GazePlay Learning,revue du Jeu de la taupe
 gazeplay-core/src/main/resources/data/common/Thumbnails/ninja.png,oui,libre,"capture du jeu (4/11/2026) ; verger et fruits dessinés pour le projet (make_ninja_images.py)",2026-11-04,GazePlay Learning,revue de Ninja
-gazeplay-core/src/main/resources/data/common/Thumbnails/openMemory.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
-gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
-gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,oui,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
+gazeplay-core/src/main/resources/data/common/Thumbnails/openMemory.png,non,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
+gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryLetters.png,non,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
+gazeplay-core/src/main/resources/data/common/Thumbnails/openMemoryNumbers.png,non,source inconnue,,2019-04-04,johzz-o2,fixed image bug from latest release
 gazeplay-core/src/main/resources/data/common/Thumbnails/opinions.jpg,oui,libre,"capture du jeu (novembre 2026) ; image d'exemple OpenMoji CC BY-SA 4.0, icônes Material Symbols Apache-2.0",2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/ordre.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Ordre
 gazeplay-core/src/main/resources/data/common/Thumbnails/passpass.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue de Gobelets Pass Pass
@@ -238,6 +238,7 @@ gazeplay-core/src/main/resources/data/common/numbers/9.jpg,oui,source inconnue,,
 gazeplay-core/src/main/resources/data/icons/add.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/ads_click.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/arrow_back.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, page des réglages et bouton du thème"
+gazeplay-core/src/main/resources/data/icons/arrow_forward.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-29,Noars,"feat(colors): revue du jeu Coloriage, et images de l'utilisateur en variante"
 gazeplay-core/src/main/resources/data/icons/assignment_turned_in_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/bar_chart.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, page des réglages et bouton du thème"
 gazeplay-core/src/main/resources/data/icons/bolt_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
@@ -251,9 +252,11 @@ gazeplay-core/src/main/resources/data/icons/favorite_fill1.svg,oui,libre,"Materi
 gazeplay-core/src/main/resources/data/icons/folder_open.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique du menu des évaluations, et GazePlay Eval Test"
 gazeplay-core/src/main/resources/data/icons/fullscreen.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/fullscreen_exit.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/home_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-30,Noars,"feat(pet): revue de Pet (pièces dessinées, jauges nommées, Biboule triste, activités claires)"
 gazeplay-core/src/main/resources/data/icons/info.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/keyboard_arrow_down.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/keyboard_arrow_up.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/language.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-30,Noars,feat(eval): revue du lecteur GazePlay Eval et du menu des évaluations
 gazeplay-core/src/main/resources/data/icons/light_mode_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, page des réglages et bouton du thème"
 gazeplay-core/src/main/resources/data/icons/logout.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/manage_accounts_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
@@ -263,15 +266,25 @@ gazeplay-core/src/main/resources/data/icons/perm_media_fill1.svg,oui,libre,"Mate
 gazeplay-core/src/main/resources/data/icons/person_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/play_arrow_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique du menu des évaluations, et GazePlay Eval Test"
 gazeplay-core/src/main/resources/data/icons/power_settings_new.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/print.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-29,Noars,"feat(colors): revue du jeu Coloriage, et images de l'utilisateur en variante"
 gazeplay-core/src/main/resources/data/icons/psychology_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/replay.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/restart_alt.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-29,Noars,"feat(colors): revue du jeu Coloriage, et images de l'utilisateur en variante"
+gazeplay-core/src/main/resources/data/icons/restaurant.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-30,Noars,"feat(pet): revue de Pet (pièces dessinées, jauges nommées, Biboule triste, activités claires)"
+gazeplay-core/src/main/resources/data/icons/save.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-29,Noars,"feat(colors): revue du jeu Coloriage, et images de l'utilisateur en variante"
 gazeplay-core/src/main/resources/data/icons/search.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
 gazeplay-core/src/main/resources/data/icons/settings.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/shower_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-30,Noars,"feat(pet): revue de Pet (pièces dessinées, jauges nommées, Biboule triste, activités claires)"
 gazeplay-core/src/main/resources/data/icons/sports_esports_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/sports_soccer_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-30,Noars,"feat(pet): revue de Pet (pièces dessinées, jauges nommées, Biboule triste, activités claires)"
 gazeplay-core/src/main/resources/data/icons/swap_horiz.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, menu des jeux et fenêtre des variantes"
+gazeplay-core/src/main/resources/data/icons/thumb_down_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-11-02,Noars,"feat(opinions): revue d'Opinions (images de l'utilisateur, réponses enregistrées)"
+gazeplay-core/src/main/resources/data/icons/thumb_up_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-11-02,Noars,"feat(opinions): revue d'Opinions (images de l'utilisateur, réponses enregistrées)"
 gazeplay-core/src/main/resources/data/icons/translate.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique, page des réglages et bouton du thème"
+gazeplay-core/src/main/resources/data/icons/undo.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-29,Noars,"feat(colors): revue du jeu Coloriage, et images de l'utilisateur en variante"
 gazeplay-core/src/main/resources/data/icons/upload_file.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique du menu des évaluations, et GazePlay Eval Test"
 gazeplay-core/src/main/resources/data/icons/visibility.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-28,Noars,"feat: refonte graphique du menu des évaluations, et GazePlay Eval Test"
+gazeplay-core/src/main/resources/data/icons/volume_up_fill1.svg,oui,libre,"Material Symbols (Google), Apache-2.0",2026-10-29,Noars,"feat(whereisit): revue de la famille Where Is It (graphisme, gameplay, photos libres)"
 gazeplay-games/src/main/resources/data/biboulejump/biboules/Blue.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/biboulejump/biboules/Orange.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/biboulejump/biboules/Red.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
@@ -305,30 +318,6 @@ gazeplay-games/src/main/resources/data/bubble/images/animals/whale.png,oui,libre
 gazeplay-games/src/main/resources/data/bubble/images/kelp.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
 gazeplay-games/src/main/resources/data/bubble/images/reef.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
 gazeplay-games/src/main/resources/data/bubble/images/wreck.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
-gazeplay-games/src/main/resources/data/cake/images/01.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/02.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/03.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/04.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/11.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/12.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/13.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/14.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/15.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/21.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/22.png,oui,source inconnue,,2018-05-09,kuhlkrein,A grab transition that place the cake at the good position
-gazeplay-games/src/main/resources/data/cake/images/23.png,oui,source inconnue,,2018-05-09,kuhlkrein,A grab transition that place the cake at the good position
-gazeplay-games/src/main/resources/data/cake/images/31.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/32.png,oui,source inconnue,,2018-05-09,kuhlkrein,A grab transition that place the cake at the good position
-gazeplay-games/src/main/resources/data/cake/images/aero.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/background.png,oui,source inconnue,,2018-05-31,kuhlkrein,new background for the cake factory
-gazeplay-games/src/main/resources/data/cake/images/grab.png,oui,source inconnue,,2018-05-09,kuhlkrein,A grab transition that place the cake at the good position
-gazeplay-games/src/main/resources/data/cake/images/menu0.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/menu1.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/menu2.png,oui,source inconnue,,2018-05-15,kuhlkrein,images for the buttons added to cakefactory
-gazeplay-games/src/main/resources/data/cake/images/menu3.png,oui,source inconnue,,2018-05-15,kuhlkrein,images for the buttons added to cakefactory
-gazeplay-games/src/main/resources/data/cake/images/menu4.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/return.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
-gazeplay-games/src/main/resources/data/cake/images/validate.png,oui,source inconnue,,2018-05-07,kuhlkrein,Add of the cake and cream images
 gazeplay-games/src/main/resources/data/colorblend/images/glass.png,oui,source inconnue,,2024-04-30,Yaniissou,replaced glass image
 gazeplay-games/src/main/resources/data/colorblend/images/park.png,oui,source inconnue,,2024-04-24,Yaniissou,started colorblend game
 gazeplay-games/src/main/resources/data/colors/images/easy/draw-balloon.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -483,10 +472,10 @@ gazeplay-games/src/main/resources/data/gazeRace/car-4.png,oui,libre,"dessiné po
 gazeplay-games/src/main/resources/data/gazeRace/car-5.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-games/src/main/resources/data/gazeRace/car-player.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-games/src/main/resources/data/gazeRace/crash.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
-gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VeloCorrectSecond.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
-gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VoitureFalseFirst.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
-gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/CeriseFalseSecond.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
-gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/OursCorrectFirst.jpg,oui,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
+gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VeloCorrectSecond.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
+gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VoitureFalseFirst.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
+gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/CeriseFalseSecond.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
+gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/OursCorrectFirst.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/goosegame/gooseboard.png,oui,libre,"dessiné pour le projet (gradle/images/make_goose_images.py, sur les centres de positions.json), GPL-3.0-or-later ; remplace un plateau de source inconnue (12/11/2026)",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
 gazeplay-games/src/main/resources/data/horses/biboules/BLUE.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/GREEN.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
