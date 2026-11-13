@@ -110,6 +110,26 @@ EvalUnsupportedMedia,,,,,,,Screen {0}: the format of {1} cannot be read by GazeP
 BibJump,Biboule Jump,بيبول يقذف,Скачок Бібуль,比布尔跳,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,बिबौल जंप,Biboule Jump,Biboule Jump,Biboule Jump,ビブールジャンプ,Biboule Jump,Biboule Jump,Biboule Jump,Бибул Прыжок,Biboule Jump,Biboule Jump,Biboule Jump
 Blocks,Blloqe,مكعبات,Блокі,色块,Blöcke,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,ब्लाकों,Blokovi,Blok,Blocchi,ブロック,Blokken,Bloki,Bloco,Блоки,Bloques,Các hình khối,Blok
 Bottle,Shishe,زجاجة,Бутэлька,瓶子,Flasche,Μπουκάλι,Bottle,Pullo,Bouteille,बोतल,Boca,Botol,Bottiglia,ボトル,Fles,Butelka,Garrafa,Бутылка,Botella,Chai,Botol
+BottleBreakAll,,,,,,,Break them all,,Tout casser,,,,,,,,,,,,
+BottleColorMode,,,,,,,The right color,,La bonne couleur,,,,,,,,,,,,
+BottleEnd1,,,,,,,1 series,,1 série,,,,,,,,,,,,
+BottleEnd3,,,,,,,3 series,,3 séries,,,,,,,,,,,,
+BottleEnd5,,,,,,,5 series,,5 séries,,,,,,,,,,,,
+BottleEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+Bottles4,,,,,,,4 bottles,,4 bouteilles,,,,,,,,,,,,
+Bottles8,,,,,,,8 bottles,,8 bouteilles,,,,,,,,,,,,
+Bottles12,,,,,,,12 bottles,,12 bouteilles,,,,,,,,,,,,
+Bottles16,,,,,,,16 bottles,,16 bouteilles,,,,,,,,,,,,
+BottleSmall,,,,,,,Small bottles,,Petites bouteilles,,,,,,,,,,,,
+BottleMedium,,,,,,,Medium bottles,,Bouteilles moyennes,,,,,,,,,,,,
+BottleLarge,,,,,,,Big bottles,,Grosses bouteilles,,,,,,,,,,,,
+BottleCount,,,,,,,Bottles:,,Bouteilles :,,,,,,,,,,,,
+BottleSeries,,,,,,,Series:,,Séries :,,,,,,,,,,,,
+BottleWell,,,,,,,Well done!,,Bravo !,,,,,,,,,,,,
+BottleBreakRed,,,,,,,Break the red bottles,,Casse les bouteilles rouges,,,,,,,,,,,,
+BottleBreakBlue,,,,,,,Break the blue bottles,,Casse les bouteilles bleues,,,,,,,,,,,,
+BottleBreakGreen,,,,,,,Break the green bottles,,Casse les bouteilles vertes,,,,,,,,,,,,
+BottleBreakYellow,,,,,,,Break the yellow bottles,,Casse les bouteilles jaunes,,,,,,,,,,,,
 Cakes,Fabrika e ëmbëlsirave,مصنع الكيك,Тортная фабрыка,蛋糕工厂,Die Kuchenfabrik,Το εργοστάσιο κέικ,The Cake Factory,Kakkutehdas,La Fabrique à Gateaux,केक फैक्टरी,Tvornica kolača,Pabrik Kue,La fabbrica di torte,ケーキ工場,De taartfabriek,Fabryka ciast,A Fábrica de Bolos,Торт Фабрика,La fábrica de pasteles,Nhà máy bánh,Kilang Kek
 CasseBrique,Breakout,انطلق,Прарыў,爆发,Ausbrechen,Διάσπαση,Breakout,Puhjeta,Casse-brique,फैलना,Bijeg,Kesuksesan besar,Scoppiare,起こる,Uitbreken,Wybuch,Saia,Разразиться,Fugarse,Đột phá,Breakout
 Bubbles,,,,,,,Bubbles,,Bulles,,,,,,,,,,,,
@@ -331,12 +351,6 @@ Classic,,,,,,,Classic,,Classique,,,,,,,,,,,,
 HighContrasts,,,,,,,High-Contrasts,,Contrastes élevés,,,,,,,,,,,,
 MouseCategory,,,,,,,Mouse and cheese,,Souris et fromage,,,,,,,,,,,,
 OtherCategory,,,,,,,Other characters,,Autres personnages,,,,,,,,,,,,
-BigSizeCategory,,,,,,,Big,,Grosses,,,,,,,,,,,,
-HighSizeCategory,,,,,,,High,,Grandes,,,,,,,,,,,,
-NormalSizeCategory,,,,,,,Normal,,Normales,,,,,,,,,,,,
-SmallSizeCategory,,,,,,,Small,,Petites,,,,,,,,,,,,
-TinySizeCategory,,,,,,,Tiny,,Minuscules,,,,,,,,,,,,
-InfinityCategory,,,,,,,Infinity,,À l'infini,,,,,,,,,,,,
 Hide,Kundërshtari i fshehur,الخصم الخفي,Схаваны праціўнік,隐藏的对手,Versteckter Gegner,Κρυφός αντίπαλος,Hidden opponent,Piilotettu vastustaja,Adversaire caché,छिपे हुए प्रतिद्वंद्वी,Skriveni protivnik,Lawan tersembunyi,Avversario nascosto,隠れた相手,Verborgen tegenstander,Ukryty przeciwnik,Adversário oculto,Скрытый противник,Oponente oculto,Đối thủ ẩn,Lawan tersembunyi
 Visible,Kundërshtar i dukshëm,خصم مرئي,Бачны праціўнік,可见的对手,Sichtbarer Gegner,Ορατός αντίπαλος,Visible opponent,Näkyvä vastustaja,Adversaire visible,दृश्यमान प्रतिद्वंद्वी,Vidljiv protivnik,Lawan yang terlihat,Avversario visibile,目に見える相手,Zichtbare tegenstander,Widoczny przeciwnik,Adversário visível,Видимый противник,Oponente visible,Đối thủ có thể nhìn thấy,Kelihatan lawan
 Forest,Pyll,غابة,Лес,森林,Wald,Δάσος,Forest,Metsä,Forêt,जंगल,Šuma,Hutan,foresta,森,Woud,Las,Floresta,Лес,Bosque,Rừng,Hutan
@@ -362,12 +376,6 @@ Normal,Normale,طبيعي,Нармальны,普通的,Normal,Κανονικός
 Hard,Vështirë,الصعب,Цяжка,难的,Schwer,Σκληρός,Hard,Kovaa,Difficile,सख्त,Teško,Keras,Difficile,難しい,Moeilijk,Ciężko,Duro,Жесткий,Difícil,Cứng,Keras
 Word Comprehension,,,,,,,Word Comprehension,,Compréhension de mots,,,,,,,,,,,,
 Sentence Comprehension,,,,,,,Sentence Comprehension,,Compréhension de phrases,,,,,,,,,,,,
-BigBottles,,,вялікія бутэлькі,,,,big bottles,,grosses bouteilles,,,,,,,,,большие бутылки,,,
-HighBottles,,,высокія бутэлькі,,,,high botles,,grandes bouteilles,,,,,,,,,высокие бутылки,,,
-NormalBottles,,,звычайныя бутэлькі,,,,normal bottles,,bouteilles normales,,,,,,,,,обычные бутылки,,,
-SmallBottles,,,маленькія бутэлькі,,,,small bottles,,petites bouteilles,,,,,,,,,маленькие бутылки,,,
-TinyBottles,,,нізкія бутэлькі,,,,tiny bottles,,bouteilles minuscules,,,,,,,,,низкие бутылки,,,
-InfinityBottles,,,,,,,infinity bottles,,bouteilles à l'infini,,,,,,,,,,,,
 ToTop,,,знізу ўверх,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,снизу вверх,de abajo hacia arriba,,
 ToBottom,,,зверху ўніз,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,сверху вниз,de arriba hacia abajo,,
 ToRight,,,злева направа,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,слева направо,de la izquierda hacia la derecha,,

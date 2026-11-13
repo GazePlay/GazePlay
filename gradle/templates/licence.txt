@@ -209,6 +209,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (gradle/images/make_cakes_sounds.py), sous la licence du projet ; les pots de peinture sont dessinés par le jeu.
 - Chansons du « Piano » : airs du domaine public (Au clair de la lune, Ah ! vous dirai-je maman, l’Ode à la joie de
   Beethoven, Joyeux anniversaire), écrits note par note pour GazePlay Learning ; le clavier est dessiné par le jeu.
+- Sons de « Bouteille » (data/bottle/sounds) : faits pour GazePlay Learning (gradle/images/make_bottle_sounds.py),
+  sous la licence du projet ; le stand et les bouteilles sont dessinés par le jeu.
 - Dessins du jeu « Point par point » (data/dottodot/figures.json) : faits pour GazePlay Learning
   (gradle/images/make_dottodot_figures.py), sous la licence du projet.
 - Images du jeu « Diviseur » (data/divisor) : lapins et prairie, dessins du projet (2018), sous la licence du

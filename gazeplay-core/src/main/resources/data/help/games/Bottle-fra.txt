@@ -1,0 +1,19 @@
+# Le principe
+Au stand de la fête foraine, casse des bouteilles avec une balle ! Casse toutes les bouteilles des étagères, ou seulement celles de la couleur demandée.
+
+# Comment jouer
+- Regarde une bouteille : un anneau se remplit, puis une balle part du bas de l’écran et la casse en morceaux de verre. Plusieurs balles peuvent voler en même temps. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Les bouteilles sont rouges, bleues, vertes ou jaunes, et chaque couleur a son symbole sur l’étiquette : un rond, une étoile, un cœur, un triangle.
+- En Tout casser : casse toutes les bouteilles.
+- En La bonne couleur : la carte de gauche dit quelle couleur casser (« Casse les bouteilles rouges »). Une bouteille d’une autre couleur tremble sans se casser.
+- En haut, les bouteilles cassées et les séries finies.
+- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies : une bouteille de la mauvaise couleur compte seulement une erreur dans les statistiques. Une série finie donne une étoile et « Bravo ! », puis de nouvelles bouteilles (en La bonne couleur, une autre couleur à casser). Selon ton choix, le jeu s’arrête après 1, 3 ou 5 séries (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Tout casser, ou La bonne couleur.
+- Le nombre de bouteilles : 4, 8, 12 ou 16, sur deux étagères.
+- En bas, la fin (1, 3 ou 5 séries, ou sans fin) et la taille des bouteilles (petites, moyennes ou grosses).

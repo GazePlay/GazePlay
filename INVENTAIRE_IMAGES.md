@@ -43,7 +43,9 @@ vignette refaite (capture du jeu) ; **1 037 images livrées, 671 libres, 153 lib
 (50 dans les jeux pas encore revus et les Biboules, 33 images communes). Revue du Piano (13/11/2026) : les 5 notes de
 musique et la galaxie (non lue) retirées, la vignette refaite ; **1 031 images livrées, 672 libres, 206 de source
 inconnue** (44 dans les jeux pas encore revus et les Biboules, 32 images communes). Les 3 fichiers MIDI du Piano (deux
-morceaux protégés : « River Flows in You », Pirates des Caraïbes) sont retirés aussi.
+morceaux protégés : « River Flows in You », Pirates des Caraïbes) sont retirés aussi. Revue de Bouteille (13/11/2026) :
+le décor, l’étagère, la bouteille, la bouteille cassée et la balle retirés, la vignette refaite ; **1 026 images
+livrées, 673 libres, 200 de source inconnue** (39 dans les jeux pas encore revus et les Biboules, 31 images communes).
 
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à

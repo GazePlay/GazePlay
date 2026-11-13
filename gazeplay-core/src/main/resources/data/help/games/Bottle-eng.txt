@@ -1,0 +1,19 @@
+# The principle
+At the stall of the fair, break bottles with a ball! Break all the bottles on the shelves, or only those of the color asked for.
+
+# How to play
+- Look at a bottle: a ring fills, then a ball flies from the bottom of the screen and breaks it into pieces of glass. Several balls can fly at once. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- The bottles are red, blue, green or yellow, and each color has its symbol on the label: a round, a star, a heart, a triangle.
+- In Break them all: break all the bottles.
+- In The right color: the card on the left says which color to break ("Break the red bottles"). A bottle of another color shakes without breaking.
+- At the top, the bottles broken and the series finished.
+- At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives: a bottle of the wrong color only counts a mistake in the statistics. A finished series gives a star and "Well done!", then new bottles (in The right color, another color to break). As you chose, the game stops after 1, 3 or 5 series ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Break them all, or The right color.
+- The number of bottles: 4, 8, 12 or 16, on two shelves.
+- At the bottom, the end (1, 3 or 5 series, or no end) and the size of the bottles (small, medium or big).

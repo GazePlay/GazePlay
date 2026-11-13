@@ -45,7 +45,7 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
    et commité (`655ae66e1`).
 2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend` ; **13/11 : fait, essayé et validé par le mainteneur,
    commité**, fiche en bas), Piano (**13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas),
-   Bouteille (`Bottle`), La pièce
+   Bouteille (`Bottle` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), La pièce
    (`Room`), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
    chemin (`Follow`).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
@@ -958,7 +958,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Pierre papier ciseaux** (`RockPaperScissors`) | **10/11** : les 7 dessins retirés (gants de dessin animé proches d'un personnage commercial, parc, pouces) ; mains d'OpenMoji (`make_rockpaperscissors_images.py`), sons faits par script ; vignette faite d'une capture | ✔ 10/11 (trois cartes avec la main et son nom, poings qui se balancent pendant « Pierre… papier… ciseaux ! », main gagnante qui grossit, messages sous les mains, anneau, pastille du score) | ✔ 10/11 (règle du mainteneur : contre l'ordinateur en 2 / 3 / 5 manches gagnantes ou sans fin, l'ordinateur peut gagner ; apprendre la règle en 5 / 10 bonnes réponses ou sans fin, erreur expliquée) — validé le 10/11 |
 | **Piano** (`Piano`) | **13/11** : les 5 notes et la galaxie (source inconnue) et les 3 fichiers MIDI (deux morceaux protégés) retirés ; tout dessiné par le jeu, chansons du domaine public écrites dans le code ; vignette refaite (capture) | ✔ 13/11 (clavier droit d’une octave, touches de couleur nommées, touches noires, cadre et flèche, anneau, notes qui s’envolent) | ✔ 13/11 (règle du mainteneur : Chansons ou Libre, 4 chansons, fin 1 / 3 / 5 / sans fin, touche fausse sans erreur) |
 | **Apprends les Maths** (`Math101`, une seule carte depuis le 10/11, avant 5) | **10/11** : les 6 images retirées (5 de source inconnue, et le tableau d'Openclipart), tableau et cartes dessinés par le jeu, Biboule jaune du Tir ; 2 sons faits par script (`make_math101_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (tableau noir à la craie, réponse écrite en jaune, Biboule qui saute de joie, 3 grandes cartes, coche ou croix, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : une seule carte, 7 sujets, niveaux jusqu'à 10 / 20 / 100 ou par tables, jamais de 0, mauvaises réponses proches, chercher jusqu'à trouver ou 3 vies, fin après 5 / 10 / 20 opérations ou sans fin) — validé le 10/11 |
-| Bottle (`Bottle`) | À confirmer : 5 images | | |
+| **Bouteille** (`Bottle`) | **13/11** : les 5 images (2020, auteur non prouvé) et le son de verre (source inconnue) retirés ; tout dessiné par le jeu, sons faits par script ; vignette refaite (capture) | ✔ 13/11 (stand de fête foraine, bouteilles de 4 couleurs à symbole, balle, éclats de verre, carte de la couleur, anneau, pastilles) | ✔ 13/11 (règle du mainteneur : Tout casser ou La bonne couleur, 4 / 8 / 12 / 16 bouteilles, 3 tailles, séries 1 / 3 / 5 ou sans fin, plusieurs balles à la fois) |
 | **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
 | **Embouteillage** (`RushHour`, avant « Rush Hour ») | **9/11** : les 4 images et la vignette retirées ; camions et bus dessinés par script (`make_trafficjam_images.py`), voitures de la Course du regard, parking dessiné par le jeu ; les 33 parkings de source inconnue remplacés par 90 parkings faits par script (`make_trafficjam_levels.py`) | ✔ 9/11 (parking vu de dessus centré, véhicules de couleurs différentes, voiture rouge à sortir, ouverture et flèche, cases libres allumées, bouton « Recommencer », anneau, pastille) — à essayer | ✔ 9/11 (règle du mainteneur : nouveau nom, nos propres parkings classés Facile 3-8 / Normal 9-16 / Difficile 17-30 coups, choisir le véhicule puis la case, « Recommencer », fin après 1 / 3 / 5 ou sans fin) — à essayer |
 | **Morpion** (`TicTacToe`) | **10/11** : les 3 images de source inconnue (croix, rond, case blanche) retirées, tout dessiné par le jeu ; 3 sons faits par script (`make_tictactoe_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (cases arrondies, croix rouge et rond bleu qui se dessinent, case regardée éclairée avec le symbole en attente et l'anneau, bande jaune sous les 3 symboles gagnants, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : ordi facile / moyen / difficile (parfait mais 1 erreur sur 5 coups, choix A) ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
@@ -3975,3 +3975,41 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   (`build/game-screenshots/apres/piano/` ; après la première : le cadre suit la forme de la touche au lieu d’un
   rectangle qui débordait sur les touches noires, anneau autour du nom de la note ; un test a trouvé la flèche absente
   sur la chanson suivante, corrigé). **Essayé et validé par le mainteneur le 13/11/2026, commité.**
+
+### Bouteille (`Bottle`) — 13/11/2026
+
+- **État des lieux (code et captures sans fenêtre, `build/game-screenshots/avant/bottle/`)** : un stand de fête foraine
+  (auvent rayé), des bouteilles vertes sur deux étagères ; une fixation lance une balle du bas de l’écran au centre, qui
+  casse la bouteille ; fin quand toutes sont cassées. 24 variantes (4, 8, 12, 16 bouteilles × minuscules, petites,
+  normales, hautes, grosses, « à l’infini »). Bouteilles déformées avec l’écran (largeur et hauteur prises séparément),
+  une balle à la fois (une bouteille fixée pendant le vol ignorée), pas de but à atteindre, partie finie après une
+  seule série, pas de délai, bouton « rejouer » jamais montré (image empruntée à Biboule Jump), deux constructeurs
+  recopiés (graine oubliée au rejeu), filtres de regard jamais retirés, `dispose()` vide, score en chiffre blanc de
+  50 px ; cas particulier de Bouteille dans la fenêtre des variantes ; 5 images (2020, auteur non prouvé), son de verre
+  et vignette de source inconnue.
+- **Règle du mainteneur (13/11/2026)** : les deux modes, 3 tailles, des séries (1, 3, 5 ou sans fin), tout dessiné ;
+  propositions validées (couleurs à symbole, balle sous la bouteille, plusieurs balles, anciennes variantes lues).
+- **Fait** : le jeu réécrit (`BottleGame`, `BottleMode`, `BottleCount`, `BottleSize`, `BottleEnd`, `BottleColor`,
+  `BottleGameVariantGenerator` ; statistiques « BottleGame », **format inchangé**). Stand dessiné (mur, auvent rayé à
+  festons, deux étagères en bois, comptoir rayé) ; bouteilles en verre (dégradé, reflet) rouges, bleues, vertes ou
+  jaunes, chacune avec son symbole sur l’étiquette (rond, étoile, cœur, triangle), toujours dans leurs proportions,
+  leur taille suivant l’écart des étagères (petites, moyennes, grosses ; plus étroites si la place manque). Une
+  fixation lance une balle du bas de l’écran, sous la bouteille ; plusieurs balles à la fois ; la bouteille éclate en
+  morceaux de verre qui tombent. **Tout casser** : série finie quand tout est cassé. **La bonne couleur** : une carte
+  « Casse les bouteilles rouges » avec une grande bouteille ; un quart des bouteilles de cette couleur, les autres des
+  autres couleurs ; une mauvaise bouteille tremble sans casser, une erreur (pas de vies) ; la série suivante demande
+  une autre couleur. Série finie : étoile et « Bravo ! », de nouvelles bouteilles ; fin après 1, 3 ou 5 séries, ou sans
+  fin. En haut « Bouteilles : 3 / 8 » et « Séries : 1 / 3 ». Anneau commun, boucle en temps réel (fixation lue à chaque
+  pas, délai, Échap). 96 variantes (`GroupedGameVariant` : le mode en haut, le nombre en boutons, la fin et la taille
+  en bas) ; anciennes variantes lues (Tout casser, même nombre ; minuscules et petites → petites, normales et hautes →
+  moyennes, grosses → grosses ; « à l’infini » → sans fin). Cas particulier de Bouteille retiré de
+  `GameVariantDialog` et ses 12 clés (`*SizeCategory`, `InfinityCategory`, `*Bottles`) ; 20 clés ajoutées. Sons
+  `glass.wav` et `throw.wav` faits par `make_bottle_sounds.py` ; erreur et victoire : sons de Dés et du Jeu de l’oie.
+  Aide en français et en anglais, crédits, licence, inventaire (1 026 images, 200 de source inconnue), vignette.
+- **Vérifications** : `BottleGameTest` (8 tests : bouteilles sur deux étagères pour chaque nombre, délai et fixation,
+  plusieurs balles à la fois et bouteilles cassées, nouvelle série, la bonne couleur (une mauvaise bouteille tremble,
+  une erreur, puis une autre couleur), « Bravo » après 3 séries, tout retiré à la fin, variantes et anciennes
+  variantes) ; `GameHelpTest` (56), `GameVariantDialogTest` (11), `TranslationFilesTest` (22) ; SpotBugs sans alerte ;
+  `allGamesTest -PallGamesOnly=Bottle -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
+  (`build/game-screenshots/apres/bottle/` ; après la première : les rayures du comptoir dépassaient sous la zone de
+  jeu). **Essayé et validé par le mainteneur le 13/11/2026, commité.**

@@ -247,17 +247,6 @@ public class GameVariantDialog extends Stage {
                     case 6,7,8,9,10,11 -> 1;
                     default -> 0;
                 };
-            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
-                button.setTextAlignment(TextAlignment.CENTER);
-                String variantString = ((IntStringGameVariant) variant).getStringValue();
-                indexOfTheVariant = switch (variantString) {
-                    case "InfinityBottles" -> 5;
-                    case "BigBottles" -> 4;
-                    case "HighBottles" -> 3;
-                    case "NormalBottles" -> 2;
-                    case "SmallBottles" -> 1;
-                    default -> 0;
-                };
             } else if (variant instanceof IntStringGameVariant) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 indexOfTheVariant = ((IntStringGameVariant) variant).getNumber();
@@ -270,8 +259,7 @@ public class GameVariantDialog extends Stage {
 
             log.debug("nameGame : {}", gameSpec.getGameSummary().getNameCode());
 
-            if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
-                gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
+            if ((gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -286,15 +274,7 @@ public class GameVariantDialog extends Stage {
             ) {
                 RadioButton[] categories;
 
-                if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
-                    categories = new RadioButton[6];
-                    categories[0] = new RadioButton(translator.translate("TinySizeCategory"));
-                    categories[1] = new RadioButton(translator.translate("SmallSizeCategory"));
-                    categories[2] = new RadioButton(translator.translate("NormalSizeCategory"));
-                    categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
-                    categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
-                    categories[5] = new RadioButton(translator.translate("InfinityCategory"));
-                } else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
+                if (gameSpec.getGameSummary().getNameCode().equals("RushHour")) {
                     categories = new RadioButton[6];
 
                     categories[0] = new RadioButton(translator.translate("Niveau1-5"));

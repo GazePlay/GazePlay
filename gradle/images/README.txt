@@ -269,6 +269,15 @@ domain in Europe since 2017). A song finished takes the sound of the goose game.
 data/common/Thumbnails/pianosight.png, 960 x 540) is a capture of the game, reduced; it replaces a thumbnail of unknown
 source.
 
+"Bouteille" (name code Bottle; gazeplay-games: data/bottle): the stall of the fair (awning, wall, shelves, counter),
+the bottles with the symbols of their labels, the ball and the pieces of glass are drawn by the game since 13/11/2026;
+the 5 pictures of data/bottle (supermarket.jpg, etagere.png, bottle.png, broken.png, ball.png, made in 2020, author
+not proven) and the sound verre.wav (unknown source) are removed. The sounds (data/bottle/sounds: glass.wav,
+throw.wav) are made by make_bottle_sounds.py (this folder), under the license of GazePlay Learning
+(GPL-3.0-or-later). A wrong bottle and a series finished take the sounds of "Dés" and of the goose game. The thumbnail
+(gazeplay-core: data/common/Thumbnails/bottle.jpg, 960 x 540) is a capture of the game, reduced; it replaces a
+thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices
