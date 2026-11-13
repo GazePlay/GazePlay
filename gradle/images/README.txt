@@ -292,6 +292,13 @@ default images (OpenMoji, CC BY-SA 4.0) or the images of the user. The sound of 
 data/common/Thumbnails/block.png, 960 x 540) is a capture of the game, reduced; it replaces a thumbnail of unknown
 source.
 
+"Échelle" (name code Ladder; gazeplay-games: package ladder): the ropes, rungs and starts are drawn by the game since
+13/11/2026; the pawn is the modernised Biboule of the shooting game (data/shooter/biboule/images/Blue.png, drawing of
+the project), the pictures at the bottom the default images (OpenMoji, CC BY-SA 4.0) or the images of the user. Its
+former copy of the Biboule (data/ladder/Biboule.png) is removed. A game won and a wrong start take the sounds of the
+goose game and of "Dés". The thumbnail (gazeplay-core: data/common/Thumbnails/ladder.png, 960 x 540) is a capture of
+the game, reduced; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

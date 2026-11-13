@@ -6,8 +6,8 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
 /**
- * Declares the game "Ladder" to the menu: its name, thumbnail, categories, variants and launcher (see
- * {@code GameSpecSource}).
+ * Declares "Échelle" (name code Ladder) to the menu: its name, thumbnail, categories, variants (see
+ * {@link LadderGameVariantGenerator}) and launcher (see {@code GameSpecSource}).
  */
 public class LadderGameSpecSource implements GameSpecSource {
     @Override
@@ -17,6 +17,6 @@ public class LadderGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .build(),
-            new LadderGameLauncher());
+            new LadderGameVariantGenerator(), new LadderGameLauncher());
     }
 }

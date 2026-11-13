@@ -1,0 +1,18 @@
+# The principle
+A Japanese ladder: colored ropes joined by rungs. The Biboule goes down a rope and takes each rung it meets, down to a picture at the bottom. Follow it with your eyes, or find the start that takes it to the picture asked for!
+
+# How to play
+- At the top of each rope, a round start. Look at a start: a ring fills, then the Biboule goes down. Its way is drawn behind it. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- In Free: choose a start and follow the Biboule to its picture.
+- In Aim: a picture is framed at the bottom. Follow the ways with your eyes to find the start that leads to it. If the Biboule arrives somewhere else, the picture shakes and "Not yet!": try another start. After 2 tries, the right start is framed.
+- At the top, the number of games.
+- At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives: a wrong start only counts a mistake in the statistics. A game won gives a star and "Well done!", then another ladder. As you chose, the game stops after 3, 5 or 10 games ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Free, or Aim.
+- The level: Easy (3 ropes), Normal (4 ropes) or Hard (5 ropes and more rungs).
+- At the bottom, the end (3, 5 or 10 games, or no end) and the pictures: the animals, or My images (the folder "My images" of the settings).

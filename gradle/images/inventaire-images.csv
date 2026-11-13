@@ -85,7 +85,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,libre,"capt
 gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,non,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,"faite des images du jeu par make_labyrinth_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
-gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,source inconnue,,2021-09-03,Iluvrog,end of the game
+gazeplay-core/src/main/resources/data/common/Thumbnails/ladder.png,oui,libre,"capture du jeu « Échelle » (13/11/2026) ; échelle dessinée par le jeu, animaux OpenMoji CC BY-SA 4.0, Biboule du projet",2026-11-13,GazePlay Learning,revue d’Échelle
 gazeplay-core/src/main/resources/data/common/Thumbnails/letters.png,oui,libre,"capture du jeu (12/11/2026) ; cartes et lettres dessinées par le jeu, un animal des images par défaut (OpenMoji, CC BY-SA 4.0)",2026-11-12,GazePlay Learning,revue d'Identifier les lettres
 gazeplay-core/src/main/resources/data/common/Thumbnails/magicCard.png,oui,libre,"capture du jeu (12/11/2026) ; cartes dessinées par le jeu, animal OpenMoji (CC BY-SA 4.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Cartes magiques
 gazeplay-core/src/main/resources/data/common/Thumbnails/math101.png,oui,libre,"capture du jeu (tableau et cartes dessinés par le jeu, Biboule du Tir), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
@@ -483,7 +483,6 @@ gazeplay-games/src/main/resources/data/horses/rollImages/rollYELLOW.png,oui,libr
 gazeplay-games/src/main/resources/data/labyrinth/images/cheese.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/labyrinth/images/house.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
 gazeplay-games/src/main/resources/data/labyrinth/images/mouse.png,oui,libre,"dessiné pour le projet (gradle/images/make_labyrinth_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
-gazeplay-games/src/main/resources/data/ladder/Biboule.png,oui,source inconnue,,2021-09-02,Iluvrog,little graphical change
 gazeplay-games/src/main/resources/data/math101/images/biboule.png,oui,libre,"Biboule jaune du Tir (mascotte du laboratoire modernisée pour le projet), recadrée par gradle/images/make_math101_images.py, GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue d'Apprends les Maths
 gazeplay-games/src/main/resources/data/pet/images/ball.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_pet_images.py)",2026-10-30,GazePlay Learning,revue de Pet
 gazeplay-games/src/main/resources/data/pet/images/bathroom.png,oui,libre,"dessiné pour le projet (gradle/images/make_pet_images.py), GPL-3.0-or-later",2026-10-30,GazePlay Learning,revue de Pet

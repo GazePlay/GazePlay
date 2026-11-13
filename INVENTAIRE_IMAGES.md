@@ -50,7 +50,9 @@ Revue de La pièce (13/11/2026) : les 9 images des murs et des flèches (source 
 lu par aucun code) retirés, 32 objets OpenMoji (CC BY-SA 4.0) ajoutés, la vignette `home.png` refaite ; **1 048 images
 livrées, 705 libres, 190 de source inconnue** (30 dans les jeux pas encore revus et les Biboules, 30 images communes).
 Revue de Blocs (13/11/2026) : la vignette `block.png` refaite (le jeu n’a pas d’autre image) ; **1 048 images livrées,
-706 libres, 189 de source inconnue** (29 images communes).
+706 libres, 189 de source inconnue** (29 images communes). Revue d’Échelle (13/11/2026) : sa Biboule (copie de celle du
+projet) retirée au profit de celle du Tir, la vignette refaite ; **1 047 images livrées, 707 libres, 187 de source
+inconnue** (28 dans les jeux pas encore revus et les Biboules, 28 images communes).
 
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à

@@ -46,7 +46,7 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
 2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend` ; **13/11 : fait, essayé et validé par le mainteneur,
    commité**, fiche en bas), Piano (**13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas),
    Bouteille (`Bottle` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), La pièce
-   (`Room` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Blocs (`Blocks` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Échelle (`Ladder`), Suivre le
+   (`Room` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Blocs (`Blocks` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Échelle (`Ladder` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Suivre le
    chemin (`Follow`).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
    travail, tests ciblés, essai du mainteneur, puis un commit par jeu sur demande.
@@ -969,7 +969,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Dés** (`Dice`) | **12/11** : `roll.png` plus lu (bouton dessiné par le jeu ; encore lu par le Jeu de l’oie) ; texture des faces du dé et son du lancer redessinés par script (`make_dice_images.py`, `make_dice_sounds.py`, communs avec les Petits chevaux et le Jeu de l’oie), 2 sons faits par script ; vignette composée par le script | ✔ 12/11 (tapis de jeu vert, dés 3D avec une ombre, bouton rond « Lancer », total en grand, 3 grandes cartes, coche ou croix, anneau partout, vies en cœurs) | ✔ 12/11 (règle du mainteneur : deux modes, Compter les points (1 / 2 / 3 dés, mauvais totaux proches, chercher jusqu’à trouver ou 3 vies, fin après 5 / 10 / 20 ou sans fin) et Lancer les dés (1 à 6, un dé seul relancé par une fixation) ; rien ne se relance pendant un lancer) — validé le 12/11 |
 | **Jeu de l’oie** (`GooseGame`) | **12/11** : plateau redessiné par script sur les mêmes centres de cases (`make_goose_images.py` : chemin en spirale, cases rondes numérotées, oies, pont, auberge, puits, prison, flèche du retour, étoile de la fin, drapeau du départ) ; 6 sons refaits et 3 ajoutés (`make_goose_sounds.py`) ; `roll.png` retiré ; Biboules du Tir sur un socle ; vignette faite d’une capture | ✔ 12/11 (bandeau du tour et des messages, une phrase à la fois, socle de la couleur du pion, bouton rond « Lancer », dés 3D sur une carte au milieu, anneau) | ✔ 12/11 (règle du mainteneur : contre 1 à 3 ordinateurs ou 2 à 4 joueurs, règles classiques ou simples (les oies seulement), tous libérés si tous attendent, « Bravo » si une personne gagne puis les statistiques) — validé le 12/11 |
 | **Point par point** (`DotToDot`) | **12/11** : `background.png` (blanc, inutilisé) et les 40 figures sans nom retirés ; 24 figures nommées faites par script (`make_dottodot_figures.py`) ; vignette faite d’une capture | ✔ 12/11 (grands disques numérotés, traits de la couleur principale qui se tracent, dessin qui se colore avec son nom, point suivant qui grossit en Facile, anneau, proportions gardées) | ✔ 12/11 (règle du mainteneur : nombres ou lettres, Facile 4-7 / Normal 8-12 / Difficile 13-20 points / Progressif, erreur comptée, points reliés ignorés, dernier trait automatique, fin après 3 / 5 / 10 dessins ou sans fin) — validé le 12/11 |
-| Ladder | À confirmer : 1 image | | |
+| **Échelle** (`Ladder`) | **13/11** : sa copie de la Biboule retirée (celle du Tir à la place) ; échelle dessinée par le jeu, animaux par défaut (OpenMoji) ou Mes images ; vignette refaite (capture) | ✔ 13/11 (cordes de couleur, barreaux horizontaux, départs ronds, chemin tracé, image entourée, anneau) | ✔ 13/11 (règle du mainteneur : Libre (d’abord « Observer ») ou Viser, 3 / 4 / 5 cordes, 3 / 5 / 10 parties ou sans fin, bon départ entouré après 2 erreurs) |
 | **Gobelets Pass Pass** (`CupsBalls`) | **10/11** : le gobelet de source inconnue retiré ; gobelets, balle et table dessinés par le jeu ; 3 sons faits par script (`make_cups_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (gobelets rouges à rayures bien plus grands, échanges en arc, gobelet soulevé sur la balle, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : échanges deux par deux sur une rangée, Facile 3 / Normal 4 / Difficile 5 gobelets, un essai par manche, 3 vies, fin après 3 / 5 / 10 balles ou sans fin ; zones d'intérêt de la balle gardées) — validé le 10/11 |
 | **Quatre en ligne** (`Connect4`, avant « Puissance 4 ») | **10/11** : pas d'image propre ; le son de source inconnue (`tokenFalling.wav`) remplacé par 3 sons faits par script (`make_connect4_sounds.py`) ; vignette faite d'une capture. Plantage audio sous Windows corrigé le 28/10/2026 (`MMDevAPI.dll`) : à revoir en vrai | ✔ 10/11 (grille vue de face aux vrais trous, jetons à symbole, colonne éclairée et jeton en attente avec l'anneau, chute avec rebond, jetons gagnants entourés, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : nouveau nom, ordi facile / moyen / difficile ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | **Identifier les lettres** (`Letters`) | **12/11** : les 26 images de lettres inutilisées retirées ; cartes et lettres dessinées par le jeu ; vignette faite d’une capture ; **208 voix de source inconnue gardées en attendant** (format de services de synthèse vocale, hypothèse) | ✔ 12/11 (bandeau « Trouve la lettre » et la lettre en grand, haut-parleur pour réécouter, cartes arrondies aux couleurs douces, minuscules en Andika, anneau, carte fausse qui tremble en rouge, image découverte) | ✔ 12/11 (règle du mainteneur : un tiers des cartes de la lettre, Facile 6 / Normal 12 / Difficile 20 cartes avec les lettres qui se ressemblent, capitales / minuscules / les deux, Animaux ou Mes images, fin après 3 / 5 / 10 images ou sans fin, erreurs comptées) — validé le 12/11 ; voix : issue #1741 |
@@ -4085,3 +4085,36 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   regardées (`build/game-screenshots/apres/blocs/`). Retour du mainteneur (13/11) : les deux modes nommés comme dans
   Bulles, « Disparaissent dès qu’on les regarde » et « Disparaissent après une fixation » (avant : « Au regard », « Par
   fixation »), aide adaptée. **Essayé et validé par le mainteneur le 13/11/2026, commité.**
+
+### Échelle (`Ladder`) — 13/11/2026
+
+- **État des lieux (code et vignette)** : une échelle japonaise (amidakuji) de 5 lignes noires sur fond blanc,
+  reliées par des barreaux tirés au hasard, souvent en biais (3 par paire de lignes) ; 5 gros boutons ronds rouges en
+  haut, 5 images en bas (Mes images, sinon les images par défaut, répétitions possibles) ; une fixation sur un bouton
+  fait descendre une Biboule, son chemin en rouge. **Aucun but** : rien n’est demandé, la partie s’arrête à la première
+  descente (écran des statistiques), quelle que soit l’image ; vitesse prise du réglage des animations ; bouton recopié
+  5 fois (ancien indicateur de fixation) ; ni délai, ni variante, ni aide, graine oubliée au rejeu, filtres jamais
+  retirés ; vignette de source inconnue, copie de la Biboule (mascotte du laboratoire).
+- **Règle du mainteneur (13/11/2026)** : propositions acceptées : les deux modes (Libre, Viser ; « Observer » renommé « Libre » le 13/11 à la demande du mainteneur), barreaux
+  horizontaux, 3 niveaux, animaux tous différents ou Mes images, 3 / 5 / 10 parties ou sans fin, tout dessiné, la
+  Biboule modernisée du Tir.
+- **Fait** : le jeu réécrit (`Ladder`, `LadderMode`, `LadderLevel`, `LadderEnd`, `LadderPictures`,
+  `LadderGameVariantGenerator` ; `Step` retiré ; statistiques « Ladder », **format inchangé**). Cordes de couleur et
+  barreaux horizontaux en bois, jamais deux barreaux au même point d’une corde (chaque départ mène à sa propre
+  image) ; départs ronds avec une flèche de la couleur de leur corde ; images dans des cartes ; la Biboule descend à
+  vitesse fixe, son chemin tracé derrière elle. **Libre** : où qu’elle arrive, l’image saute, étoile et « Bravo ! »,
+  une autre échelle. **Viser** : une image entourée et « Amène la Biboule jusqu’à l’image entourée » ; le bon départ :
+  « Bravo ! » et une autre échelle ; un autre : le chemin montre où elle est allée, l’image tremble, « Pas encore ! »,
+  une erreur (pas de vies), la même échelle ; après 2 erreurs, le bon départ entouré. Facile 3 cordes (2 barreaux par
+  paire), Normal 4 (3), Difficile 5 (4). Fin après 3, 5 ou 10 parties, ou sans fin. Animaux tous différents (les images
+  par défaut ont chaque animal deux fois, avec et sans fond, et deux éléphants : un par animal) ou Mes images (message
+  si le dossier est vide). Anneau commun, boucle en temps réel (fixation lue à chaque pas, délai, Échap ; rien pendant
+  la descente). 48 variantes ; sans variante (le jeu n’en avait pas), Libre, Normal, animaux, 3 parties. 15 clés
+  ajoutées ; aide en français et en anglais ; crédits, inventaire (1 047 images, 187 de source inconnue), vignette.
+- **Vérifications** : `LadderTest` (7 tests : chaque départ mène à sa propre image et animaux tous différents, sur 20
+  échelles par niveau, délai et fixation, descente puis une autre échelle en Libre (rien pendant la descente),
+  mauvais départ compté puis bon départ entouré après 2 erreurs en Viser, « Bravo » après 3 parties, tout retiré à la
+  fin, variantes et lancement sans variante) ; `GameHelpTest` (59), `TranslationFilesTest` (22) ; SpotBugs sans alerte
+  ; `allGamesTest -PallGamesOnly=Ladder -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
+  (`build/game-screenshots/apres/ladder/` ; après la première : deux lapins identiques en bas, corrigé). **À essayer
+  par le mainteneur.**
