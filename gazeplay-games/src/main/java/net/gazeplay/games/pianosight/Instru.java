@@ -8,43 +8,48 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 
 /**
- * The MIDI synthesizer of the Piano game, playing the notes on a channel.
+ * The MIDI synthesizer of Java playing the notes of the Piano with its piano sound (no file needed). Without a
+ * synthesizer or a sound output, the game goes on silently (a warning in the log).
  * <p>
- * Created by schwab on 28/08/2016.
+ * Created by schwab on 28/08/2016; tolerant and closed at the end since 13/11/2026.
  */
 @Slf4j
-public class Instru {
+class Instru implements NotePlayer {
 
-    private final MidiChannel canal;
+    private static final int VOLUME = 100;
+
+    private Synthesizer synthesizer;
+    private MidiChannel channel;
 
     Instru() {
-        // On récupère le synthétiseur, on l'ouvre et on obtient un canal
-        final Synthesizer synthetiseur;
         try {
-            synthetiseur = MidiSystem.getSynthesizer();
-            synthetiseur.open();
-        } catch (final MidiUnavailableException e) {
-            throw new RuntimeException(e);
+            synthesizer = MidiSystem.getSynthesizer();
+            synthesizer.open();
+            channel = synthesizer.getChannels()[0];
+            channel.programChange(0);
+        } catch (final MidiUnavailableException | RuntimeException e) {
+            log.warn("No MIDI synthesizer: the Piano plays without sound", e);
+            channel = null;
         }
-        canal = synthetiseur.getChannels()[0];
-
-        // On initialise l'instrument 0 (le piano) pour le canal
-        canal.programChange(0);
     }
 
-    /**
-     * Joue la note dont le numéro est en paramètre
-     */
-    void noteOn(final int note) {
-        final int volume = 100;
-        canal.noteOn(note, volume);
+    @Override
+    public void play(final int midiNote) {
+        if (channel != null) {
+            // The same note again: start it anew
+            channel.noteOff(midiNote);
+            channel.noteOn(midiNote, VOLUME);
+        }
     }
 
-    /**
-     * Arrête de jouer la note dont le numéro est en paramètre
-     */
-    public void noteOff(final int note) {
-        canal.noteOff(note);
+    @Override
+    public void close() {
+        if (channel != null) {
+            channel.allNotesOff();
+        }
+        if (synthesizer != null && synthesizer.isOpen()) {
+            synthesizer.close();
+        }
+        channel = null;
     }
-
 }

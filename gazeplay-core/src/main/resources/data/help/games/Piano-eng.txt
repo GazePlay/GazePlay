@@ -1,0 +1,17 @@
+# The principle
+Play the piano with your eyes! The keyboard has one octave, from C to C: 8 white keys, each of its color with the name of its note, and 5 black keys. Play songs by following the keys that light up, or play freely.
+
+# How to play
+- Look at a key: a ring fills, then the note plays and a little musical note flies away. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- In Songs: the key to play is framed, with an arrow above it. Play it: the next key lights up. Another key plays its note, with no mistake, but the song does not go on. At the top, the title of the song and the number of notes played.
+- The songs: Au clair de la lune, Twinkle Twinkle Little Star, Ode to Joy and Happy Birthday. Some of them have a black key.
+- In Free: each key plays its note, from C to C.
+- At the start, nothing can be played during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives and no mistakes. A finished song gives a star and "Well done!", then the whole tune is played again in rhythm, with its keys, before another song. As you chose, the game stops after 1, 3 or 5 songs ("Bravo", then the statistics), or has no end. The Free mode has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Songs (follow the keys that light up), or Free (all the keys).
+- For the songs, the end: 1, 3 or 5 songs, or no end.

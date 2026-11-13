@@ -258,6 +258,17 @@ folder), under the license of GazePlay Learning (GPL-3.0-or-later). A wrong mix 
 game. The thumbnail (gazeplay-core: data/common/Thumbnails/colorblend.png, 960 x 540) is a capture of the game,
 reduced; it replaces a thumbnail of unknown source.
 
+The Piano (name code Piano; gazeplay-games: package pianosight): the keyboard, the case and the flying notes are drawn
+by the game since 13/11/2026, and the notes are played by the MIDI synthesizer of Java (no sound file). Removed: the 5
+pictures of notes and the galaxy (data/pianosight/images, unknown source, the galaxy read by no code), and the 3 MIDI
+files (data/pianosight/songs): RIVER.mid, very likely "River Flows in You" (Yiruma, 2001), Pirates.mid ("Yo Ho", very
+likely from "Pirates of the Caribbean", 2003), both protected by copyright, and auclair_pno.mid (unknown source). The
+four songs are written note by note in the code (Song.java): tunes of the public domain (Au clair de la lune, Ah ! vous
+dirai-je maman, the first two phrases of the Ode to Joy by Beethoven, Happy Birthday, whose tune is in the public
+domain in Europe since 2017). A song finished takes the sound of the goose game. The thumbnail (gazeplay-core:
+data/common/Thumbnails/pianosight.png, 960 x 540) is a capture of the game, reduced; it replaces a thumbnail of unknown
+source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

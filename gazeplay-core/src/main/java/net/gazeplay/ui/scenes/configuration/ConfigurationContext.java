@@ -195,7 +195,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             .add("EnableRewardSound", buildCheckBox(config.getRewardSoundEnabledProperty()))
             .add("Limiter Time", buildLimiterTime(config, translator))
             .add("Limiter Score", buildLimiterScore(config, translator))
-            .add("PianoTileColors", chooseColorHBox(config.getTileColorsProperty()))
             .build();
     }
 

@@ -565,7 +565,8 @@ public class Configuration {
     }
 
     /**
-     * @return the color of the tiles of the areas of interest
+     * @return the color of the lit tile of the former Piano; read by no game since the review of the Piano
+     * (13/11/2026: its keys have their own colors), the key stays in the files
      */
     public Color getTileColors(){
         return Color.web(tileColorsProperty.getValue());

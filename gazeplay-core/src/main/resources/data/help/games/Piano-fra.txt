@@ -1,0 +1,17 @@
+# Le principe
+Joue du piano avec les yeux ! Le clavier a une octave, du do au do : 8 touches blanches, chacune de sa couleur avec le nom de sa note, et 5 touches noires. Joue des chansons en suivant les touches qui s’allument, ou joue librement.
+
+# Comment jouer
+- Regarde une touche : un anneau se remplit, puis la note joue et une petite note de musique s’envole. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- En Chansons : la touche à jouer est entourée, avec une flèche au-dessus. Joue-la : la touche suivante s’allume. Une autre touche joue sa note, sans erreur, mais la chanson n’avance pas. En haut, le titre de la chanson et le nombre de notes jouées.
+- Les chansons : Au clair de la lune, Ah ! vous dirai-je maman, L’Ode à la joie et Joyeux anniversaire. Certaines ont une touche noire.
+- En Libre : chaque touche joue sa note, du do au do.
+- Au début, rien ne se joue pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies ni d’erreurs. Une chanson finie donne une étoile et « Bravo ! », puis toute la mélodie est rejouée en rythme, avec ses touches, avant une autre chanson. Selon ton choix, le jeu s’arrête après 1, 3 ou 5 chansons (« Bravo », puis les statistiques), ou il est sans fin. Le mode Libre est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Chansons (suivre les touches qui s’allument), ou Libre (toutes les touches).
+- Pour les chansons, la fin : 1, 3 ou 5 chansons, ou sans fin.

@@ -44,7 +44,8 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
    refondues d’après les retours reçus (captures avant/après des jeux et des menus), inventaire des images recompté
    et commité (`655ae66e1`).
 2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend` ; **13/11 : fait, essayé et validé par le mainteneur,
-   commité**, fiche en bas), Piano, Bouteille (`Bottle`), La pièce
+   commité**, fiche en bas), Piano (**13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas),
+   Bouteille (`Bottle`), La pièce
    (`Room`), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
    chemin (`Follow`).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
@@ -955,7 +956,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Diviseur** (`Divisor`, une seule carte depuis le 12/11, avant 2 : Lapins est un thème) | **12/11** : les 7 lapins et la prairie gardés comme dessins du projet (métadonnées Photoshop : dessinés de janvier à avril 2018, documents insérés tous créés pendant le travail sur le jeu ; commités par kuhlkrein, comme les Biboules) ; `coeur.png` et `explosion.png` (inutilisés) retirés ; sons des Bulles ; vignette faite d'une capture, celle de Lapins retirée | ✔ 12/11 (lapins entiers sans déformation, images en rond avec un bord blanc, confettis et son à l'éclatement, anneau, pastille, temps à la fin) | ✔ 12/11 (règle du mainteneur : une seule carte, Lapins / Animaux / Mes images, dès qu'on touche ou après fixation, Facile 2 / Normal 3 / Difficile 4 divisions (7 / 15 / 31 cibles, hauteur de l'écran en 5 / 3 / 2 s), plus petite cible à un dixième de la hauteur, « Bravo » et le temps) — validé le 12/11 |
 | **Biboule Jump** (`BibJump`) | **4/11** : ciel, nuages, tremplin et sons faits par script (`make_biboulejump_images.py`, `make_biboulejump_sounds.py`) ; Biboules du Tir | ✔ 4/11 (Biboule non déformée, ciel, nuages et tremplin plus grand, cœurs, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : 3 vies, retour sur un nouveau nuage avec les points gardés ; sans fin, 1 ou 3 min ; Facile / Normal / Difficile ; même saut sur tout écran ; plus de record) |
 | **Pierre papier ciseaux** (`RockPaperScissors`) | **10/11** : les 7 dessins retirés (gants de dessin animé proches d'un personnage commercial, parc, pouces) ; mains d'OpenMoji (`make_rockpaperscissors_images.py`), sons faits par script ; vignette faite d'une capture | ✔ 10/11 (trois cartes avec la main et son nom, poings qui se balancent pendant « Pierre… papier… ciseaux ! », main gagnante qui grossit, messages sous les mains, anneau, pastille du score) | ✔ 10/11 (règle du mainteneur : contre l'ordinateur en 2 / 3 / 5 manches gagnantes ou sans fin, l'ordinateur peut gagner ; apprendre la règle en 5 / 10 bonnes réponses ou sans fin, erreur expliquée) — validé le 10/11 |
-| Piano (`Piano`) | À confirmer : 6 images | | |
+| **Piano** (`Piano`) | **13/11** : les 5 notes et la galaxie (source inconnue) et les 3 fichiers MIDI (deux morceaux protégés) retirés ; tout dessiné par le jeu, chansons du domaine public écrites dans le code ; vignette refaite (capture) | ✔ 13/11 (clavier droit d’une octave, touches de couleur nommées, touches noires, cadre et flèche, anneau, notes qui s’envolent) | ✔ 13/11 (règle du mainteneur : Chansons ou Libre, 4 chansons, fin 1 / 3 / 5 / sans fin, touche fausse sans erreur) |
 | **Apprends les Maths** (`Math101`, une seule carte depuis le 10/11, avant 5) | **10/11** : les 6 images retirées (5 de source inconnue, et le tableau d'Openclipart), tableau et cartes dessinés par le jeu, Biboule jaune du Tir ; 2 sons faits par script (`make_math101_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (tableau noir à la craie, réponse écrite en jaune, Biboule qui saute de joie, 3 grandes cartes, coche ou croix, anneau, vies en cœurs) | ✔ 10/11 (règle du mainteneur : une seule carte, 7 sujets, niveaux jusqu'à 10 / 20 / 100 ou par tables, jamais de 0, mauvaises réponses proches, chercher jusqu'à trouver ou 3 vies, fin après 5 / 10 / 20 opérations ou sans fin) — validé le 10/11 |
 | Bottle (`Bottle`) | À confirmer : 5 images | | |
 | **Course du regard** (`GazeRace`) | **9/11** : les 4 images retirées ; voitures, barrière et choc dessinés par script (`make_gazerace_images.py`), route dessinée par le jeu, vignette faite par le script | ✔ 9/11 (route aux couleurs douces, voitures vues de dessus, cœurs, pastilles, tailles à l'échelle de l'écran) | ✔ 9/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min, Facile / Normal / Difficile, route horizontale ou verticale, 1 point toutes les 3 s ; barrière gardée ; ligne fine au milieu) |
@@ -3931,3 +3932,46 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `allGamesTest -PallGamesOnly=colorblend -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
   (`build/game-screenshots/apres/colorblend/` ; après la première : le nom posé sur la bande du grand pot au lieu de
   dessous, contour de l’étiquette des pots pour voir le pot blanc). **Essayé et validé par le mainteneur le 13/11/2026, commité.**
+
+### Piano (`Piano`, paquet `pianosight`) — 13/11/2026
+
+- **État des lieux (code et captures sans fenêtre, `build/game-screenshots/avant/piano/`)** : clavier rond (7 touches
+  blanches en couronne, 5 noires dedans) ; « Jouer en suivant les instructions » (les notes d’un fichier MIDI s’allument
+  en orange, une fixation joue la note) et « Jeu libre ». **Le morceau joué, `RIVER.mid`, très probablement « River
+  Flows in You » (Yiruma, 2001), est protégé** ; `Pirates.mid` (« Yo Ho », Pirates des Caraïbes, 2003, protégé) et
+  `auclair_pno.mid` lus par aucun code. Première touche allumée fausse (la première note pas convertie comme les
+  suivantes), choix de la piste MIDI faux (variable jamais mise à jour, « TODO problem here »), notes du jeu libre hors
+  de toute gamme (`index*85/13+30`), bouton « Open » d’un fichier MIDI à la souris seulement (anglais, presque
+  transparent, fenêtre de fichiers), un nouvel indicateur de fixation à chaque regard jamais retiré, pas de délai,
+  `dispose()` vide, pas de fin ; 5 notes de musique et vignette de source inconnue, `Background.jpg` (galaxie) lu par
+  aucun code ; réglage « Couleur tuile piano » (`TILE_COLORS`) pour ce seul jeu.
+- **Règle du mainteneur (13/11/2026)** : deux modes, clavier droit avec touches noires, plus aucun fichier MIDI ; puis
+  propositions validées : 4 chansons du domaine public, une touche fausse joue sa note sans erreur, réglage de couleur
+  retiré.
+- **Fait** : le jeu réécrit (`Piano`, `Song`, `PianoMode`, `PianoEnd`, `NotePlayer`, `Instru` tolérant et fermé à la
+  fin ; `Jukebox`, `MidiReader`, `Tile` retirés ; `PianoGameVariant` gardé pour lire les anciennes variantes : « Jeu
+  libre » = Libre, « Jouer en suivant les instructions » = Chansons sans fin). **Clavier** : une octave droite, du do
+  au do, 8 touches blanches de couleur (do rouge, ré orange, mi jaune, fa vert, sol bleu ciel, la bleu, si violet, do
+  rouge) avec le nom de la note (« Do Ré Mi… », « C D E… » en anglais), 5 touches noires ; la forme des touches
+  blanches contourne les noires (un regard est sur une seule touche) ; dans un boîtier de bois. Une touche jouée
+  s’enfonce et une note dessinée s’envole. **Chansons** : la touche à jouer entourée (le contour de la touche) avec une
+  flèche ; la jouer allume la suivante ; une autre touche joue sa note sans erreur ; en haut le titre et « Notes : 3 /
+  44 » ; chanson finie : étoile et « Bravo ! », la mélodie rejouée en rythme avec ses touches (rien ne se joue pendant
+  ce temps), puis une autre chanson (jamais deux fois de suite) ; fin après 1, 3 ou 5 chansons, ou sans fin. Chansons
+  (`Song`, notes et durées) : Au clair de la lune (en sol, avec un fa dièse : en do, la 3ᵉ phrase descend sous le do),
+  Ah ! vous dirai-je maman, l’Ode à la joie (2 phrases), Joyeux anniversaire (en fa, avec un si bémol). **Libre** :
+  chaque touche joue sa note. Son : synthétiseur MIDI de Java (aucun fichier), sans synthétiseur le jeu continue sans
+  son. Anneau commun autour du nom de la note (sous les touches noires, la touche est trop étroite), boucle en temps
+  réel. Statistiques (« Piano », **format inchangé**) : un but par note et un par chanson finie. 5 variantes. Réglage
+  « Couleur tuile piano » retiré de la page des réglages (la clé `TILE_COLORS` reste lue, sans effet) ; clés
+  `Freeplay`, `PlayWithInstructions`, `PianoTileColors` retirées, 22 ajoutées ; aide en français et en anglais ;
+  crédits, licence, inventaire (1 031 images, 206 de source inconnue), vignette. Les tests du cœur qui prenaient le
+  Piano comme jeu non revu (`GameHelpTest`, `GameVariantDialogTest`) prennent un nom fictif (`NotReviewedGame`).
+- **Vérifications** : `PianoTest` (7 tests : 13 touches et chansons dans l’octave, délai et fixation, chanson suivie
+  (touche fausse sans erreur) puis rejouée en rythme et une autre, mode Libre, « Bravo » après 3 chansons, synthétiseur
+  fermé et tout retiré à la fin, variantes et anciennes variantes) ; `GameHelpTest` (55), `GameVariantDialogTest` (11),
+  `ConfigurationContextTest` (26), `TranslationFilesTest` (22) ; SpotBugs sans alerte ;
+  `allGamesTest -PallGamesOnly=Piano -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
+  (`build/game-screenshots/apres/piano/` ; après la première : le cadre suit la forme de la touche au lieu d’un
+  rectangle qui débordait sur les touches noires, anneau autour du nom de la note ; un test a trouvé la flèche absente
+  sur la chanson suivante, corrigé). **Essayé et validé par le mainteneur le 13/11/2026, commité.**

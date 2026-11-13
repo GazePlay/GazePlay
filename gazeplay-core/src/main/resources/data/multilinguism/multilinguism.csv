@@ -597,8 +597,28 @@ Farm,Fermë,مزرعة,Ферма,农场,Bauernhof,Αγρόκτημα,Farm,Maati
 Jungle,,,Джунглі,丛林,,,Jungle,,Jungle,,,,,,Jungle,,,Джунгли,,,
 Savanna,Savana,السافانا,Саванна,稀树草原,Savanne,Σαβάνα,Savanna,Savanni,Savane,लंबा-चौड़ा चरागाह,Savana,sabana,Savana,サバンナ,Savanne,Sawanna,Savana,Саванна,Sabana,Savanna,Savana
 Sea,,,Мора,,,,Sea,,Mer,,,,,,,,,Море,,,
-Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
-PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
+PianoSongs,,,,,,,Songs,,Chansons,,,,,,,,,,,,
+PianoFree,,,,,,,Free,,Libre,,,,,,,,,,,,
+PianoOctave,,,,,,,One octave,,Une octave,,,,,,,,,,,,
+PianoEnd1,,,,,,,1 song,,1 chanson,,,,,,,,,,,,
+PianoEnd3,,,,,,,3 songs,,3 chansons,,,,,,,,,,,,
+PianoEnd5,,,,,,,5 songs,,5 chansons,,,,,,,,,,,,
+PianoEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
+PianoAllKeys,,,,,,,All the keys,,Toutes les touches,,,,,,,,,,,,
+PianoNotes,,,,,,,Notes:,,Notes :,,,,,,,,,,,,
+PianoDone,,,,,,,Songs:,,Chansons :,,,,,,,,,,,,
+PianoWell,,,,,,,Well done!,,Bravo !,,,,,,,,,,,,
+PianoDo,,,,,,,C,,Do,,,,,,,,,,,,
+PianoRe,,,,,,,D,,Ré,,,,,,,,,,,,
+PianoMi,,,,,,,E,,Mi,,,,,,,,,,,,
+PianoFa,,,,,,,F,,Fa,,,,,,,,,,,,
+PianoSol,,,,,,,G,,Sol,,,,,,,,,,,,
+PianoLa,,,,,,,A,,La,,,,,,,,,,,,
+PianoSi,,,,,,,B,,Si,,,,,,,,,,,,
+PianoSongMoon,,,,,,,Au clair de la lune,,Au clair de la lune,,,,,,,,,,,,
+PianoSongTwinkle,,,,,,,Twinkle Twinkle Little Star,,Ah ! vous dirai-je maman,,,,,,,,,,,,
+PianoSongJoy,,,,,,,Ode to Joy,,L’Ode à la joie,,,,,,,,,,,,
+PianoSongBirthday,,,,,,,Happy Birthday,,Joyeux anniversaire,,,,,,,,,,,,
 
 # CONTEXT TITLES
 StatsTitle,Statistika,احصائيات,Статыстыка,游戏数据,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,विन्यास,Statistika,Statistik,Statistiche,統計,Statistieken,Statystyka,Estatística,Статистика,Estadísticas,Số liệu thống kê,Statistik
@@ -657,7 +677,6 @@ ReaskQuestionOnFail,,,Задаць пытанне зноў калі няправ
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),Ўключыць гук ўзнагароджання,打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,,Aktiviraj zvuk za,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Activeer beloningsgeluid,Włącz dźwięk nagrody,Activar o som a « Bravo »,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng,Dayakan bunyi Ganjaran
 Limiter Time,,,Абмежавальнік часу,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,
 Limiter Score,,,Абмежавальнік выніку,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,
-PianoTileColors,,,,,,,Panio tile color,,Couleur tuile piano,,,,,,,,,,,,
 Time,,,Час (у секундах),时间 (秒),,,Time (seconds),,Temps (secondes),,,,,,,,,Время (в секундах),,,
 
 # EYE-TRACKER SETTINGS

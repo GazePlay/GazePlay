@@ -40,7 +40,10 @@ beaucoup de jeux revus dessinent maintenant leurs images eux-mêmes.
 
 **Depuis le recompte** : revue de Mélanger les couleurs (13/11/2026, plus tard) : le parc et le verre retirés, la
 vignette refaite (capture du jeu) ; **1 037 images livrées, 671 libres, 153 libres probables, 213 de source inconnue**
-(50 dans les jeux pas encore revus et les Biboules, 33 images communes).
+(50 dans les jeux pas encore revus et les Biboules, 33 images communes). Revue du Piano (13/11/2026) : les 5 notes de
+musique et la galaxie (non lue) retirées, la vignette refaite ; **1 031 images livrées, 672 libres, 206 de source
+inconnue** (44 dans les jeux pas encore revus et les Biboules, 32 images communes). Les 3 fichiers MIDI du Piano (deux
+morceaux protégés : « River Flows in You », Pirates des Caraïbes) sont retirés aussi.
 
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
