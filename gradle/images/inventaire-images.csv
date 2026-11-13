@@ -66,7 +66,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/bottle.jpg,oui,source in
 gazeplay-core/src/main/resources/data/common/Thumbnails/bubblecolor.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/cakes.png,oui,libre,"capture du jeu (12/11/2026) ; gâteaux dessinés par le jeu, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de La Fabrique à gâteaux
 gazeplay-core/src/main/resources/data/common/Thumbnails/cassebrique.png,oui,libre,"capture du jeu (3/11/2026) ; briques, fond et raquette dessinés par le jeu",2026-11-03,GazePlay Learning,revue du Casse-brique
-gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,source inconnue,,2024-04-24,Yaniissou,setup ColorBlendGame
+gazeplay-core/src/main/resources/data/common/Thumbnails/colorblend.png,oui,libre,"capture du jeu (13/11/2026) ; pots de peinture dessinés par le jeu, GPL-3.0-or-later",2026-11-13,GazePlay Learning,revue de Mélanger les couleurs
 gazeplay-core/src/main/resources/data/common/Thumbnails/colors.png,oui,libre,capture du jeu (octobre 2026) ; coloriage OpenMoji CC BY-SA 4.0,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/connect4.png,oui,libre,"capture du jeu (tout dessiné par le jeu), GPL-3.0-or-later",2026-11-10,GazePlay Learning,revue de Quatre en ligne
 gazeplay-core/src/main/resources/data/common/Thumbnails/creamPie.png,oui,libre,"capture du jeu (12/11/2026) ; tarte et main faites pour le projet, animal OpenMoji (CC BY-SA 4.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Tartes à la crème
@@ -318,8 +318,6 @@ gazeplay-games/src/main/resources/data/bubble/images/animals/whale.png,oui,libre
 gazeplay-games/src/main/resources/data/bubble/images/kelp.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
 gazeplay-games/src/main/resources/data/bubble/images/reef.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
 gazeplay-games/src/main/resources/data/bubble/images/wreck.png,oui,libre,"dessiné pour le projet (gradle/images/make_bubbles_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Bubbles
-gazeplay-games/src/main/resources/data/colorblend/images/glass.png,oui,source inconnue,,2024-04-30,Yaniissou,replaced glass image
-gazeplay-games/src/main/resources/data/colorblend/images/park.png,oui,source inconnue,,2024-04-24,Yaniissou,started colorblend game
 gazeplay-games/src/main/resources/data/colors/images/easy/draw-balloon.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/colors/images/easy/draw-chick.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/colors/images/easy/draw-fish.png,oui,libre,"OpenMoji (contours noirs), CC BY-SA 4.0 ; gradle/images/make_coloring_images.py",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)

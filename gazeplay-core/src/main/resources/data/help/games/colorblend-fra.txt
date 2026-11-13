@@ -1,0 +1,18 @@
+# Le principe
+Verse des pots de peinture dans le grand pot et mélange-les, comme un peintre : le jaune et le bleu font du vert, le rouge et le jaune de l’orange, le rouge et le bleu du violet ; le blanc éclaircit, le noir fonce. Fais la couleur demandée, ou invente tes propres mélanges !
+
+# Comment jouer
+- En bas, des boutons ronds montrent les pots de peinture. Regarde un pot : un anneau se remplit, puis une goutte tombe dans le grand pot et la peinture se mélange. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Un petit chiffre sur un pot dit combien de fois il est dans le mélange. En haut à gauche, le nombre de pots versés.
+- En Défi : la carte de gauche montre la couleur à faire et son nom. Verse les pots de sa recette, dans l’ordre que tu veux : 2 pots en Facile et en Normal, 3 en Difficile. Le mélange est regardé après le dernier pot. Si ce n’est pas la bonne couleur, le grand pot montre ce que tu as fait (avec son nom quand il en a un) et « Pas encore ! », puis il se vide : essaie encore. Après 2 essais, les pots de la recette sont entourés.
+- En Libre : verse autant de pots que tu veux ; le nom de la couleur s’affiche quand c’est une couleur connue. Le bouton « Vider le pot » recommence.
+- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies : un mauvais mélange compte seulement une erreur dans les statistiques. Une bonne couleur donne une étoile et « Bravo ! », puis une autre couleur à faire. Selon ton choix, le Défi s’arrête après 5, 10 ou 20 couleurs (« Bravo », puis les statistiques), ou il est sans fin. Le mode Libre est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Défi (une couleur à faire), ou Libre (tes propres mélanges, avec les 5 pots).
+- Pour le Défi : Facile (rouge, jaune et bleu, pour faire l’orange, le vert et le violet), Normal (avec le blanc et le noir, pour faire le rose, le bleu ciel, le jaune pâle, le gris, le bordeaux et le bleu nuit) ou Difficile (3 pots par couleur, pour faire le marron, le vert clair, le mauve, la couleur pêche, le vert sapin et l’aubergine).
+- En bas, la fin du Défi : 5, 10 ou 20 couleurs, ou sans fin.

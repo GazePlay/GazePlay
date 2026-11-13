@@ -43,7 +43,8 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
    faites (proposition C, fiche en bas), essayé et validé par le mainteneur, commité.** Fait aussi le 13/11 : diapos
    refondues d’après les retours reçus (captures avant/après des jeux et des menus), inventaire des images recompté
    et commité (`655ae66e1`).
-2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend`), Piano, Bouteille (`Bottle`), La pièce
+2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend` ; **13/11 : fait, essayé et validé par le mainteneur,
+   commité**, fiche en bas), Piano, Bouteille (`Bottle`), La pièce
    (`Room`), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
    chemin (`Follow`).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
@@ -962,7 +963,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Morpion** (`TicTacToe`) | **10/11** : les 3 images de source inconnue (croix, rond, case blanche) retirées, tout dessiné par le jeu ; 3 sons faits par script (`make_tictactoe_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (cases arrondies, croix rouge et rond bleu qui se dessinent, case regardée éclairée avec le symbole en attente et l'anneau, bande jaune sous les 3 symboles gagnants, pastilles du tour et du score) | ✔ 10/11 (règle du mainteneur : ordi facile / moyen / difficile (parfait mais 1 erreur sur 5 coups, choix A) ou à deux, celui qui commence change à chaque partie, match en 1 / 3 / 5 parties ou sans fin, match nul, « Bravo » seulement si le joueur gagne) — validé le 10/11 |
 | **Ordre** (`Order`) | **10/11** : les 3 images de source inconnue (cible, juste, faux) retirées, cibles dessinées par le jeu ; 3 sons faits par script (`make_order_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (cibles toutes pareilles qui apparaissent avec un rebond, numéro et coche (juste) ou croix (faux), bonne réponse montrée, anneau, vies en cœurs, pastilles) | ✔ 10/11 (règle du mainteneur : mémoire de l'ordre d'apparition, 3 vies, 3 / 5 / 7 cibles ou progressif jusqu'à 10, fin après 3 / 5 / 10 manches ou sans fin, plus de cibles qui se chevauchent) — validé le 10/11 |
 | **Jeu de la taupe** (`WhacAMole`) | **4/11** : les 3 images et les 2 sons retirés ; pré, trou, taupe et sons faits par script (`make_moles_images.py`, `make_moles_sounds.py`) ; Biboules du Tir | ✔ 4/11 (cible qui sort de derrière le bord du trou, sans déformation, étoile, anneau, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : taupes, Biboules ou Mes images ; dès qu'on regarde ou après fixation ; 6 ou 9 trous, 1 à 3 cibles, temps dehors = fixation + 3 / 2 / 1,5 s ; sans fin, 1 ou 3 min, 20 ou 50) |
-| colorblend (`colorblend`) | À confirmer : 2 images | | |
+| **Mélanger les couleurs** (`colorblend`) | **13/11** : le parc (ancien fond de Pierre papier ciseaux) et le verre, de source inconnue, retirés ; tout dessiné par le jeu ; vignette refaite (capture) | ✔ 13/11 (grand pot, pots de peinture, carte de la couleur à faire, anneau, pastilles) | ✔ 13/11 (règle du mainteneur : Défi ou Libre, mélange de peintre RYB, Facile / Normal / Difficile, 5 / 10 / 20 couleurs ou sans fin) |
 | **Répète après moi** (`Simon`, avant « Simon ») | **10/11** : les 2 images (juste, faux) et les 7 notes de source inconnue retirées ; appareil dessiné par le jeu ; 4 notes (do, mi, sol, do aigu), erreur et réussite faites par script (`make_simon_sounds.py`) ; vignette faite d'une capture | ✔ 10/11 (appareil rond à la taille de l'écran, 4 quarts aux couleurs douces qui s'illuminent, symbole par couleur, longueur de la mélodie et état au milieu, anneau, pastilles, vies en cœurs) | ✔ 10/11 (règle du mainteneur : nouveau nom, classique à 3 vies / à deux / libre, mélodie de 5 / 8 / 12 notes ou sans fin, erreur montrée tout de suite, 0,85 s par note au lieu de 3 s) — validé le 10/11 |
 | **Dés** (`Dice`) | **12/11** : `roll.png` plus lu (bouton dessiné par le jeu ; encore lu par le Jeu de l’oie) ; texture des faces du dé et son du lancer redessinés par script (`make_dice_images.py`, `make_dice_sounds.py`, communs avec les Petits chevaux et le Jeu de l’oie), 2 sons faits par script ; vignette composée par le script | ✔ 12/11 (tapis de jeu vert, dés 3D avec une ombre, bouton rond « Lancer », total en grand, 3 grandes cartes, coche ou croix, anneau partout, vies en cœurs) | ✔ 12/11 (règle du mainteneur : deux modes, Compter les points (1 / 2 / 3 dés, mauvais totaux proches, chercher jusqu’à trouver ou 3 vies, fin après 5 / 10 / 20 ou sans fin) et Lancer les dés (1 à 6, un dé seul relancé par une fixation) ; rien ne se relance pendant un lancer) — validé le 12/11 |
 | **Jeu de l’oie** (`GooseGame`) | **12/11** : plateau redessiné par script sur les mêmes centres de cases (`make_goose_images.py` : chemin en spirale, cases rondes numérotées, oies, pont, auberge, puits, prison, flèche du retour, étoile de la fin, drapeau du départ) ; 6 sons refaits et 3 ajoutés (`make_goose_sounds.py`) ; `roll.png` retiré ; Biboules du Tir sur un socle ; vignette faite d’une capture | ✔ 12/11 (bandeau du tour et des messages, une phrase à la fois, socle de la couleur du pion, bouton rond « Lancer », dés 3D sur une carte au milieu, anneau) | ✔ 12/11 (règle du mainteneur : contre 1 à 3 ordinateurs ou 2 à 4 joueurs, règles classiques ou simples (les oies seulement), tous libérés si tous attendent, « Bravo » si une personne gagne puis les statistiques) — validé le 12/11 |
@@ -3889,3 +3890,44 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   feuille de style claire des jeux), vignette refaite ; `CakesTest` vert. **Remarque** : le ruban de l’accessoire
   (bleu, 90, 170, 230) est proche du gâteau myrtille (déjà le cas avec l’ancien gâteau bleu), et les cœurs roses
   proches du gâteau fraise : à voir à l’essai. **Essayé et validé par le mainteneur le 13/11/2026, commité.**
+
+### Mélanger les couleurs (`colorblend`) — 13/11/2026
+
+- **État des lieux (code et captures sans fenêtre, `build/game-screenshots/avant/colorblend/`)** : 10 rectangles de
+  couleur dans le coin en haut à gauche, devant un parc ; une couleur fixée (ou cliquée) remplit un grand rond, la
+  suivante se mélange. **Mélange faux** : moyenne du rouge, du vert et du bleu de l’écran (jaune + bleu = kaki, rouge +
+  vert = marron terne), chaque couleur ajoutée compte pour moitié. Tailles prises sur l’écran entier, rond posé sur la
+  racine de la fenêtre, un seul indicateur de fixation pour les 10 couleurs (placé à droite du verre), un clic choisit
+  tout de suite (mode « regard seul » contourné), contour blanc jamais enlevé, durée de fixation lue une fois, pas de
+  délai, `dispose()` vide ; ni but, ni fin, ni variante, ni aide, ni test ; parc (ancien fond de Pierre papier ciseaux),
+  verre (clipart de 3100 × 5508 px) et vignette (le parc seul) de source inconnue.
+- **Règle du mainteneur (13/11/2026)** : les deux modes (Défi et Libre), un **mélange de peintre**, les niveaux
+  proposés ; noms et couleurs de la planche validés (`build/game-screenshots/propositions/planche-melanges.png`), ordre
+  des pots libre en Défi.
+- **Fait** : le jeu réécrit (`ColorBlend`, `PaintMix`, `ColorBlendMode`, `ColorBlendLevel`, `ColorBlendEnd`,
+  `ColorBlendVariantGenerator`). **Mélange** (`PaintMix`) : modèle RYB, interpolation trilinéaire de Gossett et Chen
+  (2004), coins adoucis ; le blanc éclaircit et le noir fonce selon leur part ; le même calcul pour les deux modes.
+  **Défi** : une carte à gauche (« Fais cette couleur », une tache de la couleur et son nom) ; les pots de la recette
+  versés un à un, dans n’importe quel ordre (2 en Facile et Normal, 3 en Difficile), mélange regardé après le dernier ;
+  juste : étoile et « Bravo ! », une autre couleur (jamais deux fois de suite la même) ; faux : le grand pot montre la
+  couleur obtenue et son nom s’il en a un, « Pas encore ! », une erreur comptée (pas de vies), le pot vidé après 2 s,
+  la même couleur ; après 2 erreurs, les pots de la recette entourés. Facile : rouge, jaune, bleu → orange, vert,
+  violet ; Normal : + blanc, noir → rose, bleu ciel, jaune pâle, gris, bordeaux, bleu nuit ; Difficile : marron, vert
+  clair, mauve, pêche, vert sapin, aubergine. Fin après 5, 10 ou 20 couleurs, ou sans fin. **Libre** : les 5 pots,
+  autant qu’on veut (20 au plus), le nom quand c’est une couleur connue, « Vider le pot » ; sans fin. Dessins du jeu :
+  grand pot en céramique sur une table, pots de peinture dans des boutons ronds (chiffre du nombre de fois dans le
+  mélange), goutte qui tombe (0,35 s) puis peinture qui tourne (0,45 s), rien ne se choisit pendant ce temps ; anneau
+  commun, une boucle en temps réel (fixation lue à chaque pas, délai, Échap) ; plus de choix au clic. Statistiques
+  (« ColorBlend », **format inchangé**) : un but par couleur à faire, une erreur par mauvais mélange ; les fichiers déjà
+  produits ne changent pas. 13 variantes (12 de Défi, 1 de Libre) ; sans variante (le jeu n’en avait pas), le mode
+  Libre. 36 clés ajoutées (16 du jeu, 20 noms de couleurs ; nom anglais changé en « Mix the colors ») ; aide en français et en anglais ; son de goutte (le
+  « plop » de La Fabrique à gâteaux), sons d’erreur et de victoire de Dés et du Jeu de l’oie ; crédits, licence,
+  inventaire (1 037 images, 213 de source inconnue), vignette (capture du Défi Normal).
+- **Vérifications** : `ColorBlendTest` (9 tests : mélange de peintre (vert, orange, violet, ordre, blanc, noir, gris,
+  couleurs à faire toutes différentes et nommées), délai et fixation (rien pendant le versement), couleur faite dans
+  l’autre ordre puis une autre, mauvais mélange compté puis la même couleur et l’indice après 2, mauvais mélange nommé,
+  mode Libre (noms, chiffres, vider), « Bravo » après 5 couleurs, tout retiré à la fin, variantes et lancement sans
+  variante) ; `GameHelpTest` (54) et `TranslationFilesTest` (22) ; SpotBugs sans alerte ;
+  `allGamesTest -PallGamesOnly=colorblend -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
+  (`build/game-screenshots/apres/colorblend/` ; après la première : le nom posé sur la bande du grand pot au lieu de
+  dessous, contour de l’étiquette des pots pour voir le pot blanc). **Essayé et validé par le mainteneur le 13/11/2026, commité.**

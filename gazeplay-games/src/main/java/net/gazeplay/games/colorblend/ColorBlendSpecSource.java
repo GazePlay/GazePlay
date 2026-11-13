@@ -6,14 +6,16 @@ import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
 /**
- * Declares the game "colorblend" to the menu: its name, thumbnail, categories, variants and launcher (see
- * {@code GameSpecSource}).
+ * Declares "Mélanger les couleurs" (name code colorblend) to the menu: its name, thumbnail, categories, variants (see
+ * {@link ColorBlendVariantGenerator}) and launcher (see {@code GameSpecSource}).
  */
 public class ColorBlendSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("colorblend").gameThumbnail("colorblend").category(GameCategories.Category.SELECTION).build(),
-        new ColorBlendLauncher());
+            GameSummary.builder().nameCode("colorblend").gameThumbnail("colorblend")
+                .category(GameCategories.Category.SELECTION)
+                .build(),
+            new ColorBlendVariantGenerator(), new ColorBlendLauncher());
     }
 }

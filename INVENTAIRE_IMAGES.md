@@ -38,6 +38,10 @@ beaucoup de jeux revus dessinent maintenant leurs images eux-mêmes.
 | **Source inconnue** | 216 (915 le 28/10, 586 le 30/10) | 130 dessins simples des jeux « Où est… » (44 drapeaux, 34 formes, 26 lettres, 16 couleurs, 10 chiffres) ; 34 images communes (`common/images` 14, `common/Thumbnails` 10, `common/numbers` 10) ; 52 dans les jeux pas encore revus (Suivre le chemin, La pièce, Piano, Bouteille, Mélanger les couleurs, Échelle) et les Biboules (Biboule Jump, Horses, Frogs Race). Détail du 28/10 en section 3 |
 | **Total** | 1 039 | 64 % libres, 15 % libres probables, 0 non libre, 21 % de source inconnue (13/11) |
 
+**Depuis le recompte** : revue de Mélanger les couleurs (13/11/2026, plus tard) : le parc et le verre retirés, la
+vignette refaite (capture du jeu) ; **1 037 images livrées, 671 libres, 153 libres probables, 213 de source inconnue**
+(50 dans les jeux pas encore revus et les Biboules, 33 images communes).
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons ne sont toujours pas inventoriés.

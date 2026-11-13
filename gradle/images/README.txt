@@ -249,6 +249,15 @@ cream.wav) are made by make_cakes_sounds.py (this folder), under the license of 
 of "Dés" and of the goose game. The thumbnail (gazeplay-core: data/common/Thumbnails/cakes.png, 960 x 540) is a
 capture of the game, reduced by half; it replaces a thumbnail of unknown source.
 
+"Mélanger les couleurs" (name code colorblend; gazeplay-games: data/colorblend): the big pot, the pots of paint, the
+splash of the color to make and the table are drawn by the game since 13/11/2026; the park (park.png, the former
+background of "Pierre papier ciseaux") and the glass (glass.png), of unknown source, are removed. The sound of a drop
+(data/colorblend/sounds/drop.wav) is the "plop" of "La Fabrique à gâteaux", made by make_cakes_sounds.py (this
+folder), under the license of GazePlay Learning (GPL-3.0-or-later). A wrong mix and a right one take the sounds of
+"Dés" and of the goose game. The paints are mixed by the RYB interpolation of Gossett and Chen (2004), written for the
+game. The thumbnail (gazeplay-core: data/common/Thumbnails/colorblend.png, 960 x 540) is a capture of the game,
+reduced; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

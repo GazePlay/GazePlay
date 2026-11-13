@@ -1,0 +1,18 @@
+# The principle
+Pour pots of paint into the big pot and mix them, like a painter: yellow and blue make green, red and yellow make orange, red and blue make purple; white makes lighter, black makes darker. Make the color asked for, or invent your own mixes!
+
+# How to play
+- At the bottom, round buttons show the pots of paint. Look at a pot: a ring fills, then a drop falls into the big pot and the paint mixes. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- A small number on a pot tells how many times it is in the mix. At the top left, the number of pots poured.
+- In Challenge: the card on the left shows the color to make and its name. Pour the pots of its recipe, in any order: 2 pots in Easy and Normal, 3 in Hard. The mix is checked after the last pot. If it is not the right color, the big pot shows what you made (with its name when it has one) and "Not yet!", then it empties: try again. After 2 tries, the pots of the recipe are framed.
+- In Free: pour as many pots as you like; the name of the color is shown when it is a known color. The "Empty the pot" button starts again.
+- At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives: a wrong mix only counts a mistake in the statistics. A right color gives a star and "Well done!", then another color to make. As you chose, the Challenge stops after 5, 10 or 20 colors ("Bravo", then the statistics), or has no end. The Free mode has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Challenge (a color to make), or Free (your own mixes, with the 5 pots).
+- For the Challenge: Easy (red, yellow and blue, to make orange, green and purple), Normal (with white and black, to make pink, sky blue, pale yellow, grey, burgundy and navy blue) or Hard (3 pots per color, to make brown, light green, mauve, peach, fir green and aubergine).
+- At the bottom, the end of the Challenge: 5, 10 or 20 colors, or no end.
