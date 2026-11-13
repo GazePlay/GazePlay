@@ -81,7 +81,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/frogsrace.png,oui,source
 gazeplay-core/src/main/resources/data/common/Thumbnails/gazeRace.png,oui,libre,"faite des images du jeu par make_gazerace_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,libre,"capture du jeu (12/11/2026) ; plateau dessiné pour le projet, Biboules du Tir, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
 gazeplay-core/src/main/resources/data/common/Thumbnails/gribouille.png,oui,libre,"capture du jeu (12/11/2026) ; tout dessiné par le jeu, icônes Material Symbols (Apache-2.0), GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue de Gribouille
-gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,source inconnue,,2018-07-17,kuhlkrein,Addition of new icones + correction bugs config
+gazeplay-core/src/main/resources/data/common/Thumbnails/home.png,oui,libre,"capture du jeu « La pièce » (13/11/2026) ; pièce dessinée par le jeu, objets OpenMoji CC BY-SA 4.0",2026-11-13,GazePlay Learning,revue de La pièce
 gazeplay-core/src/main/resources/data/common/Thumbnails/horses.png,oui,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/horsesSimplified.png,non,source inconnue,,2019-07-19,Téo Blachère,forgotten push
 gazeplay-core/src/main/resources/data/common/Thumbnails/labyrinth.png,oui,libre,"faite des images du jeu par make_labyrinth_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue du Labyrinthe
@@ -527,16 +527,6 @@ gazeplay-games/src/main/resources/data/race/images/frog-violet.png,oui,libre,"de
 gazeplay-games/src/main/resources/data/rockPaperScissors/paper.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_rockpaperscissors_images.py)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
 gazeplay-games/src/main/resources/data/rockPaperScissors/rock.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_rockpaperscissors_images.py)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
 gazeplay-games/src/main/resources/data/rockPaperScissors/scissors.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (gradle/images/make_rockpaperscissors_images.py)",2026-11-10,GazePlay Learning,revue de Pierre papier ciseaux
-gazeplay-games/src/main/resources/data/room/arrowEast.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/arrowNorth.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/arrowSouth.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/arrowWest.png,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/back.jpg,oui,source inconnue,,2018-05-10,DMyTryC,Adding the pictures for the walls
-gazeplay-games/src/main/resources/data/room/front.jpg,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/left.jpg,oui,source inconnue,,2018-05-10,DMyTryC,Adding the pictures for the walls
-gazeplay-games/src/main/resources/data/room/right.jpg,oui,source inconnue,,2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/stars.jpg,oui,libre,"ESA/Hubble, CC BY 4.0 : attribution à ajouter",2018-04-10,DMyTryC,Recreated the room game from the master branch of the gazeplay project
-gazeplay-games/src/main/resources/data/room/top_bottom.jpg,oui,source inconnue,,2018-05-10,DMyTryC,Adding the pictures for the walls
 gazeplay-games/src/main/resources/data/rushHour/bus.png,oui,libre,"dessiné pour le projet (gradle/images/make_trafficjam_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
 gazeplay-games/src/main/resources/data/rushHour/truck-1.png,oui,libre,"dessiné pour le projet (gradle/images/make_trafficjam_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
 gazeplay-games/src/main/resources/data/rushHour/truck-2.png,oui,libre,"dessiné pour le projet (gradle/images/make_trafficjam_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue d'Embouteillage
@@ -1105,3 +1095,35 @@ gazeplay-games/src/test/resources/images/portraits/biscuit2.jpg,non,source incon
 gradle/innosetup/gazeplayicon.bmp,non,source inconnue,,2020-01-09,Miles Bardon,Windows Installer Refinement (#998)
 gradle/innosetup/gazeplayicon.ico,non,source inconnue,,2020-01-01,milesbardon,Added icon file to use as app icon in launcher.
 gradle/logo/gazeplay-top-logo.png,non,libre,logo du projet (gradle/logo/make_logo.py),2019-11-03,Yann ROBERT,improvements on home screen layout
+gazeplay-games/src/main/resources/data/room/objects/alarm.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/apple.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/ball.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/bathtub.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/bed.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/book.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/books.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/bowl.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/bread.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/bulb.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/chair.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/clock.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/couch.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/cup.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/door.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/milk.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/mirror.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/pan.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/paper.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/plant.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/shower.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/soap.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/socks.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/sponge.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/spoon.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/teapot.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/teddy.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/television.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/toilet.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/toothbrush.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/tshirt.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gazeplay-games/src/main/resources/data/room/objects/window.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce

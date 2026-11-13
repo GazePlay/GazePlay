@@ -46,6 +46,9 @@ inconnue** (44 dans les jeux pas encore revus et les Biboules, 32 images commune
 morceaux protégés : « River Flows in You », Pirates des Caraïbes) sont retirés aussi. Revue de Bouteille (13/11/2026) :
 le décor, l’étagère, la bouteille, la bouteille cassée et la balle retirés, la vignette refaite ; **1 026 images
 livrées, 673 libres, 200 de source inconnue** (39 dans les jeux pas encore revus et les Biboules, 31 images communes).
+Revue de La pièce (13/11/2026) : les 9 images des murs et des flèches (source inconnue) et le ciel `stars.jpg` (ESA/Hubble,
+lu par aucun code) retirés, 32 objets OpenMoji (CC BY-SA 4.0) ajoutés, la vignette `home.png` refaite ; **1 048 images
+livrées, 705 libres, 190 de source inconnue** (30 dans les jeux pas encore revus et les Biboules, 30 images communes).
 
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à

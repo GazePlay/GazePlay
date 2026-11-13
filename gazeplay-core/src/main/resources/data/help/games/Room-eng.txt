@@ -1,0 +1,18 @@
+# The principle
+Walk around the rooms of a house: the living room, the kitchen, the bedroom and the bathroom. Search for the object asked for, or explore freely and learn the names of the objects.
+
+# How to play
+- You see one wall of the room at a time. Look at the left or the right arrow: a ring fills, then you turn to the next wall. After the fourth wall, you are back at the first one. At the top right, the four dots show which wall you see. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- In Search: the card at the top asks for an object ("Where is the bed?"), with its picture or its name only. Turn to find it, then look at it: it jumps. Another object shakes and shows its name. If you do not find it, after 15 seconds the arrow leading to it the soonest blinks.
+- With "All the rooms", each question can be in another room: the house changes by itself.
+- In Explore: look at an object, it jumps and shows its name.
+- At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+
+# How to win
+There are no lives: another object only counts a mistake in the statistics. A found object gives a star and "Well done!", then another question. As you chose, the search stops after 5, 10 or 20 objects ("Bravo", then the statistics), or has no end. The Explore mode has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Search, or Explore.
+- The room: the living room, the kitchen, the bedroom, the bathroom, or all the rooms (to search).
+- At the bottom, to search: the end (5, 10 or 20 objects, or no end) and the question with the picture or the word only.

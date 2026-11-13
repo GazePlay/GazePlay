@@ -1,0 +1,18 @@
+# Le principe
+Promène-toi dans les pièces d’une maison : le salon, la cuisine, la chambre et la salle de bain. Cherche l’objet demandé, ou explore librement et découvre le nom des objets.
+
+# Comment jouer
+- Tu vois un mur de la pièce à la fois. Regarde la flèche de gauche ou de droite : un anneau se remplit, puis tu tournes vers le mur suivant. Après le quatrième mur, tu reviens au premier. En haut à droite, les quatre points montrent quel mur tu regardes. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- En Cherche : la carte en haut demande un objet (« Où est le lit ? »), avec son image ou seulement son nom. Tourne pour le trouver, puis regarde-le : il saute. Un autre objet tremble et montre son nom. Si tu ne trouves pas, au bout de 15 secondes la flèche qui y mène le plus vite clignote.
+- Avec « Toutes les pièces », chaque question peut être dans une autre pièce : la maison change toute seule.
+- En Explorer : regarde un objet, il saute et montre son nom.
+- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+
+# Comment gagner
+Il n’y a pas de vies : un autre objet compte seulement une erreur dans les statistiques. Un objet trouvé donne une étoile et « Bravo ! », puis une autre question. Selon ton choix, la recherche s’arrête après 5, 10 ou 20 objets (« Bravo », puis les statistiques), ou elle est sans fin. Le mode Explorer est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Cherche, ou Explorer.
+- La pièce : le salon, la cuisine, la chambre, la salle de bain, ou toutes les pièces (pour chercher).
+- En bas, pour chercher : la fin (5, 10 ou 20 objets, ou sans fin) et la question avec l’image ou le mot seul.

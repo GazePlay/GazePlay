@@ -46,7 +46,7 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
 2. **Suite du groupe 9, dans l’ordre** : Mélanger les couleurs (`colorblend` ; **13/11 : fait, essayé et validé par le mainteneur,
    commité**, fiche en bas), Piano (**13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas),
    Bouteille (`Bottle` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), La pièce
-   (`Room`), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
+   (`Room` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Blocs (`Blocs` ; depuis le 12/11 il n’est plus partagé avec Cartes à gratter), Échelle (`Ladder`), Suivre le
    chemin (`Follow`).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
    travail, tests ciblés, essai du mainteneur, puis un commit par jeu sur demande.
@@ -944,7 +944,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | Blocks | Utilise les images par défaut (voir Memory) | | |
 | **Casse-brique** (`CasseBrique`) | **3/11** : plus d'image de l'ancien dossier `opinions` en fond ; fond dessiné par le jeu ou variante « Mes images » ; vignette refaite (capture) | ✔ 3/11 (briques arrondies aux couleurs douces, éclat, cœurs, pastille, extraterrestre redessiné) | ✔ 3/11 (règle du mainteneur : 3 vies, toutes les briques pour gagner, Facile / Normal / Difficile, 4 dessins gardés) |
 | **Jeu de taquin** (`Puzzle`) | **9/11** : les 36 images découpées d'avance et la vignette retirées ; mer, montgolfières et pré des Biboules dessinés par script (`make_puzzle_images.py`, Biboules du Tir) ; la Joconde reprise de Wikimedia Commons (domaine public) ; chiffres dessinés par le jeu ; vignette faite par le script | ✔ 9/11 (plateau de bois centré avec son modèle à côté, pièces arrondies, bord de couleur sur les pièces qui glissent, anneau, pastille, étoile pour la dernière pièce des chiffres) — à essayer | ✔ 9/11 (règle du mainteneur : toujours une solution, vraie case vide, Facile 3 × 3 peu mélangé / Normal 3 × 3 tout mélangé / Difficile 4 × 4, fin après 1 / 3 / 5 ou sans fin, chiffres / images / Mes images) — à essayer |
-| Room (`Room`) | À confirmer : 9 images (murs, flèches) ; OK : ciel ESA/Hubble (CC BY 4.0, crédité) | | |
+| **La pièce** (`Room`) | **13/11** : les 9 images des murs et des flèches (source inconnue) et le ciel ESA/Hubble (lu par aucun code) retirés ; murs et meubles dessinés par le jeu, 32 objets OpenMoji (CC BY-SA 4.0) ; vignette refaite (capture) | ✔ 13/11 (vue en 2D mur par mur, 4 pièces de couleur, flèches rondes, boussole, carte de la question, anneau) | ✔ 13/11 (règle du mainteneur : Cherche ou Explorer, 4 pièces ou toutes, avec l’image ou le mot seul, 5 / 10 / 20 objets ou sans fin, aide après 15 s) |
 | **Défendre le château** (`TowerDefense`) | **3/11** : les 23 images retirées ; tout dessiné par script (`make_towerdefense_images.py`), neige par le jeu | ✔ 3/11 (polices des jeux, pastilles des prix, cercle de choix aux couleurs des menus, vignette) | ✔ 3/11 (règle du mainteneur : vagues à la demande ou automatiques, Facile / Normal / Difficile, sans fin / 10 / 20 vagues, « Perdu ! », carte au hasard ; 4 tours, revente et blizzard gardés) |
 | **Aiguillages** (`TrainSwitches`) | **10/11** : les 43 dessins et la vignette retirés (locomotives proches de l'emoji EmojiOne, gares de banque d'images probables) ; tout dessiné par le jeu (trains, gares, rails, aiguillages, tunnel), vignette faite d'une capture ; 5 sons remplacés par 4 faits par script (`make_trainswitches_sounds.py`) | ✔ 10/11 (vu de dessus, rails à coins arrondis, aiguillage montrant ses deux chemins, symbole par couleur sur le train et sa gare, anneau, pastilles, halo et bouton « Reprendre », aperçu du prochain train sur le tunnel) | ✔ 10/11 (règle du mainteneur : 9 circuits, 3 par niveau, Facile 3 / Normal 5 / Difficile 8 gares, nouveau circuit tous les 5 trains, fin après 5 / 10 / 20 trains ou sans fin, un à la fois / pause à chaque aiguillage / en continu, plus de zone de texte ; vitesse selon la durée de fixation) — validé le 10/11 |
 | **Tir** (`Shooter` ; Shoot The Biboules et Shoot The Robots réunis) | **2/11** : tout redessiné par script (décors, robots, cage, soucoupe, éclairs, baguette, canon), sons refaits ; les Biboules gardées (mascotte du laboratoire), puis modernisées le 3/11 (bouche et ailes d'origine) ; musique CC0 | ✔ 2/11 (score lisible, cibles moins grandes, décors doux) | ✔ 2/11 (règle du mainteneur : une carte, tir immédiat ou fixation, sans fin / 50 / 100 cibles / 1 / 3 min) |
@@ -4013,3 +4013,41 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   `allGamesTest -PallGamesOnly=Bottle -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
   (`build/game-screenshots/apres/bottle/` ; après la première : les rayures du comptoir dépassaient sous la zone de
   jeu). **Essayé et validé par le mainteneur le 13/11/2026, commité.**
+
+### La pièce (`Room`) — 13/11/2026
+
+- **État des lieux (code et images ; pas de capture : sans fenêtre, la 3D ne s’affiche pas)** : un salon en 3D (murs
+  verts : fenêtre et porte, bibliothèque et cheminée, canapé et lampe, armoire et tableau) ; 4 flèches aux bords font
+  tourner la vue (gauche, droite, et ±15° en haut et en bas). La vue ne tournait que pendant que la souris bougeait
+  (0,25° par mouvement) ou à chaque point de regard (0,1°) : immobile sur une flèche, rien ; au regard, la vitesse
+  dépendait du nombre de points de l’oculomètre. La 3D dépend de la carte graphique ; pièce de 1 600 × 500 quelle que
+  soit la taille de l’écran ; ni but, ni fin, ni variante, ni aide ; contrôle de la fixation coupé, `dispose()` vide ;
+  9 images (murs, flèches) de source inconnue, `stars.jpg` (ESA/Hubble) lu par aucun code, vignette `home.png` avec
+  une loupe et une boussole d’allure banque d’images.
+- **Règle du mainteneur (13/11/2026)** : les deux modes, vue en 2D, rotation par fixation, plusieurs pièces, tout
+  redessiné ; propositions validées (objets OpenMoji téléchargés du dépôt officiel, 8 par pièce, aide après 15 s).
+- **Fait** : le jeu réécrit (`Room`, `RoomObject`, `RoomPlace`, `RoomMode`, `RoomEnd`, `RoomLevel`,
+  `RoomGameVariantGenerator` ; `Wall` et `MoveDirection` retirés ; statistiques « room », **format inchangé**). Un mur
+  à la fois en plein écran, dessiné par le jeu (mur d’une couleur par pièce, sol en parquet ou carrelé en
+  perspective, plinthe, faïence, plan de travail, étagères, petites tables, fil du plafond) ; deux grandes flèches
+  rondes : une fixation fait glisser la vue au mur voisin en 0,5 s (après le 4ᵉ, le 1ᵉʳ) ; boussole de 4 points en haut
+  à droite. 4 pièces de 8 objets OpenMoji (2 par mur) : salon (fenêtre, canapé, télévision, plante, horloge, livres,
+  porte, chaise), cuisine (poêle, théière, tasse, bol, pomme, pain, verre de lait, cuillère), chambre (lit, ours en
+  peluche, réveil, tee-shirt, chaussettes, livre, ballon, ampoule), salle de bain (baignoire, douche, toilettes, papier
+  toilette, miroir, savon, brosse à dents, éponge). **Cherche** : carte « Où est le lit ? » (avec l’image ou le mot
+  seul) ; l’objet trouvé saute, étoile et « Bravo ! le lit », une autre question (jamais deux fois de suite le même) ;
+  un autre objet tremble, montre son nom, une erreur (pas de vies) ; après 15 s sans le trouver, la flèche qui y mène
+  le plus vite clignote ; « toutes les pièces » : chaque question dans une pièce tirée au hasard, atteinte en fondu ;
+  fin après 5, 10 ou 20 objets, ou sans fin. **Explorer** : chaque objet fixé saute et montre son nom, sans fin. Anneau
+  commun, boucle en temps réel (fixation lue à chaque pas, délai, Échap ; rien pendant que la vue glisse). 44
+  variantes (Cherche : 4 fins × 2 niveaux × 5 pièces ; Explorer : 4 pièces) ; sans variante (le jeu n’en avait pas),
+  Explorer dans le salon. 79 clés ajoutées (pour chaque objet son nom et sa question) ; objets préparés par
+  `make_room_images.py` ; aide en français et en anglais ; crédits, licence, inventaire (1 048 images, 190 de source
+  inconnue), vignette `home.png` refaite.
+- **Vérifications** : `RoomTest` (10 tests : 4 pièces de 8 objets, 2 par mur, délai et fixation, tourner mur par mur et
+  revenir au premier (rien pendant que la vue glisse), objet trouvé ou autre objet compté, aide après 15 s vers le bon
+  côté, toutes les pièces, nom des objets en Explorer, « Bravo » après 5 objets, tout retiré à la fin, variantes et
+  lancement sans variante) ; `GameHelpTest` (57), `TranslationFilesTest` (22) ; SpotBugs sans alerte ;
+  `allGamesTest -PallGamesOnly=Room -PallGamesRepeat=3` réussi ; captures sans fenêtre des 16 murs regardées
+  (`build/game-screenshots/apres/room/` ; après la première : dans la cuisine, étagères remontées au-dessus du plan de
+  travail, boussole qui débordait à droite). **Essayé et validé par le mainteneur le 13/11/2026, commité.**

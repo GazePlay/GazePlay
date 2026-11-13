@@ -278,6 +278,13 @@ throw.wav) are made by make_bottle_sounds.py (this folder), under the license of
 (gazeplay-core: data/common/Thumbnails/bottle.jpg, 960 x 540) is a capture of the game, reduced; it replaces a
 thumbnail of unknown source.
 
+"La pièce" (name code Room; gazeplay-games: data/room): the walls, floors, shelves, tables, counters and arrows are
+drawn by the game since 13/11/2026; the 32 objects (data/room/objects) are OpenMoji pictures (CC BY-SA 4.0,
+https://openmoji.org), cropped and reduced by make_room_images.py (this folder). Removed: the walls and arrows of the
+former room in 3D (data/room, 9 pictures of unknown source, 2018) and stars.jpg (ESA/Hubble, CC BY 4.0, read by no
+code). The thumbnail (gazeplay-core: data/common/Thumbnails/home.png, 960 x 540) is a capture of the game, reduced; it
+replaces a thumbnail of unknown source (a magnifying glass and a compass).
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

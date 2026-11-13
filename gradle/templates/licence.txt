@@ -106,8 +106,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Icônes de la musique (data/common/images : previous, skip, pause, play-button, speaker, mute) : Icons made
   by Smashicons and Google from www.flaticon.com,
   licensed by Creative Commons BY 3.0 (https://creativecommons.org/licenses/by/3.0/).
-- Ciel étoilé du jeu Room (stars.jpg) : ESA/Hubble, Creative Commons BY 4.0
-  (https://creativecommons.org/licenses/by/4.0/).
+- Objets du jeu « La pièce » (data/room/objects) : OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0 ;
+  recadrés (gradle/images/make_room_images.py) ; les murs, les meubles et les flèches sont dessinés par le jeu.
 - Images de Magic Potions (fioles, chaudron, bulle, décor) : dessinées pour GazePlay Learning
   (gradle/images/make_potions_images.py), sous la licence du projet.
   Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
