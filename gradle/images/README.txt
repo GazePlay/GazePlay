@@ -299,6 +299,14 @@ former copy of the Biboule (data/ladder/Biboule.png) is removed. A game won and 
 goose game and of "Dés". The thumbnail (gazeplay-core: data/common/Thumbnails/ladder.png, 960 x 540) is a capture of
 the game, reduced; it replaces a thumbnail of unknown source.
 
+"Suivre le chemin" (name code Follow; gazeplay-games: package follow): the map, the hedges, the coins, the keys, the
+doors and the treasure chest are drawn by the game since 13/11/2026; the character is the modernised Biboule of the
+shooting game (data/shooter/biboule/images/Blue.png, drawing of the project). The 13 former pictures of data/follow
+(unknown source) are removed. The sounds (data/follow/sounds: coin.wav, key.wav, door.wav) are made by
+make_follow_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later); a map finished takes the
+sound of the goose game. The thumbnail (gazeplay-core: data/common/Thumbnails/follow.png, 960 x 540) is a capture of the
+game; it replaces a thumbnail of unknown source.
+
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices

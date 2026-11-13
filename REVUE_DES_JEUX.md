@@ -47,7 +47,7 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
    commité**, fiche en bas), Piano (**13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas),
    Bouteille (`Bottle` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), La pièce
    (`Room` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Blocs (`Blocks` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Échelle (`Ladder` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas), Suivre le
-   chemin (`Follow`).
+   chemin (`Follow` ; **13/11 : fait, essayé et validé par le mainteneur, commité**, fiche en bas).
 3. Pour chaque jeu, comme toujours : état des lieux, **demander d’abord la règle voulue**, propositions validées,
    travail, tests ciblés, essai du mainteneur, puis un commit par jeu sur demande.
 0. **D’abord : vérifier la CI** du push du 12/11 au soir (run `43249868413`, `5117d578a..ea643a12b` : Gribouille,
@@ -951,7 +951,7 @@ Après chaque famille : `allGamesTest` complet (67 entrées depuis le 2/11/2026)
 | **Survive Against Robots** (`SurviveAgainstRobots` ; une seule carte depuis le 3/11, avant 2) | **3/11** : les 12 dessins retirés ; 3 décors et 4 bonus dessinés par script (`make_survive_images.py`) ; la Biboule et les robots du Tir | ✔ 3/11 (cœurs, pastilles, décor au hasard parmi 3, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin / 1 / 3 min / 20 / 50 robots, souris ou regard selon le réglage des entrées, tir automatique ou vers l'avant, 3 niveaux, 4 bonus) |
 | **Space Game** (`SpaceGame`) | **3/11** : les 12 images retirées ; fond, fusée, soucoupes et boss dessinés par script (`make_space_images.py`) | ✔ 3/11 (fond de nuit douce choisi, cœurs, pastilles, jauge du boss, vignette) | ✔ 3/11 (règle du mainteneur : 3 vies, sans fin ou boss après 1 / 3 min ou 20 / 50 extraterrestres, boss de 15 / 30 / 50 points de vie, 4 / 6 / 8 extraterrestres) |
 | **La Fabrique à gâteaux** (`Cakes`) | **12/11** : les 24 images (faites dans Photoshop en 2018, auteur non prouvé) et les 3 sons de source inconnue retirés ; gâteaux, plat et table dessinés par le jeu (Biboules ailées redessinées) ; 2 sons faits par script (`make_cakes_sounds.py`) ; vignette faite d’une capture | ✔ 12/11 (étages en cylindre aux 4 couleurs, 5 nappages qui coulent, 3 accessoires autour des étages du dessous (ruban, perles, cœurs), 3 sortes de bonbons sur le dernier étage, parapluies ou Biboules ailées, modèle sur une carte à droite, partie fausse encadrée de rouge qui clignote, onglets des étapes, boutons qui montrent le résultat, anneau, étoile et « Bravo ! ») — à réessayer | ✔ 12/11 (règle du mainteneur : parcours guidé sans menus, Copier le modèle Facile 1 étage / Normal 3 étages / Difficile modèle caché avec « Voir le modèle », choix faux posé quand même et compté, **mode Libre** jusqu’à 3 étages, fin après 1 / 3 / 5 gâteaux ou sans fin ; essai : bonbons seulement sur le dernier étage, accessoire sur les autres) — à réessayer |
-| Follow (`Follow`) | À confirmer : 13 dessins | | |
+| **Suivre le chemin** (`Follow`) | **13/11** : les 13 images retirées (source inconnue) ; carte, haies, pièces, clés, portes et coffre dessinés par le jeu, Biboule du Tir ; 3 sons faits par script ; vignette refaite (capture) | ✔ 13/11 (carte du Labyrinthe, haies arrondies, Biboule d’une case environ, pièces dorées, clés et portes de couleur, coffre, petit rond du regard) | ✔ 13/11 (règle du mainteneur : Pièces ou Clés, 3 niveaux, 1 / 3 / 5 cartes ou sans fin, nouvelle carte à chaque fois, piège retiré) |
 | **Horses, Horses Simplified** | **Remplacées le 30/10** : plateaux et boutons du dé dessinés pour le projet (`make_horses_images.py`, d'après `positions*.json`) ; `selector.png` retiré ; Biboules gardées | ✔ 30/10 (fond des menus, équipe en cours, anneaux, cartes) | ✔ 30/10 (contre l'ordinateur, dé équilibré, règles corrigées) |
 | **Diviseur** (`Divisor`, une seule carte depuis le 12/11, avant 2 : Lapins est un thème) | **12/11** : les 7 lapins et la prairie gardés comme dessins du projet (métadonnées Photoshop : dessinés de janvier à avril 2018, documents insérés tous créés pendant le travail sur le jeu ; commités par kuhlkrein, comme les Biboules) ; `coeur.png` et `explosion.png` (inutilisés) retirés ; sons des Bulles ; vignette faite d'une capture, celle de Lapins retirée | ✔ 12/11 (lapins entiers sans déformation, images en rond avec un bord blanc, confettis et son à l'éclatement, anneau, pastille, temps à la fin) | ✔ 12/11 (règle du mainteneur : une seule carte, Lapins / Animaux / Mes images, dès qu'on touche ou après fixation, Facile 2 / Normal 3 / Difficile 4 divisions (7 / 15 / 31 cibles, hauteur de l'écran en 5 / 3 / 2 s), plus petite cible à un dixième de la hauteur, « Bravo » et le temps) — validé le 12/11 |
 | **Biboule Jump** (`BibJump`) | **4/11** : ciel, nuages, tremplin et sons faits par script (`make_biboulejump_images.py`, `make_biboulejump_sounds.py`) ; Biboules du Tir | ✔ 4/11 (Biboule non déformée, ciel, nuages et tremplin plus grand, cœurs, pastilles, vignette) | ✔ 4/11 (règle du mainteneur : 3 vies, retour sur un nouveau nuage avec les points gardés ; sans fin, 1 ou 3 min ; Facile / Normal / Difficile ; même saut sur tout écran ; plus de record) |
@@ -4118,3 +4118,42 @@ pointeur entre dans l'œuf, y reste 2,7 s, sort, revient ; planches `*-planche.p
   ; `allGamesTest -PallGamesOnly=Ladder -PallGamesRepeat=3` réussi ; captures sans fenêtre regardées
   (`build/game-screenshots/apres/ladder/` ; après la première : deux lapins identiques en bas, corrigé). **À essayer
   par le mainteneur.**
+
+### Suivre le chemin (`Follow`) — 13/11/2026
+
+- **État des lieux (code et captures `build/game-screenshots/avant/follow/`)** : la Biboule suit le regard (ou la
+  souris) en continu et les murs l’arrêtent ; 3 cartes fixes de 32 × 18 cases : « KeyEasy » (une clé ouvre une grille
+  devant le rubis), « Key » (clés rouge et verte, portes, et un **piège invisible** qui ferme une grille derrière soi),
+  « Coin » (**312 pièces**, toutes atteignables, vérifié). Biboule petite (1/50 de la largeur), clés minuscules,
+  pointeur du regard en rubis de 9 px ; vitesse de 4 px à chaque image (dépend de l’écran), boucle jamais arrêtée
+  par `dispose` ; un filtre sur le regard au centre ne filtrait rien (seuil de 0,15 px²) ; ni son, ni compteur, ni fin
+  autre que la victoire ; rangé en « Logique et maths » ; 13 images de source inconnue (dont une copie de la Biboule).
+- **Règle du mainteneur (13/11/2026)** : propositions acceptées : garder le principe (la Biboule suit le regard, les
+  haies l’arrêtent), deux jeux (Pièces, Clés : chaque clé ouvre la porte de sa couleur, jusqu’au trésor), piège
+  retiré ; Facile / Normal / Difficile, vitesse fixe indépendante de l’écran, fin après 1 / 3 / 5 cartes ou sans fin ;
+  tout dessiné (haies du Labyrinthe, Biboule du Tir d’environ une case, pièces, clés, portes, coffre), un petit rond
+  discret à l’endroit regardé, des sons, catégorie « Action / réflexes ».
+- **Fait** : le jeu réécrit (`Follow`, `FollowMode`, `FollowLevel`, `FollowEnd`, `FollowGameVariantGenerator` ;
+  `EventItem` et `FollowGameVariant` retirés ; statistiques `FollowGamesStats` gardées, **format inchangé** :
+  `info-game.csv` compte maintenant les cartes, une par but). Une nouvelle carte à chaque fois : un labyrinthe du
+  Labyrinthe (`Maze`, rendu public, avec `openMore` pour les boucles ; le Labyrinthe n’en change pas), avec des
+  boucles en Pièces (Facile 50 % des murs rouverts, Normal 25 %, Difficile 10 %), sans boucle en Clés (une porte ne
+  doit pas se contourner). Facile 3 × 5 cases (6 pièces ou 1 porte), Normal 4 × 7 (10 ou 2), Difficile 5 × 9 (14 ou
+  3). La Biboule part d’un coin ; en Clés, le coffre est loin (au moins la moitié du plus long chemin), les portes
+  (rouge, bleue, violette) coupent le seul chemin vers lui, et chaque clé est placée avant sa porte mais après les
+  portes précédentes, hors du chemin si possible. Vitesse : 0,35 du petit côté de l’écran par seconde, à la vitesse
+  d’animation des réglages ; contre une haie, la Biboule glisse le long ; au bout d’une haie, elle est poussée autour.
+  Pièce : son ; clé : son, sa porte rétrécit et disparaît ; toutes les pièces ou le coffre : étoile, « Bravo ! » et
+  son de victoire (Jeu de l’oie), puis une autre carte ou la fin (« Bravo », statistiques). Pastilles « Cartes : n /
+  total » et, en Pièces, « Pièces : n / total » ; petit rond au regard (caché à la souris, qui a son pointeur).
+  Délai des réglages à chaque carte, rien pendant le menu (Échap) ; graine gardée pour le rejeu. 24 variantes ; sans
+  variante (les anciennes), Pièces, Normal, 1 carte. 12 clés ajoutées, 3 retirées (`KeyEasy`, `Key`, `Coin`) ; aide
+  en français et en anglais ; sons faits par `make_follow_sounds.py` ; crédits, inventaire (1 034 images, 173 de
+  source inconnue), vignette. Le jeu n’appelle plus `setOffFixationLengthControl` (sans fixation).
+- **Vérifications** : `FollowTest` (9 tests : variantes et lancement sans variante ; sur 5 cartes par niveau, la
+  Biboule menée de case en case ramasse toutes les pièces, puis prend chaque clé dans l’ordre (sa porte s’ouvre) et
+  atteint le coffre, sans jamais entrer dans une haie ni rester bloquée ; une porte fermée l’arrête ; une haie
+  l’arrête ; même vitesse sur tout écran ; délai des réglages ; fin après 1 carte et nouvelle carte sans fin ;
+  boucles en Pièces seulement) ; `LabyrinthTest` (17) ; `GameHelpTest` (60), `TranslationFilesTest` (22) ; SpotBugs
+  sans alerte ; `allGamesTest -PallGamesOnly=Follow -PallGamesRepeat=3` réussi (3 sur 3, aucune erreur dans les
+  journaux) ; captures sans fenêtre regardées (`build/game-screenshots/apres/follow/`). **Essayé et validé par le mainteneur le 13/11/2026.**

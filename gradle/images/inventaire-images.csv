@@ -76,7 +76,7 @@ gazeplay-core/src/main/resources/data/common/Thumbnails/dottodot.png,oui,libre,"
 gazeplay-core/src/main/resources/data/common/Thumbnails/egg.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet et OpenMoji (CC BY-SA 4.0),2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/findTheOddOneOut.jpg,oui,libre,capture du jeu (octobre 2026) ; photos créditées dans CREDITS.txt du jeu,2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-core/src/main/resources/data/common/Thumbnails/flowerOfNumbers.png,oui,libre,capture du jeu (novembre 2026) ; images dessinées pour le projet,2026-11-02,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,source inconnue,,2021-06-10,Iluvrog,add thumbnail picture
+gazeplay-core/src/main/resources/data/common/Thumbnails/follow.png,oui,libre,"capture du jeu « Suivre le chemin » (13/11/2026) ; carte dessinée par le jeu, Biboule du projet",2026-11-13,GazePlay Learning,revue de Suivre le chemin
 gazeplay-core/src/main/resources/data/common/Thumbnails/frogsrace.png,oui,source inconnue,,2019-03-16,sannara,Added menu photo for frogRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/gazeRace.png,oui,libre,"faite des images du jeu par make_gazerace_images.py, GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-core/src/main/resources/data/common/Thumbnails/goosegame.png,oui,libre,"capture du jeu (12/11/2026) ; plateau dessiné pour le projet, Biboules du Tir, GPL-3.0-or-later",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
@@ -444,19 +444,6 @@ gazeplay-games/src/main/resources/data/flowerOfNumbers/images/money/money1.png,o
 gazeplay-games/src/main/resources/data/flowerOfNumbers/images/money/money10.png,oui,libre,"dessiné pour le projet (gradle/images/make_flowerofnumbers_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Flower Of Numbers
 gazeplay-games/src/main/resources/data/flowerOfNumbers/images/money/money2.png,oui,libre,"dessiné pour le projet (gradle/images/make_flowerofnumbers_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Flower Of Numbers
 gazeplay-games/src/main/resources/data/flowerOfNumbers/images/money/money5.png,oui,libre,"dessiné pour le projet (gradle/images/make_flowerofnumbers_images.py), GPL-3.0-or-later",2026-11-02,GazePlay Learning,revue de Flower Of Numbers
-gazeplay-games/src/main/resources/data/follow/Biboule.png,oui,source inconnue,,2021-06-14,Iluvrog,Biboule resize
-gazeplay-games/src/main/resources/data/follow/coin.png,oui,source inconnue,,2021-06-08,Iluvrog,change moving fail multi-goals
-gazeplay-games/src/main/resources/data/follow/door1.png,oui,source inconnue,,2021-06-09,Iluvrog,add contour + new picture
-gazeplay-games/src/main/resources/data/follow/door1rouge.png,oui,source inconnue,,2021-06-09,Iluvrog,new pictures
-gazeplay-games/src/main/resources/data/follow/door1verte.png,oui,source inconnue,,2021-06-09,Iluvrog,new pictures
-gazeplay-games/src/main/resources/data/follow/jailbar1.png,oui,source inconnue,,2021-06-10,Iluvrog,it's a trap
-gazeplay-games/src/main/resources/data/follow/key.png,oui,source inconnue,,2021-06-09,Iluvrog,new pictures
-gazeplay-games/src/main/resources/data/follow/keygreen.png,oui,source inconnue,,2021-06-09,Iluvrog,new pictures
-gazeplay-games/src/main/resources/data/follow/keyred.png,oui,source inconnue,,2021-06-09,Iluvrog,new pictures
-gazeplay-games/src/main/resources/data/follow/nothing.png,oui,source inconnue,,2021-06-10,Iluvrog,it's a trap
-gazeplay-games/src/main/resources/data/follow/ruby1RS.png,oui,source inconnue,,2021-07-05,Iluvrog,resize ruby picture + new variant
-gazeplay-games/src/main/resources/data/follow/slab1.png,oui,source inconnue,,2021-06-10,Iluvrog,dallage
-gazeplay-games/src/main/resources/data/follow/wall1.png,oui,source inconnue,,2021-06-09,Iluvrog,add contour + new picture
 gazeplay-games/src/main/resources/data/gazeRace/barrier.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-games/src/main/resources/data/gazeRace/car-1.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace
 gazeplay-games/src/main/resources/data/gazeRace/car-2.png,oui,libre,"dessiné pour le projet (gradle/images/make_gazerace_images.py), GPL-3.0-or-later",2026-11-09,GazePlay Learning,revue de GazeRace

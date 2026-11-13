@@ -11,19 +11,20 @@ import java.util.List;
 /**
  * A labyrinth of boxes with walls between them, drawn at random (review of 9/11/2026): a "perfect" labyrinth, where one
  * path only joins two boxes, dug from a box by going on at random and coming back when stuck. It keeps the order in which
- * the walls were opened, for the animation of the digging.
+ * the walls were opened, for the animation of the digging. Also used by "Suivre le chemin" (13/11/2026), which can open
+ * more walls for loops (see {@link #openMore}).
  */
-final class Maze {
+public final class Maze {
 
     /**
      * A direction: its move in lines and columns, and the angle of a picture facing it (0: up).
      */
-    enum Direction {
+    public enum Direction {
         UP(-1, 0, 0), RIGHT(0, 1, 90), DOWN(1, 0, 180), LEFT(0, -1, 270);
 
-        final int lines;
-        final int columns;
-        final double angle;
+        public final int lines;
+        public final int columns;
+        public final double angle;
 
         Direction(final int lines, final int columns, final double angle) {
             this.lines = lines;
@@ -47,7 +48,7 @@ final class Maze {
     @Getter
     private final List<int[]> openings = new ArrayList<>();
 
-    Maze(final int lines, final int columns, final ReplayablePseudoRandom random) {
+    public Maze(final int lines, final int columns, final ReplayablePseudoRandom random) {
         this.lines = lines;
         this.columns = columns;
         rightOpen = new boolean[lines][columns];
@@ -101,14 +102,43 @@ final class Maze {
         }
     }
 
-    boolean inside(final int line, final int column) {
+    /**
+     * Opens walls still closed between two boxes, at random, for loops: the labyrinth is no longer "perfect".
+     *
+     * @param share the share of the closed walls to open, from 0 to 1
+     */
+    public void openMore(final double share, final ReplayablePseudoRandom random) {
+        final List<int[]> closed = new ArrayList<>();
+        for (int line = 0; line < lines; line++) {
+            for (int column = 0; column < columns; column++) {
+                if (column < columns - 1 && !rightOpen[line][column]) {
+                    closed.add(new int[]{line, column, 0});
+                }
+                if (line < lines - 1 && !downOpen[line][column]) {
+                    closed.add(new int[]{line, column, 1});
+                }
+            }
+        }
+        int toOpen = (int) Math.round(closed.size() * share);
+        while (toOpen-- > 0 && !closed.isEmpty()) {
+            final int[] wall = closed.remove(random.nextInt(closed.size()));
+            if (wall[2] == 0) {
+                rightOpen[wall[0]][wall[1]] = true;
+            } else {
+                downOpen[wall[0]][wall[1]] = true;
+            }
+            openings.add(wall);
+        }
+    }
+
+    public boolean inside(final int line, final int column) {
         return line >= 0 && line < lines && column >= 0 && column < columns;
     }
 
     /**
      * @return whether one can go from a box in a direction (inside the labyrinth, no wall)
      */
-    boolean canGo(final int line, final int column, final Direction direction) {
+    public boolean canGo(final int line, final int column, final Direction direction) {
         if (!inside(line, column) || !inside(line + direction.lines, column + direction.columns)) {
             return false;
         }
@@ -123,7 +153,7 @@ final class Maze {
     /**
      * @return the number of moves from a box to each box
      */
-    int[][] distancesFrom(final int line, final int column) {
+    public int[][] distancesFrom(final int line, final int column) {
         final int[][] distances = new int[lines][columns];
         for (final int[] row : distances) {
             java.util.Arrays.fill(row, -1);

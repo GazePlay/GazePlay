@@ -1,0 +1,19 @@
+# Le principe
+La Biboule va là où tu regardes, sans s’arrêter, et les haies l’arrêtent. Guide-la dans le chemin pour ramasser les pièces, ou pour prendre les clés qui ouvrent les portes, jusqu’au trésor !
+
+# Comment jouer
+- Regarde l’endroit où la Biboule doit aller : elle y va, à sa vitesse. Un petit rond montre où tu regardes. À la souris, elle suit la souris.
+- Contre une haie, elle glisse le long de la haie. Au bout d’une haie, elle la contourne.
+- En Pièces : ramasse toutes les pièces. En haut, les pièces ramassées.
+- En Clés : chaque clé ouvre la porte de sa couleur. Prends les clés dans l’ordre où tu les trouves, jusqu’au coffre au trésor.
+- En haut, le nombre de cartes. Chaque carte est nouvelle.
+- Au début de chaque carte, la Biboule ne bouge pas pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert. La vitesse d’animation des réglages change la vitesse de la Biboule.
+
+# Comment gagner
+Il n’y a pas de vies. Une carte finie donne une étoile et « Bravo ! », puis une autre carte. Selon ton choix, le jeu s’arrête après 1, 3 ou 5 cartes (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+
+# Les variantes
+Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- Le jeu : Pièces, ou Clés.
+- Le niveau : Facile (chemins larges, 6 pièces ou 1 porte), Normal (10 pièces ou 2 portes) ou Difficile (chemins plus étroits, 14 pièces ou 3 portes).
+- En bas, la fin : 1, 3 ou 5 cartes, ou sans fin.

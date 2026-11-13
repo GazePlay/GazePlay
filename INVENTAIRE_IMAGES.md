@@ -52,7 +52,10 @@ livrées, 705 libres, 190 de source inconnue** (30 dans les jeux pas encore revu
 Revue de Blocs (13/11/2026) : la vignette `block.png` refaite (le jeu n’a pas d’autre image) ; **1 048 images livrées,
 706 libres, 189 de source inconnue** (29 images communes). Revue d’Échelle (13/11/2026) : sa Biboule (copie de celle du
 projet) retirée au profit de celle du Tir, la vignette refaite ; **1 047 images livrées, 707 libres, 187 de source
-inconnue** (28 dans les jeux pas encore revus et les Biboules, 28 images communes).
+inconnue** (28 dans les jeux pas encore revus et les Biboules, 28 images communes). Revue de Suivre le chemin (13/11/2026) : les
+13 images (source inconnue : Biboule, pièce, clés, portes, grille, sol, mur, rubis) retirées, tout est dessiné par le jeu
+(Biboule du Tir), la vignette refaite ; **1 034 images livrées, 708 libres, 173 de source inconnue** (15 dans les jeux
+pas encore revus et les Biboules, 27 images communes).
 
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
@@ -101,7 +104,7 @@ jeu. **Hypothèse** à confirmer par leurs auteurs (noms dans l'historique git e
 | ~~Tower Defense~~ | ~~23~~ **Fait le 3/11/2026** : les 23 images retirées (dont les icônes qui ressemblaient à des icônes Flaticon et le GIF du blizzard) ; terrain, château, tours, monstres, missile, explosion et icônes dessinés par script (`make_towerdefense_images.py`), neige du blizzard dessinée par le jeu ; vignette composée des images du jeu. Les 3 sons de source inconnue (`craft.mp3`, `craftdouble.mp3`, `piou.mp3`) remplacés par 4 sons faits par script (`make_towerdefense_sounds.py`) |
 | ~~Shooter~~ | ~~20~~ **Fait le 2/11/2026** : décors, robots, cage, soucoupe, éclairs, baguette et canon redessinés par script ; les 5 Biboules gardées (mascotte du laboratoire, dessinée par lui), puis **modernisées le 3/11/2026** par le même script (bouche et ailes d'origine ; originales dans `gradle/images/biboule-originale`) |
 | Labyrinth | 19 |
-| Follow | 13 |
+| ~~Follow~~ | ~~13~~ **Fait le 13/11/2026** (« Suivre le chemin ») : les 13 images retirées ; carte, haies, pièces, clés, portes et coffre dessinés par le jeu, Biboule du Tir ; 3 sons faits par script (`make_follow_sounds.py`) ; vignette faite d’une capture |
 | ~~Space~~ | ~~12~~ **Fait le 3/11/2026** : les 12 images retirées (vaisseaux, boss, extraterrestres, fond, lasers, bouton) ; fond de nuit douce, fusée, 5 soucoupes et boss dessinés par script (`make_space_images.py`) ; vignette composée des images du jeu |
 | ~~Survive Against Robots~~ | ~~12~~ **Fait le 3/11/2026** : les 12 dessins retirés ; 3 décors (ciel, jardin, cour de l'école) et 4 bonus dessinés par script (`make_survive_images.py`) ; le joueur et les robots sont ceux du Tir ; vignette composée des images du jeu |
 | Horses, Race | 11 chacun |

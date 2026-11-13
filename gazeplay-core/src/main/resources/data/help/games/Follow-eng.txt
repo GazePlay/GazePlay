@@ -1,0 +1,19 @@
+# The principle
+The Biboule goes where you look, all the time, and the hedges stop it. Guide it along the paths to pick up the coins, or to take the keys opening the doors, up to the treasure!
+
+# How to play
+- Look where the Biboule must go: it goes there, at its speed. A small circle shows where you look. With the mouse, it follows the mouse.
+- Against a hedge, it slides along the hedge. At the end of a hedge, it goes round it.
+- In Coins: pick up all the coins. At the top, the coins picked up.
+- In Keys: each key opens the door of its color. Take the keys in the order you find them, up to the treasure chest.
+- At the top, the number of maps. Each map is new.
+- At the start of each map, the Biboule does not move during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open. The animation speed of the settings changes the speed of the Biboule.
+
+# How to win
+There are no lives. A map finished gives a star and "Well done!", then another map. As you chose, the game stops after 1, 3 or 5 maps ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+
+# The variants
+Choose a variant (it is framed), then press "Start".
+- The game: Coins, or Keys.
+- The level: Easy (wide paths, 6 coins or 1 door), Normal (10 coins or 2 doors) or Hard (narrower paths, 14 coins or 3 doors).
+- At the bottom, the end: 1, 3 or 5 maps, or no end.
