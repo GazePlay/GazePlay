@@ -33,7 +33,9 @@ import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Random;
 
 /**
@@ -45,8 +47,10 @@ import java.util.Random;
  * fixations, shows the choices of the step, each as the layer would look with it.
  * <p>
  * To copy the model (1 layer, 3 layers, or 3 layers with a model that hides after 5 s and is shown again by a button):
- * a choice that differs from the model is put on the cake anyway, the part of the model blinks in red and counts a
- * mistake (no lives), and the step is chosen again; a right choice goes on. In the free mode, one's own cake, up to
+ * the whole cake is made without any check, then compared with the model (maintainer's request of 16/11/2026). A
+ * wrong cake: a mistake for each wrong part, "Pas tout à fait !", the model shown with its wrong layers blinking, then
+ * the cake is taken away and the same model made again, its wrong choices no longer offered; with an end, it costs one
+ * of 3 lives, the last one loses the game ("Lost!", then the statistics). In the free mode, one's own cake, up to
  * three layers (after the cream: "Encore un étage", then the accessory, or "Décorer", then the sweets and the
  * decoration). A finished cake: a star and "Bravo !", then another; the game ends
  * after 1, 3 or 5 cakes ("Bravo", then the statistics), or has no end.
@@ -65,14 +69,28 @@ public class CakeFactory implements GameLifeCycle {
     static final int ACCESSORIES = 3;
     static final int DECORATIONS = 2;
     /**
-     * The seconds a layer takes to arrive, the model shows in the hard level, is shown again by its button, blinks,
+     * The seconds a layer takes to arrive, the model shows in the hard level, is shown again by its button,
      * and the reward lasts.
      */
     static final double ARRIVE = 0.5;
     static final double MODEL_SHOWN = 5;
     static final double MODEL_AGAIN = 3;
-    static final double BLINK = 1;
     static final double REWARD = 2.2;
+
+    /**
+     * Seconds during which a wrong cake is shown, its wrong parts blinking on the model, before it is taken away.
+     */
+    static final double CHECK = 2.5;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
+
+    /**
+     * The lives of a copy with an end (maintainer's request of 16/11/2026): a wrong cake costs one.
+     */
+    static final int LIVES = 3;
 
     /**
      * Cakes: vanilla, chocolate, strawberry, blueberry. Icings: white chocolate, dark chocolate, caramel, blackcurrant,
@@ -102,7 +120,7 @@ public class CakeFactory implements GameLifeCycle {
         }
     }
 
-    enum Phase { WAIT, CHOOSE, ARRIVE, REWARD, OVER }
+    enum Phase { WAIT, CHOOSE, ARRIVE, REWARD, CHECK, LOST, OVER }
 
     /**
      * A layer: its cake, cream, and accessory (a layer under another) or sweets (the top layer), -1 before they are
@@ -165,6 +183,19 @@ public class CakeFactory implements GameLifeCycle {
     private final List<Layer> model = new ArrayList<>();
     @Getter
     private int modelDecoration;
+    @Getter
+    private int lives = LIVES;
+
+    /**
+     * The wrong choices of the cake being made, taken away from their buttons at the next try (layer, step, value).
+     */
+    @Getter
+    private final Set<String> removed = new HashSet<>();
+
+    /**
+     * The layers of the model shown wrong after a wrong cake (the decoration counts as the top layer).
+     */
+    private final Set<Integer> wrongLayers = new HashSet<>();
 
     private double width;
     private double height;
@@ -268,6 +299,7 @@ public class CakeFactory implements GameLifeCycle {
         gameContext.getChildren().add(layer);
         gameContext.getGazeDeviceManager().addStats(stats);
         cakes = 0;
+        lives = LIVES;
         newCake();
         phase = Phase.WAIT;
         elapsed = 0;
@@ -284,6 +316,8 @@ public class CakeFactory implements GameLifeCycle {
         layers.add(new Layer());
         decoration = -1;
         reward.getChildren().clear();
+        removed.clear();
+        wrongLayers.clear();
         if (mode == CakesMode.COPY) {
             model.clear();
             for (int i = 0; i < level.getLayers(); i++) {
@@ -317,6 +351,28 @@ public class CakeFactory implements GameLifeCycle {
         score.setLayoutX(width - score.getBoundsInLocal().getWidth() - height * 0.03);
         score.setLayoutY(height * 0.025);
         hud.getChildren().setAll(score);
+        if (hasLives()) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+        }
+    }
+
+    /**
+     * @return whether the game has lives: a copy with an end (none without end, nor in the free mode)
+     */
+    boolean hasLives() {
+        return mode == CakesMode.COPY && end.getCakes() > 0;
+    }
+
+    /**
+     * @return the width of the row of the hearts, at the top left (the tabs go after it)
+     */
+    private double livesWidth() {
+        final double heart = Math.min(height * 0.055, width * 0.3 / (LIVES * 1.1));
+        return (LIVES - 1) * heart * 1.1 + heart;
     }
 
     /**
@@ -337,7 +393,7 @@ public class CakeFactory implements GameLifeCycle {
             shown.add(Step.DECORATION);
         }
         final double size = height * 0.03;
-        double x = height * 0.03;
+        double x = hasLives() ? height * 0.025 + livesWidth() + height * 0.03 : height * 0.03;
         final String floor = gameContext.getTranslator().translate("CakesLayer") + " " + layers.size()
             + (mode == CakesMode.COPY ? " / " + model.size() : "");
         final Group floorPill = GameStyle.pill(floor, size);
@@ -381,6 +437,9 @@ public class CakeFactory implements GameLifeCycle {
         switch (step) {
             case SPONGE -> {
                 for (int i = 0; i < SPONGES; i++) {
+                    if (isRemoved(step, i)) {
+                        continue;
+                    }
                     final Layer preview = new Layer();
                     preview.sponge = i;
                     row.add(new Choice(step, i, layerPicture(preview, buttonRadius() * 1.3, 11), null));
@@ -388,6 +447,9 @@ public class CakeFactory implements GameLifeCycle {
             }
             case CREAM -> {
                 for (int i = 0; i < CREAMS; i++) {
+                    if (isRemoved(step, i)) {
+                        continue;
+                    }
                     final Layer preview = current.copy();
                     preview.cream = i;
                     row.add(new Choice(step, i, layerPicture(preview, buttonRadius() * 1.3, 11), null));
@@ -395,6 +457,9 @@ public class CakeFactory implements GameLifeCycle {
             }
             case SWEETS -> {
                 for (int i = 0; i < SWEETS; i++) {
+                    if (isRemoved(step, i)) {
+                        continue;
+                    }
                     final Layer preview = current.copy();
                     preview.sweets = i;
                     row.add(new Choice(step, i, layerPicture(preview, buttonRadius() * 1.3, 11 + i), null));
@@ -402,6 +467,9 @@ public class CakeFactory implements GameLifeCycle {
             }
             case ACCESSORY -> {
                 for (int i = 0; i < ACCESSORIES; i++) {
+                    if (isRemoved(step, i)) {
+                        continue;
+                    }
                     final Layer preview = current.copy();
                     preview.accessory = i;
                     row.add(new Choice(step, i, layerPicture(preview, buttonRadius() * 1.3, 11), null));
@@ -413,6 +481,9 @@ public class CakeFactory implements GameLifeCycle {
             }
             case DECORATION -> {
                 for (int i = 0; i < DECORATIONS; i++) {
+                    if (isRemoved(step, i)) {
+                        continue;
+                    }
                     final Group preview = new Group(layerPicture(current, buttonRadius() * 1.2, 11));
                     preview.getChildren().add(decorationPicture(i, buttonRadius() * 1.2, -buttonRadius() * 0.12));
                     preview.setLayoutY(buttonRadius() * 0.2);
@@ -455,6 +526,21 @@ public class CakeFactory implements GameLifeCycle {
         group.setLayoutX(-size / 2);
         group.setLayoutY(-size / 2);
         return new Group(group);
+    }
+
+    /**
+     * @return the key of a choice of the layer being made (the decoration: the top layer), for {@link #removed}
+     */
+    private String removedKey(final Step part, final int value) {
+        final int index = part == Step.DECORATION ? model.size() - 1 : layers.size() - 1;
+        return index + ":" + part + ":" + value;
+    }
+
+    /**
+     * @return whether a choice was wrong at a try of this cake: it is no longer offered
+     */
+    private boolean isRemoved(final Step part, final int value) {
+        return mode == CakesMode.COPY && removed.contains(removedKey(part, value));
     }
 
     private void clearButtons() {
@@ -724,7 +810,8 @@ public class CakeFactory implements GameLifeCycle {
     /**
      * @return a whole cake: its layers stacked from (0, 0), the bottom of the cake, and its decoration on top
      */
-    private Group cakePicture(final List<Layer> parts, final int deco, final double width0, final int highlight) {
+    private Group cakePicture(final List<Layer> parts, final int deco, final double width0,
+                              final Set<Integer> highlight) {
         final Group group = new Group();
         double bottom = 0;
         double topWidth = width0;
@@ -734,7 +821,7 @@ public class CakeFactory implements GameLifeCycle {
             final Group picture = layerPicture(parts.get(i), w, 11 + i * 7L + Math.max(0, parts.get(i).sweets));
             picture.setLayoutY(bottom - h);
             group.getChildren().add(picture);
-            if (i == highlight) {
+            if (highlight.contains(i)) {
                 final Rectangle frame = new Rectangle(-w / 2 - w * 0.06, bottom - h - w * 0.2, w * 1.12, h + w * 0.34);
                 frame.setArcWidth(w * 0.12);
                 frame.setArcHeight(w * 0.12);
@@ -753,7 +840,7 @@ public class CakeFactory implements GameLifeCycle {
     }
 
     private void drawCake() {
-        final Group cake = cakePicture(layers, decoration, baseWidth, -1);
+        final Group cake = cakePicture(layers, decoration, baseWidth, Set.of());
         cake.setLayoutX(cakeX);
         cake.setLayoutY(plateY);
         cakeGroup.getChildren().setAll(cake);
@@ -784,10 +871,10 @@ public class CakeFactory implements GameLifeCycle {
         modelHidden.setVisible(false);
         modelCard.getChildren().addAll(card, title, modelGroup, modelHidden);
         modelCard.setMouseTransparent(true);
-        drawModel(-1);
+        drawModel(Set.of());
     }
 
-    private void drawModel(final int highlight) {
+    private void drawModel(final Set<Integer> highlight) {
         final double cardWidth = width * 0.3;
         final double w = Math.min(cardWidth * 0.62, baseWidth * 0.7);
         final Group cake = cakePicture(model, modelDecoration, w, highlight);
@@ -819,7 +906,7 @@ public class CakeFactory implements GameLifeCycle {
                 blinkLeft = Math.max(0, blinkLeft - seconds);
                 modelGroup.setOpacity(blinkLeft == 0 || ((int) (blinkLeft * 6)) % 2 == 0 ? 1 : 0.35);
                 if (blinkLeft == 0) {
-                    drawModel(-1);
+                    drawModel(Set.of());
                 }
             }
             final boolean shown = isModelShown();
@@ -862,6 +949,22 @@ public class CakeFactory implements GameLifeCycle {
                         phase = Phase.CHOOSE;
                         phaseTime = 0;
                     }
+                }
+            }
+            case CHECK -> {
+                if (phaseTime >= CHECK) {
+                    if (hasLives() && lives == 0) {
+                        lose();
+                    } else {
+                        tryAgain();
+                    }
+                }
+            }
+            case LOST -> {
+                if (phaseTime >= LOST_SHOWN) {
+                    phase = Phase.OVER;
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
                 }
             }
             default -> {
@@ -933,21 +1036,28 @@ public class CakeFactory implements GameLifeCycle {
         }
         gameContext.getSoundManager().add(SOUNDS + (choice.step == Step.CREAM ? "cream.wav" : "plop.wav"));
         drawCake();
-        if (mode == CakesMode.COPY && !matches(choice)) {
-            stats.incrementNumberOfMistakes();
-            gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
-            blinkLeft = BLINK;
-            drawModel(choice.step == Step.DECORATION ? model.size() - 1 : layers.size() - 1);
-            return;
-        }
+        // Copying a model: no check on the way (maintainer's request of 16/11/2026), the cake is compared once finished
         nextStep();
     }
 
-    private boolean matches(final Choice choice) {
-        if (choice.step == Step.DECORATION) {
-            return choice.value == modelDecoration;
+    /**
+     * @return the wrong parts of the finished cake, as keys of {@link #removed} (layer, step, value)
+     */
+    List<String> wrongParts() {
+        final List<String> wrong = new ArrayList<>();
+        for (int i = 0; i < model.size(); i++) {
+            final Layer made = layers.get(i);
+            final Layer expected = model.get(i);
+            for (final Step part : List.of(Step.SPONGE, Step.CREAM, Step.ACCESSORY, Step.SWEETS)) {
+                if (made.part(part) != expected.part(part)) {
+                    wrong.add(i + ":" + part + ":" + made.part(part));
+                }
+            }
         }
-        return model.get(layers.size() - 1).part(choice.step) == choice.value;
+        if (decoration != modelDecoration) {
+            wrong.add((model.size() - 1) + ":" + Step.DECORATION + ":" + decoration);
+        }
+        return wrong;
     }
 
     /**
@@ -987,6 +1097,13 @@ public class CakeFactory implements GameLifeCycle {
 
     private void cakeDone() {
         clearButtons();
+        if (mode == CakesMode.COPY) {
+            final List<String> wrong = wrongParts();
+            if (!wrong.isEmpty()) {
+                wrongCake(wrong);
+                return;
+            }
+        }
         cakes++;
         stats.incrementNumberOfGoalsReached();
         gameContext.getSoundManager().add("data/goosegame/sounds/win.wav");
@@ -998,6 +1115,70 @@ public class CakeFactory implements GameLifeCycle {
         }
         showScore();
         tabs.getChildren().clear();
+    }
+
+    /**
+     * A wrong cake: a mistake for each wrong part, one life less with an end, "Not quite!", the model shown with its
+     * wrong layers blinking, then the cake is taken away.
+     */
+    private void wrongCake(final List<String> wrong) {
+        wrong.forEach(part -> stats.incrementNumberOfMistakes());
+        removed.addAll(wrong);
+        wrongLayers.clear();
+        wrong.forEach(part -> wrongLayers.add(Integer.parseInt(part.substring(0, part.indexOf(':')))));
+        if (hasLives()) {
+            lives = Math.max(0, lives - 1);
+        }
+        gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
+        showScore();
+        tabs.getChildren().clear();
+        drawModel(wrongLayers);
+        blinkLeft = CHECK;
+        modelAgain = CHECK;
+        reward.getChildren().setAll(messageUnderTheCake("CakesNotQuite"));
+        phase = Phase.CHECK;
+        phaseTime = 0;
+    }
+
+    /**
+     * After a wrong cake: it is taken away, the same model is made again, without the wrong choices.
+     */
+    private void tryAgain() {
+        layers.clear();
+        layers.add(new Layer());
+        decoration = -1;
+        reward.getChildren().clear();
+        wrongLayers.clear();
+        blinkLeft = 0;
+        drawModel(Set.of());
+        drawCake();
+        setStep(Step.SPONGE);
+        phase = Phase.CHOOSE;
+        phaseTime = 0;
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("CakesLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        reward.getChildren().setAll(lost);
+        phase = Phase.LOST;
+        phaseTime = 0;
+    }
+
+    /**
+     * @return a message on a pill under the cake
+     */
+    private Group messageUnderTheCake(final String key) {
+        final Group pill = GameStyle.pill(gameContext.getTranslator().translate(key), height * 0.04);
+        pill.setLayoutX(cakeX - pill.getBoundsInLocal().getWidth() / 2);
+        pill.setLayoutY(height - height * 0.13 - pill.getBoundsInLocal().getHeight() / 2);
+        return pill;
     }
 
     /**

@@ -974,6 +974,14 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    Tests `ColorBlendTest` (2 nouveaux) ; `allGamesTest` (Défi, 10 couleurs) réussi. Reste : essai du mainteneur.
 4. **La Fabrique à gâteaux**, en copiant un modèle : laisser finir le gâteau, puis le comparer ; s'il n'est pas bon,
    un cœur perdu, le gâteau enlevé, et il recommence sans les choix faux qu'il avait pris.
+   **16/11 : fait, non commité** (propositions validées) : en copiant un modèle, plus de vérification en cours de
+   route ; le gâteau fini est comparé (`wrongParts`) ; faux : une erreur par partie fausse, « Pas tout à fait ! », le
+   modèle réaffiché (même en Difficile) avec ses étages faux encadrés en rouge qui clignotent 2,5 s (étape `CHECK`),
+   puis le gâteau enlevé et le même modèle refait, chaque choix faux retiré des boutons de son étage et de son étape
+   (`removed`) ; avec une fin (1, 3 ou 5 gâteaux), 3 cœurs en haut à gauche, les onglets après eux, un gâteau faux en
+   coûte un, plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; sans fin : même façon de jouer,
+   sans cœurs. Traductions `CakesNotQuite`, `CakesLost`, aides. Tests `CakesTest` (11, dont 2 nouveaux, l'ancien test
+   de la vérification étape par étape remplacé) ; `allGamesTest` réussi. Reste : essai du mainteneur.
 5. **Ajoutés le 16/11 (même logique : des cœurs tant que la variante n'est pas sans fin)** : **Aiguillages** (un cœur
    perdu si le train arrive à la mauvaise gare), **Point par point** (si l'ordre n'est pas bon), **Bouteille** (si la
    bouteille touchée n'est pas celle montrée), **Identifier les lettres**, **Échelle**, **Cartes magiques** (règles à

@@ -138,21 +138,88 @@ class CakesTest {
         });
     }
 
+    /**
+     * Makes the cake of the model of one layer, with a wrong cake part (the next one in the list of the cakes).
+     */
+    private static int makeWithAWrongSponge(final CakeFactory game) {
+        final CakeFactory.Layer part = game.getModel().get(0);
+        final int wrong = game.getChoices().stream().map(CakeFactory.Choice::getValue)
+            .filter(value -> value != part.sponge).findFirst().orElseThrow();
+        game.choose(game.choice(wrong));
+        game.choose(game.choice(part.cream));
+        game.choose(game.choice(part.sweets));
+        game.choose(game.choice(game.getModelDecoration()));
+        return wrong;
+    }
+
+    /**
+     * Copying a model (maintainer's request of 16/11/2026): no check on the way; the finished cake is compared with the
+     * model; wrong: a mistake, a life less with an end, "Not quite!" and the model shown, then the cake taken away and
+     * the same model again, without the wrong choice.
+     */
     @Test
-    void shouldCountAChoiceThatDiffersFromTheModelAndAskAgain() throws Exception {
-        final CakeFactory game = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.ENDLESS);
+    void shouldCheckTheFinishedCakeThenMakeItAgainWithoutTheWrongChoices() throws Exception {
+        final CakeFactory game = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.CAKES_3);
         fx(() -> {
-            final int right = game.getModel().get(0).sponge;
-            final int wrong = (right + 1) % CakeFactory.SPONGES;
-            game.choose(game.choice(wrong));
-            // Put on the cake anyway, a mistake, the same step
-            assertEquals(wrong, game.getLayers().get(0).sponge);
-            assertEquals(CakeFactory.Step.SPONGE, game.getStep());
+            assertTrue(game.hasLives());
+            final CakeFactory.Layer model = game.getModel().get(0);
+            final int wrongSponge = game.getChoices().stream().map(CakeFactory.Choice::getValue)
+                .filter(value -> value != model.sponge).findFirst().orElseThrow();
+            game.choose(game.choice(wrongSponge));
+            // No check on the way: the next step
+            assertEquals(CakeFactory.Step.CREAM, game.getStep());
+            verify(stats, never()).incrementNumberOfMistakes();
+            game.choose(game.choice(model.cream));
+            game.choose(game.choice(model.sweets));
+            game.choose(game.choice(game.getModelDecoration()));
+            assertEquals(CakeFactory.Phase.CHECK, game.getPhase());
             verify(stats).incrementNumberOfMistakes();
             verify(gameContext.getSoundManager()).add("data/dice/sounds/wrong.wav");
-            game.choose(game.choice(right));
-            assertEquals(CakeFactory.Step.CREAM, game.getStep());
-            verify(stats, times(1)).incrementNumberOfMistakes();
+            assertEquals(CakeFactory.LIVES - 1, game.getLives());
+            assertEquals(0, game.getCakes());
+            assertTrue(game.isModelVisible());
+            steps(game, CakeFactory.CHECK + 0.04);
+            // The cake taken away, the same model, the wrong cake no longer offered
+            assertEquals(CakeFactory.Phase.CHOOSE, game.getPhase());
+            assertEquals(CakeFactory.Step.SPONGE, game.getStep());
+            assertEquals(-1, game.getLayers().get(0).sponge);
+            assertEquals(model, game.getModel().get(0));
+            assertEquals(CakeFactory.SPONGES - 1, game.getChoices().size());
+            assertTrue(game.getChoices().stream().noneMatch(choice -> choice.getValue() == wrongSponge));
+            copyModel(game);
+            assertEquals(CakeFactory.Phase.REWARD, game.getPhase());
+            assertEquals(1, game.getCakes());
+            return null;
+        });
+    }
+
+    /**
+     * The third wrong cake loses the game: "Lost!", then the statistics; without end, no lives.
+     */
+    @Test
+    void shouldLoseTheGameAfterThreeWrongCakes() throws Exception {
+        final CakeFactory game = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.CAKES_5);
+        fx(() -> {
+            for (int cake = 1; cake <= 3; cake++) {
+                makeWithAWrongSponge(game);
+                assertEquals(CakeFactory.LIVES - cake, game.getLives());
+                steps(game, CakeFactory.CHECK + 0.04);
+            }
+            assertEquals(CakeFactory.Phase.LOST, game.getPhase());
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, CakeFactory.LOST_SHOWN + 0.04);
+            assertEquals(CakeFactory.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+        final CakeFactory endless = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.ENDLESS);
+        fx(() -> {
+            assertFalse(endless.hasLives());
+            for (int cake = 1; cake <= 3; cake++) {
+                makeWithAWrongSponge(endless);
+                steps(endless, CakeFactory.CHECK + 0.04);
+                assertEquals(CakeFactory.Phase.CHOOSE, endless.getPhase());
+            }
             return null;
         });
     }
@@ -218,11 +285,6 @@ class CakesTest {
             assertTrue(game.isModelVisible());
             steps(game, CakeFactory.MODEL_AGAIN);
             assertFalse(game.isModelVisible());
-            // A mistake shows it while it blinks
-            final int wrong = (game.getModel().get(0).sponge + 1) % CakeFactory.SPONGES;
-            game.choose(game.choice(wrong));
-            game.step(0.02);
-            assertTrue(game.isModelVisible());
             return null;
         });
     }
