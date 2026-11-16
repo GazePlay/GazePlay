@@ -32,7 +32,8 @@ import java.util.List;
 /**
  * "Point par point" (name code DotToDot; reviewed on 12/11/2026, maintainer's rules). The dots of a figure show
  * numbers (1, 2, 3...) or letters (A, B, C...); a fixation on the next one draws the line from the previous one (the
- * first one just starts). A wrong dot shakes and counts a mistake; the dots already joined are left alone. After the
+ * first one just starts). A wrong dot shakes and counts a mistake (with an end, it costs one of 3 lives, 16/11/2026;
+ * the last one loses the game: "Lost!", then the statistics); the dots already joined are left alone. After the
  * last dot, the line back to the first one draws itself, the figure fills with its color and its name shows ("It's a
  * fish!"); then another figure. The game ends after 3, 5 or 10 drawings ("Bravo"), or never.
  * <p>
@@ -59,7 +60,17 @@ public class DotToDot implements GameLifeCycle {
     private static final String[] POPS = {"data/bubble/sounds/pop1.wav", "data/bubble/sounds/pop2.wav",
         "data/bubble/sounds/pop3.wav"};
 
-    enum Phase { WAIT, PLAY, SHOW, OVER }
+    enum Phase { WAIT, PLAY, SHOW, LOST, OVER }
+
+    /**
+     * The lives of a game with an end (maintainer's request of 16/11/2026): a dot chosen out of order costs one.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -91,6 +102,8 @@ public class DotToDot implements GameLifeCycle {
     private int next;
     @Getter
     private int drawings;
+    @Getter
+    private int lives = LIVES;
     @Getter
     private int roundMistakes;
     @Getter
@@ -185,6 +198,7 @@ public class DotToDot implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addStats(stats);
         drawings = 0;
+        lives = LIVES;
         streak = 0;
         newFigure();
         phase = Phase.WAIT;
@@ -259,6 +273,37 @@ public class DotToDot implements GameLifeCycle {
         score.setLayoutX((width - score.getBoundsInLocal().getWidth()) / 2);
         score.setLayoutY(margin);
         hud.getChildren().add(score);
+        if (hasLives()) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+        }
+    }
+
+    /**
+     * @return whether the game has lives: a game with an end (none without end)
+     */
+    boolean hasLives() {
+        return end.getDrawings() > 0;
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        phase = Phase.LOST;
+        elapsed = 0;
+        looked = null;
+        progress = 0;
+        ring.stop();
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("DotLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        hud.getChildren().add(lost);
     }
 
     /**
@@ -302,6 +347,14 @@ public class DotToDot implements GameLifeCycle {
                 }
             }
             case PLAY -> fixate(seconds);
+            case LOST -> {
+                elapsed += seconds;
+                if (elapsed >= LOST_SHOWN) {
+                    phase = Phase.OVER;
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
+                }
+            }
             case SHOW -> {
                 elapsed += seconds;
                 if (fill != null) {
@@ -404,6 +457,13 @@ public class DotToDot implements GameLifeCycle {
             roundMistakes++;
             stats.incrementNumberOfMistakes();
             gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
+            if (hasLives()) {
+                lives = Math.max(0, lives - 1);
+                showHud();
+                if (lives == 0) {
+                    lose();
+                }
+            }
             return;
         }
         dot.join();

@@ -991,7 +991,13 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    train à une mauvaise gare en coûte un (croix rouge et erreur comptée inchangées) ; plus de cœurs : étape `LOST`,
    tout s'arrête (les autres trains aussi), « Perdu ! » 2 s puis les statistiques ; sans fin : pas de cœurs.
    Traduction `TrainSwitchesLost`, aides. Test `TrainSwitchesTest.shouldLoseALifeAtEachWrongStationThenTheGame` ;
-   `allGamesTest` réussi. Reste : essai du mainteneur.
+   `allGamesTest` réussi. Essayé et validé, commité (`f178898b9`).
+   **Point par point, 16/11 : fait, non commité** (règle du mainteneur) : 3 cœurs avec 3, 5 ou 10 dessins
+   (`DotToDot.LIVES`, `hasLives`), en haut à gauche ; un point dans le mauvais ordre en coûte un (il tremble, erreur
+   comptée, inchangés) ; plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; sans fin : pas de
+   cœurs ; Progressif inchangé. Traduction `DotLost`, aides. Test
+   `DotToDotTest.shouldLoseALifeAtEachDotOutOfOrderThenTheGame` ; `allGamesTest` réussi. Reste : essai du
+   mainteneur.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 

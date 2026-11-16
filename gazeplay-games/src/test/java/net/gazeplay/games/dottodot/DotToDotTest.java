@@ -150,6 +150,40 @@ class DotToDotTest {
         });
     }
 
+    /**
+     * 3 lives with an end (maintainer's request of 16/11/2026): a dot out of order costs one, the third loses the game
+     * ("Lost!", then the statistics); none without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachDotOutOfOrderThenTheGame() throws Exception {
+        final DotToDot game = launched(DotLevel.NORMAL, DotLabels.NUMBERS, DotEnd.DRAWINGS_5);
+        fx(() -> {
+            assertTrue(game.hasLives());
+            for (int wrong = 1; wrong <= 3; wrong++) {
+                game.choose(game.getDots().get(2));
+                assertEquals(DotToDot.LIVES - wrong, game.getLives());
+            }
+            assertEquals(DotToDot.Phase.LOST, game.getPhase());
+            // Nothing can be chosen any more
+            game.choose(game.getDots().get(0));
+            assertFalse(game.getDots().get(0).isJoined());
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, DotToDot.LOST_SHOWN + 0.04);
+            assertEquals(DotToDot.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+        final DotToDot endless = launched(DotLevel.NORMAL, DotLabels.NUMBERS, DotEnd.ENDLESS);
+        fx(() -> {
+            assertFalse(endless.hasLives());
+            for (int wrong = 1; wrong <= 4; wrong++) {
+                endless.choose(endless.getDots().get(2));
+            }
+            assertEquals(DotToDot.Phase.PLAY, endless.getPhase());
+            return null;
+        });
+    }
+
     @Test
     void shouldFinishTheFigureAndSayItsName() throws Exception {
         final DotToDot game = launched(DotLevel.EASY, DotLabels.LETTERS, DotEnd.ENDLESS);
