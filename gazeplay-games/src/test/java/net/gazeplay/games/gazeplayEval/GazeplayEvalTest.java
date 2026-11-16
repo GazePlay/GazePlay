@@ -987,30 +987,55 @@ class GazeplayEvalTest {
      * @return the targets of the images of a grid: transparent shapes without border
      */
     private List<Rectangle> imageTargets() {
-        return find(Rectangle.class).stream()
+        return onFx(() -> find(Rectangle.class).stream()
             .filter(rectangle -> Color.TRANSPARENT.equals(rectangle.getFill()) && rectangle.getStroke() == null)
             .sorted((a, b) -> Double.compare(a.getX(), b.getX()))
-            .toList();
+            .toList());
     }
 
     /**
      * @return the target of the image of a file
      */
     private Rectangle targetOf(String imageFile) {
-        ImageView view = find(ImageView.class).stream()
-            .filter(image -> image.getImage().getUrl().endsWith(imageFile))
-            .findFirst().orElseThrow();
-        double centerX = view.getBoundsInParent().getCenterX();
-        double centerY = view.getBoundsInParent().getCenterY();
-        return imageTargets().stream()
-            .filter(target -> target.getBoundsInParent().contains(centerX, centerY))
-            .findFirst().orElseThrow();
+        return onFx(() -> {
+            ImageView view = find(ImageView.class).stream()
+                .filter(image -> image.getImage().getUrl().endsWith(imageFile))
+                .findFirst().orElseThrow();
+            double centerX = view.getBoundsInParent().getCenterX();
+            double centerY = view.getBoundsInParent().getCenterY();
+            return imageTargets().stream()
+                .filter(target -> target.getBoundsInParent().contains(centerX, centerY))
+                .findFirst().orElseThrow();
+        });
     }
 
+    /**
+     * @return the nodes of a type in the game area, looked for on the JavaFX thread: walked from the thread of the test
+     *   while the game changed the scene, the children could change under the walk (IndexOutOfBoundsException in
+     *   collect, once on the CI under Java 26, 12/11/2026)
+     */
     private <T> List<T> find(Class<T> type) {
-        List<T> found = new ArrayList<>();
-        collect(gameArea, type, found);
-        return found;
+        return onFx(() -> {
+            List<T> found = new ArrayList<>();
+            collect(gameArea, type, found);
+            return found;
+        });
+    }
+
+    /**
+     * @return the result of an action run on the JavaFX thread (at once when already on it)
+     */
+    private static <T> T onFx(java.util.concurrent.Callable<T> action) {
+        try {
+            return Platform.isFxApplicationThread() ? action.call() : WaitForAsyncUtils.asyncFx(action).get();
+        } catch (java.util.concurrent.ExecutionException e) {
+            throw e.getCause() instanceof RuntimeException runtime ? runtime : new IllegalStateException(e.getCause());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw e instanceof RuntimeException runtime ? runtime : new IllegalStateException(e);
+        }
     }
 
     private static <T> void collect(Node node, Class<T> type, List<T> found) {

@@ -60,7 +60,10 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    `43840260631`, tests 11 min 30 sous Java 25 et 26). **Point 1 terminé.**
 2. Puis, dans l’ordre prévu après la revue : retrait des limiteurs (**16/11 : fait**, voir « Retrait des limiteurs »
    plus bas) ; test instable
-   `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26) ; refonte graphique du menu
+   `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26 ; **16/11 : corrigé dans le
+   test** : `find()`, `imageTargets()` et `targetOf()` parcourent la scène sur le fil JavaFX (`onFx`), et non plus
+   depuis le fil du test pendant que le jeu la modifie, cause de l’`IndexOutOfBoundsException` dans `collect()` ; le
+   jeu ne change pas ; `GazeplayEvalTest` 3 fois de suite en local : 32 tests, 0 échec) ; refonte graphique du menu
    des jeux et de l’écran des statistiques ; modernisation du menu Échap (ancien engrenage), avec la réduction du menu
    en évaluation au volume et à Quitter (décision du 13/11, voir plus bas).
 3. Toujours à garder en tête : inventaire des sons (pas fait), notes de version 2.0 (images de l’utilisateur à
@@ -982,8 +985,8 @@ Score ») sont retirés.
 **Vérifications (16/11, en local)** : compilation de tous les tests ; tests ciblés : `gazeplay-games-commons` 53,
 `gazeplay-commons` (configuration) 36 puis 31 après le nouveau test, `gazeplay-core` (réglages, contexte de jeu, aides,
 traductions) 101, `gazeplay-games` (les 18 jeux touchés) 286 : **0 échec** ; SpotBugs sans alerte sur les 4 modules.
-Reste : build complet et `all-games` sur la CI une fois poussé, essai du mainteneur (page des réglages, un jeu de la
-famille Où est…).
+Essayé et validé par le mainteneur ; commité et poussé (`a127cc8cf`) : **CI verte sur les 7 jobs** (run
+`43851869138`).
 
 ## Quatrième règle : la durée de fixation (demande du mainteneur du 4/11/2026, à la revue de Ninja)
 
