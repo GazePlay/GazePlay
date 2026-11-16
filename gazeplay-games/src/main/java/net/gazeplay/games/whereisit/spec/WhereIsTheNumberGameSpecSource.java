@@ -20,6 +20,6 @@ public class WhereIsTheNumberGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItGameVariantGenerator(), new WhereIsTheNumberGameLauncher());
+            new WhereIsItGameVariantGenerator("WhereIsTheNumber"), new WhereIsTheNumberGameLauncher());
     }
 }

@@ -1,0 +1,10 @@
+# À quoi sert ce graphique
+Dans les variantes dont la difficulté s'adapte au joueur (par exemple les variantes Dynamique), il montre le niveau atteint à chaque manche.
+
+# Comment le lire
+- En bas : le numéro de la manche.
+- À gauche : le niveau. Plus il est haut, plus la manche était difficile.
+- La ligne pleine : le niveau de chaque manche.
+- La ligne en tirets : le niveau moyen.
+- Les lignes en pointillés : la moyenne plus et moins l'écart-type.
+- Un clic sur le graphique l'agrandit, un autre clic le remet à sa place.

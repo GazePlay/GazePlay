@@ -1,317 +1,500 @@
 package net.gazeplay.ui.scenes.stats;
 
-import javafx.collections.ListChangeListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
-import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
-import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.ui.I18NText;
-import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.stats.ExplorationGamesStats;
-import net.gazeplay.stats.HiddenItemsGamesStats;
-import net.gazeplay.stats.SelectionGamesStats;
-import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.ui.menus.HelpDialog;
 import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
+import net.gazeplay.ui.scenes.stats.StatsFigures.Figure;
+import net.gazeplay.ui.scenes.stats.StatsFigures.View;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The statistics screen shown after a game. The screen of the BERA edition (GazePlay Eval scores, buttons to show and
- * open the Eval result file), unreachable since the edition was removed in October 2026, was removed too.
+ * The statistics screen shown after a game or an evaluation (refonte of 16/11/2026, maquette A chosen by the
+ * maintainer, REVUE_DES_JEUX.md), for an adult, in the look of the menus (menus.css, light and dark themes):
+ * <ul>
+ *   <li>at the top, the game, its variant, the profile, the date and time, and the switch "Simple | Advanced"; the
+ *   screen always opens in the simple mode (maintainer's decision);</li>
+ *   <li>simple: the main figures in large tiles, the heat map, and the buttons folder, menu, continue;</li>
+ *   <li>advanced (like a scientific calculator): the figures in small tiles, the detail of the durations, the views
+ *   in tabs (heat map, durations, positions, levels, chi-squared: only those with data for this game), and the
+ *   buttons of the areas of interest and of the scan path.</li>
+ * </ul>
+ * A click on the heat map or on a chart enlarges it to the whole screen, another click puts it back. Nothing shown
+ * here changes the files of the results.
  */
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
 
-    private final String COLON = "Colon";
+    /**
+     * Below this width, the screen takes the style class {@link #NARROW}: smaller texts and margins.
+     */
+    static final double NARROW_WIDTH = 1200;
 
-    private static final String METRICS_HELP = "data/help/stats-heatmap-";
+    static final String NARROW = "gp-stats-narrow";
 
-    private static final String CHART_HELP = "data/help/stats-chart-";
+    private final Translator translator;
+
+    private final Stats stats;
+
+    private final CustomButton continueButton;
+
+    private final Locale locale;
+
+    /**
+     * Whether the advanced mode is shown; false at the start.
+     */
+    @Getter(AccessLevel.PACKAGE)
+    private final BooleanProperty advanced = new SimpleBooleanProperty(false);
+
+    /**
+     * Whether the view shown takes the whole screen (after a click on it).
+     */
+    @Getter(AccessLevel.PACKAGE)
+    private final BooleanProperty enlarged = new SimpleBooleanProperty(false);
+
+    @Getter(AccessLevel.PACKAGE)
+    private final List<View> views;
+
+    @Getter(AccessLevel.PACKAGE)
+    private final Map<View, ToggleButton> tabs = new EnumMap<>(View.class);
+
+    @Getter(AccessLevel.PACKAGE)
+    private VBox simpleBody;
+
+    @Getter(AccessLevel.PACKAGE)
+    private VBox advancedBody;
+
+    @Getter(AccessLevel.PACKAGE)
+    private ToggleButton simpleSwitch;
+
+    @Getter(AccessLevel.PACKAGE)
+    private ToggleButton advancedSwitch;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button folderButton;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button menuButton;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button continueAction;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button areasOfInterestButton;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button scanPathButton;
+
+    @Getter(AccessLevel.PACKAGE)
+    private View shownView;
+
+    private Label viewTitle;
+
+    private Button viewHelp;
+
+    private StackPane viewContent;
 
     /**
      * Builds the screen of a game.
      *
-     * @param continueButton the button going on with the game (a new round), null when there is none
+     * @param continueButton the button going on with the game (a new round), null when there is none: the screen shows
+     *                       its own "Continue" button, which clicks it
      */
     StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
+        this.translator = gazePlay.getTranslator();
+        this.stats = stats;
+        this.continueButton = continueButton;
+        this.locale = StatsFigures.javaLocale(translator.currentLocale());
 
-        final Translator translator = gazePlay.getTranslator();
+        final Configuration config = ActiveConfigurationContext.getInstance();
+        this.views = StatsFigures.views(stats, !config.isFixationSequenceDisabled());
 
-        Locale currentLocale = translator.currentLocale();
-
-        // Align right for Arabic Language
-        boolean alignLeft = !currentLocale.getLanguage().equals("ara");
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.TOP_CENTER);
-        grid.setHgap(100);
-        grid.setVgap(50);
-        grid.setPadding(new Insets(0, 50, 0, 50));
-
-        addAllToGrid(stats, translator, grid, alignLeft);
-
-        VBox centerPane = new VBox(4);
-        centerPane.setAlignment(Pos.TOP_CENTER);
-
-        ImageView displayedMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
-        root.widthProperty().addListener((observable, oldValue, newValue) ->
-            displayedMetrics.setFitWidth(newValue.doubleValue() * StatDisplayUtils.VIEW_WIDTH_RATIO));
-        root.heightProperty().addListener((observable, oldValue, newValue) ->
-            displayedMetrics.setFitHeight(newValue.doubleValue() * StatDisplayUtils.VIEW_HEIGHT_RATIO));
-
-        displayedMetrics.setFitWidth(root.getWidth() * StatDisplayUtils.VIEW_WIDTH_RATIO);
-        displayedMetrics.setFitHeight(root.getHeight() * StatDisplayUtils.VIEW_HEIGHT_RATIO);
-
-        // Only the inputs that played the game: a single image without choice for the mouse or the gaze alone
-        final List<String> metricsShown = metricsShown(EyeTracker.fromConfigValue(config.getEyeTracker()));
-        HBox buttonSwitchMetrics = new HBox();
-        for (String metricsName : metricsShown) {
-            buttonSwitchMetrics.getChildren().add(createDisplayButton(metricsName, stats, displayedMetrics));
+        MenuStyle.applyTo(root);
+        root.getStyleClass().add("gp-stats-screen");
+        // Arabic: the whole screen from right to left (the charts and images keep their own direction)
+        if ("ar".equals(locale.getLanguage())) {
+            root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         }
-        if (metricsShown.size() == 1) {
-            showMetrics(metricsShown.get(0), stats, displayedMetrics);
-        }
-        buttonSwitchMetrics.setAlignment(Pos.CENTER);
 
-        // The title of each view, with a window explaining it (maintainer's request of 5/11/2026). The buttons of the image
-        // stay on the line of its title, to keep the room for the image
-        Label metricsTitle = new Label(translator.translate("StatsHeatmapTitle"));
-        HBox metricsHeader = new HBox(16, titleWithHelp(metricsTitle, "StatsHeatmapTitle", METRICS_HELP, translator),
-            buttonSwitchMetrics);
-        metricsHeader.setAlignment(Pos.CENTER);
-        centerPane.getChildren().addAll(metricsHeader, displayedMetrics);
+        root.setTop(header(config));
+        simpleBody = simpleBody(config);
+        advancedBody = advancedBody(config);
+        final StackPane body = new StackPane(simpleBody, advancedBody);
+        BorderPane.setMargin(body, new Insets(16, 0, 16, 0));
+        root.setCenter(body);
+        root.setBottom(footer(config));
 
-        Label chartTitle = new Label();
-        Map<Node, String> chartTitles = new HashMap<>();
-        centerPane.getChildren().add(titleWithHelp(chartTitle, "StatsChartDurations", CHART_HELP, translator));
+        simpleBody.visibleProperty().bind(advanced.not());
+        advancedBody.visibleProperty().bind(advanced);
 
-        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
-        chartTitles.put(lineChart, "StatsChartDurations");
-        centerPane.getChildren().add(lineChart);
-        chartTitle.setText(translator.translate("StatsChartDurations"));
-        // The title follows the view shown (a zoomed chart keeps its place in the list)
-        centerPane.getChildren().addListener((ListChangeListener<Node>) change -> {
-            for (Node child : centerPane.getChildren()) {
-                String titleKey = chartTitles.get(child);
-                if (titleKey != null) {
-                    chartTitle.setText(translator.translate(titleKey));
-                }
+        // Smaller texts and margins on a narrow screen (down to 800 pixels wide, menus.css)
+        root.widthProperty().addListener((observable, before, width) -> {
+            final boolean narrow = width.doubleValue() > 0 && width.doubleValue() < NARROW_WIDTH;
+            if (narrow && !root.getStyleClass().contains(NARROW)) {
+                root.getStyleClass().add(NARROW);
+            } else if (!narrow) {
+                root.getStyleClass().remove(NARROW);
             }
         });
-        RadioButton colorBands = new RadioButton("Color Bands");
-        RadioButton levelsInfo = new RadioButton("Levels Info");
-        RadioButton chi2Info = new RadioButton("Chi2 Info");
+    }
 
-        if (!config.isFixationSequenceDisabled()) {
-            LinkedList<FixationPoint> tempSequenceList = new LinkedList<>();
-            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
-            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
-            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
-            LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
-            TableView chi2Chart = StatDisplayUtils.buildTable(stats);
-            chartTitles.put(levelChart, "StatsChartLevels");
-            chartTitles.put(chi2Chart, "StatsChartChi2");
-            if (areaChart != null) {
-                chartTitles.put(areaChart, "StatsChartPositions");
-            }
+    // ----------------------------------------------------------------------------------------------------------------
+    // Header
 
-            if(config.isDarkThemeEnabled())
-            {
-                colorBands.setTextFill(Color.WHITE);
-            }
-            else {
-                colorBands.setTextFill(Color.BLACK);
-            }
-            colorBands.getStylesheets().add("data/common/radio.css");
+    private Node header(final Configuration config) {
+        final Label title = new Label(stats.getCurrentGameNameCode() == null ? translator.translate("StatsTitle")
+            : translator.translate(stats.getCurrentGameNameCode()));
+        title.getStyleClass().add("gp-stats-game-title");
 
-            colorBands.setOnAction(event -> {
-                if (colorBands.isSelected()) {
-                    if (levelsInfo.isSelected()) {
-                        centerPane.getChildren().remove(levelChart);
-                        levelsInfo.setSelected(false);
-                    }
-                    else if (chi2Info.isSelected()) {
-                        centerPane.getChildren().remove(chi2Chart);
-                        chi2Info.setSelected(false);
-                    }
-                    else
-                        centerPane.getChildren().remove(lineChart);
-                    centerPane.getChildren().add(areaChart);
-                    centerPane.getStylesheets().add("data/common/chart.css");
-                } else {
-                    centerPane.getChildren().remove(areaChart);
-                    centerPane.getChildren().add(lineChart);
-                }
-            });
-
-            if(config.isDarkThemeEnabled())
-            {
-                levelsInfo.setTextFill(Color.WHITE);
-            }
-            else {
-                levelsInfo.setTextFill(Color.BLACK);
-            }
-            levelsInfo.getStylesheets().add("data/common/radio.css");
-
-            levelsInfo.setOnAction(event -> {
-                if (levelsInfo.isSelected()) {
-                    if (colorBands.isSelected()) {
-                        centerPane.getChildren().remove(areaChart);
-                        colorBands.setSelected(false);
-                    }
-                    else if (chi2Info.isSelected()) {
-                        centerPane.getChildren().remove(chi2Chart);
-                        chi2Info.setSelected(false);
-                    }
-                    else
-                        centerPane.getChildren().remove(lineChart);
-                    centerPane.getChildren().add(levelChart);
-                    centerPane.getStylesheets().add("data/common/chart.css");
-                } else {
-                    centerPane.getChildren().remove(levelChart);
-                    centerPane.getChildren().add(lineChart);
-                }
-            });
-
-            if(config.isDarkThemeEnabled())
-            {
-                chi2Info.setTextFill(Color.WHITE);
-            }
-            else {
-                chi2Info.setTextFill(Color.BLACK);
-            }
-
-            chi2Info.getStylesheets().add("data/common/radio.css");
-
-            chi2Info.setOnAction(event -> {
-                if (chi2Info.isSelected()) {
-                    if (colorBands.isSelected()) {
-                        centerPane.getChildren().remove(areaChart);
-                        colorBands.setSelected(false);
-                    }
-                    if (levelsInfo.isSelected()) {
-                        centerPane.getChildren().remove(levelChart);
-                        levelsInfo.setSelected(false);
-                    }
-                    else
-                        centerPane.getChildren().remove(lineChart);
-                    centerPane.getChildren().add(chi2Chart);
-                    centerPane.getStylesheets().add("data/common/table.css");
-                } else {
-                    centerPane.getChildren().remove(chi2Chart);
-                    centerPane.getChildren().add(lineChart);
-                }
-            });
+        final FlowPane chips = new FlowPane(8, 8);
+        final String variant = StatsFigures.variant(stats.getCurrentGameVariant(), stats.getCurrentGameNameCode(),
+            translator);
+        if (variant != null && !variant.isBlank()) {
+            chips.getChildren().add(chip(variant));
         }
-
-        HBox controlButtonPane;
-
-        if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && (stats.getCurrentGameVariant().contains("NinjaAdaptive") || stats.getCurrentGameVariant().contains("DYNAMIC")))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-
-        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-
-        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
-
-        else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
-            (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
-
-        else
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
-
-        StackPane centerStackPane = new StackPane();
-        centerStackPane.getChildren().add(centerPane);
-
-        I18NText screenTitleText = new I18NText(translator, "StatsTitle");
-        screenTitleText.setId("title");
-
-        StackPane topPane = new StackPane();
-        topPane.getChildren().add(screenTitleText);
-
-        root.setTop(topPane);
-
-        BorderPane sidePane = new BorderPane();
-
-        if (alignLeft) {
-            sidePane.setTop(centerStackPane);
-            root.setCenter(sidePane);
-            root.setLeft(grid);
-        } else { // Arabic alignment
-            sidePane.setTop(grid);
-            root.setCenter(centerStackPane);
-            root.setRight(sidePane);
+        final String user = config.getUserName();
+        if (user != null && !user.isBlank()) {
+            chips.getChildren().add(chip(translator.translate("StatsProfile") + " " + user));
         }
-        sidePane.setBottom(controlButtonPane);
+        chips.getChildren().add(chip(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(locale)
+            .format(LocalDateTime.now())));
 
-        if (config.isDarkThemeEnabled()) {
-            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-        }
-        else {
-            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
-        }
+        final VBox identity = new VBox(8, title, chips);
+        HBox.setHgrow(identity, Priority.ALWAYS);
 
+        final ToggleGroup group = new ToggleGroup();
+        simpleSwitch = modeSwitch(translator.translate("StatsSimple"), group);
+        advancedSwitch = modeSwitch(translator.translate("StatsAdvanced"), group);
+        simpleSwitch.setSelected(true);
+        // One of the two is always chosen
+        group.selectedToggleProperty().addListener((observable, before, now) -> {
+            if (now == null) {
+                group.selectToggle(before);
+            } else {
+                enlarged.set(false);
+                advanced.set(now == advancedSwitch);
+            }
+        });
+        final HBox modes = new HBox(4, simpleSwitch, advancedSwitch);
+        modes.getStyleClass().add("gp-stats-mode");
+        modes.setMaxHeight(Region.USE_PREF_SIZE);
+
+        final HBox header = new HBox(24, identity, modes);
+        header.setAlignment(Pos.CENTER_LEFT);
+        return header;
+    }
+
+    private static Label chip(final String text) {
+        final Label chip = new Label(text);
+        chip.getStyleClass().add("gp-stats-chip");
+        return chip;
+    }
+
+    private static ToggleButton modeSwitch(final String text, final ToggleGroup group) {
+        final ToggleButton button = new ToggleButton(text);
+        button.setToggleGroup(group);
+        return button;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Bodies
+
+    private VBox simpleBody(final Configuration config) {
+        final GridPane tiles = tiles(StatsFigures.main(stats, locale), false);
+        tiles.visibleProperty().bind(enlarged.not());
+        tiles.managedProperty().bind(tiles.visibleProperty());
+
+        final Label title = cardTitle(translator.translate(View.HEATMAP.titleKey));
+        final HBox titleLine = new HBox(10, title, helpButton(View.HEATMAP));
+        titleLine.setAlignment(Pos.CENTER_LEFT);
+        final VBox heatmap = heatmap(config);
+        // The sources go under the title when the line is too short
+        final FlowPane top = new FlowPane(24, 8, titleLine, (Node) heatmap.getUserData());
+        top.setAlignment(Pos.CENTER_LEFT);
+        final VBox card = card(top, heatmap);
+        VBox.setVgrow(heatmap, Priority.ALWAYS);
+
+        final VBox body = new VBox(16, tiles, card);
+        VBox.setVgrow(card, Priority.ALWAYS);
+        return body;
+    }
+
+    private VBox advancedBody(final Configuration config) {
+        final GridPane tiles = tiles(StatsFigures.main(stats, locale), true);
+        tiles.visibleProperty().bind(enlarged.not());
+        tiles.managedProperty().bind(tiles.visibleProperty());
+
+        final HBox columns = new HBox(16);
+        final List<Figure> details = StatsFigures.details(stats, locale);
+        if (!details.isEmpty()) {
+            final VBox detailsCard = detailsCard(details);
+            detailsCard.visibleProperty().bind(enlarged.not());
+            detailsCard.managedProperty().bind(detailsCard.visibleProperty());
+            columns.getChildren().add(detailsCard);
+        }
+        final VBox viewsCard = viewsCard(config);
+        HBox.setHgrow(viewsCard, Priority.ALWAYS);
+        columns.getChildren().add(viewsCard);
+
+        final VBox body = new VBox(14, tiles, columns);
+        VBox.setVgrow(columns, Priority.ALWAYS);
+        return body;
     }
 
     /**
-     * @return the title of a view of the screen on a thin line, with the "i" button opening its explanation, in the look of
-     *   the help of the games
+     * @return the figures as tiles of the same width; small ones in the advanced mode
      */
-    private HBox titleWithHelp(Label title, String helpTitleKey, String helpPrefix, Translator translator) {
-        title.getStyleClass().add("gp-help-heading");
-        Button helpButton = MenuStyle.smallRoundButton(MenuIcon.INFO, "teal", translator.translate("StatsExplain"),
-            () -> new HelpDialog(getGazePlay().getPrimaryStage(), translator, translator.translate(helpTitleKey),
-                HelpDialog.read(helpPrefix, HelpDialog.language(translator.currentLocale())), null, null).show());
-        HBox line = new HBox(8, title, helpButton);
-        line.setAlignment(Pos.CENTER);
-        // Rules of the menus for this line only; the rest of the screen waits for its redesign
-        MenuStyle.applyTo(line);
-        line.setStyle("-fx-background-color: transparent;");
-        return line;
+    private GridPane tiles(final List<Figure> figures, final boolean compact) {
+        final GridPane grid = new GridPane();
+        grid.setHgap(compact ? 12 : 16);
+        grid.getStyleClass().add("gp-stats-tiles");
+        if (compact) {
+            grid.getStyleClass().add("gp-stats-compact");
+        }
+        for (int i = 0; i < figures.size(); i++) {
+            final Figure figure = figures.get(i);
+            final Label label = new Label(translator.translate(figure.labelKey()));
+            label.getStyleClass().add("gp-stats-tile-label");
+            label.setWrapText(true);
+            final Label value = new Label(figure.value());
+            value.getStyleClass().add("gp-stats-tile-value");
+            if (figure.good()) {
+                value.getStyleClass().add("gp-stats-good");
+            }
+            final VBox tile = new VBox(compact ? 0 : 2, label, value);
+            tile.getStyleClass().add("gp-stats-tile");
+            tile.setMaxWidth(Double.MAX_VALUE);
+            grid.add(tile, i, 0);
+            final ColumnConstraints column = new ColumnConstraints();
+            column.setPercentWidth(100.0 / figures.size());
+            column.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(column);
+        }
+        return grid;
+    }
+
+    /**
+     * @return the card of the detail of the durations, with the note on the standard deviation
+     */
+    private VBox detailsCard(final List<Figure> details) {
+        final GridPane rows = new GridPane();
+        rows.setHgap(16);
+        final ColumnConstraints name = new ColumnConstraints();
+        name.setHgrow(Priority.ALWAYS);
+        // The values are never cut: the names wrap instead
+        final ColumnConstraints values = new ColumnConstraints();
+        values.setMinWidth(Region.USE_PREF_SIZE);
+        values.setHgrow(Priority.NEVER);
+        rows.getColumnConstraints().addAll(name, values);
+        for (int i = 0; i < details.size(); i++) {
+            final Label label = new Label(translator.translate(details.get(i).labelKey()));
+            label.getStyleClass().add("gp-stats-detail-label");
+            label.setWrapText(true);
+            final Label value = new Label(details.get(i).value());
+            value.getStyleClass().add("gp-stats-detail-value");
+            label.setMaxWidth(Double.MAX_VALUE);
+            value.setMaxWidth(Double.MAX_VALUE);
+            value.setAlignment(Pos.CENTER_RIGHT);
+            final String row = i == details.size() - 1 ? "gp-stats-detail-last" : "gp-stats-detail-row";
+            label.getStyleClass().add(row);
+            value.getStyleClass().add(row);
+            rows.add(label, 0, i);
+            rows.add(value, 1, i);
+        }
+        final Label note = new Label(translator.translate("StatsSDNote"));
+        note.getStyleClass().add("gp-stats-note");
+        note.setWrapText(true);
+        // The rows scroll when the screen is too low for them
+        final ScrollPane scroll = new ScrollPane(rows);
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setMinHeight(0);
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+        final HBox titleLine = new HBox(10, cardTitle(translator.translate("StatsDurationDetails")),
+            helpButton("StatsDurationDetails", "data/help/stats-details-"));
+        titleLine.setAlignment(Pos.CENTER_LEFT);
+        final VBox card = card(titleLine, scroll, note);
+        // The same width whatever the view shown next to it, narrower on a narrow screen
+        card.setMinWidth(260);
+        card.setPrefWidth(400);
+        card.setMaxWidth(400);
+        return card;
+    }
+
+    /**
+     * @return the card of the views of the advanced mode: a tab per view with data, its title and its "i", the view
+     */
+    private VBox viewsCard(final Configuration config) {
+        final FlowPane tabLine = new FlowPane(6, 6);
+        tabLine.setAlignment(Pos.CENTER_LEFT);
+        final ToggleGroup group = new ToggleGroup();
+        for (final View view : views) {
+            final ToggleButton tab = new ToggleButton(translator.translate(view.tabKey));
+            tab.getStyleClass().add("gp-stats-tab");
+            tab.setToggleGroup(group);
+            tab.setOnAction(e -> {
+                tab.setSelected(true);
+                show(view, config);
+            });
+            tabs.put(view, tab);
+            tabLine.getChildren().add(tab);
+        }
+        viewTitle = cardTitle("");
+        viewHelp = new Button();
+        final HBox titleLine = new HBox(10, viewTitle);
+        titleLine.setAlignment(Pos.CENTER_LEFT);
+        viewContent = new StackPane();
+        viewContent.setMinSize(0, 0);
+        final VBox card = card(tabLine, titleLine, viewContent);
+        VBox.setVgrow(viewContent, Priority.ALWAYS);
+        card.setMinWidth(0);
+        show(StatsFigures.firstAdvancedView(views), config);
+        return card;
+    }
+
+    /**
+     * Shows a view of the advanced mode.
+     */
+    void show(final View view, final Configuration config) {
+        shownView = view;
+        final ToggleButton tab = tabs.get(view);
+        if (tab != null) {
+            tab.setSelected(true);
+        }
+        viewTitle.setText(translator.translate(view.titleKey));
+        final HBox titleLine = (HBox) viewTitle.getParent();
+        if (titleLine != null) {
+            titleLine.getChildren().remove(viewHelp);
+            viewHelp = helpButton(view);
+            titleLine.getChildren().add(viewHelp);
+        }
+        final Node content = switch (view) {
+            case HEATMAP -> {
+                final VBox heatmap = heatmap(config);
+                final Node sources = (Node) heatmap.getUserData();
+                final VBox box = new VBox(8, sources, heatmap);
+                VBox.setVgrow(heatmap, Priority.ALWAYS);
+                yield box;
+            }
+            case DURATIONS -> enlargeable(StatsCharts.durations(stats, translator));
+            case POSITIONS -> enlargeable(StatsCharts.positions(stats, translator));
+            case LEVELS -> enlargeable(StatsCharts.levels(stats, translator));
+            case CHI2 -> StatsCharts.chi2(stats, translator, locale);
+        };
+        viewContent.getChildren().setAll(content);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // The heat map
+
+    /**
+     * @return the image of the results (heat map and path of the gaze), as large as its place allows; its user data is
+     *   the row of buttons choosing the source (mouse, gaze, both), empty when only one input played
+     */
+    private VBox heatmap(final Configuration config) {
+        final ImageView image = new ImageView();
+        image.setPreserveRatio(true);
+        image.setSmooth(true);
+        image.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+        final StackPane holder = enlargeable(fit(image));
+
+        final List<String> shown = metricsShown(EyeTracker.fromConfigValue(config.getEyeTracker()));
+        final HBox sources = new HBox(6);
+        sources.setAlignment(Pos.CENTER_RIGHT);
+        if (shown.size() > 1) {
+            final ToggleGroup group = new ToggleGroup();
+            for (final String name : shown) {
+                final ToggleButton source = new ToggleButton(translator.translate(name));
+                source.getStyleClass().add("gp-stats-tab");
+                source.setToggleGroup(group);
+                source.setOnAction(e -> {
+                    source.setSelected(true);
+                    showMetrics(name, stats, image);
+                });
+                sources.getChildren().add(source);
+            }
+            // Both inputs at the start, as before
+            ((ToggleButton) sources.getChildren().get(sources.getChildren().size() - 1)).setSelected(true);
+        }
+        showMetrics(shown.get(shown.size() - 1), stats, image);
+
+        final VBox box = new VBox(holder);
+        VBox.setVgrow(holder, Priority.ALWAYS);
+        box.setMinSize(0, 0);
+        box.setUserData(sources);
+        return box;
+    }
+
+    /**
+     * @return a place where an image takes all the room it can, keeping its proportions, centered
+     */
+    private static StackPane fit(final ImageView image) {
+        final StackPane holder = new StackPane(image);
+        holder.setMinSize(0, 0);
+        holder.setPrefSize(10, 10);
+        image.setManaged(false);
+        image.fitWidthProperty().bind(holder.widthProperty());
+        image.fitHeightProperty().bind(holder.heightProperty());
+        final ChangeListener<Object> center = (observable, before, now) -> {
+            final Bounds bounds = image.getLayoutBounds();
+            image.relocate((holder.getWidth() - bounds.getWidth()) / 2, (holder.getHeight() - bounds.getHeight()) / 2);
+        };
+        holder.widthProperty().addListener(center);
+        holder.heightProperty().addListener(center);
+        image.layoutBoundsProperty().addListener(center);
+        return holder;
     }
 
     /**
@@ -329,15 +512,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return a button showing one of the metrics images (mouse, gaze, or both)
-     */
-    I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
-        I18NButton displayButton = new I18NButton(getGazePlay().getTranslator(), buttonName);
-        displayButton.setOnMouseClicked((e) -> showMetrics(buttonName, stats, metrics));
-        return displayButton;
-    }
-
-    /**
      * Shows a metrics image of the round in the image of the screen.
      */
     private static void showMetrics(String metricsName, Stats stats, ImageView metrics) {
@@ -345,189 +519,108 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if (savedStatsInfo == null) {
             return;
         }
-        switch (metricsName) {
-            case "Mouse":
-                metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
-                break;
-            case "Gaze":
-                metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
-                break;
-            default: // "MouseAndGaze"
-                metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
-                break;
-        }
-    }
-
-    /**
-     * Adds the figures of the game to the grid: total time, goals, durations of the rounds, levels, mistakes...,
-     * depending on the kind of game.
-     */
-    void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-
-        Text value;
-        String labelValue;
-
-        value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
-        addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
-
-        if (!(stats instanceof ExplorationGamesStats)) {
-
-            if (stats instanceof ShootGamesStats) {
-                labelValue = "Shots";
-            } else if (stats instanceof HiddenItemsGamesStats) {
-                labelValue = "HiddenItemsShot";
-            } else {
-                labelValue = "Score";
-            }
-
-            value = new Text(String.valueOf(stats.getNbGoalsReached()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if(stats instanceof SelectionGamesStats && stats.getNbMistakes() > -1){
-            labelValue = "Mistakes";
-            value = new Text(String.valueOf(stats.getNbMistakes()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (stats instanceof ShootGamesStats) {
-            labelValue = "HitRate";
-            value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = "Length";
-            value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = stats instanceof ShootGamesStats ? "ShotaverageLength" : "AverageLength";
-            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = stats instanceof ShootGamesStats ? "ShotmedianLength" : "MedianLength";
-            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = "StandDev";
-            value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
-            labelValue = "UncountedShot";
-            value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-    }
-
-    /**
-     * Adds a figure (its label and its value) on a new row of the grid.
-     */
-    private void addToGrid(
-        GridPane grid,
-        AtomicInteger currentFormRow,
-        Translator translator,
-        String labelText,
-        Text value,
-        boolean alignLeft
-    ) {
-        final int columnIndexLabelLeft = 0;
-        final int columnIndexInputLeft = 1;
-        final int columnIndexLabelRight = 1;
-        final int columnIndexInputRight = 0;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        I18NText label = new I18NText(translator, labelText, COLON);
-
-        label.setId("item");
-        value.setId("item");
-
-        if (alignLeft) {
-            grid.add(label, columnIndexLabelLeft, currentRowIndex);
-            grid.add(value, columnIndexInputLeft, currentRowIndex);
-
-            GridPane.setHalignment(label, HPos.LEFT);
-            GridPane.setHalignment(value, HPos.LEFT);
-        } else {
-            grid.add(value, columnIndexInputRight, currentRowIndex);
-            grid.add(label, columnIndexLabelRight, currentRowIndex);
-
-            GridPane.setHalignment(label, HPos.RIGHT);
-            GridPane.setHalignment(value, HPos.RIGHT);
-        }
-    }
-
-    /**
-     * @return the buttons of the screen: home, continue, areas of interest, scan path, folder of the results, and the
-     *   choice of the images and charts shown
-     */
-    HBox createControlButtonPane(
-        GazePlay gazePlay,
-        Stats stats,
-        Configuration config,
-        RadioButton colorBands,
-        RadioButton addInfo,
-        CustomButton continueButton,
-        boolean additionButton
-    ) {
-
-        HBox controlButtonPane = new HBox();
-
-        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
-
-        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
-        I18NTooltip.install(homeButton, tooltipBackToMenu);
-
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-        aoiButton.addEventHandler(
-            MouseEvent.MOUSE_CLICKED,
-            e -> gazePlay.onDisplayAOI(stats));
-
-        EventHandler<Event> viewScanPath = s -> {
-            ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
-            gazePlay.onDisplayScanpath(scanPath);
+        final File file = switch (metricsName) {
+            case "Mouse" -> savedStatsInfo.getGazeMetricsFileMouse();
+            case "Gaze" -> savedStatsInfo.getGazeMetricsFileGaze();
+            default -> savedStatsInfo.getGazeMetricsFileMouseAndGaze();
         };
+        if (file != null) {
+            metrics.setImage(new Image(file.toURI().toString()));
+        }
+    }
 
-        CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
-        scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+    /**
+     * A click on a view enlarges it to the whole screen (the tiles and the detail are hidden), another click puts it
+     * back, as the former screen did.
+     */
+    private <T extends Region> T enlargeable(final T view) {
+        Tooltip.install(view, MenuStyle.tooltip(translator.translate("StatsEnlarge")));
+        view.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                enlarged.set(!enlarged.get());
+            }
+        });
+        return view;
+    }
 
-        // Opens the folder of the files of this game (heatmaps, metrics...)
-        CustomButton seeFolderButton = new CustomButton("data/common/images/seeFolder.png", screenDimension);
-        seeFolderButton.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> seeGameFolder(stats));
-        I18NTooltip.install(seeFolderButton, new I18NTooltip(gazePlay.getTranslator(), "SeeFolder"));
+    // ----------------------------------------------------------------------------------------------------------------
+    // Footer
 
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
-        controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-
-        if (config.isAreaOfInterestDisabled())
-            controlButtonPane.getChildren().add(aoiButton);
-
+    private Node footer(final Configuration config) {
+        areasOfInterestButton = button("StatsAreasOfInterest", MenuIcon.AREAS_OF_INTEREST, false,
+            () -> getGazePlay().onDisplayAOI(stats));
+        scanPathButton = button("StatsScanPath", MenuIcon.SCAN_PATH, false,
+            () -> getGazePlay().onDisplayScanpath(new ScanpathView(getGazePlay(), stats, continueButton)));
+        final HBox advancedButtons = new HBox(12);
+        // AREA_OF_INTEREST_DISABLED: true means the areas of interest are on (name kept, see CLAUDE.md)
+        if (config.isAreaOfInterestDisabled()) {
+            advancedButtons.getChildren().add(areasOfInterestButton);
+        }
         if (!config.isFixationSequenceDisabled()) {
-            controlButtonPane.getChildren().add(colorBands);
-            if(additionButton)
-                controlButtonPane.getChildren().add(addInfo);
-            controlButtonPane.getChildren().add(scanPathButton);
+            advancedButtons.getChildren().add(scanPathButton);
         }
+        advancedButtons.visibleProperty().bind(advanced);
+        advancedButtons.managedProperty().bind(advanced);
 
-        controlButtonPane.getChildren().add(seeFolderButton);
-        controlButtonPane.getChildren().add(homeButton);
-
+        folderButton = button("StatsResultsFolder", MenuIcon.FOLDER, false, () -> seeGameFolder(stats));
+        menuButton = button("StatsMenu", MenuIcon.HOME, false, StatDisplayUtils::closeStatsWindow);
+        final HBox mainButtons = new HBox(12, folderButton, menuButton);
         if (continueButton != null) {
-            controlButtonPane.getChildren().add(continueButton);
+            continueAction = button("StatsContinue", MenuIcon.FORWARD, true, this::continueTheGame);
+            continueAction.setContentDisplay(ContentDisplay.RIGHT);
+            mainButtons.getChildren().add(continueAction);
         }
 
-        return controlButtonPane;
+        final Region gap = new Region();
+        HBox.setHgrow(gap, Priority.ALWAYS);
+        final HBox footer = new HBox(12, advancedButtons, gap, mainButtons);
+        footer.setAlignment(Pos.CENTER_LEFT);
+        return footer;
+    }
+
+    private Button button(final String key, final MenuIcon icon, final boolean primary, final Runnable action) {
+        final Button button = new Button(translator.translate(key), icon.create(22));
+        button.getStyleClass().addAll("gp-button", primary ? "gp-button-primary" : "gp-button-secondary");
+        button.setOnAction(e -> action.run());
+        return button;
+    }
+
+    /**
+     * Goes on with the game: clicks the button given by the game (its handlers start a new round).
+     */
+    private void continueTheGame() {
+        Event.fireEvent(continueButton, new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1,
+            false, false, false, false, true, false, false, true, false, false, null));
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Shared parts
+
+    private static VBox card(final Node... children) {
+        final VBox card = new VBox(12, children);
+        card.getStyleClass().add("gp-stats-card");
+        card.setMinHeight(0);
+        return card;
+    }
+
+    private static Label cardTitle(final String text) {
+        final Label title = new Label(text);
+        title.getStyleClass().add("gp-stats-card-title");
+        title.setWrapText(true);
+        return title;
+    }
+
+    private Button helpButton(final View view) {
+        return helpButton(view.titleKey, view.helpPrefix);
+    }
+
+    /**
+     * @return the "i" button opening the explanation of a view, in the look of the help of the games
+     */
+    private Button helpButton(final String titleKey, final String helpPrefix) {
+        return MenuStyle.smallRoundButton(MenuIcon.INFO, "teal", translator.translate("StatsExplain"),
+            () -> new HelpDialog(getGazePlay().getPrimaryStage(), translator, translator.translate(titleKey),
+                HelpDialog.read(helpPrefix, HelpDialog.language(locale)), null, null).show());
     }
 
     @Override

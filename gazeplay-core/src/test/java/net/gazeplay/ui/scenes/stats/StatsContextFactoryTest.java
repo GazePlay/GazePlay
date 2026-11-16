@@ -2,8 +2,6 @@ package net.gazeplay.ui.scenes.stats;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Dimension2D;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -26,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -72,16 +72,18 @@ class StatsContextFactoryTest {
         ActiveConfigurationContext.setInstance(mockConfig);
     }
 
+    /**
+     * The screen of a game: the header, the bodies of the two modes, the buttons (16/11/2026); without the button of
+     * the game, no "Continue".
+     */
     @Test
     void shouldCreateNewInstance() {
         StatsContext result = StatsContextFactory.newInstance(mockGazePlay, mockStats);
 
-        BorderPane pane = (BorderPane) result.getRoot().getChildren().get(1);
-        HBox box = (HBox) pane.getChildren().get(1);
-
         assertEquals(3, result.getRoot().getChildren().size());
-        // Including the button of the results folder
-        assertEquals(5, box.getChildren().size());
+        assertNotNull(result.getFolderButton());
+        assertNotNull(result.getMenuButton());
+        assertNull(result.getContinueAction());
     }
 
     @Test
@@ -90,12 +92,7 @@ class StatsContextFactoryTest {
         StatsContext result =
             StatsContextFactory.newInstance(mockGazePlay, mockStats, button);
 
-        BorderPane pane = (BorderPane) result.getRoot().getChildren().get(1);
-        HBox box = (HBox) pane.getChildren().get(1);
-
         assertEquals(3, result.getRoot().getChildren().size());
-        // Including the button of the results folder
-        assertEquals(6, box.getChildren().size());
-        assertEquals(button, box.getChildren().get(5));
+        assertNotNull(result.getContinueAction());
     }
 }

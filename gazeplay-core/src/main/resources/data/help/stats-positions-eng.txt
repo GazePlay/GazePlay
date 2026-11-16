@@ -1,0 +1,13 @@
+# What this chart is for
+It shows where the fixations were during the game: the places where the gaze, or the mouse, stopped.
+
+# How to read it
+- At the bottom: the time, in seconds since the first fixation.
+- On the left: the position, in pixels of the screen.
+- The solid line: the horizontal position (from left to right).
+- The dashed line: the vertical position (from top to bottom).
+- A step shows a long fixation at the same place; a jump shows the gaze moving somewhere else.
+- A click on the chart enlarges it, another click puts it back.
+
+# When it shows
+Only when the path of the gaze is recorded (settings, Statistics section) and the game has fixations.

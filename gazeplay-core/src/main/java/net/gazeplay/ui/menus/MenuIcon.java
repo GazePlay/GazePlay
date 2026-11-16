@@ -71,6 +71,14 @@ public enum MenuIcon {
     INFO("info"),
     BACK("arrow_back"),
     /**
+     * Buttons of the statistics screen (16/11/2026): continue, back to the menu, the areas of interest (a grid) and the
+     * scan path (a line through points).
+     */
+    FORWARD("arrow_forward"),
+    HOME("home_fill1"),
+    AREAS_OF_INTEREST("grid_view"),
+    SCAN_PATH("timeline"),
+    /**
      * The active theme on its button: dark (a moon), light (a sun).
      */
     DARK_THEME("dark_mode_fill1"),

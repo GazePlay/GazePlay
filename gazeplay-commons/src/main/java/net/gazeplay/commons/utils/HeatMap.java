@@ -118,7 +118,8 @@ public class HeatMap {
 
     /**
      * @return the legend of the heatmap: a vertical gradient of its colors, the hottest at the top, with the values of
-     *   the limits of the color steps
+     *   the limits of the color steps, in dark on a light rounded background: readable on any image (16/11/2026: the
+     *   metrics images now have a white background, where the former white values were not seen)
      */
     public WritableImage getColorKey(final int width, final int height) {
         final WritableImage keyImage = new WritableImage(width, height);
@@ -133,12 +134,16 @@ public class HeatMap {
 
         final double margin = height / 20d;
         final double barHeight = height - 2 * margin;
+        gc.setFill(Color.rgb(255, 255, 255, 0.9));
+        gc.fillRoundRect(0, 0, width, height, margin, margin);
+        gc.setStroke(Color.rgb(43, 33, 24, 0.35));
+        gc.strokeRoundRect(0.5, 0.5, width - 1, height - 1, margin, margin);
         gc.setFont(new Font(margin));
         gc.setFill(heatGradient);
         gc.fillRect(0, margin, width / 3d, barHeight);
 
-        gc.setStroke(Color.BLACK);
-        gc.setFill(Color.WHITE);
+        gc.setStroke(Color.rgb(43, 33, 24));
+        gc.setFill(Color.rgb(43, 33, 24));
 
         final DecimalFormat numberFormat = new DecimalFormat("#.00");
 

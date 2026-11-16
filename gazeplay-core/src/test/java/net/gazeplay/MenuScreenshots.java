@@ -247,7 +247,106 @@ public final class MenuScreenshots {
                 capture(gazePlay, output, "4-parametres-" + suffix + "-" + (i + 1));
             }
         }
+        captureStatistics(gazePlay, output);
         System.exit(0);
+    }
+
+    /**
+     * The statistics screen (refonte of 16/11/2026) of an example game of "Where is the animal?": simple mode, then
+     * the advanced mode with the durations, the positions and the chi-squared test. Mouse and gaze, so that the choice
+     * of the source of the heat map shows.
+     */
+    private static void captureStatistics(final GazePlay gazePlay, final File output) throws Exception {
+        final File heatmap = File.createTempFile("heatmap", ".png");
+        heatmap.deleteOnExit();
+        ImageIO.write(exampleHeatmap(), "png", heatmap);
+        final net.gazeplay.stats.SelectionGamesStats stats = org.mockito.Mockito.mock(
+            net.gazeplay.stats.SelectionGamesStats.class);
+        org.mockito.Mockito.when(stats.getCurrentGameNameCode()).thenReturn("WhereIsTheAnimal");
+        org.mockito.Mockito.when(stats.getCurrentGameVariant())
+            .thenReturn("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-");
+        org.mockito.Mockito.when(stats.computeTotalElapsedDuration()).thenReturn(222_000L);
+        org.mockito.Mockito.when(stats.getNbGoalsReached()).thenReturn(10);
+        org.mockito.Mockito.when(stats.getNbGoalsToReach()).thenReturn(10);
+        org.mockito.Mockito.when(stats.getNbMistakes()).thenReturn(2);
+        org.mockito.Mockito.when(stats.getRoundsTotalAdditiveDuration()).thenReturn(184_000L);
+        org.mockito.Mockito.when(stats.computeRoundsDurationAverageDuration()).thenReturn(18_400L);
+        org.mockito.Mockito.when(stats.computeRoundsDurationMedianDuration()).thenReturn(16_500L);
+        org.mockito.Mockito.when(stats.computeRoundsDurationStandardDeviation()).thenReturn(5_700.0);
+        org.mockito.Mockito.when(stats.getOriginalDurationsBetweenGoals()).thenReturn(List.of(22_000L, 15_000L,
+            19_000L, 31_000L, 14_000L, 17_000L, 12_000L, 25_000L, 16_000L, 13_000L));
+        org.mockito.Mockito.when(stats.getSavedStatsInfo()).thenReturn(new net.gazeplay.commons.utils.stats
+            .SavedStatsInfo(null, heatmap, heatmap, heatmap, null, null, null));
+        final java.util.LinkedList<net.gazeplay.commons.utils.FixationPoint> fixations = new java.util.LinkedList<>();
+        for (int i = 0; i < 60; i++) {
+            // In memory, x holds the vertical position and y the horizontal one (FixationPoint)
+            fixations.add(new net.gazeplay.commons.utils.FixationPoint(1_000L + i * 3_500L, 400,
+                250 + (int) (180 * Math.sin(i / 3.0)), 800 + (int) (500 * Math.cos(i / 5.0))));
+        }
+        org.mockito.Mockito.when(stats.getFixationSequence()).thenReturn(new java.util.ArrayList<>(List.of(
+            new java.util.LinkedList<>(), fixations)));
+        final net.gazeplay.commons.utils.stats.ChiReport chi = new net.gazeplay.commons.utils.stats.ChiReport();
+        chi.addChiObs(4.5);
+        chi.addChiLevel(1);
+        org.mockito.Mockito.when(stats.getChiReport()).thenReturn(chi);
+
+        onFx(() -> {
+            ActiveConfigurationContext.switchToDefaultUser();
+            ActiveConfigurationContext.getInstance().setEyeTracker("tobii_and_mouse");
+            final net.gazeplay.commons.utils.CustomButton continueButton = new net.gazeplay.commons.utils
+                .CustomButton("data/common/images/continue.png", 100);
+            gazePlay.onDisplayStats(net.gazeplay.ui.scenes.stats.StatsContextFactory.newInstance(gazePlay, stats,
+                continueButton));
+            return null;
+        });
+        capture(gazePlay, output, "5-statistiques-simple");
+        clickToggle(gazePlay, gazePlay.getTranslator().translate("StatsAdvanced"));
+        capture(gazePlay, output, "5-statistiques-avance");
+        clickToggle(gazePlay, gazePlay.getTranslator().translate("StatsTabPositions"));
+        capture(gazePlay, output, "5-statistiques-avance-positions");
+        clickToggle(gazePlay, gazePlay.getTranslator().translate("StatsTabChi2"));
+        capture(gazePlay, output, "5-statistiques-avance-khi2");
+    }
+
+    private static void clickToggle(final GazePlay gazePlay, final String text) throws Exception {
+        onFx(() -> {
+            gazePlay.getPrimaryScene().getRoot().lookupAll(".toggle-button").stream()
+                .map(ToggleButton.class::cast).filter(button -> text.equals(button.getText()))
+                .findFirst().orElseThrow().fire();
+            return null;
+        });
+    }
+
+    /**
+     * @return an example of the image of the results: a grid of 6 cards and the band of the question, with warm spots
+     */
+    private static java.awt.image.BufferedImage exampleHeatmap() {
+        final int width = 1600;
+        final int height = 900;
+        final java.awt.image.BufferedImage image = new java.awt.image.BufferedImage(width, height,
+            java.awt.image.BufferedImage.TYPE_INT_RGB);
+        final java.awt.Graphics2D g = image.createGraphics();
+        g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setColor(new java.awt.Color(0xEA, 0xF1, 0xE6));
+        g.fillRect(0, 0, width, height);
+        for (int line = 0; line < 2; line++) {
+            for (int column = 0; column < 3; column++) {
+                g.setColor(java.awt.Color.WHITE);
+                g.fillRoundRect(40 + column * 520, 40 + line * 340, 480, 300, 40, 40);
+            }
+        }
+        g.setColor(new java.awt.Color(0xF6, 0xEF, 0xE4));
+        g.fillRect(0, 760, width, 140);
+        final int[][] spots = {{800, 190, 200}, {280, 530, 130}, {1320, 180, 100}, {820, 830, 110}};
+        for (final int[] spot : spots) {
+            final java.awt.RadialGradientPaint paint = new java.awt.RadialGradientPaint(spot[0], spot[1], spot[2],
+                new float[]{0f, 0.4f, 1f}, new java.awt.Color[]{new java.awt.Color(214, 40, 40, 210),
+                new java.awt.Color(247, 127, 0, 140), new java.awt.Color(252, 191, 73, 0)});
+            g.setPaint(paint);
+            g.fillOval(spot[0] - spot[2], spot[1] - spot[2], spot[2] * 2, spot[2] * 2);
+        }
+        g.dispose();
+        return image;
     }
 
     /**

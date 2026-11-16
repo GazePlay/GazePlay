@@ -1,5 +1,5 @@
 # À quoi sert cette image
-Elle montre où s'est porté le regard, ou la souris, pendant la partie, sur une image de l'écran prise au début de la partie.
+C'est une carte de chaleur globale : elle montre où s'est porté le regard, ou la souris, pendant toute la partie, toutes les manches ensemble. Elle est dessinée sur un fond blanc, et non sur une image du jeu prise à un moment de la partie, pour ne pas faire croire qu'elle ne concerne que ce moment. Les manches ne sont pas séparées : un endroit regardé dans plusieurs manches s'additionne. La capture d'écran du jeu reste dans le dossier des résultats.
 
 # La carte de chaleur
 - Les taches de couleur sont les endroits regardés. Plus un endroit a été regardé longtemps, plus la couleur est chaude.

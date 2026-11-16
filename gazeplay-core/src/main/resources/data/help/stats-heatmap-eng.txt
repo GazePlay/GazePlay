@@ -1,5 +1,5 @@
 # What this image is for
-It shows where the gaze, or the mouse, went during the game, over a picture of the screen taken at the start of the game.
+It is an overall heat map: it shows where the gaze, or the mouse, went during the whole game, all the rounds together. It is drawn on a white background, not over a picture of the game taken at one moment, so as not to suggest that it only concerns that moment. The rounds are not separated: a place looked at in several rounds adds up. The screenshot of the game stays in the results folder.
 
 # The heat map
 - The colored spots are the places looked at. The longer a place was looked at, the warmer its color.

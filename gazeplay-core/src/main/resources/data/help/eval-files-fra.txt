@@ -60,7 +60,7 @@ Toujours en .csv, car il peut être très long. Une ligne par position du regard
 # Le dossier heatmaps : les images
 - ecran-NN-type-essai-K-regard.png et -souris.png : la carte de chaleur de chaque écran, pour le regard et pour la souris. Sans aucune position sur l'écran, il y a seulement l'image de l'écran.
 - Le fond est l'écran à sa fin. Si l'option de cacher les images est active, c'est la grille complète, à son affichage.
-- passation-regard.png, passation-souris.png, passation-regard-et-souris.png : toute la passation sur une seule image, avec le parcours et les fixations numérotées. Ce sont les images de l'écran des statistiques. Leur fond est vide, car les écrans y sont mélangés.
+- passation-regard.png, passation-souris.png, passation-regard-et-souris.png : toute la passation sur une seule image, avec le parcours et les fixations numérotées. Ce sont les images de l'écran des statistiques. Leur fond est blanc, car les écrans y sont mélangés.
 
 # La vidéo de l'écran
 Si l'enregistrement vidéo est activé dans les réglages, un fichier .avi est ajouté dans le dossier. Il commence après le formulaire, qui n'est donc pas filmé.

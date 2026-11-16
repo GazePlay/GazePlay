@@ -1,0 +1,13 @@
+# À quoi sert ce graphique
+Il montre où se trouvaient les fixations au fil de la partie : les endroits où le regard, ou la souris, s'est arrêté.
+
+# Comment le lire
+- En bas : le temps, en secondes depuis la première fixation.
+- À gauche : la position, en pixels de l'écran.
+- La ligne pleine : la position horizontale (de gauche à droite).
+- La ligne en tirets : la position verticale (de haut en bas).
+- Un palier montre une fixation longue au même endroit ; un saut montre un changement de place du regard.
+- Un clic sur le graphique l'agrandit, un autre clic le remet à sa place.
+
+# Quand il apparaît
+Seulement quand le parcours du regard est enregistré (réglages, section Statistiques) et que la partie a des fixations.

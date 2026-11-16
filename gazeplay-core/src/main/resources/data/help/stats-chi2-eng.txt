@@ -1,0 +1,9 @@
+# What this table is for
+In the games that use it (the "Where is it?" family), the game checks regularly, by blocks of rounds, whether the right answers could be due to chance. It is a chi-squared test with one degree of freedom. When the answers are not due to chance, the level can go up.
+
+# How to read it
+- Block: the number of the block of rounds.
+- Level: the level played during this block.
+- Observed chi²: the value computed from the right and wrong answers. The larger it is, the less the answers look like chance.
+- 50 % to 0.5 %: the risk of being wrong when saying that the answers are not due to chance. A ✓ means that the observed chi² reaches the critical value of this risk; a – that it does not.
+- The game uses the risk of 5 % (critical value 3.84) to change the level.

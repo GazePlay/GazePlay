@@ -613,16 +613,19 @@ public class Stats {
     }
 
     /**
-     * Draws the screenshot of the game, on a black background, into an image of the metrics.
+     * Prepares an image of the metrics: a white background. Since 16/11/2026 (maintainer's request), the screenshot of
+     * the game is no longer drawn under the heatmap: taken at one moment of the game, it made believe that the heatmap
+     * was the one of that moment, when it gathers the whole game. The screenshot is still written in its own file
+     * (screenshot.png).
      *
+     * @param screenshotImage not drawn any more; its size gives the size of the heatmap
      * @return the graphics of the image, to draw the heatmap and the fixation sequence on it
      */
     public Graphics initGazeMetricsImage(BufferedImage bImage, BufferedImage screenshotImage) {
 
         final Graphics graphics = bImage.getGraphics();
-        graphics.setColor(Color.BLACK);
+        graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
-        graphics.drawImage(screenshotImage, 0, 0, null);
 
         return graphics;
     }

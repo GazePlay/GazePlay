@@ -1,0 +1,9 @@
+# À quoi sert ce tableau
+Dans les jeux qui l'utilisent (famille Où est…), le jeu vérifie régulièrement, par blocs de manches, si les bonnes réponses peuvent être dues au hasard. C'est un test du khi² à un degré de liberté. Quand les réponses ne sont pas dues au hasard, le niveau peut monter.
+
+# Comment le lire
+- Bloc : le numéro du bloc de manches.
+- Niveau : le niveau joué pendant ce bloc.
+- Khi² observé : la valeur calculée à partir des bonnes et des mauvaises réponses. Plus elle est grande, moins les réponses ressemblent à du hasard.
+- 50 % à 0,5 % : le risque de se tromper en disant que les réponses ne sont pas dues au hasard. Un ✓ veut dire que le khi² observé atteint la valeur critique de ce risque ; un – qu'il ne l'atteint pas.
+- Le jeu utilise le risque de 5 % (valeur critique 3,84) pour changer de niveau.

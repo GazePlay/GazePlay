@@ -1,0 +1,12 @@
+# What this detail is for
+It gives the figures of the durations of the game, to follow the progress from one game to the next or for an analysis.
+
+# The figures
+- Actual play time: the sum of the durations of the rounds, that is the time spent looking for each goal.
+- Average and median time: the duration of a round on average, and the one that splits the rounds into two halves (less sensitive to a very long round).
+- Standard deviation: the average gap of the durations around the average. The larger it is, the more irregular the durations. It is a standard deviation of the population (divided by n, the number of rounds).
+- Fastest and slowest round: their duration, and their number in the game (in the shooting games, the durations are sorted and the number is not given).
+- Goals reached / to reach: what the game counted.
+
+# Where to find them
+All these figures are also in the files of the game ("Results folder" button).

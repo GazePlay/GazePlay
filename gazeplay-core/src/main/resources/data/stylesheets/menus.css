@@ -1095,3 +1095,360 @@
     -fx-font-size: 24pt;
 }
 
+/* Statistics screen (StatsContext, refonte of 16/11/2026): only the colors of the theme (-gp-*), so that every part
+   reads as well in the light theme as in the dark one */
+
+.gp-menu.gp-stats-screen {
+    -fx-padding: 24 36 20 36;
+}
+
+.gp-menu .gp-stats-game-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 24pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-chip {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 3 14 3 14;
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text;
+}
+
+/* "Simple | Advanced": two switches in a rounded box, the chosen one in the main color */
+.gp-menu .gp-stats-mode {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 4;
+}
+
+.gp-menu .gp-stats-mode .toggle-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 8 24 8 24;
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 14pt;
+    -fx-text-fill: -gp-text-muted;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-stats-mode .toggle-button:hover {
+    -fx-background-color: -gp-surface-hover;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-mode .toggle-button:selected {
+    -fx-background-color: -gp-accent;
+    -fx-text-fill: -gp-on-accent;
+}
+
+.gp-menu .gp-stats-mode .toggle-button:focus-visible {
+    -fx-border-color: -gp-text;
+}
+
+/* The figures */
+.gp-menu .gp-stats-tile {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 20;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-padding: 14 20 14 20;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 12, 0, 0, 3);
+}
+
+.gp-menu .gp-stats-tile-label {
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-stats-tile-value {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 26pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-compact .gp-stats-tile {
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-padding: 8 16 8 16;
+}
+
+.gp-menu .gp-stats-compact .gp-stats-tile-value {
+    -fx-font-size: 17pt;
+}
+
+/* A success (the goals reached): teal, on large figures only (3.6:1 on the light surface, enough for large text) */
+.gp-menu .gp-stats-good {
+    -fx-text-fill: -gp-teal;
+}
+
+.gp-menu .gp-stats-muted {
+    -fx-text-fill: -gp-text-muted;
+}
+
+/* The cards: heat map, detail of the durations, views */
+.gp-menu .gp-stats-card {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
+    -fx-padding: 14 20 16 20;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 16, 0, 0, 4);
+}
+
+.gp-menu .gp-stats-card-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 16pt;
+    -fx-text-fill: -gp-text;
+}
+
+/* Tabs of the views and sources of the heat map: the chosen one framed in the main color */
+.gp-menu .gp-stats-tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 5 16 5 16;
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text-muted;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-stats-tab:hover {
+    -fx-background-color: -gp-surface-hover;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-tab:selected {
+    -fx-background-color: -gp-surface-hover;
+    -fx-border-color: -gp-accent;
+    -fx-text-fill: -gp-text;
+    -fx-font-family: "Fredoka SemiBold";
+}
+
+.gp-menu .gp-stats-tab:focus-visible {
+    -fx-border-color: -gp-text;
+}
+
+/* Detail of the durations: a line between the rows */
+.gp-menu .gp-stats-detail-label {
+    -fx-font-size: 13pt;
+    -fx-text-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-stats-detail-value {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 14pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-detail-row {
+    -fx-padding: 8 0 8 0;
+    -fx-border-color: transparent transparent -gp-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gp-menu .gp-stats-detail-last {
+    -fx-padding: 8 0 8 0;
+}
+
+.gp-menu .gp-stats-note,
+.gp-menu .gp-stats-legend {
+    -fx-font-size: 11pt;
+    -fx-text-fill: -gp-text-muted;
+}
+
+/* Charts: transparent background, lines of the grid and axes in the colors of the theme */
+.gp-menu .gp-stats-chart {
+    -fx-padding: 4 8 0 0;
+}
+
+.gp-menu .gp-stats-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.gp-menu .gp-stats-chart .chart-vertical-grid-lines,
+.gp-menu .gp-stats-chart .chart-horizontal-grid-lines {
+    -fx-stroke: -gp-border;
+}
+
+.gp-menu .gp-stats-chart .chart-alternative-row-fill,
+.gp-menu .gp-stats-chart .chart-alternative-column-fill {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
+}
+
+.gp-menu .gp-stats-chart .chart-vertical-zero-line,
+.gp-menu .gp-stats-chart .chart-horizontal-zero-line {
+    -fx-stroke: -gp-border;
+}
+
+.gp-menu .gp-stats-chart .axis {
+    -fx-tick-label-fill: -gp-text-muted;
+    -fx-tick-label-font-size: 11pt;
+    -fx-border-color: transparent;
+}
+
+.gp-menu .gp-stats-chart .axis-label {
+    -fx-text-fill: -gp-text-muted;
+    -fx-font-size: 11pt;
+}
+
+.gp-menu .gp-stats-chart .axis-tick-mark,
+.gp-menu .gp-stats-chart .axis-minor-tick-mark {
+    -fx-stroke: -gp-border;
+}
+
+/* The lines of the charts and of their legends: told apart by their color and their dashes */
+.gp-menu .gp-series-main {
+    -fx-stroke: -gp-accent;
+    -fx-stroke-width: 3;
+}
+
+.gp-menu .gp-series-average {
+    -fx-stroke: -gp-teal;
+    -fx-stroke-width: 2;
+    -fx-stroke-dash-array: 8 6;
+}
+
+.gp-menu .gp-series-sd {
+    -fx-stroke: -gp-text-muted;
+    -fx-stroke-width: 1.5;
+    -fx-stroke-dash-array: 3 5;
+}
+
+.gp-menu .gp-series-x {
+    -fx-stroke: -gp-violet;
+    -fx-stroke-width: 2.5;
+}
+
+.gp-menu .gp-series-y {
+    -fx-stroke: -gp-teal;
+    -fx-stroke-width: 2.5;
+    -fx-stroke-dash-array: 7 5;
+}
+
+.gp-menu .gp-legend-line {
+    -fx-stroke-line-cap: round;
+}
+
+/* Chi-squared table */
+.gp-menu .gp-stats-table-head {
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text-muted;
+    -fx-padding: 6 8 6 8;
+    -fx-border-color: transparent transparent -gp-border transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.gp-menu .gp-stats-table-cell {
+    -fx-font-size: 13pt;
+    -fx-text-fill: -gp-text;
+    -fx-padding: 6 8 6 8;
+    -fx-border-color: transparent transparent -gp-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gp-menu .gp-stats-table-cell.gp-stats-good {
+    -fx-text-fill: -gp-text;
+    -fx-font-family: "Fredoka SemiBold";
+}
+
+.gp-menu .gp-stats-table-cell.gp-stats-muted {
+    -fx-text-fill: -gp-text-muted;
+}
+
+/* Icons of the buttons with a text */
+.gp-menu .gp-button-secondary .gp-icon-shape {
+    -fx-fill: -gp-text;
+}
+
+.gp-menu .gp-button-primary .gp-icon-shape {
+    -fx-fill: -gp-on-accent;
+}
+
+/* Statistics screen on a narrow screen (below 1200 pixels wide, StatsContext.NARROW): smaller texts and margins */
+.gp-menu.gp-stats-screen.gp-stats-narrow {
+    -fx-padding: 14 18 12 18;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-game-title {
+    -fx-font-size: 18pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-chip,
+.gp-menu.gp-stats-narrow .gp-stats-tab {
+    -fx-font-size: 10pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-tab {
+    -fx-padding: 3 10 3 10;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-mode .toggle-button {
+    -fx-padding: 5 14 5 14;
+    -fx-font-size: 12pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-tile {
+    -fx-padding: 8 12 8 12;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-tile-label {
+    -fx-font-size: 10pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-tile-value {
+    -fx-font-size: 18pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-compact .gp-stats-tile-value {
+    -fx-font-size: 14pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-card {
+    -fx-padding: 10 14 12 14;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-card-title {
+    -fx-font-size: 13pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-detail-label {
+    -fx-font-size: 11pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-detail-value {
+    -fx-font-size: 12pt;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-detail-row,
+.gp-menu.gp-stats-narrow .gp-stats-detail-last {
+    -fx-padding: 4 0 4 0;
+}
+
+.gp-menu.gp-stats-narrow .gp-stats-table-head,
+.gp-menu.gp-stats-narrow .gp-stats-table-cell {
+    -fx-font-size: 10pt;
+    -fx-padding: 4 4 4 4;
+}
+
+.gp-menu.gp-stats-narrow .gp-button {
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 12pt;
+}

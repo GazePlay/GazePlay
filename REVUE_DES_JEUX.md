@@ -68,7 +68,9 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    en évaluation au volume et à Quitter (décision du 13/11, voir plus bas).
 3. Toujours à garder en tête : inventaire des sons (pas fait), notes de version 2.0 (images de l’utilisateur à
    remettre, pas de migration), fusion de `GazePlayLearning` et numéro de version après la modernisation.
-4. **À la fin des autres tâches** (recommandation du 16/11, acceptée par le mainteneur) : faire fermer leurs parties
+4. **Plus tard (demande du mainteneur du 16/11)** : retravailler les écrans **Zones d'intérêt** et **Parcours du
+   regard**, ouverts par leurs boutons depuis l'écran des statistiques (mode avancé), dans le style du nouvel écran.
+5. **À la fin des autres tâches** (recommandation du 16/11, acceptée par le mainteneur) : faire fermer leurs parties
    (`dispose()`) à tous les tests qui en lancent (une quarantaine de classes de `gazeplay-games`, comme
    `CasseBriqueTest`, `EggGameTest`, `SpaceGameTest`, `SprintFinishTest` le 16/11), puis revenir à la libération
    immédiate des objets simulés dans `ClearMocksAfterEachClassListener` (594 Mo au plus haut au lieu de 1 462 Mo, voir
@@ -945,6 +947,71 @@ autre thread n'est pas libéré.
 `gazeplay-games` monte au plus à **1 462 Mo** (sonde à la fin de chaque classe, avant la libération différée des
 dernières classes ; marches : Échelle +884, Flower Of Numbers +510, Survive +498, Where Is It +430, Magic Potions
 +354), puis redescend : la mémoire reste bornée, avec une marge plus faible qu'avec la libération immédiate (594 Mo).
+
+## Refonte de l'écran des statistiques (commencée le 16/11/2026)
+
+**État des lieux (16/11)** : `StatsContext` (550 lignes) : grille « libellé : valeur » de chiffres techniques, carte
+de chaleur et courbe à droite, boutons radio « Color Bands », « Levels Info », « Chi2 Info » (non traduits, exclusifs
+par du code écrit à la main), choix de ces boutons d'après le nom du jeu (deux erreurs : `contains("DYNAMIC")` jamais
+vrai pour Où est l'animal ?, parenthèse de `WhereIs || flags`), anciens boutons images sans texte, fond et thème
+sombre écrits en dur. Même écran en fin de passation GazePlay Eval.
+
+**Décisions du mainteneur (16/11)** : écran pour un **adulte** ; un **mode simple** et un **mode avancé** qui montre
+les données scientifiques, « comme la calculette et la calculette scientifique » ; l'écran **s'ouvre toujours en
+mode simple**. Planche de 3 maquettes (artefact « Écran des statistiques — 3 maquettes ») : **maquette A, Tableau de
+bord, retenue** :
+- en-tête : nom du jeu, variante en clair, profil, date et heure ; interrupteur « Simple | Avancé » en haut à droite ;
+- simple : 4 grands chiffres (durée, réussites, erreurs, temps moyen), la carte de chaleur en grand (Regard / Souris /
+  Les deux en mode « les deux »), boutons Dossier des résultats, Menu, Continuer (couleur principale) ;
+- avancé : chiffres en petit, carte « Détail des durées » (temps des écrans, moyenne, médiane, écart-type ÷ n, plus
+  rapide, plus long, buts), carte à onglets (Carte de chaleur, Durée des manches, Positions, Niveaux, Khi², seulement
+  ceux qui ont des données), boutons Zones d'intérêt et Parcours du regard en plus ;
+- style des menus, un « i » par vue, aucun fichier de résultats changé.
+
+**Choix validés (16/11)** : chiffres selon le genre de jeu (tir : tirs, taux de réussite ; exploration : durée
+seule ; les autres : durée, réussites, erreurs quand le jeu les compte, temps moyen) ; écrans Zones d'intérêt et
+Parcours du regard refaits **après**, dans une seconde étape ; arabe : sens droite-à-gauche de JavaFX ; « bien voir
+les deux thèmes ».
+
+**Fait (16/11, non commité)** :
+- `StatsContext` réécrit (en-tête, interrupteur Simple | Avancé, ouverture en simple, corps simple et avancé, boutons
+  avec icône et texte) ; `StatsFigures` (chiffres, détail, vues **choisies d'après les données**, plus d'après le nom
+  du jeu : les deux erreurs relevées disparaissent ; durées « 3 min 42 s », « 18,4 s » ; variante en clair) ;
+  `StatsCharts` (durées en secondes, niveaux, positions dans le temps, tableau du khi² avec les 6 risques, légendes).
+  Le bouton « Continuer » de l'écran clique celui que le jeu donne (déroulement inchangé). Un clic sur une vue
+  l'agrandit, un autre la remet.
+- `menus.css` : section « Statistics screen », seulement les couleurs du thème (`-gp-*`) ; points de contraste : le
+  turquoise seulement sur les grands chiffres, ✓ du tableau en couleur du texte, lignes des positions violet et
+  turquoise en tirets. Mode **étroit** sous 1 200 px (`gp-stats-narrow` : textes et marges plus petits), onglets et
+  sources qui passent à la ligne, liste des durées qui défile si la hauteur manque.
+- Icônes Material Symbols (Apache-2.0) ajoutées : `grid_view` (zones d'intérêt), `timeline` (parcours du regard) ;
+  `MenuIcon` : `FORWARD`, `HOME`, `AREAS_OF_INTEREST`, `SCAN_PATH`.
+- 34 traductions (français, anglais) ; aides : `stats-chart-*` réécrites, `stats-details-*`, `stats-positions-*`,
+  `stats-levels-*`, `stats-chi2-*` nouvelles.
+- Langue : GazePlay donne des codes à 3 lettres (« fra ») que Java ne connaît pas pour les nombres et les dates
+  (« 18.4 », « 2026-11-16 ») : `StatsFigures.javaLocale` les convertit.
+- Où est le nombre ? : son thème caché devient `WhereIsTheNumber` (il partageait `WhereIsIt`, que l'en-tête aurait
+  montré comme « Où est-ce ? »).
+- Captures : `MenuScreenshots` montre maintenant l'écran des statistiques d'une partie d'exemple (simple, avancé,
+  positions, khi²), fichiers `5-statistiques-*.png` ; regardées en clair et en sombre à 800, 1 366 et 1 920 px.
+- Tests : `StatsContextTest` réécrit (17 tests : ouverture en simple, passage d'un mode à l'autre, style des menus
+  sans couleur écrite, en-tête, chiffres par genre de jeu, plus rapide et plus long, durées, langue, vues d'après les
+  données, chaque onglet, Continuer, zones d'intérêt et parcours seulement en avancé, dossier, agrandissement, aides),
+  `StatsContextFactoryTest` adapté. `gazeplay-core` : 312 tests, 0 échec ; SpotBugs sans alerte.
+- **Retours du mainteneur (16/11)** :
+  - préciser que la carte de chaleur est **globale** : titre « Carte de chaleur globale et parcours du regard (toute
+    la partie) », onglet « Carte de chaleur globale », aide complétée ;
+  - **fond blanc** plutôt qu'une image du jeu prise à un moment de la partie (qui faisait croire à la carte de ce
+    moment) : `Stats.initGazeMetricsImage` ne dessine plus la capture, fond blanc. **Impact sur les résultats** : les
+    images `metricsMouse.png`, `metricsGaze.png`, `metricsMouseAndGaze.png` (et les 3 images « passation-* » de
+    GazePlay Eval) écrites désormais ont un fond blanc ; les fichiers déjà produits ne sont pas réécrits ; la capture
+    du jeu reste écrite à part (`screenshot.png`) ; aucune donnée (CSV, `replayData.json`) ne change, pas de
+    `formatVersion` à monter (les images ne sont relues par aucun programme). La légende (`HeatMap.getColorKey`),
+    autrefois en nombres blancs sur la bande noire, a maintenant son fond clair et des nombres foncés : lisible sur
+    le blanc comme sur les images écran par écran de GazePlay Eval (vérifié sur une image d'exemple). Aides
+    (`stats-heatmap-*`, `eval-files-*`) mises à jour.
+- Reste : essai du mainteneur sur une vraie partie (et une fin de passation GazePlay Eval), puis commit ; ensuite les
+  écrans Zones d'intérêt et Parcours du regard.
 
 ## Retrait des limiteurs (16/11/2026, décision du mainteneur du 4/11/2026)
 

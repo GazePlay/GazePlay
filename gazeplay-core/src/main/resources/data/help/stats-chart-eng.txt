@@ -3,14 +3,11 @@ It shows the time it took to reach each goal of the game, for instance a bubble 
 
 # How to read it
 - At the bottom: the number of the goal, in the order of the game. In the shooting games, the times are sorted, from the shortest to the longest.
-- On the left: the time, in milliseconds (1,000 milliseconds make 1 second).
-- The red curve: the time for each goal. The lower it is, the faster the goal was reached.
-- The green line: the average time.
-- The grey lines: the standard deviation, around the average. The further they are from the green line, the more irregular the times.
+- On the left: the time, in seconds.
+- The solid line, in the main color: the time for each goal. The lower it is, the faster the goal was reached.
+- The dashed line: the average time.
+- The dotted lines: the average plus and minus the standard deviation. The further they are from the average, the more irregular the times.
 - A click on the chart enlarges it, another click puts it back.
 
 # The other views
-Depending on the game, buttons at the bottom of the screen replace this chart:
-- Color Bands: the position of the fixations during the game, in width (X) and in height (Y).
-- Levels Info: the level reached at each round, in the games whose level adapts to the player, with its average and standard deviation.
-- Chi2 Info: a table of a statistical test (chi-squared) on the levels, for analyses.
+In the advanced mode, tabs above the chart show the other views of the game, only those with data: the heat map, the positions of the gaze, the levels and the chi-squared test (variants whose level adapts to the player).

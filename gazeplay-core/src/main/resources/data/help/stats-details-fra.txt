@@ -1,0 +1,12 @@
+# À quoi sert ce détail
+Il donne les chiffres des durées de la partie, pour suivre les progrès d'une partie à l'autre ou pour une analyse.
+
+# Les chiffres
+- Temps effectif de jeu : la somme des durées des manches, c'est-à-dire le temps passé à chercher chaque objectif.
+- Temps moyen et temps médian : la durée d'une manche en moyenne, et celle qui partage les manches en deux moitiés (moins sensible à une manche très longue).
+- Écart-type : l'écart moyen des durées autour de la moyenne. Plus il est grand, plus les durées sont irrégulières. C'est un écart-type de population (divisé par n, le nombre de manches).
+- Manche la plus rapide et manche la plus longue : leur durée, et leur numéro dans la partie (dans les jeux de tir, les durées sont triées et le numéro n'est pas donné).
+- Objectifs atteints / à atteindre : ce que le jeu a compté.
+
+# Où les retrouver
+Tous ces chiffres sont aussi dans les fichiers de la partie (bouton « Dossier des résultats »).

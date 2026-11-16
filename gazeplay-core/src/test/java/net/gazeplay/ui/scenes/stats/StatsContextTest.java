@@ -1,29 +1,27 @@
 package net.gazeplay.ui.scenes.stats;
 
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Dimension2D;
-import javafx.scene.chart.LineChart;
-import javafx.scene.control.RadioButton;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.gaze.EyeTracker;
-import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.stats.ChiReport;
+import net.gazeplay.commons.utils.stats.LevelsReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
+import net.gazeplay.stats.SelectionGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.SystemFileManager;
 import net.gazeplay.ui.menus.HelpDialog;
+import net.gazeplay.ui.scenes.stats.StatsFigures.Figure;
+import net.gazeplay.ui.scenes.stats.StatsFigures.View;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,16 +32,25 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+/**
+ * The statistics screen (refonte of 16/11/2026, maquette A): opens in the simple mode, the advanced mode shows the
+ * detail and the views with data, in the look of the menus; the buttons.
+ */
 @ExtendWith(ApplicationExtension.class)
 class StatsContextTest {
 
@@ -55,6 +62,8 @@ class StatsContextTest {
 
     @Mock
     private Stats mockStats;
+
+    private Configuration config;
 
     private final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
         new File("file.csv"),
@@ -75,256 +84,325 @@ class StatsContextTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
-        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
-        when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
+        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new javafx.geometry.Dimension2D(1920,
+            1080));
+        when(mockTranslator.currentLocale()).thenReturn(Locale.FRENCH);
+        when(mockTranslator.translate(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
-        when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
+        when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(),
+            new LinkedList<>())));
+        config = mock(Configuration.class);
+        when(config.getEyeTracker()).thenReturn(EyeTracker.tobii_and_mouse.name());
+        when(config.isFixationSequenceDisabled()).thenReturn(false);
+        when(config.isAreaOfInterestDisabled()).thenReturn(true);
+        when(config.getUserName()).thenReturn("Léa");
+        ActiveConfigurationContext.setInstance(config);
     }
 
-    @Test
-    void shouldChangeWidth() {
-        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        SimpleDoubleProperty widthProperty = new SimpleDoubleProperty(100);
-        ImageView metrics = spy(new ImageView("bear.jpg"));
-        BorderPane rootSpy = spy(new BorderPane());
-        when(rootSpy.widthProperty()).thenReturn(widthProperty);
-        try (MockedStatic<StatDisplayUtils> statDisplayUtils = mockStatic(StatDisplayUtils.class, CALLS_REAL_METHODS)) {
-            statDisplayUtils.when(() -> StatDisplayUtils.buildGazeMetrics(any(), any())).thenReturn(metrics);
-            new StatsContext(mockGazePlay, rootSpy, mockStats, null);
-        }
-
-        widthProperty.set(200);
-        verify(metrics).setFitWidth(200 * StatDisplayUtils.VIEW_WIDTH_RATIO);
+    private static <T> T fx(final Callable<T> action) throws Exception {
+        return WaitForAsyncUtils.asyncFx(action).get();
     }
 
-    @Test
-    void shouldChangeHeight() {
-        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        SimpleDoubleProperty heightProperty = new SimpleDoubleProperty(100);
-        ImageView metrics = spy(new ImageView("bear.jpg"));
-        BorderPane rootSpy = spy(new BorderPane());
-        when(rootSpy.heightProperty()).thenReturn(heightProperty);
-        try (MockedStatic<StatDisplayUtils> statDisplayUtils = mockStatic(StatDisplayUtils.class, CALLS_REAL_METHODS)) {
-            statDisplayUtils.when(() -> StatDisplayUtils.buildGazeMetrics(any(), any())).thenReturn(metrics);
-            new StatsContext(mockGazePlay, rootSpy, mockStats, null);
-        }
-
-        heightProperty.set(200);
-        verify(metrics).setFitHeight(200 * StatDisplayUtils.VIEW_HEIGHT_RATIO);
+    private StatsContext screen(final Stats stats, final CustomButton continueButton) throws Exception {
+        return fx(() -> new StatsContext(mockGazePlay, new BorderPane(), stats, continueButton));
     }
 
     /**
-     * Maintainer's request of 5/11/2026: the "i" next to the title of each view opens a text explaining it.
+     * Maintainer's decision of 16/11/2026: the screen always opens in the simple mode; the switch shows the advanced
+     * one and back.
      */
-    @ParameterizedTest
-    @ValueSource(strings = {"data/help/stats-heatmap-", "data/help/stats-chart-"})
-    void shouldHaveTheExplanationOfEachViewInFrenchAndEnglish(String prefix) {
-        for (String language : List.of("fra", "eng")) {
-            List<String> lines = HelpDialog.read(prefix, language);
-            assertNotNull(lines, prefix + language);
-            assertTrue(lines.stream().anyMatch(line -> line.startsWith("# ")), prefix + language);
-        }
+    @Test
+    void shouldOpenInTheSimpleModeAndSwitchToTheAdvancedOne() throws Exception {
+        final StatsContext screen = screen(mockStats, null);
+        assertFalse(screen.getAdvanced().get());
+        assertTrue(screen.getSimpleSwitch().isSelected());
+        assertTrue(screen.getSimpleBody().isVisible());
+        assertFalse(screen.getAdvancedBody().isVisible());
+
+        fx(() -> {
+            screen.getAdvancedSwitch().fire();
+            return null;
+        });
+        assertTrue(screen.getAdvanced().get());
+        assertFalse(screen.getSimpleBody().isVisible());
+        assertTrue(screen.getAdvancedBody().isVisible());
+
+        // A click on the chosen switch keeps it chosen
+        fx(() -> {
+            screen.getAdvancedSwitch().fire();
+            return null;
+        });
+        assertTrue(screen.getAdvancedSwitch().isSelected());
+
+        fx(() -> {
+            screen.getSimpleSwitch().fire();
+            return null;
+        });
+        assertFalse(screen.getAdvanced().get());
     }
 
     /**
-     * The image and the chart have the same height (maintainer's request of 5/11/2026).
+     * The look of the menus, light or dark through the stylesheets: no color written in the screen.
      */
     @Test
-    void shouldGiveTheChartTheSizeOfTheImage() {
-        BorderPane root = new BorderPane();
-        root.resize(1000, 800);
-        ImageView metrics = spy(new ImageView("bear.jpg"));
-        LineChart<?, ?>[] chart = new LineChart<?, ?>[1];
-        try (MockedStatic<StatDisplayUtils> statDisplayUtils = mockStatic(StatDisplayUtils.class, CALLS_REAL_METHODS)) {
-            statDisplayUtils.when(() -> StatDisplayUtils.buildGazeMetrics(any(), any())).thenReturn(metrics);
-            new StatsContext(mockGazePlay, root, mockStats, null);
-            chart[0] = StatDisplayUtils.buildLineChart(mockStats, root);
+    void shouldTakeTheLookOfTheMenus() throws Exception {
+        final StatsContext screen = screen(mockStats, null);
+        assertTrue(screen.getRoot().getStyleClass().contains("gp-menu"));
+        assertTrue(screen.getRoot().getStyleClass().contains("gp-stats-screen"));
+        assertTrue(screen.getRoot().getStyle() == null || screen.getRoot().getStyle().isEmpty());
+    }
+
+    /**
+     * The game, its variant in clear, the profile and the date at the top.
+     */
+    @Test
+    void shouldShowTheGameItsVariantAndTheProfile() throws Exception {
+        when(mockStats.getCurrentGameNameCode()).thenReturn("WhereIsTheAnimal");
+        when(mockStats.getCurrentGameVariant()).thenReturn("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-");
+        final StatsContext screen = screen(mockStats, null);
+        final List<String> texts = fx(() -> screen.getRoot().getTop().lookupAll(".label").stream()
+            .map(node -> ((Label) node).getText()).toList());
+        assertTrue(texts.contains("WhereIsTheAnimal"), texts.toString());
+        assertTrue(texts.contains("Farm · WhereIsItEnd10 · 2 × 3"), texts.toString());
+        assertTrue(texts.contains("StatsProfile Léa"), texts.toString());
+    }
+
+    @Test
+    void shouldDescribeTheVariantWithoutTheNameOfTheGame() {
+        assertEquals("WhereIsItEnd5 · 3 × 3",
+            StatsFigures.variant("GroupedGameVariant:EggGame:WhereIsItEnd5:3x3:-", "EggGame", mockTranslator));
+        // A variant of another kind keeps its own label
+        assertEquals(net.gazeplay.commons.gamevariants.IGameVariant.toGameVariant("DimensionGameVariant:2:3")
+            .getLabel(mockTranslator), StatsFigures.variant("DimensionGameVariant:2:3", "WhereIsIt", mockTranslator));
+        assertNull(StatsFigures.variant(null, "WhereIsIt", mockTranslator));
+        assertNull(StatsFigures.variant("SomethingUnknown", "WhereIsIt", mockTranslator));
+    }
+
+    @Test
+    void shouldGiveTheFiguresOfEachKindOfGame() {
+        final Locale fr = Locale.FRENCH;
+        final ShootGamesStats shoot = mock(ShootGamesStats.class);
+        assertEquals(List.of("TotalLength", "Shots", "HitRate", "ShotaverageLength"),
+            StatsFigures.main(shoot, fr).stream().map(Figure::labelKey).toList());
+        assertEquals(List.of("TotalLength"),
+            StatsFigures.main(mock(ExplorationGamesStats.class), fr).stream().map(Figure::labelKey).toList());
+        assertTrue(StatsFigures.details(mock(ExplorationGamesStats.class), fr).isEmpty());
+        assertEquals(List.of("TotalLength", "HiddenItemsShot", "AverageLength"),
+            StatsFigures.main(mock(HiddenItemsGamesStats.class), fr).stream().map(Figure::labelKey).toList());
+
+        final SelectionGamesStats selection = mock(SelectionGamesStats.class);
+        when(selection.getNbMistakes()).thenReturn(2);
+        when(selection.getNbGoalsReached()).thenReturn(10);
+        final List<Figure> figures = StatsFigures.main(selection, fr);
+        assertEquals(List.of("TotalLength", "StatsSuccesses", "Mistakes", "AverageLength"),
+            figures.stream().map(Figure::labelKey).toList());
+        assertEquals("10", figures.get(1).value());
+        assertTrue(figures.get(1).good());
+        // A game that does not count the mistakes (-1) shows none
+        when(selection.getNbMistakes()).thenReturn(-1);
+        assertFalse(StatsFigures.main(selection, fr).stream().anyMatch(f -> f.labelKey().equals("Mistakes")));
+    }
+
+    @Test
+    void shouldGiveTheFastestAndSlowestRounds() {
+        final Stats stats = mock(Stats.class);
+        when(stats.getOriginalDurationsBetweenGoals()).thenReturn(List.of(22_000L, 15_000L, 31_000L, 12_000L));
+        final List<Figure> details = StatsFigures.details(stats, Locale.FRENCH);
+        assertTrue(details.contains(new Figure("StatsFastest", "12,0 s (n° 4)", false)), details.toString());
+        assertTrue(details.contains(new Figure("StatsSlowest", "31,0 s (n° 3)", false)), details.toString());
+    }
+
+    /**
+     * GazePlay names its languages with three letters ("fra"): the numbers and dates take the language anyway.
+     */
+    @Test
+    void shouldFormatTheNumbersInTheLanguageOfGazePlay() {
+        assertEquals("fr", StatsFigures.javaLocale(Locale.of("fra", "FR")).getLanguage());
+        assertEquals("FR", StatsFigures.javaLocale(Locale.of("fra", "FR")).getCountry());
+        assertEquals("en", StatsFigures.javaLocale(Locale.of("eng")).getLanguage());
+        assertEquals("18,4 s", StatsFigures.duration(18_400, StatsFigures.javaLocale(Locale.of("fra", "FR"))));
+        assertEquals(Locale.FRENCH, StatsFigures.javaLocale(null));
+    }
+
+    @Test
+    void shouldWriteTheDurationsForAPerson() {
+        assertEquals("18,4 s", StatsFigures.duration(18_400, Locale.FRENCH));
+        assertEquals("18.4 s", StatsFigures.duration(18_400, Locale.ENGLISH));
+        assertEquals("3 min 42 s", StatsFigures.duration(222_000, Locale.FRENCH));
+        assertEquals("1 h 02 min", StatsFigures.duration(3_725_000, Locale.FRENCH));
+        assertEquals("0,0 s", StatsFigures.duration(-5, Locale.FRENCH));
+    }
+
+    /**
+     * The views come from the data of the game, no longer from its name (the former screen missed the levels of the
+     * dynamic "Where is the animal?").
+     */
+    @Test
+    void shouldOfferOnlyTheViewsWithData() {
+        final Stats empty = mock(Stats.class);
+        assertEquals(List.of(View.HEATMAP), StatsFigures.views(empty, true));
+
+        final Stats full = mock(Stats.class);
+        when(full.getOriginalDurationsBetweenGoals()).thenReturn(List.of(1000L, 2000L));
+        when(full.getFixationSequence()).thenReturn(new ArrayList<>(List.of(
+            new LinkedList<>(List.of(new FixationPoint(1000, 200, 30, 40))), new LinkedList<>())));
+        final LevelsReport levels = new LevelsReport();
+        levels.addRoundLevel(1);
+        when(full.getLevelsReport()).thenReturn(levels);
+        when(full.getLevelsRounds()).thenReturn(levels.getOriginalLevelsPerRounds());
+        final ChiReport chi = new ChiReport();
+        chi.addChiObs(4.5);
+        chi.addChiLevel(1);
+        when(full.getChiReport()).thenReturn(chi);
+        assertEquals(List.of(View.HEATMAP, View.DURATIONS, View.POSITIONS, View.LEVELS, View.CHI2),
+            StatsFigures.views(full, true));
+        // Without the fixation sequence (settings), no positions
+        assertFalse(StatsFigures.views(full, false).contains(View.POSITIONS));
+        assertEquals(View.DURATIONS, StatsFigures.firstAdvancedView(StatsFigures.views(full, true)));
+        assertEquals(View.HEATMAP, StatsFigures.firstAdvancedView(List.of(View.HEATMAP)));
+    }
+
+    /**
+     * Each view shows when its tab is chosen; the chi-squared table and the charts are built without error.
+     */
+    @Test
+    void shouldShowEachViewOfItsTab() throws Exception {
+        when(mockStats.getOriginalDurationsBetweenGoals()).thenReturn(List.of(22_000L, 15_000L, 19_000L));
+        when(mockStats.computeRoundsDurationAverageDuration()).thenReturn(18_666L);
+        when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(
+            new LinkedList<>(List.of(new FixationPoint(1000, 200, 30, 40), new FixationPoint(2000, 300, 300, 400))),
+            new LinkedList<>())));
+        final LevelsReport levels = new LevelsReport();
+        levels.addRoundLevel(1);
+        levels.addRoundLevel(2);
+        when(mockStats.getLevelsReport()).thenReturn(levels);
+        when(mockStats.getLevelsRounds()).thenReturn(levels.getOriginalLevelsPerRounds());
+        final ChiReport chi = new ChiReport();
+        chi.addChiObs(4.5);
+        chi.addChiLevel(1);
+        when(mockStats.getChiReport()).thenReturn(chi);
+
+        final StatsContext screen = screen(mockStats, null);
+        assertEquals(View.DURATIONS, screen.getShownView());
+        assertEquals(5, screen.getTabs().size());
+        for (final View view : View.values()) {
+            fx(() -> {
+                screen.getTabs().get(view).fire();
+                return null;
+            });
+            assertEquals(view, screen.getShownView());
+            assertTrue(screen.getTabs().get(view).isSelected());
         }
-
-        assertEquals(metrics.getFitHeight(), chart[0].getPrefHeight());
-        assertEquals(metrics.getFitHeight(), chart[0].getMaxHeight());
-        assertEquals(metrics.getFitWidth(), chart[0].getMaxWidth());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    void shouldAddAreaChartOnColorBandSelected() {
-        ArrayList<LinkedList<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
-            new LinkedList<>(List.of(
-                new FixationPoint(1234, 2345, 30, 40),
-                new FixationPoint(4567, 1234, 40, 60)
-            )),
-            new LinkedList<>(List.of(
-                new FixationPoint(1234, 2345, 30, 40),
-                new FixationPoint(4567, 1234, 40, 60)
-            ))
-        )
-        );
-        when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
-
-        Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
-        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
-
-        ActiveConfigurationContext.setInstance(mockConfig);
-
-        BorderPane root = new BorderPane();
-        new StatsContext(mockGazePlay, root, mockStats, null);
-
-        BorderPane sidePane = (BorderPane) root.getCenter();
-        StackPane centerStackPane = (StackPane) sidePane.getTop();
-        VBox centerPane = (VBox) centerStackPane.getChildren().get(0);
-        HBox controlPane = (HBox) sidePane.getBottom();
-        RadioButton colorBands = (RadioButton) controlPane.getChildren().get(1);
-
-        // Under the title of the image, the image, and the title of the chart
-        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(3);
-        assertTrue(centerPane.getChildren().contains(lineChart));
-
-        colorBands.fire();
-        assertFalse(centerPane.getChildren().contains(lineChart));
-
-        colorBands.fire();
-        assertTrue(centerPane.getChildren().contains(lineChart));
-    }
-
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    void shouldAddAllToGridShootGames(boolean alignLeft) {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        GridPane grid = new GridPane();
-        ShootGamesStats stats = mock(ShootGamesStats.class);
-        when(stats.getNbUnCountedGoalsReached()).thenReturn(3);
-        context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
-
-        assertEquals(16, grid.getChildren().size());
-    }
-
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    void shouldAddAllToGridExplorationGames(boolean alignLeft) {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        GridPane grid = new GridPane();
-        ExplorationGamesStats stats = mock(ExplorationGamesStats.class);
-        context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
-
-        assertEquals(2, grid.getChildren().size());
-    }
-
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    void shouldAddAllToGridHiddenItemsGames(boolean alignLeft) {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        GridPane grid = new GridPane();
-        HiddenItemsGamesStats stats = mock(HiddenItemsGamesStats.class);
-        context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
-
-        assertEquals(12, grid.getChildren().size());
-    }
-
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    void shouldAddAllToGrid(boolean alignLeft) {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        GridPane grid = new GridPane();
-        Stats stats = mock(Stats.class);
-        context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
-
-        assertEquals(12, grid.getChildren().size());
     }
 
     @Test
-    void shouldCreateControlButtonPane() throws InterruptedException {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+    void shouldContinueTheGameWithTheButtonOfTheGame() throws Exception {
+        final CustomButton continueButton = fx(() -> new CustomButton("bear.jpg", 300));
+        final AtomicInteger clicks = new AtomicInteger();
+        continueButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> clicks.incrementAndGet());
+        final StatsContext screen = screen(mockStats, continueButton);
+        assertNotNull(screen.getContinueAction());
+        fx(() -> {
+            screen.getContinueAction().fire();
+            return null;
+        });
+        assertEquals(1, clicks.get());
 
-        Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
-        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
-        when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
-        RadioButton radioButton = new RadioButton();
-        CustomButton button = new CustomButton("bear.jpg", 300);
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, button, false);
+        assertNull(screen(mockStats, null).getContinueAction());
+    }
 
-        assertEquals(6, result.getChildren().size());
+    /**
+     * The areas of interest and the scan path: in the advanced mode only, as the settings allow.
+     */
+    @Test
+    void shouldOfferTheAreasOfInterestAndTheScanPathInTheAdvancedMode() throws Exception {
+        final StatsContext screen = screen(mockStats, null);
+        final Button areas = screen.getAreasOfInterestButton();
+        assertFalse(areas.getParent().isVisible());
+        fx(() -> {
+            screen.getAdvancedSwitch().fire();
+            return null;
+        });
+        assertTrue(areas.getParent().isVisible());
+        assertTrue(areas.getParent().getChildrenUnmodifiable().contains(screen.getScanPathButton()));
 
-        CustomButton aoiButton = (CustomButton) result.getChildren().get(0);
-        CustomButton scanPathButton = (CustomButton) result.getChildren().get(2);
-
-        Platform.runLater(() -> aoiButton.fireEvent(TestingUtils.clickOnTarget(aoiButton)));
-        TestingUtils.waitForRunLater();
-
+        fx(() -> {
+            areas.fire();
+            return null;
+        });
         verify(mockGazePlay).onDisplayAOI(mockStats);
-
-        Platform.runLater(() -> scanPathButton.fireEvent(TestingUtils.clickOnTarget(scanPathButton)));
-        TestingUtils.waitForRunLater();
-
+        fx(() -> {
+            screen.getScanPathButton().fire();
+            return null;
+        });
         verify(mockGazePlay).onDisplayScanpath(any());
+
+        // Turned off in the settings: no buttons
+        when(config.isAreaOfInterestDisabled()).thenReturn(false);
+        when(config.isFixationSequenceDisabled()).thenReturn(true);
+        final StatsContext without = screen(mockStats, null);
+        assertNull(without.getAreasOfInterestButton().getParent());
+        assertNull(without.getScanPathButton().getParent());
     }
 
     @Test
-    void shouldCreateControlButtonPaneNoContinueButton() {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(false));
-        when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
-        RadioButton radioButton = new RadioButton();
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, null, false);
-
-        // The button of the results folder, then the home button
-        assertEquals(2, result.getChildren().size());
-    }
-
-    @Test
-    void shouldOpenTheResultsFolderOfTheGamePlayed() {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
+    void shouldOpenTheResultsFolderOfTheGamePlayed() throws Exception {
         // The files of the game were saved before midnight, the statistics screen is shown after
-        File savedFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
+        final File savedFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
         when(mockStats.getSavedStatsInfo()).thenReturn(new SavedStatsInfo(
             new File(savedFolder, "heatmap.csv"), null, null, null, null, null, null));
         when(mockStats.getGameStatsOfTheDayDirectory())
             .thenReturn(new File(new File("statistics", "WhereIsTheShape"), "2026-10-24"));
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, new RadioButton(), null, null, false);
-
-        CustomButton seeFolderButton = (CustomButton) result.getChildren().get(0);
+        final StatsContext screen = screen(mockStats, null);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
-            seeFolderButton.fireEvent(TestingUtils.clickOnTarget(seeFolderButton));
-
+            screen.getFolderButton().fire();
             systemFileManager.verify(() -> SystemFileManager.openFolder(savedFolder));
         }
     }
 
     @Test
-    void shouldOpenTheFolderOfTheDayWhenNoFileWasSaved() {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
-        File todayFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
+    void shouldOpenTheFolderOfTheDayWhenNoFileWasSaved() throws Exception {
+        final File todayFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
         when(mockStats.getSavedStatsInfo()).thenReturn(null);
         when(mockStats.getGameStatsOfTheDayDirectory()).thenReturn(todayFolder);
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, new RadioButton(), null, null, false);
-
-        CustomButton seeFolderButton = (CustomButton) result.getChildren().get(0);
+        final StatsContext screen = screen(mockStats, null);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
-            seeFolderButton.fireEvent(TestingUtils.clickOnTarget(seeFolderButton));
-
+            screen.getFolderButton().fire();
             systemFileManager.verify(() -> SystemFileManager.openFolder(todayFolder));
+        }
+    }
+
+    /**
+     * A click on a view enlarges it to the whole screen, another click puts it back.
+     */
+    @Test
+    void shouldEnlargeAViewAndPutItBack() throws Exception {
+        final StatsContext screen = screen(mockStats, null);
+        assertFalse(screen.getEnlarged().get());
+        fx(() -> {
+            screen.getEnlarged().set(true);
+            return null;
+        });
+        assertFalse(screen.getSimpleBody().getChildren().get(0).isVisible(), "the tiles are hidden");
+        // Changing the mode puts it back
+        fx(() -> {
+            screen.getAdvancedSwitch().fire();
+            return null;
+        });
+        assertFalse(screen.getEnlarged().get());
+    }
+
+    /**
+     * Maintainer's request of 5/11/2026: the "i" of each view opens a text explaining it.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {"data/help/stats-heatmap-", "data/help/stats-chart-", "data/help/stats-details-",
+        "data/help/stats-positions-", "data/help/stats-levels-", "data/help/stats-chi2-"})
+    void shouldHaveTheExplanationOfEachViewInFrenchAndEnglish(String prefix) {
+        for (String language : List.of("fra", "eng")) {
+            List<String> lines = HelpDialog.read(prefix, language);
+            assertNotNull(lines, prefix + language);
+            assertTrue(lines.stream().anyMatch(line -> line.startsWith("# ")), prefix + language);
         }
     }
 
@@ -339,10 +417,8 @@ class StatsContextTest {
     }
 
     @Test
-    void shouldGetChildren() {
-        BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
-
-        assertEquals(root.getChildren().size(), context.getChildren().size());
+    void shouldGetChildren() throws Exception {
+        final StatsContext context = screen(mockStats, null);
+        assertEquals(context.getRoot().getChildren().size(), context.getChildren().size());
     }
 }

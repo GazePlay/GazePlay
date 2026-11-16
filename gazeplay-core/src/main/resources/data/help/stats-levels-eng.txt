@@ -1,0 +1,10 @@
+# What this chart is for
+In the variants whose difficulty adapts to the player (for instance the Dynamic variants), it shows the level reached at each round.
+
+# How to read it
+- At the bottom: the number of the round.
+- On the left: the level. The higher it is, the harder the round.
+- The solid line: the level of each round.
+- The dashed line: the average level.
+- The dotted lines: the average plus and minus the standard deviation.
+- A click on the chart enlarges it, another click puts it back.
