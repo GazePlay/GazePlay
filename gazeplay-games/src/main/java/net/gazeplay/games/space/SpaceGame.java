@@ -163,7 +163,6 @@ public class SpaceGame implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -208,7 +207,6 @@ public class SpaceGame implements GameLifeCycle {
         spawnWait = 0.3;
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         phase = Phase.PLAY;
         placeShip();
         showHud();
@@ -370,7 +368,6 @@ public class SpaceGame implements GameLifeCycle {
         gameContext.getSoundManager().add("data/shooter/robot/sounds/shot" + (1 + random.nextInt(3)) + ".wav");
         destroyed++;
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         showHud();
         if (end.getAliens() > 0 && destroyed >= end.getAliens()) {
             callTheBoss();
@@ -490,7 +487,6 @@ public class SpaceGame implements GameLifeCycle {
         }
         stopPlaying();
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 
@@ -505,7 +501,6 @@ public class SpaceGame implements GameLifeCycle {
         shipView.setVisible(false);
         flash(shipX, shipY, shipSize);
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         final Group card = GameStyle.card(gameContext.getTranslator().translate("SpaceLost"), height * 0.06,
             width * 0.6);
         card.setLayoutX(width / 2 - card.getBoundsInLocal().getWidth() / 2);

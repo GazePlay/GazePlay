@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 /**
  * What the game screen offers to a game: its drawing area ({@link #getChildren()}), the settings, the gaze, the sounds,
- * the translations, the end of round transition and statistics screen, and the score and time limits of the settings.
+ * the translations, the end of round transition and statistics screen.
  */
 public interface IGameContext {
 
@@ -142,47 +142,8 @@ public interface IGameContext {
      */
     Supplier<Dimension2D> getCurrentScreenDimensionSupplier();
 
-    /**
-     * Enables the score limit of the settings (LIMITER_SCORE) for this game, if enabled there: checked by
-     * {@link #updateScore}.
-     */
-    void startScoreLimiter();
-
-    /**
-     * Enables the time limit of the settings (LIMITER_TIME) for this game, if enabled there: checked by
-     * {@link #updateScore}.
-     */
-    void startTimeLimiter();
-
-    /**
-     * Allows the limits to end the game again (each limit ends it once).
-     */
-    void setLimiterAvailable();
-
-    /**
-     * Starts the timer of the time limit.
-     */
-    void start();
-
-    /**
-     * Starts the timer of the time limit, unless it is already running.
-     */
-    void firstStart();
-
-    /**
-     * Stops the timer of the time limit.
-     */
-    void stop();
-
-    /**
-     * To be called by a game after each goal: when the score or time limit of the settings is reached, calls the
-     * matching handler, plays the win transition and shows the statistics.
-     */
-    void updateScore(Stats stats, GameLifeCycle currentGame, EventHandler<ActionEvent> onTimeLimiterEndEventHandler, EventHandler<ActionEvent> onScoreLimiterEndEventHandler);
-
-    /**
-     * Same as {@link #updateScore(Stats, GameLifeCycle, EventHandler, EventHandler)}, with no handlers.
-     */
-    void updateScore(Stats stats, GameLifeCycle currentGame);
+    // The time and score limiters of the settings (startScoreLimiter, startTimeLimiter, setLimiterAvailable, start,
+    // firstStart, stop, updateScore) were removed on 16/11/2026 (maintainer's decision of 4/11/2026): each game has
+    // its own ends, or none (leave by the menu)
 
 }

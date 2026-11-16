@@ -201,13 +201,22 @@ class PictureCard extends Group {
         // The green frame is seen before the picture grows
         fullAnimation.setDelay(new Duration(400));
 
-        gameContext.updateScore(stats, gameInstance);
-
-        fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
-            gameInstance.dispose();
-            gameContext.clear();
-            gameInstance.launch();
-        }));
+        // The last screen of the game (see WhereIsItEnd): "Bravo", then the statistics; else the next screen
+        final boolean last = gameInstance.screenFound();
+        fullAnimation.setOnFinished(actionEvent -> {
+            if (last) {
+                stats.takeScreenShot();
+            }
+            gameContext.playWinTransition(500, actionEvent1 -> {
+                gameInstance.dispose();
+                gameContext.clear();
+                if (last) {
+                    gameContext.showRoundStats(stats, gameInstance);
+                } else {
+                    gameInstance.launch();
+                }
+            });
+        });
 
         fullAnimation.play();
     }

@@ -215,6 +215,23 @@ class ConfigurationTest {
         assertEquals(properties.getProperty("FILE_DIR"), saved.getProperty("FILE_DIR"));
     }
 
+    /**
+     * The time and score limiters were removed (16/11/2026, maintainer's decision of 4/11/2026): a file written before
+     * (as the test file) keeps its LIMITER_* keys, unused, and is read and saved again without error.
+     */
+    @Test
+    void shouldKeepTheRemovedLimitersInTheFile() throws IOException {
+        assertEquals("true", properties.getProperty("LIMITER_TIME_ENABLED"));
+        configuration.setUserName("someone");
+        Properties saved = new Properties();
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
+            saved.load(is);
+        }
+        assertEquals("someone", saved.getProperty("USER_NAME"));
+        assertEquals("true", saved.getProperty("LIMITER_TIME_ENABLED"));
+        assertEquals("60", saved.getProperty("LIMITER_TIME"));
+    }
+
     @Test
     void shouldGetFixationLength() {
         assertEquals(properties.get("FIXATION_LENGTH"), configuration.getFixationLength().toString());

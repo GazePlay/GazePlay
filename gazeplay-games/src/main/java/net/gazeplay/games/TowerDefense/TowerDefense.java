@@ -261,7 +261,6 @@ public class TowerDefense implements GameLifeCycle {
         blizzardCooldownTicks = 0;
         nextWaveTicks = waves.isAutomatic() ? AUTOMATIC_WAVE_DELAY * TICKS_PER_SECOND : -1;
 
-        gameContext.setLimiterAvailable();
         gameContext.getChildren().add(canvas);
         gameContext.getChildren().add(messages);
 
@@ -363,7 +362,6 @@ public class TowerDefense implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         phase = Phase.PLAY;
         showNextWave();
         canvas.draw();
@@ -665,7 +663,6 @@ public class TowerDefense implements GameLifeCycle {
     private void killed(final Enemy enemy) {
         money.set(money.get() + enemy.getReward());
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         playEnemyDeathAnimation(enemy);
     }
 
@@ -807,7 +804,6 @@ public class TowerDefense implements GameLifeCycle {
         gameLoop.stop();
         sendWaveButton.setVisible(false);
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 
@@ -824,7 +820,6 @@ public class TowerDefense implements GameLifeCycle {
         nextWaveTicks = -1;
         showNextWave();
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         final Group card = GameStyle.card(gameContext.getTranslator().translate("TowerDefenseLost"),
             dimensions.getHeight() * 0.06, dimensions.getWidth() * 0.6);
         card.setLayoutX(dimensions.getWidth() / 2 - card.getBoundsInLocal().getWidth() / 2);

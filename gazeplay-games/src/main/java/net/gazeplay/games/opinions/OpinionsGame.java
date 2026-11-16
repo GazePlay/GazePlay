@@ -79,7 +79,6 @@ public class OpinionsGame implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double width = dimension.getWidth();
         final double height = dimension.getHeight();
@@ -106,7 +105,6 @@ public class OpinionsGame implements GameLifeCycle {
         index = 0;
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
         if (images.isEmpty()) {
             buttons.forEach(button -> button.setEnabled(false));
             final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"),
@@ -199,7 +197,6 @@ public class OpinionsGame implements GameLifeCycle {
                 showImage();
             } else {
                 stats.takeScreenShot();
-                gameContext.updateScore(stats, this);
                 gameContext.playWinTransition(500, end -> gameContext.showRoundStats(stats, this));
             }
         });

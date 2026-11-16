@@ -182,9 +182,6 @@ public class Ninja implements GameLifeCycle {
           final NinjaCut cut, final NinjaEnd end, final NinjaTarget target, final double gameSeed) {
         this.gameContext = gameContext;
         this.configuration = gameContext.getConfiguration();
-        // The limits of score and of time of the settings
-        gameContext.startScoreLimiter();
-        gameContext.startTimeLimiter();
         this.stats = stats;
         this.trajectory = trajectory;
         this.speed = speed;
@@ -207,7 +204,6 @@ public class Ninja implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -241,7 +237,6 @@ public class Ninja implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
 
         if (target == NinjaTarget.MY_IMAGES) {
             userImages = UserImagesVariant.images(NinjaTarget.USER_IMAGES_FOLDER);
@@ -518,11 +513,6 @@ public class Ninja implements GameLifeCycle {
         playCutEffect();
         gameContext.getSoundManager().add("data/ninja/sounds/slice" + (1 + random.nextInt(3)) + ".wav");
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
-        if (phase != Phase.PLAY) {
-            // The limit of score of the settings has ended the game
-            return;
-        }
         showHud();
         adapt();
         if (end.getTargets() > 0 && cuts >= end.getTargets()) {
@@ -650,7 +640,6 @@ public class Ninja implements GameLifeCycle {
         phase = Phase.OVER;
         loop.stop();
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 

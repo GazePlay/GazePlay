@@ -143,7 +143,6 @@ class RaceTest {
         assertEquals(1, race.getCaught());
         assertEquals(1, race.getPlayer().hops);
         verify(stats, times(1)).incrementNumberOfGoalsReached();
-        verify(gameContext).updateScore(stats, race);
         assertTrue(texts(race).anyMatch(text -> text.equals("RaceCaught 1")));
     }
 

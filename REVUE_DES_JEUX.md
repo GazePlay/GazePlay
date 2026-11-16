@@ -56,13 +56,20 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    (Solution provisoire possible si besoin, à ne prendre que sur décision : monter la limite à 5 ou 6 Go.)
    **16/11 : étapes 1 à 4 faites, tests en local verts avec 3 Go** (détail dans « Mémoire des tests de
    `gazeplay-games` » plus bas) ; premier push (`9d876e2a8`) : plus de manque de mémoire, mais 1 échec (Survive) ;
-   libération différée de 10 s, tests en local verts, deuxième push et CI.
-2. Puis, dans l’ordre prévu après la revue : retrait des limiteurs ; test instable
+   libération différée de 10 s, tests en local verts, deuxième push (`97cf6f25f`) : **CI verte sur les 7 jobs** (run
+   `43840260631`, tests 11 min 30 sous Java 25 et 26). **Point 1 terminé.**
+2. Puis, dans l’ordre prévu après la revue : retrait des limiteurs (**16/11 : fait**, voir « Retrait des limiteurs »
+   plus bas) ; test instable
    `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26) ; refonte graphique du menu
    des jeux et de l’écran des statistiques ; modernisation du menu Échap (ancien engrenage), avec la réduction du menu
    en évaluation au volume et à Quitter (décision du 13/11, voir plus bas).
 3. Toujours à garder en tête : inventaire des sons (pas fait), notes de version 2.0 (images de l’utilisateur à
    remettre, pas de migration), fusion de `GazePlayLearning` et numéro de version après la modernisation.
+4. **À la fin des autres tâches** (recommandation du 16/11, acceptée par le mainteneur) : faire fermer leurs parties
+   (`dispose()`) à tous les tests qui en lancent (une quarantaine de classes de `gazeplay-games`, comme
+   `CasseBriqueTest`, `EggGameTest`, `SpaceGameTest`, `SprintFinishTest` le 16/11), puis revenir à la libération
+   immédiate des objets simulés dans `ClearMocksAfterEachClassListener` (594 Mo au plus haut au lieu de 1 462 Mo, voir
+   « Mémoire des tests de `gazeplay-games` »).
 
 ## REPRISE DU VENDREDI 13/11/2026 (bilan de la séance du jeudi 12/11/2026)
 
@@ -935,6 +942,48 @@ autre thread n'est pas libéré.
 `gazeplay-games` monte au plus à **1 462 Mo** (sonde à la fin de chaque classe, avant la libération différée des
 dernières classes ; marches : Échelle +884, Flower Of Numbers +510, Survive +498, Where Is It +430, Magic Potions
 +354), puis redescend : la mémoire reste bornée, avec une marge plus faible qu'avec la libération immédiate (594 Mo).
+
+## Retrait des limiteurs (16/11/2026, décision du mainteneur du 4/11/2026)
+
+**Fait** : les limiteurs de temps et de score des réglages (section Jeux, « Limiteur de Temps » et « Limiteur de
+Score ») sont retirés.
+- `IGameContext` et `GameContext` : `startScoreLimiter`, `startTimeLimiter`, `setLimiterAvailable`, `start`,
+  `firstStart`, `stop` (le chronomètre de la limite de temps) et `updateScore` (2 formes) ; leurs appels dans 18 jeux
+  (Bulles, Casse-brique, Egg Game, Flower Of Numbers, GazePlay Eval, Memory, Jeu de la taupe, Ninja, Opinions, Race,
+  Tir, La bataille de l’espace, Spot The Differences, Sprint Finish, Survive, Défendre le château, Où est… avec
+  `PictureCard`). Jeu de la taupe et Ninja : la garde « la limite de score a fini la partie » retirée avec.
+- Page des réglages : les 2 lignes et leurs constructeurs ; traductions « Limiter Time » et « Limiter Score » retirées
+  de `multilinguism.csv`.
+- `Configuration` : propriétés, valeurs par défaut, accesseurs des clés `LIMITER_TIME_ENABLED`, `LIMITER_TIME`,
+  `LIMITER_SCORE_ENABLED`, `LIMITER_SCORE`. **Anciens fichiers de réglages** : `ApplicationConfig` garde les clés
+  inconnues, un fichier avec ces clés se lit et s’enregistre, elles y restent sans servir (test
+  `ConfigurationTest.shouldKeepTheRemovedLimitersInTheFile`, clés ajoutées au fichier de test). Les correspondances
+  des anciennes clés `LIMITERS`/`LIMITERT` (`LegacyConfigurationKeys`) restent, comme `FILE_DIR`.
+- **Famille Où est…** (9 entrées) : les limiteurs étaient sa seule fin automatique. D’abord rendue sans fin, puis
+  **décision du mainteneur (16/11/2026)** : « comme les autres jeux », une fin dans les variantes, **5, 10 ou 15
+  écrans, ou sans fin** (`WhereIsItEnd`). Un écran compte quand sa bonne image est choisie ; au dernier, « Bravo » puis
+  les statistiques ; « Continuer » recommence une partie. Variantes en `GroupedGameVariant` (`WhereIsItVariants`) :
+  le thème en haut (interrupteur seulement quand le jeu en a plusieurs), la fin en dessous, les tailles en boutons ;
+  les thèmes et tailles de chaque jeu sont gardés (par exemple 31 pour Où est l’animal ?, 124 variantes avec les fins).
+  **Anciennes variantes** (`DimensionDifficultyGameVariant`, `DimensionGameVariant`, dans un raccourci ou une partie à
+  rejouer) : toujours lues, sans fin comme avant. Les 18 aides (français, anglais) décrivent la fin. Essayé par le
+  mainteneur (options, une partie de 5 écrans jusqu’aux statistiques) : validé. **Compteur** ensuite (demande du
+  mainteneur, « comme les autres jeux ») : pastille « Écrans 2 / 5 » (« Écrans 2 » sans fin) dans le coin gauche du
+  bandeau du bas, libre depuis le retrait de l’engrenage et déjà évité par la grille ; mise à jour dès qu’un écran est
+  trouvé (« 5 / 5 » pendant le « Bravo ») ; une ligne dans les aides.
+  Tests : `WhereIsItEndTest` (7, compteur compris) ; `allGamesTest -PallGamesOnly=WhereIsTheAnimal` (nouvelle variante) et `smokeTest`
+  (ancienne variante de Où est la forme ?) réussis. Le code de l’ancienne fenêtre des variantes propre à ces jeux
+  (`GameVariantDialog`, onglets des thèmes) ne sert plus, laissé tel quel.
+- **Aucun fichier de résultats ne change** : les limiteurs ne faisaient qu’arrêter la partie (« Bravo » puis les
+  statistiques).
+- Tests : `MolesTest.shouldStartTheLimitersOfTheSettings` retiré ; vérifications de `updateScore` retirées
+  (Flower Of Numbers, Race, Spot The Differences) ; `ConfigurationContextTest` vérifie que les 2 lignes ne sont plus là.
+
+**Vérifications (16/11, en local)** : compilation de tous les tests ; tests ciblés : `gazeplay-games-commons` 53,
+`gazeplay-commons` (configuration) 36 puis 31 après le nouveau test, `gazeplay-core` (réglages, contexte de jeu, aides,
+traductions) 101, `gazeplay-games` (les 18 jeux touchés) 286 : **0 échec** ; SpotBugs sans alerte sur les 4 modules.
+Reste : build complet et `all-games` sur la CI une fois poussé, essai du mainteneur (page des réglages, un jeu de la
+famille Où est…).
 
 ## Quatrième règle : la durée de fixation (demande du mainteneur du 4/11/2026, à la revue de Ninja)
 

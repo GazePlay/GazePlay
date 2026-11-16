@@ -323,16 +323,6 @@ class MolesTest {
         verify(gameContext, times(1)).playWinTransition(anyLong(), any());
     }
 
-    /**
-     * The limits of score and of time of the settings apply.
-     */
-    @Test
-    void shouldStartTheLimitersOfTheSettings() throws Exception {
-        launched(MolesLevel.EASY, MolesHit.AT_ONCE, MolesEnd.ENDLESS);
-        verify(gameContext).startScoreLimiter();
-        verify(gameContext).startTimeLimiter();
-    }
-
     @Test
     void shouldGiveTheVariantsWithMyImagesAndReadOnesOfBefore() {
         final Set<IGameVariant> variants = new MolesGameVariantGenerator().getVariants();

@@ -74,7 +74,9 @@ public class WhereIsIt implements GameLifeCycle {
     @Getter
     private final WhereIsItGameType gameType;
 
+    @Getter
     private final int nbLines;
+    @Getter
     private final int nbColumns;
 
     private int level = 1;
@@ -95,37 +97,109 @@ public class WhereIsIt implements GameLifeCycle {
 
     private final ArrayList<TargetAOI> targetAOIList;
 
+    /**
+     * The end of the game (16/11/2026): after a number of screens found, or without end.
+     */
+    @Getter
+    private final WhereIsItEnd end;
+
+    /**
+     * The screens found since the start of the game.
+     */
+    @Getter
+    private int screensFound;
+
+    /**
+     * Whether the last screen has been found: the next {@link #launch()} (the "continue" of the statistics) starts a new
+     * game.
+     */
+    private boolean ended;
+
+    /**
+     * The counter of the screens found, in the band (see {@link #showCounter()}).
+     */
+    private Group counterPill;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
                      final IGameContext gameContext, final Stats stats) {
+        this(gameType, nbLines, nbColumns, gameContext, stats, WhereIsItEnd.ENDLESS);
+    }
+
+    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
+                     final IGameContext gameContext, final Stats stats, final WhereIsItEnd end) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.gameType = gameType;
         this.stats = stats;
+        this.end = end;
         this.targetAOIList = new ArrayList<>();
-        this.gameContext.startScoreLimiter();
-        this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
     }
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
-                     final IGameContext gameContext, final Stats stats, double gameSeed) {
+                     final IGameContext gameContext, final Stats stats, final WhereIsItEnd end, double gameSeed) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.gameType = gameType;
         this.stats = stats;
+        this.end = end;
         this.targetAOIList = new ArrayList<>();
-        this.gameContext.startScoreLimiter();
-        this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+    }
+
+    /**
+     * Counts a screen found (its right picture chosen).
+     *
+     * @return whether it was the last screen of the game
+     */
+    boolean screenFound() {
+        screensFound++;
+        ended = end.getScreens() > 0 && screensFound >= end.getScreens();
+        showCounter();
+        return ended;
+    }
+
+    /**
+     * The screens found, as in the other games (16/11/2026): "Screens 2 / 5" ("Screens 2" without end), in the corner on
+     * the left of the band, which the grid leaves free.
+     */
+    private void showCounter() {
+        gameContext.getChildren().remove(counterPill);
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns).computeGameSizing(dimension);
+        final String text = gameContext.getTranslator().translate("WhereIsItScreens") + " " + screensFound
+            + (end.getScreens() > 0 ? " / " + end.getScreens() : "");
+        final double room = sizing.bandLeft() - 2 * sizing.gap();
+        final double font = sizing.bandHeight() * 0.18;
+        counterPill = GameStyle.pill(text, font);
+        final double pillWidth = counterPill.getLayoutBounds().getWidth();
+        if (pillWidth > room) {
+            counterPill = GameStyle.pill(text, font * room / pillWidth);
+        }
+        counterPill.setMouseTransparent(true);
+        counterPill.setLayoutX(sizing.gap());
+        counterPill.setLayoutY(sizing.bandTop() + (sizing.bandHeight()
+            - counterPill.getLayoutBounds().getHeight()) / 2);
+        gameContext.getChildren().add(counterPill);
+    }
+
+    /**
+     * @return the counter of the screens found (for the tests)
+     */
+    Group counter() {
+        return counterPill;
     }
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
-
+        if (ended) {
+            ended = false;
+            screensFound = 0;
+        }
+        showCounter();
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
@@ -167,7 +241,6 @@ public class WhereIsIt implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
 
         if (gameType.toString().contains("SOUNDS")) {
             gameContext.pauseBackgroundMusic();
@@ -307,6 +380,7 @@ public class WhereIsIt implements GameLifeCycle {
      */
     @Override
     public void dispose() {
+        gameContext.getChildren().remove(counterPill);
         if (replayButton != null) {
             replayButton.dispose();
             gameContext.getChildren().remove(replayButton);

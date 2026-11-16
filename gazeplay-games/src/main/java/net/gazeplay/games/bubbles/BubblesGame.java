@@ -177,7 +177,6 @@ public class BubblesGame implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -216,7 +215,6 @@ public class BubblesGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         nextPicture();
         for (int i = 0; i < BUBBLES; i++) {
             final Bubble bubble = new Bubble();
@@ -320,7 +318,6 @@ public class BubblesGame implements GameLifeCycle {
         splash(bubble);
         if (phase == Phase.PLAY) {
             stats.incrementNumberOfGoalsReached();
-            gameContext.updateScore(stats, this);
             final List<Tile> closed = tiles.stream().filter(pane -> !pane.open).toList();
             if (!closed.isEmpty()) {
                 closed.get(random.nextInt(closed.size())).open();

@@ -275,7 +275,6 @@ public class GazeplayEval implements GameLifeCycle {
         }
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
 
         if (definition == null) {
             showMessage();

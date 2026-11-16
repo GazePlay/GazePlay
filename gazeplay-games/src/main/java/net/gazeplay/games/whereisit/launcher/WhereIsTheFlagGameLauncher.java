@@ -4,9 +4,10 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.WhereIsIt;
+import net.gazeplay.games.whereisit.WhereIsItVariants;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -21,7 +22,7 @@ import java.util.LinkedList;
  * Creates the game "WhereIsTheFlag" and its statistics, for a new game or for the replay of a saved one (see
  * {@code IGameLauncher}).
  */
-public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
+public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new WhereIsItStats(scene, WhereIsItGameType.FLAGS_ALL.getGameName());
@@ -33,8 +34,8 @@ public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, Dimensio
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
+        WhereIsItGameType gameType = switch (WhereIsItVariants.theme(gameVariant, "")) {
             case "MostFamous" -> WhereIsItGameType.FLAGS_MOST_FAMOUS;
             case "Africa" -> WhereIsItGameType.FLAGS_AFRICA;
             case "America" -> WhereIsItGameType.FLAGS_AMERICA;
@@ -42,12 +43,14 @@ public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, Dimensio
             case "Europe" -> WhereIsItGameType.FLAGS_EUROPE;
             default -> WhereIsItGameType.FLAGS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats);
+        return new WhereIsIt(gameType, WhereIsItVariants.lines(gameVariant),
+            WhereIsItVariants.columns(gameVariant), gameContext, stats,
+            WhereIsItVariants.end(gameVariant));
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
+        WhereIsItGameType gameType = switch (WhereIsItVariants.theme(gameVariant, "")) {
             case "MostFamous" -> WhereIsItGameType.FLAGS_MOST_FAMOUS;
             case "Africa" -> WhereIsItGameType.FLAGS_AFRICA;
             case "America" -> WhereIsItGameType.FLAGS_AMERICA;
@@ -55,6 +58,8 @@ public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, Dimensio
             case "Europe" -> WhereIsItGameType.FLAGS_EUROPE;
             default -> WhereIsItGameType.FLAGS_ALL;
         };
-        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), gameContext, stats, gameSeed);
+        return new WhereIsIt(gameType, WhereIsItVariants.lines(gameVariant),
+            WhereIsItVariants.columns(gameVariant), gameContext, stats,
+            WhereIsItVariants.end(gameVariant), gameSeed);
     }
 }

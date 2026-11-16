@@ -157,7 +157,6 @@ public class CasseBrique implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -225,7 +224,6 @@ public class CasseBrique implements GameLifeCycle {
         waiting = FIRST_WAIT;
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         phase = Phase.PLAY;
         placePaddle();
         placeBallOnPaddle();
@@ -428,7 +426,6 @@ public class CasseBrique implements GameLifeCycle {
             veil.setOpacity(VEIL_OPACITY * (1 - broken / (double) Math.max(1, toBreak)));
         }
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         showHud();
         if (bricks.isEmpty()) {
             win();
@@ -478,7 +475,6 @@ public class CasseBrique implements GameLifeCycle {
         phase = Phase.OVER;
         loop.stop();
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 
@@ -490,7 +486,6 @@ public class CasseBrique implements GameLifeCycle {
         loop.stop();
         ball.setVisible(false);
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         final Group card = GameStyle.card(gameContext.getTranslator().translate("CasseBriqueLost"), height * 0.06,
             width * 0.6);
         card.setLayoutX(width / 2 - card.getBoundsInLocal().getWidth() / 2);

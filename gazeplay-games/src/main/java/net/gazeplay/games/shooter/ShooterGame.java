@@ -156,7 +156,6 @@ public class ShooterGame implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -203,7 +202,6 @@ public class ShooterGame implements GameLifeCycle {
         timeLeft = end.getSeconds();
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         phase = Phase.PLAY;
         placeBox();
         for (int i = 0; i < TARGETS; i++) {
@@ -309,7 +307,6 @@ public class ShooterGame implements GameLifeCycle {
         target.stopFixation();
         score++;
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         gameContext.getSoundManager().add(path("sounds/shot" + (1 + random.nextInt(3)) + ".wav"));
         aimAt(target.x, target.y);
         gunShot.setOpacity(1);
@@ -331,7 +328,6 @@ public class ShooterGame implements GameLifeCycle {
         loop.stop();
         targets.forEach(Target::stopFixation);
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 

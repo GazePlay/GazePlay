@@ -160,7 +160,6 @@ public class EggGame implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -198,7 +197,6 @@ public class EggGame implements GameLifeCycle {
         });
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         newEgg();
     }
 
@@ -350,7 +348,6 @@ public class EggGame implements GameLifeCycle {
         }
         cracks++;
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         if (cracks >= steps) {
             hatch();
             return;

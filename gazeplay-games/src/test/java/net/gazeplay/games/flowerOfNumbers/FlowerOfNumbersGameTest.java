@@ -228,7 +228,6 @@ class FlowerOfNumbersGameTest {
         }
         verify(gameContext.getSoundManager(), times(5)).add(FlowerOfNumbersGame.PETAL_SOUND);
         verify(stats).incrementNumberOfGoalsReached();
-        verify(gameContext).updateScore(any(), any());
         verify(gameContext).playWinTransition(anyLong(), any());
         assertTrue(game.getChoices().values().stream().flatMap(List::stream).noneMatch(ValueTarget::isEnabled));
     }

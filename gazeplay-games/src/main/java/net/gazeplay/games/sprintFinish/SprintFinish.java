@@ -209,7 +209,6 @@ public class SprintFinish implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double width = dimension.getWidth();
         final double height = dimension.getHeight();
@@ -244,7 +243,6 @@ public class SprintFinish implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         index = 0;
         startMap();
         if (!manual) {
@@ -579,7 +577,6 @@ public class SprintFinish implements GameLifeCycle {
             phase = Phase.OVER;
             loop.stop();
             stats.takeScreenShot();
-            gameContext.updateScore(stats, this);
             gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
         } else {
             index++;

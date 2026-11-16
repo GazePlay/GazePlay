@@ -172,16 +172,17 @@ class ConfigurationContextTest {
                 "SettingsFolders", "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));
             assertEquals(Utils.isWindows(), has(sections, "CreateShortcut"));
-            // Games: question length, reask on fail, reward sound, limiters (no quit key: the menu button leaves a game;
-            // no color of the piano tiles since the review of the Piano, 13/11/2026: its keys have their colors)
+            // Games: question length, reask on fail, reward sound (no quit key: the menu button leaves a game; no color
+            // of the piano tiles since the review of the Piano, 13/11/2026: its keys have their colors; no time and score
+            // limiters since 16/11/2026)
             assertFalse(has(sections, "QuitKey"));
+            assertFalse(has(sections, "Limiter Time"));
+            assertFalse(has(sections, "Limiter Score"));
             assertFalse(has(sections, "PianoTileColors"));
             assertInstanceOf(Spinner.class, control(sections, "QuestionLength"));
             assertInstanceOf(Spinner.class, control(sections, "GameStartDelay"));
             assertInstanceOf(CheckBox.class, control(sections, "ReaskQuestionOnFail"));
             assertInstanceOf(CheckBox.class, control(sections, "EnableRewardSound"));
-            assertInstanceOf(HBox.class, control(sections, "Limiter Time"));
-            assertInstanceOf(HBox.class, control(sections, "Limiter Score"));
             // Eye tracker, fixation length
             assertInstanceOf(ChoiceBox.class, control(sections, "EyeTracker"));
             assertInstanceOf(Spinner.class, control(sections, "FixationLength"));

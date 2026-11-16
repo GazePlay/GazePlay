@@ -213,7 +213,6 @@ public class SurviveAgainstRobots implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -271,7 +270,6 @@ public class SurviveAgainstRobots implements GameLifeCycle {
         spawnWait = 0.5;
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
         phase = Phase.PLAY;
         placePlayer();
         showHud();
@@ -544,7 +542,6 @@ public class SurviveAgainstRobots implements GameLifeCycle {
         gameContext.getSoundManager().add("data/shooter/biboule/sounds/shot" + (1 + random.nextInt(3)) + ".wav");
         destroyed++;
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         if (random.nextDouble() < BONUS_CHANCE) {
             final List<BonusKind> kinds = new ArrayList<>(List.of(BonusKind.FIRE, BonusKind.SHIELD, BonusKind.SLOW));
             if (lives < LIVES) {
@@ -676,7 +673,6 @@ public class SurviveAgainstRobots implements GameLifeCycle {
         }
         stopPlaying();
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 
@@ -692,7 +688,6 @@ public class SurviveAgainstRobots implements GameLifeCycle {
         shieldBubble.setVisible(false);
         flash(playerFlash, playerX, playerY, playerSize);
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         final Group card = GameStyle.card(gameContext.getTranslator().translate("SurviveLost"), height * 0.06,
             width * 0.6);
         card.setLayoutX(width / 2 - card.getBoundsInLocal().getWidth() / 2);

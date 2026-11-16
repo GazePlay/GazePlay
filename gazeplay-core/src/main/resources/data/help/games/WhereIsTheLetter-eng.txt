@@ -9,9 +9,11 @@ A letter is asked for: find it among the others.
 # How to win
 - Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
 - Wrong answer: the picture is crossed out and greyed; look again (the question is said again if the settings ask for it).
-- The game does not stop by itself: leave by the menu (Esc key), or set a time or score limit in the settings (Games section).
+- Depending on the variant, the game stops after 5, 10 or 15 screens found: "Bravo", then the statistics; without end, leave by the menu (Esc key).
+- At the bottom left, the counter shows the screens found.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - At the bottom, the letters: Vowels, Consonants or All letters.
 - The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.
+- At the bottom, the end of the game: 5, 10 or 15 screens, or without end.

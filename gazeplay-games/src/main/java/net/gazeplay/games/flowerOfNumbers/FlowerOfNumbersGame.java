@@ -181,7 +181,6 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         won = false;
         wasOver = false;
         flower.init();
@@ -214,7 +213,6 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         stats.incrementNumberOfGoalsToReach();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
     }
 
     @Override
@@ -681,7 +679,6 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
             gameContext.getSoundManager().add(PETAL_SOUND);
         }
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> {
             dispose();
             gameContext.clear();

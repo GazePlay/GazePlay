@@ -108,14 +108,12 @@ public class Memory implements GameLifeCycle {
 
     public Memory(final IGameContext gameContext, final Stats stats, final GroupedGameVariant variant) {
         this(gameContext, stats, variant, new ReplayablePseudoRandom());
-        this.gameContext.startTimeLimiter();
         this.stats.setGameSeed(random.getSeed());
     }
 
     public Memory(final IGameContext gameContext, final Stats stats, final GroupedGameVariant variant,
                   final double gameSeed) {
         this(gameContext, stats, variant, new ReplayablePseudoRandom(gameSeed));
-        this.gameContext.startTimeLimiter();
     }
 
     private Memory(final IGameContext gameContext, final Stats stats, final GroupedGameVariant variant,
@@ -145,7 +143,6 @@ public class Memory implements GameLifeCycle {
         comparing = false;
         pairsFound = 0;
         tries = 0;
-        gameContext.setLimiterAvailable();
         dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle background = new Rectangle(dimension.getWidth(), dimension.getHeight());
@@ -346,7 +343,6 @@ public class Memory implements GameLifeCycle {
             }
             adaptLevel();
         }
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> {
             dispose();
             gameContext.clear();

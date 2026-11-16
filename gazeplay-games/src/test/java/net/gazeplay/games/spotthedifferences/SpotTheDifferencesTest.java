@@ -215,7 +215,6 @@ class SpotTheDifferencesTest {
         final ArgumentCaptor<javafx.event.EventHandler<javafx.event.ActionEvent>> next =
             ArgumentCaptor.forClass(javafx.event.EventHandler.class);
         verify(gameContext).playWinTransition(anyLong(), next.capture());
-        verify(gameContext).updateScore(any(), any());
         WaitForAsyncUtils.asyncFx(() -> next.getValue().handle(null)).get();
         assertNotEquals(scene, game.getScene());
         assertEquals(3, game.getDifferences().stream().filter(d -> !d.isFound()).count());

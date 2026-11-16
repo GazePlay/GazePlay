@@ -105,7 +105,6 @@ public class Race extends Parent implements GameLifeCycle {
 
     public Race(final IGameContext gameContext, final Stats stats, final RaceVariant variant) {
         this(gameContext, stats, variant, new ReplayablePseudoRandom());
-        this.gameContext.startTimeLimiter();
         this.stats.setGameSeed(random.getSeed());
     }
 
@@ -133,7 +132,6 @@ public class Race extends Parent implements GameLifeCycle {
         bugs.clear();
         racers.clear();
         dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        gameContext.setLimiterAvailable();
 
         getChildren().add(createBackground());
         createLanes();
@@ -147,7 +145,6 @@ public class Race extends Parent implements GameLifeCycle {
         if (!gameContext.getChildren().contains(this)) {
             gameContext.getChildren().add(this);
         }
-        gameContext.start();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.setOffFixationLengthControl();
@@ -415,7 +412,6 @@ public class Race extends Parent implements GameLifeCycle {
         play(shot);
 
         hop(player);
-        gameContext.updateScore(stats, this);
     }
 
     // ----------------------------------------------------------------------------------------------------------------

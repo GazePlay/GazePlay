@@ -148,9 +148,6 @@ public class Moles implements GameLifeCycle {
           final MolesHit hit, final MolesEnd end, final double gameSeed) {
         this.gameContext = gameContext;
         this.configuration = gameContext.getConfiguration();
-        // The limits of score and of time of the settings
-        gameContext.startScoreLimiter();
-        gameContext.startTimeLimiter();
         this.stats = stats;
         this.target = target;
         this.level = level;
@@ -166,7 +163,6 @@ public class Moles implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -191,7 +187,6 @@ public class Moles implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
-        gameContext.firstStart();
 
         if (target == MolesTarget.MY_IMAGES) {
             userImages = UserImagesVariant.images(MolesTarget.USER_IMAGES_FOLDER);
@@ -322,11 +317,6 @@ public class Moles implements GameLifeCycle {
         gameContext.getSoundManager().add("data/whackmole/sounds/hit" + (1 + random.nextInt(2)) + ".wav");
         playStar(hole);
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
-        if (phase != Phase.PLAY) {
-            // The limit of score of the settings has ended the game
-            return;
-        }
         showHud();
         if (end.getTargets() > 0 && hits >= end.getTargets()) {
             win();
@@ -395,7 +385,6 @@ public class Moles implements GameLifeCycle {
         loop.stop();
         holes.forEach(Hole::stopRing);
         stats.takeScreenShot();
-        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, event -> gameContext.showRoundStats(stats, this));
     }
 

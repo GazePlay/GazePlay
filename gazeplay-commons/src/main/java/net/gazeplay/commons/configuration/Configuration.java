@@ -44,10 +44,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_GAME_START_DELAY = "GAME_START_DELAY";
     private static final String PROPERTY_NAME_QUESTION_REASKED_ON_FAIL = "QUESTION_REASKED_ON_FAIL";
     private static final String PROPERTY_NAME_REWARD_SOUND_ENABLED = "REWARD_SOUND_ENABLED";
-    private static final String PROPERTY_NAME_LIMITER_TIME_ENABLED = "LIMITER_TIME_ENABLED";
-    private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
-    private static final String PROPERTY_NAME_LIMITER_SCORE_ENABLED = "LIMITER_SCORE_ENABLED";
-    private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
+    // LIMITER_TIME_ENABLED, LIMITER_TIME, LIMITER_SCORE_ENABLED and LIMITER_SCORE (time and score limiters) removed on
+    // 16/11/2026: ApplicationConfig keeps the unknown keys, an older file is read and saved with them, unused
     /* Settings of the evaluations (GazePlay Eval) */
     private static final String PROPERTY_NAME_TRANSITION_TIME = "TRANSITION_TIME";
     private static final String PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME = "DELAY_BEFORE_SELECTION_TIME";
@@ -103,10 +101,6 @@ public class Configuration {
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_QUESTION_REASKED_ON_FAIL = true;
     private static final boolean DEFAULT_VALUE_REWARD_SOUND_ENABLED = true;
-    private static final boolean DEFAULT_VALUE_LIMITER_TIME_ENABLED = false;
-    private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
-    private static final boolean DEFAULT_VALUE_LIMITER_SCORE_ENABLED = false;
-    private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
     /* Settings of the evaluations (GazePlay Eval) */
     private static final int DEFAULT_VALUE_TRANSITION_TIME = 2000;
     private static final int DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME = 1000;
@@ -166,14 +160,6 @@ public class Configuration {
     private final BooleanProperty questionReaskedOnFailProperty;
     @Getter
     private final BooleanProperty rewardSoundEnabledProperty;
-    @Getter
-    private final BooleanProperty limiterTimeEnabledProperty;
-    @Getter
-    private final IntegerProperty limiterTimeProperty;
-    @Getter
-    private final BooleanProperty limiterScoreEnabledProperty;
-    @Getter
-    private final IntegerProperty limiterScoreProperty;
     /* Settings of the evaluations (GazePlay Eval) */
     @Getter
     private final IntegerProperty transitionTimeProperty;
@@ -287,10 +273,6 @@ public class Configuration {
         questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
         questionReaskedOnFailProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_REASKED_ON_FAIL, DEFAULT_VALUE_QUESTION_REASKED_ON_FAIL, propertyChangeListener);
         rewardSoundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REWARD_SOUND_ENABLED, DEFAULT_VALUE_REWARD_SOUND_ENABLED, propertyChangeListener);
-        limiterTimeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME_ENABLED, DEFAULT_VALUE_LIMITER_TIME_ENABLED, propertyChangeListener);
-        limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
-        limiterScoreEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE_ENABLED, DEFAULT_VALUE_LIMITER_SCORE_ENABLED, propertyChangeListener);
-        limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
         tileColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_TILE_COLORS, DEFAULT_VALUE_TILE_COLORS, propertyChangeListener);
 
         /* Settings of the evaluations (GazePlay Eval) */
@@ -434,22 +416,6 @@ public class Configuration {
 
     public Boolean isRewardSoundEnabled() {
         return rewardSoundEnabledProperty.getValue();
-    }
-
-    public boolean isLimiterTimeEnabled() {
-        return limiterTimeEnabledProperty.getValue();
-    }
-
-    public int getLimiterTime() {
-        return limiterTimeProperty.getValue();
-    }
-
-    public boolean isLimiterScoreEnabled() {
-        return limiterScoreEnabledProperty.getValue();
-    }
-
-    public int getLimiterScore() {
-        return limiterScoreProperty.getValue();
     }
 
     /* Settings of the evaluations (GazePlay Eval) */
@@ -646,16 +612,6 @@ public class Configuration {
 
     public void setCountry(final String country) {
         countryProperty.setValue(country);
-    }
-
-    /* Game settings */
-
-    public void setLimiterScore(final int limiterScore) {
-        limiterScoreProperty.setValue(limiterScore);
-    }
-
-    public void setLimiterTime(final int limiterTime) {
-        limiterTimeProperty.setValue(limiterTime);
     }
 
     /* Eye-tracking settings */

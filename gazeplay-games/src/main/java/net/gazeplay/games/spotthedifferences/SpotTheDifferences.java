@@ -108,7 +108,6 @@ public class SpotTheDifferences implements GameLifeCycle {
         } else {
             this.random = new ReplayablePseudoRandom(gameSeed);
         }
-        this.gameContext.startTimeLimiter();
         instances = (JsonArray) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(FOLDER + "instances.json")),
             StandardCharsets.UTF_8));
@@ -117,7 +116,6 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
         dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         differences.clear();
         found = 0;
@@ -186,7 +184,6 @@ public class SpotTheDifferences implements GameLifeCycle {
         stats.incrementNumberOfGoalsToReach(differences.size());
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
     }
 
     private void addPicture(final Image image, final double x, final double y, final double side) {
@@ -225,7 +222,6 @@ public class SpotTheDifferences implements GameLifeCycle {
         if (found == differences.size()) {
             hintTimer.stop();
             nextButton.setEnabled(false);
-            gameContext.updateScore(stats, this);
             gameContext.playWinTransition(500, event -> {
                 dispose();
                 gameContext.clear();
