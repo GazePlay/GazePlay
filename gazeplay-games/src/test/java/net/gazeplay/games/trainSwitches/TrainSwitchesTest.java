@@ -354,6 +354,36 @@ class TrainSwitchesTest {
         verify(gameContext.getSoundManager()).add("data/trainSwitches/sounds/wrong.wav");
     }
 
+    /**
+     * 3 lives with an end (maintainer's request of 16/11/2026): a train at a wrong station costs one, the third loses
+     * the game ("Lost!", then the statistics); none without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachWrongStationThenTheGame() throws Exception {
+        final TrainSwitches game = playing(TrainSwitchesLevel.EASY, TrainSwitchesRhythm.ONE_AT_A_TIME,
+            TrainSwitchesEnd.TRAINS_10, 7);
+        assertTrue(game.hasLives());
+        sendOne(game, true);
+        assertEquals(TrainSwitches.LIVES, game.getLives());
+        for (int wrong = 1; wrong <= 3; wrong++) {
+            sendOne(game, false);
+            assertEquals(TrainSwitches.LIVES - wrong, game.getLives());
+        }
+        assertEquals(TrainSwitches.Phase.LOST, game.getPhase());
+        verify(gameContext, never()).showRoundStats(any(), any());
+        steps(game, TrainSwitches.LOST_SHOWN + 0.1);
+        assertEquals(TrainSwitches.Phase.OVER, game.getPhase());
+        verify(gameContext).showRoundStats(stats, game);
+
+        final TrainSwitches endless = playing(TrainSwitchesLevel.EASY, TrainSwitchesRhythm.ONE_AT_A_TIME,
+            TrainSwitchesEnd.ENDLESS, 7);
+        assertFalse(endless.hasLives());
+        for (int wrong = 1; wrong <= 3; wrong++) {
+            sendOne(endless, false);
+        }
+        assertNotEquals(TrainSwitches.Phase.LOST, endless.getPhase());
+    }
+
     @Test
     void shouldChangeASwitchAfterAFixationOfTheLengthOfTheSettingsReadAtEachStep() throws Exception {
         final TrainSwitches game = playing(TrainSwitchesLevel.NORMAL, TrainSwitchesRhythm.ONE_AT_A_TIME,

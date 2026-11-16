@@ -986,6 +986,12 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    perdu si le train arrive à la mauvaise gare), **Point par point** (si l'ordre n'est pas bon), **Bouteille** (si la
    bouteille touchée n'est pas celle montrée), **Identifier les lettres**, **Échelle**, **Cartes magiques** (règles à
    préciser pour ces trois-là).
+   **Aiguillages, 16/11 : fait, non commité** (règle donnée par le mainteneur, même logique) : 3 cœurs avec 5, 10 ou
+   20 trains (`TrainSwitches.LIVES`, `hasLives`), en haut à gauche (le circuit commence à 11 % de la hauteur) ; un
+   train à une mauvaise gare en coûte un (croix rouge et erreur comptée inchangées) ; plus de cœurs : étape `LOST`,
+   tout s'arrête (les autres trains aussi), « Perdu ! » 2 s puis les statistiques ; sans fin : pas de cœurs.
+   Traduction `TrainSwitchesLost`, aides. Test `TrainSwitchesTest.shouldLoseALifeAtEachWrongStationThenTheGame` ;
+   `allGamesTest` réussi. Reste : essai du mainteneur.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 

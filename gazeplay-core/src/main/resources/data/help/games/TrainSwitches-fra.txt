@@ -12,7 +12,7 @@ Des trains de couleur sortent du tunnel : envoie chacun à la gare de sa couleur
 - Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Un train arrivé à la bonne gare compte un point (une coche verte). À une mauvaise gare, c'est une erreur (une croix rouge), et la partie continue. Tous les 5 trains, un nouveau circuit arrive. Après 5, 10 ou 20 trains, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+Un train arrivé à la bonne gare compte un point (une coche verte). À une mauvaise gare, c'est une erreur (une croix rouge). Avec 5, 10 ou 20 trains, tu as 3 cœurs en haut à gauche : chaque train arrivé à une mauvaise gare en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n'y a pas de cœurs et la partie continue. Tous les 5 trains, un nouveau circuit arrive. Après 5, 10 ou 20 trains, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

@@ -108,7 +108,17 @@ public class TrainSwitches implements GameLifeCycle {
     private static final Color RAIL = Color.rgb(112, 114, 126);
     private static final Color WAY = Color.rgb(92, 64, 44);
 
-    enum Phase { WAIT, PLAY, CHANGE, OVER }
+    enum Phase { WAIT, PLAY, CHANGE, LOST, OVER }
+
+    /**
+     * The lives of a game with an end (maintainer's request of 16/11/2026): a train at a wrong station costs one.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -147,6 +157,9 @@ public class TrainSwitches implements GameLifeCycle {
     private int arrived;
     @Getter
     private int right;
+    @Getter
+    private int lives = LIVES;
+    private double lostTime;
     private int sentHere;
     private int arrivedHere;
     private int quota;
@@ -269,6 +282,7 @@ public class TrainSwitches implements GameLifeCycle {
         sent = 0;
         arrived = 0;
         right = 0;
+        lives = LIVES;
         newCircuit();
         if (!manual) {
             loop.start();
@@ -558,6 +572,14 @@ public class TrainSwitches implements GameLifeCycle {
                     elapsed += seconds;
                 }
             }
+            case LOST -> {
+                lostTime += seconds;
+                if (lostTime >= LOST_SHOWN) {
+                    phase = Phase.OVER;
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
+                }
+            }
             case CHANGE -> {
                 elapsed += seconds;
                 if (elapsed >= JOY) {
@@ -736,6 +758,9 @@ public class TrainSwitches implements GameLifeCycle {
     private void arrive(final Train train) {
         trains.remove(train);
         trainsLayer.getChildren().remove(train.node);
+        if (phase == Phase.LOST || phase == Phase.OVER) {
+            return;
+        }
         arrived++;
         arrivedHere++;
         clock = 0;
@@ -748,11 +773,18 @@ public class TrainSwitches implements GameLifeCycle {
         } else {
             stats.incrementNumberOfMistakes();
             gameContext.getSoundManager().add(SOUNDS + "wrong.wav");
+            if (hasLives()) {
+                lives = Math.max(0, lives - 1);
+            }
         }
         final Mark mark = new Mark(circuit.getStations().get(train.toStation), correct);
         marks.add(mark);
         marksLayer.getChildren().add(mark.node);
         showHud();
+        if (hasLives() && lives == 0) {
+            lose();
+            return;
+        }
         if (arrivedHere >= quota) {
             phase = Phase.CHANGE;
             elapsed = 0;
@@ -873,6 +905,38 @@ public class TrainSwitches implements GameLifeCycle {
         count.setLayoutX((width - total) / 2 + good.getBoundsInLocal().getWidth() + gap);
         count.setLayoutY(height * 0.02);
         hud.getChildren().addAll(good, count);
+        if (hasLives()) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+        }
+    }
+
+    /**
+     * @return whether the game has lives: a game with an end (none without end)
+     */
+    boolean hasLives() {
+        return end.getTrains() > 0;
+    }
+
+    /**
+     * No life left: everything stops, "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        phase = Phase.LOST;
+        lostTime = 0;
+        looked = null;
+        progress = 0;
+        ring.stop();
+        halo.setVisible(false);
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("TrainSwitchesLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        hud.getChildren().add(lost);
     }
 
     private void win() {
