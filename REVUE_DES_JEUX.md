@@ -55,7 +55,8 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    5. tests en local, puis push sur accord et **CI verte sur les 7 jobs**.
    (Solution provisoire possible si besoin, à ne prendre que sur décision : monter la limite à 5 ou 6 Go.)
    **16/11 : étapes 1 à 4 faites, tests en local verts avec 3 Go** (détail dans « Mémoire des tests de
-   `gazeplay-games` » plus bas) ; reste le push sur accord et la CI.
+   `gazeplay-games` » plus bas) ; premier push (`9d876e2a8`) : plus de manque de mémoire, mais 1 échec (Survive) ;
+   libération différée de 10 s, tests en local verts, deuxième push et CI.
 2. Puis, dans l’ordre prévu après la revue : retrait des limiteurs ; test instable
    `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26) ; refonte graphique du menu
    des jeux et de l’écran des statistiques ; modernisation du menu Échap (ancien engrenage), avec la réduction du menu
@@ -915,7 +916,25 @@ reprise du 16/11). Sonde temporaire (même mesure que le 4/11, retirée ensuite)
 
 **Vérifications (16/11, en local, Java 25, 3 Go)** : `gazeplay-commons` 192 tests, `gazeplay-core` 305,
 `gazeplay-games` 712 : **0 échec**. Avec la libération et les parties fermées, `gazeplay-games` finit à **594 Mo** au
-plus haut (sonde, avant son retrait). Reste : push sur accord et CI verte sur les 7 jobs.
+plus haut (sonde, avant son retrait). Commité et poussé (`9d876e2a8`).
+
+**CI du 16/11 (run `43834092412`) : pas verte.** Plus d'`OutOfMemoryError`, les 712 tests vont au bout (10-11 min), mais
+**1 échec sous Java 25 et 26** : `DisabledMockException` dans `TicTacToeTest`, venu de Survive (`lose`, pause de 2 s,
+`SurviveAgainstRobots.java:702`), une partie non fermée par son test. Pas vu en local (PC plus rapide). **Fait** :
+une quarantaine de classes de tests lancent des parties sans toujours les fermer ; les corriger une à une à mesure que
+la CI les trouve serait fragile (question de vitesse de la machine).
+
+**Correction** : `ClearMocksAfterEachClassListener` ne libère plus tout à la fin de chaque classe. Il suit les objets
+simulés créés (`MockCreationListener` de Mockito, sur le thread des tests et sur celui de JavaFX, où naissent souvent
+les objets des « deep stubs ») et libère ceux d'une classe (`clearInlineMock`) à la fin d'une classe suivante, une fois
+**10 s** passées depuis la fin de la leur : une pause restée en route (2 ou 3 s) se déclenche sur des objets encore
+valides, comme avant le 16/11. Les 4 tests corrigés le matin gardent leurs fermetures. Un objet simulé créé sur un
+autre thread n'est pas libéré.
+
+**Vérifications (en local, 3 Go)** : `gazeplay-commons` 192, `gazeplay-core` 305, `gazeplay-games` 712 : **0 échec**.
+`gazeplay-games` monte au plus à **1 462 Mo** (sonde à la fin de chaque classe, avant la libération différée des
+dernières classes ; marches : Échelle +884, Flower Of Numbers +510, Survive +498, Where Is It +430, Magic Potions
++354), puis redescend : la mémoire reste bornée, avec une marge plus faible qu'avec la libération immédiate (594 Mo).
 
 ## Quatrième règle : la durée de fixation (demande du mainteneur du 4/11/2026, à la revue de Ninja)
 
