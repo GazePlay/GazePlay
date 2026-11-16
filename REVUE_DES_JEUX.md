@@ -5,6 +5,42 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU MARDI 17/11/2026 (bilan de la séance du lundi 16/11/2026)
+
+**Fait le lundi 16/11/2026** (détail dans les sections en bas), tout commité et poussé (dernier push : `b33d45d97`) :
+- **Mémoire des tests** (`9d876e2a8`, `97cf6f25f`) : objets simulés de Mockito libérés 10 s après la fin de leur
+  classe (`ClearMocksAfterEachClassListener`), 4 tests ferment leur partie, tests à 3 Go ; CI de nouveau verte.
+- **Retrait des limiteurs** de temps et de score (`a127cc8cf`) ; la famille Où est… a reçu une fin (5, 10, 15 écrans
+  ou sans fin) et un compteur.
+- **Test instable de GazePlay Eval corrigé** (`e6334b379`) : la scène est parcourue sur le fil JavaFX.
+- **Refonte de l'écran des statistiques** (`31396e971`) : maquette A, mode simple et mode avancé, cartes de chaleur
+  sur fond blanc.
+- **3 cœurs dans 9 jeux** (« Vies dans d'autres jeux »), un commit par jeu, chacun essayé et validé : famille Où est…
+  (`065a087c7`), Mélanger les couleurs (`cad950d89`), La Fabrique à gâteaux (`4b1bd7457`, gâteau vérifié une fois
+  fini), Aiguillages (`f178898b9`), Point par point (`909130a1d`), La bonne couleur (`f75cc81a6`), Identifier les
+  lettres (`080f5b365`, carte fausse bloquée, bulle pour réécouter), Échelle (`4539e04ab`, départ essayé bloqué),
+  Cartes magiques (`f78963181`, en Magique seulement). Memory : cœurs abandonnés (décision du mainteneur).
+- **Option « Avec cœurs / Sans cœurs »** (`b33d45d97`, validée) : mécanisme commun `LivesVariant`, fenêtre des
+  variantes qui ne montre une ligne qu'avec les valeurs possibles après les choix du dessus, appliquée aux 9 jeux
+  ci-dessus, guides français et anglais mis à jour.
+- **CI du push de 17 h 15** (run `43905440185`) : **verte sur les 7 jobs** (13 min).
+
+**Ordre du jour du mardi 17/11/2026** :
+1. **Option « Avec cœurs / Sans cœurs » dans les 12 jeux plus anciens**, de la même manière que `b33d45d97`, un jeu
+   à la fois : choix en dernier supplément de la variante (`LivesVariant.options(...)`, seulement là où les cœurs
+   existent), `setWithLives` du jeu lu par le lanceur, guides français et anglais (phrase des cœurs, phrase « Sans
+   cœurs », ligne de variante), tests ciblés (nombre de variantes, « Avec » et « Sans »), `allGamesTest` du jeu ;
+   essai du mainteneur, puis commit. Jeux : Biboule Jump, Casse-brique, Course du regard, La bataille de l'espace,
+   Survivre contre des robots, Défendre le château, Gobelets Pass Pass, Magic Potions, Dés, Apprends les Maths,
+   Ordre, Répète après moi. **À signaler avant de coder** : les jeux où la partie ne finit que par la perte des vies
+   (surtout les jeux d'action) ; il faudra une autre fin en « Sans cœurs » (proposition à valider par jeu).
+2. Puis pousser le groupe et vérifier la CI.
+3. **Après les vies** : retirer le bouton « Continuer » de l'écran des statistiques (demande du 16/11).
+4. Ensuite : écrans **Zones d'intérêt** et **Parcours du regard** dans le style du nouvel écran des statistiques ;
+   refonte graphique du menu des jeux ; modernisation du menu Échap (réduit au volume et à Quitter en évaluation).
+5. À la fin : faire fermer leurs parties à tous les tests, puis libération immédiate des objets simulés ; inventaire
+   des sons ; notes de version 2.0.
+
 ## REPRISE DU LUNDI 16/11/2026 (bilan de la séance du vendredi 13/11/2026)
 
 **Fait le vendredi 13/11/2026** (détail dans les fiches en bas) — **la revue des jeux est terminée** :
