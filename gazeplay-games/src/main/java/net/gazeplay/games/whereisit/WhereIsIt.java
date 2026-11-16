@@ -3,6 +3,7 @@ package net.gazeplay.games.whereisit;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
@@ -120,6 +121,33 @@ public class WhereIsIt implements GameLifeCycle {
      */
     private Group counterPill;
 
+    /**
+     * The lives at the start of a game with an end (maintainer's request of 16/11/2026): a wrong picture costs one.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * The lives left; none are shown without end.
+     */
+    @Getter
+    private int lives = LIVES;
+
+    /**
+     * Whether the game is lost: no life left, "Lost!" then the statistics.
+     */
+    @Getter
+    private boolean lost;
+
+    private Group livesGroup;
+
+    private Group replayHint;
+
+    private PauseTransition hintPause;
+
+    private ScaleTransition replayPulse;
+
+    private PauseTransition lostPause;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
                      final IGameContext gameContext, final Stats stats) {
         this(gameType, nbLines, nbColumns, gameContext, stats, WhereIsItEnd.ENDLESS);
@@ -169,7 +197,7 @@ public class WhereIsIt implements GameLifeCycle {
     private void showCounter() {
         gameContext.getChildren().remove(counterPill);
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns).computeGameSizing(dimension);
+        final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns, hasLives()).computeGameSizing(dimension);
         final String text = gameContext.getTranslator().translate("WhereIsItScreens") + " " + screensFound
             + (end.getScreens() > 0 ? " / " + end.getScreens() : "");
         final double room = sizing.bandLeft() - 2 * sizing.gap();
@@ -193,13 +221,144 @@ public class WhereIsIt implements GameLifeCycle {
         return counterPill;
     }
 
+    /**
+     * @return whether the game has lives: a variant with an end (none without end, maintainer's decision)
+     */
+    boolean hasLives() {
+        return end.getScreens() > 0;
+    }
+
+    /**
+     * The lives, at the top left as in the other games.
+     */
+    private void showLives() {
+        gameContext.getChildren().remove(livesGroup);
+        livesGroup = null;
+        if (!hasLives()) {
+            return;
+        }
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        livesGroup = GameStyle.lives(lives, LIVES, dimension.getHeight() * 0.055, dimension.getWidth() * 0.3,
+            Boolean.TRUE.equals(gameContext.getConfiguration().isDarkThemeEnabled()));
+        livesGroup.setLayoutX(dimension.getHeight() * 0.025);
+        livesGroup.setLayoutY(dimension.getHeight() * 0.015);
+        gameContext.getChildren().add(livesGroup);
+    }
+
+    /**
+     * @return the lives shown (for the tests), null without end
+     */
+    Group livesShown() {
+        return livesGroup;
+    }
+
+    /**
+     * A wrong picture chosen: one life less in a game with an end.
+     *
+     * @return whether it was the last life: the game is lost
+     */
+    boolean wrongPictureChosen() {
+        if (!hasLives() || lost) {
+            return false;
+        }
+        lives = Math.max(0, lives - 1);
+        showLives();
+        lost = lives == 0;
+        return lost;
+    }
+
+    /**
+     * No life left: the pictures can no longer be chosen, "Lost!" for 2 s, then the statistics; the "continue" of the
+     * statistics starts a new game.
+     */
+    void lose() {
+        ended = true;
+        hideReplayHint();
+        if (currentRoundDetails != null && currentRoundDetails.getPictureCardList() != null) {
+            currentRoundDetails.getPictureCardList().forEach(PictureCard::lock);
+        }
+        stats.takeScreenShot();
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Group card = GameStyle.card(gameContext.getTranslator().translate("WhereIsItLost"),
+            dimension.getHeight() * 0.06, dimension.getWidth() * 0.6);
+        card.setLayoutX(dimension.getWidth() / 2 - card.getBoundsInLocal().getWidth() / 2);
+        card.setLayoutY(dimension.getHeight() / 2 - card.getBoundsInLocal().getHeight() / 2);
+        card.setMouseTransparent(true);
+        gameContext.getChildren().add(card);
+        lostPause = new PauseTransition(Duration.seconds(2));
+        lostPause.setOnFinished(event -> {
+            dispose();
+            gameContext.clear();
+            gameContext.showRoundStats(stats, this);
+        });
+        lostPause.play();
+    }
+
+    /**
+     * After a mistake, when the question has a sound: a bubble next to the loudspeaker says it can be heard again, and
+     * the loudspeaker pulses (maintainer's request of 16/11/2026).
+     */
+    void showReplayHint() {
+        if (replayButton == null || currentRoundDetails == null || currentRoundDetails.getQuestionSoundPath() == null) {
+            return;
+        }
+        hideReplayHint();
+        final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns, hasLives()).computeGameSizing(dimension);
+        final String key = gameType.toString().contains("SOUNDS") ? "WhereIsItReplaySoundHint" : "WhereIsItReplayHint";
+        replayHint = GameStyle.pill(gameContext.getTranslator().translate(key), sizing.bandHeight() * 0.16);
+        replayHint.setMouseTransparent(true);
+        final Bounds bounds = replayHint.getLayoutBounds();
+        replayHint.setLayoutX(Math.max(sizing.gap(), dimension.getWidth() - sizing.gap() - bounds.getWidth()));
+        replayHint.setLayoutY(sizing.bandTop() - bounds.getHeight() - sizing.gap());
+        gameContext.getChildren().add(replayHint);
+        replayPulse = new ScaleTransition(Duration.millis(450), replayButton);
+        replayPulse.setFromX(1);
+        replayPulse.setFromY(1);
+        replayPulse.setToX(1.18);
+        replayPulse.setToY(1.18);
+        replayPulse.setAutoReverse(true);
+        replayPulse.setCycleCount(6);
+        replayPulse.play();
+        hintPause = new PauseTransition(Duration.seconds(4));
+        hintPause.setOnFinished(event -> hideReplayHint());
+        hintPause.play();
+    }
+
+    /**
+     * @return the bubble saying that the question can be heard again (for the tests), null when hidden
+     */
+    Group replayHint() {
+        return replayHint;
+    }
+
+    private void hideReplayHint() {
+        if (hintPause != null) {
+            hintPause.stop();
+            hintPause = null;
+        }
+        if (replayPulse != null) {
+            replayPulse.stop();
+            replayPulse = null;
+        }
+        if (replayButton != null) {
+            replayButton.setScaleX(1);
+            replayButton.setScaleY(1);
+        }
+        gameContext.getChildren().remove(replayHint);
+        replayHint = null;
+    }
+
     @Override
     public void launch() {
         if (ended) {
             ended = false;
             screensFound = 0;
+            lives = LIVES;
+            lost = false;
         }
         showCounter();
+        showLives();
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
@@ -255,7 +414,7 @@ public class WhereIsIt implements GameLifeCycle {
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double width = gamePaneDimension2D.getWidth();
         final double height = gamePaneDimension2D.getHeight();
-        final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns).computeGameSizing(gamePaneDimension2D);
+        final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns, hasLives()).computeGameSizing(gamePaneDimension2D);
         final long questionLength = gameContext.getConfiguration().getQuestionLength();
 
         // In the middle: as large as the screen allows
@@ -381,6 +540,11 @@ public class WhereIsIt implements GameLifeCycle {
     @Override
     public void dispose() {
         gameContext.getChildren().remove(counterPill);
+        gameContext.getChildren().remove(livesGroup);
+        hideReplayHint();
+        if (lostPause != null && lostPause.getStatus() == javafx.animation.Animation.Status.RUNNING) {
+            lostPause.stop();
+        }
         if (replayButton != null) {
             replayButton.dispose();
             gameContext.getChildren().remove(replayButton);
@@ -506,7 +670,7 @@ public class WhereIsIt implements GameLifeCycle {
             return null;
         }
 
-        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns)
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, hasLives())
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
         // The picture of each place of the grid. The draws are made in the order of the former versions (a folder,

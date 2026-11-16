@@ -70,6 +70,8 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    remettre, pas de migration), fusion de `GazePlayLearning` et numéro de version après la modernisation.
 4. **Plus tard (demande du mainteneur du 16/11)** : retravailler les écrans **Zones d'intérêt** et **Parcours du
    regard**, ouverts par leurs boutons depuis l'écran des statistiques (mode avancé), dans le style du nouvel écran.
+   **Après les vies dans les jeux (demande du 16/11)** : **retirer le bouton « Continuer »** de l'écran des
+   statistiques.
 5. **À la fin des autres tâches** (recommandation du 16/11, acceptée par le mainteneur) : faire fermer leurs parties
    (`dispose()`) à tous les tests qui en lancent (une quarantaine de classes de `gazeplay-games`, comme
    `CasseBriqueTest`, `EggGameTest`, `SpaceGameTest`, `SprintFinishTest` le 16/11), puis revenir à la libération
@@ -947,6 +949,32 @@ autre thread n'est pas libéré.
 `gazeplay-games` monte au plus à **1 462 Mo** (sonde à la fin de chaque classe, avant la libération différée des
 dernières classes ; marches : Échelle +884, Flower Of Numbers +510, Survive +498, Where Is It +430, Magic Potions
 +354), puis redescend : la mémoire reste bornée, avec une marge plus faible qu'avec la libération immédiate (594 Mo).
+
+## Vies dans d'autres jeux (demandes du mainteneur du 16/11/2026, à faire jeu par jeu ensemble)
+
+Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle.lives`) dans :
+1. **Famille Où est… et Quel est ce son ?** : 3 cœurs tant que la variante n'est pas sans fin ; une réponse fausse
+   n'est plus sélectionnable et reste un peu visible ; après une erreur, dire qu'on peut réécouter la question.
+   **16/11 : fait, non commité** (propositions validées : cœurs comme dans les autres jeux, en haut à gauche ; pas
+   de cœurs en sans fin) : `WhereIsIt` (`LIVES` = 3, `hasLives`, `wrongPictureChosen`, `lose` : « Perdu ! » 2 s puis
+   les statistiques, « Continuer » repart à 3 cœurs et 0 écran), la grille laisse une rangée en haut aux cœurs
+   (`GameSizingComputer.LIVES_ROW`, seulement avec une fin) ; image fausse à 45 % d'opacité (avant 25 %). **Correction
+   de l'état des lieux** : une image fausse n'était déjà plus sélectionnable (elle reste « choisie ») ; c'est
+   maintenant écrit et testé. Après une erreur, quand la question a un son : bulle « Tu peux réécouter la question »
+   (« … le son » pour Quel est ce son ?) au-dessus du haut-parleur, qui pulse ; 4 s. Traductions `WhereIsItLost`,
+   `WhereIsItReplayHint`, `WhereIsItReplaySoundHint` ; 18 aides. Tests `WhereIsItEndTest` (vies, défaite, rangée des
+   cœurs, bulle) et `PictureCardTest` (image fausse) ; `allGamesTest` de Quel est ce son ? et Où est l'animal ? (10
+   écrans) réussis. Reste : essai du mainteneur.
+2. **Memory** : des cœurs (règle à préciser).
+3. **Mélanger les couleurs** : des cœurs (règle à préciser).
+4. **La Fabrique à gâteaux**, en copiant un modèle : laisser finir le gâteau, puis le comparer ; s'il n'est pas bon,
+   un cœur perdu, le gâteau enlevé, et il recommence sans les choix faux qu'il avait pris.
+5. **Ajoutés le 16/11 (même logique : des cœurs tant que la variante n'est pas sans fin)** : **Aiguillages** (un cœur
+   perdu si le train arrive à la mauvaise gare), **Point par point** (si l'ordre n'est pas bon), **Bouteille** (si la
+   bouteille touchée n'est pas celle montrée), **Identifier les lettres**, **Échelle**, **Cartes magiques** (règles à
+   préciser pour ces trois-là).
+
+Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 
 ## Refonte de l'écran des statistiques (commencée le 16/11/2026)
 

@@ -14,7 +14,7 @@ package net.gazeplay.games.whereisit;
  * @param width      width of the game area
  */
 record GameSizing(double cellWidth, double cellHeight, double gap, double bandTop, double bandHeight, double bandLeft,
-                  double width) {
+                  double width, double top) {
 
     /**
      * @return the left of the picture of this column
@@ -27,7 +27,7 @@ record GameSizing(double cellWidth, double cellHeight, double gap, double bandTo
      * @return the top of the picture of this line
      */
     double cellY(final int line) {
-        return gap + line * (cellHeight + gap);
+        return top + gap + line * (cellHeight + gap);
     }
 
     /**

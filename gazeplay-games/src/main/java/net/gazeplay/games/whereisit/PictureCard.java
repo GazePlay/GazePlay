@@ -139,7 +139,7 @@ class PictureCard extends Group {
     /**
      * Chooses the picture, at the end of the fixation.
      */
-    private void onFixationCompleted() {
+    void onFixationCompleted() {
         log.debug("FINISHED");
 
         selected = true;
@@ -222,7 +222,14 @@ class PictureCard extends Group {
     }
 
     /**
-     * Shows that the picture is not the right one (greyed and crossed), and counts a wrong decision for the levels.
+     * Opacity of a wrong picture: still recognizable (maintainer's request of 16/11/2026, before 0.25).
+     */
+    static final double WRONG_OPACITY = 0.45;
+
+    /**
+     * Shows that the picture is not the right one (greyed and crossed); it stays chosen, so it cannot be chosen again.
+     * Counts a wrong decision for the levels and, in a game with an
+     * end, costs a life; the last one loses the game. Then the question can be heard again (bubble and loudspeaker).
      */
     private void onWrongCardSelected() {
         gameInstance.updateWrong();
@@ -230,11 +237,12 @@ class PictureCard extends Group {
 
         customInputEventHandler.ignoreAnyInput = true;
         ring.setVisible(false);
+        final boolean gameLost = gameInstance.wrongPictureChosen();
 
         final FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(600), imageRectangle);
         imageFadeOutTransition.setFromValue(1);
         // Not zero, so that the picture can still be seen after it is marked as a wrong choice
-        imageFadeOutTransition.setToValue(0.25);
+        imageFadeOutTransition.setToValue(WRONG_OPACITY);
 
         errorMark.toFront();
         errorMark.setVisible(true);
@@ -248,13 +256,32 @@ class PictureCard extends Group {
         final ParallelTransition fullAnimation = new ParallelTransition(imageFadeOutTransition, errorPopTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
+            if (gameLost) {
+                gameInstance.lose();
+                return;
+            }
             if (gameContext.getConfiguration().isQuestionReaskedOnFail()) {
                 gameInstance.playQuestionSound();
             }
-            customInputEventHandler.ignoreAnyInput = false;
+            gameInstance.showReplayHint();
         });
 
         fullAnimation.play();
+    }
+
+    /**
+     * The picture can no longer be chosen (the game lost).
+     */
+    void lock() {
+        customInputEventHandler.ignoreAnyInput = true;
+        ring.setVisible(false);
+    }
+
+    /**
+     * @return whether the picture can still be chosen (for the tests)
+     */
+    boolean isSelectable() {
+        return !customInputEventHandler.ignoreAnyInput && !selected;
     }
 
     /**

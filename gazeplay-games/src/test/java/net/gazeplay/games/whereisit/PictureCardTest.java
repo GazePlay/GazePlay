@@ -11,7 +11,12 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.util.WaitForAsyncUtils;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -53,6 +58,33 @@ class PictureCardTest {
             resource, mockStats, mockWhereIsIt);
         Image image = pictureCard.getImageRectangle().getImage();
         assert image.getUrl().contains("blue.jpg");
+    }
+
+    /**
+     * A wrong picture (16/11/2026): it costs a life, cannot be chosen again, stays a little visible; then the question
+     * can be heard again; the last life loses the game.
+     */
+    @Test
+    void shouldCostALifeAndLockAWrongPicture() throws Exception {
+        final PictureCard wrong = WaitForAsyncUtils.asyncFx(() -> new PictureCard(2, 2, 200, 200, mockGameContext,
+            false, "images/blue/blue.jpg", mockStats, mockWhereIsIt)).get();
+        assertTrue(wrong.isSelectable());
+        WaitForAsyncUtils.asyncFx(() -> {
+            wrong.onFixationCompleted();
+            return null;
+        }).get();
+        verify(mockWhereIsIt).wrongPictureChosen();
+        assertFalse(wrong.isSelectable());
+        verify(mockWhereIsIt, timeout(3000)).showReplayHint();
+
+        final PictureCard last = WaitForAsyncUtils.asyncFx(() -> new PictureCard(2, 2, 200, 200, mockGameContext,
+            false, "images/blue/blue.jpg", mockStats, mockWhereIsIt)).get();
+        when(mockWhereIsIt.wrongPictureChosen()).thenReturn(true);
+        WaitForAsyncUtils.asyncFx(() -> {
+            last.onFixationCompleted();
+            return null;
+        }).get();
+        verify(mockWhereIsIt, timeout(3000)).lose();
     }
 
     @Test

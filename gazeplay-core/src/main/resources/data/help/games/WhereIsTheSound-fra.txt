@@ -8,7 +8,8 @@
 
 # Comment gagner
 - Bonne réponse : l'image est entourée de vert, elle grandit, puis « Bravo » et une nouvelle question.
-- Mauvaise réponse : l'image est barrée et grisée ; cherche encore (la question est redite si le réglage le demande).
+- Mauvaise réponse : l'image est barrée et grisée, et ne peut plus être choisie ; cherche encore (la question est redite si le réglage le demande). Si la question a un son, une bulle rappelle que tu peux la réécouter avec le haut-parleur.
+- Avec une fin (5, 10 ou 15 écrans), tu as 3 cœurs en haut à gauche : chaque mauvaise réponse en coûte un. Sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n'y a pas de cœurs.
 - Selon la variante, le jeu s'arrête après 5, 10 ou 15 écrans trouvés : « Bravo », puis les statistiques ; sans fin, quitte par le menu (touche Échap).
 - En bas à gauche, le compteur montre les écrans trouvés.
 

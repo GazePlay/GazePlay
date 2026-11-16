@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -155,6 +156,75 @@ class WhereIsItEndTest {
 
     private static String text(final Group pill) {
         return pill.lookupAll("Text").stream().map(Text.class::cast).map(Text::getText).findFirst().orElse(null);
+    }
+
+    /**
+     * 3 lives with an end (maintainer's request of 16/11/2026): a wrong picture costs one, the third loses the game;
+     * none without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachWrongPictureWithAnEnd() throws Exception {
+        final WhereIsIt game = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
+            WhereIsItEnd.SCREENS_5);
+        assertTrue(game.hasLives());
+        assertEquals(WhereIsIt.LIVES, game.getLives());
+        assertFalse(game.wrongPictureChosen());
+        assertEquals(2, game.getLives());
+        assertNotNull(game.livesShown(), "the hearts");
+        assertTrue(gameArea.getChildren().contains(game.livesShown()));
+        assertFalse(game.wrongPictureChosen());
+        assertTrue(game.wrongPictureChosen(), "the third wrong picture loses the game");
+        assertEquals(0, game.getLives());
+        assertTrue(game.isLost());
+
+        final WhereIsIt endless = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
+            WhereIsItEnd.ENDLESS);
+        assertFalse(endless.hasLives());
+        for (int i = 0; i < 10; i++) {
+            assertFalse(endless.wrongPictureChosen());
+        }
+        assertNull(endless.livesShown());
+    }
+
+    /**
+     * The game lost: "Lost!", then the statistics.
+     */
+    @Test
+    void shouldShowTheStatisticsWhenTheGameIsLost() throws Exception {
+        final WhereIsIt game = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
+            WhereIsItEnd.SCREENS_10);
+        WaitForAsyncUtils.asyncFx(() -> {
+            game.wrongPictureChosen();
+            game.wrongPictureChosen();
+            game.wrongPictureChosen();
+            game.lose();
+            return null;
+        }).get();
+        assertTrue(gameArea.getChildren().stream().anyMatch(node -> node instanceof Group group
+            && group.lookupAll("Text").stream().anyMatch(text -> "WhereIsItLost".equals(((Text) text).getText()))));
+        org.mockito.Mockito.verify(gameContext, org.mockito.Mockito.timeout(4000)).showRoundStats(stats, game);
+    }
+
+    /**
+     * The hearts at the top left, as in the other games: the grid leaves them a row.
+     */
+    @Test
+    void shouldLeaveARowAtTheTopForTheLives() {
+        final Dimension2D screen = new Dimension2D(1600, 900);
+        final GameSizing without = new GameSizingComputer(2, 3).computeGameSizing(screen);
+        final GameSizing with = new GameSizingComputer(2, 3, true).computeGameSizing(screen);
+        assertEquals(without.gap(), without.cellY(0), 1e-9);
+        assertTrue(with.cellY(0) >= 900 * GameSizingComputer.LIVES_ROW, "under the hearts: " + with.cellY(0));
+        // The pictures stay above the band
+        assertTrue(with.cellY(1) + with.cellHeight() <= with.bandTop());
+    }
+
+    @Test
+    void shouldNotShowTheReplayHintWithoutTheLoudspeaker() {
+        final WhereIsIt game = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
+            WhereIsItEnd.SCREENS_5);
+        game.showReplayHint();
+        assertNull(game.replayHint());
     }
 
     @Test
