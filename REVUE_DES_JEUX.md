@@ -1002,7 +1002,15 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    séries (`BottleGame.LIVES`, `hasLives`), en haut à gauche, la pastille « Bouteilles » après eux ; une bouteille de
    la mauvaise couleur en coûte un (elle tremble, erreur comptée, inchangés) ; plus de cœurs : étape `LOST`,
    « Perdu ! » 2 s puis les statistiques ; pas de cœurs en Tout casser ni sans fin. Traduction `BottleLost`, aides.
-   Test `BottleGameTest.shouldLoseALifeAtEachBottleOfAnotherColorThenTheGame` ; `allGamesTest` réussi. Reste : essai
+   Test `BottleGameTest.shouldLoseALifeAtEachBottleOfAnotherColorThenTheGame` ; `allGamesTest` réussi. Essayé et
+   validé, commité (`f75cc81a6`).
+   **Identifier les lettres, 16/11 : fait, non commité** (propositions validées) : 3 cœurs avec 3, 5 ou 10 images
+   (`Letters.LIVES`, `hasLives`), à gauche du bandeau, la pastille « Images » après eux ; une carte d'une autre
+   lettre en coûte un, puis reste grisée (45 %) et **n'est plus choisie jusqu'à la lettre suivante** (avant, on
+   pouvait la rechoisir) ; après l'erreur, bulle « Tu peux réécouter la lettre » sous le haut-parleur, qui pulse 4 s
+   (dans la boucle du jeu) ; plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; sans fin : pas de
+   cœurs (la carte reste bloquée et la bulle s'affiche aussi). Traductions `LettersLost`, `LettersReplayHint`, aides.
+   Tests `LettersTest` (l'ancien test « rechoisie » remplacé, test des cœurs) ; `allGamesTest` réussi. Reste : essai
    du mainteneur.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.

@@ -5,12 +5,12 @@ Une lettre est demandée. Trouve toutes les cartes de cette lettre : elles se re
 - La lettre demandée est écrite en grand dans le bandeau du haut, et elle est dite. Regarde le haut-parleur, à droite du bandeau, pour l’entendre encore.
 - Regarde une carte : un anneau se remplit. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Une carte de la bonne lettre se retourne et laisse voir un morceau de l’image, et la lettre est dite.
-- Une carte d’une autre lettre tremble en rouge et dit sa lettre. Regarde ailleurs, puis une autre carte.
+- Une carte d’une autre lettre tremble en rouge et dit sa lettre, puis elle reste grisée et ne peut plus être choisie jusqu’à la lettre suivante. Une bulle rappelle que tu peux réécouter la lettre avec le haut-parleur.
 - Quand toutes les cartes de la lettre sont trouvées, toute l’image apparaît, puis une nouvelle lettre est demandée.
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Il n’y a ni vies ni pénalité : une mauvaise carte compte seulement une erreur dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+Une mauvaise carte compte une erreur. Avec une fin (3, 5 ou 10 images), tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n’y a pas de cœurs. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

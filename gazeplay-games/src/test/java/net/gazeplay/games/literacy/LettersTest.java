@@ -177,8 +177,12 @@ class LettersTest {
         });
     }
 
+    /**
+     * A card of another letter (16/11/2026): a mistake, then greyed and no longer chosen until the next letter (before,
+     * it could be chosen again); a bubble says the letter can be heard again, then goes.
+     */
     @Test
-    void shouldCountAMistakeForACardOfAnotherLetterAndLetItBeTriedAgain() throws Exception {
+    void shouldCountAMistakeForACardOfAnotherLetterThenBlockIt() throws Exception {
         final Letters game = launched(LettersLevel.EASY, LettersCase.CAPITALS, LettersEnd.ENDLESS);
         fx(() -> {
             final Letters.Card wrong = game.getCards().stream().filter(card -> card.getLetter() != game.getAsked())
@@ -187,13 +191,46 @@ class LettersTest {
             steps(game, 0.6);
             verify(stats).incrementNumberOfMistakes();
             assertTrue(wrong.isVisible());
-            // Still looked at: no second mistake
-            steps(game, 1.0);
-            verify(stats, times(1)).incrementNumberOfMistakes();
+            assertTrue(wrong.isBlocked());
+            assertNotNull(game.getHint(), "the bubble to hear the letter again");
             exit(wrong.getSpot());
             enter(wrong.getSpot());
-            steps(game, 0.6);
-            verify(stats, times(2)).incrementNumberOfMistakes();
+            steps(game, 1.0);
+            verify(stats, times(1)).incrementNumberOfMistakes();
+            steps(game, Letters.HINT_SHOWN);
+            assertNull(game.getHint());
+            return null;
+        });
+    }
+
+    /**
+     * 3 lives with an end (maintainer's request of 16/11/2026): a card of another letter costs one, the third loses the
+     * game ("Lost!", then the statistics); none without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachWrongCardThenTheGame() throws Exception {
+        final Letters game = launched(LettersLevel.EASY, LettersCase.CAPITALS, LettersEnd.PICTURES_5);
+        fx(() -> {
+            assertTrue(game.hasLives());
+            final List<Letters.Card> wrong = game.getCards().stream()
+                .filter(card -> card.getLetter() != game.getAsked()).toList();
+            for (int mistake = 1; mistake <= 3; mistake++) {
+                game.choose(wrong.get(mistake - 1));
+                assertEquals(Letters.LIVES - mistake, game.getLives());
+            }
+            assertEquals(Letters.Phase.LOST, game.getPhase());
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, Letters.LOST_SHOWN + 0.04);
+            assertEquals(Letters.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+        final Letters endless = launched(LettersLevel.EASY, LettersCase.CAPITALS, LettersEnd.ENDLESS);
+        fx(() -> {
+            assertFalse(endless.hasLives());
+            endless.getCards().stream().filter(card -> card.getLetter() != endless.getAsked())
+                .forEach(endless::choose);
+            assertEquals(Letters.Phase.PLAY, endless.getPhase());
             return null;
         });
     }

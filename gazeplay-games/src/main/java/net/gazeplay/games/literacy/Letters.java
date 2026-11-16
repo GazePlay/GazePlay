@@ -41,7 +41,9 @@ import java.util.Map;
  * "Identifier les lettres" (name code Letters; reviewed on 12/11/2026, maintainer's rules). A letter is asked, written
  * large in the band at the top and said; a loudspeaker button says it again. A grid of cards hides a picture: a fixation
  * on a card of the letter asked turns it, uncovering a part of the picture; a card of another letter shakes in red, says
- * its letter, and counts a mistake. When all the cards of the letter are found, the whole picture shows: "Bravo", then
+ * its letter, counts a mistake, then stays greyed and can no longer be chosen until the next letter; a bubble says the
+ * letter can be heard again (16/11/2026); with an end, it costs one of 3 lives, the last one loses the game ("Lost!",
+ * then the statistics). When all the cards of the letter are found, the whole picture shows: "Bravo", then
  * another letter. The game ends after 3, 5 or 10 pictures, or never.
  * <p>
  * Capitals, small letters (Andika, made for beginning readers) or both; Easy: 6 cards and one other letter which does not
@@ -81,6 +83,26 @@ public class Letters implements GameLifeCycle {
     static final double SHAKE = 0.5;
     static final double PICTURE = 2.2;
 
+    /**
+     * The lives of a game with an end (maintainer's request of 16/11/2026): a card of another letter costs one.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
+
+    /**
+     * Seconds of the bubble saying that the letter can be heard again, and of the pulse of the loudspeaker.
+     */
+    static final double HINT_SHOWN = 4;
+
+    /**
+     * Opacity of a card of another letter once chosen: still seen, no longer chosen.
+     */
+    static final double WRONG_OPACITY = 0.45;
+
     private static final String SOUNDS = "data/literacy/sounds/";
     private static final Color[] CARD_COLORS = {Color.rgb(255, 214, 165), Color.rgb(182, 222, 196),
         Color.rgb(190, 214, 245), Color.rgb(226, 204, 240), Color.rgb(253, 196, 196), Color.rgb(250, 232, 160)};
@@ -88,7 +110,7 @@ public class Letters implements GameLifeCycle {
     private static final Color WRONG = Color.rgb(214, 64, 64);
     private static final String SMALL_FONT = "data/fonts/Andika-Regular.ttf";
 
-    enum Phase { WAIT, PLAY, PICTURE, OVER }
+    enum Phase { WAIT, PLAY, PICTURE, LOST, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -118,7 +140,12 @@ public class Letters implements GameLifeCycle {
     private int uncovered;
     @Getter
     private int left;
+    @Getter
+    private int lives = LIVES;
     private double elapsed;
+    private Group replayButton;
+    private Group hint;
+    private double hintLeft;
 
     private double width;
     private double height;
@@ -216,7 +243,7 @@ public class Letters implements GameLifeCycle {
         ring.setMouseTransparent(true);
         hud = new Group();
         hud.setMouseTransparent(true);
-        final Group replayButton = replayButton(bandHeight);
+        replayButton = replayButton(bandHeight);
         layer = new Group(background, pictureLayer, cardsLayer, band, replayButton, ring, hud);
         gameContext.getChildren().add(layer);
 
@@ -236,6 +263,7 @@ public class Letters implements GameLifeCycle {
             animals = ImageUtils.createDefaultImageLibrary(null, random);
         }
         uncovered = 0;
+        lives = LIVES;
         newRound();
         phase = Phase.WAIT;
         elapsed = 0;
@@ -474,6 +502,73 @@ public class Letters implements GameLifeCycle {
         score.setLayoutX(margin);
         score.setLayoutY((gridY - score.getBoundsInLocal().getHeight()) / 2);
         hud.getChildren().add(score);
+        if (hasLives()) {
+            // The hearts at the left of the band as in the other games, the pictures just after them
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY((gridY - hearts.getBoundsInLocal().getHeight()) / 2);
+            hud.getChildren().add(hearts);
+            score.setLayoutX(margin + hearts.getBoundsInLocal().getWidth() + margin);
+        }
+        if (hint != null) {
+            hud.getChildren().add(hint);
+        }
+    }
+
+    /**
+     * @return whether the game has lives: a game with an end (none without end)
+     */
+    boolean hasLives() {
+        return end.getPictures() > 0;
+    }
+
+    /**
+     * After a mistake: a bubble under the loudspeaker says that the letter can be heard again, and the loudspeaker
+     * pulses (maintainer's request of 16/11/2026, as in "Where is it?").
+     */
+    private void showHint() {
+        hud.getChildren().remove(hint);
+        hint = GameStyle.pill(gameContext.getTranslator().translate("LettersReplayHint"), height * 0.028);
+        hint.setLayoutX(Math.max(height * 0.025, width - hint.getBoundsInLocal().getWidth() - height * 0.025));
+        hint.setLayoutY(gridY + height * 0.01);
+        hud.getChildren().add(hint);
+        hintLeft = HINT_SHOWN;
+    }
+
+    private void hideHint() {
+        hud.getChildren().remove(hint);
+        hint = null;
+        hintLeft = 0;
+        if (replayButton != null) {
+            replayButton.setScaleX(1);
+            replayButton.setScaleY(1);
+        }
+    }
+
+    /**
+     * @return the bubble saying that the letter can be heard again (for the tests), null when hidden
+     */
+    Group getHint() {
+        return hint;
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        hideHint();
+        phase = Phase.LOST;
+        elapsed = 0;
+        looked = null;
+        progress = 0;
+        ring.stop();
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("LettersLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        hud.getChildren().add(lost);
     }
 
     void sayQuestion() {
@@ -517,6 +612,15 @@ public class Letters implements GameLifeCycle {
             return;
         }
         cards.forEach(card -> card.shake(seconds));
+        if (hintLeft > 0) {
+            hintLeft = Math.max(0, hintLeft - seconds);
+            final double pulse = 1 + 0.12 * Math.abs(Math.sin((HINT_SHOWN - hintLeft) * Math.PI * 1.6));
+            replayButton.setScaleX(hintLeft > 0 ? pulse : 1);
+            replayButton.setScaleY(hintLeft > 0 ? pulse : 1);
+            if (hintLeft == 0) {
+                hideHint();
+            }
+        }
         switch (phase) {
             case WAIT -> {
                 elapsed += seconds;
@@ -525,6 +629,14 @@ public class Letters implements GameLifeCycle {
                 }
             }
             case PLAY -> fixate(seconds);
+            case LOST -> {
+                elapsed += seconds;
+                if (elapsed >= LOST_SHOWN) {
+                    phase = Phase.OVER;
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
+                }
+            }
             case PICTURE -> {
                 elapsed += seconds;
                 if (elapsed >= PICTURE) {
@@ -543,7 +655,7 @@ public class Letters implements GameLifeCycle {
 
     private boolean isEnabled(final Spot spot) {
         return phase == Phase.PLAY && (spot == replay || spot.card != null && !spot.card.found
-            && !spot.card.tried);
+            && !spot.card.tried && !spot.card.blocked);
     }
 
     private void fixate(final double seconds) {
@@ -598,7 +710,7 @@ public class Letters implements GameLifeCycle {
      * red, says its letter and counts a mistake.
      */
     void choose(final Card card) {
-        if (phase != Phase.PLAY || card.found) {
+        if (phase != Phase.PLAY || card.found || card.blocked) {
             return;
         }
         if (card.letter == asked) {
@@ -620,9 +732,20 @@ public class Letters implements GameLifeCycle {
             return;
         }
         card.tried = true;
+        card.blocked = true;
         card.wrong();
         sayLetter(card.letter);
         stats.incrementNumberOfMistakes();
+        if (hasLives()) {
+            lives = Math.max(0, lives - 1);
+            if (lives == 0) {
+                showHud();
+                lose();
+                return;
+            }
+        }
+        showHint();
+        showHud();
     }
 
     private void clearCards() {
@@ -714,6 +837,11 @@ public class Letters implements GameLifeCycle {
          * Chosen while wrong: it must be left and looked at again to be chosen once more.
          */
         private boolean tried;
+        /**
+         * Of another letter and chosen (16/11/2026): greyed, no longer chosen until the next letter.
+         */
+        @Getter
+        private boolean blocked;
         private double shaking;
         private final Color color;
 
@@ -763,6 +891,9 @@ public class Letters implements GameLifeCycle {
             if (shaking == 0) {
                 back.setFill(color);
                 text.setFill(INK);
+                if (blocked) {
+                    node.setOpacity(WRONG_OPACITY);
+                }
             }
         }
 
