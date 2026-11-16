@@ -1019,7 +1019,13 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    après « Pas encore ! », étape `LOST`, « Perdu ! » 2 s puis les statistiques ; pas de cœurs en Libre ni sans fin.
    En Facile (3 cordes), on ne perd qu'au fil de plusieurs échelles (2 mauvais départs au plus par échelle).
    Traduction `LadderLost`, aides. Tests `LadderTest` (test de l'indice adapté, test des cœurs) ; `allGamesTest`
-   réussi. Reste : essai du mainteneur.
+   réussi. Essayé et validé, commité (`4539e04ab`).
+   **Cartes magiques, 16/11 : fait, non commité** (décision du mainteneur : Magique seulement, en Chercher la carte
+   se trouve au hasard) : 3 cœurs en Magique avec 3, 5 ou 10 images (`MagicCards.LIVES`, `hasLives`), en haut à
+   gauche ; une mauvaise carte en coûte un (croix, gris, erreur comptée, carte déjà non rechoisissable : inchangés) ;
+   plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; pas de cœurs en Chercher ni sans fin.
+   Traduction `MagicLost`, aides. Test `MagicCardsTest.shouldLoseALifeAtEachWrongCardInTheMagicModeThenTheGame` ;
+   `allGamesTest` réussi. Reste : essai du mainteneur.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 

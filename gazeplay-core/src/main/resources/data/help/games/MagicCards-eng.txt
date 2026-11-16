@@ -10,7 +10,7 @@ Cards are face down. Only one hides a picture: find it!
 - At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-There are no lives: a wrong card only counts a mistake in the statistics. As you chose, the game stops after 3, 5 or 10 pictures found ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+A wrong card counts a mistake. In Magic with an end (3, 5 or 10 pictures), you have 3 hearts at the top left: each wrong card costs one; with no heart left, "Lost!", then the statistics. In Search, where the card is found by chance, and without end, there are no hearts. As you chose, the game stops after 3, 5 or 10 pictures found ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

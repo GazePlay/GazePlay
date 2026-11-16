@@ -220,6 +220,34 @@ class MagicCardsTest {
         });
     }
 
+    /**
+     * 3 lives in the magic mode with an end (maintainer's request of 16/11/2026): a wrong card costs one, the third
+     * loses the game ("Lost!", then the statistics); none in the search (found by chance) nor without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachWrongCardInTheMagicModeThenTheGame() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.NINE, MagicCardsEnd.PICTURES_3);
+        fx(() -> {
+            assertTrue(game.hasLives());
+            steps(game, MagicCards.SHOW + MagicCards.FLIP + 0.1
+                + MagicCardsCount.NINE.getSwaps() * (MagicCards.SWAP + MagicCards.SWAP_PAUSE) + 0.2);
+            assertEquals(MagicCards.Phase.PLAY, game.getPhase());
+            for (int mistake = 1; mistake <= 3; mistake++) {
+                game.choose(wrongCard(game));
+                steps(game, MagicCards.FLIP + 0.1);
+                assertEquals(MagicCards.LIVES - mistake, game.getLives());
+            }
+            assertEquals(MagicCards.Phase.LOST, game.getPhase());
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, MagicCards.LOST_SHOWN + 0.04);
+            assertEquals(MagicCards.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+        assertFalse(launched(MagicCardsMode.SEARCH, MagicCardsCount.NINE, MagicCardsEnd.PICTURES_3).hasLives());
+        assertFalse(launched(MagicCardsMode.MAGIC, MagicCardsCount.NINE, MagicCardsEnd.ENDLESS).hasLives());
+    }
+
     @Test
     void shouldEndWithBravoAfterThePicturesOfTheVariant() throws Exception {
         final MagicCards game = launched(MagicCardsMode.SEARCH, MagicCardsCount.FOUR, MagicCardsEnd.PICTURES_3);

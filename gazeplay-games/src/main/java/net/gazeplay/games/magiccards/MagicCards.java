@@ -35,7 +35,8 @@ import java.util.List;
 /**
  * "Cartes magiques" (name code MagicCards; reviewed on 12/11/2026, maintainer's rules): cards face down, one of them
  * hiding a picture. A fixation of the length of the settings turns a card over: a wrong card shows an empty face with a
- * cross, counts a mistake (no lives) and stays turned over, greyed; the right one shows the picture, the others fade,
+ * cross, counts a mistake (in the magic mode with an end, one of 3 lives, 16/11/2026; the last one loses the game:
+ * "Lost!", then the statistics) and stays turned over, greyed; the right one shows the picture, the others fade,
  * the picture grows in the middle, a star and "Bravo !", then another round. In the magic mode, the picture is first
  * shown on its card, the cards turn over and are shuffled before the eyes (two by two, on arcs), then the card is to be
  * found again. The game ends after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end.
@@ -63,7 +64,18 @@ public class MagicCards implements GameLifeCycle {
     private static final String WRONG_SOUND = "data/dice/sounds/wrong.wav";
     private static final String WIN_SOUND = "data/goosegame/sounds/win.wav";
 
-    enum Phase { WAIT, SHOW, SHUFFLE, PLAY, REVEAL, OVER }
+    enum Phase { WAIT, SHOW, SHUFFLE, PLAY, REVEAL, LOST, OVER }
+
+    /**
+     * The lives of the magic mode with an end (maintainer's request of 16/11/2026): a wrong card costs one; none in the
+     * search, where the card is found by chance, nor without end.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -82,6 +94,8 @@ public class MagicCards implements GameLifeCycle {
     private Phase phase = Phase.OVER;
     @Getter
     private int found;
+    @Getter
+    private int lives = LIVES;
     private double elapsed;
     private double phaseTime;
     private boolean rewarded;
@@ -186,6 +200,7 @@ public class MagicCards implements GameLifeCycle {
         }
         animals = ImageUtils.createDefaultImageLibrary(null, random);
         found = 0;
+        lives = LIVES;
         newRound();
         phase = Phase.WAIT;
         elapsed = 0;
@@ -283,6 +298,38 @@ public class MagicCards implements GameLifeCycle {
         score.setLayoutX(width - score.getBoundsInLocal().getWidth() - height * 0.03);
         score.setLayoutY(height * 0.025);
         hud.getChildren().setAll(order, score);
+        if (hasLives()) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+        }
+    }
+
+    /**
+     * @return whether the game has lives: the magic mode with an end
+     */
+    boolean hasLives() {
+        return mode == MagicCardsMode.MAGIC && end.getPictures() > 0;
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        phase = Phase.LOST;
+        phaseTime = 0;
+        if (looked != null) {
+            looked.showRing(false);
+            looked = null;
+        }
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("MagicLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        hud.getChildren().add(lost);
     }
 
     /**
@@ -318,6 +365,13 @@ public class MagicCards implements GameLifeCycle {
             case SHUFFLE -> shuffle();
             case PLAY -> fixate(seconds);
             case REVEAL -> reveal();
+            case LOST -> {
+                if (phaseTime >= LOST_SHOWN) {
+                    phase = Phase.OVER;
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
+                }
+            }
             default -> {
             }
         }
@@ -436,6 +490,13 @@ public class MagicCards implements GameLifeCycle {
             card.markWrong();
             stats.incrementNumberOfMistakes();
             gameContext.getSoundManager().add(WRONG_SOUND);
+            if (hasLives()) {
+                lives = Math.max(0, lives - 1);
+                showBand(instruction);
+                if (lives == 0) {
+                    lose();
+                }
+            }
         }
     }
 
