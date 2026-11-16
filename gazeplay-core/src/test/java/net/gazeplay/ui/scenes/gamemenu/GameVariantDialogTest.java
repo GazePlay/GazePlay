@@ -409,4 +409,25 @@ class GameVariantDialogTest {
             return dialog;
         }).get();
     }
+    /**
+     * A row of switches shows the values possible with the choices of the rows above it (16/11/2026: the hearts only in
+     * the magic mode with an end of "Magic cards"); before, with the group only.
+     */
+    @Test
+    void shouldShowTheValuesOfARowPossibleWithTheChoicesAbove() {
+        final List<GroupedGameVariant> variants = List.of(
+            new GroupedGameVariant("Search", "Animals", "3", null, "End3", "LivesWithout"),
+            new GroupedGameVariant("Magic", "Animals", "3", null, "End3", "LivesWith"),
+            new GroupedGameVariant("Magic", "Animals", "3", null, "End3", "LivesWithout"),
+            new GroupedGameVariant("Magic", "Animals", "3", null, "Endless", "LivesWithout"));
+        // Rows: 0 mode, 1 pictures, 2 end, 3 hearts
+        assertEquals(Set.of("LivesWithout"),
+            GameVariantDialog.valuesOfRow(variants, new String[]{"Search", "Animals", "End3", null}, 3));
+        assertEquals(List.of("LivesWith", "LivesWithout"), List.copyOf(
+            GameVariantDialog.valuesOfRow(variants, new String[]{"Magic", "Animals", "End3", null}, 3)));
+        assertEquals(Set.of("LivesWithout"),
+            GameVariantDialog.valuesOfRow(variants, new String[]{"Magic", "Animals", "Endless", null}, 3));
+        assertEquals(List.of("End3", "Endless"), List.copyOf(
+            GameVariantDialog.valuesOfRow(variants, new String[]{"Magic", "Animals", null, null}, 2)));
+    }
 }

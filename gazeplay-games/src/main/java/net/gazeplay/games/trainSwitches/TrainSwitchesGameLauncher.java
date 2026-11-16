@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
@@ -40,15 +41,17 @@ public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, IGameVari
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                        final Stats stats) {
-        return new TrainSwitches(gameContext, stats, levelOf(gameVariant), rhythmOf(gameVariant), endOf(gameVariant),
-            -1);
+        return withLives(
+            new TrainSwitches(gameContext, stats, levelOf(gameVariant), rhythmOf(gameVariant), endOf(gameVariant),
+            -1), gameVariant);
     }
 
     @Override
     public GameLifeCycle replayGame(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                                     final double gameSeed) {
-        return new TrainSwitches(gameContext, stats, levelOf(gameVariant), rhythmOf(gameVariant), endOf(gameVariant),
-            gameSeed);
+        return withLives(
+            new TrainSwitches(gameContext, stats, levelOf(gameVariant), rhythmOf(gameVariant), endOf(gameVariant),
+            gameSeed), gameVariant);
     }
 
     static TrainSwitchesLevel levelOf(final IGameVariant gameVariant) {
@@ -86,5 +89,13 @@ public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, IGameVari
                 : TrainSwitchesEnd.closestTo(old.getNumber2());
         }
         return TrainSwitchesEnd.TRAINS_10;
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static TrainSwitches withLives(final TrainSwitches game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

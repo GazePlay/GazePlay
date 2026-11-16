@@ -1025,7 +1025,22 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    gauche ; une mauvaise carte en coûte un (croix, gris, erreur comptée, carte déjà non rechoisissable : inchangés) ;
    plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; pas de cœurs en Chercher ni sans fin.
    Traduction `MagicLost`, aides. Test `MagicCardsTest.shouldLoseALifeAtEachWrongCardInTheMagicModeThenTheGame` ;
-   `allGamesTest` réussi. Reste : essai du mainteneur.
+   `allGamesTest` réussi. Essayé et validé, commité (`f78963181`).
+
+   **Option « Avec cœurs / Sans cœurs », 16/11 (demande du mainteneur, propositions validées)** : dans tous les jeux
+   à cœurs, une ligne d'interrupteurs de plus dans la fenêtre des variantes, « Avec cœurs » choisi au départ.
+   « Sans cœurs » : pas de cœurs, jamais perdu, erreurs toujours comptées. Mécanisme commun : `LivesVariant`
+   (`gazeplay-games-commons`, dernier supplément de `GroupedGameVariant`, `LivesWith`/`LivesWithout` ; une variante
+   d'avant sans ce supplément garde ses cœurs) ; la fenêtre des variantes ne montre plus dans une ligne que les
+   valeurs possibles avec **tous** les choix des lignes au-dessus (`GameVariantDialog.valuesOfRow` ; avant : avec le
+   groupe seulement), si bien que la ligne des cœurs n'apparaît que là où ils existent (Cartes magiques : en Magique
+   avec une fin). Aiguillages : la fin est un bouton de variante, pas une ligne ; les deux choix sont donnés avec
+   chaque fin pour qu'aucun bouton ne disparaisse (sans fin : jamais de cœurs). Étapes 1 et 2 faites :
+   mécanisme, famille Où est…, Mélanger les couleurs, La Fabrique à gâteaux, Aiguillages, Point par point,
+   La bonne couleur, Identifier les lettres, Échelle, Cartes magiques (`setWithLives` du jeu, lu par le lanceur) ;
+   aides françaises et anglaises (phrase des cœurs, phrase « Sans cœurs », ligne de variante) ; tests (nombres de
+   variantes, « Avec » et « Sans » de chaque jeu, `LivesVariantTest`, `valuesOfRow`). Essayé et validé, commité ;
+   suite : étape 3, les 12 jeux plus anciens, de la même manière.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 

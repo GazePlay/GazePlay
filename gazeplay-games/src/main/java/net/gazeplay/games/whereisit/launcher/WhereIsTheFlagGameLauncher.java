@@ -45,7 +45,7 @@ public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, IGameVar
         };
         return new WhereIsIt(gameType, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant));
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant));
     }
 
     @Override
@@ -60,6 +60,6 @@ public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, IGameVar
         };
         return new WhereIsIt(gameType, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant), gameSeed);
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant), gameSeed);
     }
 }

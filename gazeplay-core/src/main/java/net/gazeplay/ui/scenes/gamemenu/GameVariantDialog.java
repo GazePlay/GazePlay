@@ -602,13 +602,15 @@ public class GameVariantDialog extends Stage {
         // The rows of the chosen group, put in the column just after the switches of the groups
         final List<FlowPane> otherRows = new ArrayList<>();
         final int[] otherRowsIndex = new int[1];
-        final Runnable showOtherRows = () -> {
+        final Runnable[] showOtherRows = new Runnable[1];
+        showOtherRows[0] = () -> {
             centerPane.getChildren().removeAll(otherRows);
             otherRows.clear();
-            final List<Set<String>> groupRows = rowsOfGroup.get(chosen[0]);
             boolean firstRow = !groupSwitches;
             for (int i = 1; i < rowCount; i++) {
-                final Set<String> values = groupRows.get(i);
+                // The values possible with the choices of the rows above (16/11/2026: the lives only in the modes and
+                // the ends that have them; before, with the group only)
+                final Set<String> values = valuesOfRow(variants, chosen, i);
                 if (!values.contains(chosen[i])) {
                     chosen[i] = values.iterator().next();
                 }
@@ -618,6 +620,7 @@ public class GameVariantDialog extends Stage {
                 final int row = i;
                 final FlowPane switchRow = switches(values, chosen[i], translator, value -> {
                     chosen[row] = value;
+                    showOtherRows[0].run();
                     show.run();
                 });
                 // A clear space between two rows of switches (maintainer's request of 30/10/2026)
@@ -630,7 +633,7 @@ public class GameVariantDialog extends Stage {
         if (groupSwitches) {
             final FlowPane switchRow = switches(rows.get(0), chosen[0], translator, value -> {
                 chosen[0] = value;
-                showOtherRows.run();
+                showOtherRows[0].run();
                 show.run();
             });
             switchRow.setPadding(new Insets(16, 0, 0, 0));
@@ -652,8 +655,27 @@ public class GameVariantDialog extends Stage {
         if (mostRows > 1) {
             extraHeight += (mostRows - 1) * (SWITCH_ROWS_GAP + SWITCH_ROW_HEIGHT);
         }
-        showOtherRows.run();
+        showOtherRows[0].run();
         show.run();
+    }
+
+    /**
+     * @return the values of a row of switches among the variants matching the choices of the rows above it, in their
+     *   order
+     */
+    static Set<String> valuesOfRow(final List<GroupedGameVariant> variants, final String[] chosen, final int row) {
+        final Set<String> values = new LinkedHashSet<>();
+        for (final GroupedGameVariant variant : variants) {
+            final List<String> switches = variant.getSwitches();
+            boolean matches = true;
+            for (int j = 0; j < row && matches; j++) {
+                matches = switches.get(j).equals(chosen[j]);
+            }
+            if (matches) {
+                values.add(switches.get(row));
+            }
+        }
+        return values;
     }
 
     /**

@@ -10,7 +10,7 @@ Des cartes sont retournées. Une seule cache une image : trouve-la !
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Une mauvaise carte compte une erreur. En Magique avec une fin (3, 5 ou 10 images), tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. En Chercher, où la carte se trouve au hasard, et sans fin, il n’y a pas de cœurs. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images trouvées (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+Une mauvaise carte compte une erreur. En Magique avec une fin (3, 5 ou 10 images) et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. En Chercher, où la carte se trouve au hasard, et sans fin, il n’y a pas de cœurs. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images trouvées (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
@@ -18,3 +18,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le nombre de cartes : 3 (sur une rangée), 4, 6 ou 9.
 - En bas, les images : des animaux, ou Mes images (les images du dossier commun, à ajouter dans les réglages, Dossiers, « Mes images »).
 - En bas, la fin : 3, 5 ou 10 images, ou sans fin.
+- En bas, en Magique avec une fin, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -279,7 +280,14 @@ class MagicCardsTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new MagicCardsGameVariantGenerator().getVariants();
-        assertEquals(2 * 2 * 4 * 4, variants.size());
+        // The hearts with or without in the magic mode with an end only (16/11/2026)
+        assertEquals((3 * 2 + 1 + 4) * 2 * 4, variants.size());
+        assertTrue(MagicCardsGameLauncher.create(gameContext,
+            new GroupedGameVariant("MagicShuffle", "MagicAnimals", "MagicCards9", null, "MagicEnd5",
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(MagicCardsGameLauncher.create(gameContext,
+            new GroupedGameVariant("MagicShuffle", "MagicAnimals", "MagicCards9", null, "MagicEnd5",
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final MagicCards grouped = MagicCardsGameLauncher.create(gameContext,
             new GroupedGameVariant("MagicShuffle", "MagicMyImages", "MagicCards9", "images", "MagicEnd5"), stats, 1);
         assertEquals(MagicCardsMode.MAGIC, grouped.getMode());

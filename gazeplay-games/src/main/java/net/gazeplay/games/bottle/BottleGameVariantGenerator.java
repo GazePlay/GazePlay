@@ -2,6 +2,7 @@ package net.gazeplay.games.bottle;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -19,9 +20,11 @@ public class BottleGameVariantGenerator implements IGameVariantGenerator {
         for (final BottleMode mode : BottleMode.values()) {
             for (final BottleEnd end : BottleEnd.values()) {
                 for (final BottleSize size : BottleSize.values()) {
-                    for (final BottleCount count : BottleCount.values()) {
-                        variants.add(new GroupedGameVariant(mode.getKey(), end.getKey(), count.getKey(), null,
-                            size.getKey()));
+                    for (final String lives : LivesVariant.options(mode == BottleMode.COLOR && end.getSeries() > 0)) {
+                        for (final BottleCount count : BottleCount.values()) {
+                            variants.add(new GroupedGameVariant(mode.getKey(), end.getKey(), count.getKey(), null,
+                                size.getKey(), lives));
+                        }
                     }
                 }
             }

@@ -308,10 +308,23 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 16/11/2026); without them, the
+     * game is never lost and the mistakes are still counted.
+     */
+    private boolean withLives = true;
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
+    }
+
+    /**
      * @return whether the game has lives: the magic mode with an end
      */
     boolean hasLives() {
-        return mode == MagicCardsMode.MAGIC && end.getPictures() > 0;
+        return withLives && mode == MagicCardsMode.MAGIC && end.getPictures() > 0;
     }
 
     /**

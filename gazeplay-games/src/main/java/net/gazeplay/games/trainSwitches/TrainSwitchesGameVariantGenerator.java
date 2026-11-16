@@ -2,6 +2,7 @@ package net.gazeplay.games.trainSwitches;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -22,8 +23,13 @@ public class TrainSwitchesGameVariantGenerator implements IGameVariantGenerator 
         final Set<IGameVariant> variants = new LinkedHashSet<>();
         for (final TrainSwitchesLevel level : TrainSwitchesLevel.values()) {
             for (final TrainSwitchesRhythm rhythm : TrainSwitchesRhythm.values()) {
-                for (final TrainSwitchesEnd end : TrainSwitchesEnd.values()) {
-                    variants.add(new GroupedGameVariant(GROUP, level.getKey(), end.getKey(), null, rhythm.getKey()));
+                // The end is a button of variant, not a row of switches: both choices with each end, so that no button
+                // disappears (without end, there are no hearts anyway)
+                for (final String lives : LivesVariant.options(true)) {
+                    for (final TrainSwitchesEnd end : TrainSwitchesEnd.values()) {
+                        variants.add(new GroupedGameVariant(GROUP, level.getKey(), end.getKey(), null, rhythm.getKey(),
+                            lives));
+                    }
                 }
             }
         }

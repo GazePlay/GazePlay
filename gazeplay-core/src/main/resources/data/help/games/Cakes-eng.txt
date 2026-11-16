@@ -10,10 +10,11 @@ Make a cake layer by layer: the cake, the cream, an accessory around the layers 
 - At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-To copy the model, make the whole cake, then it is compared with the model. If it is not quite the same, "Not quite!": the wrong layers blink on the model, then the cake is taken away and you make the same one again, without the wrong choices. With an end (1, 3 or 5 cakes), you have 3 hearts at the top left: each wrong cake costs one; with no heart left, "Lost!", then the statistics. Without end, there are no hearts. The finished cake shines, with a star and "Well done!". As you chose, the game stops after 1, 3 or 5 cakes ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+To copy the model, make the whole cake, then it is compared with the model. If it is not quite the same, "Not quite!": the wrong layers blink on the model, then the cake is taken away and you make the same one again, without the wrong choices. With an end (1, 3 or 5 cakes) and "With hearts", you have 3 hearts at the top left: each wrong cake costs one; with no heart left, "Lost!", then the statistics. Without end, there are no hearts. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. The finished cake shines, with a star and "Well done!". As you chose, the game stops after 1, 3 or 5 cakes ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The game: Copy the model, or Free (your own cake).
 - To copy the model: Easy (1 layer), Normal (3 layers) or Hard (3 layers, hidden model).
 - At the bottom, the end: 1, 3 or 5 cakes, or without end.
+- At the bottom, to copy the model with an end, the hearts: With hearts (3 hearts) or Without hearts.

@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -44,10 +45,19 @@ public class ColorBlendLauncher implements IGameLauncher<Stats, IGameVariant> {
     static ColorBlend create(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                              final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
-            return new ColorBlend(gameContext, stats, ColorBlendMode.of(grouped.getGroup()),
-                ColorBlendLevel.of(grouped.getValue()), ColorBlendEnd.of(grouped.getSubGroup()), gameSeed);
+            return withLives(new ColorBlend(gameContext, stats, ColorBlendMode.of(grouped.getGroup()),
+                ColorBlendLevel.of(grouped.getValue()), ColorBlendEnd.of(grouped.getSubGroup()), gameSeed), gameVariant);
         }
-        return new ColorBlend(gameContext, stats, ColorBlendMode.FREE, ColorBlendLevel.FREE, ColorBlendEnd.ENDLESS,
-            gameSeed);
+        return withLives(
+            new ColorBlend(gameContext, stats, ColorBlendMode.FREE, ColorBlendLevel.FREE, ColorBlendEnd.ENDLESS,
+            gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static ColorBlend withLives(final ColorBlend game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

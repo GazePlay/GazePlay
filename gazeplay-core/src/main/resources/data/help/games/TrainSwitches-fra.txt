@@ -12,10 +12,11 @@ Des trains de couleur sortent du tunnel : envoie chacun à la gare de sa couleur
 - Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Un train arrivé à la bonne gare compte un point (une coche verte). À une mauvaise gare, c'est une erreur (une croix rouge). Avec 5, 10 ou 20 trains, tu as 3 cœurs en haut à gauche : chaque train arrivé à une mauvaise gare en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n'y a pas de cœurs et la partie continue. Tous les 5 trains, un nouveau circuit arrive. Après 5, 10 ou 20 trains, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+Un train arrivé à la bonne gare compte un point (une coche verte). À une mauvaise gare, c'est une erreur (une croix rouge). Avec 5, 10 ou 20 trains et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque train arrivé à une mauvaise gare en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n'y a pas de cœurs et la partie continue. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Tous les 5 trains, un nouveau circuit arrive. Après 5, 10 ou 20 trains, c'est « Bravo », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 5 trains, 10 trains, 20 trains ou sans fin : le nombre de trains de la partie.
 - En bas, le niveau : Facile, 3 gares et 2 aiguillages ; Normal, 5 gares et 4 aiguillages ; Difficile, 8 gares et 7 aiguillages.
 - En bas aussi, le rythme : un train à la fois (le suivant part quand le précédent est arrivé) ; pause à chaque aiguillage (tout s'arrête avant chaque aiguillage : change-le si besoin, puis fixe le bouton rond à droite pour repartir) ; trains en continu (les trains se suivent, toujours à la même distance).
+- En bas aussi, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs ; sans fin, il n’y a jamais de cœurs.

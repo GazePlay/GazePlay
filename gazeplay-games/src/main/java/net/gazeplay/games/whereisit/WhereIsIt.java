@@ -127,6 +127,11 @@ public class WhereIsIt implements GameLifeCycle {
     static final int LIVES = 3;
 
     /**
+     * Whether the user chose the hearts (16/11/2026); without them, the game is never lost.
+     */
+    private final boolean withLives;
+
+    /**
      * The lives left; none are shown without end.
      */
     @Getter
@@ -155,6 +160,16 @@ public class WhereIsIt implements GameLifeCycle {
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
                      final IGameContext gameContext, final Stats stats, final WhereIsItEnd end) {
+        this(gameType, nbLines, nbColumns, gameContext, stats, end, true);
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (variant, {@code LivesVariant}); they only apply with an end
+     */
+    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
+                     final IGameContext gameContext, final Stats stats, final WhereIsItEnd end,
+                     final boolean withLives) {
+        this.withLives = withLives;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
@@ -167,7 +182,9 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
-                     final IGameContext gameContext, final Stats stats, final WhereIsItEnd end, double gameSeed) {
+                     final IGameContext gameContext, final Stats stats, final WhereIsItEnd end,
+                     final boolean withLives, double gameSeed) {
+        this.withLives = withLives;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
@@ -225,7 +242,7 @@ public class WhereIsIt implements GameLifeCycle {
      * @return whether the game has lives: a variant with an end (none without end, maintainer's decision)
      */
     boolean hasLives() {
-        return end.getScreens() > 0;
+        return withLives && end.getScreens() > 0;
     }
 
     /**

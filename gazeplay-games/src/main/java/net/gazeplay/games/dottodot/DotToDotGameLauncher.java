@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -45,13 +46,24 @@ public class DotToDotGameLauncher implements IGameLauncher<Stats, IGameVariant> 
     static DotToDot create(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                            final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
-            return new DotToDot(gameContext, stats, DotLevel.of(grouped.getValue()), DotLabels.of(grouped.getGroup()),
-                DotEnd.of(grouped.getSubGroup()), gameSeed);
+            return withLives(
+                new DotToDot(gameContext, stats, DotLevel.of(grouped.getValue()), DotLabels.of(grouped.getGroup()),
+                DotEnd.of(grouped.getSubGroup()), gameSeed), gameVariant);
         }
         if (gameVariant instanceof EnumGameVariant<?> former && former.getEnumValue() instanceof DotToDotGameVariant old) {
             final DotLevel level = old.getLabel().contains("Dynamic") ? DotLevel.PROGRESSIVE : DotLevel.NORMAL;
-            return new DotToDot(gameContext, stats, level, DotLabels.NUMBERS, DotEnd.ENDLESS, gameSeed);
+            return withLives(
+                new DotToDot(gameContext, stats, level, DotLabels.NUMBERS, DotEnd.ENDLESS, gameSeed), gameVariant);
         }
-        return new DotToDot(gameContext, stats, DotLevel.EASY, DotLabels.NUMBERS, DotEnd.ENDLESS, gameSeed);
+        return withLives(
+            new DotToDot(gameContext, stats, DotLevel.EASY, DotLabels.NUMBERS, DotEnd.ENDLESS, gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static DotToDot withLives(final DotToDot game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

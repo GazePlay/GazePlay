@@ -10,11 +10,12 @@ Relie les points dans l’ordre, 1, 2, 3… ou A, B, C… Un dessin apparaît : 
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Un point touché dans le mauvais ordre tremble et compte une erreur. Avec une fin (3, 5 ou 10 dessins), tu as 3 cœurs en haut à gauche : chaque point dans le mauvais ordre en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n’y a pas de cœurs. Selon ton choix, la partie s’arrête après 3, 5 ou 10 dessins (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+Un point touché dans le mauvais ordre tremble et compte une erreur. Avec une fin (3, 5 ou 10 dessins) et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque point dans le mauvais ordre en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n’y a pas de cœurs. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 dessins (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le niveau. Facile : 4 à 7 points, le point suivant aide. Normal : 8 à 12 points. Difficile : 13 à 20 points. Progressif : commence en Facile et passe au niveau suivant après 3 dessins de suite sans erreur.
 - En bas, les points : des nombres (1, 2, 3…) ou des lettres (A, B, C…).
 - En bas, la fin : 3, 5 ou 10 dessins, ou sans fin.
+- En bas, avec une fin, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.
 - 24 dessins : un cerf-volant, une maison, un poisson, une étoile, un chat, une fusée, un château, un papillon, un bonhomme de neige…

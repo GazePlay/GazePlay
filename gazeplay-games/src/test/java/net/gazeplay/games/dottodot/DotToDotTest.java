@@ -7,6 +7,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -305,7 +306,14 @@ class DotToDotTest {
 
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
-        assertEquals(2 * 4 * 4, new DotToDotGameVariantGenerator().getVariants().size());
+        // The hearts with or without with an end only (16/11/2026)
+        assertEquals(2 * (3 * 2 + 1) * 4, new DotToDotGameVariantGenerator().getVariants().size());
+        assertTrue(DotToDotGameLauncher.create(gameContext,
+            new GroupedGameVariant("DotLetters", "DotEnd5", "DotProgressive", null,
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(DotToDotGameLauncher.create(gameContext,
+            new GroupedGameVariant("DotLetters", "DotEnd5", "DotProgressive", null,
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final DotToDot grouped = DotToDotGameLauncher.create(gameContext,
             new GroupedGameVariant("DotLetters", "DotEnd5", "DotProgressive", null), stats, 1);
         assertEquals(DotLevel.PROGRESSIVE, grouped.getLevel());

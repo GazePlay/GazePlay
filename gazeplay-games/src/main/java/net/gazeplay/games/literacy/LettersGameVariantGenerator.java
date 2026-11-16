@@ -2,6 +2,7 @@ package net.gazeplay.games.literacy;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -20,10 +21,12 @@ public class LettersGameVariantGenerator implements IGameVariantGenerator {
         for (final LettersPictures pictures : LettersPictures.values()) {
             for (final LettersCase letterCase : LettersCase.values()) {
                 for (final LettersEnd end : LettersEnd.values()) {
-                    for (final LettersLevel level : LettersLevel.values()) {
-                        variants.add(new GroupedGameVariant(pictures.getKey(), letterCase.getKey(), level.getKey(),
-                            pictures == LettersPictures.MY_IMAGES ? LettersPictures.USER_IMAGES_FOLDER : null,
-                            end.getKey()));
+                    for (final String lives : LivesVariant.options(end.getPictures() > 0)) {
+                        for (final LettersLevel level : LettersLevel.values()) {
+                            variants.add(new GroupedGameVariant(pictures.getKey(), letterCase.getKey(), level.getKey(),
+                                pictures == LettersPictures.MY_IMAGES ? LettersPictures.USER_IMAGES_FOLDER : null,
+                                end.getKey(), lives));
+                        }
                     }
                 }
             }

@@ -9,7 +9,7 @@ Listen to a sound (the cry of an animal or a musical instrument) and find the pi
 # How to win
 - Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
 - Wrong answer: the picture is crossed out and greyed, and cannot be chosen again; look again (the question is said again if the settings ask for it). If the question has a sound, a bubble reminds you that you can hear it again with the loudspeaker.
-- With an end (5, 10 or 15 screens), you have 3 hearts at the top left: each wrong answer costs one. With no heart left, "Lost!", then the statistics. Without end, there are no hearts.
+- With an end (5, 10 or 15 screens) and "With hearts", you have 3 hearts at the top left: each wrong answer costs one. With no heart left, "Lost!", then the statistics. Without end, or with "Without hearts", there are no hearts and the game is never lost: a wrong answer only counts a mistake in the statistics.
 - Depending on the variant, the game stops after 5, 10 or 15 screens found: "Bravo", then the statistics; without end, leave by the menu (Esc key).
 - At the bottom left, the counter shows the screens found.
 
@@ -18,3 +18,4 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom, the sounds: Animals, Instruments or All sounds.
 - The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.
 - At the bottom, the end of the game: 5, 10 or 15 screens, or without end.
+- At the bottom, with an end, the hearts: With hearts (3 hearts) or Without hearts.

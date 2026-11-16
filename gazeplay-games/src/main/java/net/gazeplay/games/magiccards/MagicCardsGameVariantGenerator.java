@@ -2,6 +2,7 @@ package net.gazeplay.games.magiccards;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -20,10 +21,13 @@ public class MagicCardsGameVariantGenerator implements IGameVariantGenerator {
         for (final MagicCardsMode mode : MagicCardsMode.values()) {
             for (final MagicCardsPictures pictures : MagicCardsPictures.values()) {
                 for (final MagicCardsEnd end : MagicCardsEnd.values()) {
-                    for (final MagicCardsCount count : MagicCardsCount.values()) {
-                        variants.add(new GroupedGameVariant(mode.getKey(), pictures.getKey(), count.getKey(),
-                            pictures == MagicCardsPictures.MY_IMAGES ? MagicCardsPictures.USER_IMAGES_FOLDER : null,
-                            end.getKey()));
+                    for (final String lives : LivesVariant.options(mode == MagicCardsMode.MAGIC
+                        && end.getPictures() > 0)) {
+                        for (final MagicCardsCount count : MagicCardsCount.values()) {
+                            variants.add(new GroupedGameVariant(mode.getKey(), pictures.getKey(), count.getKey(),
+                                pictures == MagicCardsPictures.MY_IMAGES ? MagicCardsPictures.USER_IMAGES_FOLDER
+                                    : null, end.getKey(), lives));
+                        }
                     }
                 }
             }

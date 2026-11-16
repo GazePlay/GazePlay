@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -369,7 +370,14 @@ class CakesTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new CakesGameVariantGenerator().getVariants();
-        assertEquals(3 * 4 + 4, variants.size());
+        // The hearts with or without in the copy with an end only (16/11/2026)
+        assertEquals((3 * 2 + 1) * 3 + 4, variants.size());
+        assertTrue(CakesGameLauncher.create(gameContext,
+            new GroupedGameVariant("CakesCopy", "CakesEnd3", "CakesHard", null,
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(CakesGameLauncher.create(gameContext,
+            new GroupedGameVariant("CakesCopy", "CakesEnd3", "CakesHard", null,
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final CakeFactory free = CakesGameLauncher.create(gameContext,
             new GroupedGameVariant("CakesFree", "CakesEnd3", "CakesFreeLayers", null), stats, 1);
         assertEquals(CakesMode.FREE, free.getMode());

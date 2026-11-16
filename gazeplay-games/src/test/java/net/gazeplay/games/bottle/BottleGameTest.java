@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.ui.Translator;
@@ -252,7 +253,14 @@ class BottleGameTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new BottleGameVariantGenerator().getVariants();
-        assertEquals(2 * 4 * 3 * 4, variants.size());
+        // The hearts with or without in "the right colour" with an end only (16/11/2026)
+        assertEquals((4 + 3 * 2 + 1) * 3 * 4, variants.size());
+        assertTrue(BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleColorMode", "BottleEnd5", "Bottles12", null, "BottleLarge",
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleColorMode", "BottleEnd5", "Bottles12", null, "BottleLarge",
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final BottleGame color = BottleGameLauncher.create(gameContext,
             new GroupedGameVariant("BottleColorMode", "BottleEnd5", "Bottles12", null, "BottleLarge"), stats, 1);
         assertEquals(BottleMode.COLOR, color.getMode());

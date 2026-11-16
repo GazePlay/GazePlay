@@ -9,10 +9,11 @@ A Japanese ladder: colored ropes joined by rungs. The Biboule goes down a rope a
 - At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-In Aim, a wrong start counts a mistake. With an end (3, 5 or 10 games), you have 3 hearts at the top left: each wrong start costs one; with no heart left, "Lost!", then the statistics. In Free and without end, there are no hearts. A game won gives a star and "Well done!", then another ladder. As you chose, the game stops after 3, 5 or 10 games ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+In Aim, a wrong start counts a mistake. With an end (3, 5 or 10 games) and "With hearts", you have 3 hearts at the top left: each wrong start costs one; with no heart left, "Lost!", then the statistics. In Free and without end, there are no hearts. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. A game won gives a star and "Well done!", then another ladder. As you chose, the game stops after 3, 5 or 10 games ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The game: Free, or Aim.
 - The level: Easy (3 ropes), Normal (4 ropes) or Hard (5 ropes and more rungs).
 - At the bottom, the end (3, 5 or 10 games, or no end) and the pictures: the animals, or My images (the folder "My images" of the settings).
+- At the bottom, in Aim with an end, the hearts: With hearts (3 hearts) or Without hearts.

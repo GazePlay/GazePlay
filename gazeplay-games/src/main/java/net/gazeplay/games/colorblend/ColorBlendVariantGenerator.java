@@ -2,6 +2,7 @@ package net.gazeplay.games.colorblend;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -20,12 +21,14 @@ public class ColorBlendVariantGenerator implements IGameVariantGenerator {
         for (final ColorBlendEnd end : ColorBlendEnd.values()) {
             for (final ColorBlendLevel level : new ColorBlendLevel[]{ColorBlendLevel.EASY, ColorBlendLevel.NORMAL,
                 ColorBlendLevel.HARD}) {
-                variants.add(new GroupedGameVariant(ColorBlendMode.CHALLENGE.getKey(), end.getKey(), level.getKey(),
-                    null));
+                for (final String lives : LivesVariant.options(end.getColors() > 0)) {
+                    variants.add(new GroupedGameVariant(ColorBlendMode.CHALLENGE.getKey(), end.getKey(),
+                        level.getKey(), null, lives));
+                }
             }
         }
         variants.add(new GroupedGameVariant(ColorBlendMode.FREE.getKey(), ColorBlendEnd.ENDLESS.getKey(),
-            ColorBlendLevel.FREE.getKey(), null));
+            ColorBlendLevel.FREE.getKey(), null, LivesVariant.WITHOUT));
         return variants;
     }
 }

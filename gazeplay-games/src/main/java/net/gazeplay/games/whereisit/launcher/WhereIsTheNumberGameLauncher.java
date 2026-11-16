@@ -38,7 +38,7 @@ public class WhereIsTheNumberGameLauncher implements IGameLauncher<Stats, IGameV
                                        IGameVariant gameVariant, Stats stats) {
         return new WhereIsIt(WhereIsItGameType.NUMBERS, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant));
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class WhereIsTheNumberGameLauncher implements IGameLauncher<Stats, IGameV
                                        IGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.NUMBERS, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant), gameSeed);
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant), gameSeed);
     }
 
 }

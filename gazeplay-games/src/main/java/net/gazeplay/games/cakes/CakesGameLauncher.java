@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -45,8 +46,8 @@ public class CakesGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     static CakeFactory create(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                               final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
-            return new CakeFactory(gameContext, stats, CakesMode.of(grouped.getGroup()),
-                CakesLevel.of(grouped.getValue()), CakesEnd.of(grouped.getSubGroup()), gameSeed);
+            return withLives(new CakeFactory(gameContext, stats, CakesMode.of(grouped.getGroup()),
+                CakesLevel.of(grouped.getValue()), CakesEnd.of(grouped.getSubGroup()), gameSeed), gameVariant);
         }
         CakesLevel level = CakesLevel.NORMAL;
         if (gameVariant instanceof EnumGameVariant<?> former && former.getEnumValue() instanceof CakeGameVariant old) {
@@ -56,6 +57,15 @@ public class CakesGameLauncher implements IGameLauncher<Stats, IGameVariant> {
                 case THREELAYERSHIDEN -> CakesLevel.HARD;
             };
         }
-        return new CakeFactory(gameContext, stats, CakesMode.COPY, level, CakesEnd.ENDLESS, gameSeed);
+        return withLives(
+            new CakeFactory(gameContext, stats, CakesMode.COPY, level, CakesEnd.ENDLESS, gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static CakeFactory withLives(final CakeFactory game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

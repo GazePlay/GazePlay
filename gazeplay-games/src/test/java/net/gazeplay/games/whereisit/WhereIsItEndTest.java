@@ -54,8 +54,8 @@ class WhereIsItEndTest {
     @Test
     void shouldGiveEachThemeAndSizeWithEachEnd() {
         final Set<IGameVariant> variants = new WhereIsTheAnimalGameVariantGenerator().getVariants();
-        // 31 themes and sizes before, each with the 4 ends
-        assertEquals(31 * 4, variants.size());
+        // 31 themes and sizes before, each with the 3 ends with or without hearts, and without end (16/11/2026)
+        assertEquals(31 * 7, variants.size());
         assertTrue(variants.stream().allMatch(GroupedGameVariant.class::isInstance));
         final List<GroupedGameVariant> grouped = variants.stream().map(GroupedGameVariant.class::cast).toList();
         // The ends in the order of the switches: 5, 10, 15 screens, then without end
@@ -65,18 +65,26 @@ class WhereIsItEndTest {
         assertEquals(List.of("Farm", "Forest", "Savanna", "Birds", "Maritime", "AllAnimals", "Dynamic"),
             List.copyOf(grouped.stream().map(GroupedGameVariant::getGroup)
                 .collect(Collectors.toCollection(LinkedHashSet::new))));
-        assertTrue(variants.contains(IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-")));
+        assertTrue(variants.contains(
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-:LivesWith")));
+        assertTrue(variants.contains(
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-:LivesWithout")));
+        // Without end, no hearts to choose
+        assertTrue(variants.contains(
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x3:-:LivesWithout")));
+        assertFalse(variants.contains(
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x3:-:LivesWith")));
         // Dynamic keeps its single size
-        assertEquals(4, grouped.stream().filter(variant -> variant.getGroup().equals("Dynamic")).count());
+        assertEquals(7, grouped.stream().filter(variant -> variant.getGroup().equals("Dynamic")).count());
         // Easy of the colors keeps its 4 sizes (no 3 x 3)
-        assertEquals(4 * 4, new WhereIsTheColorGameVariantGenerator().getVariants().stream()
+        assertEquals(4 * 7, new WhereIsTheColorGameVariantGenerator().getVariants().stream()
             .map(GroupedGameVariant.class::cast).filter(variant -> variant.getGroup().equals("Easy")).count());
     }
 
     @Test
     void shouldGiveOneThemeToAGameWithoutThemes() {
         final Set<IGameVariant> variants = new WhereIsItGameVariantGenerator().getVariants();
-        assertEquals(5 * 4, variants.size());
+        assertEquals(5 * 7, variants.size());
         assertTrue(variants.stream().map(GroupedGameVariant.class::cast)
             .allMatch(variant -> variant.getGroup().equals("WhereIsIt") && variant.isSize()));
     }
@@ -184,6 +192,26 @@ class WhereIsItEndTest {
             assertFalse(endless.wrongPictureChosen());
         }
         assertNull(endless.livesShown());
+    }
+
+    /**
+     * "Without hearts" chosen in the variant (16/11/2026): no hearts, never lost, the mistakes still counted; a variant
+     * of before keeps its hearts.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() {
+        final WhereIsIt game = (WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd5:2x2:-:LivesWithout"), stats);
+        assertFalse(game.hasLives());
+        for (int i = 0; i < 10; i++) {
+            assertFalse(game.wrongPictureChosen());
+        }
+        assertNull(game.livesShown());
+        assertFalse(game.isLost());
+        assertTrue(((WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd5:2x2:-:LivesWith"), stats)).hasLives());
+        assertTrue(((WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd5:2x2:-"), stats)).hasLives());
     }
 
     /**

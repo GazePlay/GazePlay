@@ -7,6 +7,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -314,7 +315,14 @@ class LettersTest {
 
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
-        assertEquals(2 * 3 * 4 * 3, new LettersGameVariantGenerator().getVariants().size());
+        // The hearts with or without with an end only (16/11/2026)
+        assertEquals(2 * 3 * (3 * 2 + 1) * 3, new LettersGameVariantGenerator().getVariants().size());
+        assertTrue(LettersGameLauncher.create(gameContext,
+            new GroupedGameVariant("LettersAnimals", "LettersSmall", "Hard", null, "LettersEnd5",
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(LettersGameLauncher.create(gameContext,
+            new GroupedGameVariant("LettersAnimals", "LettersSmall", "Hard", null, "LettersEnd5",
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final Letters grouped = LettersGameLauncher.create(gameContext, new GroupedGameVariant("LettersMyImages",
             "LettersSmall", "Hard", UserImagesVariant.IMAGES, "LettersEnd5"), stats, 1);
         assertEquals(LettersLevel.HARD, grouped.getLevel());

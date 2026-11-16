@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -46,15 +47,23 @@ public class MagicCardsGameLauncher implements IGameLauncher<Stats, IGameVariant
                              final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             final var extras = grouped.getExtras();
-            return new MagicCards(gameContext, stats, MagicCardsMode.of(grouped.getGroup()),
+            return withLives(new MagicCards(gameContext, stats, MagicCardsMode.of(grouped.getGroup()),
                 MagicCardsPictures.of(grouped.getSubGroup()), MagicCardsCount.of(grouped.getValue()),
-                MagicCardsEnd.of(extras.isEmpty() ? null : extras.get(0)), gameSeed);
+                MagicCardsEnd.of(extras.isEmpty() ? null : extras.get(0)), gameSeed), gameVariant);
         }
         MagicCardsCount count = MagicCardsCount.FOUR;
         if (gameVariant instanceof DimensionGameVariant grid) {
             count = MagicCardsCount.ofCards(grid.getWidth() * grid.getHeight());
         }
-        return new MagicCards(gameContext, stats, MagicCardsMode.SEARCH, MagicCardsPictures.ANIMALS, count,
-            MagicCardsEnd.ENDLESS, gameSeed);
+        return withLives(new MagicCards(gameContext, stats, MagicCardsMode.SEARCH, MagicCardsPictures.ANIMALS, count,
+            MagicCardsEnd.ENDLESS, gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static MagicCards withLives(final MagicCards game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

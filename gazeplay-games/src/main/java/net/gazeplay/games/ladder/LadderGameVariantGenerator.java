@@ -2,6 +2,7 @@ package net.gazeplay.games.ladder;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -20,10 +21,12 @@ public class LadderGameVariantGenerator implements IGameVariantGenerator {
         for (final LadderMode mode : LadderMode.values()) {
             for (final LadderEnd end : LadderEnd.values()) {
                 for (final LadderPictures pictures : LadderPictures.values()) {
-                    for (final LadderLevel level : LadderLevel.values()) {
-                        variants.add(new GroupedGameVariant(mode.getKey(), end.getKey(), level.getKey(),
-                            pictures == LadderPictures.MY_IMAGES ? LadderPictures.USER_IMAGES_FOLDER : null,
-                            pictures.getKey()));
+                    for (final String lives : LivesVariant.options(mode == LadderMode.AIM && end.getGames() > 0)) {
+                        for (final LadderLevel level : LadderLevel.values()) {
+                            variants.add(new GroupedGameVariant(mode.getKey(), end.getKey(), level.getKey(),
+                                pictures == LadderPictures.MY_IMAGES ? LadderPictures.USER_IMAGES_FOLDER : null,
+                                pictures.getKey(), lives));
+                        }
                     }
                 }
             }

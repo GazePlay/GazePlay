@@ -10,10 +10,11 @@ Fabrique un gâteau étage par étage : le gâteau, le nappage, un accessoire au
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Pour copier le modèle, fais tout le gâteau, puis il est comparé au modèle. S’il n’est pas tout à fait pareil, « Pas tout à fait ! » : les étages faux clignotent sur le modèle, puis le gâteau est enlevé et tu refais le même, sans les choix qui étaient faux. Avec une fin (1, 3 ou 5 gâteaux), tu as 3 cœurs en haut à gauche : chaque gâteau faux en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n’y a pas de cœurs. Le gâteau fini brille, avec une étoile et « Bravo ! ». Selon ton choix, la partie s’arrête après 1, 3 ou 5 gâteaux (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+Pour copier le modèle, fais tout le gâteau, puis il est comparé au modèle. S’il n’est pas tout à fait pareil, « Pas tout à fait ! » : les étages faux clignotent sur le modèle, puis le gâteau est enlevé et tu refais le même, sans les choix qui étaient faux. Avec une fin (1, 3 ou 5 gâteaux) et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque gâteau faux en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n’y a pas de cœurs. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Le gâteau fini brille, avec une étoile et « Bravo ! ». Selon ton choix, la partie s’arrête après 1, 3 ou 5 gâteaux (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le jeu : Copier le modèle, ou Libre (ton propre gâteau).
 - Pour copier le modèle : Facile (1 étage), Normal (3 étages) ou Difficile (3 étages, modèle caché).
 - En bas, la fin : 1, 3 ou 5 gâteaux, ou sans fin.
+- En bas, pour copier le modèle avec une fin, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -10,10 +10,11 @@ Au stand de la fête foraine, casse des bouteilles avec une balle ! Casse toutes
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-En La bonne couleur, une bouteille de la mauvaise couleur tremble et compte une erreur. Avec une fin (1, 3 ou 5 séries), tu as 3 cœurs en haut à gauche : chaque bouteille de la mauvaise couleur en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin et en Tout casser, il n’y a pas de cœurs. Une série finie donne une étoile et « Bravo ! », puis de nouvelles bouteilles (en La bonne couleur, une autre couleur à casser). Selon ton choix, le jeu s’arrête après 1, 3 ou 5 séries (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+En La bonne couleur, une bouteille de la mauvaise couleur tremble et compte une erreur. Avec une fin (1, 3 ou 5 séries) et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque bouteille de la mauvaise couleur en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin et en Tout casser, il n’y a pas de cœurs. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Une série finie donne une étoile et « Bravo ! », puis de nouvelles bouteilles (en La bonne couleur, une autre couleur à casser). Selon ton choix, le jeu s’arrête après 1, 3 ou 5 séries (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le jeu : Tout casser, ou La bonne couleur.
 - Le nombre de bouteilles : 4, 8, 12 ou 16, sur deux étagères.
 - En bas, la fin (1, 3 ou 5 séries, ou sans fin) et la taille des bouteilles (petites, moyennes ou grosses).
+- En bas, en La bonne couleur avec une fin, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

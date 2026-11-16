@@ -5,6 +5,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
@@ -47,8 +48,8 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IGameV
                              final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             final String size = grouped.getExtras().isEmpty() ? null : grouped.getExtras().get(0);
-            return new BottleGame(gameContext, stats, BottleMode.of(grouped.getGroup()),
-                BottleCount.of(grouped.getValue()), BottleSize.of(size), BottleEnd.of(grouped.getSubGroup()), gameSeed);
+            return withLives(new BottleGame(gameContext, stats, BottleMode.of(grouped.getGroup()),
+                BottleCount.of(grouped.getValue()), BottleSize.of(size), BottleEnd.of(grouped.getSubGroup()), gameSeed), gameVariant);
         }
         if (gameVariant instanceof IntStringGameVariant former) {
             final String type = former.getStringValue();
@@ -58,10 +59,19 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IGameV
                 default -> BottleSize.MEDIUM;
             };
             final BottleEnd end = "InfinityBottles".equals(type) ? BottleEnd.ENDLESS : BottleEnd.SERIES_1;
-            return new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.of(former.getNumber()), size, end,
-                gameSeed);
+            return withLives(
+                new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.of(former.getNumber()), size, end,
+                gameSeed), gameVariant);
         }
-        return new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.EIGHT, BottleSize.MEDIUM,
-            BottleEnd.SERIES_1, gameSeed);
+        return withLives(new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.EIGHT, BottleSize.MEDIUM,
+            BottleEnd.SERIES_1, gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static BottleGame withLives(final BottleGame game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

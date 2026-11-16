@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -46,10 +47,19 @@ public class LadderGameLauncher implements IGameLauncher<Stats, IGameVariant> {
                          final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             final String pictures = grouped.getExtras().isEmpty() ? null : grouped.getExtras().get(0);
-            return new Ladder(gameContext, stats, LadderMode.of(grouped.getGroup()), LadderLevel.of(grouped.getValue()),
-                LadderEnd.of(grouped.getSubGroup()), LadderPictures.of(pictures), gameSeed);
+            return withLives(
+                new Ladder(gameContext, stats, LadderMode.of(grouped.getGroup()), LadderLevel.of(grouped.getValue()),
+                LadderEnd.of(grouped.getSubGroup()), LadderPictures.of(pictures), gameSeed), gameVariant);
         }
-        return new Ladder(gameContext, stats, LadderMode.WATCH, LadderLevel.NORMAL, LadderEnd.GAMES_3,
-            LadderPictures.ANIMALS, gameSeed);
+        return withLives(new Ladder(gameContext, stats, LadderMode.WATCH, LadderLevel.NORMAL, LadderEnd.GAMES_3,
+            LadderPictures.ANIMALS, gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static Ladder withLives(final Ladder game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -335,7 +336,14 @@ class ColorBlendTest {
     @Test
     void shouldReadTheVariantsAndALaunchWithoutVariant() {
         final Set<IGameVariant> variants = new ColorBlendVariantGenerator().getVariants();
-        assertEquals(3 * 4 + 1, variants.size());
+        // The hearts with or without in the challenge with an end only (16/11/2026)
+        assertEquals(3 * (3 * 2 + 1) + 1, variants.size());
+        assertTrue(ColorBlendLauncher.create(gameContext,
+            new GroupedGameVariant("ColorBlendChallenge", "ColorBlendEnd10", "ColorBlendHard", null,
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(ColorBlendLauncher.create(gameContext,
+            new GroupedGameVariant("ColorBlendChallenge", "ColorBlendEnd10", "ColorBlendHard", null,
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final ColorBlend hard = ColorBlendLauncher.create(gameContext,
             new GroupedGameVariant("ColorBlendChallenge", "ColorBlendEnd10", "ColorBlendHard", null), stats, 1);
         assertEquals(ColorBlendMode.CHALLENGE, hard.getMode());

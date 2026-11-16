@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -246,7 +247,14 @@ class LadderTest {
     @Test
     void shouldReadTheVariantsAndALaunchWithoutVariant() {
         final Set<IGameVariant> variants = new LadderGameVariantGenerator().getVariants();
-        assertEquals(2 * 4 * 2 * 3, variants.size());
+        // The hearts with or without in the aim with an end only (16/11/2026)
+        assertEquals((3 * 2 + 1 + 4) * 2 * 3, variants.size());
+        assertTrue(LadderGameLauncher.create(gameContext,
+            new GroupedGameVariant("LadderAim", "LadderEnd10", "LadderHard", null, "LadderAnimals",
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(LadderGameLauncher.create(gameContext,
+            new GroupedGameVariant("LadderAim", "LadderEnd10", "LadderHard", null, "LadderAnimals",
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         final Ladder aim = LadderGameLauncher.create(gameContext,
             new GroupedGameVariant("LadderAim", "LadderEnd10", "LadderHard", "images", "LadderMyImages"), stats, 1);
         assertEquals(LadderMode.AIM, aim.getMode());

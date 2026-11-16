@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -733,15 +734,22 @@ class TrainSwitchesTest {
     @Test
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new TrainSwitchesGameVariantGenerator().getVariants();
-        assertEquals(36, variants.size());
+        // Each with or without hearts (16/11/2026)
+        assertEquals(36 * 2, variants.size());
         final IGameVariant variant = new GroupedGameVariant(TrainSwitchesGameVariantGenerator.GROUP,
             TrainSwitchesLevel.HARD.getKey(), TrainSwitchesEnd.TRAINS_20.getKey(), null,
-            TrainSwitchesRhythm.PAUSE.getKey());
+            TrainSwitchesRhythm.PAUSE.getKey(), LivesVariant.WITHOUT);
         assertTrue(variants.contains(variant));
         assertEquals(TrainSwitchesLevel.HARD, TrainSwitchesGameLauncher.levelOf(variant));
         assertEquals(TrainSwitchesEnd.TRAINS_20, TrainSwitchesGameLauncher.endOf(variant));
         assertEquals(TrainSwitchesRhythm.PAUSE, TrainSwitchesGameLauncher.rhythmOf(variant));
         assertEquals(variant, IGameVariant.toGameVariant(variant.toString()));
+        assertFalse(((TrainSwitches) new TrainSwitchesGameLauncher().createNewGame(gameContext,
+            variant, stats)).hasLives());
+        assertTrue(((TrainSwitches) new TrainSwitchesGameLauncher().createNewGame(gameContext,
+            new GroupedGameVariant(TrainSwitchesGameVariantGenerator.GROUP, TrainSwitchesLevel.HARD.getKey(),
+                TrainSwitchesEnd.TRAINS_20.getKey(), null, TrainSwitchesRhythm.PAUSE.getKey(), LivesVariant.WITH),
+            stats)).hasLives());
     }
 
     @Test

@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -47,16 +48,25 @@ public class LettersGameLauncher implements IGameLauncher<Stats, IGameVariant> {
                           final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             final List<String> extras = grouped.getExtras();
-            return new Letters(gameContext, stats, LettersLevel.of(grouped.getValue()),
+            return withLives(new Letters(gameContext, stats, LettersLevel.of(grouped.getValue()),
                 LettersCase.of(grouped.getSubGroup()), LettersPictures.of(grouped.getGroup()),
-                LettersEnd.of(extras.isEmpty() ? null : extras.get(0)), gameSeed);
+                LettersEnd.of(extras.isEmpty() ? null : extras.get(0)), gameSeed), gameVariant);
         }
         LettersLevel level = LettersLevel.EASY;
         if (gameVariant instanceof DimensionGameVariant grid) {
             final int cards = grid.getWidth() * grid.getHeight();
             level = cards >= 9 ? LettersLevel.HARD : cards >= 6 ? LettersLevel.NORMAL : LettersLevel.EASY;
         }
-        return new Letters(gameContext, stats, level, LettersCase.CAPITALS, LettersPictures.ANIMALS, LettersEnd.ENDLESS,
-            gameSeed);
+        return withLives(
+            new Letters(gameContext, stats, level, LettersCase.CAPITALS, LettersPictures.ANIMALS, LettersEnd.ENDLESS,
+            gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (16/11/2026)
+     */
+    private static Letters withLives(final Letters game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 }

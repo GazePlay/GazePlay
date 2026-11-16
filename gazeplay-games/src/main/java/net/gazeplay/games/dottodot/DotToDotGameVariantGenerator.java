@@ -2,6 +2,7 @@ package net.gazeplay.games.dottodot;
 
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.LinkedHashSet;
@@ -18,8 +19,10 @@ public class DotToDotGameVariantGenerator implements IGameVariantGenerator {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
         for (final DotLabels labels : DotLabels.values()) {
             for (final DotEnd end : DotEnd.values()) {
-                for (final DotLevel level : DotLevel.values()) {
-                    variants.add(new GroupedGameVariant(labels.getKey(), end.getKey(), level.getKey(), null));
+                for (final String lives : LivesVariant.options(end.getDrawings() > 0)) {
+                    for (final DotLevel level : DotLevel.values()) {
+                        variants.add(new GroupedGameVariant(labels.getKey(), end.getKey(), level.getKey(), null, lives));
+                    }
                 }
             }
         }
