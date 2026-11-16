@@ -194,6 +194,32 @@ class BottleGameTest {
         });
     }
 
+    /**
+     * 3 lives in the right color with an end (maintainer's request of 16/11/2026): a bottle of another color costs one,
+     * the third loses the game ("Lost!", then the statistics); none in "break them all" nor without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachBottleOfAnotherColorThenTheGame() throws Exception {
+        final BottleGame game = launched(BottleMode.COLOR, BottleCount.TWELVE, BottleSize.MEDIUM, BottleEnd.SERIES_3);
+        fx(() -> {
+            assertTrue(game.hasLives());
+            final BottleGame.Bottle wrong = game.getBottles().stream().filter(b -> b.getColor() != game.getTarget())
+                .findFirst().orElseThrow();
+            for (int mistake = 1; mistake <= 3; mistake++) {
+                game.choose(wrong);
+                assertEquals(BottleGame.LIVES - mistake, game.getLives());
+            }
+            assertEquals(BottleGame.Phase.LOST, game.getPhase());
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, BottleGame.LOST_SHOWN + 0.04);
+            assertEquals(BottleGame.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+        assertFalse(launched(BottleMode.COLOR, BottleCount.TWELVE, BottleSize.MEDIUM, BottleEnd.ENDLESS).hasLives());
+        assertFalse(launched(BottleMode.ALL, BottleCount.TWELVE, BottleSize.MEDIUM, BottleEnd.SERIES_3).hasLives());
+    }
+
     @Test
     void shouldEndWithBravoAfterTheSeriesOfTheVariant() throws Exception {
         final BottleGame game = launched(BottleMode.COLOR, BottleCount.EIGHT, BottleSize.LARGE, BottleEnd.SERIES_3);

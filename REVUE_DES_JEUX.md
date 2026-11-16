@@ -996,8 +996,14 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    (`DotToDot.LIVES`, `hasLives`), en haut à gauche ; un point dans le mauvais ordre en coûte un (il tremble, erreur
    comptée, inchangés) ; plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; sans fin : pas de
    cœurs ; Progressif inchangé. Traduction `DotLost`, aides. Test
-   `DotToDotTest.shouldLoseALifeAtEachDotOutOfOrderThenTheGame` ; `allGamesTest` réussi. Reste : essai du
-   mainteneur.
+   `DotToDotTest.shouldLoseALifeAtEachDotOutOfOrderThenTheGame` ; `allGamesTest` réussi. Essayé et validé, commité
+   (`909130a1d`).
+   **Bouteille, 16/11 : fait, non commité** (règle du mainteneur) : 3 cœurs en La bonne couleur avec 1, 3 ou 5
+   séries (`BottleGame.LIVES`, `hasLives`), en haut à gauche, la pastille « Bouteilles » après eux ; une bouteille de
+   la mauvaise couleur en coûte un (elle tremble, erreur comptée, inchangés) ; plus de cœurs : étape `LOST`,
+   « Perdu ! » 2 s puis les statistiques ; pas de cœurs en Tout casser ni sans fin. Traduction `BottleLost`, aides.
+   Test `BottleGameTest.shouldLoseALifeAtEachBottleOfAnotherColorThenTheGame` ; `allGamesTest` réussi. Reste : essai
+   du mainteneur.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 

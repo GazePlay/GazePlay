@@ -37,7 +37,8 @@ import java.util.Locale;
  * which breaks it into pieces of glass; several balls can fly at once.
  * <p>
  * Break them all: a series ends when all the bottles are broken. The right color: a card asks for a color ("Casse les
- * bouteilles rouges"); a bottle of another color shakes without breaking and counts a mistake (no lives); the series
+ * bouteilles rouges"); a bottle of another color shakes without breaking and counts a mistake (with an end, it
+ * costs one of 3 lives, 16/11/2026, the last one loses the game: "Lost!", then the statistics); the series
  * ends when the bottles of that color are broken, the next one asks for another color. The bottles are red, blue, green
  * or yellow, each with its symbol on its label (round, star, heart, triangle). A series finished: a star and
  * "Bravo !", then new bottles; the game ends after 1, 3 or 5 series ("Bravo", then the statistics), or has no end.
@@ -60,7 +61,18 @@ public class BottleGame implements GameLifeCycle {
 
     private static final String SOUNDS = "data/bottle/sounds/";
 
-    enum Phase { WAIT, PLAY, REWARD, OVER }
+    enum Phase { WAIT, PLAY, REWARD, LOST, OVER }
+
+    /**
+     * The lives of the right color with an end (maintainer's request of 16/11/2026): a bottle of another color costs
+     * one; none in "break everything" nor without end.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
 
     enum State { STANDING, TARGETED, BROKEN }
 
@@ -83,6 +95,8 @@ public class BottleGame implements GameLifeCycle {
     private BottleColor target;
     @Getter
     private int series;
+    @Getter
+    private int lives = LIVES;
     @Getter
     private int toBreak;
     @Getter
@@ -190,6 +204,7 @@ public class BottleGame implements GameLifeCycle {
         gameContext.getChildren().add(layer);
         gameContext.getGazeDeviceManager().addStats(stats);
         series = 0;
+        lives = LIVES;
         newSeries();
         phase = Phase.WAIT;
         phaseTime = 0;
@@ -321,6 +336,38 @@ public class BottleGame implements GameLifeCycle {
         seriesPill.setLayoutX(width - seriesPill.getBoundsInLocal().getWidth() - height * 0.03);
         seriesPill.setLayoutY(height * 0.02);
         hud.getChildren().setAll(bottlesPill, seriesPill);
+        if (hasLives()) {
+            // The hearts at the top left as in the other games, the bottles just after them
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+            bottlesPill.setLayoutX(height * 0.025 + hearts.getBoundsInLocal().getWidth() + height * 0.025);
+        }
+    }
+
+    /**
+     * @return whether the game has lives: the right color with an end
+     */
+    boolean hasLives() {
+        return mode == BottleMode.COLOR && end.getSeries() > 0;
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        setPhase(Phase.LOST);
+        looked = null;
+        progress = 0;
+        ring.stop();
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("BottleLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        hud.getChildren().add(lost);
     }
 
     /**
@@ -441,6 +488,13 @@ public class BottleGame implements GameLifeCycle {
                 }
             }
             case PLAY -> fixate(seconds);
+            case LOST -> {
+                if (phaseTime >= LOST_SHOWN) {
+                    setPhase(Phase.OVER);
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
+                }
+            }
             case REWARD -> {
                 if (!rewarded) {
                     rewarded = true;
@@ -516,6 +570,13 @@ public class BottleGame implements GameLifeCycle {
             stats.incrementNumberOfMistakes();
             gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
             bottle.shaking = SHAKE;
+            if (hasLives()) {
+                lives = Math.max(0, lives - 1);
+                showHud();
+                if (lives == 0) {
+                    lose();
+                }
+            }
             return;
         }
         bottle.state = State.TARGETED;
