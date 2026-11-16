@@ -59,6 +59,12 @@ class EggGameTest {
 
     private final List<File> created = new ArrayList<>();
 
+    /**
+     * The games launched by a test, closed after it: else the next egg comes after the end of the test, on the mocks
+     * of the next class (see "Mémoire des tests" in REVUE_DES_JEUX.md).
+     */
+    private final List<EggGame> games = new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -72,6 +78,11 @@ class EggGameTest {
 
     @AfterEach
     void tearDown() throws Exception {
+        fx(() -> {
+            games.forEach(EggGame::dispose);
+            games.clear();
+            return null;
+        });
         for (final File file : created) {
             Files.deleteIfExists(file.toPath());
         }
@@ -85,6 +96,7 @@ class EggGameTest {
         return fx(() -> {
             gameArea.getChildren().clear();
             final EggGame game = new EggGame(gameContext, stats, steps, content, 3);
+            games.add(game);
             game.launch();
             return game;
         });

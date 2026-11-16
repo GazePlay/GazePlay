@@ -135,9 +135,10 @@ subprojects {
 
     tasks.withType(Test).configureEach {
         usesService(javaFxTestsLimiter)
-        // 4 GB since 4/11/2026: with 3 GB, gazeplay-games ended with 2.9 GB still in use after a full collection (see
-        // REVUE_DES_JEUX.md)
-        maxHeapSize = "4g"
+        // 3 GB again since 16/11/2026: the mocks are freed after each test class (ClearMocksAfterEachClassListener of
+        // the fixtures of gazeplay-commons); gazeplay-games then needs 594 MB at most after a full collection, it went
+        // over 4 GB without it (see "Mémoire des tests" in REVUE_DES_JEUX.md)
+        maxHeapSize = "3g"
         // Same JVM options as GazePlay (see GazePlayLauncher.jvmOptions)
         jvmArgs '--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow'
 

@@ -54,6 +54,21 @@ class CasseBriqueTest {
 
     private final Pane gameArea = new Pane();
 
+    /**
+     * The games launched by a test, closed after it: else "Lost!" shows the statistics after the end of the test, on
+     * the mocks of the next class (see "Mémoire des tests" in REVUE_DES_JEUX.md).
+     */
+    private final java.util.List<CasseBrique> games = new java.util.ArrayList<>();
+
+    @org.junit.jupiter.api.AfterEach
+    void tearDown() throws Exception {
+        fx(() -> {
+            games.forEach(CasseBrique::dispose);
+            games.clear();
+            return null;
+        });
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -73,6 +88,7 @@ class CasseBriqueTest {
         return fx(() -> {
             gameArea.getChildren().clear();
             final CasseBrique game = new CasseBrique(gameContext, stats, map, level, CasseBriqueBackground.DRAWN, 5);
+            games.add(game);
             game.setManual();
             game.launch();
             return game;
@@ -259,6 +275,7 @@ class CasseBriqueTest {
                 gameArea.getChildren().clear();
                 final CasseBrique g = new CasseBrique(gameContext, stats, CasseBriqueMap.SMILEY,
                     CasseBriqueLevel.NORMAL, CasseBriqueBackground.MY_IMAGES, 5);
+                games.add(g);
                 g.setManual();
                 g.launch();
                 return g;

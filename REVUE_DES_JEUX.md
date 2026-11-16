@@ -5,6 +5,64 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU LUNDI 16/11/2026 (bilan de la séance du vendredi 13/11/2026)
+
+**Fait le vendredi 13/11/2026** (détail dans les fiches en bas) — **la revue des jeux est terminée** :
+- **CI du 12/11 au soir vérifiée** (run `43249868413`) : verte. Inventaire des images recompté et commité
+  (`655ae66e1`).
+- **Fin du groupe 9**, chaque jeu essayé et validé par le mainteneur, un commit par jeu :
+  - **La Fabrique à gâteaux** (`38defb218`) : couleurs refaites d’après une planche (proposition C) ;
+  - **Mélanger les couleurs** (`b4e36c7ab`) : mélange de peinture (rouge, jaune, bleu), `PaintMix` ;
+  - **Piano** (`11c7ff5d1`) : une octave droite, morceaux du domaine public (`Song`), fichiers MIDI retirés (deux
+    morceaux protégés), réglage des couleurs des touches retiré de la page ;
+  - **Bouteille** (`ed3d5246c`) : stand dessiné, Tout casser / La bonne couleur, sons par script ;
+  - (poussés le 13/11 à midi : **CI verte sur les 7 jobs**, run `43428313975`)
+  - **La pièce** (`8f1c922e9`) : vue d’un mur à la fois, Cherche / Explorer, 32 objets OpenMoji ;
+  - **Blocs** (`a0972f51b`) : « Disparaissent dès qu’on les regarde / après une fixation », 3 × 3 / 5 × 5 / 8 × 8 ;
+  - **Échelle** (`13a12c3f1`) : Libre (d’abord « Observer », renommé à la demande du mainteneur) / Viser, 3 / 4 / 5
+    cordes, barreaux horizontaux, Biboule du Tir ; animaux sans doublon (les images par défaut ont chaque animal deux
+    fois, avec et sans fond) ;
+  - **Suivre le chemin** (`714c355db`) : la Biboule suit le regard dans une carte tirée au hasard (labyrinthe du
+    Labyrinthe, `Maze` rendu public), Pièces / Clés (portes de couleur, coffre), 3 niveaux, 1 / 3 / 5 cartes ou sans
+    fin, sons par script, 13 images retirées, catégorie Action.
+- **Groupe 10 (GazePlay Eval et Eval Test)** : passage court, rien modifié, conforme aux règles communes ; une
+  décision notée pour plus tard (menu Échap réduit au volume et à Quitter en évaluation, voir plus bas).
+- **Inventaire des images** au 13/11 : 1 034 images livrées, 708 libres, 153 libres probables, 173 de source inconnue.
+- **Diapos du projet** (artefact) refaites d’après les retours reçus (résultats d’abord, captures avant/après des jeux
+  et des menus, technique en annexes) ; 2 diapos d’annexe ajoutées sur le retrait de Spring Boot. Copie vers Google
+  Slides : conseil donné (Partager › Exporter › Envoyer vers Google Slides), question sur une présentation existante
+  restée sans réponse.
+- **Push du 13/11 au soir** (`ed3d5246c..714c355db` : La pièce, Blocs, Échelle, Suivre le chemin) : **CI PAS VERTE**
+  (run `43451828508`). `build` (SpotBugs), `all-games` (61 entrées) et les 3 distributions sont verts ; les **deux jobs
+  de tests (Java 25 et 26) annulés à 30 min** : `OutOfMemoryError` dans les tests de `gazeplay-games` (d’abord
+  `SurviveAgainstRobotsTest`, qui passait jusqu’ici), puis la JVM bloquée jusqu’à la limite. **Hypothèse (non
+  vérifiée)** : le problème de mémoire des tests analysé le 4/11 (les objets simulés de Mockito gardent les parties et
+  leurs images) ; les 4 nouvelles classes de tests ont fait passer la suite au-dessus des 4 Go.
+- **Non commité** : ces notes (`REVUE_DES_JEUX.md`), à commiter avec la suite ou seules, sur demande.
+
+**Ordre du jour du lundi 16/11/2026** :
+1. **En priorité : la mémoire des tests** (décision du mainteneur du 13/11), pour remettre la CI au vert. D’après
+   l’analyse du 4/11 (section « Mémoire des tests de `gazeplay-games` » plus bas) :
+   1. mesurer d’abord : relancer localement les tests de `gazeplay-games` avec la sonde de mémoire (après chaque
+      classe), pour confirmer l’hypothèse et voir le poids des nouvelles classes (`RoomTest`, `BlocksTest`,
+      `LadderTest`, `FollowTest`) ; **aucun chiffre sans mesure** ;
+   2. fermer les parties à la fin des tests qui les laissent tourner (minuteries qui se déclenchent après la fin de
+      leur classe, le 4/11 : Casse-brique `lose`, Egg Game `hatch`, Space Game `lose`, Sprint Finish
+      `startCountdown` ; à revérifier, les jeux ont été revus depuis) ;
+   3. libérer les objets simulés après chaque classe (`Mockito.framework().clearInlineMocks()`, le 4/11 : de 2 920 à
+      502 Mo en fin de suite) ;
+   4. revenir à 3 Go dans `build.gradle` si les mesures le permettent ;
+   5. tests en local, puis push sur accord et **CI verte sur les 7 jobs**.
+   (Solution provisoire possible si besoin, à ne prendre que sur décision : monter la limite à 5 ou 6 Go.)
+   **16/11 : étapes 1 à 4 faites, tests en local verts avec 3 Go** (détail dans « Mémoire des tests de
+   `gazeplay-games` » plus bas) ; reste le push sur accord et la CI.
+2. Puis, dans l’ordre prévu après la revue : retrait des limiteurs ; test instable
+   `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26) ; refonte graphique du menu
+   des jeux et de l’écran des statistiques ; modernisation du menu Échap (ancien engrenage), avec la réduction du menu
+   en évaluation au volume et à Quitter (décision du 13/11, voir plus bas).
+3. Toujours à garder en tête : inventaire des sons (pas fait), notes de version 2.0 (images de l’utilisateur à
+   remettre, pas de migration), fusion de `GazePlayLearning` et numéro de version après la modernisation.
+
 ## REPRISE DU VENDREDI 13/11/2026 (bilan de la séance du jeudi 12/11/2026)
 
 **Fait le jeudi 12/11/2026** (détail dans « Avancement du jeudi 12/11/2026 » plus bas, et les fiches en bas) :
@@ -54,10 +112,26 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
    Cartes à gratter, Cartes magiques, Tartes à la crème ; build complet et `all-games` avec les nouvelles variantes ;
    `package-macos` pas prioritaire).
 4. **Pousser** à la fin du groupe 9 ou quand le mainteneur part (il le dit) : La Fabrique à gâteaux et la suite, puis
-   vérifier la CI.
-5. Ensuite : groupe 10 (GazePlay Eval et Eval Test). Après la revue : mémoire des tests, retrait des limiteurs, test
-   instable `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26), refonte graphique
-   du menu des jeux et de l’écran des statistiques.
+   vérifier la CI. **13/11 : groupe 9 terminé (Suivre le chemin commité, `714c355db`), tout poussé.**
+5. Ensuite : groupe 10 (GazePlay Eval et Eval Test). **13/11 : passage court fait** (demande du mainteneur, rien
+   modifié ; le lecteur avait déjà été revu les 29-30/10 et les 5-6/11) : anneau commun, délai avant sélection (son
+   propre réglage, « Délai avant de pouvoir sélectionner sur un écran », appliqué à chaque écran), pause du menu Échap
+   (délais, sons, vidéos, cibles), entrées, `formatVersion` 1, ressources libres, aide : conformes. **Une seule
+   décision, notée pour plus tard** : voir « Menu Échap pendant une évaluation » ci-dessous. Après la revue : mémoire
+   des tests, retrait des limiteurs, test instable `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une
+   fois sous Java 26), refonte graphique du menu des jeux et de l’écran des statistiques, modernisation du menu Échap
+   (ancien engrenage).
+
+**Menu Échap pendant une évaluation (décision du mainteneur du 13/11/2026, à faire avec la modernisation du menu
+Échap, pas avant)** : en évaluation, le menu Échap ne montrera que **le volume et Quitter**. Aujourd’hui il montre les
+réglages des jeux (durée de fixation, vitesse d’animation, taille des éléments, indicateur de progression, couleur de
+fond, `GameContext.createControlPanel`) ; or les durées de fixation des grilles, de la croix et du bouton
+« Commencer » viennent de l’évaluation (contrat du site), et la durée du menu ne change que l’écran de choix après
+une grille, à son prochain affichage : l’examinateur croirait changer la passation. Les autres réglages n’auraient pas
+d’effet dans Eval (hypothèse, non vérifiée). Points relevés au même passage, sans suite pour l’instant : les deux
+entrées utilisent la vignette « Où est-il ? » (probablement jamais montrée, les évaluations s’ouvrant par leur propre
+menu) ; restent ouverts la question RGPD, l’essai réel des vidéos lues par FFmpeg et le menu Échap sur tablette
+(issue #1738).
 
 ## REPRISE DU JEUDI 12/11/2026 (bilan de la séance du mardi 10/11/2026 ; mercredi 11/11 férié)
 
@@ -815,6 +889,33 @@ précédente se déclenche après la fin de ses tests (Casse-brique `lose`, Egg 
 `startCountdown`) et l'erreur tombe sur le test suivant. Ces tests ne ferment pas leur partie. **Travail à faire après
 la revue des jeux (décision du mainteneur du 4/11/2026)** : fermer ces parties à la fin de leurs tests, ajouter la
 libération après chaque classe, revenir à 3 Go.
+
+**Fait le 16/11/2026** (CI du 13/11 au soir rouge : `OutOfMemoryError` dans `SurviveAgainstRobotsTest`, voir la
+reprise du 16/11). Sonde temporaire (même mesure que le 4/11, retirée ensuite), tests de `gazeplay-games` :
+- **Mesure 1, code du 13/11, 4 Go** : l'`OutOfMemoryError` se reproduit en local, au même endroit ; 4 015 Mo occupés
+  sur 4 096 après un nettoyage complet. Plus grosses marches : **Échelle +910 Mo** (un test lance 60 parties, 3 niveaux
+  × 20 tirages ; chaque disque passe par `addEventFilter` d'un objet simulé), Flower Of Numbers +507, Magic Potions
+  +354, Survive +270, Spot The Differences +227, Tower Defense +208, Space +148. Autres classes du 13/11 : Suivre le
+  chemin +36, La pièce +23, Blocs +21. **Fait** : Échelle a fait passer la suite au-dessus des 4 Go.
+- **Mesure 2, objets simulés libérés après chaque classe** : les 712 tests vont au bout, **595 Mo** au plus haut ;
+  Échelle +12 Mo. 5 échecs `DisabledMockException`, les minuteries du 4/11 : Casse-brique `lose`, Egg Game (maintenant
+  `newEgg`), Space Game `lose`, Sprint Finish `startCountdown` (deux fois).
+- L'ordre des classes change d'une exécution à l'autre : les marches ne se comparent pas ligne à ligne.
+
+**Corrections** :
+- `CasseBriqueTest`, `EggGameTest`, `SpaceGameTest`, `SprintFinishTest` gardent les parties qu'ils lancent et les
+  ferment (`dispose()`, sur le thread JavaFX) après chaque test ; le code des jeux ne change pas (leur `dispose()`
+  arrêtait déjà ces minuteries).
+- `ClearMocksAfterEachClassListener` (outils de test de `gazeplay-commons`, trouvé par JUnit par
+  `META-INF/services`) : `Mockito.framework().clearInlineMocks()` à la fin de chaque classe, dans les tests de
+  `gazeplay-commons`, `gazeplay-core` et `gazeplay-games` (`gazeplay-games-commons` ne charge pas ces outils : 14 classes
+  avec Mockito, non touchées). Règles qui en découlent : fermer à la fin du test une partie qui garde une minuterie ;
+  pas d'objet simulé partagé entre deux classes, pas de classe `@Nested` (aucune aujourd'hui).
+- `build.gradle` : **3 Go** pour les tests (4 Go depuis le 4/11).
+
+**Vérifications (16/11, en local, Java 25, 3 Go)** : `gazeplay-commons` 192 tests, `gazeplay-core` 305,
+`gazeplay-games` 712 : **0 échec**. Avec la libération et les parties fermées, `gazeplay-games` finit à **594 Mo** au
+plus haut (sonde, avant son retrait). Reste : push sur accord et CI verte sur les 7 jobs.
 
 ## Quatrième règle : la durée de fixation (demande du mainteneur du 4/11/2026, à la revue de Ninja)
 

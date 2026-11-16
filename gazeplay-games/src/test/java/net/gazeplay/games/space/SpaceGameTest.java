@@ -52,6 +52,21 @@ class SpaceGameTest {
 
     private final Pane gameArea = new Pane();
 
+    /**
+     * The games launched by a test, closed after it: else "Lost!" shows the statistics after the end of the test, on
+     * the mocks of the next class (see "Mémoire des tests" in REVUE_DES_JEUX.md).
+     */
+    private final java.util.List<SpaceGame> games = new java.util.ArrayList<>();
+
+    @org.junit.jupiter.api.AfterEach
+    void tearDown() throws Exception {
+        fx(() -> {
+            games.forEach(SpaceGame::dispose);
+            games.clear();
+            return null;
+        });
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -71,6 +86,7 @@ class SpaceGameTest {
         return fx(() -> {
             gameArea.getChildren().clear();
             final SpaceGame game = new SpaceGame(gameContext, stats, level, end, 5);
+            games.add(game);
             game.setManual();
             game.launch();
             return game;
