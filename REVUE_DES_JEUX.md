@@ -965,8 +965,13 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    `WhereIsItReplayHint`, `WhereIsItReplaySoundHint` ; 18 aides. Tests `WhereIsItEndTest` (vies, défaite, rangée des
    cœurs, bulle) et `PictureCardTest` (image fausse) ; `allGamesTest` de Quel est ce son ? et Où est l'animal ? (10
    écrans) réussis. Reste : essai du mainteneur.
-2. **Memory** : des cœurs (règle à préciser).
-3. **Mélanger les couleurs** : des cœurs (règle à préciser).
+2. **Memory** : ~~des cœurs~~ **abandonné (décision du mainteneur du 16/11)** : en cartes cachées, se tromper de paire fait partie du jeu (il n'a ni fin ni erreurs comptées) ; pas de cœurs.
+3. **Mélanger les couleurs** : des cœurs. **16/11 : fait, non commité** (propositions validées ; pas de cœurs sans
+   fin ni en Libre) : 3 cœurs en Défi avec une fin (`ColorBlend.LIVES`, `hasLives`), en haut à gauche, la pastille
+   « Pots » juste après eux ; un mauvais mélange en coûte un (tout le reste inchangé : couleur montrée, pot vidé,
+   même couleur, indice après 2 erreurs) ; plus de cœurs : étape `LOST`, « Perdu ! » 2 s, puis les statistiques
+   (dans la boucle du jeu, pas de minuterie) ; « Continuer » repart à 3 cœurs. Traduction `ColorBlendLost`, aides.
+   Tests `ColorBlendTest` (2 nouveaux) ; `allGamesTest` (Défi, 10 couleurs) réussi. Reste : essai du mainteneur.
 4. **La Fabrique à gâteaux**, en copiant un modèle : laisser finir le gâteau, puis le comparer ; s'il n'est pas bon,
    un cœur perdu, le gâteau enlevé, et il recommence sans les choix faux qu'il avait pris.
 5. **Ajoutés le 16/11 (même logique : des cœurs tant que la variante n'est pas sans fin)** : **Aiguillages** (un cœur

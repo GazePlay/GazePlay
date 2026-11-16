@@ -212,6 +212,56 @@ class ColorBlendTest {
         });
     }
 
+    /**
+     * 3 lives in a challenge with an end (maintainer's request of 16/11/2026): a wrong mix costs one, the hint still
+     * comes after two; the third loses the game: "Lost!", then the statistics.
+     */
+    @Test
+    void shouldLoseALifeAtEachWrongMixThenTheGame() throws Exception {
+        final ColorBlend game = launched(ColorBlendMode.CHALLENGE, ColorBlendLevel.EASY, ColorBlendEnd.COLORS_10);
+        fx(() -> {
+            assertTrue(game.hasLives());
+            assertEquals(ColorBlend.LIVES, game.getLives());
+            final List<Pot> recipe = game.getTarget().getRecipe();
+            for (int attempt = 1; attempt <= 3; attempt++) {
+                pour(game, recipe.get(0));
+                pour(game, wrongPot(game, recipe));
+                assertEquals(ColorBlend.LIVES - attempt, game.getLives());
+                steps(game, ColorBlend.RESULT + 0.04);
+                if (attempt == 2) {
+                    assertTrue(game.choice(recipe.get(0)).isHinted(), "the hint after two mistakes");
+                }
+            }
+            assertEquals(ColorBlend.Phase.LOST, game.getPhase());
+            assertTrue(game.getMessages().contains("ColorBlendLost"));
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, ColorBlend.LOST_SHOWN + 0.04);
+            assertEquals(ColorBlend.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+    }
+
+    /**
+     * No lives without end nor in the free mode (maintainer's decision).
+     */
+    @Test
+    void shouldHaveNoLivesWithoutEnd() throws Exception {
+        final ColorBlend endless = launched(ColorBlendMode.CHALLENGE, ColorBlendLevel.EASY, ColorBlendEnd.ENDLESS);
+        assertFalse(endless.hasLives());
+        fx(() -> {
+            final List<Pot> recipe = endless.getTarget().getRecipe();
+            for (int attempt = 1; attempt <= 4; attempt++) {
+                pour(endless, recipe.get(0));
+                pour(endless, wrongPot(endless, recipe));
+                steps(endless, ColorBlend.RESULT + 0.04);
+            }
+            assertEquals(ColorBlend.Phase.CHOOSE, endless.getPhase());
+            return null;
+        });
+        assertFalse(launched(ColorBlendMode.FREE, ColorBlendLevel.FREE, ColorBlendEnd.COLORS_5).hasLives());
+    }
+
     @Test
     void shouldNameAWrongMixWhenItIsAKnownColor() throws Exception {
         final ColorBlend game = launched(ColorBlendMode.CHALLENGE, ColorBlendLevel.EASY, ColorBlendEnd.ENDLESS);

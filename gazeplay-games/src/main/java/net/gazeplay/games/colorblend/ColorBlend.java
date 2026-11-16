@@ -43,9 +43,10 @@ import java.util.List;
  * The challenge: a color to make is shown on a card; the pots of its recipe are poured one by one, in any order (two in
  * the easy and normal levels, three in the hard one), and the mix is checked after the last one. Right: "Bravo !" and
  * the next color (never the same twice in a row). Wrong: the pot shows the color obtained and its name when it has
- * one, a mistake is counted (no lives), the pot is emptied after 2 s and the same color is asked again; after two
+ * one, a mistake is counted, the pot is emptied after 2 s and the same color is asked again; after two
  * mistakes on a color, the pots of its recipe are framed. The game ends after 5, 10 or 20 colors ("Bravo", then the
- * statistics), or has no end. The free mode: as many pots as wanted, the mix at each pot, its name when it is a known
+ * statistics), or has no end; with an end, a wrong mix costs one of 3 lives (16/11/2026), the last one loses the
+ * game ("Lost!", then the statistics). The free mode: as many pots as wanted, the mix at each pot, its name when it is a known
  * color, a button to empty the pot; no end.
  * <p>
  * One loop, in real seconds: the fixation lasts the length of the settings (read at each step), nothing can be chosen
@@ -77,7 +78,18 @@ public class ColorBlend implements GameLifeCycle {
     private static final Color EMPTY = Color.rgb(236, 232, 226);
     private static final String SOUNDS = "data/colorblend/sounds/";
 
-    enum Phase { WAIT, CHOOSE, POUR, RESULT, REWARD, OVER }
+    enum Phase { WAIT, CHOOSE, POUR, RESULT, REWARD, LOST, OVER }
+
+    /**
+     * The lives of a challenge with an end (maintainer's request of 16/11/2026): a wrong mix costs one; none without end
+     * nor in the free mode.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -100,6 +112,8 @@ public class ColorBlend implements GameLifeCycle {
     private int done;
     @Getter
     private int mistakesOnTarget;
+    @Getter
+    private int lives = LIVES;
     private double elapsed;
     private double phaseTime;
     private boolean rewarded;
@@ -207,6 +221,7 @@ public class ColorBlend implements GameLifeCycle {
         gameContext.getChildren().add(layer);
         gameContext.getGazeDeviceManager().addStats(stats);
         done = 0;
+        lives = LIVES;
         showPots();
         if (mode == ColorBlendMode.CHALLENGE) {
             newTarget();
@@ -394,6 +409,13 @@ public class ColorBlend implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return whether the game has lives: a challenge with an end
+     */
+    boolean hasLives() {
+        return mode == ColorBlendMode.CHALLENGE && end.getColors() > 0;
+    }
+
     private void showHud() {
         final double size = height * 0.032;
         final String pots = gameContext.getTranslator().translate("ColorBlendPots") + " " + mix.size()
@@ -401,7 +423,17 @@ public class ColorBlend implements GameLifeCycle {
         final Group left = GameStyle.pill(pots, size);
         left.setLayoutX(height * 0.03);
         left.setLayoutY(height * 0.025);
-        hud.getChildren().setAll(left);
+        hud.getChildren().clear();
+        if (hasLives()) {
+            // The hearts at the top left as in the other games, the pots just after them
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+            left.setLayoutX(height * 0.025 + hearts.getBoundsInLocal().getWidth() + height * 0.025);
+        }
+        hud.getChildren().add(left);
         if (mode == ColorBlendMode.CHALLENGE) {
             final String text = gameContext.getTranslator().translate("ColorBlendDone") + " " + done
                 + (end.getColors() > 0 ? " / " + end.getColors() : "");
@@ -523,8 +555,19 @@ public class ColorBlend implements GameLifeCycle {
             case POUR -> pour();
             case RESULT -> {
                 if (phaseTime >= RESULT) {
-                    emptyPot();
-                    setPhase(Phase.CHOOSE);
+                    if (hasLives() && lives == 0) {
+                        lose();
+                    } else {
+                        emptyPot();
+                        setPhase(Phase.CHOOSE);
+                    }
+                }
+            }
+            case LOST -> {
+                if (phaseTime >= LOST_SHOWN) {
+                    setPhase(Phase.OVER);
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
                 }
             }
             case REWARD -> {
@@ -602,6 +645,10 @@ public class ColorBlend implements GameLifeCycle {
         } else {
             mistakesOnTarget++;
             stats.incrementNumberOfMistakes();
+            if (hasLives()) {
+                lives = Math.max(0, lives - 1);
+                showHud();
+            }
             gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
             showMessage(PaintMix.name(mix), "ColorBlendNotYet", false);
             setPhase(Phase.RESULT);
@@ -667,6 +714,20 @@ public class ColorBlend implements GameLifeCycle {
         updateMarks();
         showHud();
         setPhase(Phase.POUR);
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        clearButtons();
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("ColorBlendLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        message.getChildren().setAll(lost);
+        setPhase(Phase.LOST);
     }
 
     private void finish() {
