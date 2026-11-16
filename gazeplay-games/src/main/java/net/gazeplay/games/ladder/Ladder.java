@@ -44,7 +44,9 @@ import java.util.Set;
  * <p>
  * Watch: wherever it arrives, the picture jumps, a star and "Bravo !", then another ladder. Aim: a picture is framed
  * ("Amène la Biboule jusqu'à l'image entourée"); the right start gives "Bravo !" and another ladder; another one shows
- * where the Biboule went, the picture shakes, "Pas encore !", a mistake (no lives), and the same ladder again; after two
+ * where the Biboule went, the picture shakes, "Pas encore !", a mistake, the start greyed and no longer chosen, the
+ * same ladder again (with an end, one of 3 lives lost, 16/11/2026; the last one loses the game: "Lost!", then the
+ * statistics); after two
  * mistakes, the right start is framed. The game ends after 3, 5 or 10 games ("Bravo", then the statistics), or has no
  * end.
  * <p>
@@ -66,11 +68,26 @@ public class Ladder implements GameLifeCycle {
     static final double REWARD = 2;
     static final int HINT_AFTER = 2;
 
+    /**
+     * The lives of the aim with an end (maintainer's request of 16/11/2026): a wrong start costs one.
+     */
+    static final int LIVES = 3;
+
+    /**
+     * Seconds of "Lost!" before the statistics.
+     */
+    static final double LOST_SHOWN = 2;
+
+    /**
+     * Opacity of a start tried and wrong: still seen, no longer chosen until the next ladder.
+     */
+    static final double TRIED_OPACITY = 0.45;
+
     private static final Color[] ROPES = {Color.rgb(230, 110, 100), Color.rgb(90, 150, 220), Color.rgb(110, 185, 120),
         Color.rgb(230, 175, 60), Color.rgb(165, 120, 210)};
     private static final String BIBOULE = "data/shooter/biboule/images/Blue.png";
 
-    enum Phase { WAIT, CHOOSE, RUN, RESULT, REWARD, OVER }
+    enum Phase { WAIT, CHOOSE, RUN, RESULT, REWARD, LOST, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -95,6 +112,9 @@ public class Ladder implements GameLifeCycle {
     private int target = -1;
     @Getter
     private int games;
+    @Getter
+    private int lives = LIVES;
+    private Start chosen;
     @Getter
     private int mistakesOnLadder;
     @Getter
@@ -219,6 +239,7 @@ public class Ladder implements GameLifeCycle {
         }
         buildStarts();
         games = 0;
+        lives = LIVES;
         newLadder();
         phase = Phase.WAIT;
         phaseTime = 0;
@@ -264,6 +285,7 @@ public class Ladder implements GameLifeCycle {
         drawPictures();
         clearWay();
         mistakesOnLadder = 0;
+        starts.forEach(start -> start.setTried(false));
         target = mode == LadderMode.AIM ? random.nextInt(level.getLines()) : -1;
         showTarget();
         updateHint();
@@ -407,6 +429,15 @@ public class Ladder implements GameLifeCycle {
         count.setLayoutX(height * 0.03);
         count.setLayoutY(height * 0.02);
         hud.getChildren().setAll(count);
+        if (hasLives()) {
+            // The hearts at the top left as in the other games, the count of the games just after them
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
+                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            hearts.setLayoutX(height * 0.025);
+            hearts.setLayoutY(height * 0.015);
+            hud.getChildren().add(hearts);
+            count.setLayoutX(height * 0.025 + hearts.getBoundsInLocal().getWidth() + height * 0.025);
+        }
         if (mode == LadderMode.AIM) {
             final Group ask = GameStyle.pill(gameContext.getTranslator().translate("LadderAimText"), size);
             ask.setLayoutX((width - ask.getBoundsInLocal().getWidth()) / 2);
@@ -493,8 +524,19 @@ public class Ladder implements GameLifeCycle {
                 if (phaseTime >= RESULT) {
                     clearWay();
                     message.getChildren().clear();
-                    updateHint();
-                    setPhase(Phase.CHOOSE);
+                    if (hasLives() && lives == 0) {
+                        lose();
+                    } else {
+                        updateHint();
+                        setPhase(Phase.CHOOSE);
+                    }
+                }
+            }
+            case LOST -> {
+                if (phaseTime >= LOST_SHOWN) {
+                    setPhase(Phase.OVER);
+                    loop.stop();
+                    gameContext.showRoundStats(stats, this);
                 }
             }
             case REWARD -> {
@@ -537,7 +579,7 @@ public class Ladder implements GameLifeCycle {
     }
 
     private void fixate(final double seconds) {
-        if (looked == null || Stats.isConfigMenuOpen()) {
+        if (looked == null || looked.isTried() || Stats.isConfigMenuOpen()) {
             return;
         }
         if (!ring.isVisible()) {
@@ -580,9 +622,10 @@ public class Ladder implements GameLifeCycle {
      * A start chosen: the Biboule goes down from it.
      */
     void choose(final Start start) {
-        if (phase != Phase.CHOOSE) {
+        if (phase != Phase.CHOOSE || start.isTried()) {
             return;
         }
+        chosen = start;
         way = wayFrom(start.column);
         wayLength = 0;
         for (int i = 1; i < way.size(); i++) {
@@ -654,8 +697,38 @@ public class Ladder implements GameLifeCycle {
             gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
             shake = 0.5;
             showMessage("LadderNotYet", false);
+            if (chosen != null) {
+                chosen.setTried(true);
+            }
+            if (hasLives()) {
+                lives = Math.max(0, lives - 1);
+                showHud();
+            }
             setPhase(Phase.RESULT);
         }
+    }
+
+    /**
+     * @return whether the game has lives: the aim with an end (none in the watch nor without end)
+     */
+    boolean hasLives() {
+        return mode == LadderMode.AIM && end.getGames() > 0;
+    }
+
+    /**
+     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     */
+    private void lose() {
+        looked = null;
+        progress = 0;
+        ring.stop();
+        stats.takeScreenShot();
+        final Group lost = GameStyle.card(gameContext.getTranslator().translate("LadderLost"), height * 0.06,
+            width * 0.6);
+        lost.setLayoutX(width / 2 - lost.getBoundsInLocal().getWidth() / 2);
+        lost.setLayoutY(height / 2 - lost.getBoundsInLocal().getHeight() / 2);
+        message.getChildren().setAll(lost);
+        setPhase(Phase.LOST);
     }
 
     /**
@@ -749,6 +822,20 @@ public class Ladder implements GameLifeCycle {
         private final int column;
         private final Circle disc;
         private final Circle hint;
+        private Group iconGroup;
+        /**
+         * Tried in the aim and wrong (16/11/2026): greyed, no longer chosen until the next ladder.
+         */
+        @Getter
+        private boolean tried;
+
+        void setTried(final boolean tried) {
+            this.tried = tried;
+            disc.setOpacity(tried ? TRIED_OPACITY : 1);
+            if (iconGroup != null) {
+                iconGroup.setOpacity(tried ? TRIED_OPACITY : 1);
+            }
+        }
 
         Start(final int column) {
             this.column = column;
@@ -766,7 +853,7 @@ public class Ladder implements GameLifeCycle {
             hint.setMouseTransparent(true);
             final SVGPath icon = GameStyle.icon("keyboard_arrow_down", r * 1.2);
             icon.setStyle("-fx-fill: " + toCss(ROPES[column % ROPES.length].darker()) + ";");
-            final Group iconGroup = new Group(icon);
+            iconGroup = new Group(icon);
             iconGroup.setLayoutX(cx - r * 0.6);
             iconGroup.setLayoutY(cy - r * 0.6);
             iconGroup.setMouseTransparent(true);

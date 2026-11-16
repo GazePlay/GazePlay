@@ -160,9 +160,10 @@ class LadderTest {
             final int target = game.getTarget();
             assertTrue(target >= 0);
             final int right = game.startFor(target);
-            final int wrong = (right + 1) % LadderLevel.HARD.getLines();
             for (int attempt = 1; attempt <= 2; attempt++) {
                 assertFalse(game.isHintShown());
+                // Another wrong start each time: a start tried is no longer chosen (16/11/2026)
+                final int wrong = (right + attempt) % LadderLevel.HARD.getLines();
                 go(game, wrong);
                 assertEquals(Ladder.Phase.RESULT, game.getPhase());
                 assertNotEquals(target, game.getArrival());
@@ -178,6 +179,41 @@ class LadderTest {
             verify(gameContext.getSoundManager(), times(2)).add("data/dice/sounds/wrong.wav");
             return null;
         });
+    }
+
+    /**
+     * 3 lives in the aim with an end (maintainer's request of 16/11/2026): a wrong start costs one and is greyed, no
+     * longer chosen until the next ladder; the third loses the game ("Lost!", then the statistics); none in the watch
+     * nor without end.
+     */
+    @Test
+    void shouldLoseALifeAtEachWrongStartThenTheGame() throws Exception {
+        final Ladder game = launched(LadderMode.AIM, LadderLevel.HARD, LadderEnd.GAMES_5, 7);
+        fx(() -> {
+            assertTrue(game.hasLives());
+            final int right = game.startFor(game.getTarget());
+            final Ladder.Start first = game.getStarts().get((right + 1) % LadderLevel.HARD.getLines());
+            go(game, first.getColumn());
+            assertEquals(Ladder.LIVES - 1, game.getLives());
+            steps(game, Ladder.RESULT + 0.04);
+            assertTrue(first.isTried());
+            // Tried: no longer chosen
+            game.choose(first);
+            assertEquals(Ladder.Phase.CHOOSE, game.getPhase());
+            for (int attempt = 2; attempt <= 3; attempt++) {
+                go(game, (right + attempt) % LadderLevel.HARD.getLines());
+                assertEquals(Ladder.LIVES - attempt, game.getLives());
+                steps(game, Ladder.RESULT + 0.04);
+            }
+            assertEquals(Ladder.Phase.LOST, game.getPhase());
+            verify(gameContext, never()).showRoundStats(any(), any());
+            steps(game, Ladder.LOST_SHOWN + 0.04);
+            assertEquals(Ladder.Phase.OVER, game.getPhase());
+            verify(gameContext).showRoundStats(stats, game);
+            return null;
+        });
+        assertFalse(launched(LadderMode.AIM, LadderLevel.HARD, LadderEnd.ENDLESS, 7).hasLives());
+        assertFalse(launched(LadderMode.WATCH, LadderLevel.HARD, LadderEnd.GAMES_5, 7).hasLives());
     }
 
     @Test

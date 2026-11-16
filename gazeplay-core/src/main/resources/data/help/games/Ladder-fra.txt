@@ -4,12 +4,12 @@ Une échelle japonaise : des cordes de couleur reliées par des barreaux. La Bib
 # Comment jouer
 - En haut de chaque corde, un départ rond. Regarde un départ : un anneau se remplit, puis la Biboule descend. Son chemin se dessine derrière elle. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - En Libre : choisis un départ et suis la Biboule jusqu’à son image.
-- En Viser : une image est entourée en bas. Suis les chemins des yeux pour trouver le départ qui y mène. Si la Biboule arrive ailleurs, l’image tremble et « Pas encore ! » : essaie un autre départ. Après 2 essais, le bon départ est entouré.
+- En Viser : une image est entourée en bas. Suis les chemins des yeux pour trouver le départ qui y mène. Si la Biboule arrive ailleurs, l’image tremble et « Pas encore ! » : essaie un autre départ (celui-ci reste grisé et ne peut plus être choisi pour cette échelle). Après 2 essais, le bon départ est entouré.
 - En haut, le nombre de parties.
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Il n’y a pas de vies : un mauvais départ compte seulement une erreur dans les statistiques. Une partie réussie donne une étoile et « Bravo ! », puis une autre échelle. Selon ton choix, le jeu s’arrête après 3, 5 ou 10 parties (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+En Viser, un mauvais départ compte une erreur. Avec une fin (3, 5 ou 10 parties), tu as 3 cœurs en haut à gauche : chaque mauvais départ en coûte un ; sans cœur, « Perdu ! », puis les statistiques. En Libre et sans fin, il n’y a pas de cœurs. Une partie réussie donne une étoile et « Bravo ! », puis une autre échelle. Selon ton choix, le jeu s’arrête après 3, 5 ou 10 parties (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

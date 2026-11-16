@@ -1010,8 +1010,16 @@ Après la liste des jeux sans cœurs, le mainteneur demande des vies (`GameStyle
    pouvait la rechoisir) ; après l'erreur, bulle « Tu peux réécouter la lettre » sous le haut-parleur, qui pulse 4 s
    (dans la boucle du jeu) ; plus de cœurs : étape `LOST`, « Perdu ! » 2 s puis les statistiques ; sans fin : pas de
    cœurs (la carte reste bloquée et la bulle s'affiche aussi). Traductions `LettersLost`, `LettersReplayHint`, aides.
-   Tests `LettersTest` (l'ancien test « rechoisie » remplacé, test des cœurs) ; `allGamesTest` réussi. Reste : essai
-   du mainteneur.
+   Tests `LettersTest` (l'ancien test « rechoisie » remplacé, test des cœurs) ; `allGamesTest` réussi. Essayé et
+   validé, commité (`080f5b365`).
+   **Échelle, 16/11 : fait, non commité** (propositions validées) : 3 cœurs en Viser avec 3, 5 ou 10 parties
+   (`Ladder.LIVES`, `hasLives`), en haut à gauche, la pastille « Parties » après eux ; un mauvais départ en coûte un
+   (« Pas encore ! », image qui tremble, erreur comptée, inchangés) et reste grisé (45 %), **plus choisi jusqu'à
+   l'échelle suivante** (avant, on pouvait le rechoisir) ; indice inchangé (après 2 essais faux) ; plus de cœurs :
+   après « Pas encore ! », étape `LOST`, « Perdu ! » 2 s puis les statistiques ; pas de cœurs en Libre ni sans fin.
+   En Facile (3 cordes), on ne perd qu'au fil de plusieurs échelles (2 mauvais départs au plus par échelle).
+   Traduction `LadderLost`, aides. Tests `LadderTest` (test de l'indice adapté, test des cœurs) ; `allGamesTest`
+   réussi. Reste : essai du mainteneur.
 
 Essai du mainteneur pour la famille Où est… : validé le 16/11, commité.
 
