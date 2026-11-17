@@ -5,14 +5,14 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * When GazeRace ends (maintainer's choice of 9/11/2026): when the three lives are lost, or after 1 or 3 minutes if they
- * are not.
+ * are not. The order is that of the buttons, "without end" always last, on the right (rule of 17/11/2026).
  */
 @Getter
 @RequiredArgsConstructor
 public enum GazeRaceEnd {
-    ENDLESS("GazeRaceEndless", 0),
     TIME_1("GazeRaceTime1", 60),
-    TIME_3("GazeRaceTime3", 180);
+    TIME_3("GazeRaceTime3", 180),
+    ENDLESS("GazeRaceEndless", 0);
 
     /**
      * Key of translation, and value of the variants.

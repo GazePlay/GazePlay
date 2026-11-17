@@ -32,7 +32,8 @@ import java.util.Map;
  * road going by, and avoids the other cars and the barriers of works. On one side of the road the cars overtake the
  * player, on the other they come the other way. A car hit costs a life, sends the road back to its starting speed and
  * makes the player invincible for a while. A point every 3 seconds. Three lives; the game has no end, or ends after 1 or
- * 3 minutes ("Bravo"), or after the third life ("Lost!"); then the statistics.
+ * 3 minutes ("Bravo"), or after the third life ("Lost!"); then the statistics. Without hearts (variant of 17/11/2026,
+ * maintainer's choice), no hearts shown and the first hit loses the game. Each hit is counted as a mistake.
  * <p>
  * Everything is measured in parts of the screen, in real seconds, at the animation speed of the settings; nothing moves
  * while the menu of the game is open, nor before the delay of the settings at the start. The game is computed along the
@@ -106,6 +107,12 @@ public class GazeRace implements GameLifeCycle {
     private Phase phase = Phase.OVER;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026); without them, no hearts
+     * shown and the first hit loses the game.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int score;
     @Getter
@@ -546,7 +553,9 @@ public class GazeRace implements GameLifeCycle {
             carsLayer.getChildren().remove(mobile.view);
             mobiles.remove(mobile);
         }
-        lives--;
+        stats.incrementNumberOfMistakes();
+        // Without hearts, the first hit loses the game (maintainer's choice of 17/11/2026)
+        lives = withLives ? lives - 1 : 0;
         speed = level.getStartSpeed();
         invincible = INVINCIBLE;
         spin = SPIN;
@@ -608,10 +617,12 @@ public class GazeRace implements GameLifeCycle {
         final double margin = height * 0.025;
         final double heart = height * 0.055;
         // The lives: the hearts shared by the reviewed games (GameStyle.lives)
-        final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin * 0.6);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin * 0.6);
+            hud.getChildren().add(hearts);
+        }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("GazeRaceScore") + " " + score,
             fontSize);
         pill.setLayoutX(width - pill.getBoundsInLocal().getWidth() - margin);
@@ -649,6 +660,13 @@ public class GazeRace implements GameLifeCycle {
         lostPause = new PauseTransition(Duration.seconds(2.5));
         lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
         lostPause.play();
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

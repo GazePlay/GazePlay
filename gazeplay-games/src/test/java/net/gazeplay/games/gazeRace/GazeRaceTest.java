@@ -7,6 +7,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -461,13 +462,51 @@ class GazeRaceTest {
     @Test
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new GazeRaceVariantGenerator().getVariants();
-        assertEquals(18, variants.size());
+        // With or without hearts (17/11/2026)
+        assertEquals(18 * 2, variants.size());
         final IGameVariant variant = new GroupedGameVariant(GazeRaceVariant.VERTICAL.getKey(),
-            GazeRaceLevel.HARD.getKey(), GazeRaceEnd.TIME_3.getKey(), null);
+            GazeRaceLevel.HARD.getKey(), GazeRaceEnd.TIME_3.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
         assertEquals(GazeRaceVariant.VERTICAL, GazeRaceLauncher.roadOf(variant));
         assertEquals(GazeRaceLevel.HARD, GazeRaceLauncher.levelOf(variant));
         assertEquals(GazeRaceEnd.TIME_3, GazeRaceLauncher.endOf(variant));
+        final IGameVariant endlessWithout = new GroupedGameVariant(GazeRaceVariant.HORIZONTAL.getKey(),
+            GazeRaceLevel.EASY.getKey(), GazeRaceEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT);
+        assertTrue(variants.contains(endlessWithout));
+        assertFalse(LivesVariant.withLives(endlessWithout));
+        // The buttons of the end: 1 minute, 3 minutes, then without end on the right (rule of 17/11/2026)
+        assertEquals(List.of(GazeRaceEnd.TIME_1, GazeRaceEnd.TIME_3, GazeRaceEnd.ENDLESS),
+            List.of(GazeRaceEnd.values()));
+    }
+
+    /**
+     * "Without hearts" (maintainer's choice of 17/11/2026): no hearts, and the first hit loses the game ("Lost!", then
+     * the statistics); the hit is counted as a mistake.
+     */
+    @Test
+    void shouldLoseAtTheFirstHitWithoutHearts() throws Exception {
+        final GazeRace game = fx(() -> {
+            gameArea.getChildren().clear();
+            final GazeRace created = new GazeRace(gameContext, stats, GazeRaceVariant.HORIZONTAL, GazeRaceLevel.EASY,
+                GazeRaceEnd.TIME_3, 1);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        fx(() -> {
+            assertFalse(game.isWithLives());
+            emptySteps(game, 1);
+            game.hit(game.addCar());
+            assertEquals(GazeRace.Phase.OVER, game.getPhase());
+            assertEquals(0, game.getLives());
+            game.dispose();
+            return null;
+        });
+        verify(stats).incrementNumberOfMistakes();
+        verify(gameContext, never()).playWinTransition(anyLong(), any());
+        assertTrue(GazeRaceLauncher.withLives(game, new GroupedGameVariant(GazeRaceVariant.HORIZONTAL.getKey(),
+            GazeRaceLevel.EASY.getKey(), GazeRaceEnd.ENDLESS.getKey(), null, LivesVariant.WITH)).isWithLives());
     }
 
     @Test

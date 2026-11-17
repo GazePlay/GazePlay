@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -29,7 +30,9 @@ public class GazeRaceLauncher implements IGameLauncher<GazeRaceStats, IGameVaria
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, GazeRaceStats stats) {
-        return new GazeRace(gameContext, stats, roadOf(gameVariant), levelOf(gameVariant), endOf(gameVariant), -1);
+        return withLives(
+            new GazeRace(gameContext, stats, roadOf(gameVariant), levelOf(gameVariant), endOf(gameVariant), -1),
+            gameVariant);
     }
 
     @Override
@@ -39,7 +42,17 @@ public class GazeRaceLauncher implements IGameLauncher<GazeRaceStats, IGameVaria
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, GazeRaceStats stats, double gameSeed) {
-        return new GazeRace(gameContext, stats, roadOf(gameVariant), levelOf(gameVariant), endOf(gameVariant), gameSeed);
+        return withLives(
+            new GazeRace(gameContext, stats, roadOf(gameVariant), levelOf(gameVariant), endOf(gameVariant), gameSeed),
+            gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (17/11/2026)
+     */
+    static GazeRace withLives(final GazeRace game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 
     static GazeRaceVariant roadOf(final IGameVariant gameVariant) {
