@@ -205,8 +205,8 @@ class LettersTest {
     }
 
     /**
-     * 3 lives with an end (maintainer's request of 16/11/2026): a card of another letter costs one, the third loses the
-     * game ("Lost!", then the statistics); none without end.
+     * 3 lives (maintainer's request of 16/11/2026): a card of another letter costs one, the third loses the game
+     * ("Lost!", then the statistics); without end too since 17/11/2026, never with "without hearts".
      */
     @Test
     void shouldLoseALifeAtEachWrongCardThenTheGame() throws Exception {
@@ -228,10 +228,30 @@ class LettersTest {
         });
         final Letters endless = launched(LettersLevel.EASY, LettersCase.CAPITALS, LettersEnd.ENDLESS);
         fx(() -> {
-            assertFalse(endless.hasLives());
-            endless.getCards().stream().filter(card -> card.getLetter() != endless.getAsked())
-                .forEach(endless::choose);
-            assertEquals(Letters.Phase.PLAY, endless.getPhase());
+            assertTrue(endless.hasLives());
+            final List<Letters.Card> wrong = endless.getCards().stream()
+                .filter(card -> card.getLetter() != endless.getAsked()).toList();
+            for (int mistake = 1; mistake <= 3; mistake++) {
+                endless.choose(wrong.get(mistake - 1));
+            }
+            assertEquals(Letters.Phase.LOST, endless.getPhase());
+            return null;
+        });
+        final Letters without = fx(() -> {
+            gameArea.getChildren().clear();
+            final Letters noHearts = new Letters(gameContext, stats, LettersLevel.EASY, LettersCase.CAPITALS,
+                LettersPictures.ANIMALS, LettersEnd.ENDLESS, 4);
+            noHearts.setWithLives(false);
+            noHearts.setManual();
+            noHearts.launch();
+            return noHearts;
+        });
+        fx(() -> {
+            steps(without, 0.05);
+            assertFalse(without.hasLives());
+            without.getCards().stream().filter(card -> card.getLetter() != without.getAsked())
+                .forEach(without::choose);
+            assertEquals(Letters.Phase.PLAY, without.getPhase());
             return null;
         });
     }
@@ -315,8 +335,14 @@ class LettersTest {
 
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
-        // The hearts with or without with an end only (16/11/2026)
-        assertEquals(2 * 3 * (3 * 2 + 1) * 3, new LettersGameVariantGenerator().getVariants().size());
+        // The hearts with or without, with every end, without end too (17/11/2026)
+        assertEquals(2 * 3 * 4 * 2 * 3, new LettersGameVariantGenerator().getVariants().size());
+        assertTrue(LettersGameLauncher.create(gameContext,
+            new GroupedGameVariant("LettersAnimals", "LettersSmall", "Hard", null, "LettersEndless",
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(LettersGameLauncher.create(gameContext,
+            new GroupedGameVariant("LettersAnimals", "LettersSmall", "Hard", null, "LettersEndless",
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         assertTrue(LettersGameLauncher.create(gameContext,
             new GroupedGameVariant("LettersAnimals", "LettersSmall", "Hard", null, "LettersEnd5",
                 LivesVariant.WITH), stats, 1).hasLives());

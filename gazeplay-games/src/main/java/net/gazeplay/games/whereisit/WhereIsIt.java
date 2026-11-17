@@ -122,7 +122,8 @@ public class WhereIsIt implements GameLifeCycle {
     private Group counterPill;
 
     /**
-     * The lives at the start of a game with an end (maintainer's request of 16/11/2026): a wrong picture costs one.
+     * The lives at the start of a game with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without
+     * end): a wrong picture costs one.
      */
     static final int LIVES = 3;
 
@@ -132,7 +133,7 @@ public class WhereIsIt implements GameLifeCycle {
     private final boolean withLives;
 
     /**
-     * The lives left; none are shown without end.
+     * The lives left; none are shown without hearts.
      */
     @Getter
     private int lives = LIVES;
@@ -239,10 +240,10 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: a variant with an end (none without end, maintainer's decision)
+     * @return whether the game has lives: the hearts chosen, with or without end (maintainer's decision of 17/11/2026)
      */
     boolean hasLives() {
-        return withLives && end.getScreens() > 0;
+        return withLives;
     }
 
     /**
@@ -263,14 +264,14 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * @return the lives shown (for the tests), null without end
+     * @return the lives shown (for the tests), null without hearts
      */
     Group livesShown() {
         return livesGroup;
     }
 
     /**
-     * A wrong picture chosen: one life less in a game with an end.
+     * A wrong picture chosen: one life less in a game with the hearts.
      *
      * @return whether it was the last life: the game is lost
      */

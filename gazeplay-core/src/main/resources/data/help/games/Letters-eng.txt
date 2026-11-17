@@ -10,7 +10,7 @@ A letter is asked. Find all the cards of this letter: they turn over and a pictu
 - At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-A wrong card counts a mistake. With an end (3, 5 or 10 pictures) and "With hearts", you have 3 hearts at the top left: each wrong card costs one; with no heart left, "Lost!", then the statistics. Without end, there are no hearts. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. As you chose, the game stops after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+A wrong card counts a mistake. With or without end, with "With hearts", you have 3 hearts at the top left: each wrong card costs one; with no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. As you chose, the game stops after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
@@ -18,4 +18,4 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom, the hidden pictures: Animals, or My images ("My images" folder of the settings).
 - At the bottom, the writing: capitals, small letters (written as at school), or both (the "A" asked is found as "A" or "a").
 - At the bottom, the end: 3, 5 or 10 pictures, or without end.
-- At the bottom, with an end, the hearts: With hearts (3 hearts) or Without hearts.
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

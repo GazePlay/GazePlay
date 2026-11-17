@@ -54,8 +54,8 @@ class WhereIsItEndTest {
     @Test
     void shouldGiveEachThemeAndSizeWithEachEnd() {
         final Set<IGameVariant> variants = new WhereIsTheAnimalGameVariantGenerator().getVariants();
-        // 31 themes and sizes before, each with the 3 ends with or without hearts, and without end (16/11/2026)
-        assertEquals(31 * 7, variants.size());
+        // 31 themes and sizes before, each with the 4 ends with or without hearts (without end too since 17/11/2026)
+        assertEquals(31 * 8, variants.size());
         assertTrue(variants.stream().allMatch(GroupedGameVariant.class::isInstance));
         final List<GroupedGameVariant> grouped = variants.stream().map(GroupedGameVariant.class::cast).toList();
         // The ends in the order of the switches: 5, 10, 15 screens, then without end
@@ -69,22 +69,22 @@ class WhereIsItEndTest {
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-:LivesWith")));
         assertTrue(variants.contains(
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-:LivesWithout")));
-        // Without end, no hearts to choose
+        // Without end, the hearts to choose too (17/11/2026)
         assertTrue(variants.contains(
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x3:-:LivesWithout")));
-        assertFalse(variants.contains(
+        assertTrue(variants.contains(
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x3:-:LivesWith")));
         // Dynamic keeps its single size
-        assertEquals(7, grouped.stream().filter(variant -> variant.getGroup().equals("Dynamic")).count());
+        assertEquals(8, grouped.stream().filter(variant -> variant.getGroup().equals("Dynamic")).count());
         // Easy of the colors keeps its 4 sizes (no 3 x 3)
-        assertEquals(4 * 7, new WhereIsTheColorGameVariantGenerator().getVariants().stream()
+        assertEquals(4 * 8, new WhereIsTheColorGameVariantGenerator().getVariants().stream()
             .map(GroupedGameVariant.class::cast).filter(variant -> variant.getGroup().equals("Easy")).count());
     }
 
     @Test
     void shouldGiveOneThemeToAGameWithoutThemes() {
         final Set<IGameVariant> variants = new WhereIsItGameVariantGenerator().getVariants();
-        assertEquals(5 * 7, variants.size());
+        assertEquals(5 * 8, variants.size());
         assertTrue(variants.stream().map(GroupedGameVariant.class::cast)
             .allMatch(variant -> variant.getGroup().equals("WhereIsIt") && variant.isSize()));
     }
@@ -167,11 +167,11 @@ class WhereIsItEndTest {
     }
 
     /**
-     * 3 lives with an end (maintainer's request of 16/11/2026): a wrong picture costs one, the third loses the game;
-     * none without end.
+     * 3 lives (maintainer's request of 16/11/2026): a wrong picture costs one, the third loses the game; without end
+     * too since 17/11/2026.
      */
     @Test
-    void shouldLoseALifeAtEachWrongPictureWithAnEnd() throws Exception {
+    void shouldLoseALifeAtEachWrongPictureWithOrWithoutEnd() throws Exception {
         final WhereIsIt game = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
             WhereIsItEnd.SCREENS_5);
         assertTrue(game.hasLives());
@@ -187,11 +187,13 @@ class WhereIsItEndTest {
 
         final WhereIsIt endless = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
             WhereIsItEnd.ENDLESS);
-        assertFalse(endless.hasLives());
-        for (int i = 0; i < 10; i++) {
-            assertFalse(endless.wrongPictureChosen());
-        }
-        assertNull(endless.livesShown());
+        assertTrue(endless.hasLives());
+        assertFalse(endless.wrongPictureChosen());
+        assertNotNull(endless.livesShown(), "the hearts without end too");
+        assertEquals(2, endless.getLives());
+        assertFalse(endless.wrongPictureChosen());
+        assertTrue(endless.wrongPictureChosen(), "the third wrong picture loses the game without end too");
+        assertTrue(endless.isLost());
     }
 
     /**
@@ -212,6 +214,16 @@ class WhereIsItEndTest {
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd5:2x2:-:LivesWith"), stats)).hasLives());
         assertTrue(((WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd5:2x2:-"), stats)).hasLives());
+        // Without end (17/11/2026)
+        assertTrue(((WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x2:-:LivesWith"), stats)).hasLives());
+        final WhereIsIt endlessWithout = (WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x2:-:LivesWithout"), stats);
+        assertFalse(endlessWithout.hasLives());
+        for (int i = 0; i < 10; i++) {
+            assertFalse(endlessWithout.wrongPictureChosen());
+        }
+        assertFalse(endlessWithout.isLost());
     }
 
     /**

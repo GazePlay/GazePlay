@@ -42,8 +42,8 @@ import java.util.Map;
  * large in the band at the top and said; a loudspeaker button says it again. A grid of cards hides a picture: a fixation
  * on a card of the letter asked turns it, uncovering a part of the picture; a card of another letter shakes in red, says
  * its letter, counts a mistake, then stays greyed and can no longer be chosen until the next letter; a bubble says the
- * letter can be heard again (16/11/2026); with an end, it costs one of 3 lives, the last one loses the game ("Lost!",
- * then the statistics). When all the cards of the letter are found, the whole picture shows: "Bravo", then
+ * letter can be heard again (16/11/2026); with the hearts (with or without end since 17/11/2026), it costs one of 3
+ * lives, the last one loses the game ("Lost!", then the statistics). When all the cards of the letter are found, the whole picture shows: "Bravo", then
  * another letter. The game ends after 3, 5 or 10 pictures, or never.
  * <p>
  * Capitals, small letters (Andika, made for beginning readers) or both; Easy: 6 cards and one other letter which does not
@@ -84,7 +84,8 @@ public class Letters implements GameLifeCycle {
     static final double PICTURE = 2.2;
 
     /**
-     * The lives of a game with an end (maintainer's request of 16/11/2026): a card of another letter costs one.
+     * The lives of a game with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a card
+     * of another letter costs one.
      */
     static final int LIVES = 3;
 
@@ -530,10 +531,10 @@ public class Letters implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: a game with an end (none without end)
+     * @return whether the game has lives: the hearts chosen, with or without end (17/11/2026)
      */
     boolean hasLives() {
-        return withLives && end.getPictures() > 0;
+        return withLives;
     }
 
     /**

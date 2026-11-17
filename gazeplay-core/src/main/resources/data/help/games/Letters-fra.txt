@@ -10,7 +10,7 @@ Une lettre est demandée. Trouve toutes les cartes de cette lettre : elles se re
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Une mauvaise carte compte une erreur. Avec une fin (3, 5 ou 10 images) et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Sans fin, il n’y a pas de cœurs. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+Une mauvaise carte compte une erreur. Avec ou sans fin, avec « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
@@ -18,4 +18,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas, les images cachées : Animaux, ou Mes images (dossier « Mes images » des réglages).
 - En bas, l’écriture : capitales, minuscules (écrites comme à l’école), ou les deux (le « A » demandé se trouve sous la forme « A » ou « a »).
 - En bas, la fin : 3, 5 ou 10 images, ou sans fin.
-- En bas, avec une fin, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -11,7 +11,8 @@ import java.util.Set;
 /**
  * Gives the variants of "Identifier les lettres" (maintainer's choices of 12/11/2026): the level as buttons (see
  * {@link LettersLevel}), and at the bottom the pictures (see {@link LettersPictures}; "My images" plays with the images
- * of the user), how the letters are written (see {@link LettersCase}) and the end (see {@link LettersEnd}).
+ * of the user), how the letters are written (see {@link LettersCase}), the end (see {@link LettersEnd}) and the hearts
+ * (see {@link LivesVariant}), with every end, without end too (maintainer's choice of 17/11/2026).
  */
 public class LettersGameVariantGenerator implements IGameVariantGenerator {
 
@@ -21,7 +22,7 @@ public class LettersGameVariantGenerator implements IGameVariantGenerator {
         for (final LettersPictures pictures : LettersPictures.values()) {
             for (final LettersCase letterCase : LettersCase.values()) {
                 for (final LettersEnd end : LettersEnd.values()) {
-                    for (final String lives : LivesVariant.options(end.getPictures() > 0)) {
+                    for (final String lives : LivesVariant.options(true)) {
                         for (final LettersLevel level : LettersLevel.values()) {
                             variants.add(new GroupedGameVariant(pictures.getKey(), letterCase.getKey(), level.getKey(),
                                 pictures == LettersPictures.MY_IMAGES ? LettersPictures.USER_IMAGES_FOLDER : null,

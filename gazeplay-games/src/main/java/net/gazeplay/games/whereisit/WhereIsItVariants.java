@@ -14,7 +14,7 @@ import java.util.Set;
  * The variants of the family "Where is it?" since 16/11/2026: the theme at the top (a switch when the game has several,
  * e.g. Farm, Forest), the end at the bottom (see {@link WhereIsItEnd}), the sizes of the grid as buttons, in a
  * {@link GroupedGameVariant} ({@code GroupedGameVariant:<theme>:<end>:<lines>x<columns>:-:<hearts>}); the hearts
- * (with or without, see {@link LivesVariant}) only with an end.
+ * (with or without, see {@link LivesVariant}) with every end, without end too (maintainer's choice of 17/11/2026).
  * <p>
  * The variants of before (in a shortcut, or a game to replay) are still read, without end as they were:
  * {@code DimensionDifficultyGameVariant:<lines>:<columns>:<theme>} and {@code DimensionGameVariant:<lines>:<columns>}.
@@ -33,7 +33,7 @@ public final class WhereIsItVariants {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
         for (final IGameVariant size : sizes) {
             for (final WhereIsItEnd end : WhereIsItEnd.values()) {
-                for (final String lives : LivesVariant.options(end.getScreens() > 0)) {
+                for (final String lives : LivesVariant.options(true)) {
                     variants.add(new GroupedGameVariant(theme(size, singleTheme), end.getKey(),
                         lines(size) + "x" + columns(size), null, lives));
                 }
