@@ -195,8 +195,12 @@ class ShooterGameTest {
         final GroupedGameVariant first = (GroupedGameVariant) variants.getFirst();
         assertEquals("ShooterAtOnce", first.getGroup());
         assertEquals("ShooterBiboules", first.getSubGroup());
-        assertEquals("ShooterEndless", first.getValue());
-        assertEquals(ShooterEnd.TIME_3, ShooterGameLauncher.endOf(variants.get(4)));
+        // The buttons of the end, without end last, on the right (rule of 17/11/2026)
+        assertEquals("ShooterScore50", first.getValue());
+        assertEquals(ShooterEnd.TIME_3, ShooterGameLauncher.endOf(variants.get(3)));
+        assertEquals(ShooterEnd.ENDLESS, ShooterGameLauncher.endOf(variants.get(4)));
+        assertEquals(List.of(ShooterEnd.SCORE_50, ShooterEnd.SCORE_100, ShooterEnd.TIME_1, ShooterEnd.TIME_3,
+            ShooterEnd.ENDLESS), List.of(ShooterEnd.values()));
         final IGameVariant none = new IntGameVariant(1);
         assertEquals(ShooterTheme.BIBOULES, ShooterGameLauncher.themeOf(none));
         assertEquals(ShooterShot.AT_ONCE, ShooterGameLauncher.shotOf(none));
