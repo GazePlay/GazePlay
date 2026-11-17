@@ -6,16 +6,17 @@ import lombok.RequiredArgsConstructor;
 /**
  * When "Space Game" ends, besides the three lives lost (maintainer's rules of 3/11/2026): never, or the boss comes after
  * 1 or 3 minutes, or after 20 or 50 aliens destroyed, and the game is won when it is destroyed ("Bravo" and the
- * statistics). Without end, no boss.
+ * statistics). Without end, no boss. The order is that of the buttons, "without end" always last, on the right (rule
+ * of 17/11/2026).
  */
 @Getter
 @RequiredArgsConstructor
 public enum SpaceEnd {
-    ENDLESS("SpaceEndless", 0, 0),
     TIME_1("SpaceTime1", 0, 60),
     TIME_3("SpaceTime3", 0, 180),
     ALIENS_20("SpaceAliens20", 20, 0),
-    ALIENS_50("SpaceAliens50", 50, 0);
+    ALIENS_50("SpaceAliens50", 50, 0),
+    ENDLESS("SpaceEndless", 0, 0);
 
     /**
      * Key of translation, and value of the variants.

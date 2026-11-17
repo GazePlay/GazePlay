@@ -11,11 +11,12 @@ Des extraterrestres dans leurs soucoupes volantes attaquent ! Ta fusée les dét
 - La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
 # Comment gagner
-Selon la variante : battre le boss, qui arrive après 1 ou 3 minutes de jeu, ou après 20 ou 50 extraterrestres détruits. Le boss battu : « Bravo », puis les statistiques. Sans fin : pas de boss, on quitte par le menu (touche Échap). Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+Selon la variante : battre le boss, qui arrive après 1 ou 3 minutes de jeu, ou après 20 ou 50 extraterrestres détruits. Le boss battu : « Bravo », puis les statistiques. Sans fin : pas de boss, on quitte par le menu (touche Échap). Si les 3 vies sont perdues : « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n'y a pas de cœurs et on ne peut pas perdre : touchée, la fusée clignote seulement, et chaque touche reste comptée comme une erreur dans les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Sans fin, 1 minute puis le boss, 3 minutes puis le boss, 20 extraterrestres puis le boss, 50 extraterrestres puis le boss : la fin de la partie.
+- 1 minute puis le boss, 3 minutes puis le boss, 20 extraterrestres puis le boss, 50 extraterrestres puis le boss, ou sans fin : la fin de la partie.
 - En bas, le niveau. Facile : 4 extraterrestres à la fois, chacun tire environ toutes les 6 secondes ; le boss a 15 points de vie (15 lasers pour le battre).
 - Normal : 6 extraterrestres à la fois, chacun tire environ toutes les 4 secondes ; le boss a 30 points de vie.
 - Difficile : 8 extraterrestres à la fois, chacun tire environ toutes les 2,5 secondes ; le boss a 50 points de vie.
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (on ne peut pas perdre).

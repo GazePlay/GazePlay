@@ -39,6 +39,9 @@ import java.util.Map;
  * other aliens go and the boss comes (15, 30 or 50 points of life by the level): destroyed, "Bravo" then the
  * statistics. Without end, no boss.
  * <p>
+ * Without hearts (variant of 17/11/2026, maintainer's choice): a touched rocket blinks but loses nothing, and the game
+ * cannot be lost. Each touch is counted as a mistake, with or without hearts.
+ * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves and the time does not
  * run while the menu of the game is open.
  */
@@ -78,6 +81,12 @@ public class SpaceGame implements GameLifeCycle {
     private Phase phase = Phase.OVER;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026); without them, no hearts
+     * shown, a touched rocket loses nothing and the game cannot be lost.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int destroyed;
     @Getter
@@ -340,15 +349,18 @@ public class SpaceGame implements GameLifeCycle {
     }
 
     /**
-     * The rocket touched by a ball: one life less, unless it blinks.
+     * The rocket touched by a ball, unless it blinks: a mistake, one life less with the hearts.
      */
     void hurt() {
         if (phase == Phase.OVER || invincible > 0) {
             return;
         }
-        lives--;
+        stats.incrementNumberOfMistakes();
+        if (withLives) {
+            lives--;
+        }
         showHud();
-        if (lives <= 0) {
+        if (withLives && lives <= 0) {
             lose();
         } else {
             invincible = INVINCIBLE;
@@ -449,10 +461,12 @@ public class SpaceGame implements GameLifeCycle {
         final double margin = height * 0.025;
         final double heart = height * 0.055;
         // The lives: the hearts shared by the reviewed games (GameStyle.lives)
-        final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, true);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, true);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin);
+            hud.getChildren().add(hearts);
+        }
         String text = gameContext.getTranslator().translate("SpaceScore") + " " + destroyed;
         if (end.getAliens() > 0) {
             text += " / " + end.getAliens();
@@ -509,6 +523,13 @@ public class SpaceGame implements GameLifeCycle {
         lostPause = new PauseTransition(Duration.seconds(2));
         lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
         lostPause.play();
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

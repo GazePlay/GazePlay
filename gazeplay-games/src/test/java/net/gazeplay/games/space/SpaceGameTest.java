@@ -11,6 +11,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
@@ -124,6 +125,39 @@ class SpaceGameTest {
         assertEquals(0, game.getLives());
         assertEquals(SpaceGame.Phase.OVER, game.getPhase());
         verify(gameContext, never()).playWinTransition(anyLong(), any());
+    }
+
+    /**
+     * "Without hearts" (maintainer's choice of 17/11/2026): touched, the rocket blinks but loses nothing, and the game
+     * cannot be lost; each touch is counted as a mistake.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final SpaceGame game = fx(() -> {
+            gameArea.getChildren().clear();
+            final SpaceGame created = new SpaceGame(gameContext, stats, SpaceLevel.EASY, SpaceEnd.ENDLESS, 5);
+            games.add(created);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        fx(() -> {
+            assertFalse(game.isWithLives());
+            for (int touch = 0; touch < SpaceGame.LIVES + 1; touch++) {
+                game.getShots().clear();
+                game.getAliens().clear();
+                steps(game, SpaceGame.INVINCIBLE + 0.1);
+                game.hurt();
+                assertNotEquals(SpaceGame.Phase.OVER, game.getPhase());
+            }
+            return null;
+        });
+        assertEquals(SpaceGame.LIVES, game.getLives());
+        verify(stats, times(SpaceGame.LIVES + 1)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
+        assertTrue(SpaceGameLauncher.withLives(game, new GroupedGameVariant(SpaceGameVariantGenerator.GROUP,
+            SpaceLevel.EASY.getKey(), SpaceEnd.ENDLESS.getKey(), null, LivesVariant.WITH)).isWithLives());
     }
 
     @Test
@@ -245,10 +279,16 @@ class SpaceGameTest {
     @Test
     void shouldGiveTheVariantsAndReadOnesOfBefore() {
         final Set<IGameVariant> variants = new SpaceGameVariantGenerator().getVariants();
-        assertEquals(SpaceLevel.values().length * SpaceEnd.values().length, variants.size());
+        // With or without hearts (17/11/2026)
+        assertEquals(SpaceLevel.values().length * SpaceEnd.values().length * 2, variants.size());
         final GroupedGameVariant variant = new GroupedGameVariant(SpaceGameVariantGenerator.GROUP,
-            SpaceLevel.HARD.getKey(), SpaceEnd.TIME_3.getKey(), null);
+            SpaceLevel.HARD.getKey(), SpaceEnd.TIME_3.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
+        assertTrue(variants.contains(new GroupedGameVariant(SpaceGameVariantGenerator.GROUP,
+            SpaceLevel.EASY.getKey(), SpaceEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT)));
+        // The buttons of the end, without end last, on the right (rule of 17/11/2026)
+        assertEquals(java.util.List.of(SpaceEnd.TIME_1, SpaceEnd.TIME_3, SpaceEnd.ALIENS_20, SpaceEnd.ALIENS_50,
+            SpaceEnd.ENDLESS), java.util.List.of(SpaceEnd.values()));
         assertEquals(SpaceLevel.HARD, SpaceGameLauncher.levelOf(variant));
         assertEquals(SpaceEnd.TIME_3, SpaceGameLauncher.endOf(variant));
         assertEquals(SpaceLevel.NORMAL, SpaceGameLauncher.levelOf(new IntGameVariant(1)));
