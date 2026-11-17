@@ -10,7 +10,7 @@ Renvoie la balle avec la raquette pour casser toutes les briques du mur.
 - La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Casse toutes les briques : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+Casse toutes les briques : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : la balle tombée revient simplement sur la raquette, et chaque balle tombée reste comptée comme une erreur dans les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
@@ -19,3 +19,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas aussi, le niveau. Facile : une grande raquette (30 % de l'écran) et une balle lente.
 - Normal : une raquette moyenne (22 % de l'écran) et une balle plus rapide.
 - Difficile : une petite raquette (16 % de l'écran), une balle rapide, et une brique sur trois à toucher deux fois.
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

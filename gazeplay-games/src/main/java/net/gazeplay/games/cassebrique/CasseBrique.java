@@ -36,7 +36,9 @@ import java.util.List;
  * gaze or the mouse is (as the setting of the inputs allows) and sends the ball back towards a wall of bricks (the
  * drawing of the variant). A brick hit breaks (with a little flash), or cracks first in the hard level; all the bricks
  * broken: "Bravo" then the statistics. Three lives: a fallen ball costs one, the ball comes back on the paddle; the
- * three lost: "Lost!" then the statistics. Behind the bricks, a soft background drawn by the game, or an image of the
+ * three lost: "Lost!" then the statistics. Without hearts (variant of 17/11/2026), a fallen ball just comes back on
+ * the paddle and the game is never lost; each fallen ball is counted as a mistake, with or without hearts. Behind the
+ * bricks, a soft background drawn by the game, or an image of the
  * user found little by little.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves while the menu of the
@@ -76,6 +78,12 @@ public class CasseBrique implements GameLifeCycle {
     private Phase phase = Phase.OVER;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026); without them, no hearts
+     * shown, a fallen ball comes back on the paddle and the game is never lost.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int broken;
     @Getter
@@ -433,15 +441,19 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     /**
-     * The ball fallen: one life less; the ball comes back on the paddle, or "Lost!" after the third.
+     * The ball fallen: a mistake, one life less with the hearts; the ball comes back on the paddle, or "Lost!" after the
+     * third.
      */
     void fall() {
         if (phase != Phase.PLAY) {
             return;
         }
-        lives--;
+        stats.incrementNumberOfMistakes();
+        if (withLives) {
+            lives--;
+        }
         showHud();
-        if (lives <= 0) {
+        if (withLives && lives <= 0) {
             lose();
             return;
         }
@@ -457,10 +469,12 @@ public class CasseBrique implements GameLifeCycle {
         final double margin = height * 0.025;
         final double heart = height * 0.055;
         // The lives: the hearts shared by the reviewed games (GameStyle.lives)
-        final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin * 0.6);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin * 0.6);
+            hud.getChildren().add(hearts);
+        }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("CasseBriqueScore") + " " + broken
             + " / " + toBreak, fontSize);
         pill.setLayoutX(width - pill.getBoundsInLocal().getWidth() - margin);
@@ -494,6 +508,13 @@ public class CasseBrique implements GameLifeCycle {
         lostPause = new PauseTransition(Duration.seconds(2));
         lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
         lostPause.play();
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

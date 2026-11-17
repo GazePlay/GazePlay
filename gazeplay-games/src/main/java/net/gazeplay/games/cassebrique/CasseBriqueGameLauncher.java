@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -33,14 +34,22 @@ public class CasseBriqueGameLauncher implements IGameLauncher<Stats, IGameVarian
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
-        return new CasseBrique(gameContext, stats, mapOf(gameVariant), levelOf(gameVariant),
-            backgroundOf(gameVariant), -1);
+        return withLives(new CasseBrique(gameContext, stats, mapOf(gameVariant), levelOf(gameVariant),
+            backgroundOf(gameVariant), -1), gameVariant);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new CasseBrique(gameContext, stats, mapOf(gameVariant), levelOf(gameVariant),
-            backgroundOf(gameVariant), gameSeed);
+        return withLives(new CasseBrique(gameContext, stats, mapOf(gameVariant), levelOf(gameVariant),
+            backgroundOf(gameVariant), gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (17/11/2026)
+     */
+    static CasseBrique withLives(final CasseBrique game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 
     static CasseBriqueMap mapOf(final IGameVariant gameVariant) {

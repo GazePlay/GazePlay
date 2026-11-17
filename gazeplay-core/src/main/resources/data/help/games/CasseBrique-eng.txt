@@ -10,7 +10,7 @@ Send the ball back with the paddle to break all the bricks of the wall.
 - The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
 
 # How to win
-Break all the bricks: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics.
+Break all the bricks: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: a fallen ball just comes back on the paddle, and each fallen ball is still counted as a mistake in the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
@@ -19,3 +19,4 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom too, the level. Easy: a big paddle (30 % of the screen) and a slow ball.
 - Normal: a middle paddle (22 % of the screen) and a faster ball.
 - Hard: a small paddle (16 % of the screen), a fast ball, and one brick in three to hit twice.
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

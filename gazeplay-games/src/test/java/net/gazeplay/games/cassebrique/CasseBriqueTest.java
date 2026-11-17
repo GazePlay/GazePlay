@@ -11,6 +11,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -120,6 +121,43 @@ class CasseBriqueTest {
         assertEquals(0, game.getLives());
         assertEquals(CasseBrique.Phase.OVER, game.getPhase());
         verify(gameContext, never()).playWinTransition(anyLong(), any());
+    }
+
+    /**
+     * "Without hearts" (maintainer's request of 17/11/2026): a fallen ball comes back on the paddle, no life lost, the
+     * game never lost; each fallen ball is counted as a mistake.
+     */
+    @Test
+    void shouldBringTheBallBackOnThePaddleWithoutHearts() throws Exception {
+        final CasseBrique game = fx(() -> {
+            gameArea.getChildren().clear();
+            final CasseBrique created = new CasseBrique(gameContext, stats, CasseBriqueMap.SMILEY,
+                CasseBriqueLevel.EASY, CasseBriqueBackground.DRAWN, 5);
+            games.add(created);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        fx(() -> {
+            assertFalse(game.isWithLives());
+            game.aimAt(100);
+            steps(game, 0.1);
+            game.throwBall(game.getWidth() - 50, game.getHeight() * 0.8, 0, 1);
+            steps(game, 1);
+            assertTrue(game.getWaiting() > 0, "the ball back on the paddle");
+            for (int i = 0; i < CasseBrique.LIVES + 1; i++) {
+                game.fall();
+                assertEquals(CasseBrique.Phase.PLAY, game.getPhase());
+            }
+            assertEquals(CasseBrique.LIVES, game.getLives());
+            return null;
+        });
+        verify(stats, times(CasseBrique.LIVES + 2)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
+        assertTrue(CasseBriqueGameLauncher.withLives(game,
+            new GroupedGameVariant(CasseBriqueBackground.DRAWN.getKey(), CasseBriqueLevel.EASY.getKey(),
+                CasseBriqueMap.BLOC.getKey(), null, LivesVariant.WITH)).isWithLives());
     }
 
     @Test
@@ -237,11 +275,19 @@ class CasseBriqueTest {
     @Test
     void shouldGiveTheVariantsWithMyImagesAndReadOnesOfBefore() {
         final Set<IGameVariant> variants = new CasseBriqueGameVariantGenerator().getVariants();
+        // With or without hearts (17/11/2026)
         assertEquals(CasseBriqueBackground.values().length * CasseBriqueLevel.values().length
-            * CasseBriqueMap.values().length, variants.size());
+            * CasseBriqueMap.values().length * 2, variants.size());
         final GroupedGameVariant mine = new GroupedGameVariant(CasseBriqueBackground.MY_IMAGES.getKey(),
-            CasseBriqueLevel.HARD.getKey(), CasseBriqueMap.ARC.getKey(), CasseBriqueBackground.USER_IMAGES_FOLDER);
+            CasseBriqueLevel.HARD.getKey(), CasseBriqueMap.ARC.getKey(), CasseBriqueBackground.USER_IMAGES_FOLDER,
+            LivesVariant.WITHOUT);
         assertTrue(variants.contains(mine));
+        assertTrue(variants.contains(new GroupedGameVariant(CasseBriqueBackground.DRAWN.getKey(),
+            CasseBriqueLevel.EASY.getKey(), CasseBriqueMap.BLOC.getKey(), null, LivesVariant.WITH)));
+        assertFalse(LivesVariant.withLives(mine));
+        // A variant of before the hearts keeps them
+        assertTrue(LivesVariant.withLives(new GroupedGameVariant(CasseBriqueBackground.DRAWN.getKey(),
+            CasseBriqueLevel.EASY.getKey(), CasseBriqueMap.BLOC.getKey(), null)));
         assertEquals("images", UserImagesVariant.folderOf(mine), "the images shared by all the games");
         assertEquals(CasseBriqueMap.ARC, CasseBriqueGameLauncher.mapOf(mine));
         assertEquals(CasseBriqueLevel.HARD, CasseBriqueGameLauncher.levelOf(mine));
