@@ -86,14 +86,44 @@ class MagicCardsTest {
     }
 
     private static MagicCards.Card wrongCard(final MagicCards game) {
-        return game.getCards().stream().filter(card -> card != game.getWinner() && !card.isTurned()).findFirst()
-            .orElseThrow();
+        return game.getCards().stream().filter(card -> !game.getWinners().contains(card) && !card.isTurned())
+            .findFirst().orElseThrow();
+    }
+
+    /**
+     * Steps through the show and the shuffle, until the cards can be chosen.
+     */
+    private static void untilPlay(final MagicCards game) {
+        for (int i = 0; i < 5000 && game.getPhase() != MagicCards.Phase.PLAY; i++) {
+            game.step(0.02);
+        }
+        assertEquals(MagicCards.Phase.PLAY, game.getPhase());
+    }
+
+    /**
+     * Rule of 17/11/2026: half of the cards (rounded down) have a picture, each its own, all shown face up first.
+     */
+    @Test
+    void shouldHideHalfOfTheCardsRoundedDown() throws Exception {
+        assertEquals(List.of(1, 2, 3, 4), List.of(MagicCardsCount.THREE.getToFind(), MagicCardsCount.FOUR.getToFind(),
+            MagicCardsCount.SIX.getToFind(), MagicCardsCount.NINE.getToFind()));
+        for (final MagicCardsCount count : MagicCardsCount.values()) {
+            final MagicCards game = launched(MagicCardsMode.MAGIC, count, MagicCardsEnd.ENDLESS);
+            fx(() -> {
+                assertEquals(count.getToFind(), game.getWinners().size(), count.toString());
+                assertTrue(game.getWinners().stream().allMatch(MagicCards.Card::isFaceUp));
+                assertEquals(count.getToFind(), game.getCards().stream().filter(MagicCards.Card::isFaceUp).count());
+                verify(stats).incrementNumberOfGoalsToReach(count.getToFind());
+                return null;
+            });
+            clearInvocations(stats);
+        }
     }
 
     @Test
     void shouldPutEveryGridInTheScreenWithoutOverlap() throws Exception {
         for (final MagicCardsCount count : MagicCardsCount.values()) {
-            final MagicCards game = launched(MagicCardsMode.SEARCH, count, MagicCardsEnd.ENDLESS);
+            final MagicCards game = launched(MagicCardsMode.MAGIC, count, MagicCardsEnd.ENDLESS);
             fx(() -> {
                 assertEquals(count.getCards(), game.getCards().size());
                 final double h = game.getCardHeight();
@@ -115,14 +145,15 @@ class MagicCardsTest {
     @Test
     void shouldTurnACardOverAfterTheFixationOnly() throws Exception {
         when(configuration.getGameStartDelay()).thenReturn(1000);
-        final MagicCards game = launched(MagicCardsMode.SEARCH, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
         fx(() -> {
-            final MagicCards.Card card = wrongCard(game);
             // Nothing during the delay
-            game.lookAt(card);
+            game.lookAt(game.getCards().get(0));
             assertNull(game.getLooked());
             steps(game, 1.02);
-            assertEquals(MagicCards.Phase.PLAY, game.getPhase());
+            assertEquals(MagicCards.Phase.SHOW, game.getPhase());
+            untilPlay(game);
+            final MagicCards.Card card = wrongCard(game);
             game.lookAt(card);
             steps(game, 0.3);
             game.lookAway(card);
@@ -137,8 +168,9 @@ class MagicCardsTest {
 
     @Test
     void shouldCountAWrongCardThatStaysTurnedOver() throws Exception {
-        final MagicCards game = launched(MagicCardsMode.SEARCH, MagicCardsCount.SIX, MagicCardsEnd.ENDLESS);
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.SIX, MagicCardsEnd.ENDLESS);
         fx(() -> {
+            untilPlay(game);
             final MagicCards.Card card = wrongCard(game);
             game.choose(card);
             steps(game, MagicCards.FLIP + 0.1);
@@ -157,29 +189,61 @@ class MagicCardsTest {
         });
     }
 
+    /**
+     * 4 cards, 2 pictures (17/11/2026): a picture found stays face up and the round goes on; both found, the others
+     * fade, a star and "Bravo !", then another round with its show.
+     */
     @Test
-    void shouldShowThePictureFoundThenAnotherRound() throws Exception {
-        final MagicCards game = launched(MagicCardsMode.SEARCH, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
+    void shouldFindAllThePicturesBeforeTheNextRound() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
         fx(() -> {
-            final MagicCards.Card winner = game.getWinner();
-            game.choose(winner);
+            untilPlay(game);
+            final List<MagicCards.Card> winners = List.copyOf(game.getWinners());
+            assertEquals(2, winners.size());
+            game.choose(winners.get(0));
+            steps(game, MagicCards.FLIP + 0.05);
+            assertEquals(MagicCards.Phase.PLAY, game.getPhase(), "one more to find");
+            assertEquals(1, game.getFoundInRound());
+            assertTrue(winners.get(0).isFaceUp());
+            assertFalse(winners.get(0).isWrong());
+            assertEquals(0, game.getFound());
+            // Found: it cannot be chosen again
+            game.choose(winners.get(0));
+            assertEquals(1, game.getFoundInRound());
+            game.choose(winners.get(1));
             assertEquals(MagicCards.Phase.REVEAL, game.getPhase());
             assertEquals(1, game.getFound());
-            verify(stats).incrementNumberOfGoalsReached();
+            verify(stats, times(2)).incrementNumberOfGoalsReached();
             steps(game, MagicCards.FLIP + MagicCards.GROW + 0.05);
-            assertTrue(winner.isFaceUp());
-            assertTrue(winner.getNode().getScaleY() > 1.5);
+            assertTrue(winners.stream().allMatch(MagicCards.Card::isFaceUp));
             assertEquals(2, game.getReward().getChildren().size());
             verify(gameContext.getSoundManager()).add("data/goosegame/sounds/win.wav");
-            game.getCards().stream().filter(card -> card != winner)
+            game.getCards().stream().filter(card -> !winners.contains(card))
                 .forEach(card -> assertEquals(0, card.getNode().getOpacity(), 1e-9));
             steps(game, MagicCards.REWARD);
-            // Another round, all face down
-            assertEquals(MagicCards.Phase.PLAY, game.getPhase());
-            assertNotSame(winner, game.getWinner());
-            assertTrue(game.getCards().stream().noneMatch(MagicCards.Card::isFaceUp));
+            // Another round, its pictures shown
+            assertEquals(MagicCards.Phase.SHOW, game.getPhase());
+            assertTrue(game.getWinners().stream().noneMatch(winners::contains));
             assertTrue(game.getReward().getChildren().isEmpty());
-            verify(stats, times(2)).incrementNumberOfGoalsToReach();
+            verify(stats, times(2)).incrementNumberOfGoalsToReach(2);
+            return null;
+        });
+    }
+
+    /**
+     * 3 cards, 1 picture: found, it comes to the middle and grows (the 3 cards in a row are already large).
+     */
+    @Test
+    void shouldGrowASinglePictureFound() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.THREE, MagicCardsEnd.ENDLESS);
+        fx(() -> {
+            untilPlay(game);
+            final MagicCards.Card winner = game.getWinners().get(0);
+            game.choose(winner);
+            assertEquals(MagicCards.Phase.REVEAL, game.getPhase());
+            steps(game, MagicCards.FLIP + MagicCards.GROW + 0.05);
+            assertEquals(800, winner.getNode().getLayoutX(), 1e-6, "in the middle");
+            assertTrue(winner.getNode().getScaleY() >= 1);
             return null;
         });
     }
@@ -188,7 +252,7 @@ class MagicCardsTest {
     void shouldShowThePictureThenShuffleTheCardsInTheMagicMode() throws Exception {
         final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.THREE, MagicCardsEnd.ENDLESS);
         fx(() -> {
-            final MagicCards.Card winner = game.getWinner();
+            final MagicCards.Card winner = game.getWinners().get(0);
             assertTrue(winner.isFaceUp());
             assertEquals(MagicCards.Phase.SHOW, game.getPhase());
             // Nothing can be chosen while it is shown, nor while the cards move
@@ -222,17 +286,15 @@ class MagicCardsTest {
     }
 
     /**
-     * 3 lives in the magic mode with an end (maintainer's request of 16/11/2026): a wrong card costs one, the third
-     * loses the game ("Lost!", then the statistics); none in the search (found by chance) nor without end.
+     * 3 lives (maintainer's request of 16/11/2026): a wrong card costs one, the third loses the game ("Lost!", then the
+     * statistics); without end too since 17/11/2026, never with "without hearts".
      */
     @Test
-    void shouldLoseALifeAtEachWrongCardInTheMagicModeThenTheGame() throws Exception {
-        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.NINE, MagicCardsEnd.PICTURES_3);
+    void shouldLoseALifeAtEachWrongCardThenTheGame() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.NINE, MagicCardsEnd.ENDLESS);
         fx(() -> {
             assertTrue(game.hasLives());
-            steps(game, MagicCards.SHOW + MagicCards.FLIP + 0.1
-                + MagicCardsCount.NINE.getSwaps() * (MagicCards.SWAP + MagicCards.SWAP_PAUSE) + 0.2);
-            assertEquals(MagicCards.Phase.PLAY, game.getPhase());
+            untilPlay(game);
             for (int mistake = 1; mistake <= 3; mistake++) {
                 game.choose(wrongCard(game));
                 steps(game, MagicCards.FLIP + 0.1);
@@ -245,16 +307,38 @@ class MagicCardsTest {
             verify(gameContext).showRoundStats(stats, game);
             return null;
         });
-        assertFalse(launched(MagicCardsMode.SEARCH, MagicCardsCount.NINE, MagicCardsEnd.PICTURES_3).hasLives());
-        assertFalse(launched(MagicCardsMode.MAGIC, MagicCardsCount.NINE, MagicCardsEnd.ENDLESS).hasLives());
+        final MagicCards without = fx(() -> {
+            gameArea.getChildren().clear();
+            final MagicCards noHearts = new MagicCards(gameContext, stats, MagicCardsMode.MAGIC,
+                MagicCardsPictures.ANIMALS, MagicCardsCount.NINE, MagicCardsEnd.ENDLESS, 4);
+            noHearts.setWithLives(false);
+            noHearts.setManual();
+            noHearts.launch();
+            noHearts.step(0.02);
+            return noHearts;
+        });
+        fx(() -> {
+            assertFalse(without.hasLives());
+            untilPlay(without);
+            // The 5 cards without a picture, all wrong: never lost
+            for (int mistake = 1; mistake <= 5; mistake++) {
+                without.choose(wrongCard(without));
+                steps(without, MagicCards.FLIP + 0.1);
+            }
+            assertEquals(MagicCards.Phase.PLAY, without.getPhase());
+            return null;
+        });
     }
 
     @Test
-    void shouldEndWithBravoAfterThePicturesOfTheVariant() throws Exception {
-        final MagicCards game = launched(MagicCardsMode.SEARCH, MagicCardsCount.FOUR, MagicCardsEnd.PICTURES_3);
+    void shouldEndWithBravoAfterTheRoundsOfTheVariant() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.FOUR, MagicCardsEnd.PICTURES_3);
         fx(() -> {
             for (int round = 0; round < 3; round++) {
-                game.choose(game.getWinner());
+                untilPlay(game);
+                for (final MagicCards.Card winner : List.copyOf(game.getWinners())) {
+                    game.choose(winner);
+                }
                 steps(game, MagicCards.FLIP + MagicCards.GROW + MagicCards.REWARD + 0.1);
             }
             assertEquals(3, game.getFound());
@@ -280,8 +364,16 @@ class MagicCardsTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new MagicCardsGameVariantGenerator().getVariants();
-        // The hearts with or without in the magic mode with an end only (16/11/2026)
-        assertEquals((3 * 2 + 1 + 4) * 2 * 4, variants.size());
+        // One mode (the search removed on 17/11/2026), 2 kinds of pictures, each end with or without hearts, 4 counts
+        assertEquals(2 * 4 * 2 * 4, variants.size());
+        assertEquals(List.of(MagicCardsMode.MAGIC), List.of(MagicCardsMode.values()));
+        assertTrue(MagicCardsGameLauncher.create(gameContext,
+            new GroupedGameVariant("MagicShuffle", "MagicAnimals", "MagicCards9", null, "MagicEndless",
+                LivesVariant.WITH), stats, 1).hasLives());
+        // A variant of the search of before: played in the magic
+        assertEquals(MagicCardsMode.MAGIC, MagicCardsGameLauncher.create(gameContext,
+            new GroupedGameVariant("MagicSearch", "MagicAnimals", "MagicCards4", null, "MagicEnd3"), stats, 1)
+            .getMode());
         assertTrue(MagicCardsGameLauncher.create(gameContext,
             new GroupedGameVariant("MagicShuffle", "MagicAnimals", "MagicCards9", null, "MagicEnd5",
                 LivesVariant.WITH), stats, 1).hasLives());
@@ -298,7 +390,7 @@ class MagicCardsTest {
             final MagicCards old = MagicCardsGameLauncher.create(gameContext,
                 new DimensionGameVariant(grid[0], grid[1]), stats, 1);
             assertEquals(grid[2], old.getCount().getCards());
-            assertEquals(MagicCardsMode.SEARCH, old.getMode());
+            assertEquals(MagicCardsMode.MAGIC, old.getMode());
             assertEquals(MagicCardsPictures.ANIMALS, old.getPictures());
             assertEquals(MagicCardsEnd.ENDLESS, old.getEnd());
         }

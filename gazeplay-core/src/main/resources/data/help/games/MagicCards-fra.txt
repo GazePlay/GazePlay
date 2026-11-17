@@ -1,21 +1,20 @@
 # Le principe
-Des cartes sont retournées. Une seule cache une image : trouve-la !
+Des images sont montrées sur des cartes, puis les cartes se retournent et se mélangent sous tes yeux : retrouve les cartes des images !
 
 # Comment jouer
-- Regarde une carte : un anneau fait le tour de la carte. Quand il est plein, la carte se retourne. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
-- Une mauvaise carte montre une croix et reste retournée, en gris : tu sais qu’elle est déjà vue.
-- La bonne carte montre l’image : les autres s’effacent, l’image grandit au milieu avec une étoile et « Bravo ! ». Puis d’autres cartes arrivent.
-- En Magique, l’image est d’abord montrée sur sa carte. Puis la carte se retourne et les cartes se mélangent sous tes yeux : suis bien la carte de l’image ! Quand elles s’arrêtent, retrouve-la.
+- La moitié des cartes a une image : 1 carte sur 3, 2 sur 4, 3 sur 6, 4 sur 9. Elles sont d’abord montrées face visible. Puis elles se retournent et les cartes se mélangent : suis bien les cartes des images !
+- Quand les cartes s’arrêtent, regarde une carte : un anneau fait le tour de la carte. Quand il est plein, la carte se retourne. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Une carte d’image reste face visible. Une mauvaise carte montre une croix et reste retournée, en gris : tu sais qu’elle est déjà vue.
+- Pour passer à la suite, trouve toutes les cartes des images : les autres s’effacent, une étoile et « Bravo ! » (une seule image grandit au milieu). Puis d’autres cartes arrivent.
 - Rien ne se choisit pendant que les cartes bougent.
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Une mauvaise carte compte une erreur. En Magique avec une fin (3, 5 ou 10 images) et « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. En Chercher, où la carte se trouve au hasard, et sans fin, il n’y a pas de cœurs. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 images trouvées (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
+Une mauvaise carte compte une erreur. Avec « Avec cœurs », avec ou sans fin, tu as 3 cœurs en haut à gauche : chaque mauvaise carte en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 manches (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Le jeu : Chercher (l’image est cachée sous une carte) ou Magique (l’image est montrée, puis les cartes se mélangent).
 - Le nombre de cartes : 3 (sur une rangée), 4, 6 ou 9.
 - En bas, les images : des animaux, ou Mes images (les images du dossier commun, à ajouter dans les réglages, Dossiers, « Mes images »).
-- En bas, la fin : 3, 5 ou 10 images, ou sans fin.
-- En bas, en Magique avec une fin, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.
+- En bas, la fin : 3, 5 ou 10 manches, ou sans fin.
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

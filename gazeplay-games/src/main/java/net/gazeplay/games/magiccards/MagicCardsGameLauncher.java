@@ -20,7 +20,8 @@ import java.util.LinkedList;
 /**
  * Creates "Cartes magiques" (name code MagicCards) and its statistics (folder "MagicCards", as before), for a new game or
  * for the replay of a saved one (see {@code IGameLauncher}). The grids of before the review (2 x 2, 2 x 3, 3 x 2, 3 x 3)
- * are read as 4, 6, 6 and 9 cards, to look for, with the animals, without end (maintainer's choice of 12/11/2026).
+ * are read as 4, 6, 6 and 9 cards, in the magic (the only mode since 17/11/2026), with the animals, without end
+ * (maintainer's choice of 12/11/2026).
  */
 public class MagicCardsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
@@ -55,7 +56,7 @@ public class MagicCardsGameLauncher implements IGameLauncher<Stats, IGameVariant
         if (gameVariant instanceof DimensionGameVariant grid) {
             count = MagicCardsCount.ofCards(grid.getWidth() * grid.getHeight());
         }
-        return withLives(new MagicCards(gameContext, stats, MagicCardsMode.SEARCH, MagicCardsPictures.ANIMALS, count,
+        return withLives(new MagicCards(gameContext, stats, MagicCardsMode.MAGIC, MagicCardsPictures.ANIMALS, count,
             MagicCardsEnd.ENDLESS, gameSeed), gameVariant);
     }
 

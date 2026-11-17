@@ -34,6 +34,14 @@ public enum MagicCardsCount {
     }
 
     /**
+     * @return the cards with a picture, to find (maintainer's rule of 17/11/2026): half of the cards, rounded down (3
+     *   cards: 1, 4: 2, 6: 3, 9: 4)
+     */
+    public int getToFind() {
+        return getCards() / 2;
+    }
+
+    /**
      * @return the number of cards of a key, 4 for an unknown one
      */
     public static MagicCardsCount of(final String key) {

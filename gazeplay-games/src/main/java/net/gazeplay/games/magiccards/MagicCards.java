@@ -33,13 +33,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * "Cartes magiques" (name code MagicCards; reviewed on 12/11/2026, maintainer's rules): cards face down, one of them
- * hiding a picture. A fixation of the length of the settings turns a card over: a wrong card shows an empty face with a
- * cross, counts a mistake (in the magic mode with an end, one of 3 lives, 16/11/2026; the last one loses the game:
- * "Lost!", then the statistics) and stays turned over, greyed; the right one shows the picture, the others fade,
- * the picture grows in the middle, a star and "Bravo !", then another round. In the magic mode, the picture is first
- * shown on its card, the cards turn over and are shuffled before the eyes (two by two, on arcs), then the card is to be
- * found again. The game ends after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end.
+ * "Cartes magiques" (name code MagicCards; reviewed on 12/11/2026, maintainer's rules): half of the cards (rounded
+ * down: 1 of 3, 2 of 4, 3 of 6, 4 of 9; rule of 17/11/2026) have a picture, each its own. The pictures are first shown
+ * on their cards, the cards turn over and are shuffled before the eyes (two by two, on arcs), then the cards of the
+ * pictures are to be found again. A fixation of the length of the settings turns a card over: a wrong card shows an
+ * empty face with a cross, counts a mistake (with the hearts, with or without end, one of 3 lives, 16/11 and 17/11/2026;
+ * the last one loses the game: "Lost!", then the statistics) and stays turned over, greyed; a card of a picture stays
+ * face up. All of them found: the others fade (a single picture grows in the middle), a star and "Bravo !", then
+ * another round. The game ends after 3, 5 or 10 rounds ("Bravo", then the statistics), or has no end. (The search, a
+ * picture hidden under one card found by chance, was removed on 17/11/2026.)
  * <p>
  * One loop, in real seconds: the fixation lasts the length of the settings (read at each step), nothing can be chosen
  * before the delay of the settings, while the cards move, nor while the menu of the game is open. (Before the review:
@@ -67,8 +69,8 @@ public class MagicCards implements GameLifeCycle {
     enum Phase { WAIT, SHOW, SHUFFLE, PLAY, REVEAL, LOST, OVER }
 
     /**
-     * The lives of the magic mode with an end (maintainer's request of 16/11/2026): a wrong card costs one; none in the
-     * search, where the card is found by chance, nor without end.
+     * The lives with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a wrong card
+     * costs one.
      */
     static final int LIVES = 3;
 
@@ -119,8 +121,13 @@ public class MagicCards implements GameLifeCycle {
     private Group reward;
     @Getter
     private final List<Card> cards = new ArrayList<>();
+    /**
+     * The cards of the pictures of the round, to find (half of the cards, 17/11/2026), and those found.
+     */
     @Getter
-    private Card winner;
+    private final List<Card> winners = new ArrayList<>();
+    @Getter
+    private int foundInRound;
     @Getter
     private Card looked;
     @Getter
@@ -239,28 +246,36 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
-     * A new round: the cards face down, one of them with the picture (face up in the magic mode, for the show).
+     * A new round: the cards of the pictures face up for the show (half of the cards, each its own picture), the others
+     * face down.
      */
     private void newRound() {
         removeCards();
         reward.getChildren().clear();
-        final int winnerIndex = random.nextInt(slots.length);
-        final Image image = nextImage();
+        final List<Integer> places = new ArrayList<>();
         for (int i = 0; i < slots.length; i++) {
-            final Card card = new Card(i, i == winnerIndex ? image : null);
+            places.add(i);
+        }
+        final List<Integer> pictured = new ArrayList<>();
+        for (int i = 0; i < count.getToFind(); i++) {
+            pictured.add(places.remove(random.nextInt(places.size())));
+        }
+        for (int i = 0; i < slots.length; i++) {
+            final Card card = new Card(i, pictured.contains(i) ? nextImage() : null);
             cards.add(card);
             cardsLayer.getChildren().add(card.node);
+            if (pictured.contains(i)) {
+                winners.add(card);
+                card.setFaceUp(true);
+            }
         }
-        winner = cards.get(winnerIndex);
-        if (mode == MagicCardsMode.MAGIC) {
-            winner.setFaceUp(true);
-        }
+        foundInRound = 0;
         looked = null;
         progress = 0;
         phaseTime = 0;
         stats.notifyNewRoundReady();
-        stats.incrementNumberOfGoalsToReach();
-        showBand(mode == MagicCardsMode.MAGIC ? "MagicWatch" : "MagicFind");
+        stats.incrementNumberOfGoalsToReach(winners.size());
+        showBand(winners.size() > 1 ? "MagicWatchMany" : "MagicWatch");
     }
 
     private Image nextImage() {
@@ -321,10 +336,10 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: the magic mode with an end
+     * @return whether the game has lives: the hearts chosen, with or without end (17/11/2026)
      */
     boolean hasLives() {
-        return withLives && mode == MagicCardsMode.MAGIC && end.getPictures() > 0;
+        return withLives;
     }
 
     /**
@@ -364,9 +379,9 @@ public class MagicCards implements GameLifeCycle {
                 }
             }
             case SHOW -> {
-                if (phaseTime >= SHOW && !winner.isFlipping()) {
-                    if (winner.isFaceUp()) {
-                        winner.flip(false);
+                if (phaseTime >= SHOW && winners.stream().noneMatch(Card::isFlipping)) {
+                    if (winners.stream().anyMatch(Card::isFaceUp)) {
+                        winners.forEach(card -> card.flip(false));
                         gameContext.getSoundManager().add(FLIP_SOUND);
                     } else {
                         phase = Phase.SHUFFLE;
@@ -391,15 +406,11 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
-     * After the delay, or the reward of the round before: the show of the magic mode, or the search.
+     * After the delay, or the reward of the round before: the show of the pictures.
      */
     private void startRound() {
         phaseTime = 0;
-        if (mode == MagicCardsMode.MAGIC) {
-            phase = Phase.SHOW;
-        } else {
-            phase = Phase.PLAY;
-        }
+        phase = Phase.SHOW;
     }
 
     /**
@@ -418,13 +429,14 @@ public class MagicCards implements GameLifeCycle {
         if (swapsLeft == 0) {
             phase = Phase.PLAY;
             phaseTime = 0;
-            showBand("MagicWhere");
+            showBand(winners.size() > 1 ? "MagicWhereMany" : "MagicWhere");
             return;
         }
         swapsLeft--;
         phaseTime = 0;
-        // The card of the picture moves more often than the others, so that it is to be followed
-        final Card first = random.nextDouble() < 0.6 ? winner : cards.get(random.nextInt(cards.size()));
+        // The cards of the pictures move more often than the others, so that they are to be followed
+        final Card first = random.nextDouble() < 0.6 ? winners.get(random.nextInt(winners.size()))
+            : cards.get(random.nextInt(cards.size()));
         Card second = cards.get(random.nextInt(cards.size()));
         while (second == first) {
             second = cards.get(random.nextInt(cards.size()));
@@ -481,7 +493,7 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
-     * A card chosen: the picture found, or a wrong card.
+     * A card chosen: a picture found (it stays face up; all of them found, the round is won), or a wrong card.
      */
     void choose(final Card card) {
         if (!canChoose(card)) {
@@ -489,12 +501,16 @@ public class MagicCards implements GameLifeCycle {
         }
         card.flip(true);
         gameContext.getSoundManager().add(FLIP_SOUND);
-        if (card == winner) {
+        if (winners.contains(card)) {
+            foundInRound++;
+            stats.incrementNumberOfGoalsReached();
+            if (foundInRound < winners.size()) {
+                return;
+            }
             phase = Phase.REVEAL;
             phaseTime = 0;
             rewarded = false;
             found++;
-            stats.incrementNumberOfGoalsReached();
             if (looked != null) {
                 looked.showRing(false);
                 looked = null;
@@ -514,8 +530,8 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
-     * The picture found: once turned over, the others fade and it grows in the middle; a star and "Bravo !"; then
-     * another round, or the end.
+     * All the pictures found: once the last one is turned over, the other cards fade; a single picture grows in the
+     * middle, several stay at their places; a star and "Bravo !"; then another round, or the end.
      */
     private void reveal() {
         if (phaseTime < FLIP) {
@@ -524,23 +540,29 @@ public class MagicCards implements GameLifeCycle {
         final double u = Math.min(1, (phaseTime - FLIP) / GROW);
         final double ease = u * u * (3 - 2 * u);
         for (final Card card : cards) {
-            if (card != winner) {
+            if (!winners.contains(card)) {
                 card.node.setOpacity(card.baseOpacity() * (1 - ease));
             }
         }
-        final double scale = Math.min((width * 0.6) / cardWidth, (height * 0.62) / cardHeight);
-        final double[] from = slots[winner.slot];
-        final double cx = width / 2;
-        final double cy = height * 0.12 + (height * 0.88) * 0.45;
-        winner.node.setLayoutX(from[0] + (cx - from[0]) * ease);
-        winner.node.setLayoutY(from[1] + (cy - from[1]) * ease);
-        winner.node.setScaleX(1 + (scale - 1) * ease);
-        winner.node.setScaleY(1 + (scale - 1) * ease);
-        winner.node.toFront();
+        double rewardTop = height / 2 - height * 0.07;
+        if (winners.size() == 1) {
+            final Card winner = winners.get(0);
+            final double scale = Math.min((width * 0.6) / cardWidth, (height * 0.62) / cardHeight);
+            final double[] from = slots[winner.slot];
+            final double cx = width / 2;
+            final double cy = height * 0.12 + (height * 0.88) * 0.45;
+            winner.node.setLayoutX(from[0] + (cx - from[0]) * ease);
+            winner.node.setLayoutY(from[1] + (cy - from[1]) * ease);
+            winner.node.setScaleX(1 + (scale - 1) * ease);
+            winner.node.setScaleY(1 + (scale - 1) * ease);
+            winner.node.toFront();
+            rewardTop = cy + cardHeight * scale / 2;
+        }
         if (u >= 1 && !rewarded) {
             rewarded = true;
             gameContext.getSoundManager().add(WIN_SOUND);
-            showReward(cy + cardHeight * scale / 2);
+            // Several pictures: the star and "Bravo !" in the middle, over the cards
+            showReward(rewardTop);
             showBand(instruction);
         }
         if (phaseTime >= FLIP + GROW + REWARD) {
@@ -591,6 +613,7 @@ public class MagicCards implements GameLifeCycle {
             gameContext.getGazeDeviceManager().removeEventFilter(card.node);
         }
         cards.clear();
+        winners.clear();
         cardsLayer.getChildren().clear();
         swapA = null;
         swapB = null;

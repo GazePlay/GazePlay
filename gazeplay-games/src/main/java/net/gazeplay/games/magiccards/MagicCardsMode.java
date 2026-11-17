@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * How "Cartes magiques" is played (maintainer's choices of 12/11/2026): look for the picture hidden under one of the
- * cards, or the magic trick: the picture is shown on a card, the cards turn over and are shuffled before the eyes,
- * then the card is to be found again.
+ * How "Cartes magiques" is played (maintainer's choices of 12/11/2026): the magic trick: the pictures are shown on
+ * their cards, the cards turn over and are shuffled before the eyes, then the cards are to be found again. The search
+ * (a picture hidden under one of the cards, found by chance) was removed on 17/11/2026 (maintainer's decision): one
+ * mode only, kept as the group of the variants (a single value: the window shows no switch for it).
  */
 @Getter
 @RequiredArgsConstructor
 public enum MagicCardsMode {
-    SEARCH("MagicSearch"),
     MAGIC("MagicShuffle");
 
     /**
@@ -20,14 +20,9 @@ public enum MagicCardsMode {
     private final String key;
 
     /**
-     * @return the mode of a key, the search for an unknown one
+     * @return the mode of a key: the magic, the only one (a variant of the search of before is played so)
      */
     public static MagicCardsMode of(final String key) {
-        for (final MagicCardsMode mode : values()) {
-            if (mode.key.equals(key)) {
-                return mode;
-            }
-        }
-        return SEARCH;
+        return MAGIC;
     }
 }
