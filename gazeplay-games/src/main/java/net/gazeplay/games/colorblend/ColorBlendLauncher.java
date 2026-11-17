@@ -19,7 +19,7 @@ import java.util.LinkedList;
 /**
  * Creates "Mélanger les couleurs" (name code colorblend) and its statistics (folder "ColorBlend", as before), for a new
  * game or for the replay of a saved one (see {@code IGameLauncher}). Without a variant of the review (the game had none
- * before), the free mode, the closest to the game of before.
+ * before), the challenge (the only mode since 17/11/2026), easy, without end.
  */
 public class ColorBlendLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
@@ -49,7 +49,7 @@ public class ColorBlendLauncher implements IGameLauncher<Stats, IGameVariant> {
                 ColorBlendLevel.of(grouped.getValue()), ColorBlendEnd.of(grouped.getSubGroup()), gameSeed), gameVariant);
         }
         return withLives(
-            new ColorBlend(gameContext, stats, ColorBlendMode.FREE, ColorBlendLevel.FREE, ColorBlendEnd.ENDLESS,
+            new ColorBlend(gameContext, stats, ColorBlendMode.CHALLENGE, ColorBlendLevel.EASY, ColorBlendEnd.ENDLESS,
             gameSeed), gameVariant);
     }
 

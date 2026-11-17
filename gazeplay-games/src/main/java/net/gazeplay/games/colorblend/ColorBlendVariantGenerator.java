@@ -9,9 +9,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Gives the variants of "Mélanger les couleurs" (maintainer's choices of 13/11/2026): the mode at the top (see
- * {@link ColorBlendMode}), the level as buttons (see {@link ColorBlendLevel}), and at the bottom the end of the
- * challenge (see {@link ColorBlendEnd}); the free mode has a single variant, without end.
+ * Gives the variants of "Mélanger les couleurs" (maintainer's choices of 13/11/2026): the mode (see
+ * {@link ColorBlendMode}, a single one since 17/11/2026, so no switch), the level as buttons (see
+ * {@link ColorBlendLevel}), and at the bottom the end (see {@link ColorBlendEnd}) and the hearts, with every end,
+ * without end too (17/11/2026).
  */
 public class ColorBlendVariantGenerator implements IGameVariantGenerator {
 
@@ -19,16 +20,13 @@ public class ColorBlendVariantGenerator implements IGameVariantGenerator {
     public Set<IGameVariant> getVariants() {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
         for (final ColorBlendEnd end : ColorBlendEnd.values()) {
-            for (final ColorBlendLevel level : new ColorBlendLevel[]{ColorBlendLevel.EASY, ColorBlendLevel.NORMAL,
-                ColorBlendLevel.HARD}) {
-                for (final String lives : LivesVariant.options(end.getColors() > 0)) {
+            for (final ColorBlendLevel level : ColorBlendLevel.values()) {
+                for (final String lives : LivesVariant.options(true)) {
                     variants.add(new GroupedGameVariant(ColorBlendMode.CHALLENGE.getKey(), end.getKey(),
                         level.getKey(), null, lives));
                 }
             }
         }
-        variants.add(new GroupedGameVariant(ColorBlendMode.FREE.getKey(), ColorBlendEnd.ENDLESS.getKey(),
-            ColorBlendLevel.FREE.getKey(), null, LivesVariant.WITHOUT));
         return variants;
     }
 }

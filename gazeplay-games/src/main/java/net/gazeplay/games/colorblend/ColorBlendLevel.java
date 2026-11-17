@@ -8,8 +8,8 @@ import java.util.List;
 
 /**
  * The level of "Mélanger les couleurs" (maintainer's choices of 13/11/2026): its pots and the colors to make. Easy: red,
- * yellow and blue, two by two; normal: with white and black; hard: three pots. The free mode has a single value, the
- * five pots.
+ * yellow and blue, two by two; normal: with white and black; hard: three pots. (The level of the free mode, the five
+ * pots, was removed with it on 17/11/2026.)
  */
 @Getter
 public enum ColorBlendLevel {
@@ -17,8 +17,7 @@ public enum ColorBlendLevel {
     NORMAL("ColorBlendNormal", List.of(Pot.values()), List.of(Target.PINK, Target.SKY_BLUE, Target.PALE_YELLOW,
         Target.GREY, Target.BURGUNDY, Target.NAVY)),
     HARD("ColorBlendHard", List.of(Pot.values()), List.of(Target.BROWN, Target.LIGHT_GREEN, Target.MAUVE, Target.PEACH,
-        Target.FIR_GREEN, Target.AUBERGINE)),
-    FREE("ColorBlendAllPots", List.of(Pot.values()), List.of());
+        Target.FIR_GREEN, Target.AUBERGINE));
 
     /**
      * Key of translation, and value of the variants (the buttons).

@@ -18,7 +18,6 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +44,10 @@ import java.util.List;
  * the next color (never the same twice in a row). Wrong: the pot shows the color obtained and its name when it has
  * one, a mistake is counted, the pot is emptied after 2 s and the same color is asked again; after two
  * mistakes on a color, the pots of its recipe are framed. The game ends after 5, 10 or 20 colors ("Bravo", then the
- * statistics), or has no end; with an end, a wrong mix costs one of 3 lives (16/11/2026), the last one loses the
- * game ("Lost!", then the statistics). The free mode: as many pots as wanted, the mix at each pot, its name when it is a known
- * color, a button to empty the pot; no end.
+ * statistics), or has no end; with the hearts, with or without end, a wrong mix costs one of 3 lives (16/11 and
+ * 17/11/2026), the last one loses the
+ * game ("Lost!", then the statistics). (The free mode, one's own mixes with a button to empty the pot, was removed on
+ * 17/11/2026.)
  * <p>
  * One loop, in real seconds: the fixation lasts the length of the settings (read at each step), nothing can be chosen
  * before the delay of the settings, while a pot is poured, nor while the menu of the game is open. (Before the review:
@@ -70,10 +70,6 @@ public class ColorBlend implements GameLifeCycle {
      * Mistakes on a color after which the pots of its recipe are framed.
      */
     static final int HINT_AFTER = 2;
-    /**
-     * The most pots in a mix of the free mode.
-     */
-    static final int MOST_POTS = 20;
 
     private static final Color EMPTY = Color.rgb(236, 232, 226);
     private static final String SOUNDS = "data/colorblend/sounds/";
@@ -81,8 +77,8 @@ public class ColorBlend implements GameLifeCycle {
     enum Phase { WAIT, CHOOSE, POUR, RESULT, REWARD, LOST, OVER }
 
     /**
-     * The lives of a challenge with an end (maintainer's request of 16/11/2026): a wrong mix costs one; none without end
-     * nor in the free mode.
+     * The lives with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a wrong mix costs
+     * one.
      */
     static final int LIVES = 3;
 
@@ -143,7 +139,6 @@ public class ColorBlend implements GameLifeCycle {
     private Choice looked;
     @Getter
     private double progress;
-    private Choice empty;
 
     private final AnimationTimer loop = new AnimationTimer() {
         private long last = -1;
@@ -174,9 +169,8 @@ public class ColorBlend implements GameLifeCycle {
         this.configuration = gameContext.getConfiguration();
         this.stats = stats;
         this.mode = mode;
-        this.level = mode == ColorBlendMode.FREE ? ColorBlendLevel.FREE
-            : level == ColorBlendLevel.FREE ? ColorBlendLevel.EASY : level;
-        this.end = mode == ColorBlendMode.FREE ? ColorBlendEnd.ENDLESS : end;
+        this.level = level;
+        this.end = end;
         if (gameSeed < 0) {
             random = new ReplayablePseudoRandom();
             stats.setGameSeed(random.getSeed());
@@ -190,7 +184,8 @@ public class ColorBlend implements GameLifeCycle {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
-        bowlX = mode == ColorBlendMode.CHALLENGE ? width * 0.6 : width * 0.5;
+        // On the right of the card of the color to make
+        bowlX = width * 0.6;
         bowlWidth = Math.min(width * 0.3, height * 0.42);
         rimY = height * 0.42;
 
@@ -223,12 +218,7 @@ public class ColorBlend implements GameLifeCycle {
         done = 0;
         lives = LIVES;
         showPots();
-        if (mode == ColorBlendMode.CHALLENGE) {
-            newTarget();
-        } else {
-            stats.notifyNewRoundReady();
-            showHud();
-        }
+        newTarget();
         phase = Phase.WAIT;
         elapsed = 0;
         if (!manual) {
@@ -347,24 +337,14 @@ public class ColorBlend implements GameLifeCycle {
         return Math.min(height * 0.075, width * 0.045);
     }
 
-    private Node icon(final String name) {
-        final double size = buttonRadius();
-        final SVGPath shape = GameStyle.icon(name, size);
-        shape.setStyle("-fx-fill: -gp-accent;");
-        final Group group = new Group(shape);
-        group.setLayoutX(-size / 2);
-        group.setLayoutY(-size / 2);
-        return new Group(group);
-    }
-
     /**
-     * The pots of the level in a row under the big pot, and the button to empty it in the free mode.
+     * The pots of the level in a row under the big pot.
      */
     private void showPots() {
         clearButtons();
         final List<Choice> row = new ArrayList<>();
         for (final Pot pot : level.getPots()) {
-            row.add(new Choice(pot, potPicture(PaintMix.color(pot), buttonRadius() * 1.1), null));
+            row.add(new Choice(pot, potPicture(PaintMix.color(pot), buttonRadius() * 1.1)));
         }
         final double gap = buttonRadius() * 0.6;
         final double rowWidth = row.size() * 2 * buttonRadius() + (row.size() - 1) * gap;
@@ -374,11 +354,6 @@ public class ColorBlend implements GameLifeCycle {
             row.get(i).place(left + buttonRadius() + i * (2 * buttonRadius() + gap), y);
         }
         choices.addAll(row);
-        if (mode == ColorBlendMode.FREE) {
-            empty = new Choice(null, icon("restart_alt"), "ColorBlendEmpty");
-            empty.place(left + rowWidth + gap * 2.5 + buttonRadius(), y);
-            choices.add(empty);
-        }
         updateMarks();
     }
 
@@ -391,18 +366,14 @@ public class ColorBlend implements GameLifeCycle {
         ring.stop();
         looked = null;
         progress = 0;
-        empty = null;
     }
 
     /**
      * The number of times each pot is in the mix, and the frames of the hint.
      */
     private void updateMarks() {
-        final boolean hint = mode == ColorBlendMode.CHALLENGE && target != null && mistakesOnTarget >= HINT_AFTER;
+        final boolean hint = target != null && mistakesOnTarget >= HINT_AFTER;
         for (final Choice choice : choices) {
-            if (choice.pot == null) {
-                continue;
-            }
             final long count = mix.stream().filter(p -> p == choice.pot).count();
             choice.setCount((int) count);
             choice.setHinted(hint && target.getRecipe().contains(choice.pot));
@@ -423,16 +394,16 @@ public class ColorBlend implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: a challenge with an end
+     * @return whether the game has lives: the hearts chosen, with or without end (17/11/2026)
      */
     boolean hasLives() {
-        return withLives && mode == ColorBlendMode.CHALLENGE && end.getColors() > 0;
+        return withLives;
     }
 
     private void showHud() {
         final double size = height * 0.032;
         final String pots = gameContext.getTranslator().translate("ColorBlendPots") + " " + mix.size()
-            + (mode == ColorBlendMode.CHALLENGE && target != null ? " / " + target.getRecipe().size() : "");
+            + (target != null ? " / " + target.getRecipe().size() : "");
         final Group left = GameStyle.pill(pots, size);
         left.setLayoutX(height * 0.03);
         left.setLayoutY(height * 0.025);
@@ -447,14 +418,12 @@ public class ColorBlend implements GameLifeCycle {
             left.setLayoutX(height * 0.025 + hearts.getBoundsInLocal().getWidth() + height * 0.025);
         }
         hud.getChildren().add(left);
-        if (mode == ColorBlendMode.CHALLENGE) {
-            final String text = gameContext.getTranslator().translate("ColorBlendDone") + " " + done
-                + (end.getColors() > 0 ? " / " + end.getColors() : "");
-            final Group score = GameStyle.pill(text, size);
-            score.setLayoutX(width - score.getBoundsInLocal().getWidth() - height * 0.03);
-            score.setLayoutY(height * 0.025);
-            hud.getChildren().add(score);
-        }
+        final String text = gameContext.getTranslator().translate("ColorBlendDone") + " " + done
+            + (end.getColors() > 0 ? " / " + end.getColors() : "");
+        final Group score = GameStyle.pill(text, size);
+        score.setLayoutX(width - score.getBoundsInLocal().getWidth() - height * 0.03);
+        score.setLayoutY(height * 0.025);
+        hud.getChildren().add(score);
     }
 
     /**
@@ -636,14 +605,9 @@ public class ColorBlend implements GameLifeCycle {
     }
 
     /**
-     * After a pot is poured: the name of the mix in the free mode; in the challenge, the next pot, or the mix checked.
+     * After a pot is poured: the next pot, or the mix checked.
      */
     private void poured() {
-        if (mode == ColorBlendMode.FREE) {
-            showMessage(PaintMix.name(mix), null, false);
-            setPhase(Phase.CHOOSE);
-            return;
-        }
         if (mix.size() < target.getRecipe().size()) {
             setPhase(Phase.CHOOSE);
             return;
@@ -705,17 +669,10 @@ public class ColorBlend implements GameLifeCycle {
     }
 
     /**
-     * A button chosen: a pot poured, or the big pot emptied (free mode).
+     * A pot chosen: poured in the big pot.
      */
     void choose(final Choice choice) {
         if (phase != Phase.CHOOSE) {
-            return;
-        }
-        if (choice == empty) {
-            emptyPot();
-            return;
-        }
-        if (mix.size() >= MOST_POTS) {
             return;
         }
         mix.add(choice.pot);
@@ -772,10 +729,6 @@ public class ColorBlend implements GameLifeCycle {
         return choices.stream().filter(c -> c.pot == pot).findFirst().orElseThrow();
     }
 
-    Choice getEmpty() {
-        return empty;
-    }
-
     /**
      * @return the names shown under the big pot and above it, for the tests
      */
@@ -807,14 +760,12 @@ public class ColorBlend implements GameLifeCycle {
     }
 
     /**
-     * A round button: a pot of paint, or the button to empty the big pot (with its label above), with the number of
-     * times the pot is in the mix and the frame of the hint.
+     * A round button: a pot of paint, with the number of times the pot is in the mix and the frame of the hint.
      */
     final class Choice {
         @Getter
         private final Pot pot;
         private final Node picture;
-        private final String label;
         private final Circle disc;
         private final Circle hint;
         private final Group badge;
@@ -826,10 +777,9 @@ public class ColorBlend implements GameLifeCycle {
         @Getter
         private boolean hinted;
 
-        Choice(final Pot pot, final Node picture, final String label) {
+        Choice(final Pot pot, final Node picture) {
             this.pot = pot;
             this.picture = picture;
-            this.label = label;
             disc = new Circle(buttonRadius());
             disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
             hint = new Circle(buttonRadius() * 1.14);
@@ -869,23 +819,12 @@ public class ColorBlend implements GameLifeCycle {
             x = cx;
             y = cy;
             final Group node = new Group(hint, disc);
-            if (picture != null) {
-                final Group holder = new Group(picture);
-                holder.setMouseTransparent(true);
-                if (pot != null) {
-                    final var bounds = picture.getBoundsInParent();
-                    holder.setLayoutX(-(bounds.getMinX() + bounds.getMaxX()) / 2);
-                    holder.setLayoutY(-(bounds.getMinY() + bounds.getMaxY()) / 2);
-                }
-                node.getChildren().add(holder);
-            }
-            if (label != null) {
-                final Group pill = GameStyle.pill(gameContext.getTranslator().translate(label), height * 0.024);
-                pill.setLayoutX(-pill.getBoundsInLocal().getWidth() / 2);
-                pill.setLayoutY(-buttonRadius() - pill.getBoundsInLocal().getHeight() - height * 0.01);
-                pill.setMouseTransparent(true);
-                node.getChildren().add(pill);
-            }
+            final Group holder = new Group(picture);
+            holder.setMouseTransparent(true);
+            final var bounds = picture.getBoundsInParent();
+            holder.setLayoutX(-(bounds.getMinX() + bounds.getMaxX()) / 2);
+            holder.setLayoutY(-(bounds.getMinY() + bounds.getMaxY()) / 2);
+            node.getChildren().add(holder);
             node.getChildren().add(badge);
             node.setLayoutX(cx);
             node.setLayoutY(cy);

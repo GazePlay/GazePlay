@@ -244,23 +244,43 @@ class ColorBlendTest {
     }
 
     /**
-     * No lives without end nor in the free mode (maintainer's decision).
+     * Without end too since 17/11/2026: with the hearts, the third wrong mix loses the game; without them, never.
      */
     @Test
-    void shouldHaveNoLivesWithoutEnd() throws Exception {
+    void shouldHaveLivesWithoutEndToo() throws Exception {
         final ColorBlend endless = launched(ColorBlendMode.CHALLENGE, ColorBlendLevel.EASY, ColorBlendEnd.ENDLESS);
-        assertFalse(endless.hasLives());
+        assertTrue(endless.hasLives());
         fx(() -> {
             final List<Pot> recipe = endless.getTarget().getRecipe();
-            for (int attempt = 1; attempt <= 4; attempt++) {
+            for (int attempt = 1; attempt <= 3; attempt++) {
                 pour(endless, recipe.get(0));
                 pour(endless, wrongPot(endless, recipe));
                 steps(endless, ColorBlend.RESULT + 0.04);
             }
-            assertEquals(ColorBlend.Phase.CHOOSE, endless.getPhase());
+            assertEquals(ColorBlend.Phase.LOST, endless.getPhase());
             return null;
         });
-        assertFalse(launched(ColorBlendMode.FREE, ColorBlendLevel.FREE, ColorBlendEnd.COLORS_5).hasLives());
+        final ColorBlend without = fx(() -> {
+            gameArea.getChildren().clear();
+            final ColorBlend noHearts = new ColorBlend(gameContext, stats, ColorBlendMode.CHALLENGE,
+                ColorBlendLevel.EASY, ColorBlendEnd.ENDLESS, 3);
+            noHearts.setWithLives(false);
+            noHearts.setManual();
+            noHearts.launch();
+            noHearts.step(0.02);
+            return noHearts;
+        });
+        assertFalse(without.hasLives());
+        fx(() -> {
+            final List<Pot> recipe = without.getTarget().getRecipe();
+            for (int attempt = 1; attempt <= 4; attempt++) {
+                pour(without, recipe.get(0));
+                pour(without, wrongPot(without, recipe));
+                steps(without, ColorBlend.RESULT + 0.04);
+            }
+            assertEquals(ColorBlend.Phase.CHOOSE, without.getPhase());
+            return null;
+        });
     }
 
     @Test
@@ -273,32 +293,6 @@ class ColorBlendTest {
             pour(game, other.getRecipe().get(1));
             assertEquals(ColorBlend.Phase.RESULT, game.getPhase());
             assertTrue(game.getMessages().contains(other.getKey()), game.getMessages().toString());
-            return null;
-        });
-    }
-
-    @Test
-    void shouldMixFreelyNameKnownColorsAndEmptyThePot() throws Exception {
-        final ColorBlend game = launched(ColorBlendMode.FREE, ColorBlendLevel.FREE, ColorBlendEnd.COLORS_5);
-        fx(() -> {
-            assertEquals(ColorBlendEnd.ENDLESS, game.getEnd());
-            assertEquals(5, game.getLevel().getPots().size());
-            assertNull(game.getTarget());
-            assertNotNull(game.getEmpty());
-            pour(game, Pot.YELLOW);
-            assertEquals(List.of("ColorBlendYellow"), game.getMessages());
-            pour(game, Pot.BLUE);
-            assertEquals(List.of("ColorBlendGreen"), game.getMessages());
-            pour(game, Pot.YELLOW);
-            assertTrue(game.getMessages().isEmpty());
-            assertEquals(2, game.choice(Pot.YELLOW).getCount());
-            assertEquals(PaintMix.mix(List.of(Pot.YELLOW, Pot.BLUE, Pot.YELLOW)), game.getPotColor());
-            assertEquals(ColorBlend.Phase.CHOOSE, game.getPhase());
-            game.choose(game.getEmpty());
-            assertTrue(game.getMix().isEmpty());
-            assertEquals(0, game.choice(Pot.YELLOW).getCount());
-            verify(stats, never()).incrementNumberOfMistakes();
-            verify(stats, never()).incrementNumberOfGoalsToReach();
             return null;
         });
     }
@@ -336,8 +330,19 @@ class ColorBlendTest {
     @Test
     void shouldReadTheVariantsAndALaunchWithoutVariant() {
         final Set<IGameVariant> variants = new ColorBlendVariantGenerator().getVariants();
-        // The hearts with or without in the challenge with an end only (16/11/2026)
-        assertEquals(3 * (3 * 2 + 1) + 1, variants.size());
+        // One mode (the free one removed on 17/11/2026), the hearts with or without with every end (17/11/2026)
+        assertEquals(3 * 4 * 2, variants.size());
+        assertTrue(ColorBlendLauncher.create(gameContext,
+            new GroupedGameVariant("ColorBlendChallenge", "ColorBlendEndless", "ColorBlendHard", null,
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertEquals(List.of(ColorBlendMode.CHALLENGE), List.of(ColorBlendMode.values()));
+        assertEquals(List.of(ColorBlendLevel.EASY, ColorBlendLevel.NORMAL, ColorBlendLevel.HARD),
+            List.of(ColorBlendLevel.values()));
+        // A variant of the free mode of before: played as a challenge, easy (the level "the 5 pots" is no more)
+        final ColorBlend free = ColorBlendLauncher.create(gameContext,
+            new GroupedGameVariant("ColorBlendFree", "ColorBlendEndless", "ColorBlendAllPots", null), stats, 1);
+        assertEquals(ColorBlendMode.CHALLENGE, free.getMode());
+        assertEquals(ColorBlendLevel.EASY, free.getLevel());
         assertTrue(ColorBlendLauncher.create(gameContext,
             new GroupedGameVariant("ColorBlendChallenge", "ColorBlendEnd10", "ColorBlendHard", null,
                 LivesVariant.WITH), stats, 1).hasLives());
@@ -349,9 +354,10 @@ class ColorBlendTest {
         assertEquals(ColorBlendMode.CHALLENGE, hard.getMode());
         assertEquals(ColorBlendLevel.HARD, hard.getLevel());
         assertEquals(ColorBlendEnd.COLORS_10, hard.getEnd());
-        // The game had no variant before its review: the free mode
+        // The game had no variant before its review: the challenge, easy, without end
         final ColorBlend before = ColorBlendLauncher.create(gameContext, null, stats, 1);
-        assertEquals(ColorBlendMode.FREE, before.getMode());
-        assertEquals(ColorBlendLevel.FREE, before.getLevel());
+        assertEquals(ColorBlendMode.CHALLENGE, before.getMode());
+        assertEquals(ColorBlendLevel.EASY, before.getLevel());
+        assertEquals(ColorBlendEnd.ENDLESS, before.getEnd());
     }
 }
