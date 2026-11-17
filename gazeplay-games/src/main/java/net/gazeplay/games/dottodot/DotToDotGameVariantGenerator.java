@@ -10,7 +10,9 @@ import java.util.Set;
 
 /**
  * Gives the variants of "Point par point" (maintainer's choices of 12/11/2026): the level as buttons (see
- * {@link DotLevel}), and at the bottom what the dots show (see {@link DotLabels}) and the end (see {@link DotEnd}).
+ * {@link DotLevel}), and at the bottom what the dots show (see {@link DotLabels}), the end (see {@link DotEnd}) and the
+ * hearts (see {@link LivesVariant}), with any end, without end too (maintainer's choice of 17/11/2026: as many choices
+ * as possible for the users).
  */
 public class DotToDotGameVariantGenerator implements IGameVariantGenerator {
 
@@ -19,7 +21,7 @@ public class DotToDotGameVariantGenerator implements IGameVariantGenerator {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
         for (final DotLabels labels : DotLabels.values()) {
             for (final DotEnd end : DotEnd.values()) {
-                for (final String lives : LivesVariant.options(end.getDrawings() > 0)) {
+                for (final String lives : LivesVariant.options(true)) {
                     for (final DotLevel level : DotLevel.values()) {
                         variants.add(new GroupedGameVariant(labels.getKey(), end.getKey(), level.getKey(), null, lives));
                     }

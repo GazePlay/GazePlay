@@ -152,8 +152,8 @@ class DotToDotTest {
     }
 
     /**
-     * 3 lives with an end (maintainer's request of 16/11/2026): a dot out of order costs one, the third loses the game
-     * ("Lost!", then the statistics); none without end.
+     * 3 lives (maintainer's request of 16/11/2026): a dot out of order costs one, the third loses the game ("Lost!",
+     * then the statistics); without end too since 17/11/2026, and never with "without hearts".
      */
     @Test
     void shouldLoseALifeAtEachDotOutOfOrderThenTheGame() throws Exception {
@@ -176,11 +176,29 @@ class DotToDotTest {
         });
         final DotToDot endless = launched(DotLevel.NORMAL, DotLabels.NUMBERS, DotEnd.ENDLESS);
         fx(() -> {
-            assertFalse(endless.hasLives());
-            for (int wrong = 1; wrong <= 4; wrong++) {
+            assertTrue(endless.hasLives());
+            for (int wrong = 1; wrong <= 3; wrong++) {
                 endless.choose(endless.getDots().get(2));
             }
-            assertEquals(DotToDot.Phase.PLAY, endless.getPhase());
+            assertEquals(DotToDot.Phase.LOST, endless.getPhase());
+            return null;
+        });
+        final DotToDot without = fx(() -> {
+            gameArea.getChildren().clear();
+            final DotToDot noHearts = new DotToDot(gameContext, stats, DotLevel.NORMAL, DotLabels.NUMBERS,
+                DotEnd.ENDLESS, 6);
+            noHearts.setWithLives(false);
+            noHearts.setManual();
+            noHearts.launch();
+            noHearts.step(0.02);
+            return noHearts;
+        });
+        fx(() -> {
+            assertFalse(without.hasLives());
+            for (int wrong = 1; wrong <= 4; wrong++) {
+                without.choose(without.getDots().get(2));
+            }
+            assertEquals(DotToDot.Phase.PLAY, without.getPhase());
             return null;
         });
     }
@@ -306,8 +324,14 @@ class DotToDotTest {
 
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
-        // The hearts with or without with an end only (16/11/2026)
-        assertEquals(2 * (3 * 2 + 1) * 4, new DotToDotGameVariantGenerator().getVariants().size());
+        // The hearts with or without, with any end, without end too (17/11/2026)
+        assertEquals(2 * 4 * 2 * 4, new DotToDotGameVariantGenerator().getVariants().size());
+        assertTrue(DotToDotGameLauncher.create(gameContext,
+            new GroupedGameVariant("DotLetters", "DotEndless", "DotProgressive", null,
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(DotToDotGameLauncher.create(gameContext,
+            new GroupedGameVariant("DotLetters", "DotEndless", "DotProgressive", null,
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         assertTrue(DotToDotGameLauncher.create(gameContext,
             new GroupedGameVariant("DotLetters", "DotEnd5", "DotProgressive", null,
                 LivesVariant.WITH), stats, 1).hasLives());

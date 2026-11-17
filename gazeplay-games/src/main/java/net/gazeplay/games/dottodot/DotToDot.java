@@ -32,8 +32,9 @@ import java.util.List;
 /**
  * "Point par point" (name code DotToDot; reviewed on 12/11/2026, maintainer's rules). The dots of a figure show
  * numbers (1, 2, 3...) or letters (A, B, C...); a fixation on the next one draws the line from the previous one (the
- * first one just starts). A wrong dot shakes and counts a mistake (with an end, it costs one of 3 lives, 16/11/2026;
- * the last one loses the game: "Lost!", then the statistics); the dots already joined are left alone. After the
+ * first one just starts). A wrong dot shakes and counts a mistake (with the hearts, it costs one of 3 lives, 16/11/2026,
+ * with or without end since 17/11/2026; the last one loses the game: "Lost!", then the statistics); the dots already
+ * joined are left alone. After the
  * last dot, the line back to the first one draws itself, the figure fills with its color and its name shows ("It's a
  * fish!"); then another figure. The game ends after 3, 5 or 10 drawings ("Bravo"), or never.
  * <p>
@@ -63,7 +64,8 @@ public class DotToDot implements GameLifeCycle {
     enum Phase { WAIT, PLAY, SHOW, LOST, OVER }
 
     /**
-     * The lives of a game with an end (maintainer's request of 16/11/2026): a dot chosen out of order costs one.
+     * The lives of a game with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a dot
+     * chosen out of order costs one.
      */
     static final int LIVES = 3;
 
@@ -296,10 +298,10 @@ public class DotToDot implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: a game with an end (none without end)
+     * @return whether the game has lives: the hearts chosen, with or without end (17/11/2026)
      */
     boolean hasLives() {
-        return withLives && end.getDrawings() > 0;
+        return withLives;
     }
 
     /**

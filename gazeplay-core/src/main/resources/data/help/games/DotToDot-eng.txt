@@ -10,12 +10,12 @@ Join the dots in order, 1, 2, 3... or A, B, C... A drawing appears: guess what i
 - At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-A dot chosen out of order shakes and counts a mistake. With an end (3, 5 or 10 drawings) and "With hearts", you have 3 hearts at the top left: each dot out of order costs one; with no heart left, "Lost!", then the statistics. Without end, there are no hearts. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. As you chose, the game stops after 3, 5 or 10 drawings ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
+A dot chosen out of order shakes and counts a mistake. With "With hearts", with or without end, you have 3 hearts at the top left: each dot out of order costs one; with no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. As you chose, the game stops after 3, 5 or 10 drawings ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The level. Easy: 4 to 7 dots, the next dot helps. Normal: 8 to 12 dots. Hard: 13 to 20 dots. Progressive: starts easy and goes to the next level after 3 drawings in a row without a mistake.
 - At the bottom, the dots: numbers (1, 2, 3...) or letters (A, B, C...).
 - At the bottom, the end: 3, 5 or 10 drawings, or without end.
-- At the bottom, with an end, the hearts: With hearts (3 hearts) or Without hearts.
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
 - 24 drawings: a kite, a house, a fish, a star, a cat, a rocket, a castle, a butterfly, a snowman...
