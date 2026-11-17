@@ -1382,6 +1382,145 @@
     -fx-fill: -gp-on-accent;
 }
 
+/* Areas of interest and scan path (AreaOfInterest, ScanpathView, refonte of 17/11/2026, maquettes B): the game screen
+   is white in both themes, as the heat maps; the bubble, the bar and the timeline take the colors of the theme */
+.gp-menu .gp-stats-view-card {
+    -fx-padding: 12;
+}
+
+.gp-menu .gp-stats-game-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+}
+
+.gp-menu .gp-stats-bubble {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 18;
+    -fx-border-color: -gp-accent;
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+    -fx-padding: 10 16 12 16;
+    -fx-min-width: 250;
+    -fx-effect: dropshadow(gaussian, -gp-shadow, 18, 0, 0, 6);
+}
+
+.gp-menu .gp-stats-bubble-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 15pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-overlay-pill {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 6 14 6 14;
+    -fx-opacity: 0.95;
+}
+
+.gp-menu .gp-stats-aoi-scale {
+    -fx-background-color: linear-gradient(to right, rgba(242, 100, 58, 0.12), rgba(242, 100, 58, 0.75));
+    -fx-background-radius: 5;
+}
+
+.gp-menu .gp-stats-empty {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 16pt;
+    -fx-text-fill: #76665A;
+}
+
+.gp-menu .gp-stats-time {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 13pt;
+    -fx-text-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-stats-bar {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 6 8 6 8;
+}
+
+/* The list of the areas (maquette A): the chosen one framed in the main color */
+.gp-menu .gp-stats-zones-card {
+    -fx-padding: 14 16 16 16;
+}
+
+.gp-menu .gp-stats-zone-scroll,
+.gp-menu .gp-stats-zone-scroll > .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 4 0 0 0;
+}
+
+.gp-menu .gp-stats-zone-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 14;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 14;
+    -fx-padding: 8 12 8 12;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-stats-zone-item:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-stats-zone-item.gp-stats-zone-selected {
+    -fx-background-color: -gp-surface-hover;
+    -fx-border-color: -gp-accent;
+}
+
+.gp-menu .gp-stats-zone-name {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 14pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-stats-timeline-card {
+    -fx-padding: 12 16 12 16;
+}
+
+.gp-menu .gp-stats-timeline {
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-stats-timeline-track {
+    -fx-background-color: -gp-border;
+    -fx-background-radius: 3;
+}
+
+.gp-menu .gp-stats-timeline-progress {
+    -fx-background-color: -gp-accent;
+    -fx-background-radius: 3;
+}
+
+.gp-menu .gp-stats-mark-gaze {
+    -fx-background-color: #2F5FC4;
+    -fx-background-radius: 2;
+}
+
+.gp-menu .gp-stats-mark-mouse {
+    -fx-background-color: -gp-teal;
+    -fx-background-radius: 2;
+}
+
+.gp-menu .gp-stats-timeline-thumb {
+    -fx-background-color: -gp-accent;
+    -fx-background-radius: 11;
+    -fx-border-color: -gp-surface;
+    -fx-border-width: 3;
+    -fx-border-radius: 11;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 1);
+}
+
 /* Statistics screen on a narrow screen (below 1200 pixels wide, StatsContext.NARROW): smaller texts and margins */
 .gp-menu.gp-stats-screen.gp-stats-narrow {
     -fx-padding: 14 18 12 18;

@@ -2,10 +2,9 @@ package net.gazeplay.ui.scenes.stats;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.shape.Polygon;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +21,7 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -64,9 +64,15 @@ class AreaOfInterestTest {
         when(mockGazePlay.getTranslator()).thenReturn(mock(Translator.class));
     }
 
+    private static Polygon square(final double x, final double y, final double side) {
+        final Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(x, y, x + side, y, x + side, y + side, x, y + side);
+        return polygon;
+    }
+
     /**
      * R13: the areas of each source are shown separately. A source without any sample (the mouse in a game played
-     * with an eye tracker) used to make the screen fail on its first sample.
+     * with an eye tracker) used to make the screen fail on its first sample; it now says that nothing was recorded.
      */
     @Test
     void shouldShowASourceWithoutSamples() {
@@ -74,9 +80,8 @@ class AreaOfInterestTest {
 
         AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.MOUSE);
 
-        HBox sources = areaOfInterest.createSourceBox();
-        assertEquals(2, sources.getChildren().size());
-        assertTrue(sources.getChildren().get(1).isDisabled());
+        assertTrue(areaOfInterest.getZones().isEmpty());
+        assertTrue(areaOfInterest.getReplayButton().isDisabled());
         verify(mouseAreas).getMovementHistory();
     }
 
@@ -90,22 +95,15 @@ class AreaOfInterestTest {
     }
 
     @Test
-    void shouldCreateButtonBox() {
-        List<CoordinatesTracker> coordinatesTrackers = List.of(
-            new CoordinatesTracker(100, 200, 1234, 3456),
-            new CoordinatesTracker(200, 200, 4321, 4567)
-        );
-        when(gazeAreas.getMovementHistory()).thenReturn(coordinatesTrackers);
-
-        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.GAZE);
-
-        HBox result = areaOfInterest.createButtonBox();
-
-        assertEquals(5, result.getChildren().size());
+    void shouldOfferTheSourcesOfTheInputs() {
+        assertEquals(List.of(AreaOfInterest.Source.MOUSE), AreaOfInterest.sourcesShown(EyeTracker.mouse_control));
+        assertEquals(List.of(AreaOfInterest.Source.GAZE), AreaOfInterest.sourcesShown(EyeTracker.tobii));
+        assertEquals(List.of(AreaOfInterest.Source.GAZE, AreaOfInterest.Source.MOUSE),
+            AreaOfInterest.sourcesShown(EyeTracker.tobii_and_mouse));
     }
 
     @Test
-    void shouldCalculateInfoBox() {
+    void shouldOfferThreeSpeedsAndReplay() {
         List<CoordinatesTracker> coordinatesTrackers = List.of(
             new CoordinatesTracker(100, 200, 1234, 3456),
             new CoordinatesTracker(200, 200, 4321, 4567)
@@ -114,13 +112,78 @@ class AreaOfInterestTest {
 
         AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.GAZE);
 
-        Polygon currentArea = new Polygon();
-        currentArea.getPoints().addAll(1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d);
-        InfoBoxProps result1 = areaOfInterest.calculateInfoBox("id", 12.34, 1.23, 3, 300, 400, currentArea);
-        InfoBoxProps result2 = areaOfInterest.calculateInfoBox("id", 12.34, 1.23, 3, 500, 400, currentArea);
+        assertEquals(3, areaOfInterest.getSpeedTabs().size());
+        assertTrue(areaOfInterest.getSpeedTabs().get(0).isSelected());
+        assertFalse(areaOfInterest.getReplayButton().isDisabled());
 
-        assertEquals(401, result1.getInfoBox().getLayoutX());
-        assertEquals(209, result2.getInfoBox().getLayoutX());
+        areaOfInterest.startReplay();
+        assertTrue(areaOfInterest.isPlaying());
+        areaOfInterest.stopReplay();
+        assertFalse(areaOfInterest.isPlaying());
+    }
+
+    /**
+     * Two stays at the same place make one area: its first fixation is the one of its first stay, its positions and
+     * its time are added up, and the second stay is a return.
+     */
+    @Test
+    void shouldMergeTheStaysAtTheSamePlace() {
+        final List<AreaOfInterest.Stay> stays = List.of(
+            new AreaOfInterest.Stay(square(100, 100, 50), 1.5, 2.0, 40, 0, 39, 1000),
+            new AreaOfInterest.Stay(square(500, 500, 50), 3.0, 0.5, 10, 40, 49, 2000),
+            new AreaOfInterest.Stay(square(102, 102, 50), 6.0, 1.0, 25, 50, 74, 3000)
+        );
+
+        final List<AreaOfInterest.Zone> zones = AreaOfInterest.mergeStays(stays);
+
+        assertEquals(2, zones.size());
+        final AreaOfInterest.Zone merged = zones.get(0);
+        assertEquals(1, merged.number());
+        assertEquals(1.5, merged.firstFixation());
+        assertEquals(3.0, merged.timeSpent());
+        assertEquals(65, merged.samples());
+        assertEquals(1, merged.returns());
+        assertEquals(List.of(0, 2), merged.stayIndexes());
+        final AreaOfInterest.Zone alone = zones.get(1);
+        assertEquals(2, alone.number());
+        assertEquals(10, alone.samples());
+        assertEquals(0, alone.returns());
+    }
+
+    /**
+     * The list of the areas (maquette A) opens the first area; hovering another area opens it instead.
+     */
+    @Test
+    void shouldOpenTheFirstAreaInTheList() {
+        final List<CoordinatesTracker> positions = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            positions.add(new CoordinatesTracker(i < 10 ? 100 : 500, i < 10 ? 100 : 500, 20, 1000 + 20L * i));
+        }
+        when(gazeAreas.getMovementHistory()).thenReturn(positions);
+        when(gazeAreas.getAllAOIListTemp()).thenReturn(List.of(positions.subList(0, 10), positions.subList(10, 30)));
+        when(gazeAreas.getAllAOIListPolygon()).thenReturn(List.of(square(90, 90, 20), square(490, 490, 20)));
+        when(gazeAreas.getStartAndEndIdx()).thenReturn(List.of(new int[]{0, 9}, new int[]{10, 29}));
+
+        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats, AreaOfInterest.Source.GAZE);
+
+        assertEquals(2, areaOfInterest.getZones().size());
+        assertEquals(1, areaOfInterest.getSelectedZone().number());
+        areaOfInterest.selectZone(areaOfInterest.getZones().get(1));
+        assertEquals(2, areaOfInterest.getSelectedZone().number());
+    }
+
+    @Test
+    void shouldScoreTheStaysOnTheTargets() {
+        final TargetAOI target = new TargetAOI(150, 150, 100, 0);
+        target.setTimeEnded(5000);
+        final List<AreaOfInterest.Stay> stays = List.of(
+            new AreaOfInterest.Stay(square(100, 100, 50), 1, 1, 10, 0, 9, 1000),
+            new AreaOfInterest.Stay(square(900, 900, 50), 2, 1, 10, 10, 19, 2000)
+        );
+
+        final double score = AreaOfInterest.targetScore(stays, new ArrayList<>(List.of(target)));
+
+        assertTrue(score > 0.4 && score <= 0.5, "one stay on the target out of two: " + score);
     }
 
     @Test
@@ -214,20 +277,5 @@ class AreaOfInterestTest {
 
         assertArrayEquals(r1, e1);
         assertArrayEquals(r2, e2);
-    }
-
-    @Test
-    void shouldMakeInfoBox() {
-        String aoiID = "id";
-        String ttff = "12.345";
-        String timeSpent = "45.678";
-        int fixations = 5;
-
-        GridPane result1 = AreaOfInterest.makeInfoBox(aoiID, ttff, timeSpent, fixations, 10);
-        GridPane result2 = AreaOfInterest.makeInfoBox(aoiID, ttff, timeSpent, fixations, 0);
-
-        assertEquals(3, result1.getColumnCount());
-        assertEquals(6, result1.getRowCount());
-        assertEquals(5, result2.getRowCount());
     }
 }

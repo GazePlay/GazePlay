@@ -1,50 +1,72 @@
 package net.gazeplay.ui.scenes.stats;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
+import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
+import javafx.scene.text.TextBoundsType;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.stats.*;
+import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.stats.AoiGeometry;
+import net.gazeplay.commons.utils.stats.AreaOfInterestRecording;
+import net.gazeplay.commons.utils.stats.CoordinatesTracker;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.menus.MenuIcon;
 
 import java.io.File;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static net.gazeplay.ui.scenes.stats.StatsScreenParts.text;
+
 /**
- * The areas of interest screen, opened from the statistics: the screenshot of the game with the areas where the gaze
- * (or the mouse) stayed, each with its information box (time to first fixation, time spent, number of samples), and a
- * replay of the recorded positions at several speeds. One source at a time (R13), the gaze by default.
+ * The areas of interest screen, opened from the statistics (refonte of 17/11/2026, maquette B chosen by the
+ * maintainer): the game screen, white, with the areas where the gaze (or the mouse) stayed, darker when it stayed
+ * longer, each with its number; on the right, the list of the areas (maquette A, added at the maintainer's request),
+ * in the order of their numbers, the chosen one (hovered on the screen or in the list) opened with its first fixation, its
+ * time spent, its positions recorded and its returns to the area. A bar at the bottom replays the recorded positions
+ * at the real speed or slowed down 5 or 10 times. One source at a time (R13), the gaze by default. Nothing shown here
+ * is written to disk.
  */
 @Slf4j
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
@@ -63,299 +85,152 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return stats.getGazeAreasOfInterest().getMovementHistory().isEmpty() ? Source.MOUSE : Source.GAZE;
     }
 
+    /**
+     * The speeds of the replay: how many times slower than the game.
+     */
+    static final int[] SLOWDOWNS = {1, 5, 10};
+
+    private static final String[] SPEED_KEYS = {"AoiSpeedReal", "AoiSpeed5", "AoiSpeed10"};
+
+    /**
+     * Color of the areas (the main color of the light theme), its opacity going with the time spent.
+     */
+    private static final Color AREA_FILL = Color.rgb(242, 100, 58);
+
+    private static final Color AREA_STROKE = Color.rgb(201, 72, 42);
+
+    private static final Color BADGE_COLOR = Color.rgb(43, 33, 24);
+
+    /**
+     * A stay of the gaze (or the mouse) in one place, as recorded during the game.
+     *
+     * @param polygon       its outline, in the pixels of the game screen
+     * @param firstFixation seconds from the start of the game to the stay
+     * @param timeSpent     seconds of the stay
+     * @param samples       positions recorded during the stay
+     * @param startIndex    index of its first position in the movement history
+     * @param endIndex      index of its last position in the movement history
+     */
+    record Stay(Polygon polygon, double firstFixation, double timeSpent, int samples, int startIndex, int endIndex,
+                long startTime) {
+    }
+
+    /**
+     * An area shown on the screen: one stay, or several stays at the same place merged into one.
+     *
+     * @param number        its number, in the order the areas were first reached
+     * @param firstFixation seconds from the start of the game to its first stay
+     * @param timeSpent     seconds of all its stays
+     * @param samples       positions recorded in all its stays
+     * @param returns       stays after the first one
+     * @param stayIndexes   indexes of its stays in the list of the stays
+     */
+    record Zone(int number, Shape shape, double firstFixation, double timeSpent, int samples, int returns,
+                List<Integer> stayIndexes) {
+    }
+
     private final Stats stats;
+
     private final Source source;
 
-    private final List<CoordinatesTracker> movementHistory;
-    private final Label timeLabel;
-    private Timeline clock;
-    private MediaPlayer player;
-    private final List<AreaOfInterestProps> allAOIList;
-    private List<CoordinatesTracker> areaOfInterestList;
+    private final Translator translator;
 
-    private final List<List<CoordinatesTracker>> allAOIListTemp;
-    private final List<int[]> startAndEndIdx;
-    private final List<Polygon> allAOIListPolygon;
-    private final List<Double[]> allAOIListPolygonPt;
-
-    private final Color[] colors = new Color[]{
-        Color.PURPLE,
-        Color.WHITE,
-        Color.PINK,
-        Color.ORANGE,
-        Color.BLUE,
-        Color.RED,
-        Color.CHOCOLATE
-    };
+    private final Locale locale;
 
     private final Configuration config;
 
-    private Polygon currentAreaDisplay;
-    private GridPane currentInfoBox;
-    private Line currentLineToInfoBox;
-    private double score;
-    private int colorIterator;
-    private final Pane graphicsPane;
-    private Double previousInfoBoxX;
-    private Double previousInfoBoxY;
-    private final ArrayList<InitialAreaOfInterestProps> combinedAreaList;
-    private final int[] areaMap;
-    private boolean playing = false;
+    private final List<CoordinatesTracker> movementHistory;
 
-    private double highestFixationTime = 0;
-    private int intereatorAOI = 0;
+    @Getter(AccessLevel.PACKAGE)
+    private final List<Stay> stays = new ArrayList<>();
+
+    @Getter(AccessLevel.PACKAGE)
+    private final List<Zone> zones;
 
     /**
-     * Builds the screen for one source; the other one can be shown with its button.
+     * Share of the areas on the targets of the game (0 to 1), or a negative value when the game gives no target.
+     */
+    @Getter(AccessLevel.PACKAGE)
+    private final double targetScore;
+
+    /**
+     * The game screen, in its own pixels: the video if any, the areas, the positions of the replay.
+     */
+    private final Pane screen = new Pane();
+
+    /**
+     * The number of each area on the game screen, at its center, to find it in the list.
+     */
+    private final List<Group> badges = new ArrayList<>();
+
+    /**
+     * The list of the areas on the right (maquette A), the one chosen opened with all its figures.
+     */
+    private final VBox zoneList = new VBox(6);
+
+    private final Map<Zone, VBox> zoneItems = new HashMap<>();
+
+    private ScrollPane zoneScroll;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Zone selectedZone;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button replayButton;
+
+    @Getter(AccessLevel.PACKAGE)
+    private final List<ToggleButton> speedTabs = new ArrayList<>();
+
+    @Getter(AccessLevel.PACKAGE)
+    private Button backButton;
+
+    private Label timeLabel;
+
+    private MediaPlayer player;
+
+    private AnimationTimer replay;
+
+    @Getter(AccessLevel.PACKAGE)
+    private boolean playing;
+
+    private int slowdown = SLOWDOWNS[0];
+
+    /**
+     * Builds the screen for one source; the other one can be shown with the switch of the header.
      */
     public AreaOfInterest(final GazePlay gazePlay, final Stats stats, final Source shownSource) {
         super(gazePlay, new BorderPane());
-
         this.stats = stats;
         this.source = shownSource;
-        config = ActiveConfigurationContext.getInstance();
-        allAOIList = new ArrayList<>();
-        areaOfInterestList = new ArrayList<>();
-        graphicsPane = new Pane();
+        this.translator = gazePlay.getTranslator();
+        this.locale = StatsFigures.javaLocale(translator.currentLocale());
+        this.config = ActiveConfigurationContext.getInstance();
+
         final AreaOfInterestRecording recording =
             shownSource == Source.GAZE ? stats.getGazeAreasOfInterest() : stats.getMouseAreasOfInterest();
         movementHistory = recording.getMovementHistory();
-        allAOIListTemp = recording.getAllAOIListTemp();
-        startAndEndIdx = recording.getStartAndEndIdx();
-        allAOIListPolygon = recording.getAllAOIListPolygon();
-        allAOIListPolygonPt = recording.getAllAOIListPolygonPt();
+        computeDistances();
+        computeStays(recording, stats.getStartTime());
+        zones = mergeStays(stays);
+        targetScore = stats.getTargetAOIList() == null ? -1 : targetScore(stays, stats.getTargetAOIList());
 
-        this.dataTreatment();
-        calculateAreaOfInterest(0, stats.getStartTime());
-
-        areaMap = new int[allAOIList.size()];
-        Arrays.fill(areaMap, -1);
-        combinedAreaList = computeConnectedArea();
-        if (highestFixationTime != 0) {
-            for (final AreaOfInterestProps areaOfInterestProps : allAOIList) {
-                final double priority = areaOfInterestProps.getInfoBoxProps().getTimeSpent() / highestFixationTime * 0.6
-                    + 0.10;
-                areaOfInterestProps.getAreaOfInterest().setFill(Color.rgb(255, 0, 0, priority));
-                areaOfInterestProps.setPriority(priority);
-            }
-        }
-
-        for (final InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
-            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
-        }
-
-        if (stats.getTargetAOIList() != null) {
-            final ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
-            calculateTargetAOI(targetAOIArrayList);
-
-            long timeTargetAreaStart;
-            long timeTargetAreaEnd;
-            score = 0;
-            int targetAOIIterator = 0;
-
-            for (final AreaOfInterestProps areaOfInterestProps : allAOIList) {
-
-                final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
-                double maxScore = 0;
-                for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
-
-                    timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeEnded();
-
-                    if (timeTargetAreaStart <= timeAreaStart && timeAreaStart <= timeTargetAreaEnd) {
-                        final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
-                            areaOfInterestProps.getAreaOfInterest());
-                        if (intersect.getBoundsInLocal().getWidth() != -1) {
-                            if (intersect.getBoundsInLocal().getWidth()
-                                / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                > maxScore)
-                                maxScore = intersect.getBoundsInLocal().getWidth()
-                                    / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
-                        }
-                    }
-                }
-                score += maxScore;
-            }
-            score /= allAOIList.size();
-        }
-        final StackPane stackPane = new StackPane();
-
-        if (config.isVideoRecordingEnabled()) {
-            try {
-                // The recorder is stopped asynchronously at the end of the game: the file must be complete
-                if (!stats.awaitVideoRecordingEnd(10, TimeUnit.SECONDS)) {
-                    log.warn("The video recording did not end within 10 s, its file may be incomplete");
-                }
-                final File source = stats.getVideoFile()
-                    .orElseThrow(() -> new IllegalStateException("No video recorded"));
-                final File target = VideoConverter.toMp4(source);
-                final Media media = new Media(target.toURI().toString());
-                player = new MediaPlayer(media);
-                final MediaView mediaView = new MediaView(player);
-                stackPane.getChildren().add(mediaView);
-            } catch (final Exception ex) {
-                log.warn("Cannot play the video of the areas of interest", ex);
-            }
-        }
-
-        final GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(100);
-        grid.setVgap(50);
-        grid.setPadding(new Insets(50, 50, 50, 50));
-
-        final Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-
-        final Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
-
-        timeLabel = new Label();
-        timeLabel.setTextFill(Color.web("#FFFFFF"));
-        timeLabel.setMinSize(100, 0);
-        timeLabel.setTextFill(Color.GREEN);
-
-        final Label scoreLabel = new Label();
-        scoreLabel.setTextFill(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", 20));
-        scoreLabel.setText("Score: " + score);
-
-        final HBox topPane;
-        final VBox centerPane = new VBox();
-        centerPane.setAlignment(Pos.CENTER);
-
-        final HBox buttonBox = createButtonBox();
-        final HBox sourceBox = createSourceBox();
-        if (stats.getTargetAOIList() != null) {
-            topPane = new HBox(scoreLabel, timeLabel, region2, sourceBox, buttonBox);
-        } else {
-            topPane = new HBox(timeLabel, region2, sourceBox, buttonBox);
-        }
-
-        topPane.setPadding(new Insets(15, 15, 0, 15));
-        topPane.setSpacing(10);
-        topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
-
-        final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        final EventHandler<Event> aoiEvent = e -> {
-            final StatsContext statsContext;
-            statsContext = StatsContextFactory.newInstance(gazePlay, stats);
-
-            if (config.isVideoRecordingEnabled()) {
-                player.stop();
-            }
-            this.clear();
-            gazePlay.onDisplayStats(statsContext);
-        };
-
-        final HomeButton homeButton = new HomeButton(screenDimension);
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, aoiEvent);
-
-        final HBox homeBox = new HBox(homeButton);
-        homeBox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
-        homeBox.setPadding(new Insets(10, 10, 10, 10));
-
-        stackPane.getChildren().add(graphicsPane);
-        stackPane.getChildren().add(topPane);
-        stackPane.getChildren().add(homeBox);
-        StackPane.setAlignment(homeBox, Pos.BOTTOM_RIGHT);
-        StackPane.setAlignment(topPane, Pos.TOP_CENTER);
-
-        graphicsPane.setPickOnBounds(false);
-        graphicsPane.setStyle("-fx-background-color: transparent;");
-        root.setCenter(stackPane);
-        root.setStyle(
-            "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        StatsScreenParts.style(root, locale);
+        root.setTop(header());
+        final Node body = body(gazePlay.getCurrentScreenDimensionSupplier().get());
+        BorderPane.setMargin(body, new Insets(16, 0, 16, 0));
+        root.setCenter(body);
+        root.setBottom(bar());
+        showZones();
     }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // Computations (unchanged since the former screen, except the merged areas: see mergeStays)
 
     /**
-     * @return the buttons of the replay of the positions (normal speed and slowed down 5, 8 or 10 times)
+     * Distance of each position to the previous one: a position close to the previous one is a fixation in the
+     * replay.
      */
-    HBox createButtonBox() {
-        final Button slowBtn10 = new Button("10X Slow ");
-        final Button slowBtn8 = new Button("8X Slow ");
-        final Button slowBtn5 = new Button("5X Slow ");
-        final Button playBtn = new Button("Play ");
-        final Button cancelBtn = new Button("Cancel ");
-
-        playBtn.setPrefSize(100, 20);
-        slowBtn5.setPrefSize(100, 20);
-        slowBtn8.setPrefSize(100, 20);
-        slowBtn10.setPrefSize(100, 20);
-        cancelBtn.setPrefSize(100, 20);
-
-        final double baseProgressRate = 0.60;
-
-        playBtn.setOnAction(e -> {
-            playButtonPressed(baseProgressRate);
-        });
-        slowBtn5.setOnAction(e -> {
-            playButtonPressed(baseProgressRate * 5);
-        });
-        slowBtn8.setOnAction(e -> {
-            playButtonPressed(baseProgressRate * 8);
-        });
-        slowBtn10.setOnAction(e -> {
-            playButtonPressed(baseProgressRate * 10);
-        });
-        cancelBtn.setOnAction(e -> {
-            if (playing) {
-                playing = false;
-            }
-            graphicsPane.getChildren().removeAll();
-            addAllInitialArea();
-        });
-
-        final HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
-        buttonBox.setSpacing(10);
-        buttonBox.setFillHeight(true);
-        buttonBox.setPadding(new Insets(10, 10, 10, 10));
-
-        return buttonBox;
-    }
-
-    /**
-     * Buttons showing the areas of the gaze or of the mouse: the one shown is disabled.
-     */
-    HBox createSourceBox() {
-        final I18NButton gazeButton = new I18NButton(getGazePlay().getTranslator(), "Gaze");
-        final I18NButton mouseButton = new I18NButton(getGazePlay().getTranslator(), "Mouse");
-        gazeButton.setPrefSize(100, 20);
-        mouseButton.setPrefSize(100, 20);
-        gazeButton.setDisable(source == Source.GAZE);
-        mouseButton.setDisable(source == Source.MOUSE);
-        gazeButton.setOnAction(e -> showSource(Source.GAZE));
-        mouseButton.setOnAction(e -> showSource(Source.MOUSE));
-
-        final HBox sourceBox = new HBox(gazeButton, mouseButton);
-        sourceBox.setSpacing(10);
-        sourceBox.setPadding(new Insets(10, 10, 10, 10));
-        return sourceBox;
-    }
-
-    /**
-     * Stops the replay and shows the areas of another source.
-     */
-    private void showSource(final Source shown) {
-        playing = false;
-        if (player != null) {
-            player.stop();
-        }
-        this.clear();
-        getGazePlay().onDisplayAOI(stats, shown);
-    }
-
-    @Override
-    public ObservableList<Node> getChildren() {
-        return root.getChildren();
-    }
-
-    /**
-     * Builds the areas of the shown source from its samples (nothing for a source without sample).
-     */
-    private void dataTreatment() {
-        // treating the data, post processing to take performance constraint of during the data collection
+    private void computeDistances() {
         if (movementHistory.isEmpty()) {
             // No sample for this source (e.g. the mouse, in a game played with an eye tracker)
             return;
@@ -364,214 +239,116 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         for (int i = 1; i < movementHistory.size(); i++) {
             final double x = Math.pow(movementHistory.get(i).getXValue() - movementHistory.get(i - 1).getXValue(), 2);
             final double y = Math.pow(movementHistory.get(i).getYValue() - movementHistory.get(i - 1).getYValue(), 2);
-            final double distance = Math.sqrt(x + y);
-            movementHistory.get(i).setDistance(distance);
+            movementHistory.get(i).setDistance(Math.sqrt(x + y));
+        }
+    }
+
+    private void computeStays(final AreaOfInterestRecording recording, final double startTime) {
+        final List<List<CoordinatesTracker>> positions = recording.getAllAOIListTemp();
+        for (int i = 0; i < positions.size(); i++) {
+            final List<CoordinatesTracker> stay = positions.get(i);
+            final double areaStartTime = stay.get(0).getTimeStarted();
+            final CoordinatesTracker last = stay.get(stay.size() - 1);
+            final double areaEndTime = last.getTimeStarted() + last.getIntervalTime();
+            stays.add(new Stay(recording.getAllAOIListPolygon().get(i), (areaStartTime - startTime) / 1000.0,
+                (areaEndTime - areaStartTime) / 1000.0, stay.size(), recording.getStartAndEndIdx().get(i)[0],
+                recording.getStartAndEndIdx().get(i)[1], (long) areaStartTime));
         }
     }
 
     /**
-     * Replays the recorded positions, slowed down by {@code progressRate}; the areas appear as the positions reach
-     * them.
+     * Merges the stays at the same place (an overlap of more than 70 % of the smaller one) into one area. The first
+     * fixation of a merged area is the one of its first stay (the former screen added them up), and its positions are
+     * the positions of its stays (the former screen added their seconds).
      */
-    private void playButtonPressed(final double progressRate) {
-        if (!playing && !movementHistory.isEmpty()) {
-            playing = true;
-            for (final InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
-                graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
-            }
-            graphicsPane.getChildren().remove(currentInfoBox);
-
-            if (config.isVideoRecordingEnabled()) {
-                player.stop();
-                player.play();
-            }
-            intereatorAOI = 0;
-            plotMovement(0, graphicsPane, progressRate);
-            final long startTime = System.currentTimeMillis();
-            clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
-                final long theTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-                timeLabel.setText(theTime + "");
-            }), new KeyFrame(Duration.seconds(1)));
-            clock.setCycleCount(Animation.INDEFINITE);
-            clock.play();
-        }
-    }
-
-    /**
-     * Draws the position of a sample at its time, then the next one: a dot that disappears after 2 seconds.
-     */
-    private void plotMovement(final int movementIndex, final Pane graphicsPane, final double progressRate) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                final CoordinatesTracker coordinatesTracker = movementHistory.get(movementIndex);
-                final Circle circle;
-                if (movementHistory.get(movementIndex).getIntervalTime() > 11
-                    && movementHistory.get(movementIndex).getDistance() < 20) {
-                    circle = new Circle(coordinatesTracker.getXValue(), coordinatesTracker.getYValue(), 4);
-                    circle.setStroke(Color.LIGHTYELLOW);
-                    circle.setFill(Color.ORANGERED);
-                } else {
-                    circle = new Circle(coordinatesTracker.getXValue(), coordinatesTracker.getYValue(), 3);
-                    circle.setStroke(Color.LIGHTGREEN);
-                    circle.setFill(Color.GREEN);
+    static List<Zone> mergeStays(final List<Stay> stays) {
+        final int[] areaMap = new int[stays.size()];
+        java.util.Arrays.fill(areaMap, -1);
+        for (int i = 0; i < stays.size(); i++) {
+            final Polygon current = stays.get(i).polygon();
+            final double areaSize = current.getBoundsInLocal().getWidth() * current.getBoundsInLocal().getHeight();
+            for (int j = 0; j < stays.size(); j++) {
+                if (stays.get(j).polygon() == current) {
+                    continue;
                 }
-
-                Platform.runLater(() -> {
-                    if (intereatorAOI < allAOIList.size()) {
-                        if (movementIndex == allAOIList.get(intereatorAOI).getStartingIndex()) {
-                            currentInfoBox = allAOIList.get(intereatorAOI).getInfoBoxProps().getInfoBox();
-                            currentAreaDisplay = allAOIList.get(intereatorAOI).getAreaOfInterest();
-                            currentLineToInfoBox = allAOIList.get(intereatorAOI).getInfoBoxProps().getLineToInfoBox();
-                            graphicsPane.getChildren().add(currentAreaDisplay);
-                            graphicsPane.getChildren().add(currentInfoBox);
-                            graphicsPane.getChildren().add(currentLineToInfoBox);
+                final Shape intersect = Shape.intersect(current, stays.get(j).polygon());
+                if (intersect.getBoundsInLocal().getWidth() != -1) {
+                    final double overlap = intersect.getBoundsInLocal().getWidth()
+                        * intersect.getBoundsInLocal().getHeight();
+                    if (overlap / areaSize > 0.70) {
+                        if (areaMap[j] != -1) {
+                            areaMap[i] = areaMap[j];
+                        } else {
+                            areaMap[i] = i;
+                            areaMap[j] = i;
                         }
-                        if (movementIndex == allAOIList.get(intereatorAOI).getEndingIndex()) {
-                            graphicsPane.getChildren().remove(currentAreaDisplay);
-                            graphicsPane.getChildren().remove(currentInfoBox);
-                            graphicsPane.getChildren().remove(currentLineToInfoBox);
-                            intereatorAOI++;
-                        }
+                        break;
                     }
+                }
+            }
+        }
 
-                    graphicsPane.getChildren().add(circle);
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            Platform.runLater(() -> graphicsPane.getChildren().remove(circle));
-                        }
-                    }, 2000);
-
-                    if (movementIndex < movementHistory.size() - 1 && playing) {
-                        plotMovement(movementIndex + 1, graphicsPane, progressRate);
-                    } else {
-                        clock.stop();
-                        timeLabel.setText("");
-                        playing = false;
-                        graphicsPane.getChildren().removeAll(); // Reset the view to how it was before playback started.
-                        addAllInitialArea();
+        final List<Zone> zones = new ArrayList<>();
+        for (int i = 0; i < stays.size(); i++) {
+            final Stay first = stays.get(i);
+            if (areaMap[i] == -1) {
+                zones.add(new Zone(zones.size() + 1, first.polygon(), first.firstFixation(), first.timeSpent(),
+                    first.samples(), 0, List.of(i)));
+            } else if (areaMap[i] == i) {
+                Shape shape = first.polygon();
+                double firstFixation = first.firstFixation();
+                double timeSpent = first.timeSpent();
+                int samples = first.samples();
+                int returns = 0;
+                final List<Integer> indexes = new ArrayList<>(List.of(i));
+                for (int j = 0; j < stays.size(); j++) {
+                    if (j != i && areaMap[j] == i) {
+                        final Stay other = stays.get(j);
+                        firstFixation = Math.min(firstFixation, other.firstFixation());
+                        timeSpent += other.timeSpent();
+                        samples += other.samples();
+                        returns++;
+                        indexes.add(j);
+                        shape = Shape.union(shape, other.polygon());
                     }
-                });
+                }
+                zones.add(new Zone(zones.size() + 1, shape, firstFixation, timeSpent, samples, returns,
+                    List.copyOf(indexes)));
             }
-        }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
-    }
-
-    /**
-     * Draws all the areas.
-     */
-    void addAllInitialArea() {
-        for (final InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
-            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
+        return zones;
     }
 
     /**
-     * Shows the area that a sample of the replay enters, with its information box.
+     * @return the share of the stays on the targets of the game shown at their time (0 to 1)
      */
-    private void calculateAreaOfInterest(final int index, final double startTime) {
-        int i;
-        for (i = 0; i < allAOIListTemp.size(); i++) {
-            areaOfInterestList = allAOIListTemp.get(i);
-            final double areaStartTime = areaOfInterestList.get(0).getTimeStarted();
-            final double areaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
-                + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
-            final double ttff = (areaStartTime - startTime) / 1000.0;
-            final double timeSpent = (areaEndTime - areaStartTime) / 1000.0;
-
-            if (timeSpent > highestFixationTime) {
-                highestFixationTime = timeSpent;
+    static double targetScore(final List<Stay> stays, final List<TargetAOI> targets) {
+        calculateTargetAOI(targets);
+        if (stays.isEmpty()) {
+            return 0;
+        }
+        double score = 0;
+        for (final Stay stay : stays) {
+            double maxScore = 0;
+            for (final TargetAOI target : targets) {
+                if (target.getTimeStarted() <= stay.startTime() && stay.startTime() <= target.getTimeEnded()) {
+                    final Shape intersect = Shape.intersect(target.getPolygon(), stay.polygon());
+                    final double width = stay.polygon().getBoundsInLocal().getWidth() - 1;
+                    if (intersect.getBoundsInLocal().getWidth() != -1 && width > 0) {
+                        maxScore = Math.max(maxScore, intersect.getBoundsInLocal().getWidth() / width);
+                    }
+                }
             }
-
-            int centerX = 0;
-            int centerY = 0;
-
-            final int movementHistoryEndingIndex = startAndEndIdx.get(i)[1];
-            final int movementHistoryStartingIndex = startAndEndIdx.get(i)[0];
-            final Point2D[] points = new Point2D[areaOfInterestList.size()];
-            int j;
-            for (j = 0; j < areaOfInterestList.size(); j++) {
-                CoordinatesTracker coordinate = areaOfInterestList.get(j);
-                centerX += coordinate.getXValue();
-                centerY += coordinate.getYValue();
-                points[j] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
-            }
-
-            centerX /= areaOfInterestList.size();
-            centerY /= areaOfInterestList.size();
-
-            final InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), ttff, timeSpent,
-                areaOfInterestList.size(), centerX, centerY, allAOIListPolygon.get(i));
-            final AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
-                centerY, allAOIListPolygonPt.get(i), points, movementHistoryStartingIndex, movementHistoryEndingIndex,
-                allAOIListPolygon.get(i), infoBox, (long) areaStartTime, (long) areaEndTime);
-            allAOIList.add(areaOfInterestProps);
-
+            score += Math.min(1, maxScore);
         }
-    }
-
-
-    /**
-     * Determines how the Info Box will be shown for a particular area of interest.
-     *
-     * @param aoiID              Area of Interest ID
-     * @param ttff               Time to First Fixation
-     * @param timeSpent          Time spent on the AOI
-     * @param fixations          The number of fixations in that AOI
-     * @param centerX            Center X value of the AOI
-     * @param centerY            Center Y value of the AOI
-     * @param currentAreaDisplay The area around which to display
-     * @return The created InfoBoxProps object
-     */
-    InfoBoxProps calculateInfoBox(
-        final String aoiID,
-        final double ttff,
-        final double timeSpent,
-        final int fixations,
-        final int centerX,
-        final int centerY,
-        final Polygon currentAreaDisplay
-    ) {
-        final GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
-            new DecimalFormat("##.###s").format(timeSpent), fixations, 0);
-
-        final Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
-        final double screenWidthCenter = screenDimension.getWidth() / 2;
-        final double widthOfArea = currentAreaDisplay.getBoundsInLocal().getWidth();
-
-        final Line line = new Line();
-        line.setStartY(centerY);
-        line.setEndY(centerY);
-        line.setStroke(Color.YELLOW);
-
-        if (centerX > screenWidthCenter) {
-            // will display infobox on the left side
-            infoBox.setLayoutX(centerX - widthOfArea - 290);
-            line.setStartX(currentAreaDisplay.getBoundsInLocal().getMinX());
-            line.setEndX(centerX - widthOfArea - 30);
-        } else {
-            // will display infobox on the right
-            infoBox.setLayoutX(centerX + widthOfArea + 100);
-            line.setEndX(centerX + widthOfArea + 100);
-            line.setStartX(currentAreaDisplay.getBoundsInLocal().getMaxX());
-        }
-
-        infoBox.setLayoutY(centerY - 60);
-        infoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
-        return new InfoBoxProps(infoBox, line, aoiID, ttff, timeSpent, fixations);
+        return score / stays.size();
     }
 
     /**
-     * Creates a rectangle surrounding each Area Of Interest in the provided
-     * list. The rectangle is added as a transparent Polygon to each TargetAOI.
-     *
-     * @param targetAOIArrayList TargetAOIs to apply Polygons to.
-     * @see Polygon
+     * Creates a rectangle surrounding each target of the game, as a transparent polygon of the target.
      */
-    static void calculateTargetAOI(final ArrayList<TargetAOI> targetAOIArrayList) {
-        for (final TargetAOI targetAOI : targetAOIArrayList) {
-            log.debug("The target is at (" + targetAOI.getXValue() + ", " + targetAOI.getYValue() + ")");
-
+    static void calculateTargetAOI(final List<TargetAOI> targets) {
+        for (final TargetAOI targetAOI : targets) {
             final int radius = targetAOI.getAreaRadius();
             final Point2D[] point2D = {
                 new Point2D(targetAOI.getXValue() - 100, targetAOI.getYValue()),
@@ -579,178 +356,524 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 new Point2D(targetAOI.getXValue(), targetAOI.getYValue() - radius),
                 new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() - radius)
             };
-
-            final Double[] polygonPoints;
-            polygonPoints = AoiGeometry.calculateRectangle(point2D);
-
-            final Polygon targetArea;
-            targetArea = new Polygon();
-            targetArea.getPoints().addAll(polygonPoints);
+            final Polygon targetArea = new Polygon();
+            targetArea.getPoints().addAll(AoiGeometry.calculateRectangle(point2D));
             targetArea.setFill(Color.rgb(255, 255, 255, 0.4));
             targetAOI.setPolygon(targetArea);
         }
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // Header
 
-    /**
-     * Will create a GridPane with the supplied values and their respective labels.
-     *
-     * @param aoiID     Area Of Interest ID
-     * @param ttff      Time to First Fixation
-     * @param timeSpent Time spent in the AOI
-     * @param fixations Number of fixations
-     * @param revisits  Number of revisits
-     * @return The info box pane with formatted labels and values.
-     */
-    static GridPane makeInfoBox(
-        final String aoiID,
-        final String ttff,
-        final String timeSpent,
-        final int fixations,
-        final int revisits
-    ) {
-        final GridPane infoBox = new GridPane();
-        infoBox.setHgap(10);
-        infoBox.setVgap(10);
-        infoBox.setPadding(new Insets(10, 10, 10, 10));
-
-        final Text boxID = new Text(aoiID);
-        final Text ttffLabel = new Text("TTFF:");
-        final Text ttffValue = new Text(ttff);
-        final Text timeSpentLabel = new Text("Time Spent:");
-        final Text timeSpentLabelValue = new Text(timeSpent);
-        final Text fixationsLabel = new Text("Fixations:");
-        final Text fixationsValue = new Text(String.valueOf(fixations));
-
-        infoBox.add(boxID, 1, 0);
-        infoBox.add(ttffLabel, 0, 2);
-        infoBox.add(ttffValue, 2, 2);
-        infoBox.add(timeSpentLabel, 0, 3);
-        infoBox.add(timeSpentLabelValue, 2, 3);
-        infoBox.add(fixationsLabel, 0, 4);
-        infoBox.add(fixationsValue, 2, 4);
-
-        if (revisits != 0) {
-            final Text revisitsLabel = new Text("Revisits: ");
-            final Text revisitsValue = new Text(String.valueOf(revisits));
-            infoBox.add(revisitsLabel, 0, 5);
-            infoBox.add(revisitsValue, 2, 5);
+    private Node header() {
+        final List<Source> shown = sourcesShown(EyeTracker.fromConfigValue(config.getEyeTracker()));
+        Node sourceSwitch = null;
+        if (shown.size() > 1) {
+            sourceSwitch = StatsScreenParts.sourceSwitch(List.of(text(translator, "Gaze"), text(translator, "Mouse")),
+                source == Source.GAZE ? 0 : 1, index -> showSource(index == 0 ? Source.GAZE : Source.MOUSE));
         }
-        return infoBox;
+        final List<String> extraChips = targetScore < 0 ? List.of()
+            : List.of(text(translator, "AoiTargetScore") + " " + Math.round(targetScore * 100) + " %");
+        return StatsScreenParts.header(translator, locale, stats, config, "StatsAreasOfInterest", extraChips,
+            sourceSwitch);
     }
 
     /**
-     * @return the areas, the overlapping ones merged into one polygon
+     * @return the sources that can be shown for the inputs of the game, as the images of the statistics screen
      */
-    private ArrayList<InitialAreaOfInterestProps> computeConnectedArea() {
-        for (int i = 0; i < allAOIList.size(); i++) {
-            AreaOfInterestProps currentAOI = allAOIList.get(i);
+    static List<Source> sourcesShown(final EyeTracker inputs) {
+        if (!inputs.usesGaze()) {
+            return List.of(Source.MOUSE);
+        }
+        if (!inputs.acceptsMouse()) {
+            return List.of(Source.GAZE);
+        }
+        return List.of(Source.GAZE, Source.MOUSE);
+    }
 
-            final double areaSize =
-                currentAOI.getAreaOfInterest().getBoundsInLocal().getWidth() *
-                    currentAOI.getAreaOfInterest().getBoundsInLocal().getHeight();
+    /**
+     * Stops the replay and shows the areas of another source.
+     */
+    private void showSource(final Source shown) {
+        if (shown == source) {
+            return;
+        }
+        stopReplay();
+        stopVideo();
+        this.clear();
+        getGazePlay().onDisplayAOI(stats, shown);
+    }
 
-            for (int j = 0; j < allAOIList.size(); j++) {
-                if (allAOIList.get(j).getAreaOfInterest() != currentAOI.getAreaOfInterest()) {
-                    final Shape intersect = Shape.intersect(currentAOI.getAreaOfInterest(),
-                        allAOIList.get(j).getAreaOfInterest());
+    // ----------------------------------------------------------------------------------------------------------------
+    // The game view
 
-                    if (intersect.getBoundsInLocal().getWidth() != -1) {
-                        final double toCompareAreaSize =
-                            intersect.getBoundsInLocal().getWidth() *
-                                intersect.getBoundsInLocal().getHeight();
-                        final double combinationThreshHold = 0.70;
+    private Node body(final Dimension2D screenSize) {
+        addVideo();
+        final StatsScreenParts.GameView view = new StatsScreenParts.GameView(screen, screenSize.getWidth(),
+            screenSize.getHeight());
 
-                        if ((toCompareAreaSize / areaSize) > combinationThreshHold) {
-                            if (areaMap[j] != -1) {
-                                areaMap[i] = areaMap[j];
-                            } else {
-                                areaMap[i] = i;
-                                areaMap[j] = i;
-                            }
-                            break; // We break here as we have finished calculating this pair of areas.
-                        }
+        final StackPane stack = new StackPane(view);
+        if (movementHistory.isEmpty()) {
+            final Label empty = new Label(text(translator, "AoiNoData"));
+            empty.getStyleClass().add("gp-stats-empty");
+            stack.getChildren().add(empty);
+        } else {
+            final HBox legend = legend();
+            StackPane.setAlignment(legend, Pos.BOTTOM_LEFT);
+            StackPane.setMargin(legend, new Insets(16));
+            stack.getChildren().add(legend);
+        }
+        stack.setMinSize(0, 0);
+
+        final VBox card = new VBox(stack);
+        VBox.setVgrow(stack, Priority.ALWAYS);
+        card.getStyleClass().addAll("gp-stats-card", "gp-stats-view-card");
+        card.setMinHeight(0);
+        HBox.setHgrow(card, Priority.ALWAYS);
+        if (zones.isEmpty()) {
+            return card;
+        }
+        final HBox columns = new HBox(16, card, zonesCard());
+        columns.setMinHeight(0);
+        return columns;
+    }
+
+    /**
+     * The video of the game, under the areas, when it was recorded.
+     */
+    private void addVideo() {
+        if (!config.isVideoRecordingEnabled()) {
+            return;
+        }
+        try {
+            // The recorder is stopped asynchronously at the end of the game: the file must be complete
+            if (!stats.awaitVideoRecordingEnd(10, TimeUnit.SECONDS)) {
+                log.warn("The video recording did not end within 10 s, its file may be incomplete");
+            }
+            final File video = stats.getVideoFile().orElseThrow(() -> new IllegalStateException("No video recorded"));
+            player = new MediaPlayer(new Media(VideoConverter.toMp4(video).toURI().toString()));
+            final MediaView mediaView = new MediaView(player);
+            mediaView.setMouseTransparent(true);
+            screen.getChildren().add(mediaView);
+        } catch (final Exception ex) {
+            log.warn("Cannot play the video of the areas of interest", ex);
+        }
+    }
+
+    /**
+     * @return the card of the list of the areas (maquette A): in the order of their numbers, each one with its
+     *   number, its time spent and its first fixation; the chosen one opened with all its figures
+     */
+    private VBox zonesCard() {
+        final Label title = new Label(zones.size() == 1 ? text(translator, "AoiZoneCountOne")
+            : text(translator, "AoiZoneCount").replace("{0}", String.valueOf(zones.size())));
+        title.getStyleClass().add("gp-stats-card-title");
+
+        // In the order of their numbers, the order in which they were first reached (maintainer's request)
+        for (final Zone zone : zones) {
+            final VBox item = zoneItem(zone);
+            zoneItems.put(zone, item);
+            zoneList.getChildren().add(item);
+        }
+        zoneList.setFillWidth(true);
+
+        zoneScroll = new ScrollPane(zoneList);
+        zoneScroll.setFitToWidth(true);
+        zoneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        zoneScroll.getStyleClass().add("gp-stats-zone-scroll");
+        VBox.setVgrow(zoneScroll, Priority.ALWAYS);
+
+        final VBox card = new VBox(6, title, zoneScroll);
+        card.getStyleClass().addAll("gp-stats-card", "gp-stats-zones-card");
+        card.setMinHeight(0);
+        card.setMinWidth(300);
+        card.setPrefWidth(340);
+        card.setMaxWidth(340);
+        return card;
+    }
+
+    private VBox zoneItem(final Zone zone) {
+        final Label name = new Label(zoneName(zone));
+        name.getStyleClass().add("gp-stats-zone-name");
+        final Label summary = new Label(text(translator, "AoiSummary")
+            .replace("{0}", StatsScreenParts.seconds(zone.timeSpent(), locale))
+            .replace("{1}", StatsScreenParts.seconds(zone.firstFixation(), locale)));
+        summary.getStyleClass().add("gp-stats-note");
+        summary.setWrapText(true);
+
+        final VBox details = new VBox(4);
+        final String[][] rows = {
+            {text(translator, "AoiFirstFixation"), StatsScreenParts.seconds(zone.firstFixation(), locale)},
+            {text(translator, "AoiTimeSpent"), StatsScreenParts.seconds(zone.timeSpent(), locale)},
+            {text(translator, "AoiSamples"), String.valueOf(zone.samples())},
+            {text(translator, "AoiReturns"), String.valueOf(zone.returns())}
+        };
+        for (final String[] row : rows) {
+            final Label label = new Label(row[0]);
+            label.getStyleClass().add("gp-stats-detail-label");
+            final Label value = new Label(row[1]);
+            value.getStyleClass().add("gp-stats-detail-value");
+            final Region gap = new Region();
+            HBox.setHgrow(gap, Priority.ALWAYS);
+            final HBox line = new HBox(12, label, gap, value);
+            line.setAlignment(Pos.BASELINE_LEFT);
+            details.getChildren().add(line);
+        }
+        details.setVisible(false);
+        details.setManaged(false);
+
+        final VBox item = new VBox(4, name, summary, details);
+        item.getStyleClass().add("gp-stats-zone-item");
+        item.setOnMouseClicked(e -> selectZone(zone));
+        item.setOnMouseEntered(e -> {
+            if (!playing) {
+                selectZone(zone);
+            }
+        });
+        return item;
+    }
+
+    private String zoneName(final Zone zone) {
+        return text(translator, "AoiZone").replace("{0}", String.valueOf(zone.number()));
+    }
+
+    /**
+     * Chooses an area: its item of the list opens (and comes into view), the area and its number are highlighted on
+     * the game screen.
+     */
+    void selectZone(final Zone zone) {
+        if (zone == selectedZone) {
+            return;
+        }
+        selectedZone = zone;
+        for (final Map.Entry<Zone, VBox> entry : zoneItems.entrySet()) {
+            final boolean chosen = entry.getKey() == zone;
+            final VBox item = entry.getValue();
+            item.getStyleClass().remove("gp-stats-zone-selected");
+            if (chosen) {
+                item.getStyleClass().add("gp-stats-zone-selected");
+            }
+            // name, summary, details
+            item.getChildren().get(1).setVisible(!chosen);
+            item.getChildren().get(1).setManaged(!chosen);
+            item.getChildren().get(2).setVisible(chosen);
+            item.getChildren().get(2).setManaged(chosen);
+        }
+        paintZones();
+        if (zone != null && zoneScroll != null) {
+            final VBox item = zoneItems.get(zone);
+            javafx.application.Platform.runLater(() -> {
+                final double contentHeight = zoneList.getHeight() - zoneScroll.getViewportBounds().getHeight();
+                if (contentHeight > 0) {
+                    final double top = item.getBoundsInParent().getMinY();
+                    final double bottom = item.getBoundsInParent().getMaxY();
+                    final double viewTop = zoneScroll.getVvalue() * contentHeight;
+                    final double viewBottom = viewTop + zoneScroll.getViewportBounds().getHeight();
+                    if (top < viewTop) {
+                        zoneScroll.setVvalue(top / contentHeight);
+                    } else if (bottom > viewBottom) {
+                        zoneScroll.setVvalue((bottom - zoneScroll.getViewportBounds().getHeight()) / contentHeight);
                     }
                 }
-            }
+            });
         }
+    }
 
-        final ArrayList<InitialAreaOfInterestProps> listOfCombinedPolygons = new ArrayList<>();
+    private HBox legend() {
+        final Label little = new Label(text(translator, "AoiLegendLittle"));
+        final Label much = new Label(text(translator, "AoiLegendMuch"));
+        little.getStyleClass().add("gp-stats-legend");
+        much.getStyleClass().add("gp-stats-legend");
+        final Region scale = new Region();
+        scale.getStyleClass().add("gp-stats-aoi-scale");
+        scale.setMinSize(120, 10);
+        scale.setMaxSize(120, 10);
+        final HBox legend = new HBox(10, little, scale, much);
+        legend.setAlignment(Pos.CENTER_LEFT);
+        legend.getStyleClass().add("gp-stats-overlay-pill");
+        legend.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        legend.setMouseTransparent(true);
+        return legend;
+    }
 
-        for (int i = 0; i < allAOIList.size(); i++) {
-            GridPane infoBox = new GridPane();
-            Shape tempPolygon = null;
-            AreaOfInterestProps currentAOI = allAOIList.get(i);
+    private double opacity(final Zone zone) {
+        final double longest = zones.stream().mapToDouble(Zone::timeSpent).max().orElse(0);
+        return longest > 0 ? zone.timeSpent() / longest * 0.6 + 0.10 : 0.10;
+    }
 
-            if (areaMap[i] == -1) {
-                tempPolygon = currentAOI.getAreaOfInterest();
-                infoBox = currentAOI.getInfoBoxProps().getInfoBox();
-            }
-
-            if (areaMap[i] == i) {
-                tempPolygon = currentAOI.getAreaOfInterest();
-                final String aoiID = currentAOI.getInfoBoxProps().getAoiID();
-                double ttff = currentAOI.getInfoBoxProps().getTTFF();
-                double timeSpent = currentAOI.getInfoBoxProps().getTimeSpent();
-                int fixations = currentAOI.getFixations();
-                int revisit = 1;
-
-                for (int j = i + 1; j < allAOIList.size(); j++) {
-                    if (areaMap[j] == i) {
-                        ttff += allAOIList.get(j).getInfoBoxProps().getTTFF();
-                        revisit++;
-                        timeSpent += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
-                        fixations += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
-                        tempPolygon = Shape.union(tempPolygon, allAOIList.get(j).getAreaOfInterest());
-                        tempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
-                    }
+    /**
+     * Draws all the areas, darker when more time was spent in them, with their number; hovering one chooses it in the
+     * list.
+     */
+    private void showZones() {
+        badges.clear();
+        for (final Zone zone : zones) {
+            final Shape shape = zone.shape();
+            shape.setStroke(AREA_STROKE);
+            shape.setStrokeType(StrokeType.INSIDE);
+            shape.setOnMouseEntered(e -> {
+                if (!playing) {
+                    selectZone(zone);
                 }
-                infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
-                    new DecimalFormat("##.###s").format(timeSpent), fixations, revisit);
-            }
-
-            if (tempPolygon != null) {
-                final Shape finalTempPolygon = tempPolygon;
-                final GridPane finalInfoBox = infoBox;
-                final int finalI = i;
-
-                tempPolygon.setOnMouseEntered(event -> {
-                    if (!playing) {
-                        if (areaMap[finalI] == -1) {
-                            finalTempPolygon.setFill(Color.rgb(255, 0, 0, allAOIList.get(finalI).getPriority() + 0.15));
-                        } else {
-                            finalTempPolygon
-                                .setFill(Color.rgb(249, 166, 2, allAOIList.get(finalI).getPriority() + 0.15));
-                        }
-
-                        previousInfoBoxX = finalInfoBox.getLayoutX();
-                        previousInfoBoxY = finalInfoBox.getLayoutY();
-                        currentInfoBox = new GridPane();
-                        finalInfoBox.setLayoutY(0);
-                        finalInfoBox.setLayoutX(0);
-                        finalInfoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
-                        currentInfoBox = finalInfoBox;
-                        graphicsPane.getChildren().add(finalInfoBox);
-                    }
-                });
-
-                tempPolygon.setOnMouseExited(event -> {
-                    graphicsPane.getChildren().remove(currentInfoBox);
-                    finalInfoBox.setLayoutY(previousInfoBoxY);
-                    finalInfoBox.setLayoutX(previousInfoBoxX);
-
-                    if (areaMap[finalI] == -1) {
-                        finalTempPolygon.setFill(Color.rgb(255, 0, 0, allAOIList.get(finalI).getPriority()));
-                    } else {
-                        finalTempPolygon.setFill(Color.rgb(249, 166, 2, allAOIList.get(finalI).getPriority()));
-                    }
-                });
-
-                colorIterator = i % 7;
-                tempPolygon.setStroke(colors[colorIterator]);
-                listOfCombinedPolygons.add(new InitialAreaOfInterestProps(tempPolygon, infoBox));
+            });
+            shape.setOnMouseClicked(e -> selectZone(zone));
+            if (!screen.getChildren().contains(shape)) {
+                screen.getChildren().add(shape);
             }
         }
-        return listOfCombinedPolygons;
+        for (final Zone zone : zones) {
+            final Group badge = badge(zone);
+            badges.add(badge);
+            screen.getChildren().add(badge);
+        }
+        // At the start, the first area (maintainer's request); after a replay, the one chosen
+        final Zone first = selectedZone == null && !zones.isEmpty() ? zones.get(0) : selectedZone;
+        selectedZone = null;
+        selectZone(first);
+    }
+
+    /**
+     * Colors the areas and their numbers, the chosen one stronger and its number in the main color.
+     */
+    private void paintZones() {
+        for (int i = 0; i < zones.size(); i++) {
+            final Zone zone = zones.get(i);
+            final boolean chosen = zone == selectedZone;
+            zone.shape().setFill(AREA_FILL.deriveColor(0, 1, 1, Math.min(1, opacity(zone) + (chosen ? 0.15 : 0))));
+            zone.shape().setStrokeWidth(chosen ? 7 : 3);
+            if (i < badges.size()) {
+                ((Circle) badges.get(i).getChildren().get(0)).setFill(chosen ? AREA_FILL : BADGE_COLOR);
+            }
+        }
+    }
+
+    /**
+     * @return the number of an area in a dark round, at the center of the area, in the pixels of the game screen
+     */
+    private Group badge(final Zone zone) {
+        final javafx.geometry.Bounds bounds = zone.shape().getBoundsInLocal();
+        final double x = bounds.getCenterX();
+        final double y = bounds.getCenterY();
+        final Circle round = new Circle(x, y, 24, BADGE_COLOR);
+        round.setStroke(Color.WHITE);
+        round.setStrokeWidth(3);
+        final Text number = new Text(String.valueOf(zone.number()));
+        number.setFont(Font.font("Fredoka SemiBold", 26));
+        number.setFill(Color.WHITE);
+        number.setBoundsType(TextBoundsType.VISUAL);
+        number.setX(x - number.getLayoutBounds().getWidth() / 2);
+        number.setY(y + number.getLayoutBounds().getHeight() / 2);
+        final Group badge = new Group(round, number);
+        badge.setMouseTransparent(true);
+        return badge;
+    }
+
+    private void hideZones() {
+        for (final Zone zone : zones) {
+            screen.getChildren().remove(zone.shape());
+        }
+        screen.getChildren().removeAll(badges);
+    }
+
+    /**
+     * @return the area holding a stay
+     */
+    private Zone zoneOfStay(final int stayIndex) {
+        for (final Zone zone : zones) {
+            if (zone.stayIndexes().contains(stayIndex)) {
+                return zone;
+            }
+        }
+        return null;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // The bar: replay and back to the statistics
+
+    private Node bar() {
+        replayButton = StatsScreenParts.button(text(translator, "AoiReplay"), MenuIcon.PLAY, false,
+            () -> {
+                if (playing) {
+                    stopReplay();
+                } else {
+                    startReplay();
+                }
+            });
+        replayButton.setDisable(movementHistory.isEmpty());
+
+        final Label speed = new Label(text(translator, "AoiSpeed"));
+        speed.getStyleClass().add("gp-stats-legend");
+        final ToggleGroup group = new ToggleGroup();
+        final HBox speeds = new HBox(6, speed);
+        speeds.setAlignment(Pos.CENTER_LEFT);
+        for (int i = 0; i < SLOWDOWNS.length; i++) {
+            final ToggleButton tab = StatsScreenParts.tab(text(translator, SPEED_KEYS[i]), group);
+            final int chosen = SLOWDOWNS[i];
+            tab.setOnAction(e -> {
+                tab.setSelected(true);
+                slowdown = chosen;
+                if (player != null) {
+                    player.setRate(1.0 / chosen);
+                }
+            });
+            speedTabs.add(tab);
+            speeds.getChildren().add(tab);
+        }
+        speedTabs.get(0).setSelected(true);
+
+        timeLabel = new Label(StatsScreenParts.time(0, locale) + " / " + StatsScreenParts.time(gameLength(), locale));
+        timeLabel.getStyleClass().add("gp-stats-time");
+
+        backButton = StatsScreenParts.button(text(translator, "StatsBackToStats"), MenuIcon.BACK, true,
+            this::backToStats);
+
+        final Region gap = new Region();
+        HBox.setHgrow(gap, Priority.ALWAYS);
+        final HBox bar = new HBox(14, replayButton, speeds, timeLabel, gap, backButton);
+        bar.setAlignment(Pos.CENTER_LEFT);
+        bar.getStyleClass().add("gp-stats-bar");
+        return bar;
+    }
+
+    private void backToStats() {
+        stopReplay();
+        stopVideo();
+        final StatsContext statsContext = StatsContextFactory.newAdvancedInstance(getGazePlay(), stats);
+        this.clear();
+        getGazePlay().onDisplayStats(statsContext);
+    }
+
+    /**
+     * @return milliseconds from the first recorded position to the last one
+     */
+    private long gameLength() {
+        if (movementHistory.isEmpty()) {
+            return 0;
+        }
+        final CoordinatesTracker last = movementHistory.get(movementHistory.size() - 1);
+        return last.getTimeStarted() + last.getIntervalTime() - movementHistory.get(0).getTimeStarted();
+    }
+
+    /**
+     * Replays the recorded positions at the chosen speed: each position is a dot that disappears after 2 seconds,
+     * orange for a fixation, blue otherwise; the stay being replayed is shown, and its area chosen in the list. Driven by the time of
+     * the screen (one step per frame), so that the speed does not depend on the number of positions.
+     */
+    void startReplay() {
+        if (playing || movementHistory.isEmpty()) {
+            return;
+        }
+        playing = true;
+        hideZones();
+        replayButton.setText(text(translator, "AoiStop"));
+        replayButton.setGraphic(MenuIcon.CLOSE.create(22));
+        if (player != null) {
+            player.stop();
+            player.setRate(1.0 / slowdown);
+            player.play();
+        }
+        final long firstTime = movementHistory.get(0).getTimeStarted();
+        final long length = gameLength();
+        final int chosenSlowdown = slowdown;
+        final Deque<Circle> dots = new ArrayDeque<>();
+        final Deque<Long> dotTimes = new ArrayDeque<>();
+        replay = new AnimationTimer() {
+            private long start = -1;
+            private int next;
+            private int nextStay;
+            private Stay shownStay;
+            private Polygon shownPolygon;
+
+            @Override
+            public void handle(final long now) {
+                if (start < 0) {
+                    start = now;
+                }
+                final long realElapsed = (now - start) / 1_000_000;
+                final long gameElapsed = realElapsed / chosenSlowdown;
+                while (next < movementHistory.size()
+                    && movementHistory.get(next).getTimeStarted() - firstTime <= gameElapsed) {
+                    final CoordinatesTracker position = movementHistory.get(next);
+                    final Circle dot = dot(position);
+                    screen.getChildren().add(dot);
+                    dots.addLast(dot);
+                    dotTimes.addLast(realElapsed);
+                    if (shownStay != null && next > shownStay.endIndex()) {
+                        screen.getChildren().remove(shownPolygon);
+                        shownStay = null;
+                    }
+                    if (nextStay < stays.size() && next >= stays.get(nextStay).startIndex()) {
+                        shownStay = stays.get(nextStay);
+                        // The list follows the replay: the area of this stay is chosen
+                        selectZone(zoneOfStay(nextStay));
+                        nextStay++;
+                        shownPolygon = shownStay.polygon();
+                        shownPolygon.setFill(AREA_FILL.deriveColor(0, 1, 1, 0.3));
+                        shownPolygon.setStrokeWidth(3);
+                        if (!screen.getChildren().contains(shownPolygon)) {
+                            screen.getChildren().add(shownPolygon);
+                        }
+                    }
+                    next++;
+                }
+                while (!dotTimes.isEmpty() && realElapsed - dotTimes.peekFirst() > 2000) {
+                    dotTimes.removeFirst();
+                    screen.getChildren().remove(dots.removeFirst());
+                }
+                timeLabel.setText(StatsScreenParts.time(Math.min(gameElapsed, length), locale) + " / "
+                    + StatsScreenParts.time(length, locale));
+                if (next >= movementHistory.size() && dots.isEmpty()) {
+                    stopReplay();
+                }
+            }
+        };
+        replay.start();
+    }
+
+    private Circle dot(final CoordinatesTracker position) {
+        final boolean fixation = position.getIntervalTime() > 11 && position.getDistance() < 20;
+        final Circle dot = new Circle(position.getXValue(), position.getYValue(), fixation ? 9 : 6);
+        dot.setFill(fixation ? Color.rgb(242, 100, 58) : Color.rgb(47, 95, 196));
+        dot.setStroke(Color.WHITE);
+        dot.setStrokeWidth(2);
+        dot.setMouseTransparent(true);
+        return dot;
+    }
+
+    /**
+     * Stops the replay and shows all the areas again, as before it started.
+     */
+    void stopReplay() {
+        if (replay != null) {
+            replay.stop();
+            replay = null;
+        }
+        if (!playing) {
+            return;
+        }
+        playing = false;
+        if (player != null) {
+            player.pause();
+        }
+        screen.getChildren().removeIf(node -> node instanceof Circle || node instanceof Polygon);
+        for (final Stay stay : stays) {
+            screen.getChildren().remove(stay.polygon());
+        }
+        replayButton.setText(text(translator, "AoiReplay"));
+        replayButton.setGraphic(MenuIcon.PLAY.create(22));
+        timeLabel.setText(StatsScreenParts.time(0, locale) + " / " + StatsScreenParts.time(gameLength(), locale));
+        showZones();
+    }
+
+    private void stopVideo() {
+        if (player != null) {
+            player.stop();
+        }
+    }
+
+    @Override
+    public ObservableList<Node> getChildren() {
+        return root.getChildren();
     }
 }

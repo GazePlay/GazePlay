@@ -85,5 +85,18 @@ class StatsContextFactoryTest {
         assertNotNull(result.getMenuButton());
         assertTrue(result.getMenuButton().getStyleClass().contains("gp-button-primary"));
         assertFalse(result.getFolderButton().getStyleClass().contains("gp-button-primary"));
+        assertFalse(result.getAdvanced().get());
+    }
+
+    /**
+     * Coming back from the areas of interest or the scan path, the screen is in the advanced mode, where they are
+     * opened (maintainer's request of 17/11/2026).
+     */
+    @Test
+    void shouldComeBackInTheAdvancedMode() {
+        StatsContext result = StatsContextFactory.newAdvancedInstance(mockGazePlay, mockStats);
+
+        assertTrue(result.getAdvanced().get());
+        assertTrue(result.getAdvancedSwitch().isSelected());
     }
 }

@@ -37,8 +37,10 @@ un commit par jeu, tout poussé jusqu'à `1abb5a720` ; **CI verte sur les 7 jobs
 2. ~~Retirer le bouton « Continuer »~~ : **fait le 17/11** : plus de bouton créé par la partie (`GameContext`), l'écran
    n'a plus que « Voir le dossier » et « Menu » (style principal) ; on relance le jeu depuis le menu. L'image
    `data/common/images/continue.png` ne sert plus (gardée, inventaire des images inchangé).
-3. Écrans **Zones d'intérêt** et **Parcours du regard** dans le style du nouvel écran ; refonte graphique du menu des
-   jeux ; modernisation du menu Échap (réduit au volume et à Quitter en évaluation).
+3. ~~Écrans **Zones d'intérêt** et **Parcours du regard**~~ : **faits le 17/11** (maquettes B choisies par le
+   mainteneur, plus la liste des zones de la maquette A ; section « Zones d'intérêt et Parcours du regard » en bas).
+   Restent : refonte graphique du menu des jeux ; modernisation du menu Échap (réduit au volume et à Quitter en
+   évaluation).
 4. À la fin : faire fermer leurs parties à tous les tests, puis libération immédiate des objets simulés ; inventaire
    des sons ; notes de version 2.0 (images à remettre, format v5).
 
@@ -1181,6 +1183,29 @@ les deux thèmes ».
     (`stats-heatmap-*`, `eval-files-*`) mises à jour.
 - Reste : essai du mainteneur sur une vraie partie (et une fin de passation GazePlay Eval), puis commit ; ensuite les
   écrans Zones d'intérêt et Parcours du regard.
+
+## Zones d'intérêt et Parcours du regard (17/11/2026, maquettes B du mainteneur)
+
+**Fait**, essayé et validé par le mainteneur. Six maquettes proposées (page Artifact « Zones d'intérêt et parcours ») ;
+choix : B pour les deux écrans, plus la liste des zones de la maquette A, sans bulle sur les zones.
+- Pièces communes (`StatsScreenParts`) : style de l'écran des statistiques (`menus.css`, thèmes clair et sombre),
+  en-tête (titre, jeu, variante, profil, date), choix de la source comme « Simple | Avancé » (seulement les entrées de
+  la partie), vue de l'écran du jeu réduite à la place disponible, fond blanc dans les deux thèmes (comme les cartes
+  de chaleur).
+- **Zones d'intérêt** (`AreaOfInterest`) : zones orange, plus foncées avec le temps passé, numérotées ; légende
+  « Peu de temps → Beaucoup de temps » ; liste à droite dans l'ordre des numéros, la zone choisie (survolée ou
+  cliquée, sur la vue ou dans la liste) ouverte avec première fixation, temps passé, positions enregistrées, retours
+  dans la zone ; la Zone 1 ouverte au départ ; rejeu (vitesse réelle, 5 ou 10 fois plus lent ; « 8 fois » retiré)
+  suivi par la liste, mené par l'horloge de l'écran (`AnimationTimer`, plus de `java.util.Timer`) ; « Sur les
+  cibles : n % » pour les jeux à cibles (ancien « Score: 0.72… »). Zones fusionnées : la première fixation est celle du
+  premier passage (l'ancien écran les additionnait) et les positions s'additionnent (l'ancien écran ajoutait des
+  secondes) ; affichage seulement, rien n'est écrit sur disque.
+- **Parcours du regard** (`ScanpathView`) : Regard / Souris / Souris et Regard ; cercles numérotés reliés dans
+  l'ordre ; tout au départ, puis une par une (précédent, Lire, suivant, clic sur la frise du temps), les 3 dernières
+  visibles, la fixation en cours en orange avec sa bulle ; « Tout afficher ».
+- « Retour aux statistiques » rouvre l'écran des statistiques en mode **Avancé** (`newAdvancedInstance`).
+- Retirés : `InfoBoxProps`, `AreaOfInterestProps`, `InitialAreaOfInterestProps` (plus utilisés). 28 textes ajoutés
+  (anglais et français). Tests : `AreaOfInterestTest` refait, `ScanpathViewTest` nouveau, retour en mode avancé.
 
 ## Retrait des limiteurs (16/11/2026, décision du mainteneur du 4/11/2026)
 

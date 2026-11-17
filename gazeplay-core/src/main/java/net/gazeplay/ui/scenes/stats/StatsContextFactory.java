@@ -20,4 +20,14 @@ public class StatsContextFactory {
     ) {
         return new StatsContext(gazePlay, new BorderPane(), stats);
     }
+
+    /**
+     * @return the statistics screen in its advanced mode: when coming back from the areas of interest or the scan
+     *   path, which are opened from that mode (maintainer's request of 17/11/2026)
+     */
+    static StatsContext newAdvancedInstance(final GazePlay gazePlay, final Stats stats) {
+        final StatsContext statsContext = newInstance(gazePlay, stats);
+        statsContext.getAdvancedSwitch().setSelected(true);
+        return statsContext;
+    }
 }
