@@ -85,11 +85,11 @@ class BottleGameTest {
     }
 
     /**
-     * Breaks the bottles to break of the series of now: all of them, or those of the color asked.
+     * Breaks the bottles to break of the series of now: those of the color asked.
      */
     private static void breakSeries(final BottleGame game) {
         for (final BottleGame.Bottle bottle : List.copyOf(game.getBottles())) {
-            if (game.getMode() == BottleMode.ALL || bottle.getColor() == game.getTarget()) {
+            if (bottle.getColor() == game.getTarget()) {
                 game.choose(bottle);
             }
         }
@@ -99,10 +99,11 @@ class BottleGameTest {
     @Test
     void shouldPutTheBottlesOnTwoShelves() throws Exception {
         for (final BottleCount count : BottleCount.values()) {
-            final BottleGame game = launched(BottleMode.ALL, count, BottleSize.LARGE, BottleEnd.ENDLESS);
+            final BottleGame game = launched(BottleMode.COLOR, count, BottleSize.LARGE, BottleEnd.ENDLESS);
             fx(() -> {
                 assertEquals(count.getBottles(), game.getBottles().size());
-                assertEquals(count.getBottles(), game.getToBreak());
+                // A quarter of the bottles of the color asked
+                assertEquals(Math.max(1, count.getBottles() / 4), game.getToBreak());
                 return null;
             });
         }
@@ -111,9 +112,10 @@ class BottleGameTest {
     @Test
     void shouldChooseNothingDuringTheDelayThenAfterTheFixationOnly() throws Exception {
         when(configuration.getGameStartDelay()).thenReturn(1000);
-        final BottleGame game = launched(BottleMode.ALL, BottleCount.EIGHT, BottleSize.MEDIUM, BottleEnd.ENDLESS);
+        final BottleGame game = launched(BottleMode.COLOR, BottleCount.EIGHT, BottleSize.MEDIUM, BottleEnd.ENDLESS);
         fx(() -> {
-            final BottleGame.Bottle bottle = game.getBottles().get(0);
+            final BottleGame.Bottle bottle = game.getBottles().stream().filter(b -> b.getColor() == game.getTarget())
+                .findFirst().orElseThrow();
             game.choose(bottle);
             assertEquals(BottleGame.State.STANDING, bottle.getState());
             steps(game, 1.02);
@@ -131,10 +133,13 @@ class BottleGameTest {
 
     @Test
     void shouldThrowSeveralBallsAtOnceAndBreakTheBottles() throws Exception {
-        final BottleGame game = launched(BottleMode.ALL, BottleCount.EIGHT, BottleSize.MEDIUM, BottleEnd.ENDLESS);
+        final BottleGame game = launched(BottleMode.COLOR, BottleCount.EIGHT, BottleSize.MEDIUM, BottleEnd.ENDLESS);
         fx(() -> {
-            final BottleGame.Bottle first = game.getBottles().get(0);
-            final BottleGame.Bottle second = game.getBottles().get(5);
+            // The 2 bottles of the color asked (a quarter of 8)
+            final List<BottleGame.Bottle> asked = game.getBottles().stream()
+                .filter(b -> b.getColor() == game.getTarget()).toList();
+            final BottleGame.Bottle first = asked.get(0);
+            final BottleGame.Bottle second = asked.get(1);
             game.choose(first);
             game.choose(second);
             assertEquals(2, game.getBallsInFlight());
@@ -153,7 +158,7 @@ class BottleGameTest {
 
     @Test
     void shouldStartAnotherSeriesWhenAllAreBroken() throws Exception {
-        final BottleGame game = launched(BottleMode.ALL, BottleCount.FOUR, BottleSize.SMALL, BottleEnd.ENDLESS);
+        final BottleGame game = launched(BottleMode.COLOR, BottleCount.FOUR, BottleSize.SMALL, BottleEnd.ENDLESS);
         fx(() -> {
             breakSeries(game);
             assertEquals(BottleGame.Phase.REWARD, game.getPhase());
@@ -163,7 +168,8 @@ class BottleGameTest {
             assertEquals(BottleGame.Phase.PLAY, game.getPhase());
             assertEquals(4, game.getBottles().size());
             assertTrue(game.getBottles().stream().allMatch(b -> b.getState() == BottleGame.State.STANDING));
-            verify(stats, times(2)).incrementNumberOfGoalsToReach(4);
+            // One bottle of the color asked out of 4, at each series
+            verify(stats, times(2)).incrementNumberOfGoalsToReach(1);
             return null;
         });
     }
@@ -196,8 +202,8 @@ class BottleGameTest {
     }
 
     /**
-     * 3 lives in the right color with an end (maintainer's request of 16/11/2026): a bottle of another color costs one,
-     * the third loses the game ("Lost!", then the statistics); none in "break them all" nor without end.
+     * 3 lives (maintainer's request of 16/11/2026): a bottle of another color costs one, the third loses the game
+     * ("Lost!", then the statistics); without end too since 17/11/2026, never with "without hearts".
      */
     @Test
     void shouldLoseALifeAtEachBottleOfAnotherColorThenTheGame() throws Exception {
@@ -217,8 +223,37 @@ class BottleGameTest {
             verify(gameContext).showRoundStats(stats, game);
             return null;
         });
-        assertFalse(launched(BottleMode.COLOR, BottleCount.TWELVE, BottleSize.MEDIUM, BottleEnd.ENDLESS).hasLives());
-        assertFalse(launched(BottleMode.ALL, BottleCount.TWELVE, BottleSize.MEDIUM, BottleEnd.SERIES_3).hasLives());
+        final BottleGame endless = launched(BottleMode.COLOR, BottleCount.TWELVE, BottleSize.MEDIUM, BottleEnd.ENDLESS);
+        fx(() -> {
+            assertTrue(endless.hasLives());
+            final BottleGame.Bottle wrong = endless.getBottles().stream()
+                .filter(b -> b.getColor() != endless.getTarget()).findFirst().orElseThrow();
+            for (int mistake = 1; mistake <= 3; mistake++) {
+                endless.choose(wrong);
+            }
+            assertEquals(BottleGame.Phase.LOST, endless.getPhase());
+            return null;
+        });
+        final BottleGame without = fx(() -> {
+            gameArea.getChildren().clear();
+            final BottleGame noHearts = new BottleGame(gameContext, stats, BottleMode.COLOR, BottleCount.TWELVE,
+                BottleSize.MEDIUM, BottleEnd.ENDLESS, 8);
+            noHearts.setWithLives(false);
+            noHearts.setManual();
+            noHearts.launch();
+            noHearts.step(0.02);
+            return noHearts;
+        });
+        fx(() -> {
+            assertFalse(without.hasLives());
+            final BottleGame.Bottle wrong = without.getBottles().stream()
+                .filter(b -> b.getColor() != without.getTarget()).findFirst().orElseThrow();
+            for (int mistake = 1; mistake <= 4; mistake++) {
+                without.choose(wrong);
+            }
+            assertEquals(BottleGame.Phase.PLAY, without.getPhase());
+            return null;
+        });
     }
 
     @Test
@@ -238,9 +273,10 @@ class BottleGameTest {
 
     @Test
     void shouldStopAndLeaveTheGameArea() throws Exception {
-        final BottleGame game = launched(BottleMode.ALL, BottleCount.EIGHT, BottleSize.MEDIUM, BottleEnd.ENDLESS);
+        final BottleGame game = launched(BottleMode.COLOR, BottleCount.EIGHT, BottleSize.MEDIUM, BottleEnd.ENDLESS);
         fx(() -> {
-            game.choose(game.getBottles().get(0));
+            game.choose(game.getBottles().stream().filter(b -> b.getColor() == game.getTarget()).findFirst()
+                .orElseThrow());
             game.dispose();
             assertTrue(gameArea.getChildren().isEmpty());
             assertTrue(game.getBottles().isEmpty());
@@ -253,8 +289,16 @@ class BottleGameTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new BottleGameVariantGenerator().getVariants();
-        // The hearts with or without in "the right colour" with an end only (16/11/2026)
-        assertEquals((4 + 3 * 2 + 1) * 3 * 4, variants.size());
+        // One mode ("break them all" removed on 17/11/2026), the hearts with or without with every end (17/11/2026)
+        assertEquals(4 * 2 * 3 * 4, variants.size());
+        assertTrue(BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleColorMode", "BottleEndless", "Bottles12", null, "BottleLarge",
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertEquals(List.of(BottleMode.COLOR), List.of(BottleMode.values()));
+        // A variant of "break them all" of before: played in the right color
+        assertEquals(BottleMode.COLOR, BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleBreakAll", "BottleEnd5", "Bottles12", null, "BottleLarge"), stats, 1)
+            .getMode());
         assertTrue(BottleGameLauncher.create(gameContext,
             new GroupedGameVariant("BottleColorMode", "BottleEnd5", "Bottles12", null, "BottleLarge",
                 LivesVariant.WITH), stats, 1).hasLives());
@@ -269,7 +313,7 @@ class BottleGameTest {
         assertEquals(BottleSize.LARGE, color.getSize());
         final BottleGame infinity = BottleGameLauncher.create(gameContext,
             new IntStringGameVariant(16, "InfinityBottles"), stats, 1);
-        assertEquals(BottleMode.ALL, infinity.getMode());
+        assertEquals(BottleMode.COLOR, infinity.getMode());
         assertEquals(BottleEnd.ENDLESS, infinity.getEnd());
         assertEquals(BottleCount.SIXTEEN, infinity.getCount());
         assertEquals(BottleSize.MEDIUM, infinity.getSize());

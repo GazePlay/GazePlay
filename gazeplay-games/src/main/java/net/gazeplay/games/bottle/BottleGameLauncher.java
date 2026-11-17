@@ -19,8 +19,8 @@ import java.util.LinkedList;
 /**
  * Creates "Bouteille" (name code Bottle) and its statistics (folder "BottleGame", as before), for a new game or for the
  * replay of a saved one (see {@code IGameLauncher}). The variants of before the review (a number of bottles and a type)
- * are read as breaking all the bottles, as many, tiny and small bottles small, normal and high ones medium, big ones
- * big, and the bottles "à l'infini" without end (maintainer's choice of 13/11/2026).
+ * are read in the right color (the only mode since 17/11/2026), as many, tiny and small bottles small, normal and high
+ * ones medium, big ones big, and the bottles "à l'infini" without end (maintainer's choice of 13/11/2026).
  */
 public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IGameVariant> {
 
@@ -60,10 +60,10 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IGameV
             };
             final BottleEnd end = "InfinityBottles".equals(type) ? BottleEnd.ENDLESS : BottleEnd.SERIES_1;
             return withLives(
-                new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.of(former.getNumber()), size, end,
+                new BottleGame(gameContext, stats, BottleMode.COLOR, BottleCount.of(former.getNumber()), size, end,
                 gameSeed), gameVariant);
         }
-        return withLives(new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.EIGHT, BottleSize.MEDIUM,
+        return withLives(new BottleGame(gameContext, stats, BottleMode.COLOR, BottleCount.EIGHT, BottleSize.MEDIUM,
             BottleEnd.SERIES_1, gameSeed), gameVariant);
     }
 
