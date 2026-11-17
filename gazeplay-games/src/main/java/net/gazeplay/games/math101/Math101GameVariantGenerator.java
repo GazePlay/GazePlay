@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Gives the variants of "Apprends les Maths" (maintainer's choices of 10/11/2026): the levels of the chosen topic as
  * buttons (see {@link MathLevel}), and at the bottom the topic (see {@link MathTopic}), when it ends (see
- * {@link MathEnd}) and what a wrong answer does (see {@link MathMistakes}).
+ * {@link MathEnd}) and what a wrong answer does (see {@link MathMistakes}: with hearts or without hearts, 17/11/2026).
  */
 public class Math101GameVariantGenerator implements IGameVariantGenerator {
 

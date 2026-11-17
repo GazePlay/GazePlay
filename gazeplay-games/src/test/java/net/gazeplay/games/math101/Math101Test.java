@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -313,15 +315,19 @@ class Math101Test {
         assertEquals(expected, variants.size());
         final MathGameLauncher launcher = new MathGameLauncher();
         final Math101 game = (Math101) launcher.createNewGame(gameContext, new GroupedGameVariant("MathMultDiv",
-            "MathOperations20", "MathTable8", null, "MathLives"), stats);
+            "MathOperations20", "MathTable8", null, LivesVariant.WITH), stats);
         assertEquals(MathTopic.MULT_DIV, game.getTopic());
         assertEquals(MathLevel.TABLE_8, game.getLevel());
         assertEquals(MathEnd.OPERATIONS_20, game.getEnd());
         assertEquals(MathMistakes.LIVES, game.getMistakes());
         // A level of another topic: the first level of the topic
         final Math101 mismatched = (Math101) launcher.replayGame(gameContext, new GroupedGameVariant("MathAddition",
-            "MathEndless", "MathTable8", null, "MathSearchAgain"), stats, 4.5);
+            "MathEndless", "MathTable8", null, LivesVariant.WITHOUT), stats, 4.5);
         assertEquals(MathLevel.UP_TO_10, mismatched.getLevel());
+        // The common switch "with hearts / without hearts" (17/11/2026), with hearts first
+        assertEquals(MathMistakes.SEARCH_AGAIN, mismatched.getMistakes());
+        assertEquals(List.of(LivesVariant.WITH, LivesVariant.WITHOUT),
+            Arrays.stream(MathMistakes.values()).map(MathMistakes::getKey).toList());
         // A variant of before the review: the additions up to 10, without end, looking again
         final Math101 old = (Math101) launcher.createNewGame(gameContext,
             IGameVariant.toGameVariant("MathGameVariant:0:12"), stats);
