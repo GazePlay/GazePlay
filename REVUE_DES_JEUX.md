@@ -5,6 +5,43 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE APRÈS LE MARDI 17/11/2026 (bilan de la séance du mardi 17/11/2026)
+
+**Fait le mardi 17/11/2026**, jeux repris dans l'ordre du menu principal, chacun essayé et validé par le mainteneur,
+un commit par jeu, tout poussé jusqu'à `1abb5a720` ; **CI verte sur les 7 jobs** (run `44067962060`) :
+- **Règle commune** : « Sans fin » toujours le dernier choix, à droite (Ninja, Biboule Jump, Course du regard, La
+  bataille de l'espace, Survivre contre des robots, Tir). Ninja : fins 10, 20, 30 à couper, puis Sans fin.
+- **« Avec cœurs / Sans cœurs » dans toutes les variantes** : Magic Potions, Gobelets Pass Pass, Ordre, Biboule Jump,
+  Casse-brique (sans cœurs : la balle revient sur la raquette), Course du regard (sans cœurs : perdu au premier choc),
+  La bataille de l'espace et Survivre contre des robots (sans cœurs : impossible de perdre). **Aussi en Sans fin** :
+  Point par point, famille Où est… et Trouvez l'intrus, Identifier les lettres, La Fabrique à gâteaux (copier),
+  Échelle, Bouteille, Cartes magiques, Mélanger les couleurs. **Dés et Apprends les Maths** : « 3 vies / Chercher
+  jusqu'à trouver » devenus « Avec cœurs / Sans cœurs » (fonctionnement inchangé, Avec cœurs en premier).
+- **Modes retirés** : La fleur des nombres (Libre ; cœurs nouveaux : une valeur qui dépasse le nombre, ou la part de
+  son pétale en Guidé, en coûte un, 3 cœurs pour toute la partie), Échelle (Libre), Bouteille (Tout casser), Cartes
+  magiques (Chercher ; nouvelle règle : la moitié des cartes, arrondie à l'inférieur, a une image, toutes à trouver
+  pour passer à la suite ; compteur et fins en « manches »), Mélanger les couleurs (Libre, avec « Les 5 pots » et
+  « Vider le pot »).
+- **Erreurs comptées** dans les jeux à cœurs qui n'en comptaient pas (Magic Potions, Gobelets, Ordre, Biboule Jump,
+  Casse-brique, Course du regard, Bataille de l'espace, Survivre, Fleur des nombres).
+- **Vérification des statistiques** (demande du mainteneur avant le push) : **R14 corrigé, format de résultats v5**
+  (`MODERNIZATION.md` 2ap) : erreurs comptées à partir de 0 (N erreurs valaient N - 1 depuis 2023), affichées pour tout
+  jeu qui les compte (simple et avancé ; avant, 4 jeux seulement), comptées dans Où est…, Répète après moi et Pierre
+  papier ciseaux (apprendre la règle) ; La pièce « Cherche » montre ses chiffres ; Memory ne compte pas une paire
+  fausse (décision du mainteneur).
+
+**Ordre du jour suivant** :
+1. ~~Vérifier en vrai l'écran des statistiques~~ : **fait le 17/11** (partie d'Ordre essayée par le mainteneur, erreurs
+   affichées en mode simple et avancé). GazePlay Eval vérifié : ni son format (le sien, version 1) ni son écran ne
+   changent (il ne compte pas d'erreurs).
+2. ~~Retirer le bouton « Continuer »~~ : **fait le 17/11** : plus de bouton créé par la partie (`GameContext`), l'écran
+   n'a plus que « Voir le dossier » et « Menu » (style principal) ; on relance le jeu depuis le menu. L'image
+   `data/common/images/continue.png` ne sert plus (gardée, inventaire des images inchangé).
+3. Écrans **Zones d'intérêt** et **Parcours du regard** dans le style du nouvel écran ; refonte graphique du menu des
+   jeux ; modernisation du menu Échap (réduit au volume et à Quitter en évaluation).
+4. À la fin : faire fermer leurs parties à tous les tests, puis libération immédiate des objets simulés ; inventaire
+   des sons ; notes de version 2.0 (images à remettre, format v5).
+
 ## REPRISE DU MARDI 17/11/2026 (bilan de la séance du lundi 16/11/2026)
 
 **Fait le lundi 16/11/2026** (détail dans les sections en bas), tout commité et poussé (dernier push : `b33d45d97`) :
