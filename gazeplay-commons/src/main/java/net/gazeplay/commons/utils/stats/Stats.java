@@ -126,7 +126,7 @@ public class Stats {
     private int nbUnCountedGoalsReached;
 
     /**
-     * Mistakes of the player; -1 for the games that do not count them.
+     * Mistakes of the player; -1 for the games that do not count them (see {@link #countMistakes()}).
      */
     @Getter
     private int nbMistakes = -1;
@@ -865,10 +865,23 @@ public class Stats {
     }
 
     /**
-     * Counts a mistake (not during a replay).
+     * Says that the game counts the mistakes (at its launch, after {@link #reset()}): 0 mistakes until the first one,
+     * instead of -1 for the games that do not count them (17/11/2026, format 5). Nothing changes when they are already
+     * counted (a new round of the same game).
+     */
+    public void countMistakes() {
+        if (!inReplayMode && nbMistakes < 0) {
+            nbMistakes = 0;
+        }
+    }
+
+    /**
+     * Counts a mistake (not during a replay). Before the format 5 (17/11/2026), the count started from -1, so that N
+     * mistakes were counted N - 1 unless the game had counted a first one at its launch.
      */
     public void incrementNumberOfMistakes() {
         if (!inReplayMode) {
+            countMistakes();
             nbMistakes++;
             log.debug("The number of mistakes is " + nbMistakes);
         }

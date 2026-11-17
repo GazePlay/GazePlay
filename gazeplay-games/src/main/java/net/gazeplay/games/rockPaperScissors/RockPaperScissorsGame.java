@@ -153,6 +153,10 @@ public class RockPaperScissorsGame implements GameLifeCycle {
 
     @Override
     public void launch() {
+        // The game counts the mistakes in this mode: 0 until the first one (statistics, format 5)
+        if (mode == RockPaperScissorsMode.LEARN) {
+            stats.countMistakes();
+        }
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -477,6 +481,8 @@ public class RockPaperScissorsGame implements GameLifeCycle {
             elapsed = 0;
             ring.stop();
         } else {
+            // A wrong choice: a mistake (17/11/2026: it was not counted)
+            stats.incrementNumberOfMistakes();
             firstTry = false;
             greyed.add(sign);
             gameContext.getSoundManager().add(SOUNDS + "lose.wav");

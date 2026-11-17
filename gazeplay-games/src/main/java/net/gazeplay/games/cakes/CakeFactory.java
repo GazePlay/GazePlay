@@ -263,6 +263,10 @@ public class CakeFactory implements GameLifeCycle {
 
     @Override
     public void launch() {
+        // The game counts the mistakes in this mode: 0 until the first one (statistics, format 5)
+        if (mode == CakesMode.COPY) {
+            stats.countMistakes();
+        }
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();

@@ -32,6 +32,13 @@ import java.util.List;
  * memory (R7), so the resolution depended on the machine.</li>
  * </ul>
  * <p>
+ * Difference of version 5 (17/11/2026): "statsNbMistakes" is the number of mistakes of the round: 0 for a game that
+ * counts the mistakes when there is none, -1 only for a game that does not count them. Up to version 4, the count
+ * started from -1: N mistakes were written N - 1 (-1 for none, 0 for one), unless the game counted a first one at its
+ * launch (the former "Apprends les Maths", before its review of 10/11/2026, did, so that its values were right). A
+ * reader of a file of versions 1 to 4 must add 1 to a value of 0 or more for the games that did not; a value of -1
+ * means no mistake, or a game that did not count them.
+ * <p>
  * In memory, {@link FixationPoint} keeps the convention of version 1 (Y in "x", X in "y"), which the drawing code
  * relies on: the conversion happens when the file is written and read.
  */
@@ -40,7 +47,7 @@ public final class ReplayDataFormat {
     /**
      * Version written in the new files.
      */
-    public static final int CURRENT_VERSION = 4;
+    public static final int CURRENT_VERSION = 5;
 
     /**
      * Version of the files written without "formatVersion".

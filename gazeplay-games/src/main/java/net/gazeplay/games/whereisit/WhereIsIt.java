@@ -271,12 +271,17 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * A wrong picture chosen: one life less in a game with the hearts.
+     * A wrong picture chosen: a mistake (17/11/2026: it was not counted, though the guides said so), one life less in a
+     * game with the hearts.
      *
      * @return whether it was the last life: the game is lost
      */
     boolean wrongPictureChosen() {
-        if (!hasLives() || lost) {
+        if (lost) {
+            return false;
+        }
+        stats.incrementNumberOfMistakes();
+        if (!hasLives()) {
             return false;
         }
         lives = Math.max(0, lives - 1);
@@ -369,6 +374,8 @@ public class WhereIsIt implements GameLifeCycle {
 
     @Override
     public void launch() {
+        // The game counts the mistakes: 0 until the first one (statistics, format 5)
+        stats.countMistakes();
         if (ended) {
             ended = false;
             screensFound = 0;

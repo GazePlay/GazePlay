@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -210,6 +212,8 @@ class WhereIsItEndTest {
         }
         assertNull(game.livesShown());
         assertFalse(game.isLost());
+        // Each wrong picture is a mistake (17/11/2026: it was not counted)
+        verify(stats, times(10)).incrementNumberOfMistakes();
         assertTrue(((WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEnd5:2x2:-:LivesWith"), stats)).hasLives());
         assertTrue(((WhereIsIt) new WhereIsTheAnimalGameLauncher().createNewGame(gameContext,

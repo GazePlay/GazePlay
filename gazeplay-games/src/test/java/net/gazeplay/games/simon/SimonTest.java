@@ -232,6 +232,9 @@ class SimonTest {
         assertEquals(Simon.Phase.MISTAKE, game.getPhase());
         assertEquals(Simon.LIVES - 1, game.getLives());
         verify(gameContext.getSoundManager()).add("data/simonGame/sounds/mistake.wav");
+        // Counted (17/11/2026: it was not)
+        verify(stats).countMistakes();
+        verify(stats).incrementNumberOfMistakes();
         // The right button blinks
         steps(game, 0.05);
         assertEquals(right, game.getLit());

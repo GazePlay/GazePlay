@@ -160,6 +160,27 @@ class StatsTest {
         verify(statsSpy, atLeastOnce()).start();
     }
 
+    /**
+     * Format 5 (17/11/2026): N mistakes are N (they were counted from -1, so N - 1), 0 for a game that counts them
+     * without any, -1 for a game that does not count them; a new game starts again.
+     */
+    @Test
+    void shouldCountTheMistakesFromZero() {
+        assertEquals(-1, stats.getNbMistakes(), "a game that does not count them");
+        stats.countMistakes();
+        assertEquals(0, stats.getNbMistakes(), "counted, none yet");
+        stats.incrementNumberOfMistakes();
+        stats.incrementNumberOfMistakes();
+        assertEquals(2, stats.getNbMistakes());
+        // Said again at the launch of a new round of the same game: unchanged
+        stats.countMistakes();
+        assertEquals(2, stats.getNbMistakes());
+
+        final Stats undeclared = new Stats(stats.gameContextScene);
+        undeclared.incrementNumberOfMistakes();
+        assertEquals(1, undeclared.getNbMistakes(), "one mistake is one, even without countMistakes()");
+    }
+
     @Test
     void shouldIncrementHeatMapOnGazeMoved() {
         Stats statsSpy = spy(stats);
@@ -261,7 +282,8 @@ class StatsTest {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        assertEquals(4, replayData.get("formatVersion").getAsInt());
+        // Format 5 since 17/11/2026 (the mistakes counted from 0)
+        assertEquals(5, replayData.get("formatVersion").getAsInt());
         assertEquals(Set.of("formatVersion", "gameSeed", "gameName", "gameVariant", "gameStartedTime", "screenAspectRatio",
             "sceneAspectRatio", "statsNbGoalsReached", "statsNbGoalsToReach", "statsNbUnCountedGoalsReached",
             "statsNbMistakes", "lifeCycle", "roundsDurationReport", "fixationSequence", "coordinatesAndTimeStamp"),

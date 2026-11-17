@@ -203,6 +203,8 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
     @Override
     public void launch() {
+        // The game counts the mistakes: 0 until the first one (statistics, format 5)
+        stats.countMistakes();
         // A new game after a game lost: the hearts again (a new flower of the same game keeps them)
         if (lost) {
             lost = false;

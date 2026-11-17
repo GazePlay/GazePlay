@@ -7,7 +7,6 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
-import net.gazeplay.stats.SelectionGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 
 import java.text.NumberFormat;
@@ -64,23 +63,40 @@ final class StatsFigures {
     static List<Figure> main(final Stats stats, final Locale locale) {
         final List<Figure> figures = new ArrayList<>();
         figures.add(new Figure("TotalLength", duration(stats.computeTotalElapsedDuration(), locale), false));
-        if (stats instanceof ExplorationGamesStats) {
+        if (exploration(stats)) {
             return figures;
         }
         if (stats instanceof ShootGamesStats) {
             figures.add(new Figure("Shots", String.valueOf(stats.getNbGoalsReached()), true));
             figures.add(new Figure("HitRate", stats.getShotRatio() + " %", false));
+            addMistakes(stats, figures);
             figures.add(new Figure("ShotaverageLength", duration(stats.computeRoundsDurationAverageDuration(), locale),
                 false));
             return figures;
         }
         figures.add(new Figure(stats instanceof HiddenItemsGamesStats ? "HiddenItemsShot" : "StatsSuccesses",
             String.valueOf(stats.getNbGoalsReached()), true));
-        if (stats instanceof SelectionGamesStats && stats.getNbMistakes() > -1) {
-            figures.add(new Figure("Mistakes", String.valueOf(stats.getNbMistakes()), false));
-        }
+        addMistakes(stats, figures);
         figures.add(new Figure("AverageLength", duration(stats.computeRoundsDurationAverageDuration(), locale), false));
         return figures;
+    }
+
+    /**
+     * The mistakes, for every game that counts them, whatever its kind of statistics (17/11/2026: before, only the
+     * selection games showed them, so that the mistakes of 30 games were never seen).
+     */
+    private static void addMistakes(final Stats stats, final List<Figure> figures) {
+        if (stats.getNbMistakes() >= 0) {
+            figures.add(new Figure("Mistakes", String.valueOf(stats.getNbMistakes()), false));
+        }
+    }
+
+    /**
+     * @return whether the game only explores: an exploration game without goal (La pièce counts goals and mistakes in
+     *   its mode "Cherche", 17/11/2026, and shows them then)
+     */
+    static boolean exploration(final Stats stats) {
+        return stats instanceof ExplorationGamesStats && stats.getNbGoalsToReach() == 0 && stats.getNbMistakes() < 0;
     }
 
     /**
@@ -89,7 +105,7 @@ final class StatsFigures {
      */
     static List<Figure> details(final Stats stats, final Locale locale) {
         final List<Figure> figures = new ArrayList<>();
-        if (stats instanceof ExplorationGamesStats) {
+        if (exploration(stats)) {
             return figures;
         }
         final boolean shoot = stats instanceof ShootGamesStats;
@@ -119,6 +135,7 @@ final class StatsFigures {
                 + (shoot ? "" : " (n° " + (slowest + 1) + ")"), false));
         }
         figures.add(new Figure("StatsGoals", stats.getNbGoalsReached() + " / " + stats.getNbGoalsToReach(), false));
+        addMistakes(stats, figures);
         if (shoot && stats.getNbUnCountedGoalsReached() != 0) {
             figures.add(new Figure("UncountedShot", String.valueOf(stats.getNbUnCountedGoalsReached()), false));
         }
@@ -152,7 +169,7 @@ final class StatsFigures {
      */
     static List<View> views(final Stats stats, final boolean fixationSequence) {
         final List<View> views = new ArrayList<>(List.of(View.HEATMAP));
-        if (!(stats instanceof ExplorationGamesStats) && !durations(stats).isEmpty()) {
+        if (!exploration(stats) && !durations(stats).isEmpty()) {
             views.add(View.DURATIONS);
         }
         if (fixationSequence && !fixations(stats).isEmpty()) {

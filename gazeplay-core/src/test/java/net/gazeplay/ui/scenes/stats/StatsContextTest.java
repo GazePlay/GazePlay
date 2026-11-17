@@ -181,14 +181,20 @@ class StatsContextTest {
     @Test
     void shouldGiveTheFiguresOfEachKindOfGame() {
         final Locale fr = Locale.FRENCH;
+        // Games that do not count the mistakes (-1)
         final ShootGamesStats shoot = mock(ShootGamesStats.class);
+        when(shoot.getNbMistakes()).thenReturn(-1);
         assertEquals(List.of("TotalLength", "Shots", "HitRate", "ShotaverageLength"),
             StatsFigures.main(shoot, fr).stream().map(Figure::labelKey).toList());
+        final ExplorationGamesStats exploration = mock(ExplorationGamesStats.class);
+        when(exploration.getNbMistakes()).thenReturn(-1);
         assertEquals(List.of("TotalLength"),
-            StatsFigures.main(mock(ExplorationGamesStats.class), fr).stream().map(Figure::labelKey).toList());
-        assertTrue(StatsFigures.details(mock(ExplorationGamesStats.class), fr).isEmpty());
+            StatsFigures.main(exploration, fr).stream().map(Figure::labelKey).toList());
+        assertTrue(StatsFigures.details(exploration, fr).isEmpty());
+        final HiddenItemsGamesStats hidden = mock(HiddenItemsGamesStats.class);
+        when(hidden.getNbMistakes()).thenReturn(-1);
         assertEquals(List.of("TotalLength", "HiddenItemsShot", "AverageLength"),
-            StatsFigures.main(mock(HiddenItemsGamesStats.class), fr).stream().map(Figure::labelKey).toList());
+            StatsFigures.main(hidden, fr).stream().map(Figure::labelKey).toList());
 
         final SelectionGamesStats selection = mock(SelectionGamesStats.class);
         when(selection.getNbMistakes()).thenReturn(2);
@@ -201,6 +207,41 @@ class StatsContextTest {
         // A game that does not count the mistakes (-1) shows none
         when(selection.getNbMistakes()).thenReturn(-1);
         assertFalse(StatsFigures.main(selection, fr).stream().anyMatch(f -> f.labelKey().equals("Mistakes")));
+        // A game that counts them shows 0 when there is none
+        when(selection.getNbMistakes()).thenReturn(0);
+        assertTrue(StatsFigures.main(selection, fr).contains(new Figure("Mistakes", "0", false)));
+    }
+
+    /**
+     * 17/11/2026: the mistakes of every kind of game (before, only the selection games showed them: those of 30 games
+     * were never seen), in the simple and the advanced mode; an exploration game with goals (La pièce, "Cherche")
+     * shows its figures.
+     */
+    @Test
+    void shouldShowTheMistakesOfEveryKindOfGame() {
+        final Locale fr = Locale.FRENCH;
+        final ShootGamesStats shoot = mock(ShootGamesStats.class);
+        when(shoot.getNbMistakes()).thenReturn(3);
+        assertEquals(List.of("TotalLength", "Shots", "HitRate", "Mistakes", "ShotaverageLength"),
+            StatsFigures.main(shoot, fr).stream().map(Figure::labelKey).toList());
+        assertTrue(StatsFigures.details(shoot, fr).contains(new Figure("Mistakes", "3", false)));
+
+        final HiddenItemsGamesStats hidden = mock(HiddenItemsGamesStats.class);
+        when(hidden.getNbMistakes()).thenReturn(1);
+        assertEquals(List.of("TotalLength", "HiddenItemsShot", "Mistakes", "AverageLength"),
+            StatsFigures.main(hidden, fr).stream().map(Figure::labelKey).toList());
+
+        final Stats plain = mock(Stats.class);
+        when(plain.getNbMistakes()).thenReturn(0);
+        assertTrue(StatsFigures.main(plain, fr).contains(new Figure("Mistakes", "0", false)));
+
+        final ExplorationGamesStats search = mock(ExplorationGamesStats.class);
+        when(search.getNbGoalsToReach()).thenReturn(4);
+        when(search.getNbGoalsReached()).thenReturn(3);
+        when(search.getNbMistakes()).thenReturn(2);
+        assertEquals(List.of("TotalLength", "StatsSuccesses", "Mistakes", "AverageLength"),
+            StatsFigures.main(search, fr).stream().map(Figure::labelKey).toList());
+        assertFalse(StatsFigures.details(search, fr).isEmpty());
     }
 
     @Test

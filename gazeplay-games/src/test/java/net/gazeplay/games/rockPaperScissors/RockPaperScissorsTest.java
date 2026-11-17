@@ -228,6 +228,9 @@ class RockPaperScissorsTest {
         choose(game, shown.winner());
         assertEquals(1, game.getRightAnswers());
         verify(stats, never()).incrementNumberOfGoalsReached();
+        // The two wrong choices are mistakes (17/11/2026: they were not counted), counted in this mode
+        verify(stats, times(2)).incrementNumberOfMistakes();
+        verify(stats).countMistakes();
         steps(game, RockPaperScissorsGame.REVEAL + 0.05);
         assertEquals(RockPaperScissorsGame.Phase.PLAY, game.getPhase());
         // At the first try: a goal reached
