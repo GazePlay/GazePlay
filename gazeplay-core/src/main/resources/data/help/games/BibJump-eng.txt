@@ -10,9 +10,10 @@ The Biboule bounces from cloud to cloud. Make her climb as high as you can witho
 - The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open, and the time stops.
 
 # How to win
-You have 3 lives. If the Biboule falls under the screen, you lose a life: she starts again 1.5 seconds later on a new cloud and you keep your points. After the third fall, it is "Lost!" with your points. If the time is over before that, it is "Bravo". Then come the statistics.
+You have 3 lives. If the Biboule falls under the screen, you lose a life: she starts again 1.5 seconds later on a new cloud and you keep your points. After the third fall, it is "Lost!" with your points. If the time is over before that, it is "Bravo". Then come the statistics. With "Without hearts", there are no hearts and the game is never lost: after a fall, the Biboule starts again on a new cloud, and the falls are still counted as mistakes in the statistics; without end, leave by the menu (Esc key).
 
 # The variants
 Choose a variant (it gets a frame), then press "Start".
-- Without end, 1 minute or 3 minutes: without end, the game lasts until the 3 lives are lost.
+- 1 minute, 3 minutes or without end: without end and with hearts, the game lasts until the 3 lives are lost.
 - At the bottom, the level. Easy: wide clouds (a fifth of the screen), close, none moves. Normal: medium clouds (a seventh of the screen), further apart, 1 in 4 moves. Hard: small clouds (a ninth of the screen), the furthest apart, 1 in 2 moves.
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

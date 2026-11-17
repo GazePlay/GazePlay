@@ -31,7 +31,8 @@ import java.util.Map;
  * Biboule Jump (reviewed on 4/11/2026, maintainer's rules): the Biboule bounces from cloud to cloud and goes where the
  * gaze or the mouse is, sideways. A point for each hundredth of the height of the screen climbed. Three lives: after a
  * fall, she starts again on a new cloud and the points stay. The game has no end, or ends after 1 or 3 minutes; then the
- * statistics. There is no high score any more.
+ * statistics. There is no high score any more. Without hearts (variant of 17/11/2026), a fall costs nothing and the
+ * game is never lost; each fall is counted as a mistake, with or without hearts.
  * <p>
  * Everything is measured in parts of the screen: a jump climbs the same part of it on every screen. One loop moves
  * everything in real time, at the animation speed of the settings; nothing moves while the menu of the game is open.
@@ -101,6 +102,12 @@ public class BibouleJump implements GameLifeCycle {
     private Phase phase = Phase.OVER;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026, with every end); without
+     * them, no hearts shown, a fall costs nothing and the game is never lost.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int score;
     @Getter
@@ -438,14 +445,18 @@ public class BibouleJump implements GameLifeCycle {
     }
 
     /**
-     * Fallen under the screen: one life less; she starts again on a new cloud, or "Lost!" after the third.
+     * Fallen under the screen: a mistake, one life less with the hearts; she starts again on a new cloud, or "Lost!"
+     * after the third.
      */
     void fall() {
         if (phase != Phase.PLAY) {
             return;
         }
-        lives--;
-        if (lives <= 0) {
+        stats.incrementNumberOfMistakes();
+        if (withLives) {
+            lives--;
+        }
+        if (withLives && lives <= 0) {
             showHud();
             lose();
             return;
@@ -461,10 +472,12 @@ public class BibouleJump implements GameLifeCycle {
         final double margin = height * 0.025;
         final double heart = height * 0.055;
         // The lives: the hearts shared by the reviewed games (GameStyle.lives)
-        final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin * 0.6);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin * 0.6);
+            hud.getChildren().add(hearts);
+        }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("BibouleJumpScore") + " " + score,
             fontSize);
         pill.setLayoutX(width - pill.getBoundsInLocal().getWidth() - margin);
@@ -502,6 +515,13 @@ public class BibouleJump implements GameLifeCycle {
         lostPause = new PauseTransition(Duration.seconds(2.5));
         lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
         lostPause.play();
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

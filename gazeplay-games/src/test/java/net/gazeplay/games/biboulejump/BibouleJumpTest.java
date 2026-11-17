@@ -7,6 +7,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -456,12 +457,57 @@ class BibouleJumpTest {
     @Test
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new BibouleJumpGameVariantGenerator().getVariants();
-        assertEquals(9, variants.size());
+        // With or without hearts with every end, without end too (17/11/2026)
+        assertEquals(3 * 3 * 2, variants.size());
         final IGameVariant hard = new GroupedGameVariant(BibouleJumpGameVariantGenerator.GROUP,
-            BibouleJumpLevel.HARD.getKey(), BibouleJumpEnd.TIME_3.getKey(), null);
+            BibouleJumpLevel.HARD.getKey(), BibouleJumpEnd.TIME_3.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(hard));
         assertEquals(BibouleJumpLevel.HARD, BibouleJumpGameLauncher.levelOf(hard));
         assertEquals(BibouleJumpEnd.TIME_3, BibouleJumpGameLauncher.endOf(hard));
+        final IGameVariant endlessWithout = new GroupedGameVariant(BibouleJumpGameVariantGenerator.GROUP,
+            BibouleJumpLevel.EASY.getKey(), BibouleJumpEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT);
+        assertTrue(variants.contains(endlessWithout));
+        assertTrue(BibouleJumpGameLauncher.withLives(
+            new BibouleJump(gameContext, stats, BibouleJumpLevel.EASY, BibouleJumpEnd.ENDLESS, 1), hard)
+            .isWithLives());
+        assertFalse(BibouleJumpGameLauncher.withLives(
+            new BibouleJump(gameContext, stats, BibouleJumpLevel.EASY, BibouleJumpEnd.ENDLESS, 1), endlessWithout)
+            .isWithLives());
+        // A variant of before the hearts keeps them
+        assertTrue(BibouleJumpGameLauncher.withLives(
+            new BibouleJump(gameContext, stats, BibouleJumpLevel.EASY, BibouleJumpEnd.ENDLESS, 1),
+            new IntGameVariant(1)).isWithLives());
+        // The buttons of the end: 1 minute, 3 minutes, then without end on the right (rule of 17/11/2026)
+        assertEquals(List.of(BibouleJumpEnd.TIME_1, BibouleJumpEnd.TIME_3, BibouleJumpEnd.ENDLESS),
+            List.of(BibouleJumpEnd.values()));
+    }
+
+    /**
+     * "Without hearts" (17/11/2026): a fall costs nothing, she starts again on a new cloud and the game goes on; each
+     * fall is counted as a mistake.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final BibouleJump game = fx(() -> {
+            gameArea.getChildren().clear();
+            final BibouleJump created = new BibouleJump(gameContext, stats, BibouleJumpLevel.EASY,
+                BibouleJumpEnd.ENDLESS, 1);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        fx(() -> {
+            for (int i = 0; i < BibouleJump.LIVES + 2; i++) {
+                game.fall();
+                assertEquals(BibouleJump.Phase.PLAY, game.getPhase());
+            }
+            assertEquals(BibouleJump.LIVES, game.getLives());
+            game.dispose();
+            return null;
+        });
+        verify(stats, times(BibouleJump.LIVES + 2)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
     }
 
     @Test
