@@ -37,9 +37,9 @@ import java.util.Set;
  * color, shown in its bubble with the name of the color (and the potions to pour, with the recipe). A fixation on a
  * potion of the table (red, yellow, blue) pours it into the cauldron, which takes the color of the mixture; each
  * potion once per client, in any order. The potion asked for made: the client drinks it, one more served. A potion out
- * of the recipe: the cauldron explodes, a life is lost, and a new client comes. Three lives (hearts); the game ends
- * after 3, 5 or 10 potions served ("Bravo"), or never, or when the lives are lost ("Lost!"). The three potions together
- * make brown (black before).
+ * of the recipe: the cauldron explodes, a mistake is counted, a life is lost, and a new client comes. Three lives
+ * (hearts); the game ends after 3, 5 or 10 potions served ("Bravo"), or never, or when the lives are lost ("Lost!").
+ * Without hearts (variant of 17/11/2026), the game is never lost. The three potions together make brown (black before).
  * <p>
  * The pictures are those drawn for the project in October 2026 (gradle/images/make_potions_images.py). One loop, in
  * real seconds: the potions are poured at the speed of the settings, the fixations last the length of the settings
@@ -82,6 +82,12 @@ public class MagicPotions implements GameLifeCycle {
     private final Set<PotionMix.Primary> mixture = EnumSet.noneOf(PotionMix.Primary.class);
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026, with every end); without
+     * them, no hearts shown and the game is never lost; the explosions are still counted as mistakes.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int served;
     private boolean bravo;
@@ -458,7 +464,10 @@ public class MagicPotions implements GameLifeCycle {
     private void poured(final PotionMix.Primary primary) {
         elapsed = 0;
         if (!request.getRecipe().contains(primary)) {
-            lives--;
+            stats.incrementNumberOfMistakes();
+            if (withLives) {
+                lives--;
+            }
             potColor.setFill(Color.rgb(70, 70, 76));
             explosion.setVisible(true);
             gameContext.getSoundManager().add(SOUNDS + "boom.wav");
@@ -605,15 +614,24 @@ public class MagicPotions implements GameLifeCycle {
         hud.getChildren().clear();
         final double fontSize = height * 0.035;
         final double margin = height * 0.025;
-        final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3, true);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin * 0.6);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3, true);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin * 0.6);
+            hud.getChildren().add(hearts);
+        }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("PotionsScore") + " " + served
             + (end.getServed() > 0 ? " / " + end.getServed() : ""), fontSize);
         pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
         pill.setLayoutY(margin * 0.6);
         hud.getChildren().add(pill);
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

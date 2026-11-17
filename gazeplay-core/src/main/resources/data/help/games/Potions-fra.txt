@@ -12,9 +12,10 @@ Une Biboule veut une potion d'une couleur : prépare-la en versant les bonnes po
 - Rien ne peut être choisi avant le délai des réglages, ni pendant qu'une potion se verse. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Après 3, 5 ou 10 potions servies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième explosion, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie.
+Après 3, 5 ou 10 potions servies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième explosion, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les explosions restent comptées comme des erreurs dans les statistiques ; sans fin, on quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 3 potions, 5 potions, 10 potions ou sans fin : le nombre de potions à servir.
 - En bas, le niveau : avec la recette (les potions à verser sont montrées sous la bulle), ou sans la recette (à toi de savoir les mélanges).
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
@@ -258,6 +259,39 @@ class MagicPotionsTest {
         verify(gameContext).showRoundStats(any(), any());
     }
 
+    /**
+     * "Without hearts" (17/11/2026): no life lost and the game never lost, the explosions counted as mistakes.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final MagicPotions game = fx(() -> {
+            gameArea.getChildren().clear();
+            final MagicPotions created = new MagicPotions(gameContext, stats, PotionsLevel.WITHOUT_RECIPE,
+                PotionsEnd.ENDLESS, 11);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        steps(game, 0.05);
+        int explosions = 0;
+        for (int round = 0; round < 60 && explosions < MagicPotions.LIVES + 1; round++) {
+            final PotionMix.Primary wrong = outOfRecipe(game);
+            if (wrong == null) {
+                serve(game);
+                continue;
+            }
+            pour(game, wrong);
+            steps(game, MagicPotions.RESULT + 0.05);
+            explosions++;
+        }
+        assertEquals(MagicPotions.LIVES + 1, explosions);
+        assertEquals(MagicPotions.LIVES, game.getLives());
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        verify(stats, times(MagicPotions.LIVES + 1)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
+    }
+
     @Test
     void shouldEndWithBravoAfterThePotionsToServe() throws Exception {
         final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.SERVED_3, 13);
@@ -313,12 +347,28 @@ class MagicPotionsTest {
     @Test
     void shouldGiveAllTheVariantsAndPlayAnOldGame() {
         final Set<IGameVariant> variants = new PotionsGameVariantGenerator().getVariants();
-        assertEquals(8, variants.size());
+        // With or without hearts with every end, without end too (17/11/2026)
+        assertEquals(2 * 4 * 2, variants.size());
         final IGameVariant variant = new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
-            PotionsLevel.WITHOUT_RECIPE.getKey(), PotionsEnd.SERVED_10.getKey(), null);
+            PotionsLevel.WITHOUT_RECIPE.getKey(), PotionsEnd.SERVED_10.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
         assertEquals(PotionsLevel.WITHOUT_RECIPE, PotionsGameLauncher.levelOf(variant));
         assertEquals(PotionsEnd.SERVED_10, PotionsGameLauncher.endOf(variant));
+        final IGameVariant endlessWithout = new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
+            PotionsLevel.WITH_RECIPE.getKey(), PotionsEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT);
+        assertTrue(variants.contains(endlessWithout));
+        assertTrue(variants.contains(new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
+            PotionsLevel.WITH_RECIPE.getKey(), PotionsEnd.ENDLESS.getKey(), null, LivesVariant.WITH)));
+        assertTrue(PotionsGameLauncher.withLives(
+            new MagicPotions(gameContext, stats, PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 1), variant).isWithLives());
+        assertFalse(PotionsGameLauncher.withLives(
+            new MagicPotions(gameContext, stats, PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 1), endlessWithout)
+            .isWithLives());
+        // A variant of before the hearts keeps them
+        assertTrue(PotionsGameLauncher.withLives(
+            new MagicPotions(gameContext, stats, PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 1),
+            new GroupedGameVariant(PotionsGameVariantGenerator.GROUP, PotionsLevel.WITH_RECIPE.getKey(),
+                PotionsEnd.SERVED_5.getKey(), null)).isWithLives());
         assertEquals(PotionsLevel.WITH_RECIPE, PotionsGameLauncher.levelOf(null));
         assertEquals(PotionsEnd.ENDLESS, PotionsGameLauncher.endOf(null));
     }
