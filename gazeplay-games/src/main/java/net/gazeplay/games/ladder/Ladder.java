@@ -42,12 +42,11 @@ import java.util.Set;
  * the default images, all different, or the images of the user). A fixation on a start sends the Biboule down its
  * rope: it takes each rung it meets, its way drawn behind it.
  * <p>
- * Watch: wherever it arrives, the picture jumps, a star and "Bravo !", then another ladder. Aim: a picture is framed
- * ("Amène la Biboule jusqu'à l'image entourée"); the right start gives "Bravo !" and another ladder; another one shows
- * where the Biboule went, the picture shakes, "Pas encore !", a mistake, the start greyed and no longer chosen, the
- * same ladder again (with an end, one of 3 lives lost, 16/11/2026; the last one loses the game: "Lost!", then the
- * statistics); after two
- * mistakes, the right start is framed. The game ends after 3, 5 or 10 games ("Bravo", then the statistics), or has no
+ * A picture is framed ("Amène la Biboule jusqu'à l'image entourée"); the right start gives "Bravo !" and another
+ * ladder; another one shows where the Biboule went, the picture shakes, "Pas encore !", a mistake, the start greyed and
+ * no longer chosen, the same ladder again (with the hearts, one of 3 lives lost, 16/11/2026, with or without end since
+ * 17/11/2026; the last one loses the game: "Lost!", then the statistics); after two mistakes, the right start is
+ * framed. (The free mode, where any picture reached gave "Bravo !", was removed on 17/11/2026.) The game ends after 3, 5 or 10 games ("Bravo", then the statistics), or has no
  * end.
  * <p>
  * One loop, in real seconds: the fixation lasts the length of the settings (read at each step), nothing can be chosen
@@ -69,7 +68,8 @@ public class Ladder implements GameLifeCycle {
     static final int HINT_AFTER = 2;
 
     /**
-     * The lives of the aim with an end (maintainer's request of 16/11/2026): a wrong start costs one.
+     * The lives with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a wrong start
+     * costs one.
      */
     static final int LIVES = 3;
 
@@ -679,11 +679,11 @@ public class Ladder implements GameLifeCycle {
     }
 
     /**
-     * The Biboule at the bottom: in the watch and on the picture asked, "Bravo !"; else the picture shakes.
+     * The Biboule at the bottom: on the picture asked, "Bravo !"; else the picture shakes.
      */
     private void arrived(final int column) {
         arrival = column;
-        if (mode == LadderMode.WATCH || column == target) {
+        if (column == target) {
             games++;
             stats.incrementNumberOfGoalsReached();
             gameContext.getSoundManager().add("data/goosegame/sounds/win.wav");
@@ -722,10 +722,10 @@ public class Ladder implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: the aim with an end (none in the watch nor without end)
+     * @return whether the game has lives: the hearts chosen, with or without end (17/11/2026)
      */
     boolean hasLives() {
-        return withLives && mode == LadderMode.AIM && end.getGames() > 0;
+        return withLives;
     }
 
     /**

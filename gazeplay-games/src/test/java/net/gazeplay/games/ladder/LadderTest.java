@@ -19,6 +19,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -95,7 +96,7 @@ class LadderTest {
     void shouldLeadEachStartToItsOwnPicture() throws Exception {
         for (final LadderLevel level : LadderLevel.values()) {
             for (int seed = 1; seed <= 20; seed++) {
-                final Ladder game = launched(LadderMode.WATCH, level, LadderEnd.ENDLESS, seed);
+                final Ladder game = launched(LadderMode.AIM, level, LadderEnd.ENDLESS, seed);
                 fx(() -> {
                     final Set<Integer> arrivals = new HashSet<>();
                     for (int start = 0; start < level.getLines(); start++) {
@@ -114,7 +115,7 @@ class LadderTest {
     @Test
     void shouldChooseNothingDuringTheDelayThenAfterTheFixationOnly() throws Exception {
         when(configuration.getGameStartDelay()).thenReturn(1000);
-        final Ladder game = launched(LadderMode.WATCH, LadderLevel.EASY, LadderEnd.ENDLESS, 3);
+        final Ladder game = launched(LadderMode.AIM, LadderLevel.EASY, LadderEnd.ENDLESS, 3);
         fx(() -> {
             final Ladder.Start start = game.getStarts().get(1);
             game.choose(start);
@@ -133,15 +134,16 @@ class LadderTest {
     }
 
     @Test
-    void shouldGoDownToItsPictureThenGiveAnotherLadderInTheWatch() throws Exception {
-        final Ladder game = launched(LadderMode.WATCH, LadderLevel.NORMAL, LadderEnd.ENDLESS, 5);
+    void shouldGoDownToThePictureAskedThenGiveAnotherLadder() throws Exception {
+        final Ladder game = launched(LadderMode.AIM, LadderLevel.NORMAL, LadderEnd.ENDLESS, 5);
         fx(() -> {
-            final int expected = game.arrivalFrom(2);
-            game.choose(game.getStarts().get(2));
+            final int right = game.startFor(game.getTarget());
+            final int other = (right + 1) % LadderLevel.NORMAL.getLines();
+            game.choose(game.getStarts().get(right));
             // Nothing is chosen while the Biboule goes down
-            game.choose(game.getStarts().get(0));
-            steps(game, game.runTime(2) + 0.1);
-            assertEquals(expected, game.getArrival());
+            game.choose(game.getStarts().get(other));
+            steps(game, game.runTime(right) + 0.1);
+            assertEquals(game.getTarget(), game.getArrival());
             assertEquals(Ladder.Phase.REWARD, game.getPhase());
             assertEquals(1, game.getGames());
             verify(stats).incrementNumberOfGoalsReached();
@@ -183,9 +185,8 @@ class LadderTest {
     }
 
     /**
-     * 3 lives in the aim with an end (maintainer's request of 16/11/2026): a wrong start costs one and is greyed, no
-     * longer chosen until the next ladder; the third loses the game ("Lost!", then the statistics); none in the watch
-     * nor without end.
+     * 3 lives (maintainer's request of 16/11/2026): a wrong start costs one and is greyed, no longer chosen until the
+     * next ladder; the third loses the game ("Lost!", then the statistics); without end too since 17/11/2026.
      */
     @Test
     void shouldLoseALifeAtEachWrongStartThenTheGame() throws Exception {
@@ -213,8 +214,46 @@ class LadderTest {
             verify(gameContext).showRoundStats(stats, game);
             return null;
         });
-        assertFalse(launched(LadderMode.AIM, LadderLevel.HARD, LadderEnd.ENDLESS, 7).hasLives());
-        assertFalse(launched(LadderMode.WATCH, LadderLevel.HARD, LadderEnd.GAMES_5, 7).hasLives());
+        // Without end too (17/11/2026)
+        final Ladder endless = launched(LadderMode.AIM, LadderLevel.HARD, LadderEnd.ENDLESS, 7);
+        assertTrue(endless.hasLives());
+        fx(() -> {
+            final int right = endless.startFor(endless.getTarget());
+            for (int attempt = 1; attempt <= 3; attempt++) {
+                go(endless, (right + attempt) % LadderLevel.HARD.getLines());
+                steps(endless, Ladder.RESULT + 0.04);
+            }
+            assertEquals(Ladder.Phase.LOST, endless.getPhase());
+            return null;
+        });
+    }
+
+    /**
+     * "Without hearts": no lives, never lost, the mistakes still counted.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final Ladder game = fx(() -> {
+            gameArea.getChildren().clear();
+            final Ladder created = new Ladder(gameContext, stats, LadderMode.AIM, LadderLevel.HARD, LadderEnd.ENDLESS,
+                LadderPictures.ANIMALS, 7);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            created.step(0.02);
+            return created;
+        });
+        fx(() -> {
+            assertFalse(game.hasLives());
+            final int right = game.startFor(game.getTarget());
+            for (int attempt = 1; attempt <= 3; attempt++) {
+                go(game, (right + attempt) % LadderLevel.HARD.getLines());
+                steps(game, Ladder.RESULT + 0.04);
+                assertEquals(Ladder.Phase.CHOOSE, game.getPhase());
+            }
+            return null;
+        });
+        verify(stats, times(3)).incrementNumberOfMistakes();
     }
 
     @Test
@@ -234,7 +273,7 @@ class LadderTest {
 
     @Test
     void shouldStopAndLeaveTheGameArea() throws Exception {
-        final Ladder game = launched(LadderMode.WATCH, LadderLevel.NORMAL, LadderEnd.ENDLESS, 2);
+        final Ladder game = launched(LadderMode.AIM, LadderLevel.NORMAL, LadderEnd.ENDLESS, 2);
         fx(() -> {
             game.dispose();
             assertTrue(gameArea.getChildren().isEmpty());
@@ -247,8 +286,16 @@ class LadderTest {
     @Test
     void shouldReadTheVariantsAndALaunchWithoutVariant() {
         final Set<IGameVariant> variants = new LadderGameVariantGenerator().getVariants();
-        // The hearts with or without in the aim with an end only (16/11/2026)
-        assertEquals((3 * 2 + 1 + 4) * 2 * 3, variants.size());
+        // One mode (the free one removed on 17/11/2026), each end with or without hearts, 2 kinds of pictures, 3 levels
+        assertEquals(LadderEnd.values().length * 2 * 2 * 3, variants.size());
+        assertEquals(List.of(LadderMode.AIM), List.of(LadderMode.values()));
+        assertTrue(LadderGameLauncher.create(gameContext,
+            new GroupedGameVariant("LadderAim", "LadderEndless", "LadderHard", null, "LadderAnimals",
+                LivesVariant.WITH), stats, 1).hasLives());
+        // A variant of the free mode of before: played aiming
+        assertEquals(LadderMode.AIM, LadderGameLauncher.create(gameContext,
+            new GroupedGameVariant("LadderWatch", "LadderEnd3", "LadderEasy", null, "LadderAnimals"), stats, 1)
+            .getMode());
         assertTrue(LadderGameLauncher.create(gameContext,
             new GroupedGameVariant("LadderAim", "LadderEnd10", "LadderHard", null, "LadderAnimals",
                 LivesVariant.WITH), stats, 1).hasLives());
@@ -262,7 +309,7 @@ class LadderTest {
         assertEquals(LadderLevel.HARD, aim.getLevel());
         assertEquals(LadderPictures.MY_IMAGES, aim.getPictures());
         final Ladder before = LadderGameLauncher.create(gameContext, null, stats, 1);
-        assertEquals(LadderMode.WATCH, before.getMode());
+        assertEquals(LadderMode.AIM, before.getMode());
         assertEquals(LadderEnd.GAMES_3, before.getEnd());
     }
 }

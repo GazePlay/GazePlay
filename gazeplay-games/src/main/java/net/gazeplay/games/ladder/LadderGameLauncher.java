@@ -18,8 +18,8 @@ import java.util.LinkedList;
 
 /**
  * Creates "Échelle" (name code Ladder) and its statistics (folder "Ladder", as before), for a new game or for the replay
- * of a saved one (see {@code IGameLauncher}). Without a variant of the review (the game had none before), watching, at
- * the normal level, with the animals, after 3 games.
+ * of a saved one (see {@code IGameLauncher}). Without a variant of the review (the game had none before), aiming (the
+ * only mode since 17/11/2026), at the normal level, with the animals, after 3 games.
  */
 public class LadderGameLauncher implements IGameLauncher<Stats, IGameVariant> {
 
@@ -51,7 +51,7 @@ public class LadderGameLauncher implements IGameLauncher<Stats, IGameVariant> {
                 new Ladder(gameContext, stats, LadderMode.of(grouped.getGroup()), LadderLevel.of(grouped.getValue()),
                 LadderEnd.of(grouped.getSubGroup()), LadderPictures.of(pictures), gameSeed), gameVariant);
         }
-        return withLives(new Ladder(gameContext, stats, LadderMode.WATCH, LadderLevel.NORMAL, LadderEnd.GAMES_3,
+        return withLives(new Ladder(gameContext, stats, LadderMode.AIM, LadderLevel.NORMAL, LadderEnd.GAMES_3,
             LadderPictures.ANIMALS, gameSeed), gameVariant);
     }
 
