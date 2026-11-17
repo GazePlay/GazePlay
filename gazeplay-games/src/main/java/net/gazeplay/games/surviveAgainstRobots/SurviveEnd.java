@@ -5,16 +5,17 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * When "Survive Against Robots" ends, besides the three lives lost (maintainer's rules of 3/11/2026): never, after 1 or
- * 3 minutes, or after 20 or 50 robots destroyed. Then "Bravo" and the statistics.
+ * 3 minutes, or after 20 or 50 robots destroyed. Then "Bravo" and the statistics. The order is that of the buttons,
+ * "without end" always last, on the right (rule of 17/11/2026).
  */
 @Getter
 @RequiredArgsConstructor
 public enum SurviveEnd {
-    ENDLESS("SurviveEndless", 0, 0),
     TIME_1("SurviveTime1", 0, 60),
     TIME_3("SurviveTime3", 0, 180),
     ROBOTS_20("SurviveRobots20", 20, 0),
-    ROBOTS_50("SurviveRobots50", 50, 0);
+    ROBOTS_50("SurviveRobots50", 50, 0),
+    ENDLESS("SurviveEndless", 0, 0);
 
     /**
      * Key of translation, and value of the variants.

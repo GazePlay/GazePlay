@@ -43,6 +43,9 @@ import java.util.Map;
  * after 20 or 50 robots destroyed (then "Bravo" and the statistics). A robot destroyed sometimes leaves a bonus, taken
  * by flying on it: faster shots, a shield or the robots slowed for {@value #BONUS_EFFECT} s, or one life back.
  * <p>
+ * Without hearts (variant of 17/11/2026, maintainer's choice): a touched Biboule blinks but loses nothing, and the game
+ * cannot be lost (no heart bonus, the lives staying full). Each touch is counted as a mistake, with or without hearts.
+ * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves and the time does not
  * run while the menu of the game is open.
  */
@@ -108,6 +111,12 @@ public class SurviveAgainstRobots implements GameLifeCycle {
     private Phase phase = Phase.OVER;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026); without them, no hearts
+     * shown, a touched Biboule loses nothing and the game cannot be lost.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int destroyed;
     @Getter
@@ -513,15 +522,19 @@ public class SurviveAgainstRobots implements GameLifeCycle {
     }
 
     /**
-     * The Biboule touched by a robot or a shot: one life less, unless it blinks or has the shield.
+     * The Biboule touched by a robot or a shot, unless it blinks or has the shield: a mistake, one life less with the
+     * hearts.
      */
     void hurt() {
         if (phase != Phase.PLAY || invincible > 0 || effects.containsKey(BonusKind.SHIELD)) {
             return;
         }
-        lives--;
+        stats.incrementNumberOfMistakes();
+        if (withLives) {
+            lives--;
+        }
         showHud();
-        if (lives <= 0) {
+        if (withLives && lives <= 0) {
             lose();
         } else {
             invincible = INVINCIBLE;
@@ -623,12 +636,16 @@ public class SurviveAgainstRobots implements GameLifeCycle {
         final double margin = height * 0.025;
         final double heart = height * 0.055;
         // The lives: the hearts shared by the reviewed games (GameStyle.lives)
-        final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, heart, width * 0.3, false);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin);
+            hud.getChildren().add(hearts);
+        }
         shownEffects.clear();
         double x = margin;
+        // Under the hearts, or in their place without them
+        final double iconsY = withLives ? margin + heart * 1.2 : margin;
         for (final Map.Entry<BonusKind, Double> effect : effects.entrySet()) {
             final int left = (int) Math.ceil(effect.getValue());
             shownEffects.put(effect.getKey(), left);
@@ -636,10 +653,10 @@ public class SurviveAgainstRobots implements GameLifeCycle {
             icon.setFitWidth(heart);
             icon.setFitHeight(heart);
             icon.setLayoutX(x);
-            icon.setLayoutY(margin + heart * 1.2);
+            icon.setLayoutY(iconsY);
             final Group seconds = GameStyle.pill(String.valueOf(left), fontSize * 0.7);
             seconds.setLayoutX(x + heart * 0.55);
-            seconds.setLayoutY(margin + heart * 1.75);
+            seconds.setLayoutY(iconsY + heart * 0.55);
             hud.getChildren().addAll(icon, seconds);
             x += heart * 1.6;
         }
@@ -696,6 +713,13 @@ public class SurviveAgainstRobots implements GameLifeCycle {
         lostPause = new PauseTransition(Duration.seconds(2));
         lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
         lostPause.play();
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

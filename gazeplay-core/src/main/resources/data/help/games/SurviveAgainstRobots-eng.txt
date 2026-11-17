@@ -13,13 +13,14 @@ The Biboule flies among robots. It throws sparkles to destroy them: escape them 
 - The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open, and the time stops.
 
 # How to win
-As chosen in the variant: without end (leave by the menu (Esc key)), 1 or 3 minutes of play, or 20 or 50 robots to destroy. At the end: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics.
+As chosen in the variant: 1 or 3 minutes of play, 20 or 50 robots to destroy, or without end (leave by the menu (Esc key)). At the end: "Bravo", then the statistics. If the 3 lives are lost: "Lost!", then the statistics. With "Without hearts", there are no hearts and the game cannot be lost: touched, the Biboule only blinks (no heart bonus), and each touch is still counted as a mistake in the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- Without end, 1 minute, 3 minutes, 20 robots or 50 robots: the end of the game.
+- 1 minute, 3 minutes, 20 robots, 50 robots or without end: the end of the game.
 - At the bottom, the level. Easy: up to 2 robots at a time, none shoots.
 - Normal: up to 3 robots at a time, 1 robot in 5 shoots (the red ones).
 - Hard: up to 4 robots at a time, 1 robot in 3 shoots (the red ones).
 - At the bottom too, the shots. Automatic shots: the Biboule aims by itself at the nearest robot; you only have to move to avoid the robots.
 - Shots forwards: the Biboule shoots in front of it; you have to go towards the robots to hit them.
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts (the game cannot be lost).

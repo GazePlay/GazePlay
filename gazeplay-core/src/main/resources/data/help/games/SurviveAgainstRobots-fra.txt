@@ -13,13 +13,14 @@ La Biboule vole au milieu de robots. Elle lance des étincelles pour les détrui
 - La vitesse suit la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
 # Comment gagner
-Selon la variante : sans fin (quitte par le menu (touche Échap)), 1 ou 3 minutes de jeu, ou 20 ou 50 robots à détruire. À la fin : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques.
+Selon la variante : 1 ou 3 minutes de jeu, 20 ou 50 robots à détruire, ou sans fin (quitte par le menu (touche Échap)). À la fin : « Bravo », puis les statistiques. Si les 3 vies sont perdues : « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n'y a pas de cœurs et on ne peut pas perdre : touchée, la Biboule clignote seulement (pas de bonus cœur), et chaque touche reste comptée comme une erreur dans les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Sans fin, 1 minute, 3 minutes, 20 robots ou 50 robots : la fin de la partie.
+- 1 minute, 3 minutes, 20 robots, 50 robots ou sans fin : la fin de la partie.
 - En bas, le niveau. Facile : jusqu'à 2 robots à la fois, aucun ne tire.
 - Normal : jusqu'à 3 robots à la fois, 1 robot sur 5 tire (les rouges).
 - Difficile : jusqu'à 4 robots à la fois, 1 robot sur 3 tire (les rouges).
 - En bas aussi, le tir. Tir automatique : la Biboule vise toute seule le robot le plus proche ; il suffit de se déplacer pour éviter les robots.
 - Tir vers l'avant : la Biboule tire devant elle ; il faut aller vers les robots pour les toucher.
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (on ne peut pas perdre).

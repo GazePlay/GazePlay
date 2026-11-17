@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -29,8 +30,8 @@ public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, IGameV
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
-        return new SurviveAgainstRobots(gameContext, stats, levelOf(gameVariant), shotOf(gameVariant),
-            endOf(gameVariant));
+        return withLives(new SurviveAgainstRobots(gameContext, stats, levelOf(gameVariant), shotOf(gameVariant),
+            endOf(gameVariant)), gameVariant);
     }
 
     @Override
@@ -40,8 +41,16 @@ public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, IGameV
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new SurviveAgainstRobots(gameContext, stats, levelOf(gameVariant), shotOf(gameVariant),
-            endOf(gameVariant), gameSeed);
+        return withLives(new SurviveAgainstRobots(gameContext, stats, levelOf(gameVariant), shotOf(gameVariant),
+            endOf(gameVariant), gameSeed), gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (17/11/2026)
+     */
+    static SurviveAgainstRobots withLives(final SurviveAgainstRobots game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 
     static SurviveLevel levelOf(final IGameVariant gameVariant) {

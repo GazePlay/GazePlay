@@ -11,6 +11,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
@@ -122,6 +123,42 @@ class SurviveAgainstRobotsTest {
         assertEquals(0, game.getLives());
         assertEquals(SurviveAgainstRobots.Phase.OVER, game.getPhase());
         verify(gameContext, never()).playWinTransition(anyLong(), any());
+    }
+
+    /**
+     * "Without hearts" (maintainer's choice of 17/11/2026): touched, the Biboule blinks but loses nothing, and the game
+     * cannot be lost; each touch is counted as a mistake.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final SurviveAgainstRobots game = fx(() -> {
+            gameArea.getChildren().clear();
+            final SurviveAgainstRobots created = new SurviveAgainstRobots(gameContext, stats, SurviveLevel.EASY,
+                SurviveShot.AUTOMATIC, SurviveEnd.ENDLESS, 5);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        fx(() -> {
+            assertFalse(game.isWithLives());
+            for (int touch = 0; touch < SurviveAgainstRobots.LIVES + 1; touch++) {
+                // No robot nor shot in the way: only the touches of the test
+                game.getRobots().clear();
+                game.getShots().clear();
+                game.hurt();
+                assertTrue(game.getInvincible() > 0, "it blinks");
+                assertEquals(SurviveAgainstRobots.Phase.PLAY, game.getPhase());
+                steps(game, SurviveAgainstRobots.INVINCIBLE + 0.1);
+            }
+            game.dispose();
+            return null;
+        });
+        assertEquals(SurviveAgainstRobots.LIVES, game.getLives());
+        verify(stats, times(SurviveAgainstRobots.LIVES + 1)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
+        assertTrue(SurviveAgainstRobotsLauncher.withLives(game, new GroupedGameVariant(SurviveLevel.EASY.getKey(),
+            SurviveShot.AUTOMATIC.getKey(), SurviveEnd.ENDLESS.getKey(), null, LivesVariant.WITH)).isWithLives());
     }
 
     @Test
@@ -321,11 +358,17 @@ class SurviveAgainstRobotsTest {
     @Test
     void shouldGiveTheVariantsAndReadOnesOfBefore() {
         final Set<IGameVariant> variants = new SurviveAgainstRobotsVariantGenerator().getVariants();
-        assertEquals(SurviveLevel.values().length * SurviveShot.values().length * SurviveEnd.values().length,
+        // With or without hearts (17/11/2026)
+        assertEquals(SurviveLevel.values().length * SurviveShot.values().length * SurviveEnd.values().length * 2,
             variants.size());
         final GroupedGameVariant variant = new GroupedGameVariant(SurviveLevel.HARD.getKey(),
-            SurviveShot.FORWARD.getKey(), SurviveEnd.ROBOTS_50.getKey(), null);
+            SurviveShot.FORWARD.getKey(), SurviveEnd.ROBOTS_50.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
+        assertTrue(variants.contains(new GroupedGameVariant(SurviveLevel.EASY.getKey(),
+            SurviveShot.AUTOMATIC.getKey(), SurviveEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT)));
+        // The buttons of the end, without end last, on the right (rule of 17/11/2026)
+        assertEquals(List.of(SurviveEnd.TIME_1, SurviveEnd.TIME_3, SurviveEnd.ROBOTS_20, SurviveEnd.ROBOTS_50,
+            SurviveEnd.ENDLESS), List.of(SurviveEnd.values()));
         assertEquals(SurviveLevel.HARD, SurviveAgainstRobotsLauncher.levelOf(variant));
         assertEquals(SurviveShot.FORWARD, SurviveAgainstRobotsLauncher.shotOf(variant));
         assertEquals(SurviveEnd.ROBOTS_50, SurviveAgainstRobotsLauncher.endOf(variant));
