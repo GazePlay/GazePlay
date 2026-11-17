@@ -195,7 +195,8 @@ class CakesTest {
     }
 
     /**
-     * The third wrong cake loses the game: "Lost!", then the statistics; without end, no lives.
+     * The third wrong cake loses the game: "Lost!", then the statistics; without end too since 17/11/2026, never with
+     * "without hearts".
      */
     @Test
     void shouldLoseTheGameAfterThreeWrongCakes() throws Exception {
@@ -215,11 +216,32 @@ class CakesTest {
         });
         final CakeFactory endless = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.ENDLESS);
         fx(() -> {
-            assertFalse(endless.hasLives());
+            assertTrue(endless.hasLives());
             for (int cake = 1; cake <= 3; cake++) {
                 makeWithAWrongSponge(endless);
+                assertEquals(CakeFactory.LIVES - cake, endless.getLives());
                 steps(endless, CakeFactory.CHECK + 0.04);
-                assertEquals(CakeFactory.Phase.CHOOSE, endless.getPhase());
+            }
+            assertEquals(CakeFactory.Phase.LOST, endless.getPhase());
+            return null;
+        });
+        final CakeFactory without = fx(() -> {
+            gameArea.getChildren().clear();
+            final CakeFactory noHearts = new CakeFactory(gameContext, stats, CakesMode.COPY, CakesLevel.EASY,
+                CakesEnd.ENDLESS, 8);
+            noHearts.setWithLives(false);
+            noHearts.setManual();
+            noHearts.launch();
+            noHearts.step(0.02);
+            return noHearts;
+        });
+        fx(() -> {
+            assertFalse(without.hasLives());
+            // 3 wrong cakes, which lose the game with the hearts (no wrong sponge is offered after them)
+            for (int cake = 1; cake <= 3; cake++) {
+                makeWithAWrongSponge(without);
+                steps(without, CakeFactory.CHECK + 0.04);
+                assertEquals(CakeFactory.Phase.CHOOSE, without.getPhase());
             }
             return null;
         });
@@ -370,8 +392,14 @@ class CakesTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new CakesGameVariantGenerator().getVariants();
-        // The hearts with or without in the copy with an end only (16/11/2026)
-        assertEquals((3 * 2 + 1) * 3 + 4, variants.size());
+        // The hearts with or without in the copy, with every end, without end too (17/11/2026)
+        assertEquals(4 * 2 * 3 + 4, variants.size());
+        assertTrue(CakesGameLauncher.create(gameContext,
+            new GroupedGameVariant("CakesCopy", "CakesEndless", "CakesHard", null,
+                LivesVariant.WITH), stats, 1).hasLives());
+        assertFalse(CakesGameLauncher.create(gameContext,
+            new GroupedGameVariant("CakesCopy", "CakesEndless", "CakesHard", null,
+                LivesVariant.WITHOUT), stats, 1).hasLives());
         assertTrue(CakesGameLauncher.create(gameContext,
             new GroupedGameVariant("CakesCopy", "CakesEnd3", "CakesHard", null,
                 LivesVariant.WITH), stats, 1).hasLives());

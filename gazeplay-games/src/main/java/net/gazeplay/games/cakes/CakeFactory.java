@@ -49,8 +49,8 @@ import java.util.Random;
  * To copy the model (1 layer, 3 layers, or 3 layers with a model that hides after 5 s and is shown again by a button):
  * the whole cake is made without any check, then compared with the model (maintainer's request of 16/11/2026). A
  * wrong cake: a mistake for each wrong part, "Pas tout à fait !", the model shown with its wrong layers blinking, then
- * the cake is taken away and the same model made again, its wrong choices no longer offered; with an end, it costs one
- * of 3 lives, the last one loses the game ("Lost!", then the statistics). In the free mode, one's own cake, up to
+ * the cake is taken away and the same model made again, its wrong choices no longer offered; with the hearts (with or
+ * without end since 17/11/2026), it costs one of 3 lives, the last one loses the game ("Lost!", then the statistics). In the free mode, one's own cake, up to
  * three layers (after the cream: "Encore un étage", then the accessory, or "Décorer", then the sweets and the
  * decoration). A finished cake: a star and "Bravo !", then another; the game ends
  * after 1, 3 or 5 cakes ("Bravo", then the statistics), or has no end.
@@ -88,7 +88,8 @@ public class CakeFactory implements GameLifeCycle {
     static final double LOST_SHOWN = 2;
 
     /**
-     * The lives of a copy with an end (maintainer's request of 16/11/2026): a wrong cake costs one.
+     * The lives of a copy with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a wrong
+     * cake costs one.
      */
     static final int LIVES = 3;
 
@@ -374,10 +375,11 @@ public class CakeFactory implements GameLifeCycle {
     }
 
     /**
-     * @return whether the game has lives: a copy with an end (none without end, nor in the free mode)
+     * @return whether the game has lives: a copy with the hearts, with or without end (17/11/2026); none in the free
+     *   mode
      */
     boolean hasLives() {
-        return withLives && mode == CakesMode.COPY && end.getCakes() > 0;
+        return withLives && mode == CakesMode.COPY;
     }
 
     /**
@@ -1131,7 +1133,7 @@ public class CakeFactory implements GameLifeCycle {
     }
 
     /**
-     * A wrong cake: a mistake for each wrong part, one life less with an end, "Not quite!", the model shown with its
+     * A wrong cake: a mistake for each wrong part, one life less with the hearts, "Not quite!", the model shown with its
      * wrong layers blinking, then the cake is taken away.
      */
     private void wrongCake(final List<String> wrong) {
