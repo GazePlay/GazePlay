@@ -31,9 +31,10 @@ import java.util.List;
 /**
  * "Ordre" (Order; reviewed on 10/11/2026, maintainer's rules): targets, all alike, appear one after the other at places
  * drawn at random, then stay; the player fixates them in the order they appeared. A right target shows its number and
- * a check; a wrong one a cross, then every target shows its number (the right answer) for 2 seconds, one life is lost,
- * and a new round comes. Three lives (hearts); 3, 5 or 7 targets, or progressive (3, one more after each round won);
- * the game ends after 3, 5 or 10 rounds won ("Bravo"), or never, or when the lives are lost ("Lost!").
+ * a check; a wrong one a cross, then every target shows its number (the right answer) for 2 seconds, a mistake is
+ * counted, one life is lost, and a new round comes. Three lives (hearts); 3, 5 or 7 targets, or progressive (3, one
+ * more after each round won); the game ends after 3, 5 or 10 rounds won ("Bravo"), or never, or when the lives are lost
+ * ("Lost!"). Without hearts (variant of 17/11/2026), the game is never lost.
  * <p>
  * Everything is drawn by the game. One loop, in real seconds: the targets appear at the speed of the settings, the
  * fixations last the length of the settings (read at each step), nothing can be chosen before the delay of the
@@ -84,6 +85,12 @@ public class Order implements GameLifeCycle {
     private int next;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026, with every end); without
+     * them, no hearts shown and the game is never lost; the wrong targets are still counted as mistakes.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int won;
     private boolean bravo;
@@ -389,7 +396,10 @@ public class Order implements GameLifeCycle {
                 other.showNumber();
             }
         }
-        lives--;
+        stats.incrementNumberOfMistakes();
+        if (withLives) {
+            lives--;
+        }
         phase = Phase.REVEAL;
         elapsed = 0;
         showHud();
@@ -424,10 +434,12 @@ public class Order implements GameLifeCycle {
         hud.getChildren().clear();
         final double fontSize = height * 0.035;
         final double margin = height * 0.025;
-        final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3, false);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin * 0.6);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3, false);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin * 0.6);
+            hud.getChildren().add(hearts);
+        }
         final Group rounds = GameStyle.pill(gameContext.getTranslator().translate("OrderRounds") + " " + won
             + (end.getRounds() > 0 ? " / " + end.getRounds() : ""), fontSize);
         rounds.setLayoutX((width - rounds.getBoundsInLocal().getWidth()) / 2);
@@ -438,6 +450,13 @@ public class Order implements GameLifeCycle {
         targetCount.setLayoutX(width - targetCount.getBoundsInLocal().getWidth() - margin);
         targetCount.setLayoutY(margin * 0.6);
         hud.getChildren().add(targetCount);
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

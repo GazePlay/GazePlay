@@ -12,9 +12,10 @@ Des cibles, toutes pareilles, apparaissent l'une après l'autre. Retiens l'ordre
 - Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Une manche est réussie quand toutes les cibles ont été regardées dans l'ordre. Après 3, 5 ou 10 manches réussies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie.
+Une manche est réussie quand toutes les cibles ont été regardées dans l'ordre. Après 3, 5 ou 10 manches réussies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques ; sans fin, on quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 3 manches, 5 manches, 10 manches ou sans fin : le nombre de manches à réussir.
 - En bas, le niveau : 3, 5 ou 7 cibles ; ou progressif (3 cibles, puis une de plus après chaque manche réussie, jusqu'à 10).
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

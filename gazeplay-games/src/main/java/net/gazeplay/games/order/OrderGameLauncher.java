@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -39,13 +40,22 @@ public class OrderGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                        final Stats stats) {
-        return new Order(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), -1);
+        return withLives(new Order(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), -1), gameVariant);
     }
 
     @Override
     public GameLifeCycle replayGame(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                                     final double gameSeed) {
-        return new Order(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), gameSeed);
+        return withLives(new Order(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), gameSeed),
+            gameVariant);
+    }
+
+    /**
+     * @return the game, with the hearts or not as chosen in the variant (17/11/2026)
+     */
+    static Order withLives(final Order game, final IGameVariant gameVariant) {
+        game.setWithLives(LivesVariant.withLives(gameVariant));
+        return game;
     }
 
     static OrderLevel levelOf(final IGameVariant gameVariant) {

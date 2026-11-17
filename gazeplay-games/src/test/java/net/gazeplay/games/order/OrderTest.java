@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
@@ -235,6 +236,32 @@ class OrderTest {
         verify(gameContext).showRoundStats(any(), any());
     }
 
+    /**
+     * "Without hearts" (17/11/2026): no life lost and the game never lost, the wrong targets counted as mistakes.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final Order game = fx(() -> {
+            gameArea.getChildren().clear();
+            final Order created = new Order(gameContext, stats, OrderLevel.THREE, OrderEnd.ENDLESS, 11);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        steps(game, 0.05);
+        for (int mistake = 0; mistake <= Order.LIVES; mistake++) {
+            untilPlay(game);
+            choose(game, 2);
+            steps(game, Order.REVEAL + 0.05);
+        }
+        assertEquals(Order.LIVES, game.getLives());
+        assertNotEquals(Order.Phase.SHOW, game.getPhase());
+        assertNotEquals(Order.Phase.OVER, game.getPhase());
+        verify(stats, times(Order.LIVES + 1)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
+    }
+
     @Test
     void shouldEndWithBravoAfterTheRoundsToWin() throws Exception {
         final Order game = launched(OrderLevel.THREE, OrderEnd.ROUNDS_3, 13);
@@ -303,10 +330,21 @@ class OrderTest {
     @Test
     void shouldGiveAllTheVariantsAndPlayTheOldOnes() {
         final Set<IGameVariant> variants = new OrdersGameVariantGenerator().getVariants();
-        assertEquals(16, variants.size());
+        // With or without hearts with every end, without end too (17/11/2026)
+        assertEquals(4 * 4 * 2, variants.size());
         final IGameVariant variant = new GroupedGameVariant(OrdersGameVariantGenerator.GROUP,
-            OrderLevel.PROGRESSIVE.getKey(), OrderEnd.ROUNDS_10.getKey(), null);
+            OrderLevel.PROGRESSIVE.getKey(), OrderEnd.ROUNDS_10.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
+        final IGameVariant endlessWithout = new GroupedGameVariant(OrdersGameVariantGenerator.GROUP,
+            OrderLevel.THREE.getKey(), OrderEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT);
+        assertTrue(variants.contains(endlessWithout));
+        assertTrue(OrderGameLauncher.withLives(
+            new Order(gameContext, stats, OrderLevel.THREE, OrderEnd.ENDLESS, 1), variant).isWithLives());
+        assertFalse(OrderGameLauncher.withLives(
+            new Order(gameContext, stats, OrderLevel.THREE, OrderEnd.ENDLESS, 1), endlessWithout).isWithLives());
+        // A variant of before the hearts keeps them
+        assertTrue(OrderGameLauncher.withLives(new Order(gameContext, stats, OrderLevel.THREE, OrderEnd.ENDLESS, 1),
+            IGameVariant.toGameVariant("IntGameVariant:7")).isWithLives());
         assertEquals(OrderLevel.PROGRESSIVE, OrderGameLauncher.levelOf(variant));
         assertEquals(OrderEnd.ROUNDS_10, OrderGameLauncher.endOf(variant));
         final IGameVariant old = IGameVariant.toGameVariant("IntGameVariant:7");

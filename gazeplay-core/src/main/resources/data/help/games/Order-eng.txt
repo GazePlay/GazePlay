@@ -12,9 +12,10 @@ Targets, all alike, appear one after the other. Remember the order they appeared
 - Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
 
 # How to win
-A round is won when every target has been looked at in order. After 3, 5 or 10 rounds won, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left.
+A round is won when every target has been looked at in order. After 3, 5 or 10 rounds won, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics; without end, leave by the menu (Escape key).
 
 # The variants
 Choose a variant (it is circled), then press "Start".
 - 3 rounds, 5 rounds, 10 rounds or without end: the number of rounds to win.
 - At the bottom, the level: 3, 5 or 7 targets; or progressive (3 targets, then one more after each round won, up to 10).
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
