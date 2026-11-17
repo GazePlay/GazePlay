@@ -30,9 +30,9 @@ import java.util.List;
  * "Gobelets Pass Pass" (Cups and Balls, name code CupsBalls; reviewed on 10/11/2026, maintainer's rules): cups in a row
  * on a table; one is lifted to show the ball under it, then they are exchanged two by two, one passing in front of
  * the other in an arc. The player fixates the cup hiding the ball: the right one lifts and shows it; a wrong one lifts
- * empty, then the right one shows the ball, and a life is lost. 3, 4 or 5 cups, more exchanges and faster by the
- * level; three lives (hearts); the game ends after 3, 5 or 10 balls found ("Bravo"), or never, or when the lives are
- * lost ("Lost!"). The places of the ball are given to the statistics as areas of interest (where the gaze should
+ * empty, then the right one shows the ball, a mistake is counted and a life is lost. 3, 4 or 5 cups, more exchanges
+ * and faster by the level; three lives (hearts); the game ends after 3, 5 or 10 balls found ("Bravo"), or never, or
+ * when the lives are lost ("Lost!"). Without hearts (variant of 17/11/2026), the game is never lost. The places of the ball are given to the statistics as areas of interest (where the gaze should
  * follow), as before.
  * <p>
  * Everything is drawn by the game. One loop, in real seconds: the cups move at the speed of the settings, the
@@ -83,6 +83,12 @@ public class CupsAndBalls implements GameLifeCycle {
     private Cup moving2;
     @Getter
     private int lives;
+    /**
+     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026, with every end); without
+     * them, no hearts shown and the game is never lost; the wrong cups are still counted as mistakes.
+     */
+    @Getter
+    private boolean withLives = true;
     @Getter
     private int found;
     private boolean bravo;
@@ -440,7 +446,10 @@ public class CupsAndBalls implements GameLifeCycle {
             stats.incrementNumberOfGoalsReached();
             gameContext.getSoundManager().add(SOUNDS + "found.wav");
         } else {
-            lives--;
+            stats.incrementNumberOfMistakes();
+            if (withLives) {
+                lives--;
+            }
             gameContext.getSoundManager().add(SOUNDS + "missed.wav");
         }
         phase = Phase.REVEAL;
@@ -486,15 +495,24 @@ public class CupsAndBalls implements GameLifeCycle {
         hud.getChildren().clear();
         final double fontSize = height * 0.035;
         final double margin = height * 0.025;
-        final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3, false);
-        hearts.setLayoutX(margin);
-        hearts.setLayoutY(margin * 0.6);
-        hud.getChildren().add(hearts);
+        if (withLives) {
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3, false);
+            hearts.setLayoutX(margin);
+            hearts.setLayoutY(margin * 0.6);
+            hud.getChildren().add(hearts);
+        }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("CupsScore") + " " + found
             + (end.getFound() > 0 ? " / " + end.getFound() : ""), fontSize);
         pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
         pill.setLayoutY(margin * 0.6);
         hud.getChildren().add(pill);
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**

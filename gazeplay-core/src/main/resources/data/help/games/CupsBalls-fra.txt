@@ -12,9 +12,10 @@ Une balle est cachée sous un gobelet. Suis bien ce gobelet des yeux pendant que
 - Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Après 3, 5 ou 10 balles trouvées, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie.
+Après 3, 5 ou 10 balles trouvées, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques ; sans fin, on quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 3 balles, 5 balles, 10 balles ou sans fin : le nombre de balles à trouver.
 - En bas, le niveau : Facile, 3 gobelets et 5 échanges lents ; Normal, 4 gobelets et 8 échanges ; Difficile, 5 gobelets et 12 échanges rapides.
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

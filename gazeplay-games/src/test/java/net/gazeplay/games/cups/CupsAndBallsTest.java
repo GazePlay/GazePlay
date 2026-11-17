@@ -6,6 +6,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
@@ -217,6 +218,31 @@ class CupsAndBallsTest {
         verify(gameContext).showRoundStats(any(), any());
     }
 
+    /**
+     * "Without hearts" (17/11/2026): no life lost and the game never lost, the wrong cups counted as mistakes.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final CupsAndBalls game = fx(() -> {
+            gameArea.getChildren().clear();
+            final CupsAndBalls created = new CupsAndBalls(gameContext, stats, CupsLevel.EASY, CupsEnd.ENDLESS, 11);
+            created.setWithLives(false);
+            created.setManual();
+            created.launch();
+            return created;
+        });
+        steps(game, 0.05);
+        for (int mistake = 0; mistake <= CupsAndBalls.LIVES; mistake++) {
+            untilPlay(game);
+            choose(game, wrongCup(game));
+        }
+        assertEquals(CupsAndBalls.LIVES, game.getLives());
+        assertNotEquals(CupsAndBalls.Phase.SHOW, game.getPhase());
+        assertNotEquals(CupsAndBalls.Phase.OVER, game.getPhase());
+        verify(stats, times(CupsAndBalls.LIVES + 1)).incrementNumberOfMistakes();
+        verify(gameContext, never()).showRoundStats(any(), any());
+    }
+
     @Test
     void shouldEndWithBravoAfterTheBallsToFind() throws Exception {
         final CupsAndBalls game = launched(CupsLevel.EASY, CupsEnd.FOUND_3, 13);
@@ -269,10 +295,22 @@ class CupsAndBallsTest {
     @Test
     void shouldGiveAllTheVariantsAndPlayTheOldOnes() {
         final Set<IGameVariant> variants = new CupsBallsGameVariantGenerator().getVariants();
-        assertEquals(12, variants.size());
+        // With or without hearts with every end, without end too (17/11/2026)
+        assertEquals(3 * 4 * 2, variants.size());
         final IGameVariant variant = new GroupedGameVariant(CupsBallsGameVariantGenerator.GROUP,
-            CupsLevel.HARD.getKey(), CupsEnd.FOUND_10.getKey(), null);
+            CupsLevel.HARD.getKey(), CupsEnd.FOUND_10.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
+        final IGameVariant endlessWithout = new GroupedGameVariant(CupsBallsGameVariantGenerator.GROUP,
+            CupsLevel.EASY.getKey(), CupsEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT);
+        assertTrue(variants.contains(endlessWithout));
+        assertTrue(CupsBallsGameLauncher.withLives(
+            new CupsAndBalls(gameContext, stats, CupsLevel.EASY, CupsEnd.ENDLESS, 1), variant).isWithLives());
+        assertFalse(CupsBallsGameLauncher.withLives(
+            new CupsAndBalls(gameContext, stats, CupsLevel.EASY, CupsEnd.ENDLESS, 1), endlessWithout).isWithLives());
+        // A variant of before the hearts keeps them
+        assertTrue(CupsBallsGameLauncher.withLives(
+            new CupsAndBalls(gameContext, stats, CupsLevel.EASY, CupsEnd.ENDLESS, 1),
+            IGameVariant.toGameVariant("IntGameVariant:5")).isWithLives());
         assertEquals(CupsLevel.HARD, CupsBallsGameLauncher.levelOf(variant));
         assertEquals(CupsEnd.FOUND_10, CupsBallsGameLauncher.endOf(variant));
         assertEquals(CupsLevel.EASY, CupsBallsGameLauncher.levelOf(IGameVariant.toGameVariant("IntGameVariant:3")));

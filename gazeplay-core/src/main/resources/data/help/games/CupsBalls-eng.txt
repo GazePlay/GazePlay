@@ -12,9 +12,10 @@ A ball is hidden under a cup. Follow that cup with your eyes while the cups are 
 - Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
 
 # How to win
-After 3, 5 or 10 balls found, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left.
+After 3, 5 or 10 balls found, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics; without end, leave by the menu (Escape key).
 
 # The variants
 Choose a variant (it is circled), then press "Start".
 - 3 balls, 5 balls, 10 balls or without end: the number of balls to find.
 - At the bottom, the level: Easy, 3 cups and 5 slow exchanges; Normal, 4 cups and 8 exchanges; Hard, 5 cups and 12 fast exchanges.
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
