@@ -689,7 +689,7 @@ public class ColorBlend implements GameLifeCycle {
     }
 
     /**
-     * No life left: "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     * No life left: "Lost!", then the statistics.
      */
     private void lose() {
         clearButtons();

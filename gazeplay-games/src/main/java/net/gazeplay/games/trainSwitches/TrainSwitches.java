@@ -937,7 +937,7 @@ public class TrainSwitches implements GameLifeCycle {
     }
 
     /**
-     * No life left: everything stops, "Lost!", then the statistics; the "continue" of the statistics starts a new game.
+     * No life left: everything stops, "Lost!", then the statistics.
      */
     private void lose() {
         phase = Phase.LOST;

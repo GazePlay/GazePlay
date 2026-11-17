@@ -6,7 +6,6 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.AfterEach;
@@ -24,8 +23,9 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -73,8 +73,8 @@ class StatsContextFactoryTest {
     }
 
     /**
-     * The screen of a game: the header, the bodies of the two modes, the buttons (16/11/2026); without the button of
-     * the game, no "Continue".
+     * The screen of a game: the header, the bodies of the two modes, the buttons (16/11/2026); no "Continue" since
+     * 17/11/2026 (maintainer's request): the menu is the main button.
      */
     @Test
     void shouldCreateNewInstance() {
@@ -83,16 +83,7 @@ class StatsContextFactoryTest {
         assertEquals(3, result.getRoot().getChildren().size());
         assertNotNull(result.getFolderButton());
         assertNotNull(result.getMenuButton());
-        assertNull(result.getContinueAction());
-    }
-
-    @Test
-    void shouldCreateNewInstanceWithContinueButton() {
-        CustomButton button = new CustomButton("bear.jpg", 300);
-        StatsContext result =
-            StatsContextFactory.newInstance(mockGazePlay, mockStats, button);
-
-        assertEquals(3, result.getRoot().getChildren().size());
-        assertNotNull(result.getContinueAction());
+        assertTrue(result.getMenuButton().getStyleClass().contains("gp-button-primary"));
+        assertFalse(result.getFolderButton().getStyleClass().contains("gp-button-primary"));
     }
 }

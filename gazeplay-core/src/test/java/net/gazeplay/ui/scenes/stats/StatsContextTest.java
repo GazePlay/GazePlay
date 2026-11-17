@@ -8,7 +8,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.ChiReport;
 import net.gazeplay.commons.utils.stats.LevelsReport;
@@ -40,7 +39,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -103,8 +101,8 @@ class StatsContextTest {
         return WaitForAsyncUtils.asyncFx(action).get();
     }
 
-    private StatsContext screen(final Stats stats, final CustomButton continueButton) throws Exception {
-        return fx(() -> new StatsContext(mockGazePlay, new BorderPane(), stats, continueButton));
+    private StatsContext screen(final Stats stats) throws Exception {
+        return fx(() -> new StatsContext(mockGazePlay, new BorderPane(), stats));
     }
 
     /**
@@ -113,7 +111,7 @@ class StatsContextTest {
      */
     @Test
     void shouldOpenInTheSimpleModeAndSwitchToTheAdvancedOne() throws Exception {
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         assertFalse(screen.getAdvanced().get());
         assertTrue(screen.getSimpleSwitch().isSelected());
         assertTrue(screen.getSimpleBody().isVisible());
@@ -146,7 +144,7 @@ class StatsContextTest {
      */
     @Test
     void shouldTakeTheLookOfTheMenus() throws Exception {
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         assertTrue(screen.getRoot().getStyleClass().contains("gp-menu"));
         assertTrue(screen.getRoot().getStyleClass().contains("gp-stats-screen"));
         assertTrue(screen.getRoot().getStyle() == null || screen.getRoot().getStyle().isEmpty());
@@ -159,7 +157,7 @@ class StatsContextTest {
     void shouldShowTheGameItsVariantAndTheProfile() throws Exception {
         when(mockStats.getCurrentGameNameCode()).thenReturn("WhereIsTheAnimal");
         when(mockStats.getCurrentGameVariant()).thenReturn("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-");
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         final List<String> texts = fx(() -> screen.getRoot().getTop().lookupAll(".label").stream()
             .map(node -> ((Label) node).getText()).toList());
         assertTrue(texts.contains("WhereIsTheAnimal"), texts.toString());
@@ -323,7 +321,7 @@ class StatsContextTest {
         chi.addChiLevel(1);
         when(mockStats.getChiReport()).thenReturn(chi);
 
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         assertEquals(View.DURATIONS, screen.getShownView());
         assertEquals(5, screen.getTabs().size());
         for (final View view : View.values()) {
@@ -336,20 +334,18 @@ class StatsContextTest {
         }
     }
 
+    /**
+     * No "Continue" since 17/11/2026 (maintainer's request): the folder and the menu, the menu as the main button.
+     */
     @Test
-    void shouldContinueTheGameWithTheButtonOfTheGame() throws Exception {
-        final CustomButton continueButton = fx(() -> new CustomButton("bear.jpg", 300));
-        final AtomicInteger clicks = new AtomicInteger();
-        continueButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> clicks.incrementAndGet());
-        final StatsContext screen = screen(mockStats, continueButton);
-        assertNotNull(screen.getContinueAction());
-        fx(() -> {
-            screen.getContinueAction().fire();
-            return null;
-        });
-        assertEquals(1, clicks.get());
-
-        assertNull(screen(mockStats, null).getContinueAction());
+    void shouldOfferTheFolderAndTheMenuButNoContinue() throws Exception {
+        final StatsContext screen = screen(mockStats);
+        final List<String> texts = fx(() -> screen.getRoot().lookupAll(".gp-button").stream()
+            .filter(javafx.scene.control.Button.class::isInstance).map(javafx.scene.control.Button.class::cast)
+            .map(javafx.scene.control.Button::getText).toList());
+        assertFalse(texts.contains("StatsContinue"), texts.toString());
+        assertTrue(texts.contains("StatsMenu"), texts.toString());
+        assertTrue(screen.getMenuButton().getStyleClass().contains("gp-button-primary"));
     }
 
     /**
@@ -357,7 +353,7 @@ class StatsContextTest {
      */
     @Test
     void shouldOfferTheAreasOfInterestAndTheScanPathInTheAdvancedMode() throws Exception {
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         final Button areas = screen.getAreasOfInterestButton();
         assertFalse(areas.getParent().isVisible());
         fx(() -> {
@@ -381,7 +377,7 @@ class StatsContextTest {
         // Turned off in the settings: no buttons
         when(config.isAreaOfInterestDisabled()).thenReturn(false);
         when(config.isFixationSequenceDisabled()).thenReturn(true);
-        final StatsContext without = screen(mockStats, null);
+        final StatsContext without = screen(mockStats);
         assertNull(without.getAreasOfInterestButton().getParent());
         assertNull(without.getScanPathButton().getParent());
     }
@@ -394,7 +390,7 @@ class StatsContextTest {
             new File(savedFolder, "heatmap.csv"), null, null, null, null, null, null));
         when(mockStats.getGameStatsOfTheDayDirectory())
             .thenReturn(new File(new File("statistics", "WhereIsTheShape"), "2026-10-24"));
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
             screen.getFolderButton().fire();
             systemFileManager.verify(() -> SystemFileManager.openFolder(savedFolder));
@@ -406,7 +402,7 @@ class StatsContextTest {
         final File todayFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
         when(mockStats.getSavedStatsInfo()).thenReturn(null);
         when(mockStats.getGameStatsOfTheDayDirectory()).thenReturn(todayFolder);
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
             screen.getFolderButton().fire();
             systemFileManager.verify(() -> SystemFileManager.openFolder(todayFolder));
@@ -418,7 +414,7 @@ class StatsContextTest {
      */
     @Test
     void shouldEnlargeAViewAndPutItBack() throws Exception {
-        final StatsContext screen = screen(mockStats, null);
+        final StatsContext screen = screen(mockStats);
         assertFalse(screen.getEnlarged().get());
         fx(() -> {
             screen.getEnlarged().set(true);
@@ -459,7 +455,7 @@ class StatsContextTest {
 
     @Test
     void shouldGetChildren() throws Exception {
-        final StatsContext context = screen(mockStats, null);
+        final StatsContext context = screen(mockStats);
         assertEquals(context.getRoot().getChildren().size(), context.getChildren().size());
     }
 }

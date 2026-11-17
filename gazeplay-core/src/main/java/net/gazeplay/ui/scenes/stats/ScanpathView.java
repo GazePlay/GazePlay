@@ -19,7 +19,6 @@ import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HomeButton;
@@ -39,10 +38,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
     private Color[] colors = {Color.RED, Color.BLUE};
 
-    /**
-     * @param continueButton the button going on with the game, or null
-     */
-    public ScanpathView(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
+    public ScanpathView(GazePlay gazePlay, Stats stats) {
         super(gazePlay, new BorderPane());
 
         final Pane center = buildCenterPane(stats);
@@ -51,7 +47,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, continueButton);
+            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         });

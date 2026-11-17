@@ -437,16 +437,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
         saveStats(stats);
 
-        Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
-
-        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            getGazePlay().onGameLaunch(this);
-            stats.reset();
-            currentGame.launch();
-        });
-
-        StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, continueButton);
+        // No button going on with the game any more (maintainer's request of 16/11/2026, done on 17/11/2026): one goes
+        // back to the menu and launches the game again from it
+        StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats);
 
         this.clear();
         getGazePlay().onDisplayStats(statsContext);

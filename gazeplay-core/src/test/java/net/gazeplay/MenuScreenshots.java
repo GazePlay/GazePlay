@@ -293,10 +293,7 @@ public final class MenuScreenshots {
         onFx(() -> {
             ActiveConfigurationContext.switchToDefaultUser();
             ActiveConfigurationContext.getInstance().setEyeTracker("tobii_and_mouse");
-            final net.gazeplay.commons.utils.CustomButton continueButton = new net.gazeplay.commons.utils
-                .CustomButton("data/common/images/continue.png", 100);
-            gazePlay.onDisplayStats(net.gazeplay.ui.scenes.stats.StatsContextFactory.newInstance(gazePlay, stats,
-                continueButton));
+            gazePlay.onDisplayStats(net.gazeplay.ui.scenes.stats.StatsContextFactory.newInstance(gazePlay, stats));
             return null;
         });
         capture(gazePlay, output, "5-statistiques-simple");

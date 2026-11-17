@@ -111,8 +111,7 @@ public class WhereIsIt implements GameLifeCycle {
     private int screensFound;
 
     /**
-     * Whether the last screen has been found: the next {@link #launch()} (the "continue" of the statistics) starts a new
-     * game.
+     * Whether the last screen has been found (or the game lost): the next {@link #launch()} starts a new game.
      */
     private boolean ended;
 

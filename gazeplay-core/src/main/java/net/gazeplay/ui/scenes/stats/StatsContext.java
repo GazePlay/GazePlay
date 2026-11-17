@@ -4,14 +4,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
@@ -20,7 +18,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
@@ -38,7 +35,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -65,7 +61,8 @@ import java.util.Map;
  * <ul>
  *   <li>at the top, the game, its variant, the profile, the date and time, and the switch "Simple | Advanced"; the
  *   screen always opens in the simple mode (maintainer's decision);</li>
- *   <li>simple: the main figures in large tiles, the heat map, and the buttons folder, menu, continue;</li>
+ *   <li>simple: the main figures in large tiles, the heat map, and the buttons folder and menu (no "Continue" since
+ *   17/11/2026, maintainer's request: the game is launched again from the menu);</li>
  *   <li>advanced (like a scientific calculator): the figures in small tiles, the detail of the durations, the views
  *   in tabs (heat map, durations, positions, levels, chi-squared: only those with data for this game), and the
  *   buttons of the areas of interest and of the scan path.</li>
@@ -86,8 +83,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private final Translator translator;
 
     private final Stats stats;
-
-    private final CustomButton continueButton;
 
     private final Locale locale;
 
@@ -128,9 +123,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private Button menuButton;
 
     @Getter(AccessLevel.PACKAGE)
-    private Button continueAction;
-
-    @Getter(AccessLevel.PACKAGE)
     private Button areasOfInterestButton;
 
     @Getter(AccessLevel.PACKAGE)
@@ -147,15 +139,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     /**
      * Builds the screen of a game.
-     *
-     * @param continueButton the button going on with the game (a new round), null when there is none: the screen shows
-     *                       its own "Continue" button, which clicks it
      */
-    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
+    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
         super(gazePlay, root);
         this.translator = gazePlay.getTranslator();
         this.stats = stats;
-        this.continueButton = continueButton;
         this.locale = StatsFigures.javaLocale(translator.currentLocale());
 
         final Configuration config = ActiveConfigurationContext.getInstance();
@@ -550,7 +538,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         areasOfInterestButton = button("StatsAreasOfInterest", MenuIcon.AREAS_OF_INTEREST, false,
             () -> getGazePlay().onDisplayAOI(stats));
         scanPathButton = button("StatsScanPath", MenuIcon.SCAN_PATH, false,
-            () -> getGazePlay().onDisplayScanpath(new ScanpathView(getGazePlay(), stats, continueButton)));
+            () -> getGazePlay().onDisplayScanpath(new ScanpathView(getGazePlay(), stats)));
         final HBox advancedButtons = new HBox(12);
         // AREA_OF_INTEREST_DISABLED: true means the areas of interest are on (name kept, see CLAUDE.md)
         if (config.isAreaOfInterestDisabled()) {
@@ -563,13 +551,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         advancedButtons.managedProperty().bind(advanced);
 
         folderButton = button("StatsResultsFolder", MenuIcon.FOLDER, false, () -> seeGameFolder(stats));
-        menuButton = button("StatsMenu", MenuIcon.HOME, false, StatDisplayUtils::closeStatsWindow);
+        // The main action since "Continue" is gone (17/11/2026)
+        menuButton = button("StatsMenu", MenuIcon.HOME, true, StatDisplayUtils::closeStatsWindow);
         final HBox mainButtons = new HBox(12, folderButton, menuButton);
-        if (continueButton != null) {
-            continueAction = button("StatsContinue", MenuIcon.FORWARD, true, this::continueTheGame);
-            continueAction.setContentDisplay(ContentDisplay.RIGHT);
-            mainButtons.getChildren().add(continueAction);
-        }
 
         final Region gap = new Region();
         HBox.setHgrow(gap, Priority.ALWAYS);
@@ -583,14 +567,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         button.getStyleClass().addAll("gp-button", primary ? "gp-button-primary" : "gp-button-secondary");
         button.setOnAction(e -> action.run());
         return button;
-    }
-
-    /**
-     * Goes on with the game: clicks the button given by the game (its handlers start a new round).
-     */
-    private void continueTheGame() {
-        Event.fireEvent(continueButton, new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1,
-            false, false, false, false, true, false, false, true, false, false, null));
     }
 
     // ----------------------------------------------------------------------------------------------------------------
