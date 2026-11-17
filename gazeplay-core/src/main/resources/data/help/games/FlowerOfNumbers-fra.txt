@@ -11,11 +11,12 @@ Un nombre est écrit au cœur de la fleur. Fais ce nombre avec tous les pétales
 
 # Comment gagner
 Quand le total fait le nombre (avec la règle de la variante) : « Bravo », puis un nouveau nombre. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
+Une valeur qui fait dépasser le nombre (ou, en mode Guidé, la part de son pétale) compte une erreur. Avec « Avec cœurs », tu as 3 cœurs en haut, pour toute la partie : chaque erreur en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Jusqu'à 10, 20, 30, 40 ou 50 : le plus grand nombre du cœur.
 - En bas, le mode :
 - Guidé : le nombre est partagé entre les pétales ; chaque pétale montre sa part (« 0 / 4 »), devient rouge s'il la dépasse et vert quand il la fait.
-- Libre : seul le total compte ; des pétales peuvent rester vides.
 - Tous les pétales : le total, avec au moins une valeur dans chaque pétale (un pétale vide est pâle).
+- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

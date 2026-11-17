@@ -11,11 +11,12 @@ A number is written in the heart of the flower. Make this number with all the pe
 
 # How to win
 When the total makes the number (with the rule of the variant): "Bravo", then a new number. The game does not stop by itself: leave by the menu (Esc key).
+A value making the total go over the number (or, in the Guided mode, the part of its petal) counts a mistake. With "With hearts", you have 3 hearts at the top, for the whole game: each mistake costs one; with no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - Up to 10, 20, 30, 40 or 50: the largest number of the heart.
 - At the bottom, the mode:
 - Guided: the number is shared out among the petals; each petal shows its part ("0 / 4"), turns red when it goes over and green when it makes it.
-- Free: only the total counts; some petals can stay empty.
 - All the petals: the total, with at least one value in each petal (an empty petal is pale).
+- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

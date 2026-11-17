@@ -10,6 +10,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
@@ -72,9 +73,15 @@ class FlowerOfNumbersGameTest {
 
     private FlowerOfNumbersGame launched(final int maxNumber, final FlowerMode mode, final double seed)
         throws Exception {
+        return launched(maxNumber, mode, seed, true);
+    }
+
+    private FlowerOfNumbersGame launched(final int maxNumber, final FlowerMode mode, final double seed,
+                                         final boolean withLives) throws Exception {
         return WaitForAsyncUtils.asyncFx(() -> {
             gameArea.getChildren().clear();
             final FlowerOfNumbersGame game = new FlowerOfNumbersGame(gameContext, stats, maxNumber, mode, seed);
+            game.setWithLives(withLives);
             game.launch();
             return game;
         }).get();
@@ -170,7 +177,7 @@ class FlowerOfNumbersGameTest {
      */
     @Test
     void shouldPutEachValueOnceThenTakeItBack() throws Exception {
-        final FlowerOfNumbersGame game = launched(20, FlowerMode.FREE, 7);
+        final FlowerOfNumbersGame game = launched(20, FlowerMode.ALL_PETALS, 7);
 
         choose(game, Petal.DICE, 1);
         assertEquals(1, game.getFlower().getSum(Petal.DICE));
@@ -190,11 +197,12 @@ class FlowerOfNumbersGameTest {
     }
 
     /**
-     * A full petal takes no more values; the total over the number turns red.
+     * A full petal takes no more values; the total over the number turns red (without hearts, so that the values
+     * over the number do not lose the game).
      */
     @Test
     void shouldStopAFullPetalAndShowTheTotalOver() throws Exception {
-        final FlowerOfNumbersGame game = launched(10, FlowerMode.FREE, 7);
+        final FlowerOfNumbersGame game = launched(10, FlowerMode.ALL_PETALS, 7, false);
         for (final int digit : List.of(9, 8, 7, 6)) {
             choose(game, Petal.DIGITS, digit);
         }
@@ -233,15 +241,71 @@ class FlowerOfNumbersGameTest {
     }
 
     /**
-     * Free: the total alone counts, empty petals allowed.
+     * With hearts (17/11/2026): each value put over the number costs one, a mistake each time; the third loses the game
+     * ("Lost!", nothing can be chosen any more); the hearts are shown at the top.
      */
     @Test
-    void shouldWinFreeWithTheTotalOnly() throws Exception {
-        final FlowerOfNumbersGame game = launched(10, FlowerMode.FREE, 5);
+    void shouldLoseAHeartForEachValueOverTheNumberThenTheGame() throws Exception {
+        final FlowerOfNumbersGame game = launched(10, FlowerMode.ALL_PETALS, 7);
+        assertTrue(game.isWithLives());
+        assertNotNull(game.livesShown(), "the hearts at the top");
+        assertEquals(FlowerOfNumbersGame.LIVES, game.getLives());
+        // The word of the number: not over (and not won, the other petals being empty)
         choose(game, Petal.WORDS, game.getFlower().getPistil());
+        assertEquals(FlowerOfNumbersGame.LIVES, game.getLives());
+        verify(stats, never()).incrementNumberOfMistakes();
+        // Over: each value put costs one
+        choose(game, Petal.DICE, 1);
+        assertEquals(FlowerOfNumbersGame.LIVES - 1, game.getLives());
+        verify(stats).incrementNumberOfMistakes();
+        choose(game, Petal.DICE, 2);
+        assertEquals(FlowerOfNumbersGame.LIVES - 2, game.getLives());
+        // Taking back costs nothing
+        WaitForAsyncUtils.asyncFx(() -> game.getPlaced().get(Petal.DICE)[0].select()).get();
+        assertEquals(FlowerOfNumbersGame.LIVES - 2, game.getLives());
+        choose(game, Petal.DICE, 3);
+        assertEquals(0, game.getLives());
+        assertTrue(game.isLost());
+        verify(translator).translate("FlowerLost");
+        assertTrue(game.getChoices().values().stream().flatMap(List::stream).noneMatch(ValueTarget::isEnabled));
+        verify(gameContext, never()).playWinTransition(anyLong(), any());
+        verify(stats, times(3)).incrementNumberOfMistakes();
+    }
 
-        verify(gameContext).playWinTransition(anyLong(), any());
-        assertTrue(((Text) game.getTotalPill().getChildren().get(1)).getStyle().contains(GameStyle.SUCCESS_COLOR));
+    /**
+     * Guided: a petal over its part is a mistake too, even when the total is not over.
+     */
+    @Test
+    void shouldCountAMistakeForAPetalOverItsPart() throws Exception {
+        final FlowerOfNumbersGame game = launched(30, FlowerMode.GUIDED, 11);
+        final int digits = game.partOf(Petal.DIGITS);
+        final int over = game.getChoices().get(Petal.DIGITS).stream().map(ValueTarget::getValue)
+            .filter(value -> value > digits && value <= game.getFlower().getPistil()).findFirst().orElse(0);
+        if (over == 0) {
+            return;
+        }
+        choose(game, Petal.DIGITS, over);
+        assertEquals(FlowerOfNumbersGame.LIVES - 1, game.getLives());
+        verify(stats).incrementNumberOfMistakes();
+    }
+
+    /**
+     * Without hearts: no hearts, never lost, the mistakes still counted.
+     */
+    @Test
+    void shouldNeverLoseWithoutHearts() throws Exception {
+        final FlowerOfNumbersGame game = launched(10, FlowerMode.ALL_PETALS, 7, false);
+        assertNull(game.livesShown());
+        choose(game, Petal.WORDS, game.getFlower().getPistil());
+        // 5 values over the number (4 at most in a petal)
+        for (final int die : List.of(1, 2, 3, 4)) {
+            choose(game, Petal.DICE, die);
+        }
+        choose(game, Petal.FINGERS, 1);
+        assertFalse(game.isLost());
+        assertEquals(FlowerOfNumbersGame.LIVES, game.getLives());
+        verify(stats, times(5)).incrementNumberOfMistakes();
+        verify(translator, never()).translate("FlowerLost");
     }
 
     /**
@@ -299,10 +363,18 @@ class FlowerOfNumbersGameTest {
     void shouldGiveTheVariants() {
         final List<GroupedGameVariant> variants = new FlowerOfNumbersVariantGenerator().getVariants().stream()
             .map(GroupedGameVariant.class::cast).toList();
-        assertEquals(15, variants.size());
+        // 2 modes (the free one removed on 17/11/2026), with or without hearts, 5 numbers
+        assertEquals(2 * 2 * 5, variants.size());
         assertEquals(FlowerMode.GUIDED, FlowerOfNumbersGameLauncher.modeOf(variants.get(0)));
-        assertEquals(FlowerMode.FREE, FlowerOfNumbersGameLauncher.modeOf(variants.get(5)));
-        assertEquals(FlowerMode.ALL_PETALS, FlowerOfNumbersGameLauncher.modeOf(variants.get(14)));
+        assertEquals(FlowerMode.GUIDED, FlowerOfNumbersGameLauncher.modeOf(variants.get(9)));
+        assertEquals(FlowerMode.ALL_PETALS, FlowerOfNumbersGameLauncher.modeOf(variants.get(10)));
+        assertEquals(List.of(LivesVariant.WITH), variants.get(0).getExtras());
+        assertEquals(List.of(LivesVariant.WITHOUT), variants.get(5).getExtras());
+        assertFalse(FlowerOfNumbersGameLauncher.withLives(new FlowerOfNumbersGame(gameContext, stats, 10,
+            FlowerMode.GUIDED, 1), variants.get(5)).isWithLives());
+        // A variant of the free mode of before: played guided
+        assertEquals(FlowerMode.GUIDED, FlowerOfNumbersGameLauncher.modeOf(IGameVariant.toGameVariant(
+            "GroupedGameVariant:FlowerOfNumbers:FlowerFree:FlowerUpTo10:-")));
         assertEquals(List.of(10, 20, 30, 40, 50), variants.subList(0, 5).stream()
             .map(FlowerOfNumbersGameLauncher::maxNumberOf).toList());
         for (final GroupedGameVariant variant : variants) {

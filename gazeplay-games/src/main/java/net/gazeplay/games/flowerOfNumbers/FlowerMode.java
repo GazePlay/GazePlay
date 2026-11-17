@@ -4,7 +4,8 @@ import lombok.Getter;
 
 /**
  * The rules of Flower Of Numbers (maintainer's decision of 2/11/2026). In every mode, the values of all the petals
- * together must make the number of the heart, and each value can be put only once.
+ * together must make the number of the heart, and each value can be put only once. (The free mode, only the total
+ * counting, was removed on 17/11/2026, maintainer's decision; a variant of it is played guided.)
  */
 public enum FlowerMode {
     /**
@@ -12,10 +13,6 @@ public enum FlowerMode {
      * each petal must make its part.
      */
     GUIDED("FlowerGuided", 5),
-    /**
-     * Only the total counts: some petals can stay empty.
-     */
-    FREE("FlowerFree", 1),
     /**
      * The total, with at least one value in each petal.
      */

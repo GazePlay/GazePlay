@@ -46,10 +46,14 @@ import java.util.TreeSet;
  * Game "FlowerOfNumbers" (reviewed on 2/11/2026): a number (up to 10 to 50, the variant) is written in the heart of a
  * flower of 5 petals; each petal takes one kind of values (digits, words, fingers, dice, money), shown in a card of its
  * color around the flower. The values of all the petals together must make the number, each value put once at most
- * (see {@link FlowerMode}: the part of each petal given, or free, or free with every petal used). A fixation on a
- * value puts it in its petal (it is then dimmed in its card); a fixation on a value of a petal takes it back. The total
- * is shown under the flower, the sum of each petal at its tip (with its part when guided). Won: "Bravo", then another
- * number.
+ * (see {@link FlowerMode}: the part of each petal given, or every petal used). A fixation on a value puts it in its
+ * petal (it is then dimmed in its card); a fixation on a value of a petal takes it back. The total is shown under the
+ * flower, the sum of each petal at its tip (with its part when guided). Won: "Bravo", then another number.
+ * <p>
+ * Hearts (variant of 17/11/2026, maintainer's choice): a value put that makes the total go over the number, or its
+ * petal go over its part when guided, is a mistake; with the hearts (3, at the top, for the whole game, not each
+ * flower), it costs one, and the last one loses the game ("Lost!", then the statistics). Without hearts, the game is
+ * never lost and the mistakes are still counted.
  * <p>
  * Everything is drawn on a board of {@link #BOARD_WIDTH} x {@link #BOARD_HEIGHT}, scaled to the game area and centered,
  * so that nothing overlaps from 800 x 600 to large screens. The pictures are drawn by
@@ -155,6 +159,24 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
     private int previousNumber;
     private boolean won;
 
+    /**
+     * The hearts of the whole game (17/11/2026), and the seconds of "Lost!" before the statistics.
+     */
+    static final int LIVES = 3;
+    static final double LOST_SHOWN = 2;
+
+    /**
+     * Whether the user chose the hearts (see {@code LivesVariant}).
+     */
+    @Getter
+    private boolean withLives = true;
+    @Getter
+    private int lives = LIVES;
+    @Getter
+    private boolean lost;
+    private Group livesGroup;
+    private javafx.animation.PauseTransition lostPause;
+
     public FlowerOfNumbersGame(final IGameContext gameContext, final Stats stats, final int maxNumber,
                                final FlowerMode mode) {
         this(gameContext, stats, maxNumber, mode, -1);
@@ -181,6 +203,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
     @Override
     public void launch() {
+        // A new game after a game lost: the hearts again (a new flower of the same game keeps them)
+        if (lost) {
+            lost = false;
+            lives = LIVES;
+        }
         won = false;
         wasOver = false;
         flower.init();
@@ -208,6 +235,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
             updatePetal(petal);
         }
         updateTotal();
+        showLives();
         gameContext.getChildren().addAll(background, board);
 
         stats.incrementNumberOfGoalsToReach();
@@ -217,6 +245,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        if (lostPause != null) {
+            lostPause.stop();
+            lostPause = null;
+        }
+        livesGroup = null;
         flights.forEach(Timeline::stop);
         flights.clear();
         choices.values().forEach(list -> list.forEach(ValueTarget::dispose));
@@ -478,7 +511,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
      */
     void choose(final Petal petal, final ValueTarget choice) {
         final int index = flower.getIndexFirstEmptyCell(petal);
-        if (won || index < 0 || flower.petalHolds(petal, choice.getValue())) {
+        if (won || lost || index < 0 || flower.petalHolds(petal, choice.getValue())) {
             return;
         }
         flower.add(petal, index, choice.getValue());
@@ -517,20 +550,108 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
      * A value arrived in its petal.
      */
     private void landed(final Petal petal, final ValueTarget value) {
+        if (board == null || lost) {
+            return;
+        }
         value.setMouseTransparent(false);
         value.setEnabled(!won);
         gameContext.getSoundManager().add(PUT_SOUND);
         stats.takeScreenShot();
         updatePetal(petal);
         updateTotal();
+        if (isOver(petal)) {
+            mistake();
+            return;
+        }
         checkFlower();
+    }
+
+    /**
+     * @return whether the total goes over the number, or, when guided, the petal over its part
+     */
+    boolean isOver(final Petal petal) {
+        return flower.getTotal() > flower.getPistil()
+            || mode == FlowerMode.GUIDED && flower.getSum(petal) > partOf(petal);
+    }
+
+    /**
+     * A value put over the number (or over the part of its petal): a mistake, one heart less with the hearts, "Lost!"
+     * after the last one (17/11/2026).
+     */
+    private void mistake() {
+        stats.incrementNumberOfMistakes();
+        if (!withLives) {
+            return;
+        }
+        lives = Math.max(0, lives - 1);
+        showLives();
+        if (lives == 0) {
+            lose();
+        }
+    }
+
+    /**
+     * The hearts at the top, above the flower; none without hearts.
+     */
+    private void showLives() {
+        if (livesGroup != null) {
+            board.getChildren().remove(livesGroup);
+            livesGroup = null;
+        }
+        if (!withLives) {
+            return;
+        }
+        livesGroup = GameStyle.lives(lives, LIVES, 46, 300,
+            Boolean.TRUE.equals(gameContext.getConfiguration().isDarkThemeEnabled()));
+        livesGroup.setLayoutX(CX - livesGroup.getBoundsInLocal().getWidth() / 2);
+        livesGroup.setLayoutY(14);
+        livesGroup.setMouseTransparent(true);
+        board.getChildren().add(livesGroup);
+    }
+
+    /**
+     * No heart left: nothing can be chosen any more, "Lost!", then the statistics.
+     */
+    private void lose() {
+        lost = true;
+        for (final Petal petal : Petal.values()) {
+            choices.get(petal).forEach(choice -> choice.setEnabled(false));
+            for (final ValueTarget placedValue : placed.get(petal)) {
+                if (placedValue != null) {
+                    placedValue.setEnabled(false);
+                }
+            }
+        }
+        stats.takeScreenShot();
+        final Group card = GameStyle.card(gameContext.getTranslator().translate("FlowerLost"), 46, 600);
+        card.setLayoutX(CX - card.getBoundsInLocal().getWidth() / 2);
+        card.setLayoutY(CY - card.getBoundsInLocal().getHeight() / 2);
+        card.setMouseTransparent(true);
+        board.getChildren().add(card);
+        lostPause = new javafx.animation.PauseTransition(Duration.seconds(LOST_SHOWN));
+        lostPause.setOnFinished(event -> gameContext.showRoundStats(stats, this));
+        lostPause.play();
+    }
+
+    /**
+     * @return the hearts shown (for the tests), null without hearts
+     */
+    Group livesShown() {
+        return livesGroup;
+    }
+
+    /**
+     * @param withLives whether the user chose the hearts (see {@code LivesVariant}), before the launch
+     */
+    void setWithLives(final boolean withLives) {
+        this.withLives = withLives;
     }
 
     /**
      * A value of a petal looked at: it goes back to its card.
      */
     private void takeBack(final Petal petal, final int index) {
-        if (won) {
+        if (won || lost) {
             return;
         }
         final ValueTarget value = placed.get(petal)[index];
@@ -549,7 +670,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
      * A value can be chosen while its petal has a free place and it is not in the petal yet.
      */
     private void updateChoices(final Petal petal) {
-        final boolean free = !won && !flower.petalIsFull(petal);
+        final boolean free = !won && !lost && !flower.petalIsFull(petal);
         choices.get(petal).forEach(choice -> choice.setEnabled(free && !flower.petalHolds(petal, choice.getValue())));
     }
 
