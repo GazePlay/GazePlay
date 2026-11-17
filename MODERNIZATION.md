@@ -1548,6 +1548,20 @@ Aucun format ne change. Les fichiers de résultats n'ont simplement plus de poin
 - **Vérifié** : compilation, tests et SpotBugs du module `gazeplay-games`. Pas de test qui reproduise le cas (il faut un tir sur deux aliens au même instant).
 - **Risque restant** : les écouteurs de collision sont recréés à chaque image pour chaque paire tir-ennemi (code d'origine, non modifié) ; ils ne disparaissent que lorsque le ramasse-miettes les libère (l'ancien code appelait `System.gc()` en commentaire « pour enlever les ralentissements des tirs »). **Hypothèse** : un même contact peut donc être compté plusieurs fois par le boss. À revoir si SpaceGame est repris.
 
+## 2ap. Erreurs des statistiques : format de résultats v5 (17/11/2026, vérification demandée par le mainteneur)
+
+Vérification, demandée avant le push du 17/11/2026, de ce que les jeux comptent et de ce que l'écran des statistiques en montre (mode simple et mode avancé).
+
+- **Fait (R14)** : `Stats.nbMistakes` commence à -1 (« le jeu ne compte pas les erreurs ») et chaque erreur l'augmente de 1. Depuis le commit `09b294c1f` (09/02/2023, #1471), un jeu devait compter une première erreur à son lancement pour partir de 0 ; seul l'ancien « Apprends les Maths » le faisait, et il ne le fait plus depuis sa revue du 10/11/2026. Résultat : **N erreurs valaient N - 1** (0 après une erreur, -1 sans erreur), à l'écran et dans `replayData.json` (`statsNbMistakes`).
+- **Fait** : l'écran ne montrait les erreurs que pour les statistiques de type `SelectionGamesStats` (4 des jeux qui en comptent : Magic Potions, Apprends les Maths, Course du regard, Survivre contre des robots). Les erreurs de tous les autres (cartes, tirs, objets cachés, `Stats` simple) n'étaient jamais affichées.
+- **Fait** : la famille Où est… (Trouvez l'intrus compris), Répète après moi et Pierre papier ciseaux (mode « Apprendre la règle ») ne comptaient aucune erreur, alors que leurs guides le disent ou qu'ils en ont une notion (son d'erreur, cœur perdu). La pièce (statistiques « exploration ») comptait réussites et erreurs en mode « Cherche », mais l'écran n'en montrait que le temps.
+- **Correction** :
+  - `Stats.countMistakes()` : un jeu qui compte les erreurs le dit à son lancement (0 jusqu'à la première) ; `incrementNumberOfMistakes()` part de 0 même sans cet appel. 23 jeux l'appellent, dans le mode où les erreurs existent (Dés : compter ; Fabrique à gâteaux : copier ; La pièce : chercher ; Pierre papier ciseaux : apprendre la règle).
+  - erreurs comptées dans les 11 jeux qui n'en comptaient pas (9 Où est…, Répète après moi, Pierre papier ciseaux) ; Memory ne compte pas une paire fausse (décision du mainteneur : cela fait partie du jeu de mémoire).
+  - écran (`StatsFigures`) : les erreurs pour tout jeu qui les compte, quel que soit le type de ses statistiques, en mode simple et dans les détails du mode avancé ; un jeu d'exploration avec des objectifs (La pièce, « Cherche ») montre ses chiffres et ses durées.
+- **Format v5** (`ReplayDataFormat.CURRENT_VERSION = 5`) : seul le sens de `statsNbMistakes` change. Version 5 : le nombre d'erreurs (0 sans erreur pour un jeu qui les compte, -1 pour un jeu qui ne les compte pas). Versions 1 à 4 : ajouter 1 aux valeurs de 0 ou plus, sauf pour l'ancien Apprends les Maths qui comptait bien ; -1 veut dire « aucune erreur » ou « jeu qui ne compte pas ». Les fichiers existants ne sont pas réécrits. Le rejeu ne lit pas ce champ.
+- **Vérifié** : tests de `Stats`, du format, de l'écran (types de jeux, simple et avancé) et des 23 jeux modifiés (370 tests, 0 échec) ; SpotBugs vert sur les modules `commons`, `results`, `core` et `games`.
+
 ---
 
 ## 9. État à la fin de la modernisation (26/10/2026)
@@ -1598,7 +1612,7 @@ Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `"
 
 - **R3 (`Time` dans `*-info-game.csv`)** : valeur corrigée pour les nouvelles parties, format inchangé. Les fichiers historiques gardent le mois à la place des minutes ; les minutes se retrouvent dans le nom du fichier.
 - **`GazePlay.properties`** : contenu identique, écriture atomique. Anciennes clés d'avant 1.11.1 migrées à la lecture (étape 3). Risque résiduel : un lien symbolique serait remplacé par un fichier ordinaire.
-- **Format de résultats v2** (2i), **v3** (2v) puis **v4** (2aj, heatmaps en 400 colonnes) : `formatVersion` dans `replayData.json` ; les fichiers des versions précédentes ne sont jamais réécrits et restent lus par le rejeu.
+- **Format de résultats v2** (2i), **v3** (2v), **v4** (2aj, heatmaps en 400 colonnes) puis **v5** (2ap, `statsNbMistakes` compté à partir de 0) : `formatVersion` dans `replayData.json` ; les fichiers des versions précédentes ne sont jamais réécrits et restent lus par le rejeu.
 - **Dossier de données** (2ae, 2af) : `Documents\GazePlay_Learning`, ancien dossier déplacé (ou copié si Windows refuse) ; fichiers inchangés.
 - **`argsGazeplay.txt`** (2ag) : plus lu ni écrit.
 - **Nom visible** (2ah) : aucun fichier de données ne change de nom.
