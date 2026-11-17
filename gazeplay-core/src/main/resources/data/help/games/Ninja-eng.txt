@@ -9,7 +9,7 @@ A fruit wanders in the orchard. Follow it with your eyes and cut it in two!
 - The speed also follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
 
 # How to win
-There are no lives and no penalty: a fruit missed simply goes on. As you chose, the game has no end (leave by the menu (Esc key)), or stops after 20 or 50 fruits cut: "Bravo", then the statistics.
+There are no lives and no penalty: a fruit missed simply goes on. As you chose, the game stops after 10, 20 or 30 fruits cut: "Bravo", then the statistics; or it has no end (leave by the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
@@ -18,4 +18,4 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom, the speed: Slow, the fruit goes through the height of the screen in 5 seconds; Normal, in 3 seconds; Fast, in 2 seconds.
 - Adaptive: starts as Normal. Every 3 fruits, it gets faster if all of them were cut in less than 1 second, and slower if all of them took more than 3 seconds, without counting the fixation. It stays between 8 seconds and 1.5 seconds to go through the height of the screen.
 - At the bottom, how to cut: as soon as touched, or after a fixation.
-- At the bottom, the end of the game: without end, 20 or 50 to cut.
+- At the bottom, the end of the game: 10, 20 or 30 to cut, or without end.

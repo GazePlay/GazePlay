@@ -9,7 +9,7 @@ Un fruit se promène dans le verger. Suis-le des yeux et coupe-le en deux !
 - La vitesse suit aussi la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Il n'y a ni vies ni pénalité : un fruit manqué continue simplement sa route. Selon ton choix, le jeu est sans fin (quitte par le menu (touche Échap)), ou s'arrête après 20 ou 50 fruits coupés : « Bravo », puis les statistiques.
+Il n'y a ni vies ni pénalité : un fruit manqué continue simplement sa route. Selon ton choix, le jeu s'arrête après 10, 20 ou 30 fruits coupés : « Bravo », puis les statistiques ; ou il est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
@@ -18,4 +18,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas, la vitesse : Lente, le fruit traverse la hauteur de l'écran en 5 secondes ; Normale, en 3 secondes ; Rapide, en 2 secondes.
 - Adaptative : commence comme Normale. Tous les 3 fruits, elle accélère s'ils ont tous été coupés en moins de 1 seconde, et ralentit s'ils ont tous pris plus de 3 secondes, sans compter la fixation. Elle reste entre 8 secondes et 1,5 seconde pour traverser la hauteur de l'écran.
 - En bas, comment couper : dès qu'on touche, ou après une fixation.
-- En bas, la fin de la partie : sans fin, 20 ou 50 à couper.
+- En bas, la fin de la partie : 10, 20 ou 30 à couper, ou sans fin.

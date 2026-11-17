@@ -43,7 +43,7 @@ import java.util.Map;
  * "Ninja" (reviewed on 4/11/2026, maintainer's rules): one fruit (or one image of the user) goes across an orchard, in
  * the way and at the speed of the variant, to follow with the eyes. It is cut in two as soon as it is touched, or after
  * a fixation of the length of the settings; another one comes elsewhere. There is no life and no penalty: a target
- * missed goes on. The game has no end, or ends after 20 or 50 targets cut, with "Bravo" then the statistics.
+ * missed goes on. The game ends after 10, 20 or 30 targets cut, or has no end, with "Bravo" then the statistics.
  * <p>
  * One loop moves everything in real time, at the animation speed of the settings; nothing moves while the menu of the
  * game is open. (Before the review: durations of 1 to 3 s whatever the length of the way, a target half out of the

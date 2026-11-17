@@ -4,15 +4,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * When "Ninja" ends (maintainer's choice of 4/11/2026): never, or after 20 or 50 targets cut; then "Bravo" and the
- * statistics. There is no life and no penalty: a target missed just goes on.
+ * When "Ninja" ends (maintainer's choices of 4/11 and 17/11/2026): after 10, 20 or 30 targets cut, then "Bravo" and
+ * the statistics, or never. There is no life and no penalty: a target missed just goes on. The order is that of the
+ * window of the variants, "without end" always last (on the right).
  */
 @Getter
 @RequiredArgsConstructor
 public enum NinjaEnd {
-    ENDLESS("NinjaEndless", 0),
+    CUT_10("NinjaEnd10", 10),
     CUT_20("NinjaEnd20", 20),
-    CUT_50("NinjaEnd50", 50);
+    CUT_30("NinjaEnd30", 30),
+    ENDLESS("NinjaEndless", 0);
 
     /**
      * Key of translation, and second switch of the variants.

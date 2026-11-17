@@ -21,8 +21,10 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -348,15 +350,19 @@ class NinjaTest {
         final Set<IGameVariant> variants = new NinjaGameVariantGenerator().getVariants();
         assertEquals(NinjaTarget.values().length * NinjaSpeed.values().length * NinjaCut.values().length
             * NinjaEnd.values().length * NinjaTrajectory.values().length, variants.size());
+        // 17/11/2026: 10, 20, 30 to cut, then "without end", always last (on the right of the window)
+        assertEquals(List.of(NinjaEnd.CUT_10, NinjaEnd.CUT_20, NinjaEnd.CUT_30, NinjaEnd.ENDLESS),
+            List.of(NinjaEnd.values()));
+        assertEquals(List.of(10, 20, 30, 0), Stream.of(NinjaEnd.values()).map(NinjaEnd::getTargets).toList());
         final GroupedGameVariant mine = new GroupedGameVariant(NinjaTarget.MY_IMAGES.getKey(), NinjaSpeed.FAST.getKey(),
             NinjaTrajectory.DIAGONAL_UP.getKey(), NinjaTarget.USER_IMAGES_FOLDER, NinjaCut.FIXATION.getKey(),
-            NinjaEnd.CUT_50.getKey());
+            NinjaEnd.CUT_30.getKey());
         assertTrue(variants.contains(mine));
         assertEquals("images", UserImagesVariant.folderOf(mine), "the images shared by all the games");
         assertEquals(NinjaTrajectory.DIAGONAL_UP, NinjaGameLauncher.trajectoryOf(mine));
         assertEquals(NinjaSpeed.FAST, NinjaGameLauncher.speedOf(mine));
         assertEquals(NinjaCut.FIXATION, NinjaGameLauncher.cutOf(mine));
-        assertEquals(NinjaEnd.CUT_50, NinjaGameLauncher.endOf(mine));
+        assertEquals(NinjaEnd.CUT_30, NinjaGameLauncher.endOf(mine));
         assertEquals(NinjaTarget.MY_IMAGES, NinjaGameLauncher.targetOf(mine));
 
         // As given to the JVM of the game
