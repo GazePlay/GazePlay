@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Gives the variants of "Dés" (maintainer's choices of 12/11/2026). At the bottom, the mode (see {@link DiceMode}).
  * Counting: the levels as buttons (see {@link DiceLevel}), and at the bottom when it ends (see {@link DiceEnd}) and
- * what a wrong total does (see {@link DiceMistakes}). Throwing: 1 to 6 dice as buttons; its single end and way show no
+ * what a wrong total does (see {@link DiceMistakes}: with hearts or without hearts, 17/11/2026). Throwing: 1 to 6 dice as buttons; its single end and way show no
  * switch (the window shows only the rows of the mode chosen with two values or more).
  */
 public class DiceGameVariantGenerator implements IGameVariantGenerator {

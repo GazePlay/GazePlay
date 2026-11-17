@@ -8,6 +8,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
@@ -335,13 +336,19 @@ class DiceTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Dice counting = DiceGameLauncher.create(gameContext,
-            new GroupedGameVariant("DiceCount", "DiceEnd10", "DiceHard", null, "DiceLives"), stats, 1);
+            new GroupedGameVariant("DiceCount", "DiceEnd10", "DiceHard", null, LivesVariant.WITH), stats, 1);
         assertEquals(DiceMode.COUNT, counting.getMode());
         assertEquals(3, counting.getDiceCount());
         assertEquals(DiceEnd.FOUND_10, counting.getEnd());
         assertEquals(DiceMistakes.LIVES, counting.getMistakes());
+        // The common switch "with hearts / without hearts" (17/11/2026), with hearts first
+        assertEquals(DiceMistakes.SEARCH_AGAIN, DiceGameLauncher.create(gameContext,
+            new GroupedGameVariant("DiceCount", "DiceEnd10", "DiceHard", null, LivesVariant.WITHOUT), stats, 1)
+            .getMistakes());
+        assertEquals(java.util.List.of(LivesVariant.WITH, LivesVariant.WITHOUT),
+            java.util.Arrays.stream(DiceMistakes.values()).map(DiceMistakes::getKey).toList());
         final Dice throwing = DiceGameLauncher.create(gameContext,
-            new GroupedGameVariant("DiceThrow", "DiceEndless", "Dice5", null, "DiceSearchAgain"), stats, 1);
+            new GroupedGameVariant("DiceThrow", "DiceEndless", "Dice5", null, LivesVariant.WITHOUT), stats, 1);
         assertEquals(DiceMode.THROW, throwing.getMode());
         assertEquals(5, throwing.getDiceCount());
         // "IntGameVariant:4" of before the review: 4 dice thrown

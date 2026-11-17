@@ -4,18 +4,18 @@ Des dés sur un tapis de jeu. Compte leurs points et trouve le bon total, ou lan
 # Comment jouer
 - Regarde le bouton rond « Lancer » : un anneau se remplit, puis les dés roulent. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Compter les points : quand les dés se sont arrêtés, trois cartes montrent des nombres. Regarde la carte du bon total : elle devient verte avec une coche, puis tu relances les dés.
-- Une mauvaise carte montre une croix. Selon ton choix, elle devient grise et tu cherches encore, ou tu perds une des 3 vies et le bon total est montré.
+- Une mauvaise carte montre une croix. Avec cœurs, tu perds un des 3 cœurs et le bon total est montré ; sans cœurs, elle devient grise et tu cherches encore.
 - Lancer les dés : le total s’affiche en haut quand les dés se sont arrêtés. Regarde un seul dé pour ne relancer que lui.
 - Rien ne se lance pendant que les dés roulent. Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »).
 - Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Compter les points : selon ton choix, la partie s’arrête après 5, 10 ou 20 totaux trouvés (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)). Avec les vies, elle s’arrête aussi quand les 3 vies sont perdues (« Perdu ! »).
+Compter les points : selon ton choix, la partie s’arrête après 5, 10 ou 20 totaux trouvés (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)). Avec cœurs, elle s’arrête aussi quand les 3 cœurs sont perdus (« Perdu ! »).
 Lancer les dés n’a pas de fin : c’est un outil pour jouer à un jeu de société.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas, le mode : Compter les points ou Lancer les dés.
 - Compter les points, le niveau : Facile, 1 dé (de 1 à 6 points) ; Normal, 2 dés (de 2 à 12) ; Difficile, 3 dés (de 3 à 18). Les mauvais totaux sont toujours proches du bon.
-- Compter les points, en bas : la fin (5, 10 ou 20 totaux, ou sans fin) et ce que fait une erreur (chercher jusqu’à trouver, ou 3 vies).
+- Compter les points, en bas : la fin (5, 10 ou 20 totaux, ou sans fin) et les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (chercher jusqu’à trouver).
 - Lancer les dés : de 1 à 6 dés.

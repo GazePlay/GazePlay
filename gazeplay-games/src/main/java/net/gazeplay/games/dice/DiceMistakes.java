@@ -2,17 +2,20 @@ package net.gazeplay.games.dice;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.gazeplay.commons.gamevariants.LivesVariant;
 
 /**
  * What a wrong total does in the counting mode of "Dés" (maintainer's choice of 12/11/2026, as in "Apprends les
- * Maths"): the card is greyed and the player looks again until the right total is found (no lives), or one of 3 lives
- * is lost and the right total is shown before the next roll.
+ * Maths"): one of 3 lives is lost and the right total is shown before the next roll, or the card is greyed and the
+ * player looks again until the right total is found (no lives). Since 17/11/2026, the switch is the common "with hearts
+ * / without hearts" ({@link LivesVariant}, its keys and its order, with hearts first), in place of "3 vies / Chercher
+ * jusqu'à trouver".
  */
 @Getter
 @RequiredArgsConstructor
 public enum DiceMistakes {
-    SEARCH_AGAIN("DiceSearchAgain"),
-    LIVES("DiceLives");
+    LIVES(LivesVariant.WITH),
+    SEARCH_AGAIN(LivesVariant.WITHOUT);
 
     /**
      * Key of translation, and other switch of the variants.
