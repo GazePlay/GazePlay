@@ -130,7 +130,17 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    vérifiés : durée de fixation au pas de 24,75 ms (2 s affichées, 1 980 ms enregistrées, 10 s inatteignables) corrigée
    au pas de 100 ms ; taille (pas de 1), épaisseur (pas de 10) et volumes (continus) justes. Tests
    `AnimationSpeedRatioControlTest`, `SettingsSlidersTest` (échouaient avant correction pour la vitesse) ;
-   `gazeplay-core` 335 tests, 0 échec, SpotBugs vert.
+   `gazeplay-core` 335 tests, 0 échec, SpotBugs vert. Commité (`f8ab438be`) et poussé.
+   **Sons, point 1 (18/11, NON commité)** : les 3 sons lus par aucun code retirés (`common/sounds/bip.wav`,
+   `explosion.mp3`, `seeTwoImages.wav`) ; inventaire refait : 1 080 sons livrés. CI du push `f8ab438be` verte
+   (run `44309948158`).
+   **Sons, point 2 (18/11, NON commité, écoute du mainteneur attendue)** : musique par défaut gardée et créditée
+   (« copycat », syncopika, OpenGameArt, CC BY 3.0) ; applaudissements de Bravo remplacés par ceux de « Quel est ce
+   son ? » (La Sonothèque, CC0) ; grenouille de Course des grenouilles remplacée par le coassement des « Sons de la vie »
+   (`race/sounds/frog.mp3`, Wikimedia Commons, CC BY-SA 4.0 ; retour du mainteneur : 4 s, un coassement par
+   seconde : copie réduite à sa première seconde, un seul coassement, avec le FFmpeg de JavaCV ; l'original des Sons de
+   la vie reste entier) ; crédits dans `gradle/templates/licence.txt`,
+   `data/common/CREDITS.txt`, `data/race/CREDITS.txt`. Plus aucun son non libre ; restent les voix.
    Suite du chantier des sons (après validation) : retirer les 3 sons inutilisés, remplacer applaudissements, grenouille
    et musique par défaut, refaire les 944 voix françaises et anglaises. Leçon : après un changement de la page des réglages,
    lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.

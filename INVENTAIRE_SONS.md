@@ -39,6 +39,18 @@ livrés** : 133 libres, 150 voix de synthèse aux conditions à vérifier (148 d
 probable, 799 de source inconnue (794 voix françaises et anglaises, 5 sons communs). Les tableaux ci-dessous gardent
 l'état d'avant le retrait.
 
+**Mise à jour du 18/11/2026 (recommandation 1 faite)** : les 3 sons lus par aucun code (`bip.wav`, `explosion.mp3`,
+`seeTwoImages.wav`) sont retirés. **1 080 sons livrés**, dont 796 de source inconnue (794 voix, les applaudissements
+de Bravo et la musique par défaut des menus).
+
+**Mise à jour du 18/11/2026 (recommandation 2 faite, décisions du mainteneur)** : la musique par défaut des menus est
+retrouvée et gardée : « copycat » de syncopika, OpenGameArt (https://opengameart.org/content/copycat), CC BY 3.0,
+créditée dans la licence affichée ; les applaudissements de Bravo sont remplacés par ceux de « Quel est ce son ? »
+(La Sonothèque, CC0 1.0, `data/common/CREDITS.txt`) ; la grenouille de Course des grenouilles (Aludra Software 1998)
+par le coassement des « Sons de la vie » (Wikimedia Commons, CC BY-SA 4.0, `data/race/CREDITS.txt`,
+`data/race/sounds/frog.mp3`). **1 080 sons livrés : 136 libres, 150 voix de synthèse aux conditions à vérifier, 794
+voix de source inconnue, aucun son non libre.** Reste la recommandation 3 (les voix).
+
 ## 3. Les voix (1 310 fichiers, 90 % des sons livrés)
 
 Les questions lues à voix haute des jeux « Où est… », de Trouve l'intrus et d'Identifier les lettres, en plusieurs

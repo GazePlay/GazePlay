@@ -62,6 +62,9 @@ KNOWN = {
                                    'copie du « plop » de make_cakes_sounds.py (GPL-3.0-or-later)'),
     'shooter/music/': ('libre, source connue',
                        '« Talking Cute (Chiptune) », Pro Sensory (Alex McCulloch), OpenGameArt, CC0'),
+    'home/sounds/songidea(copycat)_0.mp3': ('libre, source connue',
+                                            '« copycat », syncopika, OpenGameArt '
+                                            '(https://opengameart.org/content/copycat), CC BY 3.0'),
     'spotthedifferences/ding.wav': ('libre, source connue',
                                     'fait par gradle/images/make_spotdifferences_sound.py (GPL-3.0-or-later)'),
     # Copies of sounds of Where Is The Sound (data/soundsoflife/CREDITS.txt)

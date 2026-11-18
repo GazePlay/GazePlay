@@ -375,7 +375,9 @@ public class Race extends Parent implements GameLifeCycle {
         stats.incrementNumberOfGoalsReached();
         caught++;
         updateScorePill();
-        gameContext.getSoundManager().add("data/race/sounds/frog.WAV");
+        // The croak of "Sounds of Life" (data/race/CREDITS.txt), since 18/11/2026 in place of a sound of a commercial
+        // collection
+        gameContext.getSoundManager().add("data/race/sounds/frog.mp3");
         bug.flash.setOpacity(1);
 
         final double bugX = bug.getLayoutX() + bug.getTranslateX() + bugSize() / 2;

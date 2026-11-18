@@ -1,0 +1,6 @@
+Shared sounds of GazePlay Learning (gazeplay-core: data/common/sounds), November 2026.
+The roll of the die (sounds/diceRollSound.wav) is made by gradle/images/make_dice_sounds.py, under the license of
+GazePlay Learning (GPL-3.0-or-later).
+File | Title | Author | Licence | Source
+sounds/applause.mp3 | applause of "Quel est ce son ?" (data/whereIsTheSound/sounds/applause.mp3) | La Sonothèque | CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/) | https://lasonotheque.org
+The applause of the screen "Bravo" replace (18/11/2026) applause of unknown source (tagged "www.dvdvideosoft.com").

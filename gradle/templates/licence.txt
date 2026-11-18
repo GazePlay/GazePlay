@@ -113,7 +113,16 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
 - Images de La course des grenouilles (grenouilles et décor de la mare) : dessinées pour GazePlay Learning
   (gradle/images/make_race_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 une
-  grenouille animée et un décor de source inconnue.
+  grenouille animée et un décor de source inconnue. Le coassement d'une mouche attrapée (data/race/sounds/frog.mp3)
+  est celui des « Sons de la vie » : « Single Frog Croak.oga », MichaeltheFox8621, Wikimedia Commons, licence
+  CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/), réduit à son premier coassement (1 s) ; il remplace depuis
+  novembre 2026 un son d'une collection commerciale (Aludra Software 1998). Voir data/race/CREDITS.txt.
+- Musique par défaut des menus (data/home/sounds/songidea(copycat)_0.mp3) : « copycat », par syncopika
+  (https://opengameart.org/content/copycat), licence Creative Commons BY 3.0
+  (https://creativecommons.org/licenses/by/3.0/).
+- Applaudissements de l'écran « Bravo » (data/common/sounds/applause.mp3) : La Sonothèque (https://lasonotheque.org),
+  licence CC0 1.0, les mêmes que dans « Quel est ce son ? » ; ils remplacent depuis novembre 2026 des applaudissements
+  de source inconnue. Voir data/common/CREDITS.txt.
 - Images des petits chevaux (plateaux et boutons du dé) : dessinées pour GazePlay Learning
   (gradle/images/make_horses_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 des
   images de source inconnue.

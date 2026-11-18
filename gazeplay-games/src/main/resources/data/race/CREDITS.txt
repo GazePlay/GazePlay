@@ -1,0 +1,8 @@
+La course des grenouilles (gazeplay-games: data/race), November 2026.
+Images (images): drawn for GazePlay Learning by gradle/images/make_race_images.py, under the license of GazePlay
+Learning (GPL-3.0-or-later).
+The croak of a fly caught is the one of "Les sons de la Vie" (data/soundsoflife/jungle/frog.mp3), cut to its first
+second (its first croak, 18/11/2026, maintainer's request: the file has one croak a second for 4 s), mono MP3 (ffmpeg):
+File | Title | Author | Licence | Source
+sounds/frog.mp3 | Single Frog Croak.oga | MichaeltheFox8621 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Single_Frog_Croak.oga
+It replaces (18/11/2026) a sound of a commercial collection (tagged "Aludra Software 1998").
