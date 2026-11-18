@@ -33,6 +33,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class HorsesTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -65,7 +69,7 @@ class HorsesTest {
     private Horses launchedGame(HorsesVariant variant) throws Exception {
         launched = WaitForAsyncUtils.asyncFx(() -> {
             Horses horses = new Horses(gameContext, stats, variant, 1234);
-            horses.launch();
+            launchedGames.add(horses).launch();
             return horses;
         }).get();
         return launched;

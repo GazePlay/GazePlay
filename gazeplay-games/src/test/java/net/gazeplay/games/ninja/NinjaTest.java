@@ -40,6 +40,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class NinjaTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double WIDTH = 1600;
     private static final double HEIGHT = 900;
 
@@ -82,7 +86,7 @@ class NinjaTest {
             gameArea.getChildren().clear();
             final Ninja game = new Ninja(gameContext, stats, trajectory, speed, cut, end, NinjaTarget.FRUITS, 5);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         });
     }
@@ -115,7 +119,7 @@ class NinjaTest {
                     final Ninja g = new Ninja(gameContext, stats, trajectory, NinjaSpeed.FAST, NinjaCut.FIXATION,
                         NinjaEnd.ENDLESS, NinjaTarget.FRUITS, gameSeed);
                     g.setManual();
-                    g.launch();
+                    launchedGames.add(g).launch();
                     return g;
                 });
                 fx(() -> {
@@ -390,7 +394,7 @@ class NinjaTest {
             final Ninja g = new Ninja(gameContext, stats, NinjaTrajectory.RANDOM, NinjaSpeed.NORMAL, NinjaCut.AT_ONCE,
                 NinjaEnd.ENDLESS, NinjaTarget.MY_IMAGES, 5);
             g.setManual();
-            g.launch();
+            launchedGames.add(g).launch();
             return g;
         });
         assertEquals(Ninja.Phase.OVER, without.getPhase());
@@ -405,7 +409,7 @@ class NinjaTest {
                 final Ninja g = new Ninja(gameContext, stats, NinjaTrajectory.RANDOM, NinjaSpeed.NORMAL,
                     NinjaCut.AT_ONCE, NinjaEnd.ENDLESS, NinjaTarget.MY_IMAGES, 5);
                 g.setManual();
-                g.launch();
+                launchedGames.add(g).launch();
                 enter(g);
                 g.step(0.02);
                 return g;

@@ -37,6 +37,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class BottleGameTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -72,7 +76,7 @@ class BottleGameTest {
             gameArea.getChildren().clear();
             final BottleGame game = new BottleGame(gameContext, stats, mode, count, size, end, 8);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });
@@ -240,7 +244,7 @@ class BottleGameTest {
                 BottleSize.MEDIUM, BottleEnd.ENDLESS, 8);
             noHearts.setWithLives(false);
             noHearts.setManual();
-            noHearts.launch();
+            launchedGames.add(noHearts).launch();
             noHearts.step(0.02);
             return noHearts;
         });

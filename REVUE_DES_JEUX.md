@@ -86,7 +86,14 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    délai avant sélection, « le son bloque la sélection », mode de passation, couleur de fond, couleur principale,
    mode d'entrée et volume. Gardé tel quel.
 6. Tests ciblés, puis commit (sur accord), push et CI (suite complète et `allGamesTest`).
-7. Ensuite, tâches de fin : faire fermer leurs parties à tous les tests et libération immédiate des objets simulés ;
+7. Ensuite, tâches de fin : ~~faire fermer leurs parties à tous les tests~~ (**fait le 18/11, NON commité** :
+   extension JUnit `LaunchedGames` dans les tests de `gazeplay-games`, qui ferme après chaque test les parties
+   lancées, `launchedGames.add(partie).launch()` dans 47 classes, 76 lancements ; les 4 classes du 16/11 gardent leur
+   fermeture ; famille Où est… : ses tests attendent déjà leurs pauses ; 747 tests, 0 échec) et libération immédiate des objets simulés ;
+   **CI du push 82caf31f9 rouge** (run `44274356561`, test (25) et (26)) : `MenuOrientationTest` ouvrait la 4ᵉ section
+   des réglages, décalée par la nouvelle section Son ; il cherche maintenant la section par son contenu (corrigé le
+   18/11, NON commité ; `gazeplay-core` 331 tests, 0 échec). Leçon : après un changement de la page des réglages,
+   lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.
    inventaire des sons ; notes de version 2.0 (images à remettre, formats v5 et v6).
 
 ## REPRISE APRÈS LE MARDI 17/11/2026 (bilan de la séance du mardi 17/11/2026)

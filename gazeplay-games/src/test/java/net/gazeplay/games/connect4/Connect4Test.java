@@ -36,6 +36,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class Connect4Test {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double STEP = 1.0 / 60;
     private static final int RED = Connect4.RED;
     private static final int YELLOW = Connect4.YELLOW;
@@ -79,7 +83,7 @@ class Connect4Test {
             gameArea.getChildren().clear();
             final Connect4 game = new Connect4(gameContext, stats, opponent, end, seed);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         });
     }

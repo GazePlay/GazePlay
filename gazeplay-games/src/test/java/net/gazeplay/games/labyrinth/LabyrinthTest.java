@@ -38,6 +38,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class LabyrinthTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double STEP = 1.0 / 60;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -83,7 +87,7 @@ class LabyrinthTest {
             gameArea.getChildren().clear();
             final Labyrinth game = new Labyrinth(gameContext, stats, LabyrinthCharacter.MOUSE, level, move, end, seed);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         });
     }

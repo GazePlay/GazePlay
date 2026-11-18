@@ -46,6 +46,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class DivisorTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double WIDTH = 1600;
     private static final double HEIGHT = 900;
 
@@ -88,7 +92,7 @@ class DivisorTest {
             gameArea.getChildren().clear();
             final Divisor game = new Divisor(gameContext, stats, theme, touch, level, 5);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             // The delay of the settings (none here)
             game.step(0.01);
             return game;
@@ -251,7 +255,7 @@ class DivisorTest {
             final Divisor g = new Divisor(gameContext, stats, DivisorTheme.RABBITS, DivisorTouch.AT_ONCE,
                 DivisorLevel.EASY, 5);
             g.setManual();
-            g.launch();
+            launchedGames.add(g).launch();
             return g;
         });
         fx(() -> {

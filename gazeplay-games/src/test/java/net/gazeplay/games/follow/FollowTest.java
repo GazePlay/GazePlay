@@ -38,6 +38,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class FollowTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -73,7 +77,7 @@ class FollowTest {
             gameArea.getChildren().clear();
             final Follow game = new Follow(gameContext, stats, mode, level, end, seed);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             steps(game, Follow.APPEAR + 0.05);
             return game;
         });

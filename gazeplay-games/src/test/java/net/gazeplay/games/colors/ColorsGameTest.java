@@ -32,6 +32,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class ColorsGameTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final int BLACK = 0xFF000000;
     private static final int WHITE = 0xFFFFFFFF;
     private static final int RED = 0xFFE53935;
@@ -203,7 +207,7 @@ class ColorsGameTest {
     private ColorsGame launchedGame(final ColoringVariant variant) throws Exception {
         return WaitForAsyncUtils.asyncFx(() -> {
             final ColorsGame game = new ColorsGame(gameContext, stats, translator, variant);
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         }).get();
     }

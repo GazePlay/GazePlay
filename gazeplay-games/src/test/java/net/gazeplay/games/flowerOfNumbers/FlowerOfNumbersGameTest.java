@@ -43,6 +43,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class FlowerOfNumbersGameTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -82,7 +86,7 @@ class FlowerOfNumbersGameTest {
             gameArea.getChildren().clear();
             final FlowerOfNumbersGame game = new FlowerOfNumbersGame(gameContext, stats, maxNumber, mode, seed);
             game.setWithLives(withLives);
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         }).get();
     }

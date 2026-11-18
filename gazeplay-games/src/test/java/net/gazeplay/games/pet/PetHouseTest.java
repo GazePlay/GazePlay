@@ -31,6 +31,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class PetHouseTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -60,7 +64,7 @@ class PetHouseTest {
         game = WaitForAsyncUtils.asyncFx(() -> {
             gameArea.getChildren().clear();
             final PetHouse house = new PetHouse(gameContext, stats, 5);
-            house.launch();
+            launchedGames.add(house).launch();
             return house;
         }).get();
     }

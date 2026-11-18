@@ -39,6 +39,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class MemoryTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -78,7 +82,7 @@ class MemoryTest {
         String folder = MemoryContent.USER_IMAGES.getKey().equals(content) ? MemoryContent.USER_IMAGES_FOLDER : null;
         launched = WaitForAsyncUtils.asyncFx(() -> {
             Memory memory = new Memory(gameContext, stats, new GroupedGameVariant(content, cards, size, folder), 1234);
-            memory.launch();
+            launchedGames.add(memory).launch();
             return memory;
         }).get();
         return launched;

@@ -35,6 +35,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class BlocsTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -69,7 +73,7 @@ class BlocsTest {
             gameArea.getChildren().clear();
             final Blocs game = new Blocs(gameContext, stats, mode, level, end, BlocsPictures.ANIMALS, 8);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });

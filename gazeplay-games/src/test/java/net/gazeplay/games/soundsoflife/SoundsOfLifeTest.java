@@ -39,6 +39,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class SoundsOfLifeTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -94,7 +98,7 @@ class SoundsOfLifeTest {
         when(configuration.isBackgroundEnabled()).thenReturn(background);
         return WaitForAsyncUtils.asyncFx(() -> {
             gameArea.getChildren().clear();
-            new SoundsOfLife(gameContext, stats, SoundsOfLifeGameVariant.FARM, seed).launch();
+            launchedGames.add(new SoundsOfLife(gameContext, stats, SoundsOfLifeGameVariant.FARM, seed)).launch();
             return gameArea.getChildren().stream().filter(SoundMakingEntity.class::isInstance)
                 .map(SoundMakingEntity.class::cast).toList();
         }).get();

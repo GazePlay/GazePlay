@@ -41,6 +41,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class DiceTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double WIDTH = 1600;
     private static final double HEIGHT = 900;
 
@@ -79,7 +83,7 @@ class DiceTest {
             gameArea.getChildren().clear();
             final Dice game = new Dice(gameContext, stats, mode, dice, end, mistakes, 7);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });

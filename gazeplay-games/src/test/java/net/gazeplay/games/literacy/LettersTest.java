@@ -42,6 +42,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class LettersTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -78,7 +82,7 @@ class LettersTest {
             gameArea.getChildren().clear();
             final Letters game = new Letters(gameContext, stats, level, letterCase, LettersPictures.ANIMALS, end, 4);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });
@@ -243,7 +247,7 @@ class LettersTest {
                 LettersPictures.ANIMALS, LettersEnd.ENDLESS, 4);
             noHearts.setWithLives(false);
             noHearts.setManual();
-            noHearts.launch();
+            launchedGames.add(noHearts).launch();
             return noHearts;
         });
         fx(() -> {
@@ -315,7 +319,7 @@ class LettersTest {
             final Letters g = new Letters(gameContext, stats, LettersLevel.EASY, LettersCase.CAPITALS,
                 LettersPictures.MY_IMAGES, LettersEnd.ENDLESS, 4);
             g.setManual();
-            g.launch();
+            launchedGames.add(g).launch();
             return g;
         });
         assertTrue(game.getCards().isEmpty());

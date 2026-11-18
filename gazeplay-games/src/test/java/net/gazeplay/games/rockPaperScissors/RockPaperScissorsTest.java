@@ -34,6 +34,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class RockPaperScissorsTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double STEP = 1.0 / 60;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -72,7 +76,7 @@ class RockPaperScissorsTest {
             gameArea.getChildren().clear();
             final RockPaperScissorsGame created = new RockPaperScissorsGame(gameContext, stats, mode, end, seed);
             created.setManual();
-            created.launch();
+            launchedGames.add(created).launch();
             return created;
         });
         steps(game, 0.05);

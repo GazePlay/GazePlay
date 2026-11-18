@@ -38,6 +38,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class MagicCardsTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -73,7 +77,7 @@ class MagicCardsTest {
             gameArea.getChildren().clear();
             final MagicCards game = new MagicCards(gameContext, stats, mode, MagicCardsPictures.ANIMALS, count, end, 4);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });
@@ -313,7 +317,7 @@ class MagicCardsTest {
                 MagicCardsPictures.ANIMALS, MagicCardsCount.NINE, MagicCardsEnd.ENDLESS, 4);
             noHearts.setWithLives(false);
             noHearts.setManual();
-            noHearts.launch();
+            launchedGames.add(noHearts).launch();
             noHearts.step(0.02);
             return noHearts;
         });

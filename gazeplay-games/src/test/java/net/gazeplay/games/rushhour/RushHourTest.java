@@ -42,6 +42,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class RushHourTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double STEP = 1.0 / 60;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -86,7 +90,7 @@ class RushHourTest {
             gameArea.getChildren().clear();
             final RushHour game = new RushHour(gameContext, stats, level, end, seed);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         });
     }

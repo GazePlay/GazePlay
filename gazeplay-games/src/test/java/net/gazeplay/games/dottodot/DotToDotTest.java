@@ -39,6 +39,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class DotToDotTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -73,7 +77,7 @@ class DotToDotTest {
             gameArea.getChildren().clear();
             final DotToDot game = new DotToDot(gameContext, stats, level, labels, end, 6);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });
@@ -189,7 +193,7 @@ class DotToDotTest {
                 DotEnd.ENDLESS, 6);
             noHearts.setWithLives(false);
             noHearts.setManual();
-            noHearts.launch();
+            launchedGames.add(noHearts).launch();
             noHearts.step(0.02);
             return noHearts;
         });

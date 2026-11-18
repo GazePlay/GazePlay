@@ -36,6 +36,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class LadderTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -71,7 +75,7 @@ class LadderTest {
             gameArea.getChildren().clear();
             final Ladder game = new Ladder(gameContext, stats, mode, level, end, LadderPictures.ANIMALS, seed);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             game.step(0.02);
             return game;
         });
@@ -239,7 +243,7 @@ class LadderTest {
                 LadderPictures.ANIMALS, 7);
             created.setWithLives(false);
             created.setManual();
-            created.launch();
+            launchedGames.add(created).launch();
             created.step(0.02);
             return created;
         });

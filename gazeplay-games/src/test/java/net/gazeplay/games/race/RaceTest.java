@@ -38,6 +38,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class RaceTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -81,7 +85,7 @@ class RaceTest {
     private Race launchedRace(RaceVariant variant) throws Exception {
         launched = WaitForAsyncUtils.asyncFx(() -> {
             Race race = new Race(gameContext, stats, variant, 1234);
-            race.launch();
+            launchedGames.add(race).launch();
             return race;
         }).get();
         return launched;
@@ -97,7 +101,7 @@ class RaceTest {
 
         WaitForAsyncUtils.asyncFx(() -> {
             race.dispose();
-            race.launch();
+            launchedGames.add(race).launch();
         }).get();
 
         assertEquals(1, gameArea.getChildren().stream().filter(node -> node == race).count());

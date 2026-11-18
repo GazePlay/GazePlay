@@ -34,6 +34,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class CreamPieTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext gameContext;
 
@@ -108,7 +112,7 @@ class CreamPieTest {
             final CreamPie game = new CreamPie(gameContext, stats, CreamPiePictures.ANIMALS, CreamPieSize.MEDIUM, way,
                 motion, end, 7);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             steps(game, CreamPie.APPEAR + 0.02);
             return game;
         });

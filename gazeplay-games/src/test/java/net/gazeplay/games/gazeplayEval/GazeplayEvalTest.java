@@ -75,6 +75,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(ApplicationExtension.class)
 class GazeplayEvalTest {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     /** One screen, which ends by itself. */
     private static final String QUICK_EVALUATION = """
         [{"Type": "transition", "Mettre un temps avant passage à l'écran suivant": true, "Combien de temps": 0.1,
@@ -541,7 +545,7 @@ class GazeplayEvalTest {
 
         Platform.runLater(() -> {
             evalStats.start();
-            eval.launch();
+            launchedGames.add(eval).launch();
         });
         verify(gameContext, timeout(10_000)).showRoundStats(evalStats, eval);
         assertFalse(evalStats.isSavingDisabled());
@@ -908,7 +912,7 @@ class GazeplayEvalTest {
 
         Platform.runLater(() -> {
             evalStats.start();
-            eval.launch();
+            launchedGames.add(eval).launch();
         });
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !find(TextField.class).isEmpty());
 

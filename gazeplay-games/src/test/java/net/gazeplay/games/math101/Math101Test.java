@@ -39,6 +39,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class Math101Test {
 
+    /** The games launched by a test, closed after it (18/11/2026). */
+    @org.junit.jupiter.api.extension.RegisterExtension
+    final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
+
     private static final double STEP = 1.0 / 60;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -77,7 +81,7 @@ class Math101Test {
             gameArea.getChildren().clear();
             final Math101 game = new Math101(gameContext, stats, topic, level, end, mistakes, seed);
             game.setManual();
-            game.launch();
+            launchedGames.add(game).launch();
             return game;
         });
     }
