@@ -78,7 +78,13 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    éléments la remettait à 50 au lieu de 100 (`ElementSizeControl`), corrigé. Essayé et validé ; retour : la
    fenêtre de confirmation était trop petite (il fallait faire défiler le texte) : la hauteur du message compte
    maintenant ses lignes coupées par la largeur (`MenuMessageDialog.viewportHeight`, toutes les fenêtres de message).
-5. Point 4 : GazePlay Eval sur les valeurs par défaut, sauf celles du JSON.
+5. ~~Point 4 : GazePlay Eval sur les valeurs par défaut, sauf celles du JSON~~ : **examiné le 18/11, rien à changer**
+   (décision du mainteneur, après vérification de l'évaluation, des réglages du menu principal et du menu Échap).
+   Constat : tout ce qui règle le temps des écrans vient déjà de `evalData.json` (temps de passage, croix, bouton
+   « Commencer », fixation des grilles) ; la vitesse, la taille et l'anneau des réglages ne sont pas lus ; restent lus
+   dans le profil, sans équivalent dans le fichier du site : durée de fixation de l'écran « Recommencer / Continuer »,
+   délai avant sélection, « le son bloque la sélection », mode de passation, couleur de fond, couleur principale,
+   mode d'entrée et volume. Gardé tel quel.
 6. Tests ciblés, puis commit (sur accord), push et CI (suite complète et `allGamesTest`).
 7. Ensuite, tâches de fin : faire fermer leurs parties à tous les tests et libération immédiate des objets simulés ;
    inventaire des sons ; notes de version 2.0 (images à remettre, formats v5 et v6).
