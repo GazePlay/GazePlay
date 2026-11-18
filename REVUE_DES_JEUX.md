@@ -92,7 +92,12 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    fermeture ; famille Où est… : ses tests attendent déjà leurs pauses ; 747 tests, 0 échec) et libération immédiate des objets simulés ;
    **CI du push 82caf31f9 rouge** (run `44274356561`, test (25) et (26)) : `MenuOrientationTest` ouvrait la 4ᵉ section
    des réglages, décalée par la nouvelle section Son ; il cherche maintenant la section par son contenu (corrigé le
-   18/11, NON commité ; `gazeplay-core` 331 tests, 0 échec). Leçon : après un changement de la page des réglages,
+   18/11 ; `gazeplay-core` 331 tests, 0 échec). Commités et poussés : `e967daccf` (MenuOrientationTest) et
+   `916dee0ba` (LaunchedGames) ; **CI verte sur les 7 jobs** (run `44277815025`).
+   ~~Libération immédiate des objets simulés~~ : **faite le 18/11, NON commitée** : `ClearMocksAfterEachClassListener`
+   libère les objets d'une classe dès sa fin (plus d'attente de 10 s), après avoir laissé le thread JavaFX finir les
+   tâches en file (5 s au plus). En local : `gazeplay-commons` 197, `gazeplay-core` 331, `gazeplay-games` 747 tests,
+   0 échec, aucune `DisabledMockException` dans les sorties. Mémoire non remesurée (pas de sonde). Leçon : après un changement de la page des réglages,
    lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.
    inventaire des sons ; notes de version 2.0 (images à remettre, formats v5 et v6).
 
