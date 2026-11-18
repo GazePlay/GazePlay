@@ -27,23 +27,18 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.menus.MenuStyle;
 
 import java.util.Objects;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
-import static net.gazeplay.ui.scenes.ingame.GameContext.updateConfigPane;
 
 /**
- * Creates a new {@link GameContext} (game scene with its control panel) each time a game is launched.
+ * Creates a new {@link GameContext} (game scene with its menu, opened with Esc) each time a game is launched.
  */
 @Slf4j
 public class GameContextFactory implements Supplier<GameContext> {
-
-    /**
-     * Smallest room kept in the menu for its close button.
-     */
-    static final double BUTTON_MIN_HEIGHT = 64;
 
     /**
      * With the gaze only, how long the mouse stays still before its pointer is hidden again.
@@ -55,28 +50,6 @@ public class GameContextFactory implements Supplier<GameContext> {
      * be selected with a still mouse.
      */
     private static final long MOUSE_LEAD_AFTER_FIXATION_MILLIS = 2000;
-
-    /**
-     * @return the empty side panel of the game screen
-     */
-    private static HBox createControlPanel() {
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(hbox);
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isDarkThemeEnabled()) {
-            hbox.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-        }
-        else {
-            hbox.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white;"
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
-        }
-        return hbox;
-    }
 
     private final GazePlay gazePlay;
 
@@ -153,16 +126,20 @@ public class GameContextFactory implements Supplier<GameContext> {
         Color color = Color.web(config.getBackgroundColorProperty().getValue());
 
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
+        // The color of the rings of the fixations (menu Esc, 17/11/2026), followed at once, even during a fixation
+        applyRingColor(gamingRoot, config.getProgressBarColor());
+        config.getProgressBarColorProperty().addListener(
+            (observable, before, now) -> applyRingColor(gamingRoot, now));
 
-        HBox controlPanel = createControlPanel();
-        // Adapt the size and position of buttons to screen width
-        controlPanel.maxWidthProperty().bind(root.widthProperty());
-        controlPanel.toFront();
-
-        final HBox configPane = new HBox(2);
-        configPane.setAlignment(Pos.CENTER_LEFT);
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(configPane, primaryStage));
-        configPane.heightProperty().addListener((observable) -> updateConfigPane(configPane, primaryStage));
+        // The menu (Esc, refonte of 17/11/2026): a darkened layer over the whole game, its window in the middle
+        // (GameMenuView, filled by GameContext.createControlPanel); nothing of it is on the screen while it is closed
+        final Pane menuLayer = new Pane();
+        menuLayer.setPickOnBounds(false);
+        final StackPane menuOverlay = new StackPane();
+        MenuStyle.applyTo(menuOverlay);
+        menuOverlay.getStyleClass().add("gp-game-menu-backdrop");
+        menuOverlay.prefWidthProperty().bind(primaryStage.widthProperty());
+        menuOverlay.prefHeightProperty().bind(primaryStage.heightProperty());
 
         final GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
 
@@ -170,34 +147,51 @@ public class GameContextFactory implements Supplier<GameContext> {
         final GameCursor cursor = gameCursor(scene, EyeTracker.fromConfigValue(config.getEyeTracker()),
             () -> config.getFixationLength() + MOUSE_LEAD_AFTER_FIXATION_MILLIS);
 
-        final GameMenuPanel menu = new GameMenuPanel(configPane, controlPanel, open -> {
+        final GameMenuPanel menu = new GameMenuPanel(menuLayer, menuOverlay, open -> {
             setMenuOpen(open, gazeDeviceManager);
             if (cursor != null) {
                 cursor.setMenuOpen(open);
             }
         });
 
-        final I18NButton closeButton = new I18NButton(translator, "Close");
-        closeButton.setMinWidth(Region.USE_PREF_SIZE);
-        closeButton.setOnAction(event -> menu.close());
-        controlPanel.getChildren().add(closeButton);
-
         if (scene != null) {
-            connectMenuToScene(scene, root, menu, configPane);
+            connectMenuToScene(scene, root, menu, menuLayer);
         }
         if (cursor != null) {
             followTheScreenAndTheGaze(scene, root, cursor);
             keepTheHiddenMouseOutOfTheGame(gamingRoot, cursor);
         }
 
-        log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
-        controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
         setMenuOpen(false, gazeDeviceManager);
 
         root.getChildren().add(gamingRoot);
-        root.getChildren().add(configPane);
+        root.getChildren().add(menuLayer);
 
-        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManager, soundsManagerFactory.get(), configPane);
+        final GameContext gameContext = new GameContext(gazePlay, translator, root, gamingRoot, bravo, menuOverlay,
+            gazeDeviceManager, soundsManagerFactory.get(), menuLayer);
+        gameContext.setMenuCloser(menu::close);
+        return gameContext;
+    }
+
+    /**
+     * Gives the rings of the games (style {@code -gp-ring}) the color of the settings: the main color of the menus for
+     * {@link Configuration#RING_COLOR_ACCENT} (by default) or an unknown value.
+     */
+    static void applyRingColor(final Pane gamingRoot, final String colorName) {
+        Color ring = null;
+        if (colorName != null && !Configuration.RING_COLOR_ACCENT.equals(colorName)) {
+            try {
+                ring = Color.web(colorName);
+            } catch (final IllegalArgumentException e) {
+                log.warn("Unknown color of the rings: {}", colorName);
+            }
+        }
+        gamingRoot.setStyle(ring == null ? "" : "-gp-ring: " + toWeb(ring) + ";");
+    }
+
+    private static String toWeb(final Color color) {
+        return String.format("#%02X%02X%02X", Math.round(color.getRed() * 255), Math.round(color.getGreen() * 255),
+            Math.round(color.getBlue() * 255));
     }
 
     /**

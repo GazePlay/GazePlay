@@ -189,7 +189,22 @@ public class MusicControl {
         content.getChildren().addAll(line1, line2);
         content.setPrefHeight(PREF_HEIGHT);
 
+        startTheMusicOnce();
+
+        final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
+        pane.setCollapsible(false);
+        pane.setContent(content);
+        return pane;
+    }
+
+    /**
+     * Starts the background music the first time it is called in this JVM: the playlist of the music folder of the
+     * settings, from its first piece. Called by the music pane of the main menu, and by the menu of a game screen (whose
+     * former side panel of the music started it).
+     */
+    public void startTheMusicOnce() {
         if (autoplayExecuted.compareAndSet(false, true)) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
                 final Configuration configuration = ActiveConfigurationContext.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicDir());
@@ -197,13 +212,10 @@ public class MusicControl {
             backgroundMusicManager.changeMusic(0);
 
             // We need to manually set the music title for the first set up
-            setMusicTitle(musicName);
+            if (musicName != null) {
+                setMusicTitle(musicName);
+            }
         }
-
-        final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
-        pane.setCollapsible(false);
-        pane.setContent(content);
-        return pane;
     }
 
     /**

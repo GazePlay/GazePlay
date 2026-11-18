@@ -39,6 +39,14 @@ import java.util.List;
  * reader of a file of versions 1 to 4 must add 1 to a value of 0 or more for the games that did not; a value of -1
  * means no mistake, or a game that did not count them.
  * <p>
+ * Difference of version 6 (17/11/2026, decision of the maintainer): the time spent with the menu of the game screen
+ * open (Esc) is no longer counted in the durations. "lifeCycle" gets "menuDuration", the time spent in the menu
+ * between "startTime" and "stopTime" (both unchanged, times of the clock): the duration of the game is "stopTime" -
+ * "startTime" - "menuDuration". The durations of the rounds ("roundsDurationReport": "totalAdditiveDuration",
+ * "durationBetweenGoals") do not include the menu time. The "time" of the samples and the "timeGaze" of the fixations
+ * are unchanged (times of the clock): nothing is recorded while the menu is open, which leaves a gap. Up to version
+ * 5, the durations included the time spent in the menu (MODERNIZATION.md 2an), which cannot be known afterwards.
+ * <p>
  * In memory, {@link FixationPoint} keeps the convention of version 1 (Y in "x", X in "y"), which the drawing code
  * relies on: the conversion happens when the file is written and read.
  */
@@ -47,7 +55,7 @@ public final class ReplayDataFormat {
     /**
      * Version written in the new files.
      */
-    public static final int CURRENT_VERSION = 5;
+    public static final int CURRENT_VERSION = 6;
 
     /**
      * Version of the files written without "formatVersion".

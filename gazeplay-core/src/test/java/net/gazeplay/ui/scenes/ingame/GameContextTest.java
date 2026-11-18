@@ -134,20 +134,6 @@ class GameContextTest {
         verify(mockGamingRoot, never()).setDisable(true);
     }
 
-    /**
-     * Decision of the maintainer of 5/11/2026: the full screen button stays for the games, greyed for the evaluations.
-     */
-    @Test
-    void shouldAskTheGameWhetherTheFullScreenCanChange() {
-        when(mockGameLifeCycle.allowsFullScreenChange()).thenReturn(false);
-        assertFalse(GameContext.allowsFullScreenChange(mockGameLifeCycle));
-
-        when(mockGameLifeCycle.allowsFullScreenChange()).thenReturn(true);
-        assertTrue(GameContext.allowsFullScreenChange(mockGameLifeCycle));
-
-        assertTrue(GameContext.allowsFullScreenChange(null));
-    }
-
     @Test
     void shouldInitialisePointersOnConstruction() {
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(true);

@@ -27,6 +27,7 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -719,7 +720,7 @@ public class MagicCards implements GameLifeCycle {
             ring.setFill(null);
             ring.setStrokeType(StrokeType.INSIDE);
             ring.setStrokeLineCap(StrokeLineCap.BUTT);
-            ring.setStrokeWidth(Math.max(5, Math.min(w, h) * 0.045));
+            RingThickness.apply(ring, Math.max(5, Math.min(w, h) * 0.045));
             ring.setVisible(false);
             ring.setMouseTransparent(true);
             ringPerimeter = GameStyle.clockwiseRing(ring);
@@ -847,7 +848,7 @@ public class MagicCards implements GameLifeCycle {
         }
 
         void showRing(final boolean shown) {
-            ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-accent") + ";");
+            ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-ring") + ";");
             ring.setVisible(shown);
         }
 

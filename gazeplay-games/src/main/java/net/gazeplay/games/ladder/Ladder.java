@@ -891,4 +891,12 @@ public class Ladder implements GameLifeCycle {
         return String.format("rgb(%d, %d, %d)", (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
             (int) (color.getBlue() * 255));
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+    }
 }

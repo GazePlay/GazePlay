@@ -6,7 +6,7 @@ Before a session, "Test an evaluation" checks the calibration of the eye tracker
 - "Launch an evaluation", then choose the evaluation.
 - Fill in the participant form, then press "Start".
 - The participant chooses a picture by looking at it: a ring fills around it during the fixation.
-- To leave before the end: the menu (Esc key), then the home button. The results obtained so far are saved, and the session is marked as not finished. While the menu is open, the evaluation is paused.
+- To leave before the end: the menu (Esc key), then "Quit the evaluation". This menu only holds the volume, "Resume" and "Quit the evaluation". The results obtained so far are saved, and the session is marked as not finished. While the menu is open, the evaluation is paused.
 
 # Examiner keys
 During a screen (instruction, grid, transition):

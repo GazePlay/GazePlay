@@ -614,4 +614,12 @@ public class CupsAndBalls implements GameLifeCycle {
             return lift > 0.5;
         }
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+    }
 }

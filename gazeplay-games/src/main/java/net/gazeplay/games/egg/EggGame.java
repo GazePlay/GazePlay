@@ -46,6 +46,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -272,9 +273,9 @@ public class EggGame implements GameLifeCycle {
         ring = new Arc(0, 0, eggWidth / 2 + eggWidth * 0.07, eggHeight / 2 + eggWidth * 0.07, 90, 0);
         ring.setType(ArcType.OPEN);
         ring.setFill(null);
-        ring.setStrokeWidth(Math.max(5, eggWidth * 0.035));
+        RingThickness.apply(ring, Math.max(5, eggWidth * 0.035));
         ring.setStrokeLineCap(StrokeLineCap.ROUND);
-        ring.setStyle("-fx-stroke: -gp-accent;");
+        ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setMouseTransparent(true);
         egg = new Group(shell(), crackLines, ring);
         egg.setLayoutX(eggX);

@@ -55,6 +55,13 @@ public enum MenuIcon {
     LOGOUT("logout"),
     PLAY("play_arrow_fill1"),
     /**
+     * Pause, previous and next music: simple shapes drawn for the project (17/11/2026, menu of the games), in the box of
+     * Material Symbols, not files of that set.
+     */
+    PAUSE("pause_fill1"),
+    SKIP_PREVIOUS("skip_previous_fill1"),
+    SKIP_NEXT("skip_next_fill1"),
+    /**
      * An eye: GazePlay Eval Test, a check of the calibration.
      */
     TEST("visibility"),

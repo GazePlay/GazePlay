@@ -14,6 +14,7 @@ import org.bytedeco.javacv.Frame;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import java.io.File;
@@ -66,6 +67,9 @@ final class EvalVideoPlayer {
     private boolean restartRequested;
     private volatile boolean stopped;
     private volatile SourceDataLine line;
+
+    /** The volume of the sound, from 0 to 1 (volume of the effects of the settings, menu Esc since 17/11/2026). */
+    private volatile double volume = 1;
 
     /** The last image read, waiting for the JavaFX thread. */
     private final Object imageLock = new Object();
@@ -239,9 +243,35 @@ final class EvalVideoPlayer {
                 }
             }
             line = opened;
+            applyVolume(opened);
         } catch (LineUnavailableException | IllegalArgumentException e) {
             log.warn("No sound for the video {}", file, e);
         }
+    }
+
+    /**
+     * Changes the volume of the sound, at once if it is playing.
+     *
+     * @param newVolume from 0 (silent) to 1 (the volume of the file)
+     */
+    public void setVolume(double newVolume) {
+        volume = Math.max(0, Math.min(1, newVolume));
+        SourceDataLine current = line;
+        if (current != null) {
+            applyVolume(current);
+        }
+    }
+
+    /**
+     * The gain of the output, in decibels, for the volume; a line without gain control keeps the volume of the file.
+     */
+    private void applyVolume(SourceDataLine target) {
+        if (!target.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            return;
+        }
+        FloatControl gain = (FloatControl) target.getControl(FloatControl.Type.MASTER_GAIN);
+        float decibels = volume <= 0 ? gain.getMinimum() : (float) (20 * Math.log10(volume));
+        gain.setValue(Math.max(gain.getMinimum(), Math.min(gain.getMaximum(), decibels)));
     }
 
     private void closeTheSound() {

@@ -90,7 +90,9 @@ public class ProgressPortrait extends StackPane {
      * Applies the color of the progress indicator chosen in the settings.
      */
     public void styleProgressIndicator(IGameContext gameContext){
-        indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+        // The main color of the menus by default (ACCENT), or the color chosen for the rings
+        final String ringColor = gameContext.getConfiguration().getProgressBarColor();
+        indicator.setStyle(" -fx-progress-color: " + ("ACCENT".equals(ringColor) ? "-gp-ring" : ringColor));
     }
 
     /**

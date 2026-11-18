@@ -55,7 +55,7 @@ class ReplayDataFormatTest {
     void shouldReadBackWhatIsWritten() {
         LinkedList<FixationPoint> gaze = new LinkedList<>(List.of(new FixationPoint(1100, 300, 40, 10)));
         JsonObject json = ReplayDataWriter.toJson(new ReplayDataWriter.Round(0, "", "", 0, "", 0, 0, 0, 0, 0,
-            null, null, 0, List.of(), List.of(new LinkedList<>(), gaze), new JsonArray()));
+            null, null, null, 0, List.of(), List.of(new LinkedList<>(), gaze), new JsonArray()));
 
         List<LinkedList<FixationPoint>> inFile = new Gson().fromJson(json.get("fixationSequence"), SEQUENCES);
         List<LinkedList<FixationPoint>> read = ReplayDataFormat.fromFile(

@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -49,39 +50,37 @@ import java.io.IOException;
 import java.util.function.Supplier;
 
 /**
- * The game screen: the game area ({@link #getRoot()}, where the game draws), the configuration button and its side
- * panel (music, volumes, speed, fixation length, element size, progress indicators, background color, full screen, home
- * and replay buttons), the "bravo" animation, and the gaze and sound managers of the game.
+ * The game screen: the game area ({@link #getRoot()}, where the game draws), its menu opened with Esc (a window in the
+ * middle of the darkened game, {@link GameMenuView}, refonte of 17/11/2026: resume, restart, quit, sound, settings of
+ * the games, progress ring), the "bravo" animation, and the gaze and sound managers of the game.
  * <p>
  * It implements {@link IGameContext}, the interface the games see. Created by {@link GameContextFactory}.
  */
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
+    /**
+     * The button of the menu quitting the game (the replay of a file adds its own action to it).
+     */
     @Getter
-    private HomeButton homeButton;
-
-    @Getter
-    private ReplayButton replayButton;
+    private Button homeButton;
 
     /**
-     * Keeps the configuration button at the bottom of the window.
+     * The button of the menu restarting the game.
      */
-    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
-        double mainHeight = primaryStage.getHeight();
-
-        final double newY = mainHeight - configPane.getHeight() - 30;
-        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
-        configPane.setTranslateY(newY);
-    }
+    @Getter
+    private Button replayButton;
 
     @Getter
     private final Translator translator;
 
     private final Bravo bravo;
 
+    /**
+     * The darkened layer of the menu, over the whole screen, which holds its window while it is open.
+     */
     @Getter
-    private final HBox menuHBox;
+    private final Pane menuOverlay;
 
     @Getter
     private final RandomPositionGenerator randomPositionGenerator;
@@ -95,15 +94,18 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Getter
     private final SoundManager soundManager;
 
-    private final Pane configPane;
-
     private final Pane gamingRoot;
 
     private VideoRecordingContext videoRecordingContext;
 
-    private TitledPane fixPan;
+    @Getter
+    private GameMenuView menuView;
 
-    private GridPane leftControlPane;
+    /**
+     * Closes the menu (set by {@link GameContextFactory}): the Resume button.
+     */
+    @lombok.Setter
+    private Runnable menuCloser = () -> { };
 
     /**
      * Use {@link GameContextFactory} to create a game screen.
@@ -114,19 +116,18 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         @NonNull Pane root,
         @NonNull Pane gamingRoot,
         @NonNull Bravo bravo,
-        @NonNull HBox menuHBox,
+        @NonNull Pane menuOverlay,
         @NonNull GazeDeviceManager gazeDeviceManager,
         @NonNull SoundManager soundManager,
-        @NonNull Pane configPane
+        @NonNull Pane menuLayer
     ) {
         super(gazePlay, root);
         this.translator = translator;
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
-        this.menuHBox = menuHBox;
+        this.menuOverlay = menuOverlay;
         this.gazeDeviceManager = gazeDeviceManager;
         this.soundManager = soundManager;
-        this.configPane = configPane;
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider, new ReplayablePseudoRandom());
@@ -143,7 +144,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         super.setUpOnStage(scene);
 
         log.info("SETTING UP");
-        updateConfigPane(configPane, getGazePlay().getPrimaryStage());
     }
 
     @Override
@@ -152,130 +152,56 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     /**
-     * Fills the side panel with the controls; during a replay, without the replay button.
+     * Fills the menu (Esc) of this game: everything for a game; the sound and Quit for the replay of a file (which
+     * gives Quit its action); the volume, Resume and Quit for an evaluation ({@link GameLifeCycle#offersGameSettings()}).
      */
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, boolean inReplayMode) {
-        Configuration config = getConfiguration();
-        MusicControl musicControl = getMusicControl();
-        AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
-        FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
-        ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
-        ProgressBarControl progressBarControl = ProgressBarControl.getInstance();
-        BackgroundColorControl backgroundColorControl = BackgroundColorControl.getInstance();
+        final GameMenuView.Kind kind = inReplayMode ? GameMenuView.Kind.REPLAY
+            : currentGame != null && !currentGame.offersGameSettings() ? GameMenuView.Kind.EVALUATION
+            : GameMenuView.Kind.GAME;
+        // Started by the former side panel of the music: the background music of the game screen, once per JVM
+        getMusicControl().startTheMusicOnce();
 
-        Stage primaryStage = gazePlay.getPrimaryStage();
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToHeight(true);
-
-        leftControlPane = new GridPane();
-        leftControlPane.setHgap(5);
-        leftControlPane.setVgap(5);
-        leftControlPane.setAlignment(Pos.TOP_CENTER);
-        leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
-        leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
+        final Translator menuTranslator = gazePlay.getTranslator();
+        menuView = new GameMenuView(menuTranslator, menuLocale(menuTranslator), getConfiguration(),
+            gazePlay.getPrimaryScene(), kind,
+            currentGame == null ? java.util.EnumSet.allOf(net.gazeplay.MenuSetting.class) : currentGame.menuSettings(),
+            () -> menuCloser.run());
+        homeButton = menuView.getQuitButton();
+        replayButton = menuView.getRestartButton();
         if (!inReplayMode) {
-            leftControlPane.add(fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
-            leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 3, 0);
-            leftControlPane.add(elementSizeControl.createElementSizePane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 4, 0);
-            leftControlPane.add(progressBarControl.createProgressControlPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 5, 0);
-            leftControlPane.add(backgroundColorControl.createBackgroundColorControlPane(config, gazePlay.getTranslator(), gamingRoot), 6, 0);
+            homeButton.setOnAction(e -> {
+                root.setCursor(Cursor.WAIT);
+                exitGame(stats, gazePlay, currentGame);
+                root.setCursor(Cursor.DEFAULT);
+            });
+            replayButton.setOnAction(e -> {
+                exitReplayGame(stats, gazePlay, currentGame);
+                getGazePlay().onGameLaunch(this);
+                stats.reset();
+                currentGame.launch();
+                soundManager.init();
+            });
         }
-        leftControlPane.getChildren().forEach(node -> {
-            GridPane.setVgrow(node, Priority.ALWAYS);
-            GridPane.setHgrow(node, Priority.ALWAYS);
-        });
+        menuOverlay.getChildren().setAll(menuView.getCard());
+    }
 
-        scrollPane.setContent(leftControlPane);
-        menuHBox.getChildren().add(scrollPane);
-
-        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
-        toggleFullScreenButtonInGameScreen.setDisable(!allowsFullScreenChange(currentGame));
-        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
-
-        homeButton = inReplayMode ? createHomeButtonInGameScreenWithoutHandler(gazePlay) : createHomeButtonInGameScreen(gazePlay, stats, currentGame);
-        menuHBox.getChildren().add(homeButton);
-
-        replayButton = inReplayMode ? createReplayButtonInGameScreenWithoutHandler(gazePlay) : createReplayButtonInGameScreen(gazePlay, stats, currentGame);
-        menuHBox.getChildren().add(replayButton);
-
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < GameContextFactory.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactory.BUTTON_MIN_HEIGHT;
+    private static java.util.Locale menuLocale(final Translator translator) {
+        final java.util.Locale locale = translator == null ? null : translator.currentLocale();
+        if (locale == null || locale.getLanguage().isEmpty()) {
+            return java.util.Locale.FRENCH;
         }
-
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
-
-        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
-    }
-
-    /**
-     * @param game the game of this screen, null if there is none
-     * @return whether the full screen button of the menu is active: not during an evaluation
-     */
-    static boolean allowsFullScreenChange(final GameLifeCycle game) {
-        return game == null || game.allowsFullScreenChange();
-    }
-
-    /**
-     * Sizes the buttons of the side panel for the width of the window.
-     */
-    public void updateControllPanel(ScrollPane scrollPane, I18NButton toggleFullScreenButtonInGameScreen, Stage primaryStage) {
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < GameContextFactory.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactory.BUTTON_MIN_HEIGHT;
+        final String language = locale.getLanguage();
+        for (final String iso2 : java.util.Locale.getISOLanguages()) {
+            try {
+                if (java.util.Locale.of(iso2).getISO3Language().equals(language)) {
+                    return java.util.Locale.of(iso2);
+                }
+            } catch (final java.util.MissingResourceException e) {
+                // no ISO 3 code for this language
+            }
         }
-
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
-
-        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-    }
-
-    /**
-     * @return the home button: it ends the game, saves its results and shows its statistics
-     */
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                                   @NonNull GameLifeCycle currentGame) {
-
-        EventHandler<Event> homeEvent = e -> {
-            root.setCursor(Cursor.WAIT); // Change cursor to wait style
-            exitGame(stats, gazePlay, currentGame);
-            root.setCursor(Cursor.DEFAULT); // Change cursor to default style
-        };
-
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        HomeButton homeButton = new HomeButton(screenDimension);
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        return homeButton;
-    }
-
-    /**
-     * @return the replay button: it ends the game and replays it at once
-     */
-    public ReplayButton createReplayButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                                       @NonNull GameLifeCycle currentGame) {
-
-        EventHandler<Event> replayEvent = e -> {
-            exitReplayGame(stats, gazePlay, currentGame);
-            getGazePlay().onGameLaunch(this);
-            stats.reset();
-            currentGame.launch();
-            soundManager.init();
-        };
-
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        ReplayButton replayButton = new ReplayButton(screenDimension);
-        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, replayEvent);
-        return replayButton;
+        return locale;
     }
 
     /**
@@ -354,22 +280,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         } catch (IOException e) {
             log.error("Failed to save stats file", e);
         }
-    }
-
-    /**
-     * @return a home button without action
-     */
-    public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-        return new HomeButton(screenDimension);
-    }
-
-    /**
-     * @return a replay button without action
-     */
-    public ReplayButton createReplayButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-        return new ReplayButton(screenDimension);
     }
 
     /**
@@ -484,8 +394,14 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         wait.play();
     }
 
+    /**
+     * Takes the fixation length out of the menu, for a game that does not use it (Race).
+     */
     public void setOffFixationLengthControl() {
-        leftControlPane.getChildren().remove(fixPan);
+        if (menuView != null && menuView.getFixationRow() != null) {
+            menuView.getFixationRow().setVisible(false);
+            menuView.getFixationRow().setManaged(false);
+        }
     }
 
 }

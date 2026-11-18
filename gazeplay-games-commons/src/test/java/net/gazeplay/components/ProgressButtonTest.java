@@ -35,7 +35,35 @@ class ProgressButtonTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         when(gameContext.getConfiguration().getFixationLength()).thenReturn(300);
-        when(gameContext.getConfiguration().getProgressBarSize()).thenReturn(100);
+    }
+
+    /**
+     * Maintainer's request of 18/11/2026: the setting of the rings changes the width of their line, not their diameter
+     * (a small ring in the middle of a large button looked odd), and a change is seen at once.
+     */
+    @Test
+    void shouldChangeTheWidthOfTheLineAndNotTheDiameterWithTheThicknessOfTheSettings() throws Exception {
+        final javafx.beans.property.IntegerProperty thickness = net.gazeplay.commons.configuration
+            .ActiveConfigurationContext.getInstance().getRingThicknessProperty();
+        final Integer before = thickness.getValue();
+        try {
+            WaitForAsyncUtils.asyncFx(() -> {
+                thickness.set(100);
+                final ProgressButton b = new ProgressButton();
+                b.getButton().setRadius(50);
+                b.assignIndicatorUpdatable(event -> { }, gameContext);
+                b.active();
+                Event.fireEvent(b, new GazeEvent(GazeEvent.GAZE_ENTERED, 1, 0, 0));
+                final double width = b.getRingLineWidth();
+                assertEquals(8, width, 1e-9, "16 % of the radius by default");
+                thickness.set(200);
+                assertEquals(2 * width, b.getRingLineWidth(), 1e-9, "twice as thick, at once");
+                assertEquals(50, b.getRingRadius(), 1e-9, "the diameter of the button");
+                return null;
+            }).get();
+        } finally {
+            thickness.setValue(before);
+        }
     }
 
     private static MouseEvent mouse(final javafx.event.EventType<MouseEvent> type) {

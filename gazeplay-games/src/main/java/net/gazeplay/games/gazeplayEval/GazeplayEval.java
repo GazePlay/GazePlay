@@ -172,6 +172,12 @@ public class GazeplayEval implements GameLifeCycle {
     private final List<Animation> timers = new ArrayList<>();
     private final List<MediaPlayer> players = new ArrayList<>();
     private final List<EvalVideoPlayer> videos = new ArrayList<>();
+
+    /** Gives the volume of the effects to the videos playing (kept here: the property only holds it weakly). */
+    private final javafx.beans.value.ChangeListener<Number> videoVolumeListener =
+        (observable, before, now) -> videos.forEach(video -> video.setVolume(now.doubleValue()));
+
+    private boolean videoVolumeFollowed;
     private Pane indicatorLayer;
     private Runnable replaySound;
     /** The image under the heatmap of a grid whose selected images are hidden; null: the screen at its end. */
@@ -259,8 +265,8 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     @Override
-    public boolean allowsFullScreenChange() {
-        // The cells of a screen are placed for the size of the window, and the positions recorded depend on it
+    public boolean offersGameSettings() {
+        // The durations of the screens come from the evaluation (contract of the site): only the volume and Quit
         return false;
     }
 
@@ -1015,6 +1021,11 @@ public class GazeplayEval implements GameLifeCycle {
         try {
             Media media = new Media(definition.media(folder, fileName).toUri().toString());
             MediaPlayer player = new MediaPlayer(media);
+            // The volume of the effects, changed in the menu (Esc) during the evaluation (17/11/2026)
+            javafx.beans.property.DoubleProperty soundVolume = gameContext.getConfiguration().getEffectsVolumeProperty();
+            if (soundVolume != null) {
+                player.volumeProperty().bind(soundVolume);
+            }
             players.add(player);
             player.setOnEndOfMedia(() -> {
                 recorder.event("fin_" + kind, EvalSessionRecorder.SYSTEM, fileName, null, null, "");
@@ -1053,6 +1064,15 @@ public class GazeplayEval implements GameLifeCycle {
                 reportUnreadableMedia(MediaFolder.VIDEOS, fileName, token, true);
             });
         videos.add(video);
+        // The volume of the effects, followed while the video plays (menu Esc, 17/11/2026)
+        javafx.beans.property.DoubleProperty effectsVolume = gameContext.getConfiguration().getEffectsVolumeProperty();
+        if (effectsVolume != null) {
+            video.setVolume(effectsVolume.get());
+        }
+        if (effectsVolume != null && !videoVolumeFollowed) {
+            videoVolumeFollowed = true;
+            effectsVolume.addListener(new javafx.beans.value.WeakChangeListener<>(videoVolumeListener));
+        }
         recorder.event("debut_video", EvalSessionRecorder.SYSTEM, fileName, null, null, "");
         if (menuOpen) {
             video.pause();

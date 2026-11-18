@@ -26,6 +26,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.util.List;
 
@@ -92,9 +93,9 @@ public class SoundMakingEntity extends Parent {
         final double radius = Math.max(width, height) * 0.52;
         ring = new Circle(centerX, centerY, radius);
         ring.setFill(null);
-        ring.setStrokeWidth(Math.max(5, radius * 0.07));
+        RingThickness.apply(ring, Math.max(5, radius * 0.07));
         ring.setStrokeLineCap(StrokeLineCap.BUTT);
-        ring.setStyle("-fx-stroke: -gp-accent;");
+        ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setRotate(-90);
         ring.setVisible(false);
         ring.setMouseTransparent(true);

@@ -26,7 +26,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
  * <p>
  * Since 3/11/2026 (maintainer's request), the ring is the one of the reviewed games ({@link FixationRing}: the main
  * color on a light disc); it replaces the progress indicator of before (a disc of the color of the settings, filling
- * up). Its size is still the size of the progress indicator of the settings.
+ * up). Since 18/11/2026, the ring has the size of the button, and the setting gives the thickness of its line
+ * ({@link RingThickness}).
  */
 @Slf4j
 public class ProgressButton extends StackPane {
@@ -40,11 +41,6 @@ public class ProgressButton extends StackPane {
     private EventHandler<Event> enterButtonHandler;
     private EventHandler<Event> exitButtonHandler;
     private boolean inuse = false;
-    /**
-     * The size of the ring, as a percentage of the size of the button (the size of the progress indicator of the
-     * settings, read at each fixation).
-     */
-    private double ringPercent = 100;
 
     @Getter
     private ImageView image;
@@ -103,11 +99,9 @@ public class ProgressButton extends StackPane {
     }
 
     /**
-     * Applies the size of the progress indicator chosen in the settings (percentage of the size of the button) to the
-     * ring.
+     * Sizes the ring on the button (its line has the thickness of the settings, followed at once).
      */
     public void sizeProgressIndicator(IGameContext gameContext) {
-        ringPercent = gameContext.getConfiguration().getProgressBarSize();
         sizeRing(ringBase());
     }
 
@@ -126,12 +120,19 @@ public class ProgressButton extends StackPane {
     }
 
     private void sizeRing(final double buttonRadius) {
-        final double radius = Math.max(4, buttonRadius * ringPercent / 100);
-        final double width = Math.max(4, radius * 0.16);
+        final double radius = Math.max(4, buttonRadius);
         ringBackground.setRadius(radius);
-        ringArc.setRadiusX(radius - width / 2);
-        ringArc.setRadiusY(radius - width / 2);
-        ringArc.setStrokeWidth(width);
+        RingThickness.apply(ringArc, Math.max(4, radius * 0.16));
+        placeArc();
+    }
+
+    /**
+     * Keeps the line of the ring inside its disc, whatever its thickness.
+     */
+    private void placeArc() {
+        final double radius = Math.max(1, ringBackground.getRadius() - ringArc.getStrokeWidth() / 2);
+        ringArc.setRadiusX(radius);
+        ringArc.setRadiusY(radius);
     }
 
     private void hideRing() {
@@ -174,7 +175,8 @@ public class ProgressButton extends StackPane {
         ringArc.setFill(null);
         ringArc.setStrokeLineCap(StrokeLineCap.ROUND);
         ringArc.setStartAngle(90);
-        ringArc.setStyle("-fx-stroke: -gp-accent;");
+        ringArc.setStyle("-fx-stroke: -gp-ring;");
+        ringArc.strokeWidthProperty().addListener((observable, oldValue, newValue) -> placeArc());
         ring.getChildren().setAll(ringBackground, ringArc);
         ring.setMouseTransparent(true);
         // Out of the layout of the button, centered on it: the bounds of an arc change a little while it fills (they
@@ -266,6 +268,13 @@ public class ProgressButton extends StackPane {
      */
     double getRingRadius() {
         return ringBackground.getRadius();
+    }
+
+    /**
+     * @return the width of the line of the ring (for the tests)
+     */
+    double getRingLineWidth() {
+        return ringArc.getStrokeWidth();
     }
 
     /**

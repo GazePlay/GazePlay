@@ -33,7 +33,7 @@ public class ProgressBarControl {
         I18NLabel colorStringLabel = new I18NLabel(translator, "Color");
         Label[] colorLabels = this.createColorLabel(config);
         progressBarSizeLabel.setMinWidth(ICON_SIZE);
-        Slider progressBarSizeSlider = createProgressBarSizeSlider(config, progressBarSizeLabel);
+        Slider progressBarSizeSlider = createRingThicknessSlider(config, progressBarSizeLabel);
 
         HBox line1 = new HBox();
         line1.setSpacing(CONTENT_SPACING);
@@ -61,32 +61,32 @@ public class ProgressBarControl {
     }
 
     /**
-     * @return the slider of the size, bound to the PROGRESS_BAR_SIZE setting, its value shown in the label
+     * @return the slider of the thickness of the rings (width of their line, in percent of the width chosen by each
+     * game; 18/11/2026: it used to be their diameter), bound to the RING_THICKNESS setting, its value shown in the label
      */
-    public Slider createProgressBarSizeSlider(Configuration config, Label progressBarSizeLabel) {
-        final int initialSizeValue = config.getProgressBarSize();
+    public Slider createRingThicknessSlider(Configuration config, Label thicknessLabel) {
+        final int initialValue = config.getRingThickness();
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
         slider.setMaxWidth(QuickControl.SLIDERS_PREF_WIDTH);
         slider.setPrefWidth(QuickControl.SLIDERS_MAX_WIDTH);
-        slider.setMin(15);
-        slider.setMax(100);
-        slider.setMajorTickUnit(10);
-        slider.setMinorTickCount(5);
+        slider.setMin(Configuration.MIN_RING_THICKNESS);
+        slider.setMax(Configuration.MAX_RING_THICKNESS);
+        slider.setMajorTickUnit(50);
+        slider.setMinorTickCount(4);
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
-        slider.setValue(initialSizeValue);
+        slider.setValue(initialValue);
 
-        progressBarSizeLabel.setText(formatValue(initialSizeValue));
+        thicknessLabel.setText(formatValue(initialValue));
 
-        // user can reset ratio to default just by clicking on the label
-        progressBarSizeLabel.setOnMouseClicked(event -> slider.setValue(100));
+        // user can reset the thickness to the default just by clicking on the label
+        thicknessLabel.setOnMouseClicked(event -> slider.setValue(Configuration.DEFAULT_VALUE_RING_THICKNESS));
 
         slider.valueProperty().addListener((observable) -> {
-            int sizeRatioValue = sliderValueToSizeRatio(slider.getValue());
-            String labelText = formatValue(sizeRatioValue);
-            progressBarSizeLabel.setText(labelText);
-            config.getProgressBarSizeProperty().set(sizeRatioValue);
+            int value = sliderValueToSizeRatio(slider.getValue());
+            thicknessLabel.setText(formatValue(value));
+            config.getRingThicknessProperty().set(value);
         });
 
         return slider;
@@ -106,7 +106,8 @@ public class ProgressBarControl {
      * Colors a square, and saves its color in the PROGRESS_BAR_COLOR setting when it is clicked.
      */
     public void initializeColorLabel(Label[] labels, int position, String colorName, Configuration config){
-        labels[position].setStyle("-fx-background-color: " + colorName + ";");
+        labels[position].setStyle("-fx-background-color: "
+            + (Configuration.RING_COLOR_ACCENT.equals(colorName) ? "-gp-accent" : colorName) + ";");
         labels[position].setOnMouseClicked(event -> {
             config.getProgressBarColorProperty().set(colorName);
             setTextOnLabel(labels, position);
@@ -119,8 +120,8 @@ public class ProgressBarControl {
      * @return the squares of the colors, the one of the settings marked
      */
     public Label[] createColorLabel(Configuration config){
-        // Sequence : Red Orange Yellow Limegreen Cyan DodgerBlue Violet
-        Label[] labels = new Label[7];
+        // Sequence : the main color of the menus (by default), Red Orange Yellow Limegreen Cyan DodgerBlue Violet
+        Label[] labels = new Label[8];
         for(int i=0; i<labels.length; i++) {
             labels[i] = new Label();
             labels[i].setMinSize(25, 25);
@@ -128,13 +129,14 @@ public class ProgressBarControl {
         }
         for(int i=0; i<labels.length; i++){
             switch (i) {
-                case 0 -> initializeColorLabel(labels, 0, "RED", config);
-                case 1 -> initializeColorLabel(labels, 1, "ORANGE", config);
-                case 2 -> initializeColorLabel(labels, 2, "YELLOW", config);
-                case 3 -> initializeColorLabel(labels, 3, "LIMEGREEN", config);
-                case 4 -> initializeColorLabel(labels, 4, "CYAN", config);
-                case 5 -> initializeColorLabel(labels, 5, "DODGERBLUE", config);
-                default -> initializeColorLabel(labels, 6, "VIOLET", config);
+                case 0 -> initializeColorLabel(labels, 0, Configuration.RING_COLOR_ACCENT, config);
+                case 1 -> initializeColorLabel(labels, 1, "RED", config);
+                case 2 -> initializeColorLabel(labels, 2, "ORANGE", config);
+                case 3 -> initializeColorLabel(labels, 3, "YELLOW", config);
+                case 4 -> initializeColorLabel(labels, 4, "LIMEGREEN", config);
+                case 5 -> initializeColorLabel(labels, 5, "CYAN", config);
+                case 6 -> initializeColorLabel(labels, 6, "DODGERBLUE", config);
+                default -> initializeColorLabel(labels, 7, "VIOLET", config);
             }
         }
         return labels;

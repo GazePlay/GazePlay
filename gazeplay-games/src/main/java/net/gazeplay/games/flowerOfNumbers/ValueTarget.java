@@ -18,6 +18,7 @@ import lombok.Setter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 /**
  * A value of Flower Of Numbers to look at (reviewed on 2/11/2026): its picture or text on a rounded card; a fixation
@@ -87,8 +88,8 @@ class ValueTarget extends Group {
         ring.setFill(null);
         ring.setStrokeType(StrokeType.INSIDE);
         ring.setStrokeLineCap(StrokeLineCap.BUTT);
-        ring.setStrokeWidth(Math.max(4, Math.min(width, height) * 0.08));
-        ring.setStyle("-fx-stroke: -gp-accent;");
+        RingThickness.apply(ring, Math.max(4, Math.min(width, height) * 0.08));
+        ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setMouseTransparent(true);
         ring.setVisible(false);
         ringPerimeter = GameStyle.clockwiseRing(ring);

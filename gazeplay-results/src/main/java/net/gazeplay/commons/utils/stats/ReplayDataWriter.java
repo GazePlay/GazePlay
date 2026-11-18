@@ -37,6 +37,7 @@ final class ReplayDataWriter {
         int nbMistakes,
         Long lifeCycleStartTime,
         Long lifeCycleStopTime,
+        Long lifeCycleMenuDuration,
         long totalAdditiveDuration,
         List<Long> durationBetweenGoals,
         List<LinkedList<FixationPoint>> fixationSequence,
@@ -76,6 +77,8 @@ final class ReplayDataWriter {
         final JsonObject lifeCycleObject = new JsonObject();
         lifeCycleObject.addProperty("startTime", round.lifeCycleStartTime());
         lifeCycleObject.addProperty("stopTime", round.lifeCycleStopTime());
+        // Since the format 6: the time spent in the menu (Esc), not counted in the durations
+        lifeCycleObject.addProperty("menuDuration", round.lifeCycleMenuDuration());
         json.add("lifeCycle", lifeCycleObject);
 
         final JsonObject roundsDurationReportObject = new JsonObject();

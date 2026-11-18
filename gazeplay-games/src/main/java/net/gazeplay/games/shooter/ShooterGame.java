@@ -29,6 +29,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -390,7 +391,7 @@ public class ShooterGame implements GameLifeCycle {
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
             ring.setStrokeLineCap(StrokeLineCap.ROUND);
-            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));
             node = new Group(zone, view, ring);
@@ -469,7 +470,7 @@ public class ShooterGame implements GameLifeCycle {
             zone.setRadius(size * 0.6);
             ring.setRadiusX(size * 0.7);
             ring.setRadiusY(size * 0.7);
-            ring.setStrokeWidth(Math.max(4, size * 0.08));
+            ring.setStrokeWidth(RingThickness.width(Math.max(4, size * 0.08)));
             node.setLayoutX(x);
             node.setLayoutY(y);
         }
@@ -543,5 +544,13 @@ public class ShooterGame implements GameLifeCycle {
             stopFixation();
             gameContext.getGazeDeviceManager().removeEventFilter(node);
         }
+    }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.ANIMATION_SPEED);
     }
 }

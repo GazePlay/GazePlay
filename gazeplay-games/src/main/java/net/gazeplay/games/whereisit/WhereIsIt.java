@@ -498,7 +498,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().addAll(questionDecorations);
         decorationAnimations.forEach(Transition::play);
 
-        // In the band: centered between the configuration button and the button to hear the question again
+        // In the band: centered between the counter of the screens and the button to hear the question again
         final double bandFont = sizing.bandHeight() * 0.34;
         final double scale = Math.min(bandFont / Math.min(largeFont, largeFont * width * 0.9 / Math.max(1, pillWidth)),
             (sizing.bandRight() - sizing.bandLeft() - 2 * sizing.gap()) / pillWidth);

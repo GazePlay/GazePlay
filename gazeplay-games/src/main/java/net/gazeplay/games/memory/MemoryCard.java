@@ -22,6 +22,7 @@ import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 /**
  * A card of Memory (reviewed on 30/10/2026): a rounded card of the colors of the menus showing a picture, a letter or a
@@ -116,7 +117,7 @@ public class MemoryCard extends Group {
         ring.setFill(null);
         ring.setStrokeType(StrokeType.INSIDE);
         ring.setStrokeLineCap(StrokeLineCap.BUTT);
-        ring.setStrokeWidth(Math.max(5, Math.min(width, height) * 0.045));
+        RingThickness.apply(ring, Math.max(5, Math.min(width, height) * 0.045));
         ring.setVisible(false);
         ring.setMouseTransparent(true);
         ringPerimeter = GameStyle.clockwiseRing(ring);
@@ -163,7 +164,7 @@ public class MemoryCard extends Group {
         stopFixation();
         // On the back of a card, which has the main color, the ring would not be seen in that color (maintainer's remark
         // of 4/11/2026): it takes the color of the "?"
-        ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-accent") + ";");
+        ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-ring") + ";");
         ring.setVisible(true);
         fixationProgress.set(0);
         fixation = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),

@@ -1346,4 +1346,12 @@ public class TrainSwitches implements GameLifeCycle {
             node.setLayoutY(sy(box[1]) - cell * 0.26);
         }
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+    }
 }

@@ -130,7 +130,8 @@ class MemoryTest {
 
     /**
      * The ring of the fixation stands out from the card: not of the main color on the back of a card, which has that
-     * color (maintainer's remark of 4/11/2026: it could not be seen), of the main color on a face.
+     * color (maintainer's remark of 4/11/2026: it could not be seen), of the color of the rings of the settings on a
+     * face (17/11/2026, {@code -gp-ring}: the main color by default).
      */
     @Test
     void shouldShowTheRingOfTheFixationInAColorSeenOnTheCard() throws Exception {
@@ -146,7 +147,7 @@ class MemoryTest {
         WaitForAsyncUtils.asyncFx(() -> javafx.event.Event.fireEvent(visible.getCards().get(0),
             new net.gazeplay.commons.gaze.devicemanager.GazeEvent(
                 net.gazeplay.commons.gaze.devicemanager.GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
-        assertEquals("-fx-stroke: -gp-accent;", visible.getCards().get(0).getRingStyle());
+        assertEquals("-fx-stroke: -gp-ring;", visible.getCards().get(0).getRingStyle());
     }
 
     /**

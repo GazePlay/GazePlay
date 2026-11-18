@@ -683,4 +683,12 @@ public class Ninja implements GameLifeCycle {
             layer = null;
         }
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return cut == NinjaCut.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.ELEMENT_SIZE) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.ELEMENT_SIZE);
+    }
 }

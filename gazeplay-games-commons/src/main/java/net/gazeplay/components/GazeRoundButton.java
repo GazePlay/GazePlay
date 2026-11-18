@@ -70,14 +70,13 @@ public class GazeRoundButton extends Group {
         icon.setLayoutY((size - iconSize) / 2);
         icon.setMouseTransparent(true);
 
-        final double ringWidth = Math.max(4, size * 0.07);
-        final double ringRadius = size / 2 - ringWidth / 2;
-        progressArc = new Arc(size / 2, size / 2, ringRadius, ringRadius, 90, 0);
+        progressArc = new Arc(size / 2, size / 2, size / 2, size / 2, 90, 0);
         progressArc.setType(ArcType.OPEN);
         progressArc.setFill(null);
-        progressArc.setStrokeWidth(ringWidth);
+        // The thickness of the settings, the line staying inside the disc
+        RingThickness.applyInside(progressArc, size / 2, Math.max(4, size * 0.07));
         progressArc.setStrokeLineCap(StrokeLineCap.BUTT);
-        progressArc.setStyle("-fx-stroke: -gp-accent;");
+        progressArc.setStyle("-fx-stroke: -gp-ring;");
         progressArc.setMouseTransparent(true);
 
         getChildren().addAll(disc, icon, progressArc);

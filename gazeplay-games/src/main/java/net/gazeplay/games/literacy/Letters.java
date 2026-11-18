@@ -917,4 +917,12 @@ public class Letters implements GameLifeCycle {
             return node.isVisible();
         }
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+    }
 }

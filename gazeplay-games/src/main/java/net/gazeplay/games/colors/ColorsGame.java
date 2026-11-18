@@ -695,4 +695,12 @@ public class ColorsGame implements GameLifeCycle {
         final int blue = (int) Math.round((argb & 0xFF) * alpha + 255 * (1 - alpha));
         return 0xFF000000 | (red << 16) | (green << 8) | blue;
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+    }
 }

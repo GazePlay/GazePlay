@@ -16,12 +16,16 @@ public class GameSizingComputer {
     static final double LIVES_ROW = 0.085;
 
     /**
-     * Smallest size of the free corner left of the band: the place of the old configuration button (a tenth of the width
-     * of the window, 30 pixels above the bottom), kept for the layout until the redesign of the menu of the games.
+     * Height of the band of the question, in part of the height of the game area. Since the menu of the games opens
+     * with Esc (17/11/2026), the band no longer keeps the corner of the old configuration button: it was up to a quarter
+     * of the height.
      */
-    private static final double CONFIG_BUTTON_MIN_SIZE = 64;
+    static final double BAND = 0.17;
 
-    private static final double CONFIG_BUTTON_BOTTOM_MARGIN = 30;
+    /**
+     * Width of the left of the band, for the counter of the screens, in part of the width of the game area.
+     */
+    static final double BAND_LEFT = 0.15;
 
     private final int nbLines;
     private final int nbColumns;
@@ -53,18 +57,17 @@ public class GameSizingComputer {
         }
 
         final double gap = Math.max(8, Math.min(width, height) * 0.015);
-        final double configButton = Math.max(width / 10, CONFIG_BUTTON_MIN_SIZE);
-        // The band holds the question, and keeps the corner of the old configuration button out of the grid
-        final double bandHeight = Math.min(height * 0.25,
-            Math.max(height * 0.14, configButton + CONFIG_BUTTON_BOTTOM_MARGIN + gap));
+        // The band holds the question, the counter of the screens on its left, the button to hear it again on its right
+        final double bandHeight = height * BAND;
         final double bandTop = height - bandHeight;
 
         final double top = livesRow ? height * LIVES_ROW : 0;
         final double cellWidth = (width - gap * (nbColumns + 1)) / nbColumns;
         final double cellHeight = (bandTop - top - gap * (nbLines + 1)) / nbLines;
 
-        final GameSizing gameSizing = new GameSizing(cellWidth, cellHeight, gap, bandTop, bandHeight,
-            2 * gap + configButton, width, top);
+        final double bandLeft = Math.max(width * BAND_LEFT, 2 * gap + bandHeight * 0.7);
+        final GameSizing gameSizing = new GameSizing(cellWidth, cellHeight, gap, bandTop, bandHeight, bandLeft, width,
+            top);
         log.debug("gameSizing = {}", gameSizing);
         return gameSizing;
     }

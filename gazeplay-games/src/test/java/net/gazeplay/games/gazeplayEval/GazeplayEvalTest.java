@@ -153,16 +153,17 @@ class GazeplayEvalTest {
     }
 
     /**
-     * Decision of the maintainer of 5/11/2026: the full screen button of the menu is greyed during an evaluation, and
-     * during the test of an evaluation.
+     * Decision of the maintainer of 13/11/2026: during an evaluation, and during the test of an evaluation, the menu
+     * (Esc) has only the volume, Resume and Quit, not the settings of the games (the full screen, greyed there since
+     * 5/11/2026, is no longer in the menu since 17/11/2026).
      */
     @Test
-    void shouldForbidChangingTheFullScreen() throws Exception {
+    void shouldOfferOnlyTheVolumeAndQuitInTheMenu() throws Exception {
         createEvaluation("[]", "[]");
         GazeplayEvalGameVariant variant = new GazeplayEvalGameVariant(evaluationName);
 
-        assertFalse(new GazeplayEval(gameContext, variant, stats).allowsFullScreenChange());
-        assertFalse(GazeplayEval.test(gameContext, variant, stats).allowsFullScreenChange());
+        assertFalse(new GazeplayEval(gameContext, variant, stats).offersGameSettings());
+        assertFalse(GazeplayEval.test(gameContext, variant, stats).offersGameSettings());
     }
 
     @Test

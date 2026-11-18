@@ -2,15 +2,15 @@ package net.gazeplay.games.whereisit;
 
 /**
  * Layout of a round of "Where is it?": the grid of the pictures, with a gap between and around them, above a band at
- * the bottom of the game area for the question and the button to hear it again. The left of the band is kept free for
- * the configuration button of the game.
+ * the bottom of the game area for the question and the button to hear it again. The left of the band holds the counter
+ * of the screens (the corner of the old configuration button, freed on 17/11/2026: the menu opens with Esc).
  *
  * @param cellWidth  width of a picture
  * @param cellHeight height of a picture
  * @param gap        space between the pictures and around them
  * @param bandTop    top of the band of the question
  * @param bandHeight height of the band
- * @param bandLeft   left of the free part of the band (right of the configuration button)
+ * @param bandLeft   left of the free part of the band (right of the counter of the screens)
  * @param width      width of the game area
  */
 record GameSizing(double cellWidth, double cellHeight, double gap, double bandTop, double bandHeight, double bandLeft,
@@ -38,7 +38,7 @@ record GameSizing(double cellWidth, double cellHeight, double gap, double bandTo
     }
 
     /**
-     * @return the horizontal center of the free part of the band, between the configuration button and the button to
+     * @return the horizontal center of the free part of the band, between the counter of the screens and the button to
      * hear the question again
      */
     double bandCenterX() {

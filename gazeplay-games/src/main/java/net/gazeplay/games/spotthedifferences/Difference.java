@@ -21,6 +21,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.util.List;
 
@@ -76,9 +77,9 @@ public class Difference {
             ring = new Arc(0, 0, radius, radius, 90, 0);
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
-            ring.setStrokeWidth(Math.max(5, radius * 0.12));
+            RingThickness.apply(ring, Math.max(5, radius * 0.12));
             ring.setStrokeLineCap(StrokeLineCap.ROUND);
-            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             ring.setVisible(false);
         } else {

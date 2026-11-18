@@ -430,7 +430,7 @@ class StatsRecordingCharacterizationTest {
         assertEquals(500, sequence.get(0).getX());
         assertEquals(10, sequence.get(0).getY());
         JsonObject json = ReplayDataWriter.toJson(new ReplayDataWriter.Round(0, "", "", 0, "", 0, 0, 0, 0, 0,
-                null, null, 0, List.of(), List.of(new LinkedList<>(), sequence), new JsonArray()))
+                null, null, null, 0, List.of(), List.of(new LinkedList<>(), sequence), new JsonArray()))
             .getAsJsonArray("fixationSequence").get(1).getAsJsonArray().get(0).getAsJsonObject();
         assertEquals(10, json.get("x").getAsInt());
         assertEquals(500, json.get("y").getAsInt());

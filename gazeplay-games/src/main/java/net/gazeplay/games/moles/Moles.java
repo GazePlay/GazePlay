@@ -681,4 +681,12 @@ public class Moles implements GameLifeCycle {
             return body.isVisible();
         }
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return hit == MolesHit.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+    }
 }

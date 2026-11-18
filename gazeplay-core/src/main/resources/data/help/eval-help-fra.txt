@@ -6,7 +6,7 @@ Avant une passation, « Tester une évaluation » permet de vérifier la calib
 - « Lancer une évaluation », puis choisissez l'évaluation.
 - Remplissez le formulaire du participant, puis appuyez sur « Commencer ».
 - Le participant choisit une image en la regardant : un anneau se remplit autour d'elle pendant la fixation.
-- Pour quitter en cours de route : le menu (touche Échap), puis le bouton d'accueil. Les résultats déjà obtenus sont enregistrés, et la passation est notée comme non terminée. Pendant que le menu est ouvert, l'évaluation est en pause.
+- Pour quitter en cours de route : le menu (touche Échap), puis « Quitter l'évaluation ». Ce menu ne contient que le volume, « Reprendre » et « Quitter l'évaluation ». Les résultats déjà obtenus sont enregistrés, et la passation est notée comme non terminée. Pendant que le menu est ouvert, l'évaluation est en pause.
 
 # Touches de l'examinateur
 Pendant un écran (consigne, grille, transition) :

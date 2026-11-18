@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 /**
  * Round button with a loudspeaker, at the right of the band of the question: a fixation on it says the question
@@ -61,14 +62,13 @@ class ReplayQuestionButton extends Group {
         speaker.setLayoutY(centerY - iconSize / 2);
         speaker.setMouseTransparent(true);
 
-        final double ringWidth = Math.max(4, size * 0.07);
-        final double ringRadius = size / 2 - ringWidth / 2;
-        progressArc = new Arc(centerX, centerY, ringRadius, ringRadius, 90, 0);
+        progressArc = new Arc(centerX, centerY, size / 2, size / 2, 90, 0);
         progressArc.setType(ArcType.OPEN);
         progressArc.setFill(null);
-        progressArc.setStrokeWidth(ringWidth);
+        // The thickness of the settings, the line staying inside the disc
+        RingThickness.applyInside(progressArc, size / 2, Math.max(4, size * 0.07));
         progressArc.setStrokeLineCap(StrokeLineCap.BUTT);
-        progressArc.setStyle("-fx-stroke: -gp-accent;");
+        progressArc.setStyle("-fx-stroke: -gp-ring;");
         progressArc.setMouseTransparent(true);
 
         getChildren().addAll(disc, speaker, progressArc);

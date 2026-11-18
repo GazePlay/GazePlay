@@ -1591,3 +1591,93 @@
     -fx-padding: 6 14 6 14;
     -fx-font-size: 12pt;
 }
+
+/* Menu of a game screen, opened with Esc (GameMenuView, refonte of 17/11/2026, maquette A): a card in the middle of
+   the darkened game */
+.gp-menu.gp-game-menu-backdrop {
+    -fx-background-color: rgba(27, 22, 18, 0.55);
+    -fx-alignment: center;
+    -fx-padding: 24;
+}
+
+.gp-menu .gp-game-menu {
+    -fx-background-color: -gp-bg;
+    -fx-background-radius: 28;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 28;
+    -fx-padding: 24 28 20 28;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 40, 0, 0, 12);
+}
+
+.gp-menu .gp-game-menu-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 24pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-game-menu-note {
+    -fx-font-size: 11pt;
+    -fx-text-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-game-menu-action {
+    -fx-font-size: 15pt;
+    -fx-padding: 14 18 14 18;
+}
+
+.gp-menu .gp-game-menu-card {
+    -fx-background-color: -gp-surface;
+    -fx-background-radius: 20;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-padding: 14 18 14 18;
+}
+
+.gp-menu .gp-game-menu-card-title {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 14pt;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-game-menu-label {
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text-muted;
+}
+
+.gp-menu .gp-game-menu-value {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 13pt;
+    -fx-text-fill: -gp-text;
+}
+
+/* Sliders: a thin track, filled in the main color up to a round thumb */
+.gp-menu .gp-game-menu-slider .track {
+    -fx-background-color: -gp-border;
+    -fx-background-radius: 3;
+    -fx-background-insets: 0;
+    -fx-padding: 3;
+}
+
+.gp-menu .gp-game-menu-slider .thumb {
+    -fx-background-color: -gp-accent;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-padding: 9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 1);
+}
+
+.gp-menu .gp-game-menu-slider:focused .thumb {
+    -fx-border-color: -gp-text;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+}
+
+.gp-menu .gp-game-menu-swatch {
+    -fx-alignment: center;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-cursor: hand;
+}

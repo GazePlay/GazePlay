@@ -283,13 +283,14 @@ class StatsTest {
             throw new UncheckedIOException(e);
         }
         // Format 5 since 17/11/2026 (the mistakes counted from 0)
-        assertEquals(5, replayData.get("formatVersion").getAsInt());
+        assertEquals(6, replayData.get("formatVersion").getAsInt());
         assertEquals(Set.of("formatVersion", "gameSeed", "gameName", "gameVariant", "gameStartedTime", "screenAspectRatio",
             "sceneAspectRatio", "statsNbGoalsReached", "statsNbGoalsToReach", "statsNbUnCountedGoalsReached",
             "statsNbMistakes", "lifeCycle", "roundsDurationReport", "fixationSequence", "coordinatesAndTimeStamp"),
             replayData.keySet());
-        // stopTime is written even when null (round not stopped yet)
-        assertEquals(Set.of("startTime", "stopTime"), replayData.getAsJsonObject("lifeCycle").keySet());
+        // stopTime and menuDuration (format 6) are written even when null (round not stopped yet)
+        assertEquals(Set.of("startTime", "stopTime", "menuDuration"),
+            replayData.getAsJsonObject("lifeCycle").keySet());
         assertEquals(Set.of("totalAdditiveDuration", "durationBetweenGoals"),
             replayData.getAsJsonObject("roundsDurationReport").keySet());
         // Two lists: mouse, then gaze; the samples given to gazeMoved() go to the gaze list

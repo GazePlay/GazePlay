@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.components.RingThickness;
 
 import java.util.function.Consumer;
 
@@ -65,12 +66,13 @@ public class ColorBox extends Group {
         // An outline, so that white and the light colors stay visible on a light background
         swatch.setStyle("-fx-stroke: -gp-text-muted; -fx-stroke-width: 1.5;");
 
-        progressArc = new Arc(size / 2, size / 2, size / 2 - ringWidth / 2, size / 2 - ringWidth / 2, 90, 0);
+        progressArc = new Arc(size / 2, size / 2, size / 2, size / 2, 90, 0);
         progressArc.setType(ArcType.OPEN);
         progressArc.setFill(null);
-        progressArc.setStrokeWidth(ringWidth);
+        // The thickness of the settings, the line staying inside the box
+        RingThickness.applyInside(progressArc, size / 2, ringWidth);
         progressArc.setStrokeLineCap(StrokeLineCap.BUTT);
-        progressArc.setStyle("-fx-stroke: -gp-accent;");
+        progressArc.setStyle("-fx-stroke: -gp-ring;");
         progressArc.setMouseTransparent(true);
 
         getChildren().addAll(swatch, selectionRing, progressArc);

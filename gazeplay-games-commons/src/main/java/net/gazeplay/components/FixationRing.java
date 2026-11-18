@@ -39,23 +39,29 @@ public class FixationRing extends Group {
         progressArc.setFill(null);
         progressArc.setStrokeLineCap(StrokeLineCap.ROUND);
         progressArc.setStartAngle(90);
-        progressArc.setStyle("-fx-stroke: -gp-accent;");
+        progressArc.setStyle("-fx-stroke: -gp-ring;");
         getChildren().addAll(background, progressArc);
         setMouseTransparent(true);
         setVisible(false);
         hideDelay.setOnFinished(event -> setVisible(false));
+        // The line stays inside the disc whatever its thickness (thickness of the settings, 18/11/2026)
+        progressArc.strokeWidthProperty().addListener((observable, oldValue, newValue) -> placeArc());
         setSize(60);
     }
 
     /**
-     * Sets the diameter of the ring.
+     * Sets the diameter of the ring. The width of its line is the thickness of the settings ({@link RingThickness}).
      */
     public void setSize(final double size) {
-        final double ringWidth = Math.max(5, size * 0.12);
         background.setRadius(size / 2);
-        progressArc.setRadiusX(size / 2 - ringWidth / 2);
-        progressArc.setRadiusY(size / 2 - ringWidth / 2);
-        progressArc.setStrokeWidth(ringWidth);
+        RingThickness.apply(progressArc, Math.max(5, size * 0.12));
+        placeArc();
+    }
+
+    private void placeArc() {
+        final double radius = Math.max(1, background.getRadius() - progressArc.getStrokeWidth() / 2);
+        progressArc.setRadiusX(radius);
+        progressArc.setRadiusY(radius);
     }
 
     /**

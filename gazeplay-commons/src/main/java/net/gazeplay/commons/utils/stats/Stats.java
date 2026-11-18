@@ -291,7 +291,7 @@ public class Stats {
      * drawn under the heatmaps.
      */
     public void notifyNewRoundReady() {
-        currentRoundStartTime = System.currentTimeMillis();
+        currentRoundStartTime = MenuTime.gameClock();
         takeScreenShot();
     }
 
@@ -299,7 +299,7 @@ public class Stats {
      * To be called by a game when a round ends: adds its duration.
      */
     public void notifyNextRound() {
-        final long currentRoundEndTime = System.currentTimeMillis();
+        final long currentRoundEndTime = MenuTime.gameClock();
         final long currentRoundDuration = currentRoundEndTime - this.currentRoundStartTime;
         this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         currentRoundStartTime = currentRoundEndTime;
@@ -532,7 +532,8 @@ public class Stats {
             recordingRoot.addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         });
-        currentRoundStartTime = lifeCycle.getStartTime();
+        // The rounds are timed on the clock of the game, which stops while the menu is open (format 6)
+        currentRoundStartTime = MenuTime.gameClock();
     }
 
     private static boolean isMouseMovement(final MouseEvent e) {
@@ -829,7 +830,7 @@ public class Stats {
     public void incrementNumberOfGoalsToReach() {
         if (!inReplayMode) {
             nbGoalsToReach++;
-            currentRoundStartTime = System.currentTimeMillis();
+            currentRoundStartTime = MenuTime.gameClock();
             log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
         }
     }
@@ -840,7 +841,7 @@ public class Stats {
     public void incrementNumberOfGoalsToReach(int i) {
         if (!inReplayMode) {
             nbGoalsToReach += i;
-            currentRoundStartTime = System.currentTimeMillis();
+            currentRoundStartTime = MenuTime.gameClock();
             log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
         }
     }
@@ -851,7 +852,7 @@ public class Stats {
      */
     public void incrementNumberOfGoalsReached() {
         if (!inReplayMode) {
-            final long currentRoundEndTime = System.currentTimeMillis();
+            final long currentRoundEndTime = MenuTime.gameClock();
             final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
             if (currentRoundDuration < accidentalShotPreventionPeriod) {
                 nbUnCountedGoalsReached++;
@@ -891,7 +892,7 @@ public class Stats {
      * Adds the time since the start of the current round as a round duration.
      */
     public void addRoundDuration() {
-        this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
+        this.roundsDurationReport.addRoundDuration(MenuTime.gameClock() - currentRoundStartTime);
     }
 
     /**
@@ -1020,7 +1021,7 @@ public class Stats {
         return ReplayDataWriter.toJson(new ReplayDataWriter.Round(
             currentGameSeed, currentGameNameCode, currentGameVariant, startTime, getScreenRatio(), getSceneRatio(),
             nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, nbMistakes,
-            lifeCycle.getStartTime(), lifeCycle.getStopTime(),
+            lifeCycle.getStartTime(), lifeCycle.getStopTime(), lifeCycle.getMenuDuration(),
             roundsDurationReport.getTotalAdditiveDuration(), roundsDurationReport.getDurationBetweenGoals(),
             fixationSequence, data));
     }
@@ -1100,6 +1101,8 @@ public class Stats {
      */
     public static void setConfigMenuOpen(boolean configMenuStatus) {
         configMenuOpen = configMenuStatus;
+        // Not counted in the durations since the format 6 (17/11/2026)
+        MenuTime.setOpen(configMenuStatus);
     }
 
     /**

@@ -24,6 +24,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 /**
  * A picture of a round of "Where is it?", on a rounded card; a fixation on it chooses it, the right one ending the
@@ -101,8 +102,8 @@ class PictureCard extends Group {
         ring.setFill(null);
         ring.setStrokeType(StrokeType.INSIDE);
         ring.setStrokeLineCap(StrokeLineCap.BUTT);
-        ring.setStrokeWidth(ringWidth);
-        ring.setStyle("-fx-stroke: -gp-accent;");
+        RingThickness.apply(ring, ringWidth);
+        ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setVisible(false);
         ring.setMouseTransparent(true);
         this.ringPerimeter = GameStyle.clockwiseRing(ring);

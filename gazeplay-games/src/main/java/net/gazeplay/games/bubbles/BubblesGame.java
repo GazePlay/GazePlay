@@ -36,6 +36,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -443,7 +444,7 @@ public class BubblesGame implements GameLifeCycle {
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
             ring.setStrokeLineCap(StrokeLineCap.ROUND);
-            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));
             gameContext.getGazeDeviceManager().addEventFilter(node);
@@ -521,13 +522,13 @@ public class BubblesGame implements GameLifeCycle {
                 default -> {
                     speed = 0;
                     stillTime = STILL_TIME / ratio * (along > 0 ? along : 1);
-                    // Not in the bottom left corner (old gear) nor under the count (top), nor on another bubble
+                    // Not under the count (top), nor on another bubble (the bottom left corner of the old gear is free
+                    // since the menu opens with Esc, 17/11/2026)
                     int tries = 0;
                     do {
                         x = radius + (width - 2 * radius) * random.nextDouble();
                         y = radius + height * 0.08 + (height * 0.92 - 2 * radius) * random.nextDouble();
-                    } while (tries++ < 40 && ((x < height * 0.22 + radius && y > height * 0.78 - radius)
-                        || overlapsAnother()));
+                    } while (tries++ < 40 && overlapsAnother());
                 }
             }
             draw();
@@ -582,7 +583,7 @@ public class BubblesGame implements GameLifeCycle {
             shine.setFill(Color.web("#FFFFFF", 0.75));
             ring.setRadiusX(radius * 1.12);
             ring.setRadiusY(radius * 1.12);
-            ring.setStrokeWidth(Math.max(4, radius * 0.12));
+            RingThickness.apply(ring, Math.max(4, radius * 0.12));
             node.getChildren().addAll(film, shine, ring);
             node.getChildren().forEach(child -> child.setMouseTransparent(child == ring));
             node.setOpacity(1);
@@ -661,5 +662,13 @@ public class BubblesGame implements GameLifeCycle {
             stopFixation();
             gameContext.getGazeDeviceManager().removeEventFilter(node);
         }
+    }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return burst == BubblesBurst.FIXATION ? net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.ANIMATION_SPEED) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
     }
 }

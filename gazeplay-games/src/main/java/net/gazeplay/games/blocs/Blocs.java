@@ -528,4 +528,12 @@ public class Blocs implements GameLifeCycle {
             blocksLayer.getChildren().add(shape);
         }
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return mode == BlocsMode.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing() : net.gazeplay.MenuSetting.of();
+    }
 }

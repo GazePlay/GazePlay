@@ -86,6 +86,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_ELEMENT_SIZE = "ELEMENT_SIZE";
     private static final String PROPERTY_NAME_PROGRESS_BAR_SIZE = "PROGRESS_BAR_SIZE";
     private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
+    private static final String PROPERTY_NAME_RING_THICKNESS = "RING_THICKNESS";
     /* Menu settings */
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -140,7 +141,21 @@ public class Configuration {
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
     private static final int DEFAULT_VALUE_PROGRESS_BAR_SIZE = 100;
-    private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = "YELLOW";
+    /**
+     * Color of the rings of the fixations meaning the main color of the menus (17/11/2026: the rings of the reviewed
+     * games are in that color; the other values are color names).
+     */
+    public static final String RING_COLOR_ACCENT = "ACCENT";
+
+    private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = RING_COLOR_ACCENT;
+    /**
+     * Thickness of the rings of the fixations, in percent of the width chosen by each game (18/11/2026, maintainer's
+     * request: the setting changes the width of the line of the ring, never its diameter). A new key, so that a value
+     * of the former PROGRESS_BAR_SIZE (a diameter, from 15 to 100) is not read as a thickness.
+     */
+    public static final int DEFAULT_VALUE_RING_THICKNESS = 100;
+    public static final int MIN_RING_THICKNESS = 50;
+    public static final int MAX_RING_THICKNESS = 200;
     /* Menu settings */
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -235,6 +250,8 @@ public class Configuration {
     private final IntegerProperty progressBarSizeProperty;
     @Getter
     private final StringProperty progressBarColorProperty;
+    @Getter
+    private final IntegerProperty ringThicknessProperty;
     /* Menu settings */
     @Getter
     private final StringProperty userNameProperty;
@@ -319,6 +336,7 @@ public class Configuration {
         elementSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_ELEMENT_SIZE, DEFAULT_VALUE_ELEMENT_SIZE, propertyChangeListener);
         progressBarSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_SIZE, DEFAULT_VALUE_PROGRESS_BAR_SIZE, propertyChangeListener);
         progressBarColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_COLOR, DEFAULT_VALUE_PROGRESS_BAR_COLOR, propertyChangeListener);
+        ringThicknessProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_RING_THICKNESS, DEFAULT_VALUE_RING_THICKNESS, propertyChangeListener);
 
         /* Menu settings */
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
@@ -578,6 +596,18 @@ public class Configuration {
 
     public String getProgressBarColor() {
         return progressBarColorProperty.getValue();
+    }
+
+    /**
+     * @return the thickness of the rings of the fixations, in percent of the width chosen by each game, within
+     * {@link #MIN_RING_THICKNESS} and {@link #MAX_RING_THICKNESS}
+     */
+    public int getRingThickness() {
+        final Integer value = ringThicknessProperty.getValue();
+        if (value == null) {
+            return DEFAULT_VALUE_RING_THICKNESS;
+        }
+        return Math.max(MIN_RING_THICKNESS, Math.min(MAX_RING_THICKNESS, value));
     }
 
     /* Menu settings */

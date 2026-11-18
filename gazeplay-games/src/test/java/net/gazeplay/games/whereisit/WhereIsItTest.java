@@ -162,16 +162,16 @@ class WhereIsItTest {
     }
 
     /**
-     * The pictures stay above the band of the question, which leaves the configuration button out of the grid.
+     * The pictures stay above the band of the question; the band no longer keeps the corner of the old configuration
+     * button (17/11/2026): the pictures get more room.
      */
     @Test
     void shouldLayTheGridAboveTheBand() {
         final GameSizing sizing = new GameSizingComputer(3, 3).computeGameSizing(new Dimension2D(1366, 768));
         assertTrue(sizing.cellY(2) + sizing.cellHeight() <= sizing.bandTop() + 0.001);
         assertTrue(sizing.cellX(2) + sizing.cellWidth() <= 1366 + 0.001);
-        // Configuration button: a tenth of the width, 30 pixels above the bottom
-        assertTrue(sizing.bandHeight() >= 136.6 + 30);
-        assertTrue(sizing.bandLeft() > 136.6);
+        assertEquals(768 * GameSizingComputer.BAND, sizing.bandHeight(), 0.001);
+        assertEquals(1366 * GameSizingComputer.BAND_LEFT, sizing.bandLeft(), 0.001);
         assertTrue(sizing.bandRight() > sizing.bandLeft());
     }
 

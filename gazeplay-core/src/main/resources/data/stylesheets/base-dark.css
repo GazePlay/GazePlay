@@ -13,6 +13,8 @@
     -gp-text: #FFF4E8;
     -gp-text-muted: #C8B8A8;
     -gp-accent: #FF7E57;
+    /* Ring of a fixation in the games: the main color, unless the settings give another one (GameContextFactory) */
+    -gp-ring: -gp-accent;
     -gp-on-accent: #1B1612;
     -gp-yellow: #FFCF5C;
     -gp-teal: #3CCFC1;

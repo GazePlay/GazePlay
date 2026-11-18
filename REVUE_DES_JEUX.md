@@ -5,6 +5,65 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU MERCREDI 18/11/2026 (fin de la séance du mardi 17/11/2026, soir)
+
+**Fait le 17/11 après-midi et soir** :
+- **Commité et poussé** : écrans Zones d'intérêt et Parcours du regard refaits (maquettes B, liste des zones de la
+  maquette A dans l'ordre des numéros, Zone 1 ouverte au départ, retour aux statistiques en mode Avancé), `dcc25e21d`,
+  **CI verte** (run `44097726769`).
+- **NON commité (essai du mainteneur en cours)** :
+  - intitulé corrigé : l'ancienne « refonte graphique du menu des jeux » était le **menu Échap des parties** ;
+  - **menu Échap refait** (maquette A, `GameMenuView`) : Reprendre, Recommencer, Quitter la partie ; cartes Son, Jeu
+    (durée de fixation, vitesse des éléments, taille des éléments), Anneau de progression (taille, couleur) ; couleur
+    de fond et plein écran retirés du menu (réglages du menu principal seulement) ; en évaluation : volume, Reprendre,
+    Quitter l'évaluation (les sons et vidéos des évaluations suivent maintenant le volume des sons) ; coins de
+    l'ancien engrenage libérés (Où est…, Bulles) ;
+  - **format de résultats v6** : temps passé menu ouvert hors des durées (`MenuTime`, `menuDuration` dans
+    `lifeCycle`, `MODERNIZATION.md` 2aq) ;
+  - retour « les options n'ont pas d'incidence » : couleur de l'anneau branchée sur tous les anneaux (`-gp-ring`,
+    premier choix « couleur principale », `ACCENT`, par défaut) ; taille de l'anneau sur l'anneau commun
+    (`FixationRing`, `ProgressButton`), grisée ailleurs ; taille des éléments grisée sauf dans Ninja ; chaque jeu
+    déclare les réglages qui agissent sur lui selon sa variante (`GameLifeCycle.menuSettings()`, `MenuSetting`).
+  - Tests ciblés et SpotBugs verts ; suite complète et `allGamesTest` pas relancés (seulement Course des grenouilles).
+
+**Points à revoir, relevés par le mainteneur le 17/11 au soir (rien n'est codé)** :
+1. **La tarte à la crème** : la vitesse des éléments doit servir dans la variante « cibles qui bougent » (aujourd'hui
+   le jeu ne lit pas la vitesse du tout, d'où le réglage grisé) : brancher la vitesse sur le mouvement des cibles, et
+   ne la griser qu'en cibles immobiles. Relire de même les autres déclarations `menuSettings()` jeu par jeu (faites par
+   lecture du code, pas en jouant).
+2. **Taille de l'anneau = son épaisseur, pas son diamètre** : réduire le diamètre donne un tout petit cercle au milieu
+   de l'image, c'est bizarre. Le réglage doit changer la **largeur du trait** de l'anneau, son diamètre restant celui
+   choisi par le jeu. Pareil pour les jeux dont l'anneau de fixation fait la **bordure de la carte** (Memory, Cartes
+   magiques, Où est…, Opinions, Fleur des nombres, Sons de la vie…) : c'est l'épaisseur de la bordure qui change. Le
+   réglage pourra alors agir dans tous les jeux (plus de grisé pour la taille de l'anneau).
+3. **Réglages globaux** : vérifier que **chaque option du menu Échap existe aussi dans les réglages du menu principal**
+   (pour la régler une fois pour toutes) : volume de la musique et des sons, musique, durée de fixation, vitesse des
+   éléments, taille des éléments, taille (épaisseur) et couleur de l'anneau, avec le nouveau choix « couleur
+   principale ».
+4. **GazePlay Eval** : toujours les **valeurs par défaut classiques** des réglages, sauf les valeurs présentes dans le
+   JSON de l'évaluation (contrat du site) : une évaluation ne doit pas dépendre des réglages du profil (durée de
+   fixation, vitesse, taille, anneau…). Le volume reste réglable pendant la passation (menu Échap).
+
+**Ordre du jour du mercredi 18/11/2026** :
+1. ~~Essai du menu Échap par le mainteneur~~ : **fait le 18/11, tout est bon** (retour du mainteneur).
+2. ~~Point 2 : taille de l'anneau = épaisseur du trait~~ : **fait le 18/11, essayé sur plusieurs jeux et validé par le mainteneur, commité**.
+   Nouvelle clé `RING_THICKNESS` (50 à 200 %, 100 par défaut ; l'ancienne `PROGRESS_BAR_SIZE`, un diamètre de 15 à
+   100, n'est plus lue, pour ne pas prendre une ancienne valeur pour une épaisseur). `RingThickness` (games-commons)
+   multiplie la largeur du trait choisie par chaque jeu, suivie tout de suite (même sur un anneau en train de se
+   remplir) : anneau commun (`FixationRing`, `ProgressButton`, `GazeRoundButton`, dont le diamètre ne change plus :
+   le trait s'épaissit vers l'intérieur), anneaux propres (Bulles, Tir, Jeu de l'œuf, Fleur des nombres, Sprint
+   jusqu'à l'arrivée, Spot The Differences, bouton de la question d'Où est…, couleurs du Coloriage) et bordures de carte (Memory, Cartes magiques,
+   Où est…, Opinions, Sons de la vie : `StrokeType.INSIDE`, le bord extérieur ne bouge pas). Les anneaux de GazePlay
+   Eval ne suivent pas le réglage (point 4). Menu Échap : « Épaisseur », plus jamais grisée quand le jeu a une
+   fixation (`MenuSetting.RING_THICKNESS` ; `fixationWithOwnRing` donne maintenant les mêmes réglages que
+   `fixationWithSharedRing`). Tests ciblés et SpotBugs verts (test Memory resté sur `-gp-accent` corrigé).
+3. Point 1 : vitesse de La tarte à la crème (cibles qui bougent) ; revue des déclarations `menuSettings()`.
+4. Point 3 : réglages du menu principal complets (mêmes options que le menu Échap).
+5. Point 4 : GazePlay Eval sur les valeurs par défaut, sauf celles du JSON.
+6. Tests ciblés, puis commit (sur accord), push et CI (suite complète et `allGamesTest`).
+7. Ensuite, tâches de fin : faire fermer leurs parties à tous les tests et libération immédiate des objets simulés ;
+   inventaire des sons ; notes de version 2.0 (images à remettre, formats v5 et v6).
+
 ## REPRISE APRÈS LE MARDI 17/11/2026 (bilan de la séance du mardi 17/11/2026)
 
 **Fait le mardi 17/11/2026**, jeux repris dans l'ordre du menu principal, chacun essayé et validé par le mainteneur,
@@ -39,8 +98,23 @@ un commit par jeu, tout poussé jusqu'à `1abb5a720` ; **CI verte sur les 7 jobs
    `data/common/images/continue.png` ne sert plus (gardée, inventaire des images inchangé).
 3. ~~Écrans **Zones d'intérêt** et **Parcours du regard**~~ : **faits le 17/11** (maquettes B choisies par le
    mainteneur, plus la liste des zones de la maquette A ; section « Zones d'intérêt et Parcours du regard » en bas).
-   Restent : refonte graphique du menu des jeux ; modernisation du menu Échap (réduit au volume et à Quitter en
-   évaluation).
+   Reste : **menu Échap des parties, graphisme et modernisation** (l'ancien intitulé « refonte graphique du menu des
+   jeux » désignait ce menu, pas le menu principal des jeux, refait le 28/10). Décisions du mainteneur du 17/11 :
+   coins gardés pour l'engrenage libérés ; **le temps passé menu ouvert n'est plus compté** dans les durées (option A
+   de `MODERNIZATION.md` 2an : changement de sens des durées, donc nouvelle version du format de résultats) ; en
+   évaluation, seulement le volume et Quitter (décision du 13/11). Maquettes proposées le 17/11 (page Artifact « Menu
+   Échap des parties ») : **maquette A choisie** (fenêtre au centre : Reprendre, Recommencer, Quitter la partie, puis
+   les cartes Son, Jeu et Anneau de progression) ; libellés « Vitesse des éléments » et « Taille des éléments » (pour
+   ne pas confondre avec la durée de fixation) ; **couleur de fond et plein écran retirés du menu Échap** (décision du
+   mainteneur, « pour éviter tout souci ») : seulement dans les réglages du menu principal. Constat : Bulles et le Jeu
+   de l'œuf posent leur propre fond plein écran, qui cache la couleur de fond commune (`gamingRoot`). **Codé le 17/11**
+   (`GameMenuView`, format v6, détail dans `MODERNIZATION.md` 2aq), essai du mainteneur attendu, non commité.
+   Retour du 17/11 (« les options n'ont pas d'incidence ») : couleur de l'anneau branchée sur tous les anneaux
+   (`-gp-ring`, appliquée tout de suite ; nouveau premier choix « couleur principale », `ACCENT`, valeur par défaut) ;
+   taille de l'anneau appliquée à l'anneau commun (`FixationRing`, `ProgressButton`), grisée dans les jeux qui
+   dessinent le leur ; taille des éléments grisée sauf dans Ninja (seul à la lire) ; chaque jeu déclare les réglages
+   qui agissent sur lui, selon sa variante (`GameLifeCycle.menuSettings()`, `MenuSetting`), les autres sont grisés
+   (ex. La tarte à la crème : ni vitesse ni taille ; « dès qu'on regarde » : ni fixation ni anneau).
 4. À la fin : faire fermer leurs parties à tous les tests, puis libération immédiate des objets simulés ; inventaire
    des sons ; notes de version 2.0 (images à remettre, format v5).
 
@@ -76,7 +150,7 @@ un commit par jeu, tout poussé jusqu'à `1abb5a720` ; **CI verte sur les 7 jobs
 2. Puis pousser le groupe et vérifier la CI.
 3. **Après les vies** : retirer le bouton « Continuer » de l'écran des statistiques (demande du 16/11).
 4. Ensuite : écrans **Zones d'intérêt** et **Parcours du regard** dans le style du nouvel écran des statistiques ;
-   refonte graphique du menu des jeux ; modernisation du menu Échap (réduit au volume et à Quitter en évaluation).
+   menu Échap des parties, graphisme et modernisation (réduit au volume et à Quitter en évaluation).
 5. À la fin : faire fermer leurs parties à tous les tests, puis libération immédiate des objets simulés ; inventaire
    des sons ; notes de version 2.0.
 
@@ -138,8 +212,8 @@ un commit par jeu, tout poussé jusqu'à `1abb5a720` ; **CI verte sur les 7 jobs
    `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une fois sous Java 26 ; **16/11 : corrigé dans le
    test** : `find()`, `imageTargets()` et `targetOf()` parcourent la scène sur le fil JavaFX (`onFx`), et non plus
    depuis le fil du test pendant que le jeu la modifie, cause de l’`IndexOutOfBoundsException` dans `collect()` ; le
-   jeu ne change pas ; `GazeplayEvalTest` 3 fois de suite en local : 32 tests, 0 échec) ; refonte graphique du menu
-   des jeux et de l’écran des statistiques ; modernisation du menu Échap (ancien engrenage), avec la réduction du menu
+   jeu ne change pas ; `GazeplayEvalTest` 3 fois de suite en local : 32 tests, 0 échec) ; refonte graphique de
+   l’écran des statistiques ; menu Échap des parties (ancien engrenage), graphisme et modernisation, avec la réduction du menu
    en évaluation au volume et à Quitter (décision du 13/11, voir plus bas).
 3. Toujours à garder en tête : inventaire des sons (pas fait), notes de version 2.0 (images de l’utilisateur à
    remettre, pas de migration), fusion de `GazePlayLearning` et numéro de version après la modernisation.
@@ -209,8 +283,8 @@ de changer le code (`SPONGE`, `CREAM` dans `CakeFactory`).
    (délais, sons, vidéos, cibles), entrées, `formatVersion` 1, ressources libres, aide : conformes. **Une seule
    décision, notée pour plus tard** : voir « Menu Échap pendant une évaluation » ci-dessous. Après la revue : mémoire
    des tests, retrait des limiteurs, test instable `GazeplayEvalTest.shouldOfferToDoAGridAgainWithTheOralSupport` (une
-   fois sous Java 26), refonte graphique du menu des jeux et de l’écran des statistiques, modernisation du menu Échap
-   (ancien engrenage).
+   fois sous Java 26), refonte graphique de l’écran des statistiques, menu Échap des parties (ancien engrenage) : graphisme
+   et modernisation.
 
 **Menu Échap pendant une évaluation (décision du mainteneur du 13/11/2026, à faire avec la modernisation du menu
 Échap, pas avant)** : en évaluation, le menu Échap ne montrera que **le volume et Quitter**. Aujourd’hui il montre les
@@ -443,7 +517,7 @@ nouveau `.exe` sans demande.
   refuse les WAV autres que 16 bits, GazePlay Learning ne les contrôle pas.
 - La cause des échecs de JavaFX Media (mise à jour Windows du 14/10/2026 : hypothèse non prouvée).
 
-**À faire après la revue des jeux** : refonte graphique du menu des jeux et de l'écran des statistiques, mémoire des tests, retrait
+**À faire après la revue des jeux** : graphisme du menu Échap des parties et de l'écran des statistiques, mémoire des tests, retrait
 des limiteurs, tests instables, inventaire des sons, notes de version 2.0 (détail dans les sections suivantes).
 
 ## AVANCEMENT DU JEUDI 5/11/2026 : retours sur GazePlay Learning Eval (commité et poussé, sauf la fin du retour 4)
@@ -789,7 +863,7 @@ essayés en vrai (sauf ce qu'il a signalé). **Ne rien commiter pour l'instant**
      ouverte par un objet simulé, jamais un vrai navigateur dans les tests), capture du menu.
    - **Décisions du mainteneur (30/10/2026)** : libellé « Créer une évaluation (site GazePlay Eval) » ; adresse
      **fixe dans le code** (pas de réglage).
-6. **Tâche de fin, après la revue de tous les jeux et leur acceptation** : refonte graphique du menu des jeux (son
+6. **Tâche de fin, après la revue de tous les jeux et leur acceptation** : graphisme du menu Échap des parties (son
    panneau : musique, volume, durée de fixation, vitesse, taille, barre de progression, couleur de fond ;
    `GameMenuPanel`, `GameContextFactory`, `GameContext.createControlPanel`). La partie fonctionnelle (Échap à la place
    de l'engrenage) est faite depuis le 5/11/2026 ; à la refonte, libérer les coins gardés pour lui. À

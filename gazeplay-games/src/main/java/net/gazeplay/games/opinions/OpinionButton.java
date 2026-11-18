@@ -18,6 +18,7 @@ import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 /**
  * A button of an answer of the game "Opinions" (2/11/2026): a card with a big icon of the color of the answer and its
@@ -90,8 +91,8 @@ class OpinionButton extends Group {
         ring.setFill(null);
         ring.setStrokeType(StrokeType.INSIDE);
         ring.setStrokeLineCap(StrokeLineCap.BUTT);
-        ring.setStrokeWidth(Math.max(5, Math.min(width, height) * 0.05));
-        ring.setStyle("-fx-stroke: -gp-accent;");
+        RingThickness.apply(ring, Math.max(5, Math.min(width, height) * 0.05));
+        ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setMouseTransparent(true);
         ring.setVisible(false);
         ringPerimeter = GameStyle.clockwiseRing(ring);

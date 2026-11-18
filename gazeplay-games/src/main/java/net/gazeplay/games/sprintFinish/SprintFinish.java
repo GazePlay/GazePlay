@@ -37,6 +37,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 import net.gazeplay.games.sprintFinish.SprintMap.Button;
 import net.gazeplay.games.sprintFinish.SprintMap.Cell;
 import net.gazeplay.games.sprintFinish.SprintMap.Log;
@@ -960,9 +961,9 @@ public class SprintFinish implements GameLifeCycle {
             ring = new Arc(centerX, centerY, cell * 0.45, cell * 0.45, 90, 0);
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
-            ring.setStrokeWidth(Math.max(4, cell * 0.07));
+            RingThickness.apply(ring, Math.max(4, cell * 0.07));
             ring.setStrokeLineCap(StrokeLineCap.ROUND);
-            ring.setStyle("-fx-stroke: -gp-accent;");
+            ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));
             // A larger zone than the plate, easier to look at
