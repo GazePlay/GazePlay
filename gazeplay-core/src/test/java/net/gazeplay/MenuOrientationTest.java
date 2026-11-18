@@ -54,9 +54,20 @@ class MenuOrientationTest {
         }).get();
         // The content of a ScrollPane joins the scene at its first layout
         WaitForAsyncUtils.waitForFxEvents();
-        WaitForAsyncUtils.asyncFx(() -> ((ToggleButton) List.copyOf(stage.getScene().getRoot()
-            .lookupAll(".gp-settings-nav-item")).get(3)).fire()).get();
-        WaitForAsyncUtils.waitForFxEvents();
+        // The section of the appearance, found by its content rather than by its place: a new section moves the
+        // others (the sound section, 18/11/2026, broke an index)
+        final List<javafx.scene.Node> sections = WaitForAsyncUtils.asyncFx(() -> List.copyOf(stage.getScene().getRoot()
+            .lookupAll(".gp-settings-nav-item"))).get();
+        for (final javafx.scene.Node section : sections) {
+            WaitForAsyncUtils.asyncFx(() -> ((ToggleButton) section).fire()).get();
+            WaitForAsyncUtils.waitForFxEvents();
+            final boolean found = WaitForAsyncUtils.asyncFx(() -> stage.getScene().getRoot()
+                .lookupAll(".choice-box").stream()
+                .anyMatch(node -> ((ChoiceBox<?>) node).getItems().contains(GameButtonOrientation.VERTICAL))).get();
+            if (found) {
+                break;
+            }
+        }
         WaitForAsyncUtils.asyncFx(() -> {
             @SuppressWarnings("unchecked")
             ChoiceBox<GameButtonOrientation> chooser = (ChoiceBox<GameButtonOrientation>) stage.getScene().getRoot()
