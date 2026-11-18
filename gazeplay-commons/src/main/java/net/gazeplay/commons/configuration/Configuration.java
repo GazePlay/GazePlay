@@ -87,6 +87,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_PROGRESS_BAR_SIZE = "PROGRESS_BAR_SIZE";
     private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
     private static final String PROPERTY_NAME_RING_THICKNESS = "RING_THICKNESS";
+    private static final String PROPERTY_NAME_VOICE = "VOICE";
     /* Menu settings */
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -156,6 +157,14 @@ public class Configuration {
     public static final int DEFAULT_VALUE_RING_THICKNESS = 100;
     public static final int MIN_RING_THICKNESS = 50;
     public static final int MAX_RING_THICKNESS = 200;
+    /**
+     * The voice saying the questions of the games, chosen in the settings of the main menu, not in the menu Esc
+     * (maintainer's request of 18/11/2026; it used to be drawn at random at each game): a woman ("w") or a man ("m"),
+     * the letters of the names of the sound files.
+     */
+    public static final String VOICE_FEMALE = "w";
+    public static final String VOICE_MALE = "m";
+    public static final String DEFAULT_VALUE_VOICE = VOICE_FEMALE;
     /* Menu settings */
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -252,6 +261,8 @@ public class Configuration {
     private final StringProperty progressBarColorProperty;
     @Getter
     private final IntegerProperty ringThicknessProperty;
+    @Getter
+    private final StringProperty voiceProperty;
     /* Menu settings */
     @Getter
     private final StringProperty userNameProperty;
@@ -337,6 +348,7 @@ public class Configuration {
         progressBarSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_SIZE, DEFAULT_VALUE_PROGRESS_BAR_SIZE, propertyChangeListener);
         progressBarColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_COLOR, DEFAULT_VALUE_PROGRESS_BAR_COLOR, propertyChangeListener);
         ringThicknessProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_RING_THICKNESS, DEFAULT_VALUE_RING_THICKNESS, propertyChangeListener);
+        voiceProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VOICE, DEFAULT_VALUE_VOICE, propertyChangeListener);
 
         /* Menu settings */
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
@@ -432,6 +444,14 @@ public class Configuration {
      */
     public String getLanguage() {
         return LANGUAGE_FRENCH.equals(languageProperty.getValue()) ? LANGUAGE_FRENCH : LANGUAGE_ENGLISH;
+    }
+
+    /**
+     * @return the voice saying the questions of the games: {@link #VOICE_MALE} ("m") or {@link #VOICE_FEMALE} ("w"),
+     * a woman for any other value
+     */
+    public String getVoice() {
+        return VOICE_MALE.equals(voiceProperty.getValue()) ? VOICE_MALE : VOICE_FEMALE;
     }
 
     /**

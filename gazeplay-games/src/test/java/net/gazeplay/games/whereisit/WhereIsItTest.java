@@ -128,6 +128,25 @@ class WhereIsItTest {
         assertNull(animals.getPathSound("cow", "chn", "w"), "no Chinese voice any more");
     }
 
+    /**
+     * The voice is the one of the settings (maintainer's request of 18/11/2026), no longer drawn at random: a woman by
+     * default, a man when chosen.
+     */
+    @Test
+    void shouldSayTheQuestionsWithTheVoiceOfTheSettings() {
+        final WhereIsIt animals = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, mockGameContext, mockStats);
+        when(mockConfig.getVoice()).thenReturn(Configuration.VOICE_FEMALE);
+        for (int i = 0; i < 20; i++) {
+            assertEquals("w", animals.drawVoice("fra"));
+        }
+        when(mockConfig.getVoice()).thenReturn(Configuration.VOICE_MALE);
+        for (int i = 0; i < 20; i++) {
+            assertEquals("m", animals.drawVoice("eng"));
+        }
+        assertEquals("data/whereIsTheAnimal/sounds/eng/cow.m.eng.mp3",
+            animals.getPathSound("cow", "eng", animals.drawVoice("eng")));
+    }
+
     @Test
     void shouldSayTheQuestionOfTheOddOneOut() {
         final WhereIsIt odd = new WhereIsIt(WhereIsItGameType.FIND_ODD, 2, 2, mockGameContext, mockStats);

@@ -208,6 +208,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private SettingsPage.Section languageSection(Configuration config, Translator translator, boolean evaluations) {
         final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsLanguage", MenuIcon.LANGUAGE)
             .add("Lang", buildLanguageChooser(config, this));
+        if (!evaluations) {
+            // The voice saying the questions of the games, under the language (maintainer's request of 18/11/2026);
+            // not in the menu Esc of a game
+            section.add("VoiceGender", buildVoiceChooser(config, translator));
+        }
         if (Utils.isWindows() && !evaluations) {
             section.add("CreateShortcut", buildVariantShortcutMaker(config, this));
         }
@@ -809,6 +814,33 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         languageBox.setPrefHeight(PREF_HEIGHT);
 
         return languageBox;
+    }
+
+    /**
+     * @return the choice of the voice saying the questions of the games, a woman or a man, bound to the VOICE setting
+     */
+    static ChoiceBox<String> buildVoiceChooser(final Configuration configuration, final Translator translator) {
+        final ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll(Configuration.VOICE_FEMALE, Configuration.VOICE_MALE);
+        choiceBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(final String voice) {
+                if (voice == null) {
+                    return "";
+                }
+                return translator.translate(Configuration.VOICE_MALE.equals(voice) ? "VoiceMale" : "VoiceFemale");
+            }
+
+            @Override
+            public String fromString(final String text) {
+                return null;
+            }
+        });
+        choiceBox.setValue(configuration.getVoice());
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+        choiceBox.valueProperty().addListener((observable, before, now) -> configuration.getVoiceProperty().set(now));
+        return choiceBox;
     }
 
     /**

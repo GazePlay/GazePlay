@@ -133,7 +133,7 @@ class ConfigurationContextTest {
             // speed, the size and the ring do not act on the evaluations
             assertInstanceOf(HBox.class, control(sections, "GameMenuVolume"));
             for (String gamesOnly : List.of("GameMenuMusicVolume", "GameMenuSpeed", "GameMenuSize",
-                "GameMenuRingThickness", "GameMenuRingColor")) {
+                "GameMenuRingThickness", "GameMenuRingColor", "VoiceGender")) {
                 assertFalse(has(sections, gamesOnly), gamesOnly);
             }
             // Eye tracker, fixation length
@@ -199,6 +199,11 @@ class ConfigurationContextTest {
             assertEquals(8, ((HBox) control(sections, "GameMenuRingColor")).getChildren().size(),
                 "the main color of the menus, then 7 colors");
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));
+            // The voice of the games, under the language (18/11/2026): a woman or a man
+            @SuppressWarnings("unchecked")
+            ChoiceBox<String> voice = (ChoiceBox<String>) control(sections, "VoiceGender");
+            assertEquals(List.of("w", "m"), voice.getItems());
+            assertEquals("VoiceGender", sections.getFirst().groups().getFirst().settings().get(1).key());
             assertEquals(Utils.isWindows(), has(sections, "CreateShortcut"));
             // Games: question length, reask on fail, reward sound (no quit key: the menu button leaves a game; no color
             // of the piano tiles since the review of the Piano, 13/11/2026: its keys have their colors; no time and score

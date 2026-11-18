@@ -329,7 +329,11 @@ public class Letters implements GameLifeCycle {
         left = level.getTargets();
         showBand();
         showHud();
-        voiceFemale = random.nextInt(2) == 0;
+        // Still drawn, so that a saved game is replayed the same; the voice is the one of the settings since 18/11/2026
+        // (maintainer's request: chosen in the main menu, a woman or a man), no longer at random
+        random.nextInt(2);
+        voiceFemale = !net.gazeplay.commons.configuration.Configuration.VOICE_MALE
+            .equals(gameContext.getConfiguration().getVoice());
         sayQuestion();
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();

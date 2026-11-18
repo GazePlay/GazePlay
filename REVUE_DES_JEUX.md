@@ -5,6 +5,68 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU VENDREDI 20/11/2026 (fin de la séance du mercredi 18/11/2026) : LES VOIX
+
+Séance arrêtée avant de générer les voix (crédits de la semaine du mainteneur insuffisants pour 944 fichiers ;
+reprise le vendredi 20/11, après leur remise à zéro).
+
+**Fait et poussé le 18/11** (CI verte à chaque push, dernier : `8dd36afec`, run `44315111135`) : épaisseur de
+l'anneau, vitesse de La tarte à la crème et réglages actifs, réglages des parties dans le menu principal et valeurs
+par défaut, tests qui ferment leurs parties (`LaunchedGames`), objets simulés libérés dès la fin de leur classe,
+inventaire des sons, **français et anglais seulement** (autres langues retirées, colonnes gardées dans
+`multilinguism.csv`), carte Son commune (menu Échap, bas de l'écran des jeux, réglages), curseurs justes (vitesse,
+durée de fixation), sons inutilisés retirés, **plus aucun son non libre** (musique « copycat » créditée,
+applaudissements de La Sonothèque, coassement des Sons de la vie réduit à 1 s). Détail de chaque point plus bas
+(ordre du jour du 18/11, point 7).
+
+**Commité et poussé le 18/11 au soir** (essayé et validé par le mainteneur) :
+- **Réglage « Voix des jeux »** : Femme (par défaut) ou Homme, sous la langue dans les réglages du menu principal
+  (mode Jeux seulement), **pas dans le menu Échap** (demande du mainteneur). Clé `VOICE` (`w` ou `m`,
+  `Configuration.getVoice()`, femme pour toute autre valeur) ; traductions `VoiceGender`, `VoiceFemale`, `VoiceMale`.
+  Où est… (`WhereIsIt.drawVoice`) et Identifier les lettres (`Letters`) prennent cette voix au lieu d'un tirage au
+  hasard ; le tirage est gardé sans servir, pour qu'une partie enregistrée se rejoue avec les mêmes images. Tests :
+  `ConfigurationTest.shouldGiveTheVoiceOfTheGames`, `ConfigurationContextTest` (sous la langue, absent en mode
+  Évaluations), `WhereIsItTest.shouldSayTheQuestionsWithTheVoiceOfTheSettings` ; configuration 47, core 335, jeux
+  concernés 111 tests, 0 échec. Fonctionne déjà avec les anciennes voix.
+- **Script `gradle/images/make_voices.py`** : écrit et commité, **jamais lancé**. Il refait en place chaque fichier de voix
+  existant (944 : Où est… et Trouve l'intrus 736, Identifier les lettres 208) avec le texte affiché par le jeu (fichier
+  de traduction du jeu, clé = nom du fichier ; Identifier les lettres : « Trouve la lettre / Find the letter » + la
+  lettre, et la lettre seule), et écrit `gradle/images/voix.csv` (fichier, voix, texte). Option `--only <morceau de
+  chemin>` pour ne refaire qu'une partie (échantillon). Installation et commandes dans l'en-tête du script.
+
+**Voix choisies par le mainteneur (18/11), toutes avec Piper 1.8.0** (`piper-tts`, GPL-3.0-or-later, outil hors
+ligne, jamais livré) :
+- Français, femme (`w`) : **fr_FR-siwis-medium** : SIWIS (Université d'Édimbourg), CC BY 4.0, affinée depuis
+  hifi_tts_92 (Hi-Fi TTS de NVIDIA, CC BY 4.0). Crédit obligatoire.
+- Français, homme (`m`) : **fr_FR-tom-medium** : phrases lues par son auteur (Tom Darboux), modèle sous AGPL 3.0 ;
+  **réserve** : la voix de départ n'est pas indiquée (choix du mainteneur après écoute).
+- Anglais, femme (`w`) : **en_US-kristin-medium** : LibriVox, domaine public, entraînée de zéro.
+- Anglais, homme (`m`) : **en_US-norman-medium** : LibriVox, domaine public, entraînée de zéro.
+Écartées après lecture des fiches (`MODEL_CARD`) : toute voix affinée depuis **lessac** (licence Blizzard 2013 :
+recherche seulement, sans usage commercial ni redistribution : upmc, alan, northern_english_male, libritts_r,
+hfc_male), les données non commerciales (hfc_female, ryan, et gilles, kathleen, mls_1840 qui partent de ryan),
+cori (refusée à l'écoute), mls (lecteurs incompréhensibles), Coqui css10 (essayée, non retenue).
+
+**Sur le PC du mainteneur (dossier `build`, ignoré par git, rien de livré)** :
+- `build/piper/venv` (Piper) et `build/piper/voices` (siwis, tom, kristin, norman, et les voix essayées : mls, cori,
+  joe, ljspeech, alba, gilles) ;
+- `build/coqui` (Coqui TTS et PyTorch CPU, essai de css10) : **supprimé le 18/11** à la demande du mainteneur ;
+- échantillons écoutés : `build/piper/echantillon` et `build/piper/echantillon2` ;
+- FFmpeg : celui de JavaCV, extrait du jar `org.bytedeco:ffmpeg:8.1.2-1.5.14` (windows-x86_64, cache Gradle) dans le
+  dossier temporaire de la session (à réextraire : `unzip -j <jar> 'org/bytedeco/ffmpeg/windows-x86_64/*'`).
+
+**Ordre du jour du vendredi 20/11/2026** :
+1. Générer un **échantillon** avec le script (`--only`, par exemple une question par jeu dans les 4 voix), dans un
+   dossier à part ou sur quelques fichiers seulement, et le faire écouter (vérifier en particulier les lettres
+   isolées : « Où est le W ? », « Trouve la lettre Y », la lettre seule).
+2. Après accord : tout générer (944 fichiers), écouter des exemples en jeu (Femme puis Homme dans les réglages).
+3. Crédits : `gradle/templates/licence.txt` (paragraphe « Voix des jeux » : Piper, les 4 voix et leurs licences, le
+   crédit de SIWIS CC BY 4.0) et un `CREDITS.txt` des voix ; `inventaire_sons.py` doit lire `voix.csv` pour classer
+   ces fichiers ; refaire l'inventaire (`INVENTAIRE_SONS.md` : plus aucune voix de source inconnue attendu).
+4. Tests ciblés (Où est…, Identifier les lettres), `allGamesTest` de ces jeux, commit, push et CI.
+5. Ensuite, dernière tâche de fin : les notes de version 2.0 (images à remettre, formats de résultats v5 et v6,
+   français et anglais seulement, voix choisies dans les réglages).
+
 ## REPRISE DU MERCREDI 18/11/2026 (fin de la séance du mardi 17/11/2026, soir)
 
 **Fait le 17/11 après-midi et soir** :
@@ -140,7 +202,16 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    (`race/sounds/frog.mp3`, Wikimedia Commons, CC BY-SA 4.0 ; retour du mainteneur : 4 s, un coassement par
    seconde : copie réduite à sa première seconde, un seul coassement, avec le FFmpeg de JavaCV ; l'original des Sons de
    la vie reste entier) ; crédits dans `gradle/templates/licence.txt`,
-   `data/common/CREDITS.txt`, `data/race/CREDITS.txt`. Plus aucun son non libre ; restent les voix.
+   `data/common/CREDITS.txt`, `data/race/CREDITS.txt`. Plus aucun son non libre ; restent les voix. Commité
+   (`8dd36afec`), poussé, CI verte (run `44315111135`).
+   **Voix (18/11, en cours)** : recherche faite (voie A, synthèse libre) ; Piper 1.8.0 (GPL-3.0-or-later) installé dans
+   `build/piper/venv`, voix dans `build/piper/voices` (rien de livré) : siwis (FR femme, CC BY 4.0), mls (FR, 125
+   lecteurs, CC BY 4.0, entraînée de zéro), cori (EN femme, CC BY 4.0), joe (EN homme, CC0), norman (EN homme, domaine
+   public) ; écartées : toute voix partant de lessac (recherche seulement) ou de données NC. Échantillon à écouter dans
+   `build/piper/echantillon` (6 lecteurs graves de mls pour la voix d'homme française). **Réglage « Voix des jeux »**
+   (NON commité) : sous la langue dans les réglages du menu principal (mode Jeux), Femme par défaut ou Homme, clé
+   `VOICE` ; pas dans le menu Échap ; Où est… et Identifier les lettres prennent cette voix au lieu d'un tirage au
+   hasard (tirage gardé pour rejouer une partie à l'identique). Tests ciblés verts.
    Suite du chantier des sons (après validation) : retirer les 3 sons inutilisés, remplacer applaudissements, grenouille
    et musique par défaut, refaire les 944 voix françaises et anglaises. Leçon : après un changement de la page des réglages,
    lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.

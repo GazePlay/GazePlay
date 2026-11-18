@@ -112,6 +112,20 @@ class ConfigurationTest {
     }
 
     /**
+     * The voice of the games (18/11/2026): a woman by default, a man when chosen, a woman for any other value.
+     */
+    @Test
+    void shouldGiveTheVoiceOfTheGames() {
+        assertEquals("w", configuration.getVoice(), "a woman by default");
+        configuration.getVoiceProperty().set("m");
+        assertEquals("m", configuration.getVoice());
+        configuration.getVoiceProperty().set("something else");
+        assertEquals("w", configuration.getVoice());
+        configuration.getVoiceProperty().set("w");
+        assertEquals("w", configuration.getVoice());
+    }
+
+    /**
      * Maintainer's request of 18/11/2026: the button "Default values" of the settings puts back the settings of the
      * games (those of the menu Esc), and keeps the others.
      */

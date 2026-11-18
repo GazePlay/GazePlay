@@ -858,7 +858,11 @@ public class WhereIsIt implements GameLifeCycle {
         if (this.gameType == CUSTOMIZED || !LANGUAGES_WITH_VOICES.contains(language)) {
             return null;
         }
-        return randomGenerator.nextDouble() > 0.5 ? "m" : "w";
+        // Still drawn, so that a saved game is replayed with the same pictures; the voice is the one of the settings
+        // since 18/11/2026 (maintainer's request: chosen in the main menu, a woman or a man), no longer at random
+        randomGenerator.nextDouble();
+        final String voice = gameContext.getConfiguration().getVoice();
+        return Configuration.VOICE_MALE.equals(voice) ? Configuration.VOICE_MALE : Configuration.VOICE_FEMALE;
     }
 
     /**
