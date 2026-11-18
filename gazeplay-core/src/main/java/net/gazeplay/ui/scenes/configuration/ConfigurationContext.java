@@ -111,7 +111,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox.setHgrow(spacer, Priority.ALWAYS);
         // The theme is switched by its button, as on the other pages (no longer a setting of this page)
         final Button themeButton = MenuButtons.themeButton(gazePlay, translator);
-        final HBox topBar = new HBox(16, createBackButton(gazePlay), title, spacer, themeButton);
+        final HBox topBar = new HBox(16, createBackButton(gazePlay), title, spacer, createResetButton(translator),
+            themeButton);
+        topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.getStyleClass().add("gp-top-bar");
 
         root.setTop(topBar);
@@ -130,6 +132,34 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             gazePlay.onReturnToMenu();
             root.setCursor(Cursor.DEFAULT);
         });
+    }
+
+    /**
+     * @return the button putting back the default values of the settings of the games (those of the menu Esc of a
+     * game; maintainer's request of 18/11/2026), after a confirmation; the page is built again with them
+     */
+    Button createResetButton(final Translator translator) {
+        final Button button = new Button(translator.translate("ResetGameSettings"), MenuIcon.REPLAY.create(20));
+        button.getStyleClass().addAll("gp-button", "gp-button-secondary");
+        button.setTooltip(MenuStyle.tooltip(translator.translate("ResetGameSettingsHint")));
+        button.setOnAction(event -> {
+            if (MenuMessageDialog.confirm(getGazePlay().getPrimaryStage(), translator.translate("ResetGameSettings"),
+                translator.translate("ResetGameSettingsMessage"), translator.translate("ResetGameSettingsOk"),
+                translator.translate("Cancel"), translator.translate("Close"))) {
+                resetGameSettings(translator);
+            }
+        });
+        return button;
+    }
+
+    /**
+     * Puts back the default values of the settings of the games, and builds the page again to show them.
+     */
+    void resetGameSettings(final Translator translator) {
+        final Configuration active = ActiveConfigurationContext.getInstance();
+        active.resetGameSettings();
+        BackgroundMusicManager.getInstance().setVolume(active.getMusicVolume());
+        root.setCenter(SettingsPage.create(translator, buildSections(translator)));
     }
 
     @Override
@@ -159,6 +189,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         if (!evaluations) {
             sections.add(gamesSection(config));
         }
+        sections.add(soundSection(config, evaluations));
         sections.add(eyeTrackerSection(config, translator));
         sections.add(appearanceSection(config, translator, evaluations));
         if (evaluations) {
@@ -193,7 +224,83 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 0.1, config.getGameStartDelayProperty()))
             .add("ReaskQuestionOnFail", buildCheckBox(config.getQuestionReaskedOnFailProperty()))
             .add("EnableRewardSound", buildCheckBox(config.getRewardSoundEnabledProperty()))
+            // The settings of the menu Esc of a game, to set them once for all (maintainer's request of 17/11/2026)
+            .group("SettingsGameElements")
+            .add("GameMenuSpeed", sliderWithValue(label -> net.gazeplay.ui.AnimationSpeedRatioControl.getInstance()
+                .createSpeedEffectSlider(config, label)))
+            .add("GameMenuSize", sliderWithValue(label -> net.gazeplay.ui.ElementSizeControl.getInstance()
+                .createElementSizeSlider(config, label)))
+            .group("GameMenuRing")
+            .add("GameMenuRingThickness", sliderWithValue(label -> net.gazeplay.ui.ProgressBarControl.getInstance()
+                .createRingThicknessSlider(config, label)))
+            .add("GameMenuRingColor", ringColors(config))
             .build();
+    }
+
+    /**
+     * @return the volumes of the menu Esc of a game, to set them once for all (maintainer's request of 17/11/2026): the
+     * music and the sounds for the games, the volume of the sounds and videos for the evaluations
+     */
+    private SettingsPage.Section soundSection(Configuration config, boolean evaluations) {
+        final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("GameMenuSound", MenuIcon.SOUND);
+        if (evaluations) {
+            section.add("GameMenuVolume", volumeSlider(config.getEffectsVolumeProperty(), null));
+        } else {
+            section.add("GameMenuMusicVolume", volumeSlider(config.getMusicVolumeProperty(),
+                    value -> BackgroundMusicManager.getInstance().setVolume(value)))
+                .add("GameMenuEffectsVolume", volumeSlider(config.getEffectsVolumeProperty(), null));
+        }
+        return section.build();
+    }
+
+    /**
+     * @return a slider of a volume, from 0 to 1, bound to its setting, with its value in percent
+     */
+    private static HBox volumeSlider(final javafx.beans.property.DoubleProperty volume,
+                                     final java.util.function.DoubleConsumer onChange) {
+        return sliderWithValue(label -> {
+            final Slider slider = new Slider(0, 1, volume.get());
+            slider.setBlockIncrement(0.05);
+            label.setText(Math.round(volume.get() * 100) + " %");
+            slider.valueProperty().addListener((observable, before, now) -> {
+                volume.set(now.doubleValue());
+                label.setText(Math.round(now.doubleValue() * 100) + " %");
+                if (onChange != null) {
+                    onChange.accept(now.doubleValue());
+                }
+            });
+            return slider;
+        });
+    }
+
+    /**
+     * @return a slider made by {@code make} (bound to its setting, its value written in the label it is given), and
+     * that value at its right
+     */
+    private static HBox sliderWithValue(final java.util.function.Function<Label, Slider> make) {
+        final Label value = new Label();
+        value.setMinWidth(56);
+        final Slider slider = make.apply(value);
+        slider.setPrefWidth(PREF_WIDTH);
+        slider.setShowTickMarks(false);
+        final HBox row = new HBox(10, slider, value);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
+    }
+
+    /**
+     * @return the colors of the rings of the fixations (the main color of the menus first, by default), the chosen one
+     * marked, saved when clicked
+     */
+    private static HBox ringColors(final Configuration config) {
+        final HBox colors = new HBox(8);
+        colors.setAlignment(Pos.CENTER_LEFT);
+        for (final Label swatch : net.gazeplay.ui.ProgressBarControl.getInstance().createColorLabel(config)) {
+            swatch.setStyle(swatch.getStyle() + " -fx-background-radius: 999; -fx-min-width: 28; -fx-min-height: 28;"
+                + " -fx-pref-width: 28; -fx-pref-height: 28; -fx-text-fill: #2B2118; -fx-cursor: hand;");
+            colors.getChildren().add(swatch);
+        }
+        return colors;
     }
 
     /**

@@ -125,9 +125,17 @@ class ConfigurationContextTest {
             List<SettingsPage.Section> sections = context.buildSections(mockTranslator);
 
             // Only the settings used by the evaluations: no shortcut, no games, folders, AOI nor more statistics
-            assertEquals(List.of("SettingsLanguage", "SettingsEyeTracker", "SettingsAppearance", "SettingsEvaluations",
-                "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
+            assertEquals(List.of("SettingsLanguage", "GameMenuSound", "SettingsEyeTracker", "SettingsAppearance",
+                "SettingsEvaluations", "SettingsStatistics"),
+                sections.stream().map(SettingsPage.Section::titleKey).toList());
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));
+            // Sound: the volume of the sounds and videos only, as in the menu Esc of an evaluation (18/11/2026); the
+            // speed, the size and the ring do not act on the evaluations
+            assertInstanceOf(HBox.class, control(sections, "GameMenuVolume"));
+            for (String gamesOnly : List.of("GameMenuMusicVolume", "GameMenuSpeed", "GameMenuSize",
+                "GameMenuRingThickness", "GameMenuRingColor")) {
+                assertFalse(has(sections, gamesOnly), gamesOnly);
+            }
             // Eye tracker, fixation length
             assertInstanceOf(ChoiceBox.class, control(sections, "EyeTracker"));
             assertInstanceOf(Spinner.class, control(sections, "FixationLength"));
@@ -168,8 +176,17 @@ class ConfigurationContextTest {
             // Layout of the "Games" mode (the mode of a mocked GazePlay is null: the games), without the evaluations
             List<SettingsPage.Section> sections = context.buildSections(mockTranslator);
 
-            assertEquals(List.of("SettingsLanguage", "SettingsGames", "SettingsEyeTracker", "SettingsAppearance",
-                "SettingsFolders", "SettingsStatistics"), sections.stream().map(SettingsPage.Section::titleKey).toList());
+            assertEquals(List.of("SettingsLanguage", "SettingsGames", "GameMenuSound", "SettingsEyeTracker",
+                "SettingsAppearance", "SettingsFolders", "SettingsStatistics"),
+                sections.stream().map(SettingsPage.Section::titleKey).toList());
+            // Every setting of the menu Esc of a game is also here, to set it once for all (maintainer's request of
+            // 17/11/2026): the volumes, the speed and the size of the elements, the thickness and the color of the ring
+            for (String fromTheMenu : List.of("GameMenuMusicVolume", "GameMenuEffectsVolume", "GameMenuSpeed",
+                "GameMenuSize", "GameMenuRingThickness", "GameMenuRingColor")) {
+                assertInstanceOf(HBox.class, control(sections, fromTheMenu), fromTheMenu);
+            }
+            assertEquals(8, ((HBox) control(sections, "GameMenuRingColor")).getChildren().size(),
+                "the main color of the menus, then 7 colors");
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));
             assertEquals(Utils.isWindows(), has(sections, "CreateShortcut"));
             // Games: question length, reask on fail, reward sound (no quit key: the menu button leaves a game; no color

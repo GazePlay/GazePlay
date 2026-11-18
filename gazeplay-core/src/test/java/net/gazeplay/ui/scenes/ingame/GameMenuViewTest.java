@@ -139,4 +139,35 @@ class GameMenuViewTest {
 
         assertEquals(1500, config.getFixationLength());
     }
+
+    private static void click(final Node node) {
+        javafx.event.Event.fireEvent(node, new javafx.scene.input.MouseEvent(
+            javafx.scene.input.MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, javafx.scene.input.MouseButton.PRIMARY, 1,
+            false, false, false, false, true, false, false, false, false, false, null));
+    }
+
+    /**
+     * Maintainer's request of 18/11/2026: a click on the name of a setting puts back its default value.
+     */
+    @Test
+    void shouldPutBackTheDefaultValueWhenTheNameIsClicked() {
+        try {
+            final GameMenuView view = new GameMenuView(translator, Locale.FRENCH, config, null, GameMenuView.Kind.GAME,
+                () -> { });
+            final javafx.scene.layout.HBox fixationRow = (javafx.scene.layout.HBox) view.getFixationRow();
+            final javafx.scene.layout.HBox speedRow = (javafx.scene.layout.HBox)
+                ((javafx.scene.layout.VBox) fixationRow.getParent()).getChildren().get(2);
+            ((javafx.scene.control.Slider) fixationRow.getChildren().get(1)).setValue(1500);
+            ((javafx.scene.control.Slider) speedRow.getChildren().get(1)).setValue(3);
+            assertEquals(4, config.getAnimationSpeedRatio(), 1e-9);
+
+            click(fixationRow.getChildren().get(0));
+            click(speedRow.getChildren().get(0));
+
+            assertEquals(Configuration.DEFAULT_VALUE_FIXATION_LENGTH, config.getFixationLength());
+            assertEquals(Configuration.DEFAULT_VALUE_ANIMATION_SPEED_RATIO, config.getAnimationSpeedRatio(), 1e-9);
+        } finally {
+            config.resetGameSettings();
+        }
+    }
 }

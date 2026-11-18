@@ -85,7 +85,7 @@ public class ElementSizeControl {
         elementSizeValueLabel.setText(formatValue(initialElementSizeValue));
 
         // user can reset ratio to default just by clicking on the label
-        elementSizeValueLabel.setOnMouseClicked(event -> slider.setValue(50));
+        elementSizeValueLabel.setOnMouseClicked(event -> slider.setValue(Configuration.DEFAULT_VALUE_ELEMENT_SIZE));
 
         slider.valueProperty().addListener((observable) -> {
             String labelText = formatValue(slider.getValue());

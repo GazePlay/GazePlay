@@ -56,7 +56,7 @@ public final class MenuMessageDialog extends Stage {
         final ScrollPane scroller = new ScrollPane(messageLabel);
         scroller.setFitToWidth(true);
         scroller.setPrefViewportWidth(560);
-        scroller.setPrefViewportHeight(Math.min(360, 40 + 26 * message.split("\n").length));
+        scroller.setPrefViewportHeight(viewportHeight(message));
 
         okButton = new Button(okText);
         okButton.getStyleClass().addAll("gp-button", "gp-button-primary");
@@ -83,6 +83,23 @@ public final class MenuMessageDialog extends Stage {
 
         setScene(MenuDialog.createScene(this, content, closeText, this::close));
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), getScene());
+    }
+
+    /**
+     * About the number of characters of a line of the message in the width of the dialog (560 pixels).
+     */
+    private static final int CHARACTERS_PER_LINE = 55;
+
+    /**
+     * @return the height of the message, its long lines counted with their wrapping (18/11/2026: a message of one long
+     * line had the room of one line only and had to be scrolled), at most 360 pixels: a longer one is scrolled
+     */
+    static double viewportHeight(final String message) {
+        int lines = 0;
+        for (final String line : message.split("\n", -1)) {
+            lines += Math.max(1, (line.length() + CHARACTERS_PER_LINE - 1) / CHARACTERS_PER_LINE);
+        }
+        return Math.min(360, 40 + 28 * lines);
     }
 
     /**

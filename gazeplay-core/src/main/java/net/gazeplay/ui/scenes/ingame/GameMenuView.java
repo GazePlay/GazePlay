@@ -176,12 +176,28 @@ final class GameMenuView {
     }
 
     /**
-     * @return a row "name, slider, value", the value shown with {@code format}
+     * Makes the name of a setting put back its default value when clicked (maintainer's request of 18/11/2026), with a
+     * tooltip saying so.
      */
-    private HBox sliderRow(final String name, final Slider slider, final DoubleFunction<String> format) {
+    private void resetOnClick(final Label name, final Runnable reset) {
+        name.setCursor(javafx.scene.Cursor.HAND);
+        name.setTooltip(MenuStyle.tooltip(text("GameMenuResetHint")));
+        name.setOnMouseClicked(event -> {
+            reset.run();
+            event.consume();
+        });
+    }
+
+    /**
+     * @return a row "name, slider, value", the value shown with {@code format}; a click on the name puts the slider
+     * back on {@code defaultValue}
+     */
+    private HBox sliderRow(final String name, final Slider slider, final DoubleFunction<String> format,
+                           final double defaultValue) {
         final Label label = new Label(name);
         label.getStyleClass().add("gp-game-menu-label");
         label.setMinWidth(Region.USE_PREF_SIZE);
+        resetOnClick(label, () -> slider.setValue(defaultValue));
         final Label value = new Label(format.apply(slider.getValue()));
         value.getStyleClass().add("gp-game-menu-value");
         value.setMinWidth(64);
@@ -228,9 +244,10 @@ final class GameMenuView {
             value -> {
                 config.getMusicVolumeProperty().set(value);
                 BackgroundMusicManager.getInstance().setVolume(value);
-            }), this::percent));
+            }), this::percent, Configuration.DEFAULT_VALUE_MUSIC_VOLUME));
         card.getChildren().add(sliderRow(text("GameMenuEffectsVolume"), volumeSlider(config.getEffectsVolume(),
-            value -> config.getEffectsVolumeProperty().set(value)), this::percent));
+            value -> config.getEffectsVolumeProperty().set(value)), this::percent,
+            Configuration.DEFAULT_VALUE_EFFECTS_VOLUME));
         return card;
     }
 
@@ -240,7 +257,7 @@ final class GameMenuView {
     private VBox evaluationSoundCard(final Configuration config) {
         return settingsCard(text("GameMenuSound"), sliderRow(text("GameMenuVolume"),
             volumeSlider(config.getEffectsVolume(), value -> config.getEffectsVolumeProperty().set(value)),
-            this::percent));
+            this::percent, Configuration.DEFAULT_VALUE_EFFECTS_VOLUME));
     }
 
     private static Slider volumeSlider(final double initial, final java.util.function.DoubleConsumer onChange) {
@@ -308,13 +325,14 @@ final class GameMenuView {
             size.registerKeyHandler(scene, sizeSlider);
         }
         fixationRow = greyedUnless(MenuSetting.FIXATION_LENGTH, sliderRow(text("GameMenuFixation"), fixationSlider,
-            value -> String.format(locale, "%.1f s", value / 1000)));
+            value -> String.format(locale, "%.1f s", value / 1000), Configuration.DEFAULT_VALUE_FIXATION_LENGTH));
         return settingsCard(text("GameMenuGame"), fixationRow,
+            // 0 on the slider of the speed is the speed by default (× 1)
             greyedUnless(MenuSetting.ANIMATION_SPEED, sliderRow(text("GameMenuSpeed"), speedSlider,
-                value -> String.format(locale, "× %.2f", speed.sliderValueToSpeedRatio(value)))),
-            // 100 is the size by default
-            greyedUnless(MenuSetting.ELEMENT_SIZE,
-                sliderRow(text("GameMenuSize"), sizeSlider, value -> Math.round(value) + " %")));
+                value -> String.format(locale, "× %.2f", speed.sliderValueToSpeedRatio(value)),
+                speed.speedRatioToSliderValue(Configuration.DEFAULT_VALUE_ANIMATION_SPEED_RATIO))),
+            greyedUnless(MenuSetting.ELEMENT_SIZE, sliderRow(text("GameMenuSize"), sizeSlider,
+                value -> Math.round(value) + " %", Configuration.DEFAULT_VALUE_ELEMENT_SIZE)));
     }
 
     private VBox ringCard(final Configuration config) {
@@ -326,7 +344,13 @@ final class GameMenuView {
         colorName.setMinWidth(Region.USE_PREF_SIZE);
         final HBox colors = new HBox(8, colorName);
         colors.setAlignment(Pos.CENTER_LEFT);
-        for (final Label swatch : progress.createColorLabel(config)) {
+        final Label[] swatches = progress.createColorLabel(config);
+        // The first color, the main color of the menus, is the one by default
+        resetOnClick(colorName, () -> {
+            config.getProgressBarColorProperty().set(Configuration.RING_COLOR_ACCENT);
+            progress.setTextOnLabel(swatches, 0);
+        });
+        for (final Label swatch : swatches) {
             swatch.getStyleClass().add("gp-game-menu-swatch");
             swatch.setStyle(swatch.getStyle() + " -fx-background-radius: 999; -fx-min-width: 32; -fx-min-height: 32;"
                 + " -fx-pref-width: 32; -fx-pref-height: 32; -fx-text-fill: #2B2118;");
@@ -334,7 +358,8 @@ final class GameMenuView {
         }
         return settingsCard(text("GameMenuRing"),
             greyedUnless(MenuSetting.RING_THICKNESS,
-                sliderRow(text("GameMenuRingThickness"), thicknessSlider, value -> Math.round(value) + " %")),
+                sliderRow(text("GameMenuRingThickness"), thicknessSlider, value -> Math.round(value) + " %",
+                    Configuration.DEFAULT_VALUE_RING_THICKNESS)),
             greyedUnless(MenuSetting.RING_COLOR, colors));
     }
 }

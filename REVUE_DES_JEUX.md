@@ -64,7 +64,20 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    deux corrections : **Tir** « dès qu'on regarde » (plus de fixation ni d'anneau actifs, vitesse seulement) et
    **Sprint jusqu'à l'arrivée** seul (aucun réglage actif : pas de fixation, vitesses propres au mode ; à deux,
    fixation et anneau). Tests ciblés et SpotBugs verts.
-4. Point 3 : réglages du menu principal complets (mêmes options que le menu Échap).
+4. ~~Point 3 : réglages du menu principal complets~~ : **fait le 18/11, validé par le mainteneur, commité**.
+   Nouvelle section **Son** (mode Jeux : volume de la musique et des sons ; mode Évaluations : volume, celui des sons
+   et vidéos, comme dans le menu Échap d'une évaluation). Section **Jeux** : carte « Éléments des jeux » (vitesse,
+   taille) et carte « Anneau de progression » (épaisseur, couleur avec la couleur principale en premier), mode Jeux
+   seulement (ces réglages n'agissent pas sur les évaluations, point 4). La durée de fixation était déjà dans
+   « Oculomètre ». La lecture de la musique (précédent, lecture, suivant) reste dans le menu Échap : ce n'est pas un
+   réglage. Tests ciblés et SpotBugs verts. Essayé et validé par le mainteneur le 18/11, avec deux demandes, codées
+   le 18/11, NON commitées, essai attendu : bouton **« Valeurs par défaut »** en haut de la page des réglages (après
+   confirmation : volumes, durée de fixation, vitesse, taille, épaisseur et couleur de l'anneau ; les autres réglages
+   sont gardés ; `Configuration.resetGameSettings`) ; dans le menu Échap, **un clic sur le nom d'un réglage remet sa
+   valeur par défaut** (info-bulle, pas sur un réglage grisé). Au passage : le clic sur la valeur de la taille des
+   éléments la remettait à 50 au lieu de 100 (`ElementSizeControl`), corrigé. Essayé et validé ; retour : la
+   fenêtre de confirmation était trop petite (il fallait faire défiler le texte) : la hauteur du message compte
+   maintenant ses lignes coupées par la largeur (`MenuMessageDialog.viewportHeight`, toutes les fenêtres de message).
 5. Point 4 : GazePlay Eval sur les valeurs par défaut, sauf celles du JSON.
 6. Tests ciblés, puis commit (sur accord), push et CI (suite complète et `allGamesTest`).
 7. Ensuite, tâches de fin : faire fermer leurs parties à tous les tests et libération immédiate des objets simulés ;

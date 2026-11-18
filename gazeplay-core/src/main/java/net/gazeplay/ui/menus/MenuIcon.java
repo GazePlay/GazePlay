@@ -65,6 +65,10 @@ public enum MenuIcon {
      * An eye: GazePlay Eval Test, a check of the calibration.
      */
     TEST("visibility"),
+    /**
+     * A loudspeaker: the sound section of the settings.
+     */
+    SOUND("volume_up_fill1"),
     UPLOAD_FILE("upload_file"),
     FOLDER("folder_open"),
     /**

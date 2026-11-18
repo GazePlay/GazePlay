@@ -137,9 +137,9 @@ public class Configuration {
     /* In game settings */
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
-    private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
-    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
+    public static final double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
+    public static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
+    public static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
     private static final int DEFAULT_VALUE_PROGRESS_BAR_SIZE = 100;
     /**
      * Color of the rings of the fixations meaning the main color of the menus (17/11/2026: the rings of the reviewed
@@ -596,6 +596,21 @@ public class Configuration {
 
     public String getProgressBarColor() {
         return progressBarColorProperty.getValue();
+    }
+
+    /**
+     * Puts back the default values of the settings of the games, those of the menu Esc of a game (maintainer's request
+     * of 18/11/2026): the volumes, the fixation length, the speed and the size of the elements, the thickness and the
+     * color of the rings. The other settings (language, folders, profile, statistics...) are kept.
+     */
+    public void resetGameSettings() {
+        musicVolumeProperty.set(DEFAULT_VALUE_MUSIC_VOLUME);
+        effectsVolumeProperty.set(DEFAULT_VALUE_EFFECTS_VOLUME);
+        fixationLengthProperty.set(DEFAULT_VALUE_FIXATION_LENGTH);
+        animationSpeedRatioProperty.set(DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
+        elementSizeProperty.set(DEFAULT_VALUE_ELEMENT_SIZE);
+        ringThicknessProperty.set(DEFAULT_VALUE_RING_THICKNESS);
+        progressBarColorProperty.set(DEFAULT_VALUE_PROGRESS_BAR_COLOR);
     }
 
     /**

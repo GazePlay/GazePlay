@@ -93,6 +93,33 @@ class ConfigurationTest {
         configuration.getWhereIsItDirProperty().set(oldPath);
     }
 
+    /**
+     * Maintainer's request of 18/11/2026: the button "Default values" of the settings puts back the settings of the
+     * games (those of the menu Esc), and keeps the others.
+     */
+    @Test
+    void shouldPutBackTheDefaultValuesOfTheSettingsOfTheGamesOnly() {
+        configuration.setUserName("someone");
+        configuration.getMusicVolumeProperty().set(0.9);
+        configuration.getEffectsVolumeProperty().set(0.8);
+        configuration.getFixationLengthProperty().set(700);
+        configuration.getAnimationSpeedRatioProperty().set(3);
+        configuration.getElementSizeProperty().set(150);
+        configuration.getRingThicknessProperty().set(200);
+        configuration.getProgressBarColorProperty().set("RED");
+
+        configuration.resetGameSettings();
+
+        assertEquals(Configuration.DEFAULT_VALUE_MUSIC_VOLUME, configuration.getMusicVolume(), 1e-9);
+        assertEquals(Configuration.DEFAULT_VALUE_EFFECTS_VOLUME, configuration.getEffectsVolume(), 1e-9);
+        assertEquals(Configuration.DEFAULT_VALUE_FIXATION_LENGTH, configuration.getFixationLength());
+        assertEquals(Configuration.DEFAULT_VALUE_ANIMATION_SPEED_RATIO, configuration.getAnimationSpeedRatio(), 1e-9);
+        assertEquals(Configuration.DEFAULT_VALUE_ELEMENT_SIZE, configuration.getElementSize());
+        assertEquals(Configuration.DEFAULT_VALUE_RING_THICKNESS, configuration.getRingThickness());
+        assertEquals(Configuration.RING_COLOR_ACCENT, configuration.getProgressBarColor());
+        assertEquals("someone", configuration.getUserName());
+    }
+
     @Test
     void shouldSaveWithoutLeavingTemporaryFiles() throws IOException {
         configuration.setUserName("someone");
