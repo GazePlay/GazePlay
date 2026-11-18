@@ -551,6 +551,9 @@ public class ShooterGame implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+        // 18/11/2026: no fixation, so no ring, when a target is shot as soon as it is looked at
+        return shot == ShooterShot.FIXATION
+            ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED)
+            : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
     }
 }

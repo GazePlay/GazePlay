@@ -57,7 +57,13 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    Eval ne suivent pas le réglage (point 4). Menu Échap : « Épaisseur », plus jamais grisée quand le jeu a une
    fixation (`MenuSetting.RING_THICKNESS` ; `fixationWithOwnRing` donne maintenant les mêmes réglages que
    `fixationWithSharedRing`). Tests ciblés et SpotBugs verts (test Memory resté sur `-gp-accent` corrigé).
-3. Point 1 : vitesse de La tarte à la crème (cibles qui bougent) ; revue des déclarations `menuSettings()`.
+3. ~~Point 1 : vitesse de La tarte à la crème~~ : **fait le 18/11, essayé et validé par le mainteneur, commité**.
+   Les cibles qui bougent suivent la vitesse des éléments (lue à chaque image, changement vu tout de suite) ; le réglage
+   n'est actif qu'en « cibles qui bougent ». Revue des déclarations `menuSettings()` (par lecture du code : ce que
+   chaque jeu lit vraiment) : tous les jeux qui lisent la vitesse la déclarent, aucun ne la déclare sans la lire ;
+   deux corrections : **Tir** « dès qu'on regarde » (plus de fixation ni d'anneau actifs, vitesse seulement) et
+   **Sprint jusqu'à l'arrivée** seul (aucun réglage actif : pas de fixation, vitesses propres au mode ; à deux,
+   fixation et anneau). Tests ciblés et SpotBugs verts.
 4. Point 3 : réglages du menu principal complets (mêmes options que le menu Échap).
 5. Point 4 : GazePlay Eval sur les valeurs par défaut, sauf celles du JSON.
 6. Tests ciblés, puis commit (sur accord), push et CI (suite complète et `allGamesTest`).

@@ -57,6 +57,44 @@ class CreamPieTest {
         when(translator.translate(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(configuration.getFixationLength()).thenReturn(500);
         when(configuration.getGameStartDelay()).thenReturn(0);
+        when(configuration.getAnimationSpeedRatio()).thenReturn(1.0);
+    }
+
+    /**
+     * Maintainer's request of 18/11/2026: the speed of the elements of the settings acts on the moving targets.
+     */
+    @Test
+    void shouldMoveTheTargetsAtTheSpeedOfTheSettings() throws Exception {
+        final CreamPie normal = launched(CreamPieThrow.FIXATION, CreamPieMotion.MOVING, CreamPieEnd.ENDLESS);
+        final double normalWay = fx(() -> {
+            final double x = normal.getTargetX();
+            final double y = normal.getTargetY();
+            normal.step(0.02);
+            return Math.hypot(normal.getTargetX() - x, normal.getTargetY() - y);
+        });
+        when(configuration.getAnimationSpeedRatio()).thenReturn(2.0);
+        final CreamPie fast = launched(CreamPieThrow.FIXATION, CreamPieMotion.MOVING, CreamPieEnd.ENDLESS);
+        final double fastWay = fx(() -> {
+            final double x = fast.getTargetX();
+            final double y = fast.getTargetY();
+            fast.step(0.02);
+            return Math.hypot(fast.getTargetX() - x, fast.getTargetY() - y);
+        });
+        assertTrue(normalWay > 0);
+        assertEquals(2 * normalWay, fastWay, 1e-6);
+    }
+
+    /**
+     * The menu (Esc) greys what does not act on the game: the speed acts on the moving targets only, the fixation and
+     * the ring on a throw after a fixation only.
+     */
+    @Test
+    void shouldGiveTheSettingsOfTheMenuActingOnTheVariant() throws Exception {
+        final CreamPie still = launched(CreamPieThrow.LOOK, CreamPieMotion.STILL, CreamPieEnd.ENDLESS);
+        assertEquals(Set.of(), still.menuSettings());
+        final CreamPie moving = launched(CreamPieThrow.FIXATION, CreamPieMotion.MOVING, CreamPieEnd.ENDLESS);
+        assertEquals(Set.of(net.gazeplay.MenuSetting.FIXATION_LENGTH, net.gazeplay.MenuSetting.RING_THICKNESS,
+            net.gazeplay.MenuSetting.RING_COLOR, net.gazeplay.MenuSetting.ANIMATION_SPEED), moving.menuSettings());
     }
 
     private static <T> T fx(final Callable<T> action) throws Exception {

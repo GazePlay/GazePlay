@@ -418,14 +418,16 @@ public class CreamPie implements GameLifeCycle {
     }
 
     /**
-     * A moving target glides, and bounces on the edges of its space.
+     * A moving target glides, and bounces on the edges of its space, at the speed of the elements of the settings
+     * (read at each frame: a change in the menu Esc is seen at once; maintainer's request of 18/11/2026).
      */
     private void glide(final double seconds) {
         if (motion != CreamPieMotion.MOVING) {
             return;
         }
-        targetX += velocityX * seconds;
-        targetY += velocityY * seconds;
+        final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
+        targetX += velocityX * scaled;
+        targetY += velocityY * scaled;
         if (targetX < minX || targetX > maxX) {
             velocityX = -velocityX;
             targetX = Math.max(minX, Math.min(maxX, targetX));
@@ -615,10 +617,16 @@ public class CreamPie implements GameLifeCycle {
     }
 
     /**
-     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed. The speed acts on
+     * the moving targets only (18/11/2026)
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return way == CreamPieThrow.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing() : net.gazeplay.MenuSetting.of();
+        final java.util.Set<net.gazeplay.MenuSetting> settings = way == CreamPieThrow.FIXATION
+            ? net.gazeplay.MenuSetting.fixationWithSharedRing() : net.gazeplay.MenuSetting.of();
+        if (motion == CreamPieMotion.MOVING) {
+            settings.add(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+        }
+        return settings;
     }
 }

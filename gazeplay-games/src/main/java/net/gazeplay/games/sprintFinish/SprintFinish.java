@@ -750,6 +750,16 @@ public class SprintFinish implements GameLifeCycle {
     }
 
     /**
+     * @return the settings of the menu (Esc) acting on this game (18/11/2026): a fixation with two players only (a
+     * button looked at); alone, the cat opens the fences by walking on the buttons. The speed and the size of the
+     * settings are not read (the speeds of the dogs and the logs are those of the mode)
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return mode.isHelperGaze() ? net.gazeplay.MenuSetting.fixationWithSharedRing() : net.gazeplay.MenuSetting.of();
+    }
+
+    /**
      * A dog: it runs straight to the cat when nothing is in the way, else by the shortest way round the hedges and the
      * closed fences, diagonals included (maintainer's request of 2/11/2026: the dogs used to go only up, down, left or
      * right), stopped by a log in its way; with two players, it stops while it is looked at.
