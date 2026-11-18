@@ -112,6 +112,25 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    deux langues ; 23 drapeaux et 366 voix chinoises retirés ; colonnes des 19 langues gardées dans
    `multilinguism.csv` (non proposées). Tests : commons 197, core 330 (test du miroir arabe retiré), games 747,
    0 échec ; SpotBugs, `smokeTest` et `allGamesTest` réussis. Point de retour : `778593553`.
+   Validé et commité (`7c8a341b1`).
+   **Retour du 18/11 : volume des réglages différent de celui du menu Échap** (NON commité, essai attendu) : composant
+   commun `GameMenuControls` (core) pour les curseurs (style du menu Échap, valeur en gras à droite) et la musique
+   (titre, précédent, lecture/pause, suivant) ; la section Son des réglages reprend la carte Son du menu Échap
+   (ligne « Musique » ajoutée) ; les curseurs de vitesse, taille et épaisseur et les pastilles de couleur prennent
+   aussi le style du menu Échap, et leurs valeurs s'écrivent comme dans ce menu (« × 1.00 », « 100 % »).
+   Précision du mainteneur (capture) : il parlait de la **barre du bas de l'écran des jeux** (anciens panneaux
+   « Musique » et « Volume » de `MusicControl`, sans valeurs) : remplacée par la carte Son du menu Échap
+   (`GameMenuControls.soundCard`, utilisée aussi par le menu Échap), sans son titre et resserrée pour garder la
+   place des jeux à 800 × 600 (captures `menuScreenshots`). `gazeplay-core` 330 tests, 0 échec, SpotBugs vert.
+   Validé par le mainteneur (« nickel »).
+   **Bug des curseurs (18/11, NON commité)** : la vitesse glissée à × 10 donnait × 9.90 : le curseur s'aimantait sur
+   des graduations comptées depuis son minimum (-8,1), qui manquaient × 10 et × 1 ; et × 0.1 s'affichait × 0.11
+   (troncature). Les pas sont maintenant calculés par `AnimationSpeedRatioControl.snap` (× 0.1 à × 0.9 par dixièmes,
+   puis × 1 à × 10 par demis), arrondi au centième, raccourcis Ctrl + Haut / Bas par `nextValue`. Autres curseurs
+   vérifiés : durée de fixation au pas de 24,75 ms (2 s affichées, 1 980 ms enregistrées, 10 s inatteignables) corrigée
+   au pas de 100 ms ; taille (pas de 1), épaisseur (pas de 10) et volumes (continus) justes. Tests
+   `AnimationSpeedRatioControlTest`, `SettingsSlidersTest` (échouaient avant correction pour la vitesse) ;
+   `gazeplay-core` 335 tests, 0 échec, SpotBugs vert.
    Suite du chantier des sons (après validation) : retirer les 3 sons inutilisés, remplacer applaudissements, grenouille
    et musique par défaut, refaire les 944 voix françaises et anglaises. Leçon : après un changement de la page des réglages,
    lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.

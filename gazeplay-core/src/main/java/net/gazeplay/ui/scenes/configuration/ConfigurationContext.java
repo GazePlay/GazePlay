@@ -45,6 +45,7 @@ import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
+import net.gazeplay.ui.GameMenuControls;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.menus.MenuButtons;
 import net.gazeplay.ui.menus.MenuIcon;
@@ -217,6 +218,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * @return the settings of the games
      */
     private SettingsPage.Section gamesSection(Configuration config) {
+        final net.gazeplay.ui.AnimationSpeedRatioControl speed = net.gazeplay.ui.AnimationSpeedRatioControl.getInstance();
+        final Locale locale = getGazePlay().getTranslator().currentLocale();
         return new SettingsPage.SectionBuilder("SettingsGames", MenuIcon.GAMES)
             .add("QuestionLength", buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
                 0.5, config.getQuestionLengthProperty()))
@@ -226,65 +229,51 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             .add("EnableRewardSound", buildCheckBox(config.getRewardSoundEnabledProperty()))
             // The settings of the menu Esc of a game, to set them once for all (maintainer's request of 17/11/2026)
             .group("SettingsGameElements")
-            .add("GameMenuSpeed", sliderWithValue(label -> net.gazeplay.ui.AnimationSpeedRatioControl.getInstance()
-                .createSpeedEffectSlider(config, label)))
-            .add("GameMenuSize", sliderWithValue(label -> net.gazeplay.ui.ElementSizeControl.getInstance()
-                .createElementSizeSlider(config, label)))
+            // The values written as in the menu Esc (GameMenuView)
+            .add("GameMenuSpeed", GameMenuControls.sliderWithValue(speed.createSpeedEffectSlider(config, new Label()),
+                value -> String.format(locale, "× %.2f", speed.sliderValueToSpeedRatio(value))))
+            .add("GameMenuSize", GameMenuControls.sliderWithValue(net.gazeplay.ui.ElementSizeControl.getInstance()
+                .createElementSizeSlider(config, new Label()), value -> Math.round(value) + " %"))
             .group("GameMenuRing")
-            .add("GameMenuRingThickness", sliderWithValue(label -> net.gazeplay.ui.ProgressBarControl.getInstance()
-                .createRingThicknessSlider(config, label)))
+            .add("GameMenuRingThickness", GameMenuControls.sliderWithValue(net.gazeplay.ui.ProgressBarControl
+                .getInstance().createRingThicknessSlider(config, new Label()), value -> Math.round(value) + " %"))
             .add("GameMenuRingColor", ringColors(config))
             .build();
     }
 
     /**
-     * @return the volumes of the menu Esc of a game, to set them once for all (maintainer's request of 17/11/2026): the
-     * music and the sounds for the games, the volume of the sounds and videos for the evaluations
+     * @return the sound of the menu Esc of a game, the same controls (GameMenuControls; maintainer's request of
+     * 18/11/2026: the volumes of the settings were different from those of the menu Esc): the music with its buttons,
+     * its volume and the volume of the sounds for the games; the volume of the sounds and videos for the evaluations
      */
     private SettingsPage.Section soundSection(Configuration config, boolean evaluations) {
         final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("GameMenuSound", MenuIcon.SOUND);
         if (evaluations) {
-            section.add("GameMenuVolume", volumeSlider(config.getEffectsVolumeProperty(), null));
+            section.add("GameMenuVolume", GameMenuControls.sliderWithValue(
+                GameMenuControls.effectsVolumeSlider(config), GameMenuControls::percent));
         } else {
-            section.add("GameMenuMusicVolume", volumeSlider(config.getMusicVolumeProperty(),
-                    value -> BackgroundMusicManager.getInstance().setVolume(value)))
-                .add("GameMenuEffectsVolume", volumeSlider(config.getEffectsVolumeProperty(), null));
+            section.add("GameMenuMusic", GameMenuControls.musicPlayer(getGazePlay().getTranslator()))
+                .add("GameMenuMusicVolume", GameMenuControls.sliderWithValue(
+                    GameMenuControls.musicVolumeSlider(config), GameMenuControls::percent))
+                .add("GameMenuEffectsVolume", GameMenuControls.sliderWithValue(
+                    GameMenuControls.effectsVolumeSlider(config), GameMenuControls::percent));
         }
         return section.build();
     }
 
     /**
-     * @return a slider of a volume, from 0 to 1, bound to its setting, with its value in percent
-     */
-    private static HBox volumeSlider(final javafx.beans.property.DoubleProperty volume,
-                                     final java.util.function.DoubleConsumer onChange) {
-        return sliderWithValue(label -> {
-            final Slider slider = new Slider(0, 1, volume.get());
-            slider.setBlockIncrement(0.05);
-            label.setText(Math.round(volume.get() * 100) + " %");
-            slider.valueProperty().addListener((observable, before, now) -> {
-                volume.set(now.doubleValue());
-                label.setText(Math.round(now.doubleValue() * 100) + " %");
-                if (onChange != null) {
-                    onChange.accept(now.doubleValue());
-                }
-            });
-            return slider;
-        });
-    }
-
-    /**
      * @return a slider made by {@code make} (bound to its setting, its value written in the label it is given), and
-     * that value at its right
+     * that value at its right, in the look of the menu Esc (GameMenuControls)
      */
     private static HBox sliderWithValue(final java.util.function.Function<Label, Slider> make) {
         final Label value = new Label();
-        value.setMinWidth(56);
-        final Slider slider = make.apply(value);
-        slider.setPrefWidth(PREF_WIDTH);
-        slider.setShowTickMarks(false);
-        final HBox row = new HBox(10, slider, value);
+        value.getStyleClass().add("gp-game-menu-value");
+        value.setMinWidth(64);
+        value.setAlignment(Pos.CENTER_RIGHT);
+        final Slider slider = GameMenuControls.styled(make.apply(value));
+        final HBox row = new HBox(12, slider, value);
         row.setAlignment(Pos.CENTER_LEFT);
+        row.setPrefWidth(300);
         return row;
     }
 
@@ -296,8 +285,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final HBox colors = new HBox(8);
         colors.setAlignment(Pos.CENTER_LEFT);
         for (final Label swatch : net.gazeplay.ui.ProgressBarControl.getInstance().createColorLabel(config)) {
-            swatch.setStyle(swatch.getStyle() + " -fx-background-radius: 999; -fx-min-width: 28; -fx-min-height: 28;"
-                + " -fx-pref-width: 28; -fx-pref-height: 28; -fx-text-fill: #2B2118; -fx-cursor: hand;");
+            // As in the menu Esc
+            swatch.getStyleClass().add("gp-game-menu-swatch");
+            swatch.setStyle(swatch.getStyle() + " -fx-background-radius: 999; -fx-min-width: 32; -fx-min-height: 32;"
+                + " -fx-pref-width: 32; -fx-pref-height: 32; -fx-text-fill: #2B2118; -fx-cursor: hand;");
             colors.getChildren().add(swatch);
         }
         return colors;

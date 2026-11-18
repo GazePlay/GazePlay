@@ -181,10 +181,21 @@ class ConfigurationContextTest {
                 sections.stream().map(SettingsPage.Section::titleKey).toList());
             // Every setting of the menu Esc of a game is also here, to set it once for all (maintainer's request of
             // 17/11/2026): the volumes, the speed and the size of the elements, the thickness and the color of the ring
-            for (String fromTheMenu : List.of("GameMenuMusicVolume", "GameMenuEffectsVolume", "GameMenuSpeed",
-                "GameMenuSize", "GameMenuRingThickness", "GameMenuRingColor")) {
+            for (String fromTheMenu : List.of("GameMenuMusic", "GameMenuMusicVolume", "GameMenuEffectsVolume",
+                "GameMenuSpeed", "GameMenuSize", "GameMenuRingThickness", "GameMenuRingColor")) {
                 assertInstanceOf(HBox.class, control(sections, fromTheMenu), fromTheMenu);
             }
+            // The volumes as in the menu Esc (maintainer's request of 18/11/2026): its slider, its value in percent
+            for (String volume : List.of("GameMenuMusicVolume", "GameMenuEffectsVolume", "GameMenuSpeed")) {
+                HBox row = (HBox) control(sections, volume);
+                assertTrue(row.getChildren().get(0).getStyleClass().contains("gp-game-menu-slider"), volume);
+                assertTrue(row.getChildren().get(1).getStyleClass().contains("gp-game-menu-value"), volume);
+            }
+            assertTrue(((Label) ((HBox) control(sections, "GameMenuMusicVolume")).getChildren().get(1)).getText()
+                .endsWith(" %"));
+            // The music with its buttons previous, play or pause, next
+            assertEquals(3, ((HBox) control(sections, "GameMenuMusic")).getChildren().stream()
+                .filter(Button.class::isInstance).count());
             assertEquals(8, ((HBox) control(sections, "GameMenuRingColor")).getChildren().size(),
                 "the main color of the menus, then 7 colors");
             assertInstanceOf(MenuButton.class, control(sections, "Lang"));

@@ -11,16 +11,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.gazeplay.MenuSetting;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.ui.AnimationSpeedRatioControl;
 import net.gazeplay.ui.ElementSizeControl;
 import net.gazeplay.ui.FixationLengthControl;
+import net.gazeplay.ui.GameMenuControls;
 import net.gazeplay.ui.ProgressBarControl;
 import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
@@ -198,17 +197,8 @@ final class GameMenuView {
         label.getStyleClass().add("gp-game-menu-label");
         label.setMinWidth(Region.USE_PREF_SIZE);
         resetOnClick(label, () -> slider.setValue(defaultValue));
-        final Label value = new Label(format.apply(slider.getValue()));
-        value.getStyleClass().add("gp-game-menu-value");
-        value.setMinWidth(64);
-        value.setAlignment(Pos.CENTER_RIGHT);
-        slider.valueProperty().addListener((observable, before, now) -> value.setText(format.apply(now.doubleValue())));
-        slider.setMinWidth(120);
-        slider.setPrefWidth(200);
-        slider.setMaxWidth(Double.MAX_VALUE);
-        slider.setShowTickMarks(false);
-        slider.getStyleClass().add("gp-game-menu-slider");
-        HBox.setHgrow(slider, Priority.ALWAYS);
+        // The look shared with the settings of the main menu (GameMenuControls)
+        final Label value = GameMenuControls.value(GameMenuControls.styled(slider), format);
         final HBox row = new HBox(12, label, slider, value);
         row.setAlignment(Pos.CENTER_LEFT);
         label.setPrefWidth(170);
@@ -231,85 +221,18 @@ final class GameMenuView {
         return row;
     }
 
-    private String percent(final double ratio) {
-        return Math.round(ratio * 100) + " %";
-    }
-
+    /**
+     * The card of the sound, shared with the bottom of the menu of the games (GameMenuControls).
+     */
     private VBox soundCard(final Configuration config, final boolean withMusic) {
-        final VBox card = settingsCard(text("GameMenuSound"));
-        if (withMusic) {
-            card.getChildren().add(musicRow());
-        }
-        card.getChildren().add(sliderRow(text("GameMenuMusicVolume"), volumeSlider(config.getMusicVolume(),
-            value -> {
-                config.getMusicVolumeProperty().set(value);
-                BackgroundMusicManager.getInstance().setVolume(value);
-            }), this::percent, Configuration.DEFAULT_VALUE_MUSIC_VOLUME));
-        card.getChildren().add(sliderRow(text("GameMenuEffectsVolume"), volumeSlider(config.getEffectsVolume(),
-            value -> config.getEffectsVolumeProperty().set(value)), this::percent,
-            Configuration.DEFAULT_VALUE_EFFECTS_VOLUME));
-        return card;
+        return GameMenuControls.soundCard(translator, config, withMusic, false);
     }
 
     /**
      * During an evaluation: the volume of its sounds and videos (the volume of the effects).
      */
     private VBox evaluationSoundCard(final Configuration config) {
-        return settingsCard(text("GameMenuSound"), sliderRow(text("GameMenuVolume"),
-            volumeSlider(config.getEffectsVolume(), value -> config.getEffectsVolumeProperty().set(value)),
-            this::percent, Configuration.DEFAULT_VALUE_EFFECTS_VOLUME));
-    }
-
-    private static Slider volumeSlider(final double initial, final java.util.function.DoubleConsumer onChange) {
-        final Slider slider = new Slider(0, 1, initial);
-        slider.setBlockIncrement(0.05);
-        slider.valueProperty().addListener((observable, before, now) -> onChange.accept(now.doubleValue()));
-        return slider;
-    }
-
-    /**
-     * @return the title of the music and its buttons previous, play or pause, next
-     */
-    private HBox musicRow() {
-        final BackgroundMusicManager music = BackgroundMusicManager.getInstance();
-        final Label name = new Label(text("GameMenuMusic"));
-        name.getStyleClass().add("gp-game-menu-label");
-        name.setPrefWidth(170);
-        name.setMinWidth(Region.USE_PREF_SIZE);
-        final Label title = new Label(musicTitle(music));
-        title.getStyleClass().add("gp-game-menu-note");
-        title.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(title, Priority.ALWAYS);
-        music.getIsMusicChanging().addListener((observable, before, changing) -> {
-            if (!changing) {
-                title.setText(musicTitle(music));
-            }
-        });
-        final Button previous = MenuStyle.iconButton(MenuIcon.SKIP_PREVIOUS, text("GameMenuPrevious"),
-            music::previous);
-        final Button playPause = MenuStyle.iconButton(music.isPlaying() ? MenuIcon.PAUSE : MenuIcon.PLAY,
-            text(music.isPlaying() ? "GameMenuPause" : "GameMenuPlay"), () -> {
-                if (music.isPlaying()) {
-                    music.pause();
-                } else {
-                    music.play();
-                }
-            });
-        music.getIsPlayingProperty().addListener((observable) -> {
-            playPause.setGraphic((music.isPlaying() ? MenuIcon.PAUSE : MenuIcon.PLAY).create(32));
-            playPause.getTooltip().setText(text(music.isPlaying() ? "GameMenuPause" : "GameMenuPlay"));
-            playPause.setAccessibleText(playPause.getTooltip().getText());
-        });
-        final Button next = MenuStyle.iconButton(MenuIcon.SKIP_NEXT, text("GameMenuNext"), music::next);
-        final HBox row = new HBox(8, name, title, previous, playPause, next);
-        row.setAlignment(Pos.CENTER_LEFT);
-        return row;
-    }
-
-    private static String musicTitle(final BackgroundMusicManager music) {
-        final MediaPlayer current = music.getCurrentMusic();
-        final String title = BackgroundMusicManager.getMusicTitle(current);
-        return title == null ? "" : title;
+        return GameMenuControls.soundCard(translator, config, false, true);
     }
 
     private VBox gameCard(final Configuration config, final Scene scene) {

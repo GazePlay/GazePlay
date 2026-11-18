@@ -76,7 +76,9 @@ public class FixationLengthControl {
         slider.setMin(FIXATION_LENGTH_SLIDER_MIN_VALUE);
         slider.setMax(FIXATION_LENGTH_SLIDER_MAX_VALUE);
         slider.setMajorTickUnit(2500);
-        slider.setMinorTickCount(100);
+        // Steps of 100 ms (2500 / 25): 100 minor ticks made steps of 24.75 ms, which missed 10 s and the 2 s by
+        // default (found on 18/11/2026 with the speed: "2.0 s" shown, 1980 ms saved)
+        slider.setMinorTickCount(24);
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
         slider.setBlockIncrement(100);

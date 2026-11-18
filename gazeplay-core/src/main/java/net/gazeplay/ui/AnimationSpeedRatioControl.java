@@ -84,9 +84,17 @@ public class AnimationSpeedRatioControl {
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(1);
         slider.setShowTickMarks(true);
-        slider.setSnapToTicks(true);
+        // The steps are applied below (snap), not by the slider: it counts its ticks from its minimum, -8.1, which
+        // missed × 10 and × 1 (18/11/2026)
+        slider.setSnapToTicks(false);
         slider.setBlockIncrement(1d);
         slider.setValue(speedRatioToSliderValue(initialSpeedRatioValue));
+        slider.valueProperty().addListener((observable, before, now) -> {
+            final double stepped = snap(slider, now.doubleValue());
+            if (stepped != now.doubleValue()) {
+                slider.setValue(stepped);
+            }
+        });
 
         speedEffectValueLabel.setText(formatValue(initialSpeedRatioValue));
 
@@ -116,10 +124,9 @@ public class AnimationSpeedRatioControl {
     public double sliderValueToSpeedRatio(double value) {
         if (value >= 0d) {
             return 1d + value;
-        } else {
-            BigDecimal result = new BigDecimal(value).setScale(2, RoundingMode.DOWN).divide(new BigDecimal(SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.DOWN), RoundingMode.DOWN).setScale(2, RoundingMode.DOWN);
-            return result.add(new BigDecimal(1d)).doubleValue();
         }
+        // Rounded to the hundredth (18/11/2026): truncated, the minimum -8.1, stored as -8.0999..., gave × 0.11
+        return BigDecimal.valueOf(1d + value / SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**
@@ -128,35 +135,61 @@ public class AnimationSpeedRatioControl {
     public double speedRatioToSliderValue(double value) {
         if (value >= 1d) {
             return value - 1d;
-        } else {
-            BigDecimal result = new BigDecimal(value).add(new BigDecimal(-1d));
-            result = result.setScale(2, RoundingMode.DOWN).multiply(new BigDecimal(SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.DOWN)).setScale(2, RoundingMode.DOWN);
-            return result.doubleValue();
         }
+        return BigDecimal.valueOf((value - 1d) * SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
+
+    /**
+     * The step of the slider below the speed by default: 0.9, a tenth of the speed (× 0.9, × 0.8 ... × 0.1).
+     */
+    private static final double SLOWER_STEP = SPEED_RATIO_RANGE_WIDTH / 10;
+
+    /**
+     * The step of the slider above the speed by default: half the speed (× 1.5, × 2 ... × 10).
+     */
+    private static final double FASTER_STEP = 0.5;
+
+    /**
+     * @return a value of the slider put on its nearest step: a tenth of the speed below × 1, half the speed above,
+     * within its ends. The steps are computed here, not by the slider: it counts its ticks from its minimum (-8.1),
+     * which missed × 10 and × 1 (found by the maintainer on 18/11/2026: × 10 gave × 9.90)
+     */
+    static double snap(final Slider slider, final double value) {
+        final double stepped = value >= 0
+            ? Math.round(value / FASTER_STEP) * FASTER_STEP
+            : Math.round(value / SLOWER_STEP) * SLOWER_STEP;
+        final double rounded = Math.round(stepped * 100) / 100.0;
+        return Math.max(slider.getMin(), Math.min(slider.getMax(), rounded));
+    }
+
+    /**
+     * @return the value of the slider one step up ({@code direction} 1: one more speed above × 1, a tenth below) or
+     * down (-1), for the keyboard
+     */
+    static double nextValue(final Slider slider, final int direction) {
+        final double value = snap(slider, slider.getValue());
+        final double step = direction > 0
+            ? (value < 0 ? SLOWER_STEP : 1)
+            : (value > 0 ? 1 : SLOWER_STEP);
+        final double next = value + direction * step;
+        // From above × 1 to below it, or the reverse: stop on × 1 first
+        if (value > 0 && next < 0 || value < 0 && next > 0) {
+            return 0;
+        }
+        return snap(slider, next);
+    }
 
     /**
      * Makes Ctrl + Up and Ctrl + Down increase and decrease the speed during the game.
      */
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider animationSpeedRatioSlider) {
 
-        EventHandler<KeyEvent> increaseSpeedEventHandler = event -> {
-            final double sliderSpeedValue = Math.floor(animationSpeedRatioSlider.getValue());
-            if (sliderSpeedValue < animationSpeedRatioSlider.getMax()) {
-                animationSpeedRatioSlider.setValue(sliderSpeedValue + 1);
-            } else {
-                log.info("max speed for effects reached !");
-            }
-        };
-        EventHandler<KeyEvent> decreaseSpeedEventHandler = event -> {
-            final double sliderSpeedValue = Math.floor(animationSpeedRatioSlider.getValue());
-            if (sliderSpeedValue > animationSpeedRatioSlider.getMin()) {
-                animationSpeedRatioSlider.setValue(sliderSpeedValue - 1);
-            } else {
-                log.info("min speed for effects reached !");
-            }
-        };
+        // One step up or down (nextValue): the former floor + 1 stayed stuck on the minimum, -8.1 (18/11/2026)
+        EventHandler<KeyEvent> increaseSpeedEventHandler = event ->
+            animationSpeedRatioSlider.setValue(nextValue(animationSpeedRatioSlider, 1));
+        EventHandler<KeyEvent> decreaseSpeedEventHandler = event ->
+            animationSpeedRatioSlider.setValue(nextValue(animationSpeedRatioSlider, -1));
 
         final KeyCombination keyCombinationUP = new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_ANY);
         final KeyCombination keyCombinationDOWN = new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_ANY);

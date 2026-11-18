@@ -29,6 +29,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.gameslocator.GamesLocator;
+import net.gazeplay.ui.GameMenuControls;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.menus.MenuButtons;
 import net.gazeplay.ui.menus.MenuIcon;
@@ -402,10 +403,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        final HBox bottomBar = new HBox(16,
-            getMusicControl().createMusicControlPane(),
-            getMusicControl().createVolumeLevelControlPane(config, translator),
-            spacer, info);
+        // The card of the sound of the menu Esc of a game, the same (GameMenuControls; maintainer's request of
+        // 18/11/2026: the former panes "Music" and "Volume" looked different, without the values of the volumes)
+        final javafx.scene.layout.VBox sound = GameMenuControls.soundCard(translator, config, true, false, false);
+        // Lower than in the menu Esc, so that the games keep their room on a small window
+        sound.setStyle("-fx-padding: 8 18 8 18;");
+        sound.setPrefWidth(600);
+        sound.setMaxWidth(Region.USE_PREF_SIZE);
+        final HBox bottomBar = new HBox(16, sound, spacer, info);
         bottomBar.getStyleClass().add("gp-bottom-bar");
         return bottomBar;
     }
