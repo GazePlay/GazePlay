@@ -104,7 +104,16 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    et son script `gradle/images/inventaire_sons.py` ; 1 449 sons livrés : 133 libres, 278 voix de synthèse aux
    conditions à vérifier (Amazon Polly, ttsmp3.com), 1 non libre probable (grenouille de Course des grenouilles),
    1 037 de source inconnue (1 032 voix, 5 sons communs, dont les applaudissements de Bravo) ; 3 sons lus par aucun
-   code ; questions au mainteneur en section 6. Leçon : après un changement de la page des réglages,
+   code ; questions au mainteneur en section 6. Commité (`778593553`).
+   **Retrait des langues (18/11, décision du mainteneur, NON commité, essai attendu)** : français et anglais seulement,
+   une variante de chaque (France, Royaume-Uni) ; les autres langues reviendront une fois ces deux-là stables.
+   `Configuration.getLanguage()/getCountry()` ramènent toute autre langue à l'anglais (anciens profils, nouveau profil
+   sur un système qui n'est pas en français ; le fichier n'est pas réécrit) ; `Languages` et `CustomLocale` réduits à
+   deux langues ; 23 drapeaux et 366 voix chinoises retirés ; colonnes des 19 langues gardées dans
+   `multilinguism.csv` (non proposées). Tests : commons 197, core 330 (test du miroir arabe retiré), games 747,
+   0 échec ; SpotBugs, `smokeTest` et `allGamesTest` réussis. Point de retour : `778593553`.
+   Suite du chantier des sons (après validation) : retirer les 3 sons inutilisés, remplacer applaudissements, grenouille
+   et musique par défaut, refaire les 944 voix françaises et anglaises. Leçon : après un changement de la page des réglages,
    lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.
    inventaire des sons ; notes de version 2.0 (images à remettre, formats v5 et v6).
 

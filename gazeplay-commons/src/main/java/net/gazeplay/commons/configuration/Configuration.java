@@ -414,12 +414,32 @@ public class Configuration {
 
     /* Language settings */
 
+    /**
+     * French, the language of a French profile (or of a new profile on a French system).
+     */
+    public static final String LANGUAGE_FRENCH = "fra";
+
+    /**
+     * English, the language of every other profile.
+     */
+    public static final String LANGUAGE_ENGLISH = "eng";
+
+    /**
+     * @return the language of the interface: French or English, the only languages of GazePlay Learning since
+     * 18/11/2026 (maintainer's decision: the 19 other languages were translated for 12 to 20 % of the texts). A profile
+     * saved in another language, or a new profile on a system in another language, is read in English; the file is not
+     * rewritten until the language is chosen again.
+     */
     public String getLanguage() {
-        return languageProperty.getValue();
+        return LANGUAGE_FRENCH.equals(languageProperty.getValue()) ? LANGUAGE_FRENCH : LANGUAGE_ENGLISH;
     }
 
+    /**
+     * @return the country of the language: France for French, the United Kingdom for English (one variant of each
+     * since 18/11/2026)
+     */
     public String getCountry() {
-        return countryProperty.getValue();
+        return LANGUAGE_FRENCH.equals(getLanguage()) ? "FR" : "GB";
     }
 
     /* Games settings */

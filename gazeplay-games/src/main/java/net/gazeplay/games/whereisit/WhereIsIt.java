@@ -59,9 +59,10 @@ public class WhereIsIt implements GameLifeCycle {
     private static final double MAXSIZEPICTO = 250;
 
     /**
-     * Languages whose voices said the questions before October 2026, when the only ones looked for.
+     * Languages whose voices say the questions: French and English, the only languages of GazePlay Learning since
+     * 18/11/2026 (the Chinese voices, which no language offered could reach any more, are removed).
      */
-    private static final Set<String> LANGUAGES_WITH_VOICES = Set.of("fra", "eng", "chn");
+    private static final Set<String> LANGUAGES_WITH_VOICES = Set.of("fra", "eng");
 
     /**
      * Longest move of the question from the middle of the screen to the band, in ms.

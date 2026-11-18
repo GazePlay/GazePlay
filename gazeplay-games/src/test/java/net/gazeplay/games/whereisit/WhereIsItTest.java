@@ -123,6 +123,9 @@ class WhereIsItTest {
         final WhereIsIt odd = new WhereIsIt(WhereIsItGameType.FIND_ODD, 2, 2, mockGameContext, mockStats);
         assertEquals("data/findTheOddOneOut/sound/eng/odd.m.eng.mp3", odd.getPathSound("odd", "eng", "m"));
         assertNull(odd.getPathSound("odd", "chn", odd.drawVoice("chn")), "No voice of the odd one out in Chinese");
+        // French and English only since 18/11/2026: the Chinese voices are removed
+        assertNull(animals.drawVoice("chn"));
+        assertNull(animals.getPathSound("cow", "chn", "w"), "no Chinese voice any more");
     }
 
     @Test

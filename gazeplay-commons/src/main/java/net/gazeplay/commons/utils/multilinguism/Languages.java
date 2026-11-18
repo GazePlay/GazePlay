@@ -5,43 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 
 /**
- * Languages of GazePlay
- * <p>
- * They follow ISO 639-3
- * <p>
- * alb: Albanian
- * <p>
- * ara: Arabic
- * <p>
- * bel: Belarusian
- * <p>
- * chn: Chinese
- * <p>
- * deu: German
- * <p>
- * eng: English
- * <p>
- * fra: French
- * <p>
- * hrv: Croatian
- * <p>
- * ita: Italian
- * <p>
- * hin: Hindi
- * <p>
- * jpn: Japanese
- * <p>
- * pol: Polish
- * <p>
- * por: Portuguese
- * <p>
- * nld: Dutch
- * <p>
- * rus: Russian
- * <p>
- * spa: Spanish
- * <p>
- * vnm: Vietnamese
+ * Languages of GazePlay Learning: French (fra) and English (eng), ISO 639-3 codes, one variant of each (France, United
+ * Kingdom). Since 18/11/2026 (maintainer's decision), the 19 other languages are no longer offered: they were translated
+ * for 12 to 20 % of the texts, the rest shown in English. Their columns stay in the translation files, so that a
+ * language can come back once French and English are stable: a line here, its flag in data/common/flags, and
+ * {@code Configuration.getLanguage()}.
  * <p>
  * see https://iso639-3.sil.org/code_tables/639/data/c
  */
@@ -50,7 +18,10 @@ public class Languages {
 
     private static final SortedMap<Locale, LanguageDetails> languageMap = Collections.unmodifiableSortedMap(createLanguagesMap());
 
-    private static final Locale DEFAULT_CODE = Locale.of("fra", "FR");
+    /**
+     * English: the language of a profile saved in a language no longer offered (maintainer's decision of 18/11/2026).
+     */
+    private static final Locale DEFAULT_CODE = CustomLocale.UNITED_KINGDOM;
 
     private static final String flagsPath = "data/common/flags/";
 
@@ -64,31 +35,8 @@ public class Languages {
                     return o1.getCountry().compareTo(o2.getCountry());
                 }
             });
-        put(result, build(CustomLocale.ALBANIA, "Shqip", false, true, "800px-Flag_of_Albania.svg.png"));
-        put(result, build(CustomLocale.ARAB_LEAGUE, "العَرَبِيَّة", false, false, "800px-Flag_of_the_Arab_League.svg.png"));
-        put(result, build(CustomLocale.CHINA, "漢語", false, true, "800px-Flag_of_the_People's_Republic_of_China.svg.png"));
-        put(result, build(CustomLocale.GERMANY, "Deutsch", true, true, "800px-Flag_of_Germany.svg.png"));
-        put(result, build(CustomLocale.AUSTRIA, "Deutsch", true, true, "800px-Flag_of_Austria.svg.png"));
         put(result, build(CustomLocale.UNITED_KINGDOM, "English", true, true, "800px-Flag_of_the_United_Kingdom.svg.png"));
-        put(result, build(CustomLocale.UNITED_STATES, "English", true, true, "800px-Flag_of_the_United_States_(Pantone).svg.png"));
-        put(result, build(CustomLocale.GREECE, "ελληνικά", false, true, "800px-Flag_of_Greece.svg.png"));
-        put(result, build(CustomLocale.FINLAND, "Suomi", false, true, "800px-Flag_of_Finland.svg.png"));
         put(result, build(CustomLocale.FRANCE, "Français", true, true, "800px-Flag_of_France.svg.png"));
-        put(result, build(CustomLocale.FRANCOPHONIE, "Français", true, true, "Flag_of_La_Francophonie.svg.png"));
-        put(result, build(CustomLocale.CROATIA, "Hrvatski", false, true, "800px-Flag_of_Croatia.svg.png"));
-        put(result, build(CustomLocale.INDONESIA, "Bahasa Indonesia", false, true, "800px-Flag_of_Indonesia.svg.png"));
-        put(result, build(CustomLocale.ITALY, "Italiano", false, true, "800px-Flag_of_Italy.svg.png"));
-        put(result, build(CustomLocale.JAPAN, "日本語", false, true, "800px-Flag_of_Japan.svg.png"));
-        put(result, build(CustomLocale.POLAND, "polszczyzna", false, true, "800px-Flag_of_Poland.svg.png"));
-        put(result, build(CustomLocale.PORTUGAL, "Português", false, true, "800px-Flag_of_Portugal.svg.png"));
-        put(result, build(CustomLocale.BRAZIL, "Português", false, true, "800px-Flag_of_Brazil.svg.png"));
-        put(result, build(CustomLocale.NETHERLANDS, "Nederlands", false, true, "800px-Flag_of_the_Netherlands.svg.png"));
-        put(result, build(CustomLocale.RUSSIA, "Pусский язык", true, true, "800px-Flag_of_Russia.svg.png"));
-        put(result, build(CustomLocale.SPAIN, "Español", false, true, "800px-Flag_of_Spain.svg.png"));
-        put(result, build(CustomLocale.VIETNAM, "Tiếng Việt", false, true, "800px-Flag_of_Vietnam.svg.png"));
-        put(result, build(CustomLocale.MALAYSIA, "Bahasa Melayu", false, true, "800px-Flag_of_Malaysia.svg.png"));
-        put(result, build(CustomLocale.BELARUS, "Беларуская мова", true, true, "800px-Flag_of_Belarus.svg.png"));
-        put(result, build(CustomLocale.INDIA, "हिन्दी", false, true, "800px-Flag_of_India.svg.png"));
         return result;
     }
 
@@ -115,7 +63,7 @@ public class Languages {
     }
 
     /**
-     * @return the details of a language, or of French when it is null or not a language of GazePlay
+     * @return the details of a language, or of English when it is null or not a language of GazePlay
      */
     public static LanguageDetails getLocale(Locale locale) {
         Locale result = locale;

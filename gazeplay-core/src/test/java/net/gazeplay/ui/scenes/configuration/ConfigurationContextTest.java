@@ -248,18 +248,6 @@ class ConfigurationContextTest {
     }
 
     /**
-     * Arabic: the whole page is mirrored (it used to align each row of the grid to the right).
-     */
-    @Test
-    void shouldMirrorTheSettingsForArabic() throws Exception {
-        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-
-        ConfigurationContext context = WaitForAsyncUtils.asyncFx(() -> new ConfigurationContext(mockGazePlay)).get();
-
-        assertEquals(NodeOrientation.RIGHT_TO_LEFT, context.getRoot().getNodeOrientation());
-    }
-
-    /**
      * The sections on the left, the first one shown; choosing another one shows its settings, one row per setting.
      */
     @Test
@@ -432,9 +420,13 @@ class ConfigurationContextTest {
         }
     }
 
+    /**
+     * French and English only since 18/11/2026; choosing French shows its flag and saves it. (In an asyncFx: an
+     * assertion that fails in a Platform.runLater did not fail the test.)
+     */
     @Test
-    void shouldBuildLanguageChooser() throws InterruptedException {
-        Platform.runLater(() -> {
+    void shouldBuildLanguageChooser() throws Exception {
+        WaitForAsyncUtils.asyncFx(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
             StringProperty languageProperty = new SimpleStringProperty("eng");
             StringProperty countryProperty = new SimpleStringProperty("GB");
@@ -450,16 +442,18 @@ class ConfigurationContextTest {
                 utilities.when(ActiveConfigurationContext::getInstance).thenReturn(mockConfig);
                 MenuButton result = context.buildLanguageChooser(mockConfig, context);
 
-                assertEquals(25, result.getItems().size());
+                assertEquals(List.of("English", "Français"),
+                    result.getItems().stream().map(MenuItem::getText).toList());
 
                 result.getItems().get(1).fire();
 
                 ImageView image = (ImageView) result.getGraphic();
-                assertTrue(image.getImage().getUrl().contains("Arab"));
-                assertEquals("ara", languageProperty.getValue());
+                assertTrue(image.getImage().getUrl().contains("Flag_of_France"));
+                assertEquals("fra", languageProperty.getValue());
+                assertEquals("FR", countryProperty.getValue());
             }
-        });
-        TestingUtils.waitForRunLater();
+            return null;
+        }).get();
     }
 
     @Test

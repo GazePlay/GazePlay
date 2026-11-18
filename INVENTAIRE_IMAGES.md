@@ -61,6 +61,10 @@ pas encore revus et les Biboules, 27 images communes).
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).
 
+**Retrait des langues (18/11/2026)** : le français et l'anglais seuls restent proposés ; les 23 drapeaux des autres
+langues (`data/common/flags`, libres probables, Wikimedia Commons) sont retirés, lignes enlevées du CSV ; restent ceux
+de la France et du Royaume-Uni.
+
 **Hypothèse** (Pixabay) : Pixabay a quitté la licence CC0 en janvier 2019. Une image publiée avant reste sous CC0 ; la
 date est estimée par le numéro de l'image (inférieur à 3 900 000 environ). Aucune image Pixabay plus récente n'a été
 trouvée.

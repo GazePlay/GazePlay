@@ -33,6 +33,12 @@ même s'il est libre. Une voix de synthèse ne se reconnaît pas à ses métadon
 | **Source inconnue** | 1 037 | 1 032 voix (section 3) et 5 sons communs (section 4) |
 | **Total** | 1 449 | 9 % libres, 19 % voix de synthèse aux conditions à vérifier, 72 % de source inconnue (presque toutes des voix) |
 
+**Mise à jour du 18/11/2026, après le retrait des langues** (décision du mainteneur : français et anglais seulement,
+les autres langues reviendront une fois ces deux-là stables) : les 366 voix chinoises sont retirées. **1 083 sons
+livrés** : 133 libres, 150 voix de synthèse aux conditions à vérifier (148 d'Amazon Polly, 2 de ttsmp3.com), 1 non libre
+probable, 799 de source inconnue (794 voix françaises et anglaises, 5 sons communs). Les tableaux ci-dessous gardent
+l'état d'avant le retrait.
+
 ## 3. Les voix (1 310 fichiers, 90 % des sons livrés)
 
 Les questions lues à voix haute des jeux « Où est… », de Trouve l'intrus et d'Identifier les lettres, en plusieurs

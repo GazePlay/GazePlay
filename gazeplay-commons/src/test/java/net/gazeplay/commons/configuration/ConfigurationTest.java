@@ -94,6 +94,24 @@ class ConfigurationTest {
     }
 
     /**
+     * French and English only since 18/11/2026: a profile saved in another language is read in English, a French one
+     * (France or the former "Francophonie") stays French; the file is not rewritten.
+     */
+    @Test
+    void shouldReadALanguageNoLongerOfferedInEnglish() {
+        final String[][] cases = {
+            {"fra", "FR", "fra", "FR"}, {"fra", "", "fra", "FR"}, {"eng", "GB", "eng", "GB"}, {"eng", "US", "eng", "GB"},
+            {"deu", "DE", "eng", "GB"}, {"chn", "", "eng", "GB"}, {"ara", "", "eng", "GB"}, {"", "", "eng", "GB"}};
+        for (final String[] each : cases) {
+            configuration.getLanguageProperty().set(each[0]);
+            configuration.getCountryProperty().set(each[1]);
+            assertEquals(each[2], configuration.getLanguage(), each[0] + "-" + each[1]);
+            assertEquals(each[3], configuration.getCountry(), each[0] + "-" + each[1]);
+            assertEquals(each[0], configuration.getLanguageProperty().get(), "kept as saved");
+        }
+    }
+
+    /**
      * Maintainer's request of 18/11/2026: the button "Default values" of the settings puts back the settings of the
      * games (those of the menu Esc), and keeps the others.
      */
@@ -180,14 +198,20 @@ class ConfigurationTest {
         }
     }
 
+    /**
+     * The language of a new profile is the one of the system (Chinese here, set before the configuration is made),
+     * read in English since 18/11/2026: French and English are the only languages.
+     */
     @Test
     void givenLocaleIsSetShouldSetDefaultLanguage() {
-        assertEquals(Locale.CHINA.getISO3Language(), configuration.getLanguage());
+        assertEquals(Locale.CHINA.getISO3Language(), configuration.getLanguageProperty().get(), "the system's");
+        assertEquals("eng", configuration.getLanguage());
     }
 
     @Test
     void givenLocaleIsSetShouldSetDefaultCountry() {
-        assertEquals(Locale.CHINA.getCountry(), configuration.getCountry());
+        assertEquals(Locale.CHINA.getCountry(), configuration.getCountryProperty().get(), "the system's");
+        assertEquals("GB", configuration.getCountry());
     }
 
     /**
