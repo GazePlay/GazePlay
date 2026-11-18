@@ -94,10 +94,17 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
    des réglages, décalée par la nouvelle section Son ; il cherche maintenant la section par son contenu (corrigé le
    18/11 ; `gazeplay-core` 331 tests, 0 échec). Commités et poussés : `e967daccf` (MenuOrientationTest) et
    `916dee0ba` (LaunchedGames) ; **CI verte sur les 7 jobs** (run `44277815025`).
-   ~~Libération immédiate des objets simulés~~ : **faite le 18/11, NON commitée** : `ClearMocksAfterEachClassListener`
+   ~~Libération immédiate des objets simulés~~ : **faite le 18/11, commitée et poussée (`8580877a9`), CI verte sur
+   les 7 jobs (run `44282770174`), aucune `DisabledMockException` dans ses journaux** : `ClearMocksAfterEachClassListener`
    libère les objets d'une classe dès sa fin (plus d'attente de 10 s), après avoir laissé le thread JavaFX finir les
    tâches en file (5 s au plus). En local : `gazeplay-commons` 197, `gazeplay-core` 331, `gazeplay-games` 747 tests,
-   0 échec, aucune `DisabledMockException` dans les sorties. Mémoire non remesurée (pas de sonde). Leçon : après un changement de la page des réglages,
+   0 échec, aucune `DisabledMockException` dans les sorties. Mémoire non remesurée (pas de sonde).
+   Installeur Windows reconstruit le 18/11 à la demande du mainteneur (`build/distributions/`, 326 Mo).
+   ~~Inventaire des sons~~ : **fait le 18/11, NON commité** : `INVENTAIRE_SONS.md`, `gradle/images/inventaire-sons.csv`
+   et son script `gradle/images/inventaire_sons.py` ; 1 449 sons livrés : 133 libres, 278 voix de synthèse aux
+   conditions à vérifier (Amazon Polly, ttsmp3.com), 1 non libre probable (grenouille de Course des grenouilles),
+   1 037 de source inconnue (1 032 voix, 5 sons communs, dont les applaudissements de Bravo) ; 3 sons lus par aucun
+   code ; questions au mainteneur en section 6. Leçon : après un changement de la page des réglages,
    lancer toute la suite de `gazeplay-core`, pas seulement le paquet `configuration`.
    inventaire des sons ; notes de version 2.0 (images à remettre, formats v5 et v6).
 

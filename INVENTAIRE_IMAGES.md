@@ -59,7 +59,7 @@ pas encore revus et les Biboules, 27 images communes).
 
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
-corriger. Les sons ne sont toujours pas inventoriés.
+corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).
 
 **Hypothèse** (Pixabay) : Pixabay a quitté la licence CC0 en janvier 2019. Une image publiée avant reste sous CC0 ; la
 date est estimée par le numéro de l'image (inférieur à 3 900 000 environ). Aucune image Pixabay plus récente n'a été
