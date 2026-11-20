@@ -1,4 +1,4 @@
-# Inventaire des sons de GazePlay Learning (18/11/2026)
+# Inventaire des sons de GazePlay Learning (18/11/2026, mis à jour le 20/11/2026)
 
 Demandé par le mainteneur (tâches de fin, après l'inventaire des images, [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md)) :
 savoir quels sons livrés sont libres, pour que GazePlay Learning respecte sa licence (GPL-3.0-or-later, accepte toute
@@ -50,6 +50,20 @@ créditée dans la licence affichée ; les applaudissements de Bravo sont rempla
 par le coassement des « Sons de la vie » (Wikimedia Commons, CC BY-SA 4.0, `data/race/CREDITS.txt`,
 `data/race/sounds/frog.mp3`). **1 080 sons livrés : 136 libres, 150 voix de synthèse aux conditions à vérifier, 794
 voix de source inconnue, aucun son non libre.** Reste la recommandation 3 (les voix).
+
+**Mise à jour du 20/11/2026 (recommandations 3 et 4 faites, voie B, décisions du mainteneur)** : les **944 voix**
+(Où est… et Trouve l'intrus 736, Identifier les lettres 208) sont **régénérées** par `gradle/images/make_voices.py`
+avec Piper 1.8.0 (GPL-3.0-or-later, hors ligne, non livré), avec le texte affiché par le jeu, en 4 voix choisies par
+le mainteneur après lecture de leurs fiches : `fr_FR-siwis-medium` (français, femme, CC BY 4.0, crédit obligatoire),
+`fr_FR-tom-medium` (français, homme, AGPL 3.0 ; réserve : la voix de départ du modèle n'est pas indiquée),
+`en_US-kristin-medium` et `en_US-norman-medium` (anglais, femme et homme, LibriVox, domaine public). Le fichier
+`gradle/images/voix.csv` donne la voix et le texte de chaque fichier ; `inventaire_sons.py` le lit. Crédits :
+`gazeplay-games/src/main/resources/data/CREDITS-VOICES.txt` et paragraphe « Voix des jeux » de la licence affichée
+(`gradle/templates/licence.txt`). Le même jour : textes anglais rendus plus naturels (couleurs, chiffres, lettres,
+quelques animaux et formes), tutoiement (« Trouve l'intrus », aussi pour le nom du jeu, et « Trouve les
+différences »), et `whereIsTheShape/sounds/eng/nonagon.w.eg.mp3` renommé en `.eng` (le jeu ne le trouvait pas).
+Synthèse embarquée à la place des fichiers : écartée pour la 2.0, issue #1742. **1 080 sons livrés, tous libres et
+de source connue.** Les sections 3 à 6 gardent l'état d'avant.
 
 ## 3. Les voix (1 310 fichiers, 90 % des sons livrés)
 

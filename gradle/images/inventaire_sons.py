@@ -6,7 +6,7 @@ inventory of the images, INVENTAIRE_IMAGES.md). For each sound of a src/main fol
 2. what the file says of itself: ID3 tags (title, artist, comment, copyright, encoder), the encoder written in the
    MP3 frames (LAME, Lavf of FFmpeg), the INFO chunk of a WAV;
 3. its source when the project knows it: a gradle/images/make_*.py script that makes it, a line of a CREDITS.txt
-   shipped with a game, a known file (the music of the shooting game).
+   shipped with a game, a known file (the music of the shooting game), the voices made by make_voices.py (voix.csv).
 
 Writes gradle/images/inventaire-sons.csv. Run from the root of the repository:
     python gradle/images/inventaire_sons.py            (writes the CSV)
@@ -256,6 +256,30 @@ VOICES = [
 ]
 
 
+# Voices made by make_voices.py (20/11/2026), listed in voix.csv: licence of each voice model (data/CREDITS-VOICES.txt)
+VOICE_MODELS = {
+    'fr_FR-siwis-medium': 'CC BY 4.0 (SIWIS, University of Edinburgh ; Hi-Fi TTS, NVIDIA)',
+    'fr_FR-tom-medium': 'AGPL 3.0 (Tom Darboux ; voix de départ du modèle non indiquée)',
+    'en_US-kristin-medium': 'domaine public (LibriVox)',
+    'en_US-norman-medium': 'domaine public (LibriVox)',
+}
+
+
+def made_voices():
+    """{path: (category, source)} of the voices made by make_voices.py, from voix.csv."""
+    found = {}
+    path = os.path.join(HERE, 'voix.csv')
+    if not os.path.exists(path):
+        return found
+    with open(path, encoding='utf-8') as file:
+        for row in csv.DictReader(file):
+            found[row['fichier']] = ('libre, source connue',
+                                     'voix de synthèse Piper (GPL-3.0-or-later), voix %s : %s ; '
+                                     'faite par gradle/images/make_voices.py'
+                                     % (row['voix'], VOICE_MODELS[row['voix']]))
+    return found
+
+
 def classify(relative, scripts, credited, message='', tags='', date='', author=''):
     for pattern, script in scripts:
         if pattern.match(relative):
@@ -289,6 +313,7 @@ def main():
     first = origins()
     scripts = made_by_scripts()
     credited = credits()
+    voices = made_voices()
     if '--survey' in sys.argv:
         by_folder = collections.defaultdict(collections.Counter)
         for path in sounds:
@@ -307,7 +332,7 @@ def main():
         if MOVES.search(message):
             date, author, message = followed_origin(path) or (date, author, message)
         tags = metadata(path)
-        category, source = classify(relative, scripts, credited, message, tags, date, author)
+        category, source = voices.get(path) or classify(relative, scripts, credited, message, tags, date, author)
         rows.append([path, 'oui', category, source, date, author, message, tags])
     with open(os.path.join(HERE, 'inventaire-sons.csv'), 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)

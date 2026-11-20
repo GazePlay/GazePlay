@@ -151,7 +151,7 @@ Après avoir lu le nom du pays le joueur doit regarder le drapeau correspondant.
  
 ![TrouveLesDrapeaux](gazeplay/src/main/resources/data/common/Thumbnails/flags.png)
 
-## Trouvez l'intrus
+## Trouve l'intrus
 
 Le joueur doit trouver l'intrus parmi les photos qui sont affichées.
 
@@ -169,7 +169,7 @@ Sauter de nuage en nuage pour atteindre la plus haute altitude.
 
 ![Biboule-Jump](gazeplay/src/main/resources/data/common/Thumbnails/biboulejump.png)
 
-## Trouvez les différences
+## Trouve les différences
 
 Il faut trouver les différences entre les deux images en les fixant du regard.
 

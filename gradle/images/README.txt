@@ -310,9 +310,9 @@ game; it replaces a thumbnail of unknown source.
 Images and voices of "Identifier les lettres" (name code Letters; gazeplay-games: data/literacy): the cards and the
 letters are drawn by the game (12/11/2026), the hidden pictures are the default images (OpenMoji) or those of the user;
 the 26 pictures of letters of data/common/letters (unknown source, read by no code) are removed. The 208 voices
-(data/literacy/sounds: French and English, a woman's and a man's voice, the letter and the question, added in 2019)
-are of UNKNOWN SOURCE: 22 050 Hz, mono, 48 kbit/s, encoded by LAME 3.99, which is the output of some speech synthesis
-services (hypothesis, not checked); kept for now by decision of the maintainer (12/11/2026), to be replaced: issue #1741 (ways to stay in the license). The
+(data/literacy/sounds: French and English, a woman's and a man's voice, the letter and the question), of unknown
+source until then, are made again on 20/11/2026 by make_voices.py (Piper, free voices, with all the voices of the
+games "Where is...?" and "Find the odd one out"; credits in gazeplay-games: data/CREDITS-VOICES.txt, issue #1741). The
 thumbnail (gazeplay-core: data/common/Thumbnails/letters.png, 960 x 540) is a capture of the game, reduced by half.
 
 Images of "Diviseur" (name code Divisor; gazeplay-games: data/divisor): the 7 rabbits (rabbit/images/1.png to 7.png)

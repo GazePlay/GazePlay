@@ -123,6 +123,15 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Applaudissements de l'écran « Bravo » (data/common/sounds/applause.mp3) : La Sonothèque (https://lasonotheque.org),
   licence CC0 1.0, les mêmes que dans « Quel est ce son ? » ; ils remplacent depuis novembre 2026 des applaudissements
   de source inconnue. Voir data/common/CREDITS.txt.
+- Voix des jeux (questions d'« Où est… », de « Trouve l'intrus » et d'« Identifier les lettres », en français et en
+  anglais, voix de femme et d'homme) : voix de synthèse faites avec Piper (https://github.com/OHF-Voice/piper1-gpl),
+  GPL-3.0-or-later (gradle/images/make_voices.py ; seuls les sons sont livrés, ni Piper ni ses modèles). Voix :
+  fr_FR-siwis-medium (français, femme), d'après la « SIWIS French Speech Synthesis Database » (University of
+  Edinburgh) et « Hi-Fi TTS » (NVIDIA), licence Creative Commons BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/) ; fr_FR-tom-medium (français, homme), de Tom Darboux, licence
+  AGPL 3.0 ; en_US-kristin-medium (anglais, femme) et en_US-norman-medium (anglais, homme), d'après des
+  enregistrements LibriVox du domaine public. Elles remplacent depuis novembre 2026 des voix de source inconnue ou
+  faites par des services dont les conditions n'étaient pas vérifiées. Voir data/CREDITS-VOICES.txt.
 - Images des petits chevaux (plateaux et boutons du dé) : dessinées pour GazePlay Learning
   (gradle/images/make_horses_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 des
   images de source inconnue.

@@ -1,0 +1,22 @@
+Voices of the games of GazePlay Learning (gazeplay-games: data), November 2026.
+
+The questions said by the games "Where is...?" (whereIsTheAnimal, whereIsTheAnimalDynamic, whereIsTheColor,
+whereIsTheFlag, whereIsTheLetter, whereIsTheNumber, whereIsTheShape), "Find the odd one out" (findTheOddOneOut) and
+"Identify the letters" (literacy) are made by speech synthesis, offline, with the text the game shows: 944 files, in
+French and English, a woman's voice (".w." or "f") and a man's voice (".m." or "m"), chosen in the settings.
+They were made on 20/11/2026 by gradle/images/make_voices.py; gradle/images/voix.csv gives the voice and the text of
+each file. They replace voices of unknown source, or made by services whose terms were not checked (Amazon Polly,
+ttsmp3.com). See INVENTAIRE_SONS.md.
+
+Synthesizer: Piper 1.8.0 (https://github.com/OHF-Voice/piper1-gpl), GPL-3.0-or-later. Only the sounds it made are
+shipped, not the synthesizer nor its voice models.
+
+Voice | Used for | Data and licence of the voice model | Model card
+fr_FR-siwis-medium | French, woman | SIWIS French Speech Synthesis Database (University of Edinburgh), fine-tuned from hifi_tts_92 (Hi-Fi TTS, NVIDIA, CC BY 4.0); CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) | https://huggingface.co/rhasspy/piper-voices/tree/main/fr/fr_FR/siwis/medium
+fr_FR-tom-medium | French, man | sentences read by the author of the model (Tom Darboux); AGPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html); the voice it was fine-tuned from is not given | https://huggingface.co/rhasspy/piper-voices/tree/main/fr/fr_FR/tom/medium
+en_US-kristin-medium | English, woman | LibriVox recordings, trained from scratch; public domain | https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US/kristin/medium
+en_US-norman-medium | English, man | LibriVox recordings, trained from scratch; public domain | https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US/norman/medium
+
+Attribution required by CC BY 4.0 (French woman's voice): "SIWIS French Speech Synthesis Database", University of
+Edinburgh, and "Hi-Fi TTS", NVIDIA, licensed under CC BY 4.0; voice model fr_FR-siwis-medium of Piper; the sounds
+are syntheses made with it, not the recordings of the database.

@@ -55,6 +55,17 @@ cori (refusée à l'écoute), mls (lecteurs incompréhensibles), Coqui css10 (es
 - FFmpeg : celui de JavaCV, extrait du jar `org.bytedeco:ffmpeg:8.1.2-1.5.14` (windows-x86_64, cache Gradle) dans le
   dossier temporaire de la session (à réextraire : `unzip -j <jar> 'org/bytedeco/ffmpeg/windows-x86_64/*'`).
 
+**Avancement du 20/11/2026 (écouté et validé par le mainteneur, `allGamesTest` vert : 61 jeux, commité et poussé)** : synthèse embarquée écartée pour la 2.0 (issue #1742 : avantages et
+inconvénients des deux façons) ; échantillon fait (`build/piper/echantillon-voix`) ; textes corrigés avant la
+génération (anglais plus naturel : « Where is black? », « Where is number one? », « Where is the letter A? »,
+peacock, roe deer, seashell, flamingo, trapezoid, clover, diamond ; français : Bangladesh, Éthiopie ; tutoiement :
+« Trouve l'intrus », aussi pour le nom du jeu, et « Trouve les différences ») ; `nonagon.w.eg.mp3` renommé en `.eng`
+(le jeu ne le trouvait pas, le script s'y arrêtait) ; **944 voix générées** (8,8 Mo, `gradle/images/voix.csv`) ;
+crédits faits (`data/CREDITS-VOICES.txt` de gazeplay-games, paragraphe « Voix des jeux » de `licence.txt`,
+`inventaire_sons.py` lit `voix.csv` : **1 080 sons livrés, tous libres**, `INVENTAIRE_SONS.md` mis à jour) ; tests
+ciblés verts (Où est…, Identifier les lettres, Trouve les différences, traductions, aide et variantes : 206 tests).
+Suite : vérifier la CI, puis le point 5 (notes de version 2.0).
+
 **Ordre du jour du vendredi 20/11/2026** :
 1. Générer un **échantillon** avec le script (`--only`, par exemple une question par jeu dans les 4 voix), dans un
    dossier à part ou sur quelques fichiers seulement, et le faire écouter (vérifier en particulier les lettres
