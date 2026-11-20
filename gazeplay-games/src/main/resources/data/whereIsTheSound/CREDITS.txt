@@ -93,3 +93,6 @@ violin.mp3 | 00 Jazz Violin Solo.ogg | VWD | Public domain | https://commons.wik
 
 applause.mp3, bird.mp3, car.mp3, cat.mp3, chicken.mp3, cow.mp3, dog.mp3, duck.mp3, guitar.mp3, lion.mp3,
 pig.mp3, river.mp3, storm.mp3: La Sonothèque (https://lasonotheque.org), licence CC0 1.0.
+
+Volume of the sounds: brought to the loudness of the voices of the games (-17 LUFS, peaks at most -1.5 dBFS) on
+20/11/2026 by gradle/images/normalize_sounds.py (a constant gain, and a limiter on the few peaks); nothing else changed.

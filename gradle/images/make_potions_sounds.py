@@ -88,5 +88,6 @@ def boom():
 folder = sys.argv[1]
 write(os.path.join(folder, 'sounds', 'pour.wav'), pour(), 0.4)
 write(os.path.join(folder, 'sounds', 'served.wav'), served(), 0.45)
-write(os.path.join(folder, 'sounds', 'boom.wav'), boom(), 0.5)
+# 0.9 (20/11/2026; 0.5 before): the low rumble sounded much softer than the other sounds
+write(os.path.join(folder, 'sounds', 'boom.wav'), boom(), 0.9)
 print('ok')

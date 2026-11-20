@@ -6,3 +6,6 @@ second (its first croak, 18/11/2026, maintainer's request: the file has one croa
 File | Title | Author | Licence | Source
 sounds/frog.mp3 | Single Frog Croak.oga | MichaeltheFox8621 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Single_Frog_Croak.oga
 It replaces (18/11/2026) a sound of a commercial collection (tagged "Aludra Software 1998").
+
+Volume of the sounds: brought to the loudness of the voices of the games (-17 LUFS, peaks at most -1.5 dBFS) on
+20/11/2026 by gradle/images/normalize_sounds.py (a constant gain, and a limiter on the few peaks); nothing else changed.

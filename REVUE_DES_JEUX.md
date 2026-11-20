@@ -69,7 +69,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     harpe sans personne ; ballon, tasse, ours, chaise de La pièce ; les 6 autres vérifiées, inchangées). **Vignettes** :
     Où est le son ? avec des **instruments**, Où est-ce ? avec des **objets du quotidien** (aujourd'hui
     des animaux, comme Où est l'animal ?) ; vérifier les 6 autres vignettes de la famille.
-12. **Volume** : mesurer (LUFS) puis égaliser les voix (`loudnorm` dans `make_voices.py`) et la récompense de la famille
+12. **FAIT le 20/11/2026, validé par le mainteneur** (voix au même niveau par `make_voices.py`, gain puis limiteur ;
+    enregistrements à −17 LUFS par `normalize_sounds.py` ; oie plus douce, explosion de Magic Potions plus forte ;
+    musiques laissées telles quelles, décision du mainteneur). **Volume** : mesurer (LUFS) puis égaliser les voix (`loudnorm` dans `make_voices.py`) et la récompense de la famille
     Où est… (voix bien plus faible que le « biboule ») ; **puis vérifier le volume des sons de tous les jeux**.
 14. **Où est…** et Trouve l'intrus : le compteur affiche **le numéro de l'écran en cours** dès l'arrivée des images
     (aujourd'hui le nombre d'écrans trouvés) ; en Sans fin, « Écran 7 ».

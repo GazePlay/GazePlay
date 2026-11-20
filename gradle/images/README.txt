@@ -380,3 +380,11 @@ captures of the other games of the family (tester's feedback: both showed animal
 son ?": four photos of instruments of the game (piano, drum, trumpet, harp; see data/whereIsTheSound/CREDITS.txt).
 "Où est-ce ?": four objects of "La pièce" (OpenMoji, CC BY-SA 4.0). The button of the sound is cut from the thumbnail of
 "Où est l'animal ?".
+
+Loudness of the sounds (20/11/2026, tester's feedback: the voice of "Où est..." much softer than the reward). Measured
+with the filter ebur128 of FFmpeg: the voices went from -28 to -10 LUFS, the recordings from -27.8 to -12.9 LUFS,
+several over 0 dBFS. make_voices.py now brings each voice to the same level (a gain, then a limiter: about -18 LUFS,
+peaks under 0 dBFS); normalize_sounds.py (this folder) brings the recordings of "Quel est ce son ?", of "Les sons de la
+vie", the frog of the race and the applause of "Bravo" to -17 LUFS (run it again on a sound replaced or added); the
+honk of the goose game (make_goose_sounds.py) is softer and the boom of Magic Potions (make_potions_sounds.py) louder.
+The sounds made by the other scripts were already between -15 and -22 LUFS. The music is not changed (its own volume).

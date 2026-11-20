@@ -27,3 +27,6 @@ Sounds taken from Where Is The Sound (see data/whereIsTheSound/CREDITS.txt):
 farm/cow.mp3, farm/pig.mp3, savanna/lion.mp3: La Sonothèque (https://lasonotheque.org), CC0 1.0;
 farm/sheep.mp3: Sheep bleating.ogg, earthcalling, public domain;
 jungle/elephant.mp3: Elephant voice - trumpeting.ogg, CC0; jungle/snake.mp3: Rattlesnake.ogg, public domain.
+
+Volume of the sounds: brought to the loudness of the voices of the games (-17 LUFS, peaks at most -1.5 dBFS) on
+20/11/2026 by gradle/images/normalize_sounds.py (a constant gain, and a limiter on the few peaks); nothing else changed.

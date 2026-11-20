@@ -102,17 +102,42 @@ def synthesize(voice, text):
     return np.concatenate([chunk.audio_float_array for chunk in chunks]), chunks[0].sample_rate
 
 
+VOICE_LEVEL = -16.0  # dBFS: the level of the voice, its silences left out (20/11/2026)
+PEAK_LIMIT = -3.0  # dBFS: the highest peak out of the limiter (the MP3 encoding adds up to about 2 dB)
+
+
+def level_gain(audio):
+    """The same level for every voice (20/11/2026, tester's feedback: the voice much softer than the reward; measured:
+    from -28 to -10 LUFS, peaks over 0 dBFS): the gain, in dB, bringing the mean level of the voice, its silences left
+    out (the parts 40 dB under its peak), to VOICE_LEVEL; a limiter then keeps the peaks under PEAK_LIMIT (write_mp3).
+    The filter loudnorm of FFmpeg was tried first: it does not bring the short voices (a letter, under 3 seconds) to the
+    level of the others; a gain kept under the peak neither (a voice with a high peak stayed soft)."""
+    peak = float(np.max(np.abs(audio))) if audio.size else 0
+    if peak <= 0:
+        return 0.0
+    voiced = audio[np.abs(audio) > peak * 10 ** (-40 / 20)]
+    rms = float(np.sqrt(np.mean(voiced ** 2)))
+    return VOICE_LEVEL - 20 * np.log10(rms)
+
+
 def write_mp3(ffmpeg, audio, rate, target):
     with tempfile.TemporaryDirectory() as folder:
         wav = Path(folder) / "voice.wav"
+        # Written with room under 0 dBFS (nothing clipped), the gain given to FFmpeg, which works in floats
+        peak = float(np.max(np.abs(audio))) if audio.size else 0
+        room = 0.9 / peak if peak > 0 else 1
+        gain = level_gain(audio) - 20 * np.log10(room)
         with wave.open(str(wav), "wb") as file:
             file.setnchannels(1)
             file.setsampwidth(2)
             file.setframerate(rate)
-            file.writeframes((np.clip(audio, -1, 1) * 32767).astype(np.int16).tobytes())
-        # Mono, 64 kb/s: short sentences, small files
-        subprocess.run([ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav), "-ac", "1", "-c:a",
-                        "libmp3lame", "-b:a", "64k", str(target)], check=True)
+            file.writeframes((np.clip(audio * room, -1, 1) * 32767).astype(np.int16).tobytes())
+        # The gain, then a limiter (looking 5 ms ahead) keeping the peaks under PEAK_LIMIT; mono, 64 kb/s: short
+        # sentences, small files
+        subprocess.run([ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav), "-af",
+                        "volume=%.2fdB,alimiter=limit=%.3f:attack=5:release=50:level=false"
+                        % (gain, 10 ** (PEAK_LIMIT / 20)), "-ar", str(rate), "-ac", "1", "-c:a", "libmp3lame",
+                        "-b:a", "64k", str(target)], check=True)
 
 
 def main():

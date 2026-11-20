@@ -4,3 +4,6 @@ GazePlay Learning (GPL-3.0-or-later).
 File | Title | Author | Licence | Source
 sounds/applause.mp3 | applause of "Quel est ce son ?" (data/whereIsTheSound/sounds/applause.mp3) | La Sonothèque | CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/) | https://lasonotheque.org
 The applause of the screen "Bravo" replace (18/11/2026) applause of unknown source (tagged "www.dvdvideosoft.com").
+
+Volume of the sounds: brought to the loudness of the voices of the games (-17 LUFS, peaks at most -1.5 dBFS) on
+20/11/2026 by gradle/images/normalize_sounds.py (a constant gain, and a limiter on the few peaks); nothing else changed.

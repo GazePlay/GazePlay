@@ -96,6 +96,7 @@ def win():
 folder = sys.argv[1]
 for k, frequency in enumerate((700, 760, 820, 880, 940, 1000)):
     write(os.path.join(folder, 'sounds', 'mvmt%d.wav' % k), tock(frequency, k), 0.5)
-write(os.path.join(folder, 'sounds', 'goose.wav'), honk(), 0.5)
+# 0.22 (20/11/2026; 0.5 before): the honk, full of harmonics, sounded much louder than the other sounds
+write(os.path.join(folder, 'sounds', 'goose.wav'), honk(), 0.22)
 write(os.path.join(folder, 'sounds', 'trap.wav'), bonk(), 0.55)
 write(os.path.join(folder, 'sounds', 'win.wav'), win(), 0.6)
