@@ -34,8 +34,8 @@ import java.util.List;
 /**
  * "Casse-brique" (brick breaker, reviewed on 3/11/2026, maintainer's rules): the paddle goes along the bottom where the
  * gaze or the mouse is (as the setting of the inputs allows) and sends the ball back towards a wall of bricks (the
- * drawing of the variant). A brick hit breaks (with a little flash), or cracks first in the hard level; all the bricks
- * broken: "Bravo" then the statistics. Three lives: a fallen ball costs one, the ball comes back on the paddle; the
+ * drawing of the variant, more and smaller bricks from level to level, see {@link CasseBriqueLevel}). A brick hit breaks
+ * (with a little flash); all the bricks broken: "Bravo" then the statistics. Three lives: a fallen ball costs one, the ball comes back on the paddle; the
  * three lost: "Lost!" then the statistics. Without hearts (variant of 17/11/2026), a fallen ball just comes back on
  * the paddle and the game is never lost; each fallen ball is counted as a mistake, with or without hearts. Behind the
  * bricks, a soft background drawn by the game, or an image of the
@@ -203,7 +203,7 @@ public class CasseBrique implements GameLifeCycle {
         hud = new Group();
         hud.setMouseTransparent(true);
 
-        paddleWidth = width * level.getPaddleWidth();
+        paddleWidth = width * CasseBriqueLevel.PADDLE_WIDTH;
         paddleY = height * 0.92;
         paddleX = width / 2;
         aimX = paddleX;
@@ -264,17 +264,15 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     /**
-     * The bricks of the drawing, in the top 55 % of the screen under the lives and the score; in the hard level one
-     * brick in three must be hit twice.
+     * The bricks of the drawing for the level, in the top 55 % of the screen under the lives and the score: the width of
+     * the screen shared by the columns of the level, the height of a brick 0.4 of its width (at most 10 % of the screen),
+     * so that the bricks of the first levels are big.
      */
     private void buildBricks() {
-        final String[] rows = map.getRows();
-        int columns = 0;
-        for (final String row : rows) {
-            columns = Math.max(columns, row.length());
-        }
+        final String[] rows = map.rows(level);
+        final int columns = level.getColumns();
         final double cellWidth = width / columns;
-        final double cellHeight = Math.min(height * 0.065, (height * 0.55) / rows.length);
+        final double cellHeight = Math.min(Math.min(height * 0.10, cellWidth * 0.4), (height * 0.55) / rows.length);
         final double gap = Math.max(2, cellHeight * 0.08);
         for (int line = 0; line < rows.length; line++) {
             for (int column = 0; column < rows[line].length(); column++) {
@@ -282,9 +280,8 @@ public class CasseBrique implements GameLifeCycle {
                 if (cell < '1' || cell > '7') {
                     continue;
                 }
-                final boolean strong = level.isStrongBricks() && (line + column) % 3 == 0;
                 final Brick brick = new Brick(column * cellWidth + gap / 2, top + line * cellHeight + gap / 2,
-                    cellWidth - gap, cellHeight - gap, COLORS[cell - '1'], strong ? 2 : 1);
+                    cellWidth - gap, cellHeight - gap, COLORS[cell - '1'], 1);
                 bricks.add(brick);
                 bricksLayer.getChildren().add(brick.node);
             }
@@ -361,7 +358,7 @@ public class CasseBrique implements GameLifeCycle {
     private void launchBall() {
         waiting = 0;
         final double angle = Math.toRadians(-20 + 40 * random.nextDouble());
-        final double speed = level.getBallSpeed() * height;
+        final double speed = CasseBriqueLevel.BALL_SPEED * height;
         velocityX = speed * Math.sin(angle);
         velocityY = -speed * Math.cos(angle);
     }

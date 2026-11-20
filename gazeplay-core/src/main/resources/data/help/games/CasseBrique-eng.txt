@@ -4,7 +4,7 @@ Send the ball back with the paddle to break all the bricks of the wall.
 # How to play
 - The paddle goes, at the bottom of the screen, where you look or where the mouse is. The setting of the inputs decides: with the mouse only, it follows the mouse; with the eye tracker only, it follows the gaze; with both, it follows the last that moved.
 - The ball waits a little on the paddle, then goes up. The farther from the middle of the paddle it touches it, the more to the side it goes back.
-- A brick touched by the ball breaks. In Hard, some darker bricks crack at the first hit and break at the second.
+- A brick touched by the ball breaks.
 - The ball has 3 lives (the hearts at the top left). If it falls under the paddle, it loses a life and comes back on the paddle.
 - At the top right: the bricks broken and the number of bricks of the wall.
 - The speed follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
@@ -16,7 +16,9 @@ Break all the bricks: "Bravo", then the statistics. If the 3 lives are lost: "Lo
 Choose a variant (it is framed), then press "Start".
 - Block, Alien, Rainbow or Smile: the drawing of the bricks.
 - At the bottom, the background. Drawn background: a soft colored background. My images: one of your images is hidden behind the bricks and is found as they break. Add them in the settings (Folders, "My images", shared by all the games) or from the window of the variants.
-- At the bottom too, the level. Easy: a big paddle (30 % of the screen) and a slow ball.
-- Normal: a middle paddle (22 % of the screen) and a faster ball.
-- Hard: a small paddle (16 % of the screen), a fast ball, and one brick in three to hit twice.
-- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
+- At the bottom too, the level: it changes the number and the size of the bricks. The paddle (30 % of the screen) and the slow ball are the same in every level; the speed is set with the speed of the elements.
+- Discovery: one line of 6 very big bricks, to learn the game.
+- Easy: 4 lines of 8 big bricks.
+- Normal: 6 lines of 13 bricks.
+- Hard: 8 lines of 15 small bricks.
+- At the bottom, the hearts: Without hearts or With hearts (3 hearts).

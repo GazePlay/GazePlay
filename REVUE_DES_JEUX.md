@@ -50,7 +50,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 6. **Trouve les différences** : différences de couleur visibles mais non déclarées (coquillages sous l'eau, oiseaux) ;
    même couleur dans les deux images hors différences déclarées ; **double vérification pixel par pixel** (toute zone
    qui change est déclarée, toute différence déclarée change), par test ou par le script, pour toutes les scènes.
-7. **Casse-brique** : le niveau change **le nombre et la taille des briques** (Découverte 6, Facile environ 32, Moyen
+7. **FAIT le 20/11/2026, validé par le mainteneur** (`CasseBriqueLevel` : grilles 6×1, 8×4, 13×6, 15×8, raquette et
+   balle communes ; `CasseBriqueMap.rows(level)` : chaque dessin redessiné par niveau ; briques à toucher deux fois
+   retirées). **Casse-brique** : le niveau change **le nombre et la taille des briques** (Découverte 6, Facile environ 32, Moyen
    environ 78, Difficile environ 120), même vitesse lente de balle à tous les niveaux (réglable par « Vitesse des
    éléments »), grande raquette ; **dessins des briques refaits pour chaque niveau**.
 8. **Aiguillages**, « Un train à la fois » : le train suivant **attend en gare** et part quand on fixe un bouton

@@ -179,7 +179,8 @@ class CasseBriqueTest {
      */
     @Test
     void shouldBounceOnTheTopOfTheScreen() throws Exception {
-        final CasseBrique game = launched(CasseBriqueMap.SMILEY, CasseBriqueLevel.EASY);
+        // The smile of the normal level has columns without bricks on its sides
+        final CasseBrique game = launched(CasseBriqueMap.SMILEY, CasseBriqueLevel.NORMAL);
         fx(() -> {
             // Straight up in a column without bricks (the smile has holes)
             final double margin = game.getHeight() * 0.03;
@@ -209,7 +210,7 @@ class CasseBriqueTest {
         final CasseBrique game = launched(CasseBriqueMap.SMILEY, CasseBriqueLevel.NORMAL);
         fx(() -> {
             final int total = game.getToBreak();
-            assertEquals(13, total, "the bricks of the smile");
+            assertEquals(19, total, "the bricks of the smile");
             for (final CasseBrique.Brick brick : java.util.List.copyOf(game.getBricks())) {
                 game.hit(brick);
             }
@@ -220,26 +221,31 @@ class CasseBriqueTest {
         });
         assertEquals(CasseBrique.Phase.OVER, game.getPhase());
         verify(gameContext, times(1)).playWinTransition(anyLong(), any());
-        verify(stats, times(13)).incrementNumberOfGoalsToReach();
-        verify(stats, times(13)).incrementNumberOfGoalsReached();
+        verify(stats, times(19)).incrementNumberOfGoalsToReach();
+        verify(stats, times(19)).incrementNumberOfGoalsReached();
     }
 
+    /**
+     * The level changes the number and the size of the bricks only (20/11/2026): 6, 32, 78 and 120 bricks of the block,
+     * smaller from level to level, each broken at the first hit; the same paddle in every level.
+     */
     @Test
-    void shouldHaveBricksToHitTwiceInTheHardLevelOnly() throws Exception {
-        final CasseBrique hard = launched(CasseBriqueMap.BLOC, CasseBriqueLevel.HARD);
-        fx(() -> {
-            final CasseBrique.Brick strong = hard.getBricks().stream().filter(b -> b.getHits() == 2).findFirst()
-                .orElseThrow();
-            hard.hit(strong);
-            assertTrue(hard.getBricks().contains(strong), "cracked, not broken");
-            hard.hit(strong);
-            assertFalse(hard.getBricks().contains(strong));
-            return null;
-        });
-        final CasseBrique easy = launched(CasseBriqueMap.BLOC, CasseBriqueLevel.EASY);
-        assertTrue(easy.getBricks().stream().allMatch(b -> b.getHits() == 1));
-        assertTrue(easy.getPaddleWidth() > hard.getPaddleWidth());
-        assertTrue(CasseBriqueLevel.EASY.getBallSpeed() < CasseBriqueLevel.HARD.getBallSpeed());
+    void shouldGiveMoreAndSmallerBricksFromLevelToLevel() throws Exception {
+        final int[] expected = {6, 32, 78, 120};
+        double paddle = -1;
+        double brickWidth = Double.MAX_VALUE;
+        for (final CasseBriqueLevel level : CasseBriqueLevel.values()) {
+            final CasseBrique game = launched(CasseBriqueMap.BLOC, level);
+            assertEquals(expected[level.ordinal()], game.getToBreak(), level.name());
+            assertTrue(game.getBricks().stream().allMatch(b -> b.getHits() == 1), level.name());
+            final double width = game.getBricks().getFirst().getWidth();
+            assertTrue(width < brickWidth, level + " has smaller bricks");
+            brickWidth = width;
+            if (paddle >= 0) {
+                assertEquals(paddle, game.getPaddleWidth(), 1e-9, "the same paddle");
+            }
+            paddle = game.getPaddleWidth();
+        }
     }
 
     @Test
@@ -296,10 +302,14 @@ class CasseBriqueTest {
         assertEquals(CasseBriqueMap.BLOC, CasseBriqueGameLauncher.mapOf(old));
         assertEquals(CasseBriqueLevel.NORMAL, CasseBriqueGameLauncher.levelOf(old));
         assertEquals(CasseBriqueBackground.DRAWN, CasseBriqueGameLauncher.backgroundOf(null));
+        // Each drawing drawn on the grid of each level (20/11/2026)
         for (final CasseBriqueMap map : CasseBriqueMap.values()) {
-            final int length = map.getRows()[0].length();
-            for (final String row : map.getRows()) {
-                assertEquals(length, row.length(), map + " has rows of one length");
+            for (final CasseBriqueLevel level : CasseBriqueLevel.values()) {
+                final String[] rows = map.rows(level);
+                assertEquals(level.getLines(), rows.length, map + " " + level);
+                for (final String row : rows) {
+                    assertEquals(level.getColumns(), row.length(), map + " " + level + " has rows of its width");
+                }
             }
         }
     }
