@@ -103,6 +103,65 @@ class SpotTheDifferencesTest {
         }
     }
 
+    /**
+     * The double check of the differences (20/11/2026, tester's feedback: two identical microphones counted as a
+     * difference, shells of another color not counted): between the two pictures of a level, no pixel changes outside
+     * the circles of the differences, and each circle changes visibly (at least 5 % of its pixels, as checked by
+     * gradle/images/make_spotdifferences_images.py).
+     */
+    @Test
+    void shouldChangeThePicturesInTheCirclesOfTheDifferencesOnly() throws Exception {
+        final var root = JsonParser.parseReader(new InputStreamReader(Objects.requireNonNull(
+            ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")), StandardCharsets.UTF_8))
+            .getAsJsonArray();
+        for (final JsonElement element : root) {
+            final JsonObject scene = (JsonObject) element;
+            final java.awt.image.BufferedImage first = picture(scene.get("image1").getAsString());
+            for (final SpotTheDifferencesVariant variant : SpotTheDifferencesVariant.values()) {
+                final JsonObject level = scene.getAsJsonObject("levels").getAsJsonObject(variant.name());
+                final java.awt.image.BufferedImage second = picture(level.get("image2").getAsString());
+                final List<JsonObject> circles = new ArrayList<>();
+                level.getAsJsonArray("differences").forEach(diff -> circles.add((JsonObject) diff));
+                final int[] changed = new int[circles.size()];
+                final int[] total = new int[circles.size()];
+                for (int y = 0; y < first.getHeight(); y++) {
+                    for (int x = 0; x < first.getWidth(); x++) {
+                        final int a = first.getRGB(x, y);
+                        final int b = second.getRGB(x, y);
+                        final int distance = Math.abs((a >> 16 & 0xFF) - (b >> 16 & 0xFF))
+                            + Math.abs((a >> 8 & 0xFF) - (b >> 8 & 0xFF)) + Math.abs((a & 0xFF) - (b & 0xFF));
+                        boolean inside = false;
+                        for (int i = 0; i < circles.size(); i++) {
+                            final JsonObject c = circles.get(i);
+                            if (Math.hypot(x - c.get("x").getAsInt(), y - c.get("y").getAsInt())
+                                <= c.get("radius").getAsInt()) {
+                                inside = true;
+                                total[i]++;
+                                if (distance > 60) {
+                                    changed[i]++;
+                                }
+                            }
+                        }
+                        if (!inside && distance != 0) {
+                            fail(scene.get("scene").getAsString() + " " + variant + ": a pixel changes outside the "
+                                + "differences at " + x + ", " + y);
+                        }
+                    }
+                }
+                for (int i = 0; i < circles.size(); i++) {
+                    assertTrue(changed[i] >= 0.05 * total[i], scene.get("scene").getAsString() + " " + variant
+                        + ": no visible change in " + circles.get(i));
+                }
+            }
+        }
+    }
+
+    private static java.awt.image.BufferedImage picture(final String name) throws java.io.IOException {
+        try (var input = ClassLoader.getSystemResourceAsStream("data/spotthedifferences/" + name)) {
+            return javax.imageio.ImageIO.read(Objects.requireNonNull(input, name));
+        }
+    }
+
     private SpotTheDifferences launched(final SpotTheDifferencesVariant variant, final double seed) throws Exception {
         return WaitForAsyncUtils.asyncFx(() -> {
             gameArea.getChildren().clear();

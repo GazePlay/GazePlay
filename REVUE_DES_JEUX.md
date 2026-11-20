@@ -41,7 +41,11 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
    de `make_dottodot_figures.py` et deux tests ; sapin, bateau, poisson et drapeau corrigés). **Point par point** :
    tronc du petit sapin (`DotTree`, Facile) élargi (points 3 à 6 trop proches) ; **écart minimum**
    entre deux points pour toutes les figures Faciles.
-5. **Trouve les différences** : scène des instruments, deux micros identiques comptés comme une différence ; corriger,
+5. et 6. **FAITS le 20/11/2026, validés par le mainteneur** (même cause, `make_spotdifferences_images.py` : une
+   palette par image, recoloriage invisible sur les objets gris, coins des objets hors des cercles ; corrigé par une
+   palette commune par scène, un changement de couleur gardé seulement s'il se voit, des rayons calculés sur le dessin
+   et une double vérification dans le script et dans `SpotTheDifferencesTest` ; images OpenMoji retéléchargées dans
+   `build/openmoji`). 5. **Trouve les différences** : scène des instruments, deux micros identiques comptés comme une différence ; corriger,
    puis vérifier toutes les scènes : aucune différence déclarée sans changement visible.
 6. **Trouve les différences** : différences de couleur visibles mais non déclarées (coquillages sous l'eau, oiseaux) ;
    même couleur dans les deux images hors différences déclarées ; **double vérification pixel par pixel** (toute zone

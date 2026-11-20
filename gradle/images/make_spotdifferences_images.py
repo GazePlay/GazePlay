@@ -7,6 +7,12 @@ Pillow is required. For each scene: <scene>.png (the first picture, 1000 x 1000)
 <scene>-<level>.png (the second picture, with 3, 5 or 7 differences); then instances.json (the pictures and, for each
 level, the center and radius of each difference, in pixels of the picture). The differences are made here (an object
 removed, replaced or of another color), so that the circles of the game are always right.
+
+20/11/2026 (tester's feedback: two identical microphones counted as a difference, shells of another color not
+counted): the pictures of a scene share one palette (each picture had its own, so that an unchanged object could get
+other colors), a change of color is kept only when it shows (a grey object, the microphone, did not change: it is
+replaced or removed instead), and the pictures are checked at the end: no pixel changes outside the circles, and each
+circle changes visibly (check()).
 """
 import colorsys
 import json
@@ -236,6 +242,24 @@ def recolor(image):
     return image
 
 
+VISIBLE = 60  # distance of colors (sum of the differences of R, G and B) of a visible change
+MIN_RECOLORED = 0.3  # part of the pixels of an object a change of color must change visibly
+MIN_IN_CIRCLE = 0.05  # part of the pixels of a circle a difference must change visibly (a thin fishing rod: 0.067)
+
+
+def recolor_shows(code, size):
+    """Whether turning the colors of an object changes enough of it to be seen (not a grey or black object)."""
+    item = emoji(code, size)
+    turned = recolor(item.copy())
+    shown = changed = 0
+    for (r, g, b, a), (r2, g2, b2, _) in zip(item.getdata(), turned.getdata()):
+        if a > 128:
+            shown += 1
+            if abs(r - r2) + abs(g - g2) + abs(b - b2) > VISIBLE:
+                changed += 1
+    return shown > 0 and changed / shown >= MIN_RECOLORED
+
+
 def picture(background, objects, changes):
     """The scene with its objects; changes: index of an object -> 'remove', 'swap' or 'color'."""
     image = background.copy()
@@ -250,28 +274,83 @@ def picture(background, objects, changes):
     return image
 
 
-def save(image, path):
-    # Few colors: a palette keeps the files small
-    image.convert('RGB').quantize(colors=256, method=Image.Quantize.MEDIANCUT).save(path, optimize=True)
+def shared_palette(images):
+    """One palette of 256 colors for all the pictures of a scene (few colors keep the files small): a pixel of the same
+    color in two pictures stays of the same color."""
+    strip = Image.new('RGB', (S, S * len(images)))
+    for k, image in enumerate(images):
+        strip.paste(image.convert('RGB'), (0, S * k))
+    return strip.quantize(colors=256, method=Image.Quantize.MEDIANCUT)
+
+
+def save(image, palette, path):
+    image.convert('RGB').quantize(palette=palette, dither=Image.Dither.NONE).save(path, optimize=True)
+
+
+def change_of(objects, index, kind):
+    """The change made to an object: a change of color that would not show becomes a swap, or a removal."""
+    code, size, other = objects[index][0], objects[index][3], objects[index][4]
+    if kind == 'swap' and other is None:
+        kind = 'color'
+    if kind == 'color' and not recolor_shows(code, size):
+        kind = 'swap' if other is not None else 'remove'
+    return kind
+
+
+def radius_of(objects, index, kind):
+    """The radius of the circle of a difference: up to the farthest drawn pixel of the object or of the one replacing it
+    (20/11/2026; it used to be 0.6 times the size, and the corners of an object went out of the circle), at least 60."""
+    code, size, other = objects[index][0], objects[index][3], objects[index][4]
+    farthest = 0
+    for drawn in [code] + ([other] if kind == 'swap' else []):
+        alpha = emoji(drawn, size).getchannel('A').load()
+        for y in range(size):
+            for x in range(size):
+                if alpha[x, y] > 0:
+                    farthest = max(farthest, math.hypot(x + 0.5 - size / 2, y + 0.5 - size / 2))
+    return max(60, math.ceil(farthest) + 2)
+
+
+def check(scene, first, second, circles):
+    """No pixel changes outside the circles; each circle changes visibly (at least MIN_IN_CIRCLE of its pixels)."""
+    a, b = first.convert('RGB').load(), second.convert('RGB').load()
+    inside = [[0, 0] for _ in circles]
+    for y in range(S):
+        for x in range(S):
+            d = sum(abs(p - q) for p, q in zip(a[x, y], b[x, y]))
+            hit = [i for i, c in enumerate(circles) if math.hypot(x - c['x'], y - c['y']) <= c['radius']]
+            assert hit or d == 0, (scene, 'a pixel changes outside the circles', x, y)
+            for i in hit:
+                inside[i][1] += 1
+                inside[i][0] += d > VISIBLE
+    for (changed, total), circle in zip(inside, circles):
+        assert changed / total >= MIN_IN_CIRCLE, (scene, 'a circle without visible change', circle, changed / total)
 
 
 instances = []
 for scene, objects in SCENES.items():
     background = DRAW[scene]().resize((S, S), Image.LANCZOS)
-    save(picture(background, objects, {}), os.path.join(out, scene + '.png'))
+    first = picture(background, objects, {})
     by_size = sorted(range(len(objects)), key=lambda i: -objects[i][3])
+    seconds = {}
     levels = {}
     for level, (count, pick, kinds) in LEVELS.items():
         chosen = pick(by_size)
         assert len(chosen) == count, (scene, level)
-        changes = {}
-        for index, kind in zip(chosen, kinds):
-            changes[index] = 'color' if kind == 'swap' and objects[index][4] is None else kind
+        changes = {index: change_of(objects, index, kind) for index, kind in zip(chosen, kinds)}
         name = scene + '-' + level + '.png'
-        save(picture(background, objects, changes), os.path.join(out, name))
+        seconds[name] = picture(background, objects, changes)
         levels[level.upper()] = {'image2': name, 'differences': [
-            {'x': objects[i][1], 'y': objects[i][2], 'radius': max(60, round(objects[i][3] * 0.6))}
+            {'x': objects[i][1], 'y': objects[i][2], 'radius': radius_of(objects, i, changes[i])}
             for i in sorted(chosen)]}
+    palette = shared_palette([first] + list(seconds.values()))
+    save(first, palette, os.path.join(out, scene + '.png'))
+    for name, image in seconds.items():
+        save(image, palette, os.path.join(out, name))
+    # The pictures as saved, read back
+    saved_first = Image.open(os.path.join(out, scene + '.png'))
+    for level in levels.values():
+        check(scene, saved_first, Image.open(os.path.join(out, level['image2'])), level['differences'])
     instances.append({'scene': scene, 'image1': scene + '.png', 'levels': levels})
 with open(os.path.join(out, 'instances.json'), 'w', encoding='utf-8') as f:
     json.dump(instances, f, indent=2)
