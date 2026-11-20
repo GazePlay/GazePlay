@@ -62,7 +62,8 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 9. **FAIT le 20/11/2026, validé par le mainteneur** (`TrainSwitchesRhythm.ONE_AT_A_TIME_PAUSE`, rythmes décrits par
    « un à la fois » et « pauses » ; proposé par défaut, premier de la liste). **Aiguillages** : 4 rythmes, dans cet ordre : un train à la fois avec pause à chaque aiguillage (nouveau, le plus
    facile), un train à la fois, pause à chaque aiguillage, en continu.
-10. **Aiguillages** : le bouton « Reprendre » apparaît **à côté de l'aiguillage arrêté** (aujourd'hui à droite), sans
+10. **FAIT le 20/11/2026, validé par le mainteneur** (`placeResumeButton` : place libre la plus proche, écart d'au
+    moins la taille du bouton ; bouton de 0,8 case). **Aiguillages** : le bouton « Reprendre » apparaît **à côté de l'aiguillage arrêté** (aujourd'hui à droite), sans
     recouvrir de rails, assez écarté pour ne pas être fixé par accident.
 11. **Vignettes** : Où est le son ? avec des **instruments**, Où est-ce ? avec des **objets du quotidien** (aujourd'hui
     des animaux, comme Où est l'animal ?) ; vérifier les 6 autres vignettes de la famille.

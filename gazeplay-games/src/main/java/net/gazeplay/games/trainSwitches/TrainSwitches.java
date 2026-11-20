@@ -319,7 +319,8 @@ public class TrainSwitches implements GameLifeCycle {
         boardX = (width - cell * circuit.getColumns()) / 2;
         boardY = top + (availableHeight - cell * (circuit.getLines() + extra)) / 2 + (direction[1] > 0 ? cell * extra
             : 0);
-        resumeSize = cell * 1.1;
+        // The resume button: placed next to the switch at each pause (see placeResumeButton)
+        resumeSize = cell * 0.8;
         resumeX = boardX + cell * circuit.getColumns() + cell * 0.15 + resumeSize / 2;
         resumeY = boardY + cell * circuit.getLines() / 2;
     }
@@ -567,7 +568,8 @@ public class TrainSwitches implements GameLifeCycle {
             return;
         }
         departSize = cell * 0.8;
-        final double[] place = freePlaceNearTheTunnel(departSize / 2 + cell * 0.06);
+        final double[] center = preview.center();
+        final double[] place = freePlaceNear(center[0], center[1], cell, departSize / 2 + cell * 0.06);
         departX = place[0];
         departY = place[1];
         final Circle disc = new Circle(departSize / 2, Color.rgb(255, 252, 244, 0.96));
@@ -583,11 +585,15 @@ public class TrainSwitches implements GameLifeCycle {
     }
 
     /**
-     * @param radius the radius of a round button, with its margin
-     * @return the middle of the free place nearest to the hill of the tunnel for the button: tried at growing distances
-     *   and all around; the farthest place tried if none is free
+     * @param x        the middle of what the button goes next to (the next train on the tunnel, a switch)
+     * @param y        the middle of what the button goes next to
+     * @param nearest  the nearest distance of the middle of the button to that middle
+     * @param radius   the radius of a round button, with its margin
+     * @return the middle of the free place nearest to it for the button (off the boxes with rails, stations or
+     *   switches, off the hill of the tunnel, inside the screen under the band of the score): tried at growing
+     *   distances and all around; the farthest place tried if none is free
      */
-    private double[] freePlaceNearTheTunnel(final double radius) {
+    private double[] freePlaceNear(final double x, final double y, final double nearest, final double radius) {
         final List<int[]> taken = new ArrayList<>();
         taken.add(circuit.getTunnel());
         taken.addAll(circuit.getStations());
@@ -598,14 +604,13 @@ public class TrainSwitches implements GameLifeCycle {
         // The hill: a circle of 0.55 box, 0.42 box behind the box of the tunnel
         final double hillX = sx(circuit.getTunnel()[0]) - direction[0] * cell * 0.42;
         final double hillY = sy(circuit.getTunnel()[1]) - direction[1] * cell * 0.42;
-        final double[] center = preview.center();
         double[] found = null;
-        for (double distance = cell; distance <= cell * 3; distance += cell * 0.25) {
+        for (double distance = nearest; distance <= nearest + cell * 3; distance += cell * 0.25) {
             for (int degrees = 0; degrees < 360; degrees += 15) {
-                final double x = center[0] + distance * Math.cos(Math.toRadians(degrees));
-                final double y = center[1] + distance * Math.sin(Math.toRadians(degrees));
-                found = new double[]{x, y};
-                if (isFree(x, y, radius, taken, hillX, hillY)) {
+                final double px = x + distance * Math.cos(Math.toRadians(degrees));
+                final double py = y + distance * Math.sin(Math.toRadians(degrees));
+                found = new double[]{px, py};
+                if (isFree(px, py, radius, taken, hillX, hillY)) {
                     return found;
                 }
             }
@@ -867,12 +872,27 @@ public class TrainSwitches implements GameLifeCycle {
         halo.setRadius(cell * 0.54);
         halo.setStrokeWidth(Math.max(3, cell * 0.06));
         halo.setVisible(true);
+        placeResumeButton(sx(box[0]), sy(box[1]));
         resumeButton.setVisible(true);
         elapsed = 0;
         if (looked == resumeButton) {
             progress = 0;
             showRing(resumeButton);
         }
+    }
+
+    /**
+     * Puts the resume button next to the switch where the train stopped (20/11/2026, tester's feedback: it was at the
+     * right of the screen, the gaze had to go there and back): the free place nearest to it, with a gap of at least
+     * the size of the button between the switch (its ring, 0.52 box) and the button, so that looking at the switch
+     * does not choose it.
+     */
+    private void placeResumeButton(final double x, final double y) {
+        final double[] place = freePlaceNear(x, y, cell * 0.52 + resumeSize * 1.5, resumeSize / 2 + cell * 0.06);
+        resumeX = place[0];
+        resumeY = place[1];
+        resumeButton.setLayoutX(resumeX);
+        resumeButton.setLayoutY(resumeY);
     }
 
     /**

@@ -661,6 +661,55 @@ class TrainSwitchesTest {
     }
 
     /**
+     * At a pause, the resume button is next to the switch where the train stopped (20/11/2026, tester's feedback: it
+     * was at the right of the screen): inside the screen, on no box with rails, a station or a switch, with a gap of at
+     * least its size between the switch and it.
+     */
+    @Test
+    void shouldPutTheResumeButtonNextToTheStoppedSwitch() throws Exception {
+        for (final TrainSwitchesLevel level : TrainSwitchesLevel.values()) {
+            for (int seed = 1; seed <= 6; seed++) {
+                final TrainSwitches game = playing(level, TrainSwitchesRhythm.PAUSE, TrainSwitchesEnd.ENDLESS, seed);
+                for (int i = 0; i < 1200 && game.getPaused() == null; i++) {
+                    steps(game, STEP);
+                }
+                final TrainSwitches.Train train = game.getPaused();
+                assertNotNull(train, level + " " + seed);
+                final double[] layout = game.layout();
+                final double cell = game.getCell();
+                final int[] box = game.getCircuit().getJunctions().get(train.getToJunction()).getBox();
+                final double switchX = layout[0] + (box[0] + 0.5) * cell;
+                final double switchY = layout[1] + (box[1] + 0.5) * cell;
+                final double x = layout[4];
+                final double y = layout[5];
+                final double size = layout[6];
+                final String name = level + " " + seed;
+                final double distance = Math.hypot(x - switchX, y - switchY);
+                assertTrue(distance - size / 2 - cell * 0.52 >= size - 1, name + " a gap of its size");
+                assertTrue(distance < cell * 4, name + " next to the switch");
+                assertTrue(x - size / 2 >= 0 && x + size / 2 <= 1920 && y - size / 2 >= 1080 * 0.11
+                    && y + size / 2 <= 1080, name + " inside");
+                final Circuit circuit = game.getCircuit();
+                final List<int[]> taken = new ArrayList<>(circuit.getStations());
+                taken.add(circuit.getTunnel());
+                circuit.getJunctions().values().forEach(junction -> taken.add(junction.getBox()));
+                circuit.getStretches().forEach(stretch -> taken.addAll(stretch.boxes()));
+                for (final int[] other : taken) {
+                    final double left = layout[0] + other[0] * cell;
+                    final double top = layout[1] + other[1] * cell;
+                    final double nearestX = Math.max(left, Math.min(x, left + cell));
+                    final double nearestY = Math.max(top, Math.min(y, top + cell));
+                    assertTrue(Math.hypot(x - nearestX, y - nearestY) >= size / 2, name + " off the rails");
+                }
+                fx(() -> {
+                    game.dispose();
+                    return null;
+                });
+            }
+        }
+    }
+
+    /**
      * One train at a time and a pause at each switch (20/11/2026, tester's feedback: the easiest rhythm, to learn the
      * game): the train waits for "Departure", stops before each switch until "Resume", and the next one waits again.
      */
@@ -807,7 +856,7 @@ class TrainSwitchesTest {
     }
 
     @Test
-    void shouldPutTheCircuitInTheMiddleAndTheResumeButtonAtItsRightInsideTheScreen() throws Exception {
+    void shouldPutTheCircuitInTheMiddleInsideTheScreen() throws Exception {
         for (final double[] screen : new double[][]{{1920, 1080}, {1366, 768}, {1024, 768}, {800, 1000}}) {
             screen(screen[0], screen[1]);
             for (final TrainSwitchesLevel level : TrainSwitchesLevel.values()) {
@@ -820,8 +869,6 @@ class TrainSwitchesTest {
                     final String name = screen[0] + " x " + screen[1] + " " + level;
                     assertEquals(layout[0], screen[0] - layout[2], 1, name);
                     assertTrue(layout[1] >= screen[1] * 0.11 && layout[3] < screen[1], name);
-                    assertTrue(layout[4] - layout[6] / 2 > layout[2], name);
-                    assertTrue(layout[4] + layout[6] / 2 < screen[0], name);
                     // The switches are large enough for the gaze
                     assertTrue(game.getCell() >= Math.min(screen[0], screen[1]) / 11, name);
                     // The next train on the hill of the tunnel, inside the screen, under the band of the score
