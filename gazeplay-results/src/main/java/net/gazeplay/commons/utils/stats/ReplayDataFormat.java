@@ -7,45 +7,40 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Versions of replayData.json. The files are never rewritten: a reader must look at "formatVersion" (absent before
- * version 2) to interpret them. Differences of version 2 (see MODERNIZATION.md, "Format de résultats v2"):
+ * Versions of replayData.json. Two versions only (decision of the maintainer, 20/11/2026): version 1, written by the
+ * published versions of GazePlay up to 1.11 (no "formatVersion"), and version 6, written by GazePlay Learning 2.0
+ * ("formatVersion": 6). The numbers 2 to 5 were steps of the development, written only by beta versions whose files
+ * are not kept; version 6 includes all their changes. The files are never rewritten: a reader must look at
+ * "formatVersion" to interpret them. Differences of version 6 (see MODERNIZATION.md, steps 2i, 2v, 2aj, 2ap, 2aq):
  * <ul>
  * <li>"coordinatesAndTimeStamp" only holds the samples of the round (version 1: also the previous rounds, R5), and
  * the mouse samples are the movements only (version 1: also the button events, R1);</li>
  * <li>"fixationSequence": "x" is the horizontal and "y" the vertical coordinate (version 1: swapped, R11), and the
- * durations are those of the fixations (R2).</li>
- * </ul>
- * Difference of version 3: the "time" of the gaze samples of "coordinatesAndTimeStamp", and the "timeGaze" (hence the
- * durations) of the gaze fixation sequence, are the times the samples were acquired, no longer the times they were
- * handled on the JavaFX thread. Samples queued while this thread was busy used to get the same time (several samples
- * with the same "time"), and a later one. Each source ("gaze", "mouse") stays in increasing time order, but a mouse
- * sample can now precede a gaze sample of a slightly earlier time in the array. The mouse samples are unchanged.
- * <p>
- * Differences of version 4:
- * <ul>
- * <li>the gaze samples of a Tobii eye tracker are the new measures only. The position was read every 10 ms and
- * repeated when the eye tracker had sent nothing new (about 70 % of the samples with an Eye Tracker 5, R6): about 3
+ * durations are those of the fixations (version 1: twice the time elapsed, R2);</li>
+ * <li>the "time" of the gaze samples of "coordinatesAndTimeStamp", and the "timeGaze" (hence the durations) of the
+ * gaze fixation sequence, are the times the samples were acquired, not the times they were handled on the JavaFX
+ * thread (version 1: samples queued while this thread was busy got the same time, and a later one). Each source
+ * ("gaze", "mouse") stays in increasing time order, but a mouse sample can precede a gaze sample of a slightly earlier
+ * time in the array;</li>
+ * <li>the gaze samples of a Tobii eye tracker are the new measures only (version 1: the position read every 10 ms,
+ * repeated when the eye tracker had sent nothing new, about 70 % of the samples with an Eye Tracker 5, R6): about 3
  * times fewer gaze samples in "coordinatesAndTimeStamp" and in the gaze heatmaps, whose values are lower in
- * proportion. The durations of the fixations are computed from the times of the samples: unchanged;</li>
- * <li>in the other files of the round, the heatmaps (heatmap*.csv, metrics*.png) always have 400 columns (cells of
- * width / 400 pixels of the scene). Before, the cells were width / 200 pixels when the JVM had less than 1 GiB of
- * memory (R7), so the resolution depended on the machine.</li>
+ * proportion;</li>
+ * <li>in the other files of the round, the heatmaps (heatmap.csv and metricsMouseAndGaze.png, mouse and gaze
+ * together) are also written for each source, a heatmap and a metrics image of the gaze and of the mouse (version
+ * 1: the matrix of both sources in every file, R1), and always have 400 columns, cells of width / 400 pixels of the scene
+ * (version 1: width / 200 when the JVM had less than 1 GiB of memory, R7);</li>
+ * <li>"statsNbMistakes" is the number of mistakes of the round: 0 for a game that counts the mistakes when there is
+ * none, -1 only for a game that does not count them (version 1: N mistakes were written N - 1, -1 for none, 0 for
+ * one, R14; a reader of a file of version 1 must add 1 to a value of 0 or more, except for the former "Apprends les
+ * Maths", which counted right; -1 means no mistake, or a game that did not count them);</li>
+ * <li>the time spent with the menu of the game screen open (Esc) is not counted in the durations. "lifeCycle" has
+ * "menuDuration", the time spent in the menu between "startTime" and "stopTime" (times of the clock): the duration of
+ * the game is "stopTime" - "startTime" - "menuDuration". The durations of the rounds ("roundsDurationReport":
+ * "totalAdditiveDuration", "durationBetweenGoals") do not include the menu time. The "time" of the samples and the
+ * "timeGaze" of the fixations are times of the clock: nothing is recorded while the menu is open, which leaves a gap.
+ * In version 1, the durations included the time spent in the menu, which cannot be known afterwards.</li>
  * </ul>
- * <p>
- * Difference of version 5 (17/11/2026): "statsNbMistakes" is the number of mistakes of the round: 0 for a game that
- * counts the mistakes when there is none, -1 only for a game that does not count them. Up to version 4, the count
- * started from -1: N mistakes were written N - 1 (-1 for none, 0 for one), unless the game counted a first one at its
- * launch (the former "Apprends les Maths", before its review of 10/11/2026, did, so that its values were right). A
- * reader of a file of versions 1 to 4 must add 1 to a value of 0 or more for the games that did not; a value of -1
- * means no mistake, or a game that did not count them.
- * <p>
- * Difference of version 6 (17/11/2026, decision of the maintainer): the time spent with the menu of the game screen
- * open (Esc) is no longer counted in the durations. "lifeCycle" gets "menuDuration", the time spent in the menu
- * between "startTime" and "stopTime" (both unchanged, times of the clock): the duration of the game is "stopTime" -
- * "startTime" - "menuDuration". The durations of the rounds ("roundsDurationReport": "totalAdditiveDuration",
- * "durationBetweenGoals") do not include the menu time. The "time" of the samples and the "timeGaze" of the fixations
- * are unchanged (times of the clock): nothing is recorded while the menu is open, which leaves a gap. Up to version
- * 5, the durations included the time spent in the menu (MODERNIZATION.md 2an), which cannot be known afterwards.
  * <p>
  * In memory, {@link FixationPoint} keeps the convention of version 1 (Y in "x", X in "y"), which the drawing code
  * relies on: the conversion happens when the file is written and read.

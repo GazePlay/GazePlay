@@ -75,7 +75,8 @@ Suite : vérifier la CI, puis le point 5 (notes de version 2.0).
    crédit de SIWIS CC BY 4.0) et un `CREDITS.txt` des voix ; `inventaire_sons.py` doit lire `voix.csv` pour classer
    ces fichiers ; refaire l'inventaire (`INVENTAIRE_SONS.md` : plus aucune voix de source inconnue attendu).
 4. Tests ciblés (Où est…, Identifier les lettres), `allGamesTest` de ces jeux, commit, push et CI.
-5. Ensuite, dernière tâche de fin : les notes de version 2.0 (images à remettre, formats de résultats v5 et v6,
+5. Ensuite, dernière tâche de fin : les notes de version 2.0 (images à remettre, format de résultats v6, seul
+   format de la 2.0 depuis le 20/11, présenté comme un seul passage de v1 à v6 (`MODERNIZATION.md` 2ar),
    français et anglais seulement, voix choisies dans les réglages).
 
 ## REPRISE DU MERCREDI 18/11/2026 (fin de la séance du mardi 17/11/2026, soir)

@@ -7,8 +7,8 @@ import java.io.PrintWriter;
  * follow the Y axis and columns the X axis. Each sample increments the cells of a disk around its position.
  * <p>
  * Extracted from {@code Stats} without any change of computation; free of JavaFX so that it can be tested and reused
- * alone. {@code Stats} keeps three grids per round: the gaze, the mouse, and both (one grid for both before format
- * version 2, anomaly R1). GazePlay Eval uses it for the heatmap of each screen.
+ * alone. {@code Stats} keeps three grids per round: the gaze, the mouse, and both (one grid for both in format
+ * version 1, anomaly R1). GazePlay Eval uses it for the heatmap of each screen.
  */
 public final class HeatMapGrid {
 
@@ -22,7 +22,7 @@ public final class HeatMapGrid {
     private final double[][] counts;
 
     /**
-     * @param cellSize side of a cell, in pixels of the scene (width / 400 since format version 4)
+     * @param cellSize side of a cell, in pixels of the scene (width / 400 since format version 6)
      */
     public HeatMapGrid(final double sceneWidth, final double sceneHeight, final double cellSize) {
         this.cellSize = cellSize;

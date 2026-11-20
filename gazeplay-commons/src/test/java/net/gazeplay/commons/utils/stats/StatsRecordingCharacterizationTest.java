@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
  * Characterization of the data recorded by {@link Stats} during a game: raw samples (replayData.json
  * "coordinatesAndTimeStamp"), heatmap and fixation sequence. Each test documents the behaviour of the code, so that
  * any change to it is deliberate. The anomalies R1, R2, R5 and R11 of the format version 1 (CLAUDE.md) are fixed in
- * the format version 2 ({@link ReplayDataFormat}); each test says what version 1 did, which is what the historical
+ * the format version 6 ({@link ReplayDataFormat}); each test says what version 1 did, which is what the historical
  * files contain.
  * <p>
  * Samples are injected as JavaFX events on the root of a real scene, exactly as the gaze device managers and the mouse
@@ -123,7 +123,7 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * Version 3: a gaze sample is recorded at its acquisition time. Samples queued while the JavaFX thread was busy,
+     * Version 6: a gaze sample is recorded at its acquisition time. Samples queued while the JavaFX thread was busy,
      * handled in the same millisecond, used to get that same time (in the Tobii results: 74 samples out of 1636 with
      * the time of the previous one, and gaps of up to 250 ms).
      */
@@ -160,7 +160,7 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * R1, version 2: heatmap.csv and metricsMouseAndGaze.png keep both sources together (as in version 1), and each
+     * R1, version 6: heatmap.csv and metricsMouseAndGaze.png keep both sources together (as in version 1), and each
      * source has its own matrix (heatmapGaze.csv, heatmapMouse.csv, metricsGaze.png, metricsMouse.png). Version 1
      * used the mixed matrix for the three metrics images.
      */
@@ -179,7 +179,7 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * R1, version 2: only the mouse movements are samples. Version 1 listened to MouseEvent.ANY, so presses, releases
+     * R1, version 6: only the mouse movements are samples. Version 1 listened to MouseEvent.ANY, so presses, releases
      * and clicks were recorded as additional samples at the same position.
      */
     @Test
@@ -260,7 +260,7 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * R5, version 2: the raw samples are those of the round, like the heatmap. In version 1 they were never cleared:
+     * R5, version 6: the raw samples are those of the round, like the heatmap. In version 1 they were never cleared:
      * the replayData.json of round N also contained the rounds 1 to N-1, while the time origin restarted at each
      * round ("time" goes down at each round boundary, which is how the historical files can be split).
      */
@@ -282,7 +282,7 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * R7, format version 4: the heatmaps always have 400 columns, whatever the memory of the JVM (before, 200 columns
+     * R7, format version 6: the heatmaps always have 400 columns, whatever the memory of the JVM (before, 200 columns
      * below 1 GiB).
      */
     @Test
@@ -377,7 +377,7 @@ class StatsRecordingCharacterizationTest {
     }
 
     /**
-     * R2, version 2: a sample closer than 50 px (on each axis) to the first sample of the last point is merged into
+     * R2, version 6: a sample closer than 50 px (on each axis) to the first sample of the last point is merged into
      * it; the duration of a point runs from its first sample to the first sample of the next point, or to its last
      * sample for the last point. With the first four samples, version 1 gave 3 points: (1000, 0), (1100, 400) and
      * (1400, 300): the second sample was never merged, a merged duration was twice the elapsed time, and a new point
@@ -419,7 +419,7 @@ class StatsRecordingCharacterizationTest {
     /**
      * R11: in memory, the fixation points store the Y coordinate in their "x" field and X in "y" (in pixels, not
      * normalized), and the drawing code (FixationSequence, ScanpathView) swaps them back. Version 1 wrote them so in
-     * replayData.json; version 2 writes "x" = X and "y" = Y, and the replay swaps them back when reading.
+     * replayData.json; version 6 writes "x" = X and "y" = Y, and the replay swaps them back when reading.
      */
     @Test
     void r11ShouldWriteXAndYInTheirFieldsFromVersion2() {

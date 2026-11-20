@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * <p>
  * A sample closer than {@link #FIXATION_TRAIL} pixels on each axis to the first sample of the last point is merged
  * into it. The duration of a point is the time from its first sample to the first sample of the next point, or to its
- * last sample for the last point of the sequence (format version 2, see {@link ReplayDataFormat}). Version 1 never
+ * last sample for the last point of the sequence (format version 6, see {@link ReplayDataFormat}). Version 1 never
  * merged the second sample, and stored twice the elapsed time for a merged point and the duration of the previous
  * point for a new one (R2).
  * <p>
@@ -31,7 +31,7 @@ final class FixationSequenceRecorder {
      * Adds a sample to a fixation sequence: it extends the last point when it is close enough to it, otherwise it
      * starts a new point. Either way, the duration of the last point is updated up to the time of this sample.
      *
-     * @param time time of the sample (acquisition time for the gaze since format version 3)
+     * @param time time of the sample (acquisition time for the gaze since format version 6)
      * @param x    horizontal position in the scene
      * @param y    vertical position in the scene
      */

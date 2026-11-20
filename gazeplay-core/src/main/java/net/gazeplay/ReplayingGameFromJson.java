@@ -240,7 +240,7 @@ public class ReplayingGameFromJson {
             currentGameVariant = current[1];
         }
         coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
-        // Files are read as written, whatever their version (they are never rewritten): version 2 stores the fixation
+        // Files are read as written, whatever their version (they are never rewritten): version 6 stores the fixation
         // coordinates in the right fields, the memory keeps the convention of version 1
         fixationSequence = ReplayDataFormat.fromFile(ReplayDataFormat.versionOf(json.getFormatVersion()),
             json.getFixationSequence());
@@ -464,7 +464,7 @@ public class ReplayingGameFromJson {
      * @param sampleTime time of a recorded sample since the start of the round, in ms
      * @param elapsed    time since the start of the replay, in ms
      * @return how long to wait before playing the sample: 0 when its time has come (the samples of the two sources can
-     *   be slightly out of order since format version 3)
+     *   be slightly out of order since format version 6)
      */
     static long delayBeforeSample(final long sampleTime, final long elapsed) {
         return Math.max(0, sampleTime - elapsed);
@@ -572,7 +572,7 @@ class JsonFile {
     @Getter
     private String gameVariantClass;
     /**
-     * Absent from the files written before version 2.
+     * Absent from the files of version 1.
      */
     @Getter
     private Integer formatVersion;

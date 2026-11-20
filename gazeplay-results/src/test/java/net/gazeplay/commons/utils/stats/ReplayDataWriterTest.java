@@ -26,10 +26,9 @@ class ReplayDataWriterTest {
     }
 
     /**
-     * Exact text of replayData.json, key order included: persistent format, version 3. Compared to version 1, only
+     * Exact text of replayData.json, key order included: persistent format, version 6. Compared to version 1, only
      * "formatVersion" is added in front and "x"/"y" of the fixation points are no longer swapped (the point in memory
-     * holds Y in "x": 40 is the Y coordinate). Version 3 changes the meaning of the gaze times, not the structure;
-     * version 6 adds "menuDuration" to "lifeCycle" (time spent in the menu, not counted in the durations).
+     * holds Y in "x": 40 is the Y coordinate), and "menuDuration" is added to "lifeCycle" (time spent in the menu, not counted in the durations).
      */
     @Test
     void shouldWriteTheReplayDataFormat() {

@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Start and stop times of a game, each settable once, and the time spent in the menu of the game screen between them
  * (format 6 of the results, 17/11/2026: "menuDuration" of "lifeCycle" in replayData.json, not counted in the duration of
- * the game; absent from the files of versions 1 to 5, where the menu time was counted).
+ * the game; absent from the files of version 1, where the menu time was counted).
  */
 public class LifeCycle {
 
@@ -86,7 +86,7 @@ public class LifeCycle {
 
     /**
      * @return the time from the start to the stop, or to now when not stopped, without the time spent in the menu, in
-     *   ms (a file of version 1 to 5 has no menu time: its whole time)
+     *   ms (a file of version 1 has no menu time: its whole time)
      */
     public long computeTotalElapsedDuration() {
         if (stopTime != null) {

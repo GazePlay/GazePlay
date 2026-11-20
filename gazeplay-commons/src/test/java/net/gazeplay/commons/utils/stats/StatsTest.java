@@ -269,7 +269,7 @@ class StatsTest {
         assertTrue(info.getScreenshotFile().isFile());
         assertTrue(info.getReplayDataFile().isFile());
         assertEquals(stats.getGameStatsOfTheDayDirectory(), info.getHeatMapCsvFile().getParentFile());
-        // Format version 2: one heatmap per source next to heatmap.csv (same name, suffix Gaze or Mouse)
+        // Format version 6: one heatmap per source next to heatmap.csv (same name, suffix Gaze or Mouse)
         String heatMapName = info.getHeatMapCsvFile().getName();
         assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), heatMapName.replace("-heatmap.csv", "-heatmapGaze.csv")).isFile());
         assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), heatMapName.replace("-heatmap.csv", "-heatmapMouse.csv")).isFile());

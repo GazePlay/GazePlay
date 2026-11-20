@@ -118,7 +118,7 @@ public class PositionPollerRunnable implements Runnable {
         // The wrapper returns the last position it received, without its time nor whether it is new: polled every
         // 10 ms, it repeated each position of the eye tracker (about 70 % of the samples with an Eye Tracker 5, R6). A
         // new measure is practically never exactly equal to the previous one, even for a still eye: a repeated pair is
-        // no new measure, and is dropped (results format version 4)
+        // no new measure, and is dropped (results format version 6)
         if (xRatio == lastXRatio && yRatio == lastYRatio) {
             return Optional.empty();
         }

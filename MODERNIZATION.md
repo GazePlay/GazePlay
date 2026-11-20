@@ -1572,6 +1572,15 @@ Décisions du mainteneur du 17/11/2026 : le temps passé menu ouvert n'est plus 
 - **Coins libérés** : Où est… (bande de la question à 17 % de la hauteur, au lieu de jusqu'à 25 %, compteur des écrans à gauche), Bulles (bulles immobiles aussi dans le coin bas gauche), Opinions (commentaire seulement). Rien de réservé trouvé dans la Fleur des nombres.
 - **Vérifié** : tests ciblés (`MenuTimeTest`, `StatsTest`, format, écran de jeu, `GameMenuViewTest`, Où est…, Bulles, Opinions, Course, GazePlay Eval, traductions), SpotBugs vert (`commons`, `results`, `core`, `games`), lancement réel de Course des grenouilles (`allGamesTest`). Essai du mainteneur à faire.
 
+## 2ar. Formats de résultats réduits à v1 et v6 (20/11/2026, décision du mainteneur)
+
+Décision du mainteneur du 20/11/2026 : la version refaite n'est utilisée qu'en bêta-test, pas en production, et rien de ce qui a été enregistré avec elle n'est gardé avant la publication de la 2.0. On ne garde donc que **deux formats** : **v1**, écrit par les versions publiées jusqu'à 1.11 (sans `formatVersion`), et **v6**, écrit par GazePlay Learning 2.0.
+
+- **Fait** : le code ne distinguait déjà que « v1 » et « pas v1 » (inversion des coordonnées des fixations, R11, dans `ReplayDataFormat.fromFile`) ; il écrit `formatVersion` 6. Aucun changement de comportement.
+- **Documentation** : la javadoc de `ReplayDataFormat` décrit les différences de la v6 par rapport à la v1 (R1, R2, R5, R6, R7, R11, R14, temps du menu), les commentaires du code et des tests parlent de la version 6 au lieu des versions 2 à 5, `CLAUDE.md` dit « corrigé en v6 » ; `ReplayDataFormatTest` vérifie la lecture d'un fichier v6 au lieu des versions 2 et 3.
+- **Gardé** : le numéro 6 (revenir à 2 ferait porter le même numéro à des fichiers de bêta v2 de contenu différent). Les sections 2i, 2v, 2aj, 2ap et 2aq restent le journal des étapes ; les numéros 2 à 5 qui y figurent sont des étapes de la bêta.
+- **Impact sur les données** : aucun fichier n'est réécrit. Les fichiers de bêta des versions 2 à 5 ne sont pas gardés (décision du mainteneur) ; le rejeu les lit toujours comme des fichiers v6 pour les coordonnées.
+
 ---
 
 ## 9. État à la fin de la modernisation (26/10/2026)
@@ -1622,7 +1631,7 @@ Ne se produit qu'avec des `Stats` simulés en test (la valeur par défaut est `"
 
 - **R3 (`Time` dans `*-info-game.csv`)** : valeur corrigée pour les nouvelles parties, format inchangé. Les fichiers historiques gardent le mois à la place des minutes ; les minutes se retrouvent dans le nom du fichier.
 - **`GazePlay.properties`** : contenu identique, écriture atomique. Anciennes clés d'avant 1.11.1 migrées à la lecture (étape 3). Risque résiduel : un lien symbolique serait remplacé par un fichier ordinaire.
-- **Format de résultats v2** (2i), **v3** (2v), **v4** (2aj, heatmaps en 400 colonnes) puis **v5** (2ap, `statsNbMistakes` compté à partir de 0) et **v6** (2aq, temps du menu Échap hors des durées, `menuDuration`) : `formatVersion` dans `replayData.json` ; les fichiers des versions précédentes ne sont jamais réécrits et restent lus par le rejeu.
+- **Format de résultats v6** (2ar, 20/11/2026 : seuls v1 et v6 existent ; v6 réunit les étapes de bêta 2i, 2v, 2aj, 2ap et 2aq : heatmaps par source et en 400 colonnes, fixations corrigées, points datés à leur lecture et sans répétition, `statsNbMistakes` compté à partir de 0, temps du menu Échap hors des durées avec `menuDuration`) : `formatVersion` dans `replayData.json` ; les fichiers v1 ne sont jamais réécrits et restent lus par le rejeu.
 - **Dossier de données** (2ae, 2af) : `Documents\GazePlay_Learning`, ancien dossier déplacé (ou copié si Windows refuse) ; fichiers inchangés.
 - **`argsGazeplay.txt`** (2ag) : plus lu ni écrit.
 - **Nom visible** (2ah) : aucun fichier de données ne change de nom.

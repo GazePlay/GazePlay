@@ -123,7 +123,7 @@ class GazeDispatchCharacterizationTest {
     }
 
     /**
-     * The events also carry the acquisition time of their sample, recorded by the statistics (format version 3); the
+     * The events also carry the acquisition time of their sample, recorded by the statistics (format version 6); the
      * entry time used by the games is unchanged.
      */
     @Test

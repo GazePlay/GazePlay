@@ -95,7 +95,7 @@ public class Stats {
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     /**
-     * Mouse and gaze together (heatmap.csv, metricsMouseAndGaze.png), then each source alone (format version 2: in
+     * Mouse and gaze together (heatmap.csv, metricsMouseAndGaze.png), then each source alone (format version 6: in
      * version 1 the three metrics images and heatmap.csv used the mixed matrix, R1).
      */
     private HeatMapGrid heatMapGrid;
@@ -465,7 +465,7 @@ public class Stats {
                 mouseHeatMapGrid = new HeatMapGrid(gameContextScene.getWidth(), gameContextScene.getHeight(), heatMapPixelSize);
             }
             // The raw samples of replayData.json are those of the round, like the heatmap and the fixation sequence
-            // (format version 2: in version 1 they also held the previous rounds, R5)
+            // (format version 6: in version 1 they also held the previous rounds, R5)
             coordinateData = new JsonArray();
             if (!config.isFixationSequenceDisabled()) {
                 fixationSequence = new ArrayList<LinkedList<FixationPoint>>(List.of(new LinkedList<FixationPoint>(), new LinkedList<FixationPoint>()));
@@ -474,7 +474,7 @@ public class Stats {
 
             recordGazeMovements = e -> {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
-                    // Format version 3: time of the acquisition of the sample, not of its handling on the JavaFX
+                    // Format version 6: time of the acquisition of the sample, not of its handling on the JavaFX
                     // thread (samples queued while it was busy got the same time, and the time of the next ones)
                     final long sampleTime = e.getSampleTime() > 0 ? e.getSampleTime() : clock.getAsLong();
                     final long timeToFixation = sampleTime - startTime;
@@ -502,7 +502,7 @@ public class Stats {
             };
 
             recordMouseMovements = e -> {
-                // Movements only: the button events repeated the position as additional samples (format version 2,
+                // Movements only: the button events repeated the position as additional samples (format version 6,
                 // R1)
                 if (!configMenuOpen && isMouseMovement(e)) {
                     final long timeElapsedMillis = clock.getAsLong() - startTime;
@@ -993,13 +993,13 @@ public class Stats {
     }
 
     /**
-     * Number of columns of the heatmaps (heatmap*.csv, metrics*.png), whatever the machine (format version 4).
+     * Number of columns of the heatmaps (heatmap*.csv, metrics*.png), whatever the machine (format version 6).
      */
     static final int HEAT_MAP_COLUMNS = 400;
 
     /**
-     * @return the size of a cell of the heatmaps: the width of the scene divided into {@link #HEAT_MAP_COLUMNS}. Before
-     *   format version 4 it depended on the memory of the JVM (R7): 400 columns from 1 GiB, 200 below (a game started
+     * @return the size of a cell of the heatmaps: the width of the scene divided into {@link #HEAT_MAP_COLUMNS}. In
+     *   format version 1 it depended on the memory of the JVM (R7): 400 columns from 1 GiB, 200 below (a game started
      *   from the menu gets a quarter of the memory of the machine, so 200 columns on a machine with less than 4 GB)
      */
     double computeHeatMapPixelSize(final Scene gameContextScene) {

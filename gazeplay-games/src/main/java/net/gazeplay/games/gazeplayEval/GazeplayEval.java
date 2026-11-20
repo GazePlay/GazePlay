@@ -129,7 +129,7 @@ public class GazeplayEval implements GameLifeCycle {
     /** The kind, in the events, of the sound of an instruction: the content of its screen. */
     private static final String INSTRUCTION_SOUND = "son";
 
-    /** Columns of the heatmaps, as those of GazePlay (Stats.HEAT_MAP_COLUMNS, format version 4). */
+    /** Columns of the heatmaps, as those of GazePlay (Stats.HEAT_MAP_COLUMNS, format version 6). */
     private static final int HEAT_MAP_COLUMNS = 400;
 
     /** Pause after the last selection of a grid without sound, so that the selection is seen. */
