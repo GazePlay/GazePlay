@@ -31,7 +31,11 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
    gardée par cible, perdue si la cible disparaît. N'agit que sur **Ninja**, **Bulles**, **La tarte à la crème** (cibles
    qui bougent) et **Diviseur / Lapins**, variantes « Fixation » ; grisée ailleurs (`MenuSetting`). Écartés : Tir (le
    robot regardé s'arrête), Jeu de la taupe. Pas dans GazePlay Eval. Aujourd'hui : `FIXATION_GRACE` 0,3 s puis zéro.
-3. **La tarte à la crème** : tailles rangées **Grande, Moyenne, Petite** (aujourd'hui Petite d'abord). **Vérifier tous
+3. **FAIT le 20/11/2026, validé par le mainteneur** : le plus facile à gauche et proposé par défaut (premier choix
+   présélectionné par la fenêtre des variantes, décision du mainteneur) ; Tarte à la crème (taille, et « Dès le regard »
+   avant « Après une fixation »), Bouteille (taille), Cartes à gratter (grattoir), **cœurs : « Sans cœurs » avant « Avec
+   cœurs » dans tous les jeux** (`LivesVariant.options`, `DiceMistakes`, `MathMistakes`) ; les autres jeux étaient déjà
+   dans l'ordre. **La tarte à la crème** : tailles rangées **Grande, Moyenne, Petite** (aujourd'hui Petite d'abord). **Vérifier tous
    les jeux** : options rangées du plus facile au plus difficile.
 4. **Point par point** : tronc du petit sapin (`DotTree`, Facile) élargi (points 3 à 6 trop proches) ; **écart minimum**
    entre deux points pour toutes les figures Faciles.

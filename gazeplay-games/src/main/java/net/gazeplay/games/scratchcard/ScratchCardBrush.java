@@ -5,14 +5,15 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * The size of the scraper of "Cartes à gratter" (maintainer's choice of 12/11/2026), as a part of the height of the
- * screen (its radius).
+ * screen (its radius). In the order of the window of the variants, from the easiest to the hardest (20/11/2026: large
+ * first, less to scratch).
  */
 @Getter
 @RequiredArgsConstructor
 public enum ScratchCardBrush {
-    SMALL("ScratchBrushSmall", 0.045),
+    LARGE("ScratchBrushLarge", 0.1),
     MEDIUM("ScratchBrushMedium", 0.07),
-    LARGE("ScratchBrushLarge", 0.1);
+    SMALL("ScratchBrushSmall", 0.045);
 
     /**
      * Key of translation, and value of the variants (the buttons).

@@ -5,13 +5,14 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * When the pie is thrown in "Tartes à la crème" (maintainer's choice of 12/11/2026): after a fixation of the length of
- * the settings, as before, or as soon as the target is looked at, for the youngest.
+ * the settings, as before, or as soon as the target is looked at, for the youngest. In the order of the window of the
+ * variants, from the easiest to the hardest (20/11/2026: at once first, as in the other games).
  */
 @Getter
 @RequiredArgsConstructor
 public enum CreamPieThrow {
-    FIXATION("PieAfterFixation"),
-    LOOK("PieAtOnce");
+    LOOK("PieAtOnce"),
+    FIXATION("PieAfterFixation");
 
     /**
      * Key of translation, and sub-group of the variants.

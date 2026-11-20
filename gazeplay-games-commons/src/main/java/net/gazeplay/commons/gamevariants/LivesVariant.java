@@ -28,10 +28,12 @@ public final class LivesVariant {
 
     /**
      * @param applicable whether the lives apply to the variant (its mode has mistakes, it has an end)
-     * @return the values of the switch: with and without hearts, or only without when the lives do not apply
+     * @return the values of the switch: without and with hearts, or only without when the lives do not apply. Without
+     *   first (20/11/2026): the options go from the easiest to the hardest, and the first one is chosen when the window
+     *   of the variants opens (maintainer's decision: the easiest is proposed by default)
      */
     public static List<String> options(final boolean applicable) {
-        return applicable ? List.of(WITH, WITHOUT) : List.of(WITHOUT);
+        return applicable ? List.of(WITHOUT, WITH) : List.of(WITHOUT);
     }
 
     /**

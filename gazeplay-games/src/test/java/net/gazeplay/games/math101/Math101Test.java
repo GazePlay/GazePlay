@@ -328,9 +328,9 @@ class Math101Test {
         final Math101 mismatched = (Math101) launcher.replayGame(gameContext, new GroupedGameVariant("MathAddition",
             "MathEndless", "MathTable8", null, LivesVariant.WITHOUT), stats, 4.5);
         assertEquals(MathLevel.UP_TO_10, mismatched.getLevel());
-        // The common switch "with hearts / without hearts" (17/11/2026), with hearts first
+        // The common switch "with hearts / without hearts" (17/11/2026), without hearts first (20/11/2026: the easiest)
         assertEquals(MathMistakes.SEARCH_AGAIN, mismatched.getMistakes());
-        assertEquals(List.of(LivesVariant.WITH, LivesVariant.WITHOUT),
+        assertEquals(List.of(LivesVariant.WITHOUT, LivesVariant.WITH),
             Arrays.stream(MathMistakes.values()).map(MathMistakes::getKey).toList());
         // A variant of before the review: the additions up to 10, without end, looking again
         final Math101 old = (Math101) launcher.createNewGame(gameContext,

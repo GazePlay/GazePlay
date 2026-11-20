@@ -345,11 +345,11 @@ class DiceTest {
         assertEquals(3, counting.getDiceCount());
         assertEquals(DiceEnd.FOUND_10, counting.getEnd());
         assertEquals(DiceMistakes.LIVES, counting.getMistakes());
-        // The common switch "with hearts / without hearts" (17/11/2026), with hearts first
+        // The common switch "with hearts / without hearts" (17/11/2026), without hearts first (20/11/2026: the easiest)
         assertEquals(DiceMistakes.SEARCH_AGAIN, DiceGameLauncher.create(gameContext,
             new GroupedGameVariant("DiceCount", "DiceEnd10", "DiceHard", null, LivesVariant.WITHOUT), stats, 1)
             .getMistakes());
-        assertEquals(java.util.List.of(LivesVariant.WITH, LivesVariant.WITHOUT),
+        assertEquals(java.util.List.of(LivesVariant.WITHOUT, LivesVariant.WITH),
             java.util.Arrays.stream(DiceMistakes.values()).map(DiceMistakes::getKey).toList());
         final Dice throwing = DiceGameLauncher.create(gameContext,
             new GroupedGameVariant("DiceThrow", "DiceEndless", "Dice5", null, LivesVariant.WITHOUT), stats, 1);

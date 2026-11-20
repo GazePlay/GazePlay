@@ -372,10 +372,11 @@ class FlowerOfNumbersGameTest {
         assertEquals(FlowerMode.GUIDED, FlowerOfNumbersGameLauncher.modeOf(variants.get(0)));
         assertEquals(FlowerMode.GUIDED, FlowerOfNumbersGameLauncher.modeOf(variants.get(9)));
         assertEquals(FlowerMode.ALL_PETALS, FlowerOfNumbersGameLauncher.modeOf(variants.get(10)));
-        assertEquals(List.of(LivesVariant.WITH), variants.get(0).getExtras());
-        assertEquals(List.of(LivesVariant.WITHOUT), variants.get(5).getExtras());
+        // Without hearts first (20/11/2026: the easiest, chosen by default)
+        assertEquals(List.of(LivesVariant.WITHOUT), variants.get(0).getExtras());
+        assertEquals(List.of(LivesVariant.WITH), variants.get(5).getExtras());
         assertFalse(FlowerOfNumbersGameLauncher.withLives(new FlowerOfNumbersGame(gameContext, stats, 10,
-            FlowerMode.GUIDED, 1), variants.get(5)).isWithLives());
+            FlowerMode.GUIDED, 1), variants.get(0)).isWithLives());
         // A variant of the free mode of before: played guided
         assertEquals(FlowerMode.GUIDED, FlowerOfNumbersGameLauncher.modeOf(IGameVariant.toGameVariant(
             "GroupedGameVariant:FlowerOfNumbers:FlowerFree:FlowerUpTo10:-")));

@@ -13,7 +13,8 @@ class LivesVariantTest {
 
     @Test
     void shouldOfferBothChoicesOnlyWhereTheLivesApply() {
-        assertEquals(List.of(LivesVariant.WITH, LivesVariant.WITHOUT), LivesVariant.options(true));
+        // Without hearts first (20/11/2026): the easiest, chosen when the window of the variants opens
+        assertEquals(List.of(LivesVariant.WITHOUT, LivesVariant.WITH), LivesVariant.options(true));
         assertEquals(List.of(LivesVariant.WITHOUT), LivesVariant.options(false));
     }
 
