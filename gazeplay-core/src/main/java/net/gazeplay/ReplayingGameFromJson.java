@@ -250,15 +250,30 @@ public class ReplayingGameFromJson {
         sceneAspectRatio = json.getSceneAspectRatio();
         lifeCycle = json.getLifeCycle();
         roundsDurationReport = json.getRoundsDurationReport();
-        String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
-        final File gazeMetricsMouseFile = new File(filePrefix + "-metricsMouse.png");
-        final File gazeMetricsGazeFile = new File(filePrefix + "-metricsGaze.png");
-        final File gazeMetricsMouseAndGazeFile = new File(filePrefix + "-metricsMouseAndGaze.png");
-        final File heatMapCsvFile = new File(filePrefix + "-heatmap.csv");
-        final File screenShotFile = new File(filePrefix + "-screenshot.png");
-        final File colorBandsFile = new File(filePrefix + "-colorBands.png");
+        final String filePrefix = resultFilesPrefix(replayDataFile);
+        final File gazeMetricsMouseFile = new File(filePrefix + "metricsMouse.png");
+        final File gazeMetricsGazeFile = new File(filePrefix + "metricsGaze.png");
+        final File gazeMetricsMouseAndGazeFile = new File(filePrefix + "metricsMouseAndGaze.png");
+        final File heatMapCsvFile = new File(filePrefix + "heatmap.csv");
+        final File screenShotFile = new File(filePrefix + "screenshot.png");
+        final File colorBandsFile = new File(filePrefix + "colorBands.png");
         savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsMouseFile, gazeMetricsGazeFile, gazeMetricsMouseAndGazeFile, screenShotFile,
             colorBandsFile, replayDataFile);
+    }
+
+    /**
+     * The other files of a game are next to its replay data file: in its folder, without prefix, since 20/11/2026
+     * (".../14-23-34_Farm/replayData.json", then ".../14-23-34_Farm/heatmap.csv"); before, in the folder of the day,
+     * with the same time prefix ("2026-10-22-14-23-34-replayData.json", then "2026-10-22-14-23-34-heatmap.csv").
+     *
+     * @return the beginning of the paths of the other files of the game, to complete with "heatmap.csv"...
+     */
+    static String resultFilesPrefix(final File replayDataFile) {
+        if (replayDataFile.getName().equals(Stats.REPLAY_DATA_FILE)) {
+            return replayDataFile.getParent() == null ? "" : replayDataFile.getParent() + File.separator;
+        }
+        final String path = replayDataFile.getPath();
+        return path.substring(0, path.lastIndexOf('-') + 1);
     }
 
     /**

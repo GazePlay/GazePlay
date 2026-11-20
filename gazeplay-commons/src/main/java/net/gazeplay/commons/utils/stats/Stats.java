@@ -57,8 +57,9 @@ import java.util.function.LongSupplier;
  * While a round is running (from {@link #start()} to {@link #stop()}), filters on the root of the scene record each
  * gaze sample and each mouse movement: raw samples (for replayData.json and the replay), heatmaps (gaze, mouse, both),
  * fixation sequences and areas of interest, as enabled in the settings. The games count their goals, mistakes and
- * rounds with the increment... and notify... methods. {@link #saveStats()} then writes the files of the round in
- * statistics/&lt;game&gt;/&lt;yyyy-MM-dd&gt;/ (see {@link ReplayDataFormat} for the versions of the format).
+ * rounds with the increment... and notify... methods. {@link #saveStats()} then writes the files of the game in its
+ * own folder, statistics/&lt;game&gt;/&lt;yyyy-MM-dd&gt;/&lt;HH-mm-ss&gt;_&lt;variant&gt;/ (see {@link #getGameFolder()};
+ * {@link ReplayDataFormat} for the versions of the format).
  * <p>
  * Games with their own counters extend this class (e.g. ShootGamesStats).
  * <p>
@@ -161,6 +162,14 @@ public class Stats {
     String currentGameNameCode;
     double currentGameSeed = 0.;
     private final boolean inReplayMode;
+
+    /**
+     * The folder of the files of this game (video, results), chosen at its first use; a new game after
+     * {@link #reset()} gets a new one. Left out of toString(): Lombok would call {@link #getGameFolder()}, which creates
+     * the folder (Mockito prints the objects of a failed verification).
+     */
+    @ToString.Exclude
+    private File gameFolder;
 
     private String directoryOfVideo;
 
@@ -306,11 +315,11 @@ public class Stats {
     }
 
     /**
-     * Starts recording the screen into an AVI file of the statistics folder of the day (VIDEO_RECORDING_ENABLED
-     * setting). A failure is logged: the game goes on without video.
+     * Starts recording the screen into an AVI file of the folder of the game (VIDEO_RECORDING_ENABLED setting). A
+     * failure is logged: the game goes on without video.
      */
     public void startVideoRecording() {
-        directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
+        directoryOfVideo = getGameFolder().toString();
         this.movieFolder = new File(directoryOfVideo);
         final float quality = 1.0F;
         final byte bitDepth = 24;
@@ -554,9 +563,11 @@ public class Stats {
     }
 
     /**
-     * Starts a new round: the counters, the durations and the recorded data start again from zero.
+     * Starts a new round: the counters, the durations and the recorded data start again from zero. It is a new game
+     * ("Restart"): its files go to a new folder.
      */
     public void reset() {
+        gameFolder = null;
         nbGoalsReached = 0;
         nbMistakes = -1;
         nbGoalsToReach = 0;
@@ -683,9 +694,10 @@ public class Stats {
     }
 
     /**
-     * Writes the files of the round in the statistics folder of the day, all named after the current time: the
-     * screenshot, replayData.json, the heatmaps as CSV (heatmap, heatmapGaze, heatmapMouse) and the metrics images
-     * (metricsMouse, metricsGaze, metricsMouseAndGaze).
+     * Writes the files of the game in its folder ({@link #getGameFolder()}): the screenshot, replayData.json, the
+     * heatmaps as CSV (heatmap, heatmapGaze, heatmapMouse) and the metrics images (metricsMouse, metricsGaze,
+     * metricsMouseAndGaze). Until 20/11/2026 they were all in the folder of the day, their names starting with the time
+     * (yyyy-MM-dd-HH-mm-ss-replayData.json...): the folder now carries the time.
      *
      * @return the files written; null when the saving is disabled ({@link #disableSaving()}): nothing is written
      */
@@ -693,27 +705,16 @@ public class Stats {
         if (savingDisabled) {
             return null;
         }
-        final File todayDirectory = getGameStatsOfTheDayDirectory();
-        final String now = DateUtils.dateTimeNow();
-        final String heatmapFilePrefix = now + "-heatmap";
-        final String gazeHeatmapFilePrefix = now + "-heatmapGaze";
-        final String mouseHeatmapFilePrefix = now + "-heatmapMouse";
-        final String gazeMetricsFilePrefixMouse = now + "-metricsMouse";
-        final String gazeMetricsFilePrefixGaze = now + "-metricsGaze";
-        final String gazeMetricsFilePrefixMouseAndGaze = now + "-metricsMouseAndGaze";
-        final String screenShotFilePrefix = now + "-screenshot";
-        final String colorBandsFilePrefix = now + "-colorBands";
-        final String replayDataFilePrefix = now + "-replayData";
-
-        final File gazeMetricsFileMouse = new File(todayDirectory, gazeMetricsFilePrefixMouse + ".png");
-        final File gazeMetricsFileGaze = new File(todayDirectory, gazeMetricsFilePrefixGaze + ".png");
-        final File gazeMetricsFileMouseAndGaze = new File(todayDirectory, gazeMetricsFilePrefixMouseAndGaze + ".png");
-        final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
-        final File gazeHeatMapCsvFile = new File(todayDirectory, gazeHeatmapFilePrefix + ".csv");
-        final File mouseHeatMapCsvFile = new File(todayDirectory, mouseHeatmapFilePrefix + ".csv");
-        final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + ".png");
-        final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
+        final File folder = getGameFolder();
+        final File gazeMetricsFileMouse = new File(folder, "metricsMouse.png");
+        final File gazeMetricsFileGaze = new File(folder, "metricsGaze.png");
+        final File gazeMetricsFileMouseAndGaze = new File(folder, "metricsMouseAndGaze.png");
+        final File heatMapCsvFile = new File(folder, "heatmap.csv");
+        final File gazeHeatMapCsvFile = new File(folder, "heatmapGaze.csv");
+        final File mouseHeatMapCsvFile = new File(folder, "heatmapMouse.csv");
+        final File screenShotFile = new File(folder, "screenshot.png");
+        final File colorBandsFile = new File(folder, "colorBands.png");
+        final File replayDataFile = new File(folder, REPLAY_DATA_FILE);
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
@@ -921,27 +922,70 @@ public class Stats {
     }
 
     /**
-     * @return a new "...-info-game.csv" file of the statistics folder of the day, named after the current time
+     * @return the "info-game.csv" file of the folder of the game
      */
     protected File createInfoStatsFile() {
-        final File outputDirectory = getGameStatsOfTheDayDirectory();
-
-        final String fileName = DateUtils.dateTimeNow() + "-info-game.csv";
-        return new File(outputDirectory, fileName);
+        return new File(getGameFolder(), "info-game.csv");
     }
 
     /**
-     * @return the statistics folder of the game for today (statistics/&lt;game&gt;/&lt;yyyy-MM-dd&gt;, in the folder of
-     *   the current profile), created if missing
+     * Name of the replay data file in the folder of a game.
      */
-    public File getGameStatsOfTheDayDirectory() {
-        final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
-        final File gameDirectory = new File(statsDirectory, gameName);
-        final File todayDirectory = new File(gameDirectory, DateUtils.today());
-        final boolean outputDirectoryCreated = todayDirectory.mkdirs();
-        log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
+    public static final String REPLAY_DATA_FILE = "replayData.json";
 
-        return todayDirectory;
+    /**
+     * Longest part of the name of the folder of a game given by its variant.
+     */
+    static final int VARIANT_NAME_MAX_LENGTH = 60;
+
+    /**
+     * The folder of the files of this game (maintainer's decision of 20/11/2026: one folder per game, instead of all
+     * the files of the day mixed in one folder): statistics/&lt;game&gt;/&lt;yyyy-MM-dd&gt;/&lt;HH-mm-ss&gt;_&lt;variant&gt;,
+     * in the folder of the current profile. Chosen at its first use (the video at the start of the game, or the results
+     * at its end), then kept until {@link #reset()}; created if missing. Two games started in the same second get
+     * "-2", "-3"... at the end.
+     *
+     * @return the folder of the game
+     */
+    public File getGameFolder() {
+        if (gameFolder == null) {
+            final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
+            final File dayDirectory = new File(new File(statsDirectory, gameName), DateUtils.today());
+            final String name = gameFolderName(DateUtils.timeNow().replace(':', '-'), currentGameVariant);
+            File folder = new File(dayDirectory, name);
+            for (int i = 2; folder.exists(); i++) {
+                folder = new File(dayDirectory, name + "-" + i);
+            }
+            gameFolder = folder;
+        }
+        if (!gameFolder.isDirectory() && !gameFolder.mkdirs()) {
+            log.warn("Cannot create the folder of the game {}", gameFolder);
+        }
+        return gameFolder;
+    }
+
+    /**
+     * @param time    the start of the game, HH-mm-ss
+     * @param variant the variant of the game ("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-"), null if none
+     * @return the name of the folder of a game: the time, then the values of the variant without its type nor its empty
+     *   values ("14-05-32_Farm_WhereIsItEnd10_2x3"), with only letters, digits, "-", "_" and "."
+     */
+    static String gameFolderName(final String time, final String variant) {
+        if (variant == null || variant.isBlank()) {
+            return time;
+        }
+        final String[] parts = variant.split(":");
+        final StringBuilder values = new StringBuilder();
+        // The first part is the type of the variant, unless there is only one part
+        for (int i = parts.length > 1 ? 1 : 0; i < parts.length; i++) {
+            final String value = parts[i].replaceAll("[^A-Za-z0-9._-]", "");
+            if (!value.isEmpty() && !value.equals("-")) {
+                values.append(values.length() == 0 ? "" : "_").append(value);
+            }
+        }
+        final String text = values.length() > VARIANT_NAME_MAX_LENGTH
+            ? values.substring(0, VARIANT_NAME_MAX_LENGTH) : values.toString();
+        return text.isEmpty() ? time : time + "_" + text;
     }
 
     protected void printLengthBetweenGoalsToString(final PrintWriter out) {

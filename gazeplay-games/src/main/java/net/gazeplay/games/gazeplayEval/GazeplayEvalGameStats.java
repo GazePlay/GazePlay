@@ -78,9 +78,9 @@ public class GazeplayEvalGameStats extends HiddenItemsGamesStats {
      * @return the folder of the session (also the one opened by the statistics screen), created if missing
      */
     @Override
-    public File getGameStatsOfTheDayDirectory() {
+    public File getGameFolder() {
         if (sessionFolder == null) {
-            return super.getGameStatsOfTheDayDirectory();
+            return super.getGameFolder();
         }
         // Tried again here, if its creation failed at the start of the session
         if (!sessionFolder.isDirectory() && !sessionFolder.mkdirs()) {

@@ -226,8 +226,6 @@ public class GameMenuController {
             playBackgroundMusic(gameContext, selectedGameSpec, musicManager);
         }
 
-        stats.start();
-
         String gameVariantLabel;
         if (gameVariant != null) {
             gameVariantLabel = gameVariant.toString();
@@ -235,9 +233,11 @@ public class GameMenuController {
             gameVariantLabel = null;
         }
 
-
+        // Before start(): the variant names the folder of the game, created by the video at the start (20/11/2026)
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
         stats.setGameVariant(gameVariantLabel, gameNameCode);
+
+        stats.start();
 
         currentGame.launch();
         log.info("Game launched : {}, variant {}", gameNameCode, gameVariantLabel);

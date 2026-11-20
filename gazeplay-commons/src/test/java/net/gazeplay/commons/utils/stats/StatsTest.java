@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.games.DateUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,9 +126,46 @@ class StatsTest {
         stats.startVideoRecording();
         stats.endVideoRecording();
 
-        File todayDirectory = stats.getGameStatsOfTheDayDirectory();
-        assertTrue(todayDirectory.getPath().contains("testGame"));
-        assertNotEquals(0, todayDirectory.list().length);
+        File gameFolder = stats.getGameFolder();
+        assertTrue(gameFolder.getPath().contains("testGame"));
+        assertNotEquals(0, gameFolder.list().length);
+    }
+
+    /**
+     * One folder per game (20/11/2026): statistics/&lt;game&gt;/&lt;day&gt;/&lt;time&gt;_&lt;variant&gt;, kept for the whole
+     * game, a new one after reset() ("Restart"), never the folder of another game started in the same second.
+     */
+    @Test
+    void shouldGiveEachGameItsOwnFolder() {
+        stats.setGameVariant("GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-", "testGame");
+
+        File first = stats.getGameFolder();
+
+        assertTrue(first.isDirectory());
+        assertEquals(DateUtils.today(), first.getParentFile().getName());
+        assertEquals("testGame", first.getParentFile().getParentFile().getName());
+        assertTrue(first.getName().matches("\\d{2}-\\d{2}-\\d{2}_Farm_WhereIsItEnd10_2x3(-\\d+)?"), first.getName());
+        assertEquals(first, stats.getGameFolder());
+
+        when(stats.gameContextScene.getRoot()).thenReturn(new Pane());
+        stats.reset();
+        File second = stats.getGameFolder();
+
+        assertNotEquals(first, second);
+        assertTrue(second.isDirectory());
+    }
+
+    @Test
+    void shouldNameTheFolderOfAGameAfterItsTimeAndVariant() {
+        assertEquals("14-05-32", Stats.gameFolderName("14-05-32", null));
+        assertEquals("14-05-32_Farm_WhereIsItEnd10_2x3",
+            Stats.gameFolderName("14-05-32", "GroupedGameVariant:Farm:WhereIsItEnd10:2x3:-"));
+        // Characters a file name cannot hold are removed; a variant of one part keeps it
+        assertEquals("14-05-32_A_Bc", Stats.gameFolderName("14-05-32", "Type:A:B/c"));
+        assertEquals("14-05-32_Easy", Stats.gameFolderName("14-05-32", "Easy"));
+        // A long variant is cut
+        assertEquals("14-05-32_" + "x".repeat(Stats.VARIANT_NAME_MAX_LENGTH),
+            Stats.gameFolderName("14-05-32", "Type:" + "x".repeat(100)));
     }
 
     @Test
@@ -268,11 +306,13 @@ class StatsTest {
         assertTrue(info.getGazeMetricsFileMouseAndGaze().isFile());
         assertTrue(info.getScreenshotFile().isFile());
         assertTrue(info.getReplayDataFile().isFile());
-        assertEquals(stats.getGameStatsOfTheDayDirectory(), info.getHeatMapCsvFile().getParentFile());
-        // Format version 6: one heatmap per source next to heatmap.csv (same name, suffix Gaze or Mouse)
-        String heatMapName = info.getHeatMapCsvFile().getName();
-        assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), heatMapName.replace("-heatmap.csv", "-heatmapGaze.csv")).isFile());
-        assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), heatMapName.replace("-heatmap.csv", "-heatmapMouse.csv")).isFile());
+        // In the folder of the game, without the time in their names (20/11/2026)
+        assertEquals(stats.getGameFolder(), info.getHeatMapCsvFile().getParentFile());
+        assertEquals("heatmap.csv", info.getHeatMapCsvFile().getName());
+        assertEquals(Stats.REPLAY_DATA_FILE, info.getReplayDataFile().getName());
+        // Format version 6: one heatmap per source next to heatmap.csv
+        assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), "heatmapGaze.csv").isFile());
+        assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), "heatmapMouse.csv").isFile());
 
         // replayData.json is a persistent format (read by the replay and by researchers): pin its structure
         JsonObject replayData;
@@ -309,7 +349,7 @@ class StatsTest {
         stats.disableSaving();
         stats.start();
         stats.gazeMoved(new Point2D(30, 40));
-        File directory = stats.getGameStatsOfTheDayDirectory();
+        File directory = stats.getGameFolder();
         String[] before = directory.list();
 
         assertNull(stats.saveStats());

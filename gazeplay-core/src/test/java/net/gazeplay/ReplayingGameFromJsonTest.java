@@ -2,6 +2,8 @@ package net.gazeplay;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,6 +20,19 @@ class ReplayingGameFromJsonTest {
         assertEquals(0, ReplayingGameFromJson.delayBeforeSample(1000, 1000));
         // a sample slightly earlier than the previous one of the other source (format version 6): no wait
         assertEquals(0, ReplayingGameFromJson.delayBeforeSample(990, 1000));
+    }
+
+    /**
+     * The other files of a replayed game: in its folder since 20/11/2026, next to it with its time prefix before.
+     */
+    @Test
+    void shouldFindTheOtherFilesOfTheReplayedGame() {
+        final File gameFolder = new File(new File("statistics", "2026-11-20"), "14-23-34_Farm");
+        assertEquals(new File(gameFolder, "heatmap.csv"),
+            new File(ReplayingGameFromJson.resultFilesPrefix(new File(gameFolder, "replayData.json")) + "heatmap.csv"));
+        final File day = new File("statistics", "2026-10-22");
+        assertEquals(new File(day, "2026-10-22-14-23-34-heatmap.csv"), new File(ReplayingGameFromJson.resultFilesPrefix(
+            new File(day, "2026-10-22-14-23-34-replayData.json")) + "heatmap.csv"));
     }
 
     /**

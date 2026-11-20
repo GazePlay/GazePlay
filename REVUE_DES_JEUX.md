@@ -16,7 +16,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 
 ### À faire
 
-1. **Résultats des jeux** : un **dossier par partie**, `statistics\<jeu>\<aaaa-mm-jj>\<hh-mm-ss>_<variante>\` (aujourd'hui
+1. **FAIT le 20/11/2026, validé par le mainteneur** (`Stats.getGameFolder`, noms du dossier avec les clés internes de la
+   variante, fichiers sans l'heure devant, `@ToString.Exclude` sur le champ : Lombok appelait le getter, qui crée le
+   dossier). **Résultats des jeux** : un **dossier par partie**, `statistics\<jeu>\<aaaa-mm-jj>\<hh-mm-ss>_<variante>\` (aujourd'hui
    tous les fichiers du jour sont mélangés dans le dossier du jour) ; le bouton « Résultats » de l'écran des statistiques
    ouvre **le dossier de la partie**. Seul le rangement change, pas le contenu (format v6 inchangé) ; le rejeu doit
    chercher dans les sous-dossiers.

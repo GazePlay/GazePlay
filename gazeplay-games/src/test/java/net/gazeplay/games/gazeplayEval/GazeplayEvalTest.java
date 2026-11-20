@@ -560,7 +560,7 @@ class GazeplayEvalTest {
         });
 
         Path session = singleSession();
-        assertEquals(session.toFile(), evalStats.getGameStatsOfTheDayDirectory());
+        assertEquals(session.toFile(), evalStats.getGameFolder());
         Path heatmaps = session.resolve("heatmaps");
         assertEquals(heatmaps.resolve("passation-regard-et-souris.png").toFile(),
             evalStats.getSavedStatsInfo().getGazeMetricsFileMouseAndGaze());

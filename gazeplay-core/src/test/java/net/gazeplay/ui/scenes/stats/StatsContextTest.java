@@ -384,12 +384,13 @@ class StatsContextTest {
 
     @Test
     void shouldOpenTheResultsFolderOfTheGamePlayed() throws Exception {
-        // The files of the game were saved before midnight, the statistics screen is shown after
-        final File savedFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
+        // The folder of the saved files of the game (20/11/2026: one folder per game)
+        final File savedFolder = new File(new File(new File("statistics", "WhereIsTheShape"), "2026-10-23"),
+            "23-59-58_Shapes");
         when(mockStats.getSavedStatsInfo()).thenReturn(new SavedStatsInfo(
             new File(savedFolder, "heatmap.csv"), null, null, null, null, null, null));
-        when(mockStats.getGameStatsOfTheDayDirectory())
-            .thenReturn(new File(new File("statistics", "WhereIsTheShape"), "2026-10-24"));
+        when(mockStats.getGameFolder())
+            .thenReturn(new File(new File(new File("statistics", "WhereIsTheShape"), "2026-10-24"), "other"));
         final StatsContext screen = screen(mockStats);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
             screen.getFolderButton().fire();
@@ -398,10 +399,11 @@ class StatsContextTest {
     }
 
     @Test
-    void shouldOpenTheFolderOfTheDayWhenNoFileWasSaved() throws Exception {
-        final File todayFolder = new File(new File("statistics", "WhereIsTheShape"), "2026-10-23");
+    void shouldOpenTheFolderOfTheGameWhenNoFileWasSaved() throws Exception {
+        final File todayFolder = new File(new File(new File("statistics", "WhereIsTheShape"), "2026-10-23"),
+            "10-00-00_Shapes");
         when(mockStats.getSavedStatsInfo()).thenReturn(null);
-        when(mockStats.getGameStatsOfTheDayDirectory()).thenReturn(todayFolder);
+        when(mockStats.getGameFolder()).thenReturn(todayFolder);
         final StatsContext screen = screen(mockStats);
         try (MockedStatic<SystemFileManager> systemFileManager = mockStatic(SystemFileManager.class)) {
             screen.getFolderButton().fire();

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The answers of the person in the game "Opinions" (2/11/2026), and their file "&lt;time&gt;-opinions.csv", written with
- * the statistics ({@link OpinionsGameStats}).
+ * The answers of the person in the game "Opinions" (2/11/2026), and their file "opinions.csv", written with the
+ * statistics in the folder of the game ({@link OpinionsGameStats}).
  * <p>
  * Format of the file, version {@value #FORMAT_VERSION} (a new file: the files written before are not changed): UTF-8
  * with a byte order mark, ";" between the columns (opened directly by a French spreadsheet), a header line
@@ -21,7 +21,7 @@ public class OpinionsAnswers {
 
     static final int FORMAT_VERSION = 1;
 
-    static final String FILE_SUFFIX = "-opinions.csv";
+    static final String FILE_NAME = "opinions.csv";
 
     private final List<String[]> answers = new ArrayList<>();
 

@@ -605,15 +605,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Opens the folder where the files of this game (heatmaps, metrics, replay data...) were saved:
-     * statistics/&lt;game&gt;/&lt;day&gt;, or under the profile.
+     * Opens the folder where the files of this game (heatmaps, metrics, replay data...) were saved: its own folder,
+     * statistics/&lt;game&gt;/&lt;day&gt;/&lt;time&gt;_&lt;variant&gt; (20/11/2026; before, the folder of the day).
      */
     void seeGameFolder(Stats stats) {
-        // The folder of the saved files, not the one of today: they differ for a game ended after midnight
+        // The folder of the saved files (for a replay, the folder of the replayed file)
         final SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         final File folder = savedStatsInfo != null && savedStatsInfo.getHeatMapCsvFile() != null
             ? savedStatsInfo.getHeatMapCsvFile().getParentFile()
-            : stats.getGameStatsOfTheDayDirectory();
+            : stats.getGameFolder();
         SystemFileManager.openFolder(folder);
     }
 }

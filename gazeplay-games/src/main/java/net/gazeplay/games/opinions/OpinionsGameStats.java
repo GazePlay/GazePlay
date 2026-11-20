@@ -15,8 +15,8 @@ import java.util.LinkedList;
 
 /**
  * Statistics of the game "Opinions" (see {@code Stats}), with the answers of the person (2/11/2026): besides the usual
- * files, {@link #saveStats()} writes the answers file "&lt;time&gt;-opinions.csv" (see {@link OpinionsAnswers}), named
- * like the other files of the game.
+ * files, {@link #saveStats()} writes the answers file "opinions.csv" (see {@link OpinionsAnswers}) in the folder of the
+ * game (20/11/2026; before, "&lt;time&gt;-opinions.csv" in the folder of the day).
  */
 @Slf4j
 public class OpinionsGameStats extends Stats {
@@ -44,9 +44,7 @@ public class OpinionsGameStats extends Stats {
     public SavedStatsInfo saveStats() throws IOException {
         final SavedStatsInfo info = super.saveStats();
         if (info != null && info.getReplayDataFile() != null) {
-            final String replayName = info.getReplayDataFile().getName();
-            final String prefix = replayName.substring(0, replayName.length() - "-replayData.json".length());
-            final File file = new File(info.getReplayDataFile().getParentFile(), prefix + OpinionsAnswers.FILE_SUFFIX);
+            final File file = new File(info.getReplayDataFile().getParentFile(), OpinionsAnswers.FILE_NAME);
             answers.write(file);
             log.info("Answers written in {}", file);
         }

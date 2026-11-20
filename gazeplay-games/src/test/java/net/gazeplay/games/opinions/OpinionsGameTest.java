@@ -167,7 +167,7 @@ class OpinionsGameTest {
         final OpinionsAnswers answers = new OpinionsAnswers();
         answers.add("chien.png", OpinionChoice.LIKE);
         answers.add("frites; ketchup.jpg", OpinionChoice.DISLIKE);
-        final File file = folder.resolve("2026-11-02-10-00-00" + OpinionsAnswers.FILE_SUFFIX).toFile();
+        final File file = folder.resolve(OpinionsAnswers.FILE_NAME).toFile();
 
         answers.write(file);
 
