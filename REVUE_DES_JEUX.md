@@ -5,6 +5,102 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## RETOURS DE LA TESTEUSE (20/11/2026) : DÉCISIONS DU MAINTENEUR, RIEN N'EST CODÉ
+
+Source : le document de retours de la testeuse (non publié), partie GazePlay Learning seulement ; la partie sur le
+site de création d'évaluations n'est pas traitée ici. Tests de la testeuse faits **avant le 20/11** : elle a entendu les anciennes voix.
+Chaque point a été vérifié dans le code, puis validé un par un par le mainteneur le 20/11/2026.
+
+**Ordre conseillé** : corrections courtes d'abord (3, 14, 15, 24, 25, 4), puis les grosses (1, 2, 7, 8 à 10, 22, 23,
+29), la recherche de sons et de photos en dernier (16 à 19, 26 : écoutes et choix du mainteneur).
+
+### À faire
+
+1. **Résultats des jeux** : un **dossier par partie**, `statistics\<jeu>\<aaaa-mm-jj>\<hh-mm-ss>_<variante>\` (aujourd'hui
+   tous les fichiers du jour sont mélangés dans le dossier du jour) ; le bouton « Résultats » de l'écran des statistiques
+   ouvre **le dossier de la partie**. Seul le rangement change, pas le contenu (format v6 inchangé) ; le rejeu doit
+   chercher dans les sous-dossiers.
+2. **Option générale** « **Si le regard quitte la cible en mouvement** : la fixation reprend de zéro / la fixation garde
+   sa progression » (le mot « mouvement » est important : l'option n'agit que là), dans les réglages du menu principal
+   (carte Jeu) et le menu Échap ; **par défaut : reprend de zéro** (règle de base commune à tous les jeux). Progression
+   gardée par cible, perdue si la cible disparaît. N'agit que sur **Ninja**, **Bulles**, **La tarte à la crème** (cibles
+   qui bougent) et **Diviseur / Lapins**, variantes « Fixation » ; grisée ailleurs (`MenuSetting`). Écartés : Tir (le
+   robot regardé s'arrête), Jeu de la taupe. Pas dans GazePlay Eval. Aujourd'hui : `FIXATION_GRACE` 0,3 s puis zéro.
+3. **La tarte à la crème** : tailles rangées **Grande, Moyenne, Petite** (aujourd'hui Petite d'abord). **Vérifier tous
+   les jeux** : options rangées du plus facile au plus difficile.
+4. **Point par point** : tronc du petit sapin (`DotTree`, Facile) élargi (points 3 à 6 trop proches) ; **écart minimum**
+   entre deux points pour toutes les figures Faciles.
+5. **Trouve les différences** : scène des instruments, deux micros identiques comptés comme une différence ; corriger,
+   puis vérifier toutes les scènes : aucune différence déclarée sans changement visible.
+6. **Trouve les différences** : différences de couleur visibles mais non déclarées (coquillages sous l'eau, oiseaux) ;
+   même couleur dans les deux images hors différences déclarées ; **double vérification pixel par pixel** (toute zone
+   qui change est déclarée, toute différence déclarée change), par test ou par le script, pour toutes les scènes.
+7. **Casse-brique** : le niveau change **le nombre et la taille des briques** (Découverte 6, Facile environ 32, Moyen
+   environ 78, Difficile environ 120), même vitesse lente de balle à tous les niveaux (réglable par « Vitesse des
+   éléments »), grande raquette ; **dessins des briques refaits pour chaque niveau**.
+8. **Aiguillages**, « Un train à la fois » : le train suivant **attend en gare** et part quand on fixe un bouton
+   **« Départ »** à côté de la gare (aujourd'hui `READY` 1 s).
+9. **Aiguillages** : 4 rythmes, dans cet ordre : un train à la fois avec pause à chaque aiguillage (nouveau, le plus
+   facile), un train à la fois, pause à chaque aiguillage, en continu.
+10. **Aiguillages** : le bouton « Reprendre » apparaît **à côté de l'aiguillage arrêté** (aujourd'hui à droite), sans
+    recouvrir de rails, assez écarté pour ne pas être fixé par accident.
+11. **Vignettes** : Où est le son ? avec des **instruments**, Où est-ce ? avec des **objets du quotidien** (aujourd'hui
+    des animaux, comme Où est l'animal ?) ; vérifier les 6 autres vignettes de la famille.
+12. **Volume** : mesurer (LUFS) puis égaliser les voix (`loudnorm` dans `make_voices.py`) et la récompense de la famille
+    Où est… (voix bien plus faible que le « biboule ») ; **puis vérifier le volume des sons de tous les jeux**.
+14. **Où est…** et Trouve l'intrus : le compteur affiche **le numéro de l'écran en cours** dès l'arrivée des images
+    (aujourd'hui le nombre d'écrans trouvés) ; en Sans fin, « Écran 7 ».
+15. **Où est…** et Trouve l'intrus : **tirage sans répétition** des bonnes réponses (liste mélangée, remélangée une fois
+    épuisée, pas de répétition entre deux listes) ; Où est l'animal ? dynamique inchangé.
+16. **Où est le son ?** : nouveau **rugissement de lion** (l'actuel ressemble à un cochon), libre, 2 ou 3 candidats à
+    faire écouter ; aussi dans les Sons de la vie s'il y est ; crédits et inventaire.
+17. **Photo d'éléphants** à remplacer (accouplement visible) par un éléphant seul ; **revue de toutes les photos** d'Où
+    est le son ? et d'Où est l'animal ? (contenu choquant), photos douteuses signalées au mainteneur.
+18. **Violon seul** (l'actuel a percussions et guitare), 2 ou 3 candidats à faire écouter ; analyser (FFmpeg) les autres
+    sons d'instruments et signaler ceux à écouter.
+19. **Accordéon de musée** (`accordion_1.jpg`) remplacé par un accordéon courant ; pendant la revue des photos,
+    vérifier que chaque objet ou animal est typique et reconnaissable.
+22. **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
+    jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
+23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;
+    en mode Copier, l'erreur reste comptée et le cœur perdu ne revient pas.
+24. **« Normal » remplacé par « Moyen »** (« Medium » en anglais) **partout** dans les textes affichés (une vingtaine de
+    jeux), clés internes inchangées ; « Version normale » des Petits chevaux devient « **Plateau classique** » ; signaler
+    les autres mots qui renvoient à une norme.
+25. **Blocs** : réussite à **90 %** des blocs retirés ; les blocs restants **disparaissent seuls**.
+26. **Photos avec une personne reconnaissable** (Où est le son ? : musiciens…) : **toutes remplacées** (objet seul ou
+    mains sans visage), remplaçants montrés au mainteneur ; droit à l'image non vérifié, d'où ce choix.
+27. **GazePlay Eval**, aide « Comprendre les fichiers de résultats » : nouvelle mise en page (titre par fichier, à quoi
+    il sert, colonnes, exemples) ; reformulations à intégrer quand la testeuse aura dit quels passages la gênent.
+29. **Images à fond transparent** (OpenMoji : poulpe, lapin…) : en thème sombre, le fond sombre se voit à travers (Memory,
+    Cartes à gratter), et il faut viser le dessin, pas la carte. **Toujours un fond blanc sous les images**, **carte
+    entière sélectionnable**, dans **tous les jeux** qui affichent ces images (liste à établir).
+
+### En attente
+
+- 13. **Débit de la voix** (réglage Normal / Lent, voix lentes générées avec Piper) : attendre que la testeuse écoute
+  les nouvelles voix du 20/11 (la qualité des voix, qu'elle trouvait sans intonation, attend la même écoute).
+- 20. **Point par point, réaction à une erreur** (son et secousse qui peuvent pousser à refaire l'erreur exprès) :
+  **réunion avec Amélie**. Pistes : A rien changer, B ne rien montrer, C option dans les variantes, D option générale
+  pour tous les jeux qui réagissent aux erreurs. (La secousse a été ajoutée à la revue du 12/11 ; jamais retirée.)
+- 27. Reformulations de l'aide Eval : passages à demander à la testeuse.
+- 28. **Eval, croix de fixation dans `echantillons.csv`** (« - » aujourd'hui quand la croix n'est pas à fixer) : à voir
+  avec la testeuse ; le mainteneur trouve bizarre de la mettre dans la colonne des zones, qui ne liste que des cibles
+  sélectionnables. Piste : une colonne à part (`sur_la_croix`).
+- 31. **Où est-ce ?** (images de l'utilisateur ; échec de la testeuse) : jeu et fonctionnement **gardés tels quels**
+  (dossier propre `WHERE_IS_IT_DIR` : `images\<réponse>\`, textes dans `questions.csv`, sons dans `sounds\`), à revoir
+  avec la testeuse. Limite notée : chaque sous-dossier peut devenir la réponse (pas d'intrus seulement).
+
+### Laissés tels quels (décisions du mainteneur)
+
+- 21. Point par point : pas d'option « zone de sélection plus large » (la zone fait déjà 1,45 fois le point).
+- 30. Cartes à gratter : le blanc venait des images transparentes (corrigé par le point 29) ; fin à 90 % de **la carte
+  entière** gardée.
+- 32. Eval : la suppression d'une évaluation importée reste dans les réglages du mode Évaluations (elle existe déjà).
+- Retours positifs (écran des statistiques, menus, menu Échap, Labyrinthe, Quatre en ligne, Biboule Jump, Ordre, Jeu de
+  taquin, Bulles) : rien à faire.
+
 ## REPRISE DU VENDREDI 20/11/2026 (fin de la séance du mercredi 18/11/2026) : LES VOIX
 
 Séance arrêtée avant de générer les voix (crédits de la semaine du mainteneur insuffisants pour 944 fichiers ;
@@ -75,7 +171,8 @@ Suite : vérifier la CI, puis le point 5 (notes de version 2.0).
    crédit de SIWIS CC BY 4.0) et un `CREDITS.txt` des voix ; `inventaire_sons.py` doit lire `voix.csv` pour classer
    ces fichiers ; refaire l'inventaire (`INVENTAIRE_SONS.md` : plus aucune voix de source inconnue attendu).
 4. Tests ciblés (Où est…, Identifier les lettres), `allGamesTest` de ces jeux, commit, push et CI.
-5. Ensuite, dernière tâche de fin : les notes de version 2.0 (images à remettre, format de résultats v6, seul
+5. **En attente du feu vert du mainteneur** (décision du 20/11 : seulement quand tout est validé et qu'il n'y a plus
+   rien à ajouter ni à modifier) : les notes de version 2.0 (images à remettre, format de résultats v6, seul
    format de la 2.0 depuis le 20/11, présenté comme un seul passage de v1 à v6 (`MODERNIZATION.md` 2ar),
    français et anglais seulement, voix choisies dans les réglages).
 
