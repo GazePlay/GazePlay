@@ -22,7 +22,10 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
    tous les fichiers du jour sont mélangés dans le dossier du jour) ; le bouton « Résultats » de l'écran des statistiques
    ouvre **le dossier de la partie**. Seul le rangement change, pas le contenu (format v6 inchangé) ; le rejeu doit
    chercher dans les sous-dossiers.
-2. **Option générale** « **Si le regard quitte la cible en mouvement** : la fixation reprend de zéro / la fixation garde
+2. **FAIT le 20/11/2026, validé par le mainteneur** (clé `MOVING_FIXATION_KEPT`, `MenuSetting.MOVING_FIXATION`,
+   sélecteur à deux pastilles `GameMenuControls.movingFixationChoice` dans le menu Échap et les réglages ; Diviseur :
+   progression gardée par cible ; Bulles : animation mise en pause). **Option générale** « **Si le regard quitte la
+   cible en mouvement** : la fixation reprend de zéro / la fixation garde
    sa progression » (le mot « mouvement » est important : l'option n'agit que là), dans les réglages du menu principal
    (carte Jeu) et le menu Échap ; **par défaut : reprend de zéro** (règle de base commune à tous les jeux). Progression
    gardée par cible, perdue si la cible disparaît. N'agit que sur **Ninja**, **Bulles**, **La tarte à la crème** (cibles

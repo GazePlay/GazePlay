@@ -346,21 +346,35 @@ public class Divisor implements GameLifeCycle {
 
     /**
      * The fixation: its length is that of the settings, read at each step, so that a change in the menu of the game
-     * counts at once. A short look away only stops the ring for a moment; another target looked at starts again.
+     * counts at once. A short look away only stops the ring for a moment; another target looked at starts again. When
+     * the setting keeps the progress of the moving targets (MOVING_FIXATION_KEPT, 20/11/2026), a target left keeps its
+     * progress: the ring waits on it, following it, and goes on when the gaze comes back; another target looked at
+     * starts from its own progress.
      */
     private void fixation(final double seconds) {
+        final boolean kept = configuration.isMovingFixationKept();
         if (looked != null && !looked.isTouched()) {
             awaySeconds += seconds;
-            if (awaySeconds <= FIXATION_GRACE) {
-                return;
+            if (kept) {
+                final Target other = targets.stream().filter(Target::isTouched).findFirst().orElse(null);
+                if (other == null) {
+                    return;
+                }
+                looked.keptFixation = fixationSeconds;
+                stopFixation();
+            } else {
+                if (awaySeconds <= FIXATION_GRACE) {
+                    return;
+                }
+                stopFixation();
             }
-            stopFixation();
         }
         if (looked == null) {
             looked = targets.stream().filter(Target::isTouched).findFirst().orElse(null);
             if (looked == null) {
                 return;
             }
+            fixationSeconds = kept ? looked.keptFixation : 0;
             ring.setSize(looked.radius * 2.3);
             ring.show(looked.x, looked.y);
         }
@@ -561,6 +575,10 @@ public class Divisor implements GameLifeCycle {
         private double age;
         private boolean onGaze;
         private boolean onMouse;
+        /**
+         * The seconds of fixation kept by this target when the gaze left it (setting MOVING_FIXATION_KEPT).
+         */
+        private double keptFixation;
 
         Target(final int division, final Image image, final double angle) {
             this.division = division;
@@ -692,6 +710,6 @@ public class Divisor implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return touch == DivisorTouch.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+        return touch == DivisorTouch.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.MOVING_FIXATION) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
     }
 }

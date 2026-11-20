@@ -239,6 +239,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 value -> String.format(locale, "× %.2f", speed.sliderValueToSpeedRatio(value))))
             .add("GameMenuSize", GameMenuControls.sliderWithValue(net.gazeplay.ui.ElementSizeControl.getInstance()
                 .createElementSizeSlider(config, new Label()), value -> Math.round(value) + " %"))
+            .add("MovingFixation", GameMenuControls.movingFixationChoice(getGazePlay().getTranslator(), config))
             .group("GameMenuRing")
             .add("GameMenuRingThickness", GameMenuControls.sliderWithValue(net.gazeplay.ui.ProgressBarControl
                 .getInstance().createRingThicknessSlider(config, new Label()), value -> Math.round(value) + " %"))

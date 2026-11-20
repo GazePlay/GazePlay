@@ -1674,6 +1674,44 @@
     -fx-border-radius: 999;
 }
 
+/* A choice between two values (the fixation of the moving targets, 20/11/2026): two rounded segments in a rounded
+   frame, the chosen one filled with the main color */
+.gp-menu .gp-game-menu-segmented {
+    -fx-background-color: -gp-bg;
+    -fx-background-radius: 999;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 3;
+}
+
+.gp-menu .gp-game-menu-segment {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 12pt;
+    -fx-text-fill: -gp-text-muted;
+    -fx-cursor: hand;
+}
+
+.gp-menu .gp-game-menu-segment:hover {
+    -fx-background-color: -gp-surface-hover;
+}
+
+.gp-menu .gp-game-menu-segment:selected {
+    -fx-background-color: -gp-accent;
+    -fx-text-fill: -gp-on-accent;
+    -fx-font-family: "Fredoka SemiBold";
+}
+
+.gp-menu .gp-game-menu-segment:focus-visible {
+    -fx-border-color: -gp-text;
+}
+
 .gp-menu .gp-game-menu-swatch {
     -fx-alignment: center;
     -fx-border-color: -gp-border;

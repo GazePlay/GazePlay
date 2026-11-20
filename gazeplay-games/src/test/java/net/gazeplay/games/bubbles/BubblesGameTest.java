@@ -162,6 +162,41 @@ class BubblesGameTest {
     }
 
     /**
+     * With the setting keeping the fixation of the moving targets (20/11/2026), a bubble left keeps the progress of its
+     * fixation, which goes on when the gaze comes back; it is offered in the fixation variant only.
+     */
+    @Test
+    void shouldKeepTheFixationOfABubbleWhenTheSettingSaysSo() throws Exception {
+        when(configuration.isMovingFixationKept()).thenReturn(true);
+        when(configuration.getFixationLength()).thenReturn(800);
+        final BubblesGame game = launched(BubblesContent.COLORS, BubblesGameVariant.FIX, BubblesBurst.FIXATION);
+        assertTrue(game.menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+        final javafx.scene.Node bubble = fx(() -> game.getBubbles().getFirst().node());
+        fx(() -> {
+            bubble.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, 0, 0, 0));
+            return null;
+        });
+        WaitForAsyncUtils.sleep(400, TimeUnit.MILLISECONDS);
+        fx(() -> {
+            bubble.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, 0, 0, 0));
+            return null;
+        });
+        WaitForAsyncUtils.sleep(900, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(BubblesGame.TILES, (int) fx(game::panesLeft), "kept, not burst while left");
+        fx(() -> {
+            bubble.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, 0, 0, 0));
+            return null;
+        });
+        // About 400 ms are left; less than a whole fixation of 800 ms
+        WaitForAsyncUtils.sleep(650, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(BubblesGame.TILES - 1, (int) fx(game::panesLeft), "the fixation went on");
+        assertFalse(launched(BubblesContent.COLORS, BubblesGameVariant.FIX, BubblesBurst.AT_ONCE).menuSettings()
+            .contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+    }
+
+    /**
      * The bubbles go in the direction of the variant, and come back from the other side; still bubbles stay.
      */
     @Test

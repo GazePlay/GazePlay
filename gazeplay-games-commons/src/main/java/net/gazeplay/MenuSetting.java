@@ -26,7 +26,14 @@ public enum MenuSetting {
     RING_THICKNESS,
 
     /** The color of the ring of a fixation (every ring of the games, the main color of the menus by default). */
-    RING_COLOR;
+    RING_COLOR,
+
+    /**
+     * When the gaze leaves a moving target during its fixation: the fixation starts again from zero, or keeps its
+     * progress (20/11/2026). Only for the fixations of moving targets: Ninja, Bubbles, Cream pie with moving targets,
+     * Divisor.
+     */
+    MOVING_FIXATION;
 
     /**
      * @return the settings given, in a set that can be changed

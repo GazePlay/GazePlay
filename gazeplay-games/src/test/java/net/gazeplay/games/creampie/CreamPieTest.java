@@ -98,7 +98,42 @@ class CreamPieTest {
         assertEquals(Set.of(), still.menuSettings());
         final CreamPie moving = launched(CreamPieThrow.FIXATION, CreamPieMotion.MOVING, CreamPieEnd.ENDLESS);
         assertEquals(Set.of(net.gazeplay.MenuSetting.FIXATION_LENGTH, net.gazeplay.MenuSetting.RING_THICKNESS,
-            net.gazeplay.MenuSetting.RING_COLOR, net.gazeplay.MenuSetting.ANIMATION_SPEED), moving.menuSettings());
+            net.gazeplay.MenuSetting.RING_COLOR, net.gazeplay.MenuSetting.ANIMATION_SPEED,
+            net.gazeplay.MenuSetting.MOVING_FIXATION), moving.menuSettings());
+        // The fixation of a still target: the setting of the moving targets does not act
+        final CreamPie stillFixation = launched(CreamPieThrow.FIXATION, CreamPieMotion.STILL, CreamPieEnd.ENDLESS);
+        assertFalse(stillFixation.menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+    }
+
+    /**
+     * With the setting keeping the fixation of the moving targets (20/11/2026), a moving target left keeps the progress
+     * of its fixation; a still target always starts again from zero.
+     */
+    @Test
+    void shouldKeepTheFixationOfAMovingTargetWhenTheSettingSaysSo() throws Exception {
+        when(configuration.isMovingFixationKept()).thenReturn(true);
+        final CreamPie moving = launched(CreamPieThrow.FIXATION, CreamPieMotion.MOVING, CreamPieEnd.ENDLESS);
+        fx(() -> {
+            moving.lookAt();
+            steps(moving, 0.3);
+            moving.lookAway();
+            steps(moving, 0.5);
+            moving.lookAt();
+            steps(moving, 0.24);
+            assertEquals(CreamPie.Phase.THROW, moving.getPhase());
+            return null;
+        });
+        final CreamPie still = launched(CreamPieThrow.FIXATION, CreamPieMotion.STILL, CreamPieEnd.ENDLESS);
+        fx(() -> {
+            still.lookAt();
+            steps(still, 0.3);
+            still.lookAway();
+            steps(still, 0.5);
+            still.lookAt();
+            steps(still, 0.24);
+            assertEquals(CreamPie.Phase.AIM, still.getPhase());
+            return null;
+        });
     }
 
     private static <T> T fx(final Callable<T> action) throws Exception {

@@ -464,11 +464,21 @@ public class BubblesGame implements GameLifeCycle {
                     startFixation();
                 }
             } else if (exited) {
-                stopFixation();
+                if (fixation != null && gameContext.getConfiguration().isMovingFixationKept()) {
+                    // The setting keeps the progress of a moving target (20/11/2026): the ring waits on the bubble
+                    fixation.pause();
+                } else {
+                    stopFixation();
+                }
             }
         }
 
         private void startFixation() {
+            if (fixation != null && fixation.getStatus() == javafx.animation.Animation.Status.PAUSED) {
+                // Back on a bubble whose fixation was kept: it goes on from where it stopped
+                fixation.play();
+                return;
+            }
             stopFixation();
             fixation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(progress, 0)),
                 new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
@@ -669,6 +679,6 @@ public class BubblesGame implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return burst == BubblesBurst.FIXATION ? net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.ANIMATION_SPEED) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+        return burst == BubblesBurst.FIXATION ? net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.MOVING_FIXATION) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
     }
 }

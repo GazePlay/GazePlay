@@ -25,6 +25,8 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
@@ -123,6 +125,19 @@ class ConfigurationTest {
         assertEquals("w", configuration.getVoice());
         configuration.getVoiceProperty().set("w");
         assertEquals("w", configuration.getVoice());
+    }
+
+    /**
+     * The fixation of the moving targets (20/11/2026): starts again from zero by default, keeps its progress when
+     * chosen; put back to zero by the default values of the games.
+     */
+    @Test
+    void shouldStartTheFixationOfTheMovingTargetsAgainByDefault() {
+        assertFalse(configuration.isMovingFixationKept(), "from zero by default");
+        configuration.getMovingFixationKeptProperty().set(true);
+        assertTrue(configuration.isMovingFixationKept());
+        configuration.resetGameSettings();
+        assertFalse(configuration.isMovingFixationKept());
     }
 
     /**

@@ -250,6 +250,37 @@ class NinjaTest {
     }
 
     /**
+     * With the setting keeping the fixation of the moving targets (20/11/2026), a look away of any length keeps the
+     * progress, the ring waiting on the fruit; the fixation goes on when the gaze comes back.
+     */
+    @Test
+    void shouldKeepTheFixationWhenTheSettingSaysSo() throws Exception {
+        final Ninja game = launched(NinjaTrajectory.RANDOM, NinjaSpeed.NORMAL, NinjaCut.FIXATION, NinjaEnd.ENDLESS);
+        fx(() -> {
+            when(configuration.isMovingFixationKept()).thenReturn(true);
+            enter(game);
+            steps(game, 0.2);
+            final double reached = game.getFixationSeconds();
+            exit(game);
+            steps(game, Ninja.FIXATION_GRACE * 4);
+            assertEquals(reached, game.getFixationSeconds(), 1e-9);
+            assertTrue(game.getRing().isVisible());
+            enter(game);
+            steps(game, 0.1);
+            assertEquals(reached + 0.1, game.getFixationSeconds(), 0.03);
+            return null;
+        });
+    }
+
+    @Test
+    void shouldOfferTheFixationOfTheMovingTargetsInTheFixationVariantOnly() throws Exception {
+        assertTrue(launched(NinjaTrajectory.RANDOM, NinjaSpeed.NORMAL, NinjaCut.FIXATION, NinjaEnd.ENDLESS)
+            .menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+        assertFalse(launched(NinjaTrajectory.RANDOM, NinjaSpeed.NORMAL, NinjaCut.AT_ONCE, NinjaEnd.ENDLESS)
+            .menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+    }
+
+    /**
      * A look already where the next target comes starts as soon as it shows (it used to be lost).
      */
     @Test

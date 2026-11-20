@@ -255,7 +255,26 @@ final class GameMenuView {
                 value -> String.format(locale, "× %.2f", speed.sliderValueToSpeedRatio(value)),
                 speed.speedRatioToSliderValue(Configuration.DEFAULT_VALUE_ANIMATION_SPEED_RATIO))),
             greyedUnless(MenuSetting.ELEMENT_SIZE, sliderRow(text("GameMenuSize"), sizeSlider,
-                value -> Math.round(value) + " %", Configuration.DEFAULT_VALUE_ELEMENT_SIZE)));
+                value -> Math.round(value) + " %", Configuration.DEFAULT_VALUE_ELEMENT_SIZE)),
+            greyedUnless(MenuSetting.MOVING_FIXATION, movingFixationRow(config)));
+    }
+
+    /**
+     * @return the row "If the gaze leaves the moving target": starts again from zero, or keeps its progress
+     *   (20/11/2026); a click on the name puts back the default (from zero)
+     */
+    private HBox movingFixationRow(final Configuration config) {
+        final HBox choice = GameMenuControls.movingFixationChoice(translator, config);
+        final Label label = new Label(text("MovingFixation"));
+        label.getStyleClass().add("gp-game-menu-label");
+        label.setWrapText(true);
+        label.setPrefWidth(170);
+        label.setMinWidth(Region.USE_PREF_SIZE);
+        resetOnClick(label, () -> GameMenuControls.selectMovingFixation(choice,
+            Configuration.DEFAULT_VALUE_MOVING_FIXATION_KEPT));
+        final HBox row = new HBox(12, label, choice);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
     }
 
     private VBox ringCard(final Configuration config) {

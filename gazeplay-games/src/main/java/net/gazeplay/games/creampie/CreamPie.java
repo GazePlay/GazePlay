@@ -351,8 +351,20 @@ public class CreamPie implements GameLifeCycle {
 
     void lookAway() {
         looked = false;
+        if (keepsTheFixation()) {
+            // The ring waits on the moving target, which it follows, until the gaze comes back (20/11/2026)
+            return;
+        }
         progress = 0;
         ring.stop();
+    }
+
+    /**
+     * @return whether the fixation of the target keeps its progress when the gaze leaves it: a moving target, with the
+     *   setting MOVING_FIXATION_KEPT (20/11/2026)
+     */
+    private boolean keepsTheFixation() {
+        return motion == CreamPieMotion.MOVING && configuration.isMovingFixationKept();
     }
 
     /**
@@ -445,6 +457,10 @@ public class CreamPie implements GameLifeCycle {
      */
     private void aim(final double seconds) {
         glide(seconds);
+        if (ring.isVisible()) {
+            // A kept fixation waits on the target: the ring follows it
+            ring.moveTo(targetX, targetY);
+        }
         if (!looked || Stats.isConfigMenuOpen()) {
             return;
         }
@@ -626,6 +642,9 @@ public class CreamPie implements GameLifeCycle {
             ? net.gazeplay.MenuSetting.fixationWithSharedRing() : net.gazeplay.MenuSetting.of();
         if (motion == CreamPieMotion.MOVING) {
             settings.add(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+            if (way == CreamPieThrow.FIXATION) {
+                settings.add(net.gazeplay.MenuSetting.MOVING_FIXATION);
+            }
         }
         return settings;
     }

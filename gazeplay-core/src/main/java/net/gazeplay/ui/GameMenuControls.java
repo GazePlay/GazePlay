@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import net.gazeplay.commons.configuration.Configuration;
@@ -192,6 +193,50 @@ public final class GameMenuControls {
         final HBox row = new HBox(12, name, styled(slider), value(slider, GameMenuControls::percent));
         row.setAlignment(Pos.CENTER_LEFT);
         return row;
+    }
+
+    /**
+     * @return the choice "If the gaze leaves the moving target", two rounded segments in the look of the menu Esc (the
+     *   chosen one filled with the main color): the fixation starts again from zero (by default) or keeps its progress,
+     *   bound to the MOVING_FIXATION_KEPT setting (20/11/2026); the same in the menu Esc and in the settings of the main
+     *   menu. {@link #selectMovingFixation} changes it.
+     */
+    public static HBox movingFixationChoice(final Translator translator, final Configuration config) {
+        final javafx.scene.control.ToggleGroup group = new javafx.scene.control.ToggleGroup();
+        final javafx.scene.control.ToggleButton restart = segment(text(translator, "MovingFixationRestart"), group);
+        final javafx.scene.control.ToggleButton keep = segment(text(translator, "MovingFixationKeep"), group);
+        (config.isMovingFixationKept() ? keep : restart).setSelected(true);
+        group.selectedToggleProperty().addListener((observable, before, now) -> {
+            if (now == null) {
+                // A click on the chosen segment: it stays chosen
+                before.setSelected(true);
+                return;
+            }
+            config.getMovingFixationKeptProperty().set(now == keep);
+        });
+        final HBox choice = new HBox(2, restart, keep);
+        choice.getStyleClass().add("gp-game-menu-segmented");
+        choice.setAlignment(Pos.CENTER_LEFT);
+        choice.setMaxWidth(Region.USE_PREF_SIZE);
+        choice.setUserData(group);
+        return choice;
+    }
+
+    /**
+     * Chooses a value in a choice made by {@link #movingFixationChoice}.
+     */
+    public static void selectMovingFixation(final HBox choice, final boolean kept) {
+        final javafx.scene.control.ToggleGroup group = (javafx.scene.control.ToggleGroup) choice.getUserData();
+        group.selectToggle(group.getToggles().get(kept ? 1 : 0));
+    }
+
+    private static javafx.scene.control.ToggleButton segment(final String text,
+                                                             final javafx.scene.control.ToggleGroup group) {
+        final javafx.scene.control.ToggleButton segment = new javafx.scene.control.ToggleButton(text);
+        segment.getStyleClass().add("gp-game-menu-segment");
+        segment.setToggleGroup(group);
+        segment.setMinWidth(Region.USE_PREF_SIZE);
+        return segment;
     }
 
     /**

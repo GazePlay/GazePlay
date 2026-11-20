@@ -88,6 +88,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
     private static final String PROPERTY_NAME_RING_THICKNESS = "RING_THICKNESS";
     private static final String PROPERTY_NAME_VOICE = "VOICE";
+    private static final String PROPERTY_NAME_MOVING_FIXATION_KEPT = "MOVING_FIXATION_KEPT";
     /* Menu settings */
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -165,6 +166,13 @@ public class Configuration {
     public static final String VOICE_FEMALE = "w";
     public static final String VOICE_MALE = "m";
     public static final String DEFAULT_VALUE_VOICE = VOICE_FEMALE;
+    /**
+     * When the gaze leaves a moving target during its fixation (maintainer's decision of 20/11/2026, after a tester's
+     * feedback): false, the fixation starts again from zero (the base rule of the games, by default); true, it keeps its
+     * progress and goes on when the gaze comes back on the same target. Only for the fixations of moving targets
+     * (Ninja, Bubbles, Cream pie with moving targets, Divisor).
+     */
+    public static final boolean DEFAULT_VALUE_MOVING_FIXATION_KEPT = false;
     /* Menu settings */
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -263,6 +271,8 @@ public class Configuration {
     private final IntegerProperty ringThicknessProperty;
     @Getter
     private final StringProperty voiceProperty;
+    @Getter
+    private final BooleanProperty movingFixationKeptProperty;
     /* Menu settings */
     @Getter
     private final StringProperty userNameProperty;
@@ -349,6 +359,7 @@ public class Configuration {
         progressBarColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_COLOR, DEFAULT_VALUE_PROGRESS_BAR_COLOR, propertyChangeListener);
         ringThicknessProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_RING_THICKNESS, DEFAULT_VALUE_RING_THICKNESS, propertyChangeListener);
         voiceProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VOICE, DEFAULT_VALUE_VOICE, propertyChangeListener);
+        movingFixationKeptProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_MOVING_FIXATION_KEPT, DEFAULT_VALUE_MOVING_FIXATION_KEPT, propertyChangeListener);
 
         /* Menu settings */
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
@@ -641,9 +652,11 @@ public class Configuration {
     /**
      * Puts back the default values of the settings of the games, those of the menu Esc of a game (maintainer's request
      * of 18/11/2026): the volumes, the fixation length, the speed and the size of the elements, the thickness and the
-     * color of the rings. The other settings (language, folders, profile, statistics...) are kept.
+     * color of the rings, the fixation of the moving targets. The other settings (language, folders, profile,
+     * statistics...) are kept.
      */
     public void resetGameSettings() {
+        movingFixationKeptProperty.set(DEFAULT_VALUE_MOVING_FIXATION_KEPT);
         musicVolumeProperty.set(DEFAULT_VALUE_MUSIC_VOLUME);
         effectsVolumeProperty.set(DEFAULT_VALUE_EFFECTS_VOLUME);
         fixationLengthProperty.set(DEFAULT_VALUE_FIXATION_LENGTH);
@@ -663,6 +676,14 @@ public class Configuration {
             return DEFAULT_VALUE_RING_THICKNESS;
         }
         return Math.max(MIN_RING_THICKNESS, Math.min(MAX_RING_THICKNESS, value));
+    }
+
+    /**
+     * @return whether the fixation of a moving target keeps its progress when the gaze leaves it (see
+     *   {@link #DEFAULT_VALUE_MOVING_FIXATION_KEPT}); read at each step by the games, so that the menu Esc acts at once
+     */
+    public boolean isMovingFixationKept() {
+        return Boolean.TRUE.equals(movingFixationKeptProperty.getValue());
     }
 
     /* Menu settings */

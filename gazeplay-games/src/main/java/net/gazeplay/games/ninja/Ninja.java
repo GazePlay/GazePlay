@@ -476,7 +476,9 @@ public class Ninja implements GameLifeCycle {
 
     /**
      * The fixation: its length is that of the settings, read at each step, so that a change in the menu of the game
-     * counts at once. A short look away only stops the ring for a moment.
+     * counts at once. A short look away only stops the ring for a moment; a longer one starts it again from zero, unless
+     * the setting keeps the progress of a moving target (MOVING_FIXATION_KEPT, 20/11/2026): the ring then waits, still
+     * following the fruit, until the gaze comes back.
      */
     private void fixation(final double seconds) {
         final double length = configuration.getFixationLength() / 1000.0;
@@ -493,7 +495,7 @@ public class Ninja implements GameLifeCycle {
             }
         } else if (fixationSeconds > 0) {
             awaySeconds += seconds;
-            if (awaySeconds > FIXATION_GRACE) {
+            if (awaySeconds > FIXATION_GRACE && !configuration.isMovingFixationKept()) {
                 fixationSeconds = 0;
                 ring.stop();
             }
@@ -689,6 +691,6 @@ public class Ninja implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return cut == NinjaCut.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.ELEMENT_SIZE) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.ELEMENT_SIZE);
+        return cut == NinjaCut.FIXATION ? net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.ELEMENT_SIZE, net.gazeplay.MenuSetting.MOVING_FIXATION) : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.ELEMENT_SIZE);
     }
 }

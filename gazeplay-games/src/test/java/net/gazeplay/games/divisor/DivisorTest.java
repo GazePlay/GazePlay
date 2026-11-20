@@ -303,6 +303,31 @@ class DivisorTest {
         });
     }
 
+    /**
+     * With the setting keeping the fixation of the moving targets (20/11/2026): a target left keeps its progress, the
+     * ring waiting on it; back on it, the fixation goes on.
+     */
+    @Test
+    void shouldKeepTheFixationOfEachTargetWhenTheSettingSaysSo() throws Exception {
+        final Divisor game = launched(DivisorTheme.RABBITS, DivisorTouch.FIXATION, DivisorLevel.EASY);
+        fx(() -> {
+            when(configuration.isMovingFixationKept()).thenReturn(true);
+            final Divisor.Target first = game.getTargets().get(0);
+            enter(first);
+            steps(game, 0.3);
+            exit(first);
+            steps(game, 0.6);
+            assertEquals(0.3, game.getFixationSeconds(), 0.03);
+            assertTrue(game.getRing().isVisible());
+            enter(first);
+            steps(game, 0.1);
+            assertEquals(0.4, game.getFixationSeconds(), 0.03);
+            assertEquals(0, game.getBurst());
+            assertTrue(game.menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+            return null;
+        });
+    }
+
     @Test
     void shouldForgiveAShortLookAwayOnly() throws Exception {
         final Divisor game = launched(DivisorTheme.RABBITS, DivisorTouch.FIXATION, DivisorLevel.EASY);
