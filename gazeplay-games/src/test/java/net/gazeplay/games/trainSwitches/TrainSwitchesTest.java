@@ -170,6 +170,13 @@ class TrainSwitchesTest {
         final int arrived = game.getArrived();
         for (int i = 0; i < 1200 && game.getTrains().isEmpty(); i++) {
             steps(game, STEP);
+            // One at a time, the train waits for "Departure" (20/11/2026)
+            if (game.isDepartWaiting()) {
+                fx(() -> {
+                    game.depart();
+                    return null;
+                });
+            }
         }
         final TrainSwitches.Train train = game.getTrains().get(0);
         int station = stationOf(game, train.getColor());
@@ -461,20 +468,87 @@ class TrainSwitchesTest {
         }
     }
 
+    /**
+     * One at a time (20/11/2026, tester's feedback): the next train waits on the tunnel, as long as needed, until
+     * "Departure" is fixed; the button shows only while a train waits for it, and again after the arrival of the last
+     * one.
+     */
     @Test
-    void shouldSendTheNextTrainWhenTheLastOneHasArrivedOneAtATime() throws Exception {
+    void shouldSendTheNextTrainWhenDepartureIsFixedOneAtATime() throws Exception {
         final TrainSwitches game = playing(TrainSwitchesLevel.EASY, TrainSwitchesRhythm.ONE_AT_A_TIME,
             TrainSwitchesEnd.ENDLESS, 13);
-        steps(game, TrainSwitches.readyFor(1000) + 0.05);
+        steps(game, STEP);
+        assertTrue(game.isDepartShown());
+        steps(game, 20);
+        assertEquals(0, game.getSent(), "it waits for Departure");
+        assertTrue(game.isPreviewShown());
+        assertEquals("", game.previewSeconds(), "no time left shown");
+        // The departure button after a fixation of the settings (1 s)
+        fx(() -> {
+            game.lookAt(game.getDepartButton());
+            return null;
+        });
+        steps(game, 0.9);
+        assertEquals(0, game.getSent());
+        steps(game, 0.15);
+        steps(game, STEP);
         assertEquals(1, game.getSent());
+        assertFalse(game.isDepartShown(), "hidden while the train goes");
+        verify(gameContext.getSoundManager()).add("data/trainSwitches/sounds/whistle.wav");
         steps(game, 3);
         assertEquals(1, game.getSent());
-        sendOne(game, true);
-        assertTrue(game.getTrains().isEmpty());
-        steps(game, TrainSwitches.readyFor(1000) - 0.1);
+        assertFalse(game.isDepartShown());
+        // The train arrived: the button again, and the next train waits for it
+        final int[] arrived = {game.getArrived()};
+        setWays(game, stationOf(game, game.getTrains().get(0).getColor()));
+        for (int i = 0; i < 6000 && game.getArrived() == arrived[0]; i++) {
+            steps(game, STEP);
+        }
+        steps(game, STEP);
+        assertTrue(game.isDepartShown());
+        steps(game, 10);
         assertEquals(1, game.getSent());
-        steps(game, 0.15);
-        assertEquals(2, game.getSent());
+    }
+
+    /**
+     * The departure button is next to the hill of the tunnel, inside the screen under the band of the score, and on no
+     * box with rails, a station or a switch.
+     */
+    @Test
+    void shouldPutTheDepartureButtonNextToTheTunnelOffTheRails() throws Exception {
+        for (final TrainSwitchesLevel level : TrainSwitchesLevel.values()) {
+            for (int seed = 1; seed <= 6; seed++) {
+                final TrainSwitches game = playing(level, TrainSwitchesRhythm.ONE_AT_A_TIME,
+                    TrainSwitchesEnd.ENDLESS, seed);
+                final double[] depart = game.departCircle();
+                final double[] preview = game.previewCircle();
+                final double[] board = game.layout();
+                final double cell = game.getCell();
+                final double radius = depart[2] / 2;
+                assertTrue(depart[0] - radius >= 0 && depart[0] + radius <= 1920
+                    && depart[1] - radius >= 1080 * 0.11 && depart[1] + radius <= 1080, level + " " + seed + " inside");
+                final Circuit circuit = game.getCircuit();
+                final List<int[]> taken = new ArrayList<>(circuit.getStations());
+                taken.add(circuit.getTunnel());
+                circuit.getJunctions().values().forEach(junction -> taken.add(junction.getBox()));
+                circuit.getStretches().forEach(stretch -> taken.addAll(stretch.boxes()));
+                taken.addAll(circuit.getFirst().boxes());
+                for (final int[] box : taken) {
+                    final double left = board[0] + box[0] * cell;
+                    final double top = board[1] + box[1] * cell;
+                    final double nearestX = Math.max(left, Math.min(depart[0], left + cell));
+                    final double nearestY = Math.max(top, Math.min(depart[1], top + cell));
+                    assertTrue(Math.hypot(depart[0] - nearestX, depart[1] - nearestY) >= radius,
+                        level + " " + seed + " off the box " + box[0] + ", " + box[1]);
+                }
+                assertTrue(Math.hypot(depart[0] - preview[0], depart[1] - preview[1]) < cell * 2,
+                    level + " " + seed + " next to the tunnel");
+                fx(() -> {
+                    game.dispose();
+                    return null;
+                });
+            }
+        }
     }
 
     @Test
@@ -527,16 +601,31 @@ class TrainSwitchesTest {
 
     @Test
     void shouldShowTheNextTrainOnTheTunnelWithTheTimeLeft() throws Exception {
+        // With a pace: the time left before the train leaves
+        final TrainSwitches paced = playing(TrainSwitchesLevel.NORMAL, TrainSwitchesRhythm.CONTINUOUS,
+            TrainSwitchesEnd.TRAINS_5, 29);
+        assertTrue(paced.isPreviewShown());
+        assertFalse(paced.isDepartShown(), "no departure button with a pace");
+        assertEquals("3", paced.previewSeconds());
+        steps(paced, 1.2);
+        assertEquals("2", paced.previewSeconds());
+        fx(() -> {
+            paced.dispose();
+            return null;
+        });
+        // One at a time: no time, the train shown leaves on "Departure"
         final TrainSwitches game = playing(TrainSwitchesLevel.NORMAL, TrainSwitchesRhythm.ONE_AT_A_TIME,
             TrainSwitchesEnd.TRAINS_5, 29);
         assertTrue(game.isPreviewShown());
         final TrainColor next = game.getNextColor();
         assertNotNull(next);
-        assertEquals("3", game.previewSeconds());
-        steps(game, 1.2);
-        assertEquals("2", game.previewSeconds());
-        steps(game, TrainSwitches.readyFor(1000) - 1.2);
-        // The train shown leaves; the next one is shown, pale and without time until this one has arrived
+        assertEquals("", game.previewSeconds());
+        fx(() -> {
+            game.depart();
+            return null;
+        });
+        steps(game, STEP);
+        // The train shown leaves; the next one is shown, pale, until this one has arrived
         assertEquals(1, game.getTrains().size());
         assertSame(next, game.getTrains().get(0).getColor());
         assertNotSame(next, game.getNextColor());
@@ -545,8 +634,12 @@ class TrainSwitchesTest {
         final TrainColor second = game.getNextColor();
         sendOne(game, true);
         steps(game, STEP);
-        assertEquals("3", game.previewSeconds());
-        steps(game, TrainSwitches.readyFor(1000) + 0.05);
+        assertTrue(game.isDepartShown());
+        fx(() -> {
+            game.depart();
+            return null;
+        });
+        steps(game, STEP);
         assertSame(second, game.getTrains().get(0).getColor());
         // After the last train of the game, nothing is shown
         for (int i = 0; i < 3; i++) {
@@ -554,10 +647,17 @@ class TrainSwitchesTest {
         }
         for (int i = 0; i < 1200 && game.getSent() < 5; i++) {
             steps(game, STEP);
+            if (game.isDepartWaiting()) {
+                fx(() -> {
+                    game.depart();
+                    return null;
+                });
+            }
         }
         assertEquals(5, game.getSent());
         steps(game, STEP);
         assertFalse(game.isPreviewShown());
+        assertFalse(game.isDepartShown());
     }
 
     @Test

@@ -55,7 +55,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
    retirées). **Casse-brique** : le niveau change **le nombre et la taille des briques** (Découverte 6, Facile environ 32, Moyen
    environ 78, Difficile environ 120), même vitesse lente de balle à tous les niveaux (réglable par « Vitesse des
    éléments »), grande raquette ; **dessins des briques refaits pour chaque niveau**.
-8. **Aiguillages**, « Un train à la fois » : le train suivant **attend en gare** et part quand on fixe un bouton
+8. **FAIT le 20/11/2026, validé par le mainteneur** (bouton rond avec un train, à la place libre la plus proche de la
+   colline du tunnel, hors des rails, gares et aiguillages ; plus de compte à rebours ; icône `train_fill1` des
+   Material Symbols ajoutée). **Aiguillages**, « Un train à la fois » : le train suivant **attend en gare** et part quand on fixe un bouton
    **« Départ »** à côté de la gare (aujourd'hui `READY` 1 s).
 9. **Aiguillages** : 4 rythmes, dans cet ordre : un train à la fois avec pause à chaque aiguillage (nouveau, le plus
    facile), un train à la fois, pause à chaque aiguillage, en continu.

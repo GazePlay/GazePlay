@@ -7,7 +7,7 @@ Des trains de couleur sortent du tunnel : envoie chacun à la gare de sa couleur
 - Un train qui arrive à un aiguillage prend le chemin montré à ce moment-là.
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut, les trains arrivés à la bonne gare, et les trains arrivés.
-- Sur la colline du tunnel, un disque montre le prochain train (sa couleur et son symbole) et les secondes avant son départ : de quoi préparer les aiguillages.
+- Sur la colline du tunnel, un disque montre le prochain train (sa couleur et son symbole) et les secondes avant son départ : de quoi préparer les aiguillages. Avec un train à la fois, il attend aussi longtemps qu'il faut : fixe le bouton rond avec un train, à côté du tunnel, pour le faire partir.
 - Les trains vont assez lentement pour qu'on ait le temps de fixer un aiguillage avant d'y arriver : plus la durée de fixation des réglages est longue, plus ils vont lentement. Ils suivent aussi la vitesse des réglages. Un changement fait dans le menu (touche Échap) compte tout de suite.
 - Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
@@ -18,5 +18,5 @@ Un train arrivé à la bonne gare compte un point (une coche verte). À une mauv
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 5 trains, 10 trains, 20 trains ou sans fin : le nombre de trains de la partie.
 - En bas, le niveau : Facile, 3 gares et 2 aiguillages ; Normal, 5 gares et 4 aiguillages ; Difficile, 8 gares et 7 aiguillages.
-- En bas aussi, le rythme : un train à la fois (le suivant part quand le précédent est arrivé) ; pause à chaque aiguillage (tout s'arrête avant chaque aiguillage : change-le si besoin, puis fixe le bouton rond à droite pour repartir) ; trains en continu (les trains se suivent, toujours à la même distance).
+- En bas aussi, le rythme : un train à la fois (le suivant attend sur le tunnel que le précédent soit arrivé et qu'on fixe son bouton de départ) ; pause à chaque aiguillage (tout s'arrête avant chaque aiguillage : change-le si besoin, puis fixe le bouton rond à droite pour repartir) ; trains en continu (les trains se suivent, toujours à la même distance).
 - En bas aussi, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs ; sans fin, il n’y a jamais de cœurs.

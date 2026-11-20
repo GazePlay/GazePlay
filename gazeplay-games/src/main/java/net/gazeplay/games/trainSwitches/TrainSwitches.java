@@ -39,7 +39,9 @@ import java.util.Map;
  * with fixations. A switch shows its two ways, the way taken bright, and a fixation on it changes the way. A train at
  * the right station is a goal, at a wrong one a mistake. After 5 trains, a new circuit of the level comes, another one
  * than the last; the game ends after 5, 10 or 20 trains ("Bravo"), or never. The trains come one at a time, or with a
- * pause before each switch (until "Resume" is fixed), or at a steady pace.
+ * pause before each switch (until "Resume" is fixed), or at a steady pace. One at a time, the next train waits on the
+ * tunnel until "Departure", next to it, is fixed (20/11/2026, after a tester's feedback: it left one second after the
+ * arrival of the last one, without time to look at the circuit and change the switches).
  * <p>
  * After the maintainer's trial (10/11/2026): a train goes at most one box during a fixation of the settings and a
  * reaction, and the next train is shown on the tunnel with the time left before it leaves (two fixations and a second
@@ -182,6 +184,13 @@ public class TrainSwitches implements GameLifeCycle {
     private double resumeX;
     private double resumeY;
     private double resumeSize;
+    private double departX;
+    private double departY;
+    private double departSize;
+    /**
+     * One at a time: whether "Departure" was fixed, so that the next train leaves.
+     */
+    private boolean departAsked;
 
     private Group layer;
     private Group ground;
@@ -195,12 +204,13 @@ public class TrainSwitches implements GameLifeCycle {
     private Circle halo;
     private FixationRing ring;
     private Group resumeButton;
+    private Group departButton;
     private final Map<String, SwitchView> switchViews = new HashMap<>();
     private final List<Mark> marks = new ArrayList<>();
     private final List<Node> gazeNodes = new ArrayList<>();
 
     /**
-     * What is looked at (a switch or the resume button), and how far its fixation is.
+     * What is looked at (a switch, the resume button or the departure button), and how far its fixation is.
      */
     private Object looked;
     @Getter
@@ -275,10 +285,12 @@ public class TrainSwitches implements GameLifeCycle {
         hud = new Group();
         hud.setMouseTransparent(true);
         resumeButton = new Group();
+        departButton = new Group();
         layer = new Group(ground, railsLayer, switchesLayer, trainsLayer, stationsLayer, tunnelLayer, marksLayer, halo,
-            resumeButton, ring, hud);
+            resumeButton, departButton, ring, hud);
         gameContext.getChildren().add(layer);
         listen(resumeButton, () -> lookAt(resumeButton), () -> lookAway(resumeButton));
+        listen(departButton, () -> lookAt(departButton), () -> lookAway(departButton));
 
         gameContext.getGazeDeviceManager().addStats(stats);
         sent = 0;
@@ -369,7 +381,7 @@ public class TrainSwitches implements GameLifeCycle {
         trains.clear();
         marks.clear();
         for (final Group group : new Group[]{ground, railsLayer, switchesLayer, trainsLayer, stationsLayer, tunnelLayer,
-            marksLayer, resumeButton}) {
+            marksLayer, resumeButton, departButton}) {
             group.getChildren().clear();
         }
         layOut();
@@ -377,6 +389,9 @@ public class TrainSwitches implements GameLifeCycle {
         drawCircuit();
         drawResumeButton();
         resumeButton.setVisible(false);
+        drawDepartButton();
+        departAsked = false;
+        departButton.setVisible(false);
         halo.setVisible(false);
 
         sentHere = 0;
@@ -543,6 +558,120 @@ public class TrainSwitches implements GameLifeCycle {
     }
 
     /**
+     * One at a time: the departure button, a round button with a train, next to the hill of the tunnel (where the next
+     * train waits): the free place nearest to it, off the boxes with rails, stations or switches, off the hill, and
+     * inside the screen under the band of the score.
+     */
+    private void drawDepartButton() {
+        if (rhythm != TrainSwitchesRhythm.ONE_AT_A_TIME) {
+            return;
+        }
+        departSize = cell * 0.8;
+        final double[] place = freePlaceNearTheTunnel(departSize / 2 + cell * 0.06);
+        departX = place[0];
+        departY = place[1];
+        final Circle disc = new Circle(departSize / 2, Color.rgb(255, 252, 244, 0.96));
+        disc.setStroke(Color.rgb(90, 96, 110));
+        disc.setStrokeWidth(Math.max(2, departSize * 0.03));
+        final SVGPath icon = GameStyle.icon("train_fill1", departSize * 0.6);
+        icon.setStyle("-fx-fill: -gp-accent;");
+        icon.setLayoutX(-departSize * 0.3);
+        icon.setLayoutY(-departSize * 0.3);
+        departButton.getChildren().addAll(disc, icon);
+        departButton.setLayoutX(departX);
+        departButton.setLayoutY(departY);
+    }
+
+    /**
+     * @param radius the radius of a round button, with its margin
+     * @return the middle of the free place nearest to the hill of the tunnel for the button: tried at growing distances
+     *   and all around; the farthest place tried if none is free
+     */
+    private double[] freePlaceNearTheTunnel(final double radius) {
+        final List<int[]> taken = new ArrayList<>();
+        taken.add(circuit.getTunnel());
+        taken.addAll(circuit.getStations());
+        circuit.getJunctions().values().forEach(junction -> taken.add(junction.getBox()));
+        taken.addAll(circuit.getFirst().boxes());
+        circuit.getStretches().forEach(stretch -> taken.addAll(stretch.boxes()));
+        final int[] direction = Circuit.startDirection(circuit.getFirst());
+        // The hill: a circle of 0.55 box, 0.42 box behind the box of the tunnel
+        final double hillX = sx(circuit.getTunnel()[0]) - direction[0] * cell * 0.42;
+        final double hillY = sy(circuit.getTunnel()[1]) - direction[1] * cell * 0.42;
+        final double[] center = preview.center();
+        double[] found = null;
+        for (double distance = cell; distance <= cell * 3; distance += cell * 0.25) {
+            for (int degrees = 0; degrees < 360; degrees += 15) {
+                final double x = center[0] + distance * Math.cos(Math.toRadians(degrees));
+                final double y = center[1] + distance * Math.sin(Math.toRadians(degrees));
+                found = new double[]{x, y};
+                if (isFree(x, y, radius, taken, hillX, hillY)) {
+                    return found;
+                }
+            }
+        }
+        return found;
+    }
+
+    private boolean isFree(final double x, final double y, final double radius, final List<int[]> taken,
+                           final double hillX, final double hillY) {
+        if (x - radius < 0 || x + radius > width || y - radius < height * 0.11 || y + radius > height) {
+            return false;
+        }
+        if (Math.hypot(x - hillX, y - hillY) < cell * 0.55 + radius) {
+            return false;
+        }
+        for (final int[] box : taken) {
+            // The nearest point of the box to the middle of the button
+            final double left = boardX + box[0] * cell;
+            final double top = boardY + box[1] * cell;
+            final double nearestX = Math.max(left, Math.min(x, left + cell));
+            final double nearestY = Math.max(top, Math.min(y, top + cell));
+            if (Math.hypot(x - nearestX, y - nearestY) < radius) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * One at a time: the departure button shows while the next train waits for it.
+     */
+    private void showDepartButton() {
+        final boolean shown = isDepartWaiting();
+        if (shown != departButton.isVisible()) {
+            departButton.setVisible(shown);
+            if (shown && looked == departButton) {
+                progress = 0;
+                showRing(departButton);
+            }
+        }
+    }
+
+    /**
+     * One at a time: "Departure" fixed, the next train leaves at once.
+     */
+    void depart() {
+        if (!isDepartWaiting()) {
+            return;
+        }
+        departAsked = true;
+        departButton.setVisible(false);
+        if (looked == departButton) {
+            looked = null;
+            progress = 0;
+            ring.stop();
+        }
+    }
+
+    /**
+     * @return whether the departure button is waiting to be fixed (one at a time, the next train ready to leave)
+     */
+    boolean isDepartWaiting() {
+        return rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME && phase == Phase.PLAY && isNextWaiting() && !departAsked;
+    }
+
+    /**
      * One step of the game, of a duration in seconds.
      */
     void step(final double seconds) {
@@ -569,6 +698,7 @@ public class TrainSwitches implements GameLifeCycle {
                     send(scaled);
                     move(scaled);
                 }
+                showDepartButton();
                 if (paused != null) {
                     halo.setOpacity(0.55 + 0.45 * Math.sin(elapsed * 6));
                     elapsed += seconds;
@@ -662,9 +792,17 @@ public class TrainSwitches implements GameLifeCycle {
         if (!isNextWaiting()) {
             return;
         }
-        clock += seconds;
-        if (clock < nextWait()) {
-            return;
+        if (rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME) {
+            // It waits on the tunnel until "Departure" is fixed (20/11/2026)
+            if (!departAsked) {
+                return;
+            }
+            departAsked = false;
+        } else {
+            clock += seconds;
+            if (clock < nextWait()) {
+                return;
+            }
         }
         clock = 0;
         final Train train = new Train(nextColor);
@@ -835,6 +973,8 @@ public class TrainSwitches implements GameLifeCycle {
             change(view.junction.getName());
         } else if (done == resumeButton) {
             resume();
+        } else if (done == departButton) {
+            depart();
         }
     }
 
@@ -844,6 +984,9 @@ public class TrainSwitches implements GameLifeCycle {
         }
         if (target == resumeButton) {
             return paused != null;
+        }
+        if (target == departButton) {
+            return isDepartWaiting();
         }
         return target instanceof SwitchView;
     }
@@ -875,6 +1018,9 @@ public class TrainSwitches implements GameLifeCycle {
         if (target instanceof SwitchView view) {
             ring.setSize(cell * 1.04);
             ring.show(sx(view.junction.getBox()[0]), sy(view.junction.getBox()[1]));
+        } else if (target == departButton) {
+            ring.setSize(departSize * 1.15);
+            ring.show(departX, departY);
         } else {
             ring.setSize(resumeSize * 1.15);
             ring.show(resumeX, resumeY);
@@ -985,6 +1131,24 @@ public class TrainSwitches implements GameLifeCycle {
 
     Object getResumeButton() {
         return resumeButton;
+    }
+
+    Object getDepartButton() {
+        return departButton;
+    }
+
+    /**
+     * @return whether the departure button is shown (one at a time, the next train waiting for it)
+     */
+    boolean isDepartShown() {
+        return departButton.isVisible();
+    }
+
+    /**
+     * @return the middle and the size of the departure button on the screen
+     */
+    double[] departCircle() {
+        return new double[]{departX, departY, departSize};
     }
 
     /**
@@ -1299,6 +1463,13 @@ public class TrainSwitches implements GameLifeCycle {
                 return;
             }
             final boolean counting = isNextWaiting();
+            if (rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME) {
+                // No time: it waits for "Departure" (20/11/2026)
+                countdown.setLength(-360);
+                node.setOpacity(counting ? 1 : 0.5);
+                badge.setVisible(false);
+                return;
+            }
             final double total = nextWait();
             final double left = counting ? Math.max(0, total - clock) : total;
             countdown.setLength(-360 * (total <= 0 ? 0 : left / total));
