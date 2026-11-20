@@ -95,6 +95,53 @@ class DotToDotTest {
         }
     }
 
+    /**
+     * The dots of an easy figure are far enough apart to look at one only (20/11/2026, tester's feedback: the trunk of
+     * the tree): at least 0.185 of the height of the box, x times the aspect (gradle/images/make_dottodot_figures.py,
+     * MIN_EASY_GAP), so that the dots have their largest size and their zones never overlap.
+     */
+    @Test
+    void shouldKeepTheDotsOfTheEasyFiguresApart() {
+        for (final DotFigure figure : DotFigure.all()) {
+            if (!figure.level().equals("EASY")) {
+                continue;
+            }
+            final List<double[]> points = figure.points();
+            for (int i = 0; i < points.size(); i++) {
+                for (int j = i + 1; j < points.size(); j++) {
+                    final double gap = Math.hypot((points.get(i)[0] - points.get(j)[0]) * figure.aspect(),
+                        points.get(i)[1] - points.get(j)[1]);
+                    assertTrue(gap >= 0.185, figure.name() + ": dots " + (i + 1) + " and " + (j + 1) + " " + gap);
+                }
+            }
+        }
+    }
+
+    /**
+     * On a screen of 1920 x 1080, the dots of each easy figure have their largest size, and the zones looked at of two
+     * dots do not overlap.
+     */
+    @Test
+    void shouldGiveTheEasyFiguresLargeDotsWhoseZonesDoNotOverlap() throws Exception {
+        when(gameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(new Dimension2D(1920, 1080));
+        final DotToDot game = launched(DotLevel.EASY, DotLabels.NUMBERS, DotEnd.ENDLESS);
+        fx(() -> {
+            for (int figure = 0; figure < 12; figure++) {
+                assertEquals(1080 * 0.042, game.getDotRadius(), 0.5, game.getFigure().name());
+                final List<DotToDot.Dot> dots = game.getDots();
+                for (int i = 0; i < dots.size(); i++) {
+                    for (int j = i + 1; j < dots.size(); j++) {
+                        assertTrue(dots.get(i).getPoint().distance(dots.get(j).getPoint())
+                            >= 2 * 1.45 * game.getDotRadius() - 0.5, game.getFigure().name());
+                    }
+                }
+                finish(game);
+                steps(game, DotToDot.SHOW + 0.05);
+            }
+            return null;
+        });
+    }
+
     @Test
     void shouldHaveEightNamedFiguresOfEachLevelWithTheirDots() {
         final List<DotFigure> figures = DotFigure.all();

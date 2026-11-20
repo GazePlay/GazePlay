@@ -37,7 +37,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
    cœurs » dans tous les jeux** (`LivesVariant.options`, `DiceMistakes`, `MathMistakes`) ; les autres jeux étaient déjà
    dans l'ordre. **La tarte à la crème** : tailles rangées **Grande, Moyenne, Petite** (aujourd'hui Petite d'abord). **Vérifier tous
    les jeux** : options rangées du plus facile au plus difficile.
-4. **Point par point** : tronc du petit sapin (`DotTree`, Facile) élargi (points 3 à 6 trop proches) ; **écart minimum**
+4. **FAIT le 20/11/2026, validé par le mainteneur** (écart minimum 0,185 de la hauteur de la figure, `MIN_EASY_GAP`
+   de `make_dottodot_figures.py` et deux tests ; sapin, bateau, poisson et drapeau corrigés). **Point par point** :
+   tronc du petit sapin (`DotTree`, Facile) élargi (points 3 à 6 trop proches) ; **écart minimum**
    entre deux points pour toutes les figures Faciles.
 5. **Trouve les différences** : scène des instruments, deux micros identiques comptés comme une différence ; corriger,
    puis vérifier toutes les scènes : aucune différence déclarée sans changement visible.

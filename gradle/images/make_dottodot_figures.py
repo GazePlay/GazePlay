@@ -75,13 +75,15 @@ FIGURES = [
     ("DotGem", "EASY", 1.2, "#9ED8F0", [[0.25, 0], [0.75, 0], [1, 0.32], [0.5, 1], [0, 0.32]]),
     ("DotIceCream", "EASY", 0.75, "#F7D08A", [[0.5, 0], [0.82, 0.18], [0.88, 0.42], [0.5, 1], [0.12, 0.42],
                                                [0.18, 0.18]]),
-    ("DotBoat", "EASY", 1.1, "#A8C8F0", [[0.5, 0], [0.92, 0.6], [1, 0.66], [0.8, 0.96], [0.2, 0.96], [0, 0.66],
+    # 20/11/2026 (tester's feedback): the corner of the sail, the trunk of the tree, the tail of the fish and the pole
+    # of the flag moved apart, their dots were too close (see MIN_EASY_GAP)
+    ("DotBoat", "EASY", 1.1, "#A8C8F0", [[0.5, 0], [0.85, 0.45], [1, 0.66], [0.8, 0.96], [0.2, 0.96], [0, 0.66],
                                          [0.5, 0.66]]),
-    ("DotTree", "EASY", 0.85, "#9BD69A", [[0.5, 0], [0.92, 0.7], [0.6, 0.7], [0.6, 1], [0.4, 1], [0.4, 0.7],
-                                          [0.08, 0.7]]),
-    ("DotFish", "EASY", 1.6, "#FFC46B", [[1, 0.5], [0.62, 0.12], [0.28, 0.42], [0, 0.12], [0, 0.88], [0.28, 0.58],
+    ("DotTree", "EASY", 0.85, "#9BD69A", [[0.5, 0], [0.95, 0.68], [0.62, 0.68], [0.62, 1], [0.38, 1], [0.38, 0.68],
+                                          [0.05, 0.68]]),
+    ("DotFish", "EASY", 1.6, "#FFC46B", [[1, 0.5], [0.62, 0.12], [0.3, 0.4], [0, 0.12], [0, 0.88], [0.3, 0.6],
                                          [0.62, 0.88]]),
-    ("DotFlag", "EASY", 0.9, "#F28B82", [[0, 0], [0.95, 0], [0.7, 0.23], [0.95, 0.46], [0.14, 0.46], [0.14, 1],
+    ("DotFlag", "EASY", 0.9, "#F28B82", [[0, 0], [0.95, 0], [0.7, 0.23], [0.95, 0.46], [0.22, 0.46], [0.22, 1],
                                          [0, 1]]),
     # Normal: 8 to 12 dots
     ("DotStar", "NORMAL", 1.0, "#FFD54F", star(5, 0.42)),
@@ -124,12 +126,25 @@ FIGURES = [
 
 LIMITS = {"EASY": (4, 7), "NORMAL": (8, 12), "HARD": (13, 20)}
 
+# Smallest gap between two dots of an easy figure, as a part of the height of its box (x times the aspect), 20/11/2026
+# (tester's feedback: the trunk of the tree was too narrow to look at one dot only). In the game (DotToDot), the box is
+# about 0.66 of the height of the screen, a dot is at most 0.042 of it, and the zone looked at is 1.45 times the dot:
+# from 2.9 x 0.042 / 0.66 = 0.185, the dots have their largest size and their zones never overlap.
+MIN_EASY_GAP = 0.185
+
+
+def smallest_gap(aspect, points):
+    scaled = [(x * aspect, y) for x, y in points]
+    return min(math.dist(scaled[i], scaled[j]) for i in range(len(scaled)) for j in range(i + 1, len(scaled)))
+
 
 def figures():
     out = []
     for name, level, aspect, color, points in FIGURES:
         low, high = LIMITS[level]
         assert low <= len(points) <= high, (name, len(points))
+        if level == "EASY":
+            assert smallest_gap(aspect, points) >= MIN_EASY_GAP, (name, smallest_gap(aspect, points))
         out.append({"name": name, "level": level, "aspect": aspect, "color": color,
                     "points": [[round(x, 4), round(y, 4)] for x, y in points]})
     return out
