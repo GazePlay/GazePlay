@@ -65,7 +65,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 10. **FAIT le 20/11/2026, validé par le mainteneur** (`placeResumeButton` : place libre la plus proche, écart d'au
     moins la taille du bouton ; bouton de 0,8 case). **Aiguillages** : le bouton « Reprendre » apparaît **à côté de l'aiguillage arrêté** (aujourd'hui à droite), sans
     recouvrir de rails, assez écarté pour ne pas être fixé par accident.
-11. **Vignettes** : Où est le son ? avec des **instruments**, Où est-ce ? avec des **objets du quotidien** (aujourd'hui
+11. **FAIT le 20/11/2026, validé par le mainteneur** (`make_whereisit_thumbnails.py` : piano, tambour, trompette,
+    harpe sans personne ; ballon, tasse, ours, chaise de La pièce ; les 6 autres vérifiées, inchangées). **Vignettes** :
+    Où est le son ? avec des **instruments**, Où est-ce ? avec des **objets du quotidien** (aujourd'hui
     des animaux, comme Où est l'animal ?) ; vérifier les 6 autres vignettes de la famille.
 12. **Volume** : mesurer (LUFS) puis égaliser les voix (`loudnorm` dans `make_voices.py`) et la récompense de la famille
     Où est… (voix bien plus faible que le « biboule ») ; **puis vérifier le volume des sons de tous les jeux**.

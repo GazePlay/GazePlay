@@ -373,3 +373,10 @@ The thumbnail (gazeplay-core: data/common/Thumbnails/TowerDefense.png, 960 x 540
 same script. The sounds (data/towerDefense/sounds: build.wav, builddouble.wav, shot.wav, canon.wav) are made by
 make_towerdefense_sounds.py (this folder), under the same license; they replace (3/11/2026) three sounds of unknown
 source.
+
+Thumbnails of "Où est le son ?" and "Où est-ce ?" (gazeplay-core: data/common/Thumbnails/whereIsTheSound.png and
+whereIsIt.png, 960 x 540): made on 20/11/2026 by make_whereisit_thumbnails.py (this folder), in the look of the
+captures of the other games of the family (tester's feedback: both showed animals, as "Où est l'animal ?"). "Où est le
+son ?": four photos of instruments of the game (piano, drum, trumpet, harp; see data/whereIsTheSound/CREDITS.txt).
+"Où est-ce ?": four objects of "La pièce" (OpenMoji, CC BY-SA 4.0). The button of the sound is cut from the thumbnail of
+"Où est l'animal ?".
