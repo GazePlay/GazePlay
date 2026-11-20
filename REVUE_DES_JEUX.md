@@ -5,7 +5,52 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
-## RETOURS DE LA TESTEUSE (20/11/2026) : DÉCISIONS DU MAINTENEUR, RIEN N'EST CODÉ
+## REPRISE DU LUNDI 23/11/2026 (fin de la séance du vendredi 20/11/2026)
+
+**Méthode du mainteneur (depuis le 20/11)** : un point à la fois ; je code, il vérifie, puis commit et point suivant ;
+redonner à chaque message le titre du point en cours. Tests locaux ciblés seulement ; build complet et all-games en CI.
+
+**Fait le 20/11, tout commité et poussé** (dernier commit `3a47c688c` ; **CI à vérifier lundi matin**) :
+- Voix : 944 voix refaites avec Piper (siwis, tom, kristin, norman), textes corrigés, tutoiement (« Trouve l'intrus »,
+  « Trouve les différences »), crédits (`data/CREDITS-VOICES.txt`, licence affichée), 1 080 sons tous libres
+  (`f54312c83`) ; synthèse embarquée écartée, issue #1742.
+- Formats de résultats réduits à v1 et v6 (documentation seulement, `685be448f`, `MODERNIZATION.md` 2ar).
+- Retours de la testeuse : section ci-dessous, puis, chacun validé par le mainteneur :
+  1. un dossier par partie pour les résultats (`534e83dbe`) ;
+  2. option « Si le regard quitte la cible en mouvement » (`c0145f025`) ;
+  3. options du plus facile au plus difficile, le plus facile proposé par défaut, « Sans cœurs » d'abord
+     (`569f3bdcf`) ;
+  4. Point par point, écart minimum dans les figures Faciles (`fa4b65bdc`) ;
+  5. et 6. Trouve les différences, double vérification des différences (`61835d8f0`) ;
+  7. Casse-brique, 4 niveaux par la taille des briques (`6c996a5d9`) ;
+  8. Aiguillages, bouton « Départ » (`3f7d10f6b`) ; 9. rythme « un train à la fois et pause » (`130566284`) ;
+     10. « Reprendre » à côté de l'aiguillage (`7063243e4`) ;
+  11. vignettes d'Où est le son ? et d'Où est-ce ? (`8a888d478`) ;
+  12. voix et enregistrements au même volume, musiques inchangées (`3a47c688c`).
+
+**Outils sur le PC du mainteneur (dossier `build`, non suivi)** : `build/piper` (Piper et ses voix),
+`build/openmoji/618` (127 images OpenMoji des scènes de Trouve les différences), `build/icons` ; FFmpeg à réextraire du
+jar JavaCV (`org.bytedeco:ffmpeg:8.1.2-1.5.14`, windows-x86_64) dans le dossier temporaire de la session ; Pillow est
+installé dans le Python du système (pas dans `build/piper/venv`).
+
+**Ordre du jour du lundi 23/11/2026** :
+1. Vérifier la CI du push du 20/11 (tests JDK 25 et 26, all-games, paquets) ; corriger si besoin.
+2. Reprendre les retours de la testeuse, dans l'ordre : **14** (compteur = numéro de l'écran en cours), **15** (tirage
+   sans répétition), **22** (choisir seulement après avoir quitté puis retrouvé un bouton, + 0,5 s ; liste des jeux à
+   montrer au mainteneur), **23** (Fabrique à gâteaux, « Annuler »), **24** (« Normal » → « Moyen » / « Medium »,
+   « Plateau classique »), **25** (Blocs, réussite à 90 %), **29** (fond blanc sous les images, carte entière
+   sélectionnable, tous les jeux concernés), **27** (mise en page de l'aide Eval sur les fichiers de résultats).
+3. Puis la recherche de sons et de photos, avec les écoutes et les choix du mainteneur : **16** (lion), **18**
+   (violon), **17**, **19**, **26** (revue de toutes les photos d'Où est le son ? et d'Où est l'animal ? : contenu
+   choquant, objet peu reconnaissable, personne reconnaissable) ; relancer `normalize_sounds.py` sur les nouveaux sons
+   et `make_whereisit_thumbnails.py` si une photo de la vignette change.
+4. En attente : 13 (débit de la voix : écoute des nouvelles voix par la testeuse), 20 (réaction aux erreurs : réunion
+   avec Amélie), 27 (reformulations : passages à demander à la testeuse), 28 (croix d'Eval : à voir avec elle), 31
+   (Où est-ce ? : à voir avec elle).
+5. À la fin : liste des jeux du menu dans l'ordre alphabétique ; puis, au feu vert du mainteneur seulement, les notes
+   de version 2.0.
+
+## RETOURS DE LA TESTEUSE (20/11/2026) : DÉCISIONS DU MAINTENEUR (POINTS 1 À 12 FAITS LE 20/11)
 
 Source : le document de retours de la testeuse (non publié), partie GazePlay Learning seulement ; la partie sur le
 site de création d'évaluations n'est pas traitée ici. Tests de la testeuse faits **avant le 20/11** : elle a entendu les anciennes voix.
