@@ -660,6 +660,47 @@ class TrainSwitchesTest {
         assertFalse(game.isDepartShown());
     }
 
+    /**
+     * One train at a time and a pause at each switch (20/11/2026, tester's feedback: the easiest rhythm, to learn the
+     * game): the train waits for "Departure", stops before each switch until "Resume", and the next one waits again.
+     */
+    @Test
+    void shouldWaitForDepartureAndPauseAtEachSwitch() throws Exception {
+        final TrainSwitches game = playing(TrainSwitchesLevel.NORMAL, TrainSwitchesRhythm.ONE_AT_A_TIME_PAUSE,
+            TrainSwitchesEnd.ENDLESS, 17);
+        steps(game, 10);
+        assertEquals(0, game.getSent(), "it waits for Departure");
+        assertTrue(game.isDepartShown());
+        fx(() -> {
+            game.depart();
+            return null;
+        });
+        for (int i = 0; i < 1200 && game.getPaused() == null; i++) {
+            steps(game, STEP);
+        }
+        assertNotNull(game.getPaused(), "a pause before the first switch");
+        assertTrue(game.isResumeShown());
+        assertFalse(game.isDepartShown());
+        final double position = game.getPaused().getPosition();
+        steps(game, 5);
+        assertEquals(position, game.getPaused().getPosition(), 1e-9);
+        // Resumed at each switch until it arrives; no other train before Departure
+        for (int i = 0; i < 6000 && game.getArrived() == 0; i++) {
+            if (game.getPaused() != null) {
+                fx(() -> {
+                    game.resume();
+                    return null;
+                });
+            }
+            steps(game, STEP);
+        }
+        assertEquals(1, game.getArrived());
+        steps(game, STEP);
+        assertTrue(game.isDepartShown());
+        steps(game, 5);
+        assertEquals(1, game.getSent());
+    }
+
     @Test
     void shouldStopEverythingBeforeEachSwitchUntilResumeIsFixated() throws Exception {
         final TrainSwitches game = playing(TrainSwitchesLevel.NORMAL, TrainSwitchesRhythm.PAUSE,
@@ -838,8 +879,9 @@ class TrainSwitchesTest {
     @Test
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new TrainSwitchesGameVariantGenerator().getVariants();
-        // Each with or without hearts (16/11/2026)
-        assertEquals(36 * 2, variants.size());
+        // Each with or without hearts (16/11/2026); 4 rhythms since 20/11/2026
+        assertEquals(3 * 4 * 4 * 2, variants.size());
+        assertEquals(TrainSwitchesRhythm.ONE_AT_A_TIME_PAUSE, TrainSwitchesRhythm.values()[0], "the easiest first");
         final IGameVariant variant = new GroupedGameVariant(TrainSwitchesGameVariantGenerator.GROUP,
             TrainSwitchesLevel.HARD.getKey(), TrainSwitchesEnd.TRAINS_20.getKey(), null,
             TrainSwitchesRhythm.PAUSE.getKey(), LivesVariant.WITHOUT);

@@ -563,7 +563,7 @@ public class TrainSwitches implements GameLifeCycle {
      * inside the screen under the band of the score.
      */
     private void drawDepartButton() {
-        if (rhythm != TrainSwitchesRhythm.ONE_AT_A_TIME) {
+        if (!rhythm.isOneAtATime()) {
             return;
         }
         departSize = cell * 0.8;
@@ -668,7 +668,7 @@ public class TrainSwitches implements GameLifeCycle {
      * @return whether the departure button is waiting to be fixed (one at a time, the next train ready to leave)
      */
     boolean isDepartWaiting() {
-        return rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME && phase == Phase.PLAY && isNextWaiting() && !departAsked;
+        return rhythm.isOneAtATime() && phase == Phase.PLAY && paused == null && isNextWaiting() && !departAsked;
     }
 
     /**
@@ -751,7 +751,7 @@ public class TrainSwitches implements GameLifeCycle {
      * @return how long the next train waits, in seconds at the speed 1 of the settings
      */
     private double nextWait() {
-        if (sentHere == 0 || rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME) {
+        if (sentHere == 0 || rhythm.isOneAtATime()) {
             return readyFor(configuration.getFixationLength());
         }
         return INTERVAL / speed();
@@ -762,7 +762,7 @@ public class TrainSwitches implements GameLifeCycle {
      * or when a train must arrive first
      */
     boolean isNextWaiting() {
-        return sentHere < quota && (rhythm != TrainSwitchesRhythm.ONE_AT_A_TIME || trains.isEmpty());
+        return sentHere < quota && (!rhythm.isOneAtATime() || trains.isEmpty());
     }
 
     /**
@@ -792,7 +792,7 @@ public class TrainSwitches implements GameLifeCycle {
         if (!isNextWaiting()) {
             return;
         }
-        if (rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME) {
+        if (rhythm.isOneAtATime()) {
             // It waits on the tunnel until "Departure" is fixed (20/11/2026)
             if (!departAsked) {
                 return;
@@ -827,7 +827,7 @@ public class TrainSwitches implements GameLifeCycle {
             double target = train.position + distance;
             while (true) {
                 final double length = train.route.length();
-                if (rhythm == TrainSwitchesRhythm.PAUSE && train.toJunction != null
+                if (rhythm.isPauses() && train.toJunction != null
                     && !train.toJunction.equals(train.pausedFor)) {
                     final double stop = length - PAUSE_BEFORE;
                     if (target >= stop) {
@@ -1463,7 +1463,7 @@ public class TrainSwitches implements GameLifeCycle {
                 return;
             }
             final boolean counting = isNextWaiting();
-            if (rhythm == TrainSwitchesRhythm.ONE_AT_A_TIME) {
+            if (rhythm.isOneAtATime()) {
                 // No time: it waits for "Departure" (20/11/2026)
                 countdown.setLength(-360);
                 node.setOpacity(counting ? 1 : 0.5);

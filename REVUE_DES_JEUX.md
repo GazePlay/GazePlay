@@ -59,7 +59,8 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
    colline du tunnel, hors des rails, gares et aiguillages ; plus de compte à rebours ; icône `train_fill1` des
    Material Symbols ajoutée). **Aiguillages**, « Un train à la fois » : le train suivant **attend en gare** et part quand on fixe un bouton
    **« Départ »** à côté de la gare (aujourd'hui `READY` 1 s).
-9. **Aiguillages** : 4 rythmes, dans cet ordre : un train à la fois avec pause à chaque aiguillage (nouveau, le plus
+9. **FAIT le 20/11/2026, validé par le mainteneur** (`TrainSwitchesRhythm.ONE_AT_A_TIME_PAUSE`, rythmes décrits par
+   « un à la fois » et « pauses » ; proposé par défaut, premier de la liste). **Aiguillages** : 4 rythmes, dans cet ordre : un train à la fois avec pause à chaque aiguillage (nouveau, le plus
    facile), un train à la fois, pause à chaque aiguillage, en continu.
 10. **Aiguillages** : le bouton « Reprendre » apparaît **à côté de l'aiguillage arrêté** (aujourd'hui à droite), sans
     recouvrir de rails, assez écarté pour ne pas être fixé par accident.
@@ -95,6 +96,11 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 29. **Images à fond transparent** (OpenMoji : poulpe, lapin…) : en thème sombre, le fond sombre se voit à travers (Memory,
     Cartes à gratter), et il faut viser le dessin, pas la carte. **Toujours un fond blanc sous les images**, **carte
     entière sélectionnable**, dans **tous les jeux** qui affichent ces images (liste à établir).
+
+### À faire à la fin (demandes du mainteneur pendant les corrections)
+
+- **Liste des jeux du menu dans l'ordre alphabétique** (demande du 20/11/2026), d'après les noms affichés dans la
+  langue choisie.
 
 ### En attente
 
