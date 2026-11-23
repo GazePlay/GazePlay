@@ -82,7 +82,9 @@ public class MemoryCard extends Group {
         setLayoutX(x);
         setLayoutY(y);
 
-        final Rectangle surface = GameStyle.targetCard(0, 0, width, height);
+        // A picture, a letter or a digit is on a white card chosen on all its surface, in both themes (point 29 of the
+        // tester's feedback)
+        final Rectangle surface = GameStyle.pictureCard(0, 0, width, height);
         final Node content;
         if (image != null) {
             final ImageView view = new ImageView(image);
@@ -98,7 +100,7 @@ public class MemoryCard extends Group {
             final double size = Math.min(width, height) * 0.62;
             final Text glyph = new Text(text);
             glyph.setFont(GameStyle.titleFont(size));
-            glyph.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: -gp-text;");
+            glyph.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: " + GameStyle.CARD_TEXT + ";");
             glyph.setX((width - glyph.getLayoutBounds().getWidth()) / 2 - glyph.getLayoutBounds().getMinX());
             glyph.setY((height - glyph.getLayoutBounds().getHeight()) / 2 - glyph.getLayoutBounds().getMinY());
             content = glyph;

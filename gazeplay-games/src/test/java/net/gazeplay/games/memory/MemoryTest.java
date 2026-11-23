@@ -125,6 +125,32 @@ class MemoryTest {
         assertEquals(1, texts().filter(text -> text.equals("MemoryPairs 0 / 3")).count());
     }
 
+    /**
+     * Tester's feedback of 20/11/2026, point 29: a picture is on a white card, whatever the theme, and the whole card
+     * is chosen with the mouse, not only the drawing; a letter too, written in the dark text color of the light theme
+     * (maintainer's decision of 23/11/2026: the same cards in both themes).
+     */
+    @Test
+    void shouldPutThePicturesOnAWhiteCardChosenEverywhere() throws Exception {
+        Memory pictures = launchedGame("MemoryContentImages", MemoryGameVariantGenerator.VISIBLE, "2x2");
+        javafx.scene.shape.Rectangle surface = surfaceOf(pictures.getCards().get(0));
+        assertTrue(surface.getStyle().contains("-fx-fill: #FFFFFF"), surface.getStyle());
+        assertFalse(surface.isMouseTransparent());
+
+        Memory letters = launchedGame("MemoryContentLetters", MemoryGameVariantGenerator.VISIBLE, "2x2");
+        javafx.scene.shape.Rectangle letterSurface = surfaceOf(letters.getCards().get(0));
+        assertTrue(letterSurface.getStyle().contains("-fx-fill: #FFFFFF"), letterSurface.getStyle());
+        assertFalse(letterSurface.isMouseTransparent());
+        javafx.scene.Group face = (javafx.scene.Group) letters.getCards().get(0).getChildren().get(0);
+        javafx.scene.text.Text glyph = (javafx.scene.text.Text) face.getChildren().get(1);
+        assertTrue(glyph.getStyle().contains("-fx-fill: #2B2118"), glyph.getStyle());
+    }
+
+    private static javafx.scene.shape.Rectangle surfaceOf(MemoryCard card) {
+        javafx.scene.Group face = (javafx.scene.Group) card.getChildren().get(0);
+        return (javafx.scene.shape.Rectangle) face.getChildren().get(0);
+    }
+
     @Test
     void shouldShowTheCardsFaceUpInTheVisibleVersion() throws Exception {
         Memory memory = launchedGame("MemoryContentNumbers", MemoryGameVariantGenerator.VISIBLE, "2x2");

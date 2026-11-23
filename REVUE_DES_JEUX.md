@@ -258,6 +258,14 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 29. **Images à fond transparent** (OpenMoji : poulpe, lapin…) : en thème sombre, le fond sombre se voit à travers (Memory,
     Cartes à gratter), et il faut viser le dessin, pas la carte. **Toujours un fond blanc sous les images**, **carte
     entière sélectionnable**, dans **tous les jeux** qui affichent ces images (liste à établir).
+    **EN COURS le 23/11/2026. Décisions du mainteneur** : une carte à choisir a **le même aspect dans les deux thèmes**
+    (celui du thème clair) : fond blanc, bordure du thème, image, ou lettre, chiffre, mot en `#2B2118` (texte du thème
+    clair) ; elle reçoit la souris sur toute sa surface (le regard marchait déjà partout, la souris seulement sur les
+    pixels du dessin). Commun : `GameStyle.pictureCard`, `PICTURE_BACKGROUND`, `CARD_TEXT`. Liste validée : Memory
+    (**fait** : images, lettres et chiffres), Cartes magiques, Où est…, Opinions, Blocs, Identifier les lettres (image et
+    cartes de lettres), et les autres cartes à lettre ou à chiffre sur le fond du thème (à relever jeu par jeu). Déjà
+    blancs : Cartes à gratter, modèle du Taquin, Pierre papier ciseaux. **Exclus** (choix du mainteneur) : La pièce,
+    GazePlay Eval ; les objets posés sur un décor sans carte (Ninja, taupes, lapins, Tartes à la crème, Bulles, Œuf).
 
 ### À faire à la fin (demandes du mainteneur pendant les corrections)
 

@@ -133,6 +133,33 @@ public final class GameStyle {
     }
 
     /**
+     * The color under a picture, whatever the theme.
+     */
+    public static final String PICTURE_BACKGROUND = "#FFFFFF";
+
+    /**
+     * The color of a letter, a digit or a word on a {@link #pictureCard}, whatever the theme: the text color of the
+     * light theme ({@code -gp-text} of base-light.css), read on the white card.
+     */
+    public static final String CARD_TEXT = "#2B2118";
+
+    /**
+     * Tester's feedback of 20/11/2026, point 29: a picture with a transparent background (OpenMoji, a PNG of the user)
+     * let the dark card of the dark theme be seen through, and the mouse only reacted on its drawn pixels. A card to
+     * choose looks the same in both themes (maintainer's decision of 23/11/2026): a picture, a letter or a digit is on
+     * this white card, a text in {@link #CARD_TEXT}.
+     *
+     * @return a card to choose: always white, with the border of the theme, and receiving the mouse on all its
+     * surface, so that the whole card is chosen and not only the drawing
+     */
+    public static Rectangle pictureCard(final double x, final double y, final double width, final double height) {
+        final Rectangle card = targetCard(x, y, width, height);
+        card.setStyle("-fx-fill: " + PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        card.setMouseTransparent(false);
+        return card;
+    }
+
+    /**
      * @return the radius of the corners of a card of this size
      */
     public static double cardRadius(final double width, final double height) {
