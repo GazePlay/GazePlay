@@ -180,7 +180,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     délai quand les dés s'arrêtent (cartes de Compter les points ; dé qui roulait sous la souris en Lancer les dés) et
     quand le bouton « Lancer » revient après une réponse (le jeu y démarrait l'anneau exprès) ; début inchangé ;
     `DiceTest`, aide. Identifier les lettres : délai à chaque nouvelle lettre (au début, en même temps que l'attente
-    du début, aussi longue), `LettersTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    du début, aussi longue), `LettersTest`, aide. Opinions : la règle « quitter la réponse puis la regarder de
+    nouveau », qui existait déjà (souris et regard), remplacée par le délai à chaque image, première comprise
+    (décision du mainteneur : comme partout), `OpinionsGameTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

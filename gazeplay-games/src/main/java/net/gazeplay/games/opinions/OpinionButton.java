@@ -23,7 +23,8 @@ import net.gazeplay.components.RingThickness;
 /**
  * A button of an answer of the game "Opinions" (2/11/2026): a card with a big icon of the color of the answer and its
  * word under it. A fixation (the fixation length of the settings) gives the answer, a ring of the main color going round
- * the card meanwhile; it must then be left and looked at again to answer once more. Its top left corner is at (0, 0).
+ * the card meanwhile. Its top left corner is at (0, 0). Since 23/11/2026 (point 22, maintainer's decision), the next
+ * image waits for the delay of the settings, as everywhere; the card no longer had to be left and looked at again.
  */
 class OpinionButton extends Group {
 
@@ -43,8 +44,6 @@ class OpinionButton extends Group {
     private final Runnable action;
 
     private Timeline fixation;
-
-    private boolean armed = true;
 
     @Getter
     private boolean enabled = true;
@@ -108,12 +107,11 @@ class OpinionButton extends Group {
 
     private void handle(final Event e) {
         if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-            if (enabled && armed) {
+            if (enabled && !gameContext.isSelectionBlocked()) {
                 startFixation();
             }
         } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
             stopFixation();
-            armed = true;
         }
     }
 
@@ -140,7 +138,6 @@ class OpinionButton extends Group {
      */
     void select() {
         if (enabled) {
-            armed = false;
             stopFixation();
             action.run();
         }

@@ -1,5 +1,6 @@
 package net.gazeplay.games.opinions;
 
+import javafx.event.Event;
 import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
@@ -7,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
@@ -157,6 +159,37 @@ class OpinionsGameTest {
         }).get();
         verify(stats, times(1)).addAnswer(anyString(), any());
         assertTrue(game.getButtons().stream().noneMatch(OpinionButton::isEnabled));
+    }
+
+    /**
+     * Point 22 (23/11/2026, maintainer's decision): each image asks for the delay of the settings, during which the
+     * pointer entering an answer starts nothing; the answer no longer has to be left and looked at again.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachImage() throws Exception {
+        givenImages("a.png", "b.png");
+        final OpinionsGame game = launched();
+        verify(gameContext).onGameStarted();
+        final OpinionButton like = game.getButtons().stream().filter(button -> button.getChoice() == OpinionChoice.LIKE)
+            .findFirst().orElseThrow();
+
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        WaitForAsyncUtils.asyncFx(() -> Event.fireEvent(like, new GazeEvent(GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
+        WaitForAsyncUtils.sleep(400, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        verify(stats, never()).addAnswer(anyString(), any());
+
+        // Once the delay is over, entering the answer chooses it after the fixation, without leaving it first
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        WaitForAsyncUtils.asyncFx(() -> Event.fireEvent(like, new GazeEvent(GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
+        WaitForAsyncUtils.sleep(400, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        verify(stats).addAnswer("a.png", OpinionChoice.LIKE);
+
+        WaitForAsyncUtils.sleep((long) OpinionsGame.ANSWER_SHOWN.toMillis() + 200, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(1, game.getIndex());
+        verify(gameContext, times(2)).onGameStarted();
     }
 
     /**

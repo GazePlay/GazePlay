@@ -174,6 +174,9 @@ public class OpinionsGame implements GameLifeCycle {
             button.setEnabled(true);
         });
         stats.incrementNumberOfGoalsToReach();
+        // A new image, the pointer maybe still on an answer: nothing can be chosen during the delay of the settings
+        // (tester's feedback of 20/11/2026, point 22; it replaces the rule "leave the answer, then look at it again")
+        gameContext.onGameStarted();
     }
 
     /**

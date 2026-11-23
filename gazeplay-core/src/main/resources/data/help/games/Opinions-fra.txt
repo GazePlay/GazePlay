@@ -7,6 +7,7 @@ Ajoute les images dans les réglages, section Dossiers, « Mes images », comm
 # Comment jouer
 - L'image est au milieu ; au-dessus, son numéro (« 3 / 12 »).
 - Regarde « J'aime » (à gauche) ou « Je n'aime pas » (à droite) : un anneau fait le tour du bouton (durée de fixation des réglages), puis la réponse s'entoure de sa couleur et l'image suivante arrive.
+- À chaque nouvelle image, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 
 # Comment gagner
 Il n'y a pas de bonne réponse : chaque avis compte. Après la dernière image : « Bravo », puis les statistiques. Pour arrêter avant, le menu (touche Échap).

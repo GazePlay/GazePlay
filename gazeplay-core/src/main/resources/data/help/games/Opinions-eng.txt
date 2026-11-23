@@ -7,6 +7,7 @@ Add the images in the settings, section Folders, "My images", shared by all the 
 # How to play
 - The image is in the middle; above it, its number ("3 / 12").
 - Look at "I like it" (left) or "I don't like it" (right): a ring goes round the button (fixation length of the settings), then the answer is framed in its color and the next image comes.
+- At each new image, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 
 # How to win
 There is no right answer: every opinion counts. After the last image: "Bravo", then the statistics. Leave earlier by the menu (Esc key).
