@@ -279,6 +279,36 @@ class LettersTest {
         });
     }
 
+    /**
+     * Point 22 (23/11/2026): the cards of each new letter ask for the delay of the settings; nothing is chosen while it
+     * runs, then the fixation counts from zero.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachNewLetter() throws Exception {
+        final Letters game = launched(LettersLevel.EASY, LettersCase.CAPITALS, LettersEnd.ENDLESS);
+        fx(() -> {
+            final char first = game.getAsked();
+            game.getCards().stream().filter(card -> card.getLetter() == first).toList().forEach(game::choose);
+            clearInvocations(gameContext);
+            steps(game, Letters.PICTURE + 0.05);
+            assertEquals(Letters.Phase.PLAY, game.getPhase());
+            verify(gameContext).onGameStarted();
+
+            final Letters.Card right = game.getCards().stream().filter(card -> card.getLetter() == game.getAsked())
+                .findFirst().orElseThrow();
+            when(gameContext.isSelectionBlocked()).thenReturn(true);
+            enter(right.getSpot());
+            steps(game, 2);
+            assertFalse(right.isFound(), "nothing chosen during the delay");
+            when(gameContext.isSelectionBlocked()).thenReturn(false);
+            steps(game, 0.4);
+            assertFalse(right.isFound(), "the fixation counts from the end of the delay");
+            steps(game, 0.15);
+            assertTrue(right.isFound());
+            return null;
+        });
+    }
+
     @Test
     void shouldEndWithBravoAfterThePicturesOfTheVariant() throws Exception {
         final Letters game = launched(LettersLevel.EASY, LettersCase.BOTH, LettersEnd.PICTURES_3);

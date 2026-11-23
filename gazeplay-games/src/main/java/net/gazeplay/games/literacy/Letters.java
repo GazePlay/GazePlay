@@ -337,6 +337,9 @@ public class Letters implements GameLifeCycle {
         sayQuestion();
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        // New cards, maybe under the pointer: nothing can be chosen during the delay of the settings (tester's
+        // feedback of 20/11/2026, point 22; at the start, it runs with the wait of the start, as long)
+        gameContext.onGameStarted();
     }
 
     /**
@@ -682,6 +685,12 @@ public class Letters implements GameLifeCycle {
         if (looked == null || !isEnabled(looked)) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after new cards: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             showRing(looked);
         }
@@ -709,7 +718,7 @@ public class Letters implements GameLifeCycle {
         looked = spot;
         progress = 0;
         ring.stop();
-        if (isEnabled(spot)) {
+        if (isEnabled(spot) && !gameContext.isSelectionBlocked()) {
             showRing(spot);
         }
     }
