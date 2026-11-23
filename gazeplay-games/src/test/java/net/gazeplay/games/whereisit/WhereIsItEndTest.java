@@ -141,16 +141,20 @@ class WhereIsItEndTest {
     }
 
     /**
-     * The counter, as in the other games: the screens found, out of those of the end; in the corner on the left of the
-     * band, out of the grid; one counter only.
+     * The counter (tester's feedback of 20/11/2026, point 14): the screen being played, out of those of the end, from
+     * its start; in the corner on the left of the band, out of the grid; one counter only.
      */
     @Test
-    void shouldCountTheScreensFoundInTheBand() {
+    void shouldShowTheScreenBeingPlayedInTheBand() {
         final WhereIsIt game = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
             WhereIsItEnd.SCREENS_10);
+        game.showCounter();
+        assertEquals("WhereIsItScreen 1 / 10", text(game.counter()), "the first screen, from its start");
         game.screenFound();
+        assertEquals("WhereIsItScreen 1 / 10", text(game.counter()), "unchanged until the next screen");
         game.screenFound();
-        assertEquals("WhereIsItScreens 2 / 10", text(game.counter()));
+        game.showCounter();
+        assertEquals("WhereIsItScreen 3 / 10", text(game.counter()));
         assertEquals(1, gameArea.getChildren().stream().filter(node -> node == game.counter()).count());
         assertEquals(1, gameArea.getChildren().size());
         final GameSizing sizing = new GameSizingComputer(2, 2).computeGameSizing(new Dimension2D(1600, 900));
@@ -160,8 +164,18 @@ class WhereIsItEndTest {
 
         final WhereIsIt endless = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
             WhereIsItEnd.ENDLESS);
-        endless.screenFound();
-        assertEquals("WhereIsItScreens 1", text(endless.counter()));
+        for (int i = 0; i < 6; i++) {
+            endless.screenFound();
+        }
+        endless.showCounter();
+        assertEquals("WhereIsItScreen 7", text(endless.counter()));
+
+        final WhereIsIt five = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, gameContext, stats,
+            WhereIsItEnd.SCREENS_5);
+        for (int i = 0; i < 5; i++) {
+            five.screenFound();
+        }
+        assertEquals(5, five.currentScreen(), "never beyond the last screen");
     }
 
     private static String text(final Group pill) {

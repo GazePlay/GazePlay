@@ -117,7 +117,7 @@ public class WhereIsIt implements GameLifeCycle {
     private boolean ended;
 
     /**
-     * The counter of the screens found, in the band (see {@link #showCounter()}).
+     * The counter of the screens, in the band (see {@link #showCounter()}).
      */
     private Group counterPill;
 
@@ -204,19 +204,28 @@ public class WhereIsIt implements GameLifeCycle {
     boolean screenFound() {
         screensFound++;
         ended = end.getScreens() > 0 && screensFound >= end.getScreens();
-        showCounter();
+        // The counter keeps the number of the screen just found until the next one appears
         return ended;
     }
 
     /**
-     * The screens found, as in the other games (16/11/2026): "Screens 2 / 5" ("Screens 2" without end), in the corner on
-     * the left of the band, which the grid leaves free.
+     * @return the number of the screen being played (tester's feedback of 20/11/2026, point 14): 1 for the first
+     *   screen, never beyond the last screen of the end
      */
-    private void showCounter() {
+    int currentScreen() {
+        final int current = screensFound + 1;
+        return end.getScreens() > 0 ? Math.min(current, end.getScreens()) : current;
+    }
+
+    /**
+     * The screen being played, from its start (tester's feedback of 20/11/2026, point 14; until then the screens
+     * found): "Screen 3 / 5" ("Screen 7" without end), in the corner on the left of the band, which the grid leaves free.
+     */
+    void showCounter() {
         gameContext.getChildren().remove(counterPill);
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns, hasLives()).computeGameSizing(dimension);
-        final String text = gameContext.getTranslator().translate("WhereIsItScreens") + " " + screensFound
+        final String text = gameContext.getTranslator().translate("WhereIsItScreen") + " " + currentScreen()
             + (end.getScreens() > 0 ? " / " + end.getScreens() : "");
         final double room = sizing.bandLeft() - 2 * sizing.gap();
         final double font = sizing.bandHeight() * 0.18;
@@ -233,7 +242,7 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * @return the counter of the screens found (for the tests)
+     * @return the counter of the screens (for the tests)
      */
     Group counter() {
         return counterPill;

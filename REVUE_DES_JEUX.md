@@ -118,7 +118,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     enregistrements à −17 LUFS par `normalize_sounds.py` ; oie plus douce, explosion de Magic Potions plus forte ;
     musiques laissées telles quelles, décision du mainteneur). **Volume** : mesurer (LUFS) puis égaliser les voix (`loudnorm` dans `make_voices.py`) et la récompense de la famille
     Où est… (voix bien plus faible que le « biboule ») ; **puis vérifier le volume des sons de tous les jeux**.
-14. **Où est…** et Trouve l'intrus : le compteur affiche **le numéro de l'écran en cours** dès l'arrivée des images
+14. **FAIT le 23/11/2026, validé par le mainteneur** (`WhereIsIt.currentScreen`, clé `WhereIsItScreen` « Écran » /
+    « Screen » à la place de `WhereIsItScreens` ; le compteur garde le numéro de l'écran trouvé jusqu'au suivant, jamais
+    au-delà du dernier). **Où est…** et Trouve l'intrus : le compteur affiche **le numéro de l'écran en cours** dès l'arrivée des images
     (aujourd'hui le nombre d'écrans trouvés) ; en Sans fin, « Écran 7 ».
 15. **Où est…** et Trouve l'intrus : **tirage sans répétition** des bonnes réponses (liste mélangée, remélangée une fois
     épuisée, pas de répétition entre deux listes) ; Où est l'animal ? dynamique inchangé.
