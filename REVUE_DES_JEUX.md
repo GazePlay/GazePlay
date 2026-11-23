@@ -163,7 +163,16 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     reconnaissable » de toutes les photos est faite avec le point 26 ; les deux autres photos d'accordéon montrent des
     personnes reconnaissables, point 26). **Accordéon de musée** (`accordion_1.jpg`) remplacé par un accordéon courant ; pendant la revue des photos,
     vérifier que chaque objet ou animal est typique et reconnaissable.
-22. **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+22. **EN COURS le 23/11/2026. Décision du mainteneur** : pas de « quitter puis revenir » (perturbant, même à la
+    souris) ; à chaque apparition de nouveaux choix, rien n'est choisissable, au regard comme à la souris, pendant le
+    délai des réglages (`GAME_START_DELAY`, 1 s par défaut, intitulé devenu « Délai avant de pouvoir sélectionner de
+    nouveaux choix », aide de 27 jeux mise à jour) : `IGameContext.onGameStarted()`, un seul délai à la fois, relancé à
+    chaque appel, et `isSelectionBlocked()` pour les jeux qui comptent la fixation dans leur propre boucle (désactiver
+    la zone n'arrête pas cette boucle). Aiguillages gardé (les boutons n'apparaissent que trains arrêtés). Ensuite,
+    étape à part : réglages de la partie (bloc `settings`) et périodes bloquées dans `replayData.json`, en restant en
+    v6. **Fait** : socle commun, La Fabrique à gâteaux (délai à chaque étape, `CakesTest`), validé par le mainteneur
+    le 23/11 (constat à l'essai : souris immobile, la fixation ne reprend qu'une fois la souris bougée, la zone
+    désactivée ne recevant pas l'entrée du pointeur ; comportement accepté). **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

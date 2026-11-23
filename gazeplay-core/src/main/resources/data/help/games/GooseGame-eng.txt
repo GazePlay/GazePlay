@@ -7,7 +7,7 @@ The goose game: each player in turn rolls two dice and moves their Biboule along
 - Square 63 must be reached exactly: if the throw goes further, the Biboule moves back by the squares too many.
 - A goose (green squares): the Biboule moves again by the same number.
 - Classic rules only: the bridge (square 7) leads to square 32; the inn (19) makes it sleep 2 turns; the well (31) and the prison (52) keep the Biboule until another one comes or passes by; the arrow (58) sends it back to the start. If all the Biboules wait, they are all freed.
-- At the top, a sentence tells what happens. At the start, nothing rolls during the delay of the settings (Games, "Delay before a selection is possible when a game starts").
+- At the top, a sentence tells what happens. At the start, nothing rolls during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - The speed of the Biboules follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
 
 # How to win

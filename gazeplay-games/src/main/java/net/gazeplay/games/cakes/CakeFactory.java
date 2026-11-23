@@ -527,6 +527,9 @@ public class CakeFactory implements GameLifeCycle {
             choices.add(showModel);
         }
         showTabs();
+        // New buttons, maybe under the pointer: nothing can be chosen during the delay of the settings (tester's
+        // feedback of 20/11/2026, point 22: the next button used to be chosen at once with the mouse left still)
+        gameContext.onGameStarted();
     }
 
     private double buttonRadius() {
@@ -993,6 +996,12 @@ public class CakeFactory implements GameLifeCycle {
 
     private void fixate(final double seconds) {
         if (looked == null || Stats.isConfigMenuOpen()) {
+            return;
+        }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after new buttons: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
             return;
         }
         if (!ring.isVisible()) {

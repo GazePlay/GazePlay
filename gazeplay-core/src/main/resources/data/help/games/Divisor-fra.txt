@@ -6,7 +6,7 @@ Une grande image rebondit dans la prairie. Regarde-la : elle éclate en deux ima
 - Selon le choix fait en bas de la fenêtre, une image éclate dès que tu la touches, ou après une fixation : un anneau se remplit autour d'elle pendant qu'elle continue d'avancer. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Si tu quittes l'image moins de 0,3 seconde, l'anneau t'attend. Après, il repart de zéro.
 - Une image qui vient de naître ne peut pas éclater pendant 0,6 seconde : ton regard est encore là où était la grande.
-- Au début, rien n'éclate pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »).
+- Au début, rien n'éclate pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - En haut à droite, le nombre d'images éclatées sur le nombre total.
 - La vitesse suit aussi la vitesse d'animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 

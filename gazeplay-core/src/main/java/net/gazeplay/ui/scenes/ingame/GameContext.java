@@ -381,17 +381,35 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return gamingRoot;
     }
 
+    /**
+     * The delay before a selection running, null otherwise (see {@link #onGameStarted()}).
+     */
+    private volatile PauseTransition selectionDelay;
+
+    @Override
     public void onGameStarted() {
         final int delay = getConfiguration().getGameStartDelay();
         if (delay <= 0) {
             return;
         }
+        // One delay at a time, started again at each call (23/11/2026, point 22: the games call it at each new choice;
+        // two delays used to run side by side, the first one enabling the game area too early)
+        if (selectionDelay != null) {
+            selectionDelay.stop();
+        }
         gamingRoot.setDisable(true);
-        PauseTransition wait = new PauseTransition(Duration.millis(delay));
+        final PauseTransition wait = new PauseTransition(Duration.millis(delay));
         wait.setOnFinished(waitEvent -> {
+            selectionDelay = null;
             gamingRoot.setDisable(false);
         });
+        selectionDelay = wait;
         wait.play();
+    }
+
+    @Override
+    public boolean isSelectionBlocked() {
+        return selectionDelay != null;
     }
 
     /**

@@ -6,7 +6,7 @@ Des dés sur un tapis de jeu. Compte leurs points et trouve le bon total, ou lan
 - Compter les points : quand les dés se sont arrêtés, trois cartes montrent des nombres. Regarde la carte du bon total : elle devient verte avec une coche, puis tu relances les dés.
 - Une mauvaise carte montre une croix. Avec cœurs, tu perds un des 3 cœurs et le bon total est montré ; sans cœurs, elle devient grise et tu cherches encore.
 - Lancer les dés : le total s’affiche en haut quand les dés se sont arrêtés. Regarde un seul dé pour ne relancer que lui.
-- Rien ne se lance pendant que les dés roulent. Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »).
+- Rien ne se lance pendant que les dés roulent. Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner

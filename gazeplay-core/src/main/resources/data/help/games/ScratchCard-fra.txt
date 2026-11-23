@@ -7,7 +7,7 @@ Une carte est couverte d’une couche argentée. Gratte-la avec une pièce que t
 - La pièce se lève quand ton regard quitte la carte, ou quand l’oculomètre te perd un instant (un clignement).
 - Quand presque toute la carte est grattée (90 %), le reste de la couche fond tout seul : l’image apparaît avec une étoile et « Bravo ! ». Puis une autre carte arrive.
 - Avec la souris, la pièce suit le pointeur, sans cliquer.
-- Au début, rien ne se gratte pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+- Au début, rien ne se gratte pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Il n’y a ni vies ni erreurs : chaque carte découverte compte. Selon ton choix, la partie s’arrête après 3, 5 ou 10 cartes (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).

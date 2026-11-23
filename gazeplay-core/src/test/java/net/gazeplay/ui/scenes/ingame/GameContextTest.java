@@ -122,6 +122,32 @@ class GameContextTest {
         verify(mockGamingRoot, timeout(5000)).setDisable(false);
     }
 
+    /**
+     * Point 22 (23/11/2026): the games call the delay at each new choice; a call during a delay starts it again, the
+     * game area is enabled once only, at the end of the last delay, and the games see whether a delay runs.
+     */
+    @Test
+    void shouldStartTheDelayAgainAtEachCall() throws Exception {
+        when(mockRoot.getChildren()).thenReturn(mockList);
+        when(mockConfiguration.getGameStartDelay()).thenReturn(400);
+        GameContext gameContext = new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo,
+            mockHBox, mockGazeDeviceManager, mockSoundManager, mockConfigPane);
+        assertFalse(gameContext.isSelectionBlocked());
+
+        org.testfx.util.WaitForAsyncUtils.asyncFx(gameContext::onGameStarted).get();
+        assertTrue(gameContext.isSelectionBlocked());
+        Thread.sleep(250);
+        org.testfx.util.WaitForAsyncUtils.asyncFx(gameContext::onGameStarted).get();
+        Thread.sleep(250);
+        // 500 ms after the first call, 250 ms after the second: the first delay no longer enables the game area
+        verify(mockGamingRoot, never()).setDisable(false);
+        assertTrue(gameContext.isSelectionBlocked());
+
+        verify(mockGamingRoot, timeout(5000)).setDisable(false);
+        verify(mockGamingRoot, times(1)).setDisable(false);
+        assertFalse(gameContext.isSelectionBlocked());
+    }
+
     @Test
     void shouldNotBlockTheGameAreaWithoutDelay() throws Exception {
         when(mockRoot.getChildren()).thenReturn(mockList);

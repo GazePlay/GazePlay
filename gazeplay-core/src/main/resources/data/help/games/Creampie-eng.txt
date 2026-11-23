@@ -6,7 +6,7 @@ Throw cream pies at the pictures! Look at a target: the hand at the bottom of th
 - With the variant "As soon as it is looked at", the pie goes at once, without a ring.
 - The pie flies on an arc and splats on the picture: lots of cream, drips and a cherry! The picture shakes, then fades, and another target appears elsewhere.
 - With the moving targets, the target glides slowly: follow it with your eyes.
-- At the start, nothing is thrown during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+- At the start, nothing is thrown during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
 There are no lives and no mistakes: each pie thrown counts. As you chose, the game stops after 10, 20 or 30 pies ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).

@@ -116,11 +116,18 @@ public interface IGameContext {
     void showRoundStats(Stats stats, GameLifeCycle currentGame);
 
     /**
-     * Disables the game area while the round appears, so that nothing is selected by accident, for the time chosen in
-     * the settings (GAME_START_DELAY, 1 s by default, none at 0; maintainer's request of 4/11/2026: the games used to
-     * choose 2 or 3 s themselves).
+     * Disables the game area while the round or new choices appear, so that nothing is selected by accident, for the
+     * time chosen in the settings (GAME_START_DELAY, 1 s by default, none at 0; maintainer's request of 4/11/2026: the
+     * games used to choose 2 or 3 s themselves). Since 23/11/2026 (tester's feedback, point 22), the games of choices
+     * call it each time new choices appear, for the gaze and the mouse alike; a call during a delay starts it again.
      */
     void onGameStarted();
+
+    /**
+     * @return whether a delay of {@link #onGameStarted()} is running: nothing can be selected. Disabling the game area
+     *   stops the events, not a fixation a game counts in its own loop, which checks this instead.
+     */
+    boolean isSelectionBlocked();
 
     /**
      * Removes the fixation length control from the side panel, for the games that do not use it.

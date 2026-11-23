@@ -7,7 +7,7 @@ A card is covered with a silver coating. Scratch it with a coin you move with yo
 - The coin lifts when your gaze leaves the card, or when the eye tracker loses you for a moment (a blink).
 - When almost all the card is scratched (90 %), the rest of the coating melts by itself: the picture shows with a star and "Well done!". Then another card comes.
 - With the mouse, the coin follows the pointer, without clicking.
-- At the start, nothing is scratched during the delay of the settings (Games, "Delay before a selection is possible when a game starts"). Nothing moves while the menu (Esc key) is open.
+- At the start, nothing is scratched during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
 There are no lives and no mistakes: each card uncovered counts. As you chose, the game stops after 3, 5 or 10 cards ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).

@@ -104,6 +104,35 @@ class CakesTest {
         game.choose(game.choice(game.getModelDecoration()));
     }
 
+    /**
+     * Tester's feedback of 20/11/2026, point 22: the buttons of each step ask for the delay of the settings, and the
+     * pointer left on a new button chooses nothing while it runs; once it is over, the fixation counts from zero.
+     */
+    @Test
+    void shouldChooseNothingDuringTheDelayAfterNewButtons() throws Exception {
+        final CakeFactory game = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.ENDLESS);
+        fx(() -> {
+            clearInvocations(gameContext);
+            game.choose(game.choice(game.getModel().get(0).sponge));
+            assertEquals(CakeFactory.Step.CREAM, game.getStep());
+            verify(gameContext).onGameStarted();
+
+            final CakeFactory.Choice cream = game.choice(game.getModel().get(0).cream);
+            when(gameContext.isSelectionBlocked()).thenReturn(true);
+            game.lookAt(cream);
+            steps(game, 2);
+            assertEquals(0, game.getProgress());
+            assertEquals(-1, game.getLayers().get(0).cream, "nothing chosen during the delay");
+
+            when(gameContext.isSelectionBlocked()).thenReturn(false);
+            steps(game, 0.3);
+            assertEquals(-1, game.getLayers().get(0).cream, "the fixation counts from the end of the delay");
+            steps(game, 0.22);
+            assertEquals(game.getModel().get(0).cream, game.getLayers().get(0).cream);
+            return null;
+        });
+    }
+
     @Test
     void shouldChooseNothingDuringTheDelayThenAfterTheFixationOnly() throws Exception {
         when(configuration.getGameStartDelay()).thenReturn(1000);

@@ -6,7 +6,7 @@ A big picture bounces in the meadow. Look at it: it bursts into two smaller pict
 - As chosen at the bottom of the window, a picture bursts as soon as you touch it, or after a fixation: a ring fills around it while it keeps moving. Its length is that of the settings, also changed in the menu (Esc key).
 - If you leave the picture for less than 0.3 seconds, the ring waits for you. After that, it starts again from zero.
 - A picture just born cannot burst for 0.6 seconds: your gaze is still where the big one was.
-- At the start, nothing bursts during the delay of the settings (Games, "Delay before a selection is possible when a game starts").
+- At the start, nothing bursts during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - At the top right, the number of pictures burst out of the total.
 - The speed also follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
 

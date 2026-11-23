@@ -7,7 +7,7 @@ Le jeu de l’oie : chaque joueur à son tour lance deux dés et avance sa Bibou
 - Il faut arriver pile sur la case 63 : si le lancer va plus loin, la Biboule recule des cases en trop.
 - Une oie (cases vertes) : la Biboule avance encore du même nombre.
 - Règles classiques seulement : le pont (case 7) mène à la case 32 ; l’auberge (19) fait dormir 2 tours ; le puits (31) et la prison (52) gardent la Biboule jusqu’à ce qu’une autre arrive ou passe ; la flèche (58) renvoie au départ. Si toutes les Biboules attendent, elles sont toutes libérées.
-- En haut, une phrase dit ce qui se passe. Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner au lancement d’un jeu »).
+- En haut, une phrase dit ce qui se passe. Au début, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - La vitesse des Biboules suit la vitesse d’animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
