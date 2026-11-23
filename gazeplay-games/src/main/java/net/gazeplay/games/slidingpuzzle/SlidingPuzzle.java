@@ -517,7 +517,10 @@ public class SlidingPuzzle implements GameLifeCycle {
             phase = Phase.PLAY;
             updateMovable();
             stats.notifyNewRoundReady();
-            if (looked >= 0 && isMovable(looked)) {
+            // The pieces just shuffled can slide, one maybe under the pointer: nothing can be chosen during the delay of
+            // the settings (tester's feedback of 20/11/2026, point 22)
+            gameContext.onGameStarted();
+            if (looked >= 0 && isMovable(looked) && !gameContext.isSelectionBlocked()) {
                 showRing(looked);
             }
         }
@@ -530,7 +533,8 @@ public class SlidingPuzzle implements GameLifeCycle {
         if (looked < 0) {
             return;
         }
-        if (!isMovable(looked)) {
+        if (!isMovable(looked) || gameContext.isSelectionBlocked()) {
+            // Not movable, or during the delay after the shuffle: the fixation starts once it is over
             ring.stop();
             progress = 0;
             return;
@@ -593,7 +597,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         looked = piece;
         progress = 0;
         ring.stop();
-        if (isMovable(piece)) {
+        if (isMovable(piece) && !gameContext.isSelectionBlocked()) {
             showRing(piece);
         }
     }

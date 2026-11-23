@@ -266,6 +266,37 @@ class SlidingPuzzleTest {
         assertEquals(from, game.placeOf(8));
     }
 
+    /**
+     * Point 22 (23/11/2026): when the shuffled pieces can slide, the delay of the settings is asked; a piece looked at
+     * is not slid while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenThePiecesCanSlide() throws Exception {
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        final SlidingPuzzle game = playing(PuzzleContent.NUMBERS, PuzzleLevel.NORMAL, PuzzleEnd.ENDLESS, 7);
+        verify(gameContext).onGameStarted();
+        final int emptyPlace = game.placeOf(8);
+        final int piece = game.getBoard()[SlidingPuzzle.neighbors(3, emptyPlace).get(0)];
+        final int from = game.placeOf(piece);
+        fx(() -> {
+            game.lookAt(piece);
+            steps(game, 2);
+            return null;
+        });
+        assertEquals(from, game.placeOf(piece), "nothing slid during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        fx(() -> {
+            steps(game, 0.9);
+            return null;
+        });
+        assertEquals(from, game.placeOf(piece), "the fixation counts from the end of the delay");
+        fx(() -> {
+            steps(game, 0.15);
+            return null;
+        });
+        assertEquals(emptyPlace, game.placeOf(piece));
+    }
+
     @Test
     void shouldNeitherSlideAPieceAwayFromTheEmptyPlaceNorKeepAFixationLookedAway() throws Exception {
         final SlidingPuzzle game = playing(PuzzleContent.NUMBERS, PuzzleLevel.NORMAL, PuzzleEnd.ENDLESS, 11);

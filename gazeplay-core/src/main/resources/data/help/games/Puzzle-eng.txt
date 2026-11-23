@@ -7,7 +7,7 @@ Put the picture back in order by sliding its pieces into the empty place!
 - The model stays beside the board to help you.
 - A ring fills during a fixation; its length is the one of the settings.
 - At the top, the puzzles already solved.
-- Nothing can be chosen while the picture is shown and shuffled, nor before the delay of the settings. Nothing moves while the menu (Esc key) is open.
+- Nothing can be chosen while the picture is shown and shuffled, nor then during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
 When the picture is back in order, its last piece comes back and the puzzle counts a point, then a new puzzle comes. After 1, 3 or 5 puzzles, it is "Bravo", then the statistics. Without end, the game goes on until you leave it by the menu (Esc key).
