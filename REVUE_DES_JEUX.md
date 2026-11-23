@@ -33,7 +33,10 @@ redonner à chaque message le titre du point en cours. Tests locaux ciblés seul
 jar JavaCV (`org.bytedeco:ffmpeg:8.1.2-1.5.14`, windows-x86_64) dans le dossier temporaire de la session ; Pillow est
 installé dans le Python du système (pas dans `build/piper/venv`).
 
-**Ordre du jour du lundi 23/11/2026** :
+**Ordre suivi depuis le 23/11/2026 (décision du mainteneur) : l'ordre des numéros** (17, 18, 19, 22, 23, 24, 25,
+26, 27, 29 ; 20, 28, 31 et les reformulations du 27 en attente). Faits le 23/11 : CI verte, 14, 15, 16.
+
+**Ordre du jour du lundi 23/11/2026** (écrit le 20/11, remplacé par l'ordre des numéros) :
 1. Vérifier la CI du push du 20/11 (tests JDK 25 et 26, all-games, paquets) ; corriger si besoin.
 2. Reprendre les retours de la testeuse, dans l'ordre : **14** (compteur = numéro de l'écran en cours), **15** (tirage
    sans répétition), **22** (choisir seulement après avoir quitté puis retrouvé un bouton, + 0,5 s ; liste des jeux à
@@ -134,7 +137,10 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     les 2 lignes de `inventaire-sons.csv` ; le reste du CSV, périmé depuis la mise au niveau du 20/11 et au champ
     `trame` instable, n'a pas été régénéré). **Où est le son ?** : nouveau **rugissement de lion** (l'actuel ressemble à un cochon), libre, 2 ou 3 candidats à
     faire écouter ; aussi dans les Sons de la vie s'il y est ; crédits et inventaire.
-17. **Photo d'éléphants** à remplacer (accouplement visible) par un éléphant seul ; **revue de toutes les photos** d'Où
+17. **FAIT le 23/11/2026, validé par le mainteneur** (Où est le son ?, `elephant_2.jpg` : les deux jeunes
+    éléphants de Diego Delso remplacés par *Male Bush Elephant Head Trunk Up Kafue*, Timothy A. Gonsalves, CC BY-SA 4.0,
+    éléphant seul de face, trompe levée ; crédits, `choices.txt`, inventaire ; la revue de toutes les photos est faite
+    avec le point 26). **Photo d'éléphants** à remplacer (accouplement visible) par un éléphant seul ; **revue de toutes les photos** d'Où
     est le son ? et d'Où est l'animal ? (contenu choquant), photos douteuses signalées au mainteneur.
 18. **Violon seul** (l'actuel a percussions et guitare), 2 ou 3 candidats à faire écouter ; analyser (FFmpeg) les autres
     sons d'instruments et signaler ceux à écouter.
