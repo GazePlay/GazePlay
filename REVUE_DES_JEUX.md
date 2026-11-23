@@ -216,7 +216,11 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     2as). Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
-23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;
+23. **FAIT le 23/11/2026, validé par le mainteneur** (`CakeFactory.undo`, historique du gâteau ; bouton rond à
+    gauche de la rangée, icône `undo`, libellé « Annuler » / « Undo », montré dès qu'un choix peut s'annuler ; revient
+    au choix et à l'étape d'avant, un étage ajouté s'en va ; rien n'est rendu après un gâteau faux, le gâteau refait
+    repart sans historique ; aide corrigée aussi : elle décrivait encore la vérification à chaque choix, retirée le
+    16/11 ; `CakesTest`). **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;
     en mode Copier, l'erreur reste comptée et le cœur perdu ne revient pas.
 24. **« Normal » remplacé par « Moyen »** (« Medium » en anglais) **partout** dans les textes affichés (une vingtaine de
     jeux), clés internes inchangées ; « Version normale » des Petits chevaux devient « **Plateau classique** » ; signaler

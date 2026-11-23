@@ -32,7 +32,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -198,6 +200,24 @@ public class CakeFactory implements GameLifeCycle {
      */
     private final Set<Integer> wrongLayers = new HashSet<>();
 
+    /**
+     * The cake before a choice: its layers, its decoration and the step it was at (see {@link #undo()}).
+     */
+    private record Snapshot(List<Layer> layers, int decoration, Step step) {
+    }
+
+    /**
+     * The cake before each choice since its start, the last one first: "Undo" goes back one choice, as far as the
+     * start of the cake, finished layers included (tester's feedback of 20/11/2026, point 23).
+     */
+    private final Deque<Snapshot> history = new ArrayDeque<>();
+
+    /**
+     * The "Undo" button, at the left of the row, shown once a choice can be undone; null otherwise.
+     */
+    @Getter
+    private Choice undoButton;
+
     private double width;
     private double height;
     private double cakeX;
@@ -320,6 +340,7 @@ public class CakeFactory implements GameLifeCycle {
         layers.clear();
         layers.add(new Layer());
         decoration = -1;
+        history.clear();
         reward.getChildren().clear();
         removed.clear();
         wrongLayers.clear();
@@ -525,6 +546,13 @@ public class CakeFactory implements GameLifeCycle {
             showModel = new Choice(null, 0, icon("search"), "CakesShowModel");
             showModel.place(width * 0.8, height - buttonRadius() - height * 0.05);
             choices.add(showModel);
+        }
+        // "Undo" at the left of the row, once there is a choice to undo (point 23)
+        undoButton = null;
+        if (!history.isEmpty()) {
+            undoButton = new Choice(null, -1, icon("undo"), "CakesUndo");
+            undoButton.place(width * 0.1, y);
+            choices.add(undoButton);
         }
         showTabs();
         // New buttons, maybe under the pointer: nothing can be chosen during the delay of the settings (tester's
@@ -1048,6 +1076,14 @@ public class CakeFactory implements GameLifeCycle {
             modelAgain = MODEL_AGAIN;
             return;
         }
+        if (choice == undoButton) {
+            undo();
+            return;
+        }
+        // The cake before this choice, for "Undo"
+        final List<Layer> before = new ArrayList<>();
+        layers.forEach(part -> before.add(part.copy()));
+        history.push(new Snapshot(before, decoration, step));
         if (choice.step == Step.NEXT) {
             setStep(choice.value == 0 ? Step.ACCESSORY : Step.SWEETS);
             return;
@@ -1066,6 +1102,24 @@ public class CakeFactory implements GameLifeCycle {
         drawCake();
         // Copying a model: no check on the way (maintainer's request of 16/11/2026), the cake is compared once finished
         nextStep();
+    }
+
+    /**
+     * "Undo": the cake goes back to how it was before the last choice, its step too (a layer added goes away). Nothing
+     * else changes: a copy is only checked once finished, so the mistakes counted and the hearts lost at a wrong cake
+     * stay (the cake made again starts with an empty history).
+     */
+    void undo() {
+        if (phase != Phase.CHOOSE || history.isEmpty()) {
+            return;
+        }
+        final Snapshot last = history.pop();
+        layers.clear();
+        last.layers().forEach(part -> layers.add(part.copy()));
+        decoration = last.decoration();
+        gameContext.getSoundManager().add(SOUNDS + "plop.wav");
+        drawCake();
+        setStep(last.step());
     }
 
     /**
@@ -1175,6 +1229,7 @@ public class CakeFactory implements GameLifeCycle {
         layers.clear();
         layers.add(new Layer());
         decoration = -1;
+        history.clear();
         reward.getChildren().clear();
         wrongLayers.clear();
         blinkLeft = 0;

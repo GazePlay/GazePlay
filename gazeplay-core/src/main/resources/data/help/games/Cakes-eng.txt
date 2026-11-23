@@ -4,7 +4,8 @@ Make a cake layer by layer: the cake, the cream, an accessory around the layers 
 # How to play
 - At the bottom, round buttons show the choices of the step: each button shows the layer as it would be. Look at a button: a ring fills, then the choice goes on the cake. The length of the ring is that of the settings, also changed in the menu (Esc key).
 - At the top, the layer and the step of now: Cake, Cream, then Accessory (a ribbon, pearls or hearts around the layer) for the layers below, or Sweets and Decoration for the last layer.
-- Copying the model: if a choice is not that of the model, the part of the model blinks in red; choose again. A right choice goes to the next step, then a new layer comes.
+- Copying the model: each choice goes to the next step, then a new layer comes; the cake is compared with the model only once finished (see "How to win").
+- The "Undo" button, at the left of the choices, takes the last choice away and goes back to its step; you can undo up to the start of the cake, finished layers included. It only shows once a first choice is made. Copying the model, a wrong cake stays counted as a mistake, and the heart lost does not come back.
 - In Hard, the model hides after 5 seconds: look at the button "See the model" to see it again for 3 seconds.
 - In Free, after the cream: "One more layer" (the accessory, then a new layer, up to 3) or "Decorate" (the sweets and the decoration, to finish).
 - At the start and at each new row of buttons, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.

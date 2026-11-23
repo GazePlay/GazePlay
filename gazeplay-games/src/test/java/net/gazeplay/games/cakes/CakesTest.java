@@ -105,6 +105,83 @@ class CakesTest {
     }
 
     /**
+     * Tester's feedback of 20/11/2026, point 23: "Undo" shows once a choice is made, and takes the last choice away,
+     * back to its step, as far as the start of the cake.
+     */
+    @Test
+    void shouldUndoTheLastChoicesUpToTheStartOfTheCake() throws Exception {
+        final CakeFactory game = launched(CakesMode.FREE, CakesLevel.FREE, CakesEnd.ENDLESS);
+        fx(() -> {
+            assertNull(game.getUndoButton(), "nothing to undo at the start");
+            game.choose(game.choice(2));
+            game.choose(game.choice(3));
+            assertEquals(CakeFactory.Step.NEXT, game.getStep());
+            assertNotNull(game.getUndoButton());
+            assertTrue(game.getChoices().contains(game.getUndoButton()));
+
+            game.choose(game.getUndoButton());
+            assertEquals(CakeFactory.Step.CREAM, game.getStep());
+            assertEquals(2, game.getLayers().get(0).sponge);
+            assertEquals(-1, game.getLayers().get(0).cream);
+            game.choose(game.getUndoButton());
+            assertEquals(CakeFactory.Step.SPONGE, game.getStep());
+            assertEquals(-1, game.getLayers().get(0).sponge);
+            assertNull(game.getUndoButton(), "back at the start of the cake");
+            return null;
+        });
+    }
+
+    /**
+     * Point 23: a finished layer can be undone too; the layer added after it goes away.
+     */
+    @Test
+    void shouldUndoAFinishedLayer() throws Exception {
+        final CakeFactory game = launched(CakesMode.COPY, CakesLevel.NORMAL, CakesEnd.ENDLESS);
+        fx(() -> {
+            final CakeFactory.Layer first = game.getModel().get(0);
+            game.choose(game.choice(first.sponge));
+            game.choose(game.choice(first.cream));
+            game.choose(game.choice(first.accessory));
+            assertEquals(2, game.getLayers().size());
+            steps(game, CakeFactory.ARRIVE + 0.04);
+            assertEquals(CakeFactory.Step.SPONGE, game.getStep());
+
+            game.choose(game.getUndoButton());
+            assertEquals(1, game.getLayers().size(), "the layer added goes away");
+            assertEquals(CakeFactory.Step.ACCESSORY, game.getStep());
+            assertEquals(-1, game.getLayers().get(0).accessory);
+            assertEquals(first.cream, game.getLayers().get(0).cream);
+            return null;
+        });
+    }
+
+    /**
+     * Point 23: undoing gives nothing back after a wrong cake: the mistakes stay counted, the heart lost does not come
+     * back, and the cake made again starts with nothing to undo.
+     */
+    @Test
+    void shouldGiveNothingBackAfterAWrongCake() throws Exception {
+        final CakeFactory game = launched(CakesMode.COPY, CakesLevel.EASY, CakesEnd.ENDLESS);
+        fx(() -> {
+            final CakeFactory.Layer part = game.getModel().get(0);
+            game.choose(game.choice((part.sponge + 1) % CakeFactory.SPONGES));
+            game.choose(game.choice(part.cream));
+            game.choose(game.choice(part.sweets));
+            game.choose(game.choice(game.getModelDecoration()));
+            assertEquals(CakeFactory.Phase.CHECK, game.getPhase());
+            assertEquals(CakeFactory.LIVES - 1, game.getLives());
+            verify(stats).incrementNumberOfMistakes();
+
+            steps(game, CakeFactory.CHECK + 0.04);
+            assertEquals(CakeFactory.Phase.CHOOSE, game.getPhase());
+            assertNull(game.getUndoButton(), "the cake made again starts with nothing to undo");
+            assertEquals(CakeFactory.LIVES - 1, game.getLives());
+            verify(stats, times(1)).incrementNumberOfMistakes();
+            return null;
+        });
+    }
+
+    /**
      * Tester's feedback of 20/11/2026, point 22: the buttons of each step ask for the delay of the settings, and the
      * pointer left on a new button chooses nothing while it runs; once it is over, the fixation counts from zero.
      */
@@ -162,12 +239,13 @@ class CakesTest {
         fx(() -> {
             assertEquals(CakeFactory.SPONGES, game.getChoices().size());
             game.choose(game.choice(0));
-            assertEquals(CakeFactory.CREAMS, game.getChoices().size());
+            // The choices of the step, and "Undo" once a choice is made (point 23)
+            assertEquals(CakeFactory.CREAMS + 1, game.getChoices().size());
             game.choose(game.choice(0));
             assertEquals(CakeFactory.Step.NEXT, game.getStep());
-            assertEquals(2, game.getChoices().size());
+            assertEquals(2 + 1, game.getChoices().size());
             game.choose(game.choice(0));
-            assertEquals(CakeFactory.ACCESSORIES, game.getChoices().size());
+            assertEquals(CakeFactory.ACCESSORIES + 1, game.getChoices().size());
             return null;
         });
     }

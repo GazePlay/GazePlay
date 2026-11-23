@@ -4,7 +4,8 @@ Fabrique un gâteau étage par étage : le gâteau, le nappage, un accessoire au
 # Comment jouer
 - En bas, des boutons ronds montrent les choix de l’étape : chaque bouton montre l’étage tel qu’il serait. Regarde un bouton : un anneau se remplit, puis le choix se pose sur le gâteau. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - En haut, l’étage et l’étape en cours : Gâteau, Nappage, puis Accessoire (un ruban, des perles ou des cœurs autour de l’étage) pour les étages du dessous, ou Bonbons et Décoration pour le dernier étage.
-- En copiant le modèle : si un choix n’est pas celui du modèle, la partie du modèle clignote en rouge ; choisis à nouveau. Un bon choix passe à l’étape suivante, puis un nouvel étage arrive.
+- En copiant le modèle : chaque choix passe à l’étape suivante, puis un nouvel étage arrive ; le gâteau n’est comparé au modèle qu’une fois fini (voir « Comment gagner »).
+- Le bouton « Annuler », à gauche des choix, enlève le dernier choix et revient à son étape ; on peut annuler jusqu’au début du gâteau, étages finis compris. Il n’apparaît qu’une fois un premier choix fait. En copiant le modèle, un gâteau faux reste compté comme une erreur, et le cœur perdu ne revient pas.
 - En Difficile, le modèle se cache au bout de 5 secondes : regarde le bouton « Voir le modèle » pour le revoir 3 secondes.
 - En Libre, après le nappage : « Encore un étage » (l’accessoire, puis un nouvel étage, jusqu’à 3) ou « Décorer » (les bonbons et la décoration, pour finir).
 - Au début et à chaque nouvelle rangée de boutons, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
