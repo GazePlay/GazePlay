@@ -326,6 +326,10 @@ public class Memory implements GameLifeCycle {
                 other.reset(!faceUp);
                 card.reset(!faceUp);
                 comparing = false;
+                // The cards can be chosen again, one of them under the pointer, which the turning card leaves and
+                // enters again: nothing is chosen during the delay of the settings (tester's feedback of 20/11/2026,
+                // point 22)
+                gameContext.onGameStarted();
             });
         }
     }

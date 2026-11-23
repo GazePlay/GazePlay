@@ -5,6 +5,7 @@ Retrouve les paires de cartes identiques.
 - Regarde une carte : un anneau fait le tour de la carte, puis elle se retourne (durée de fixation des réglages).
 - Regarde une deuxième carte. Si elles sont pareilles, elles sont entourées de vert puis disparaissent.
 - Sinon, elles sont entourées de rouge, restent visibles un moment, puis se retournent : retiens où elles sont.
+- Au début de la partie et quand les cartes se retournent, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - En haut, « Paires » montre combien de paires tu as trouvées.
 
 # Comment gagner

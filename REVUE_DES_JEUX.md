@@ -172,7 +172,10 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     étape à part : réglages de la partie (bloc `settings`) et périodes bloquées dans `replayData.json`, en restant en
     v6. **Fait** : socle commun, La Fabrique à gâteaux (délai à chaque étape, `CakesTest`), validé par le mainteneur
     le 23/11 (constat à l'essai : souris immobile, la fixation ne reprend qu'une fois la souris bougée, la zone
-    désactivée ne recevant pas l'entrée du pointeur ; comportement accepté). **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    désactivée ne recevant pas l'entrée du pointeur ; comportement accepté). Où est… et Trouve l'intrus : rien à
+    changer (délai déjà lancé à chaque écran, fixation démarrée seulement à l'entrée du pointeur). Memory : délai quand
+    une paire fausse se retourne (la carte qui tourne sous la souris immobile la faisait sortir puis rentrer, et se
+    rechoisir), `MemoryTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

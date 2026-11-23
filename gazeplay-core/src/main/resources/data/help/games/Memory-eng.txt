@@ -5,6 +5,7 @@ Find the pairs of identical cards.
 - Look at a card: a ring goes around the card, then it turns over (fixation length of the settings).
 - Look at a second card. If they are the same, they are circled in green, then they disappear.
 - Otherwise they are circled in red, stay shown for a moment, then turn back: remember where they are.
+- At the start of the game and when the cards turn back, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - At the top, "Pairs" shows how many pairs you found.
 
 # How to win

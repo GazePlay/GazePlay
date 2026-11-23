@@ -188,6 +188,7 @@ class MemoryTest {
         MemoryCard second = memory.getCards().stream().filter(card -> card.getPairId() == 1).findFirst().orElseThrow();
 
         WaitForAsyncUtils.asyncFx(() -> {
+            clearInvocations(gameContext);
             memory.cardFixated(first);
             memory.cardFixated(second);
         }).get();
@@ -195,12 +196,15 @@ class MemoryTest {
 
         WaitForAsyncUtils.sleep((long) Memory.WRONG_PAIR_SHOWN.toMillis() - 500, java.util.concurrent.TimeUnit.MILLISECONDS);
         assertTrue(memory.isComparing(), "still shown");
+        verify(gameContext, never()).onGameStarted();
         WaitForAsyncUtils.sleep(900, java.util.concurrent.TimeUnit.MILLISECONDS);
         WaitForAsyncUtils.waitForFxEvents();
         assertFalse(first.isSelected() || second.isSelected());
         assertFalse(memory.isComparing());
         assertEquals(0, memory.getPairsFound());
         verify(stats, never()).incrementNumberOfGoalsReached();
+        // Point 22 (23/11/2026): the cards turned back, maybe under the pointer, wait for the delay of the settings
+        verify(gameContext).onGameStarted();
     }
 
     /**
