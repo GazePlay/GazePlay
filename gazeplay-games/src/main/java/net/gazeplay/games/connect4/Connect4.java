@@ -352,8 +352,12 @@ public class Connect4 implements GameLifeCycle {
 
     /**
      * The turn of the player to play: the computer thinks, or a column can be chosen.
+     *
+     * @param delayed whether a player's turn follows another turn, the pointer maybe still on the column just played:
+     *                nothing can be chosen during the delay of the settings (tester's feedback of 20/11/2026, point 22;
+     *                the first turn follows the wait of the start)
      */
-    private void startTurn() {
+    private void startTurn(final boolean delayed) {
         elapsed = 0;
         progress = 0;
         ring.stop();
@@ -365,6 +369,9 @@ public class Connect4 implements GameLifeCycle {
             showGhost(sweep[0]);
         } else {
             phase = Phase.PLAY;
+            if (delayed) {
+                gameContext.onGameStarted();
+            }
             showLooked();
         }
         showHud();
@@ -382,7 +389,7 @@ public class Connect4 implements GameLifeCycle {
                 elapsed += seconds;
                 if (elapsed >= waiting) {
                     stats.notifyNewRoundReady();
-                    startTurn();
+                    startTurn(false);
                 }
             }
             case PLAY -> fixate(seconds);
@@ -405,7 +412,7 @@ public class Connect4 implements GameLifeCycle {
                     } else {
                         newGame();
                         stats.notifyNewRoundReady();
-                        startTurn();
+                        startTurn(true);
                     }
                 }
             }
@@ -420,6 +427,15 @@ public class Connect4 implements GameLifeCycle {
     private void fixate(final double seconds) {
         if (looked < 0 || !board.canPlay(looked)) {
             return;
+        }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay of a new turn: the fixation starts once it is over
+            progress = 0;
+            ring.stop();
+            return;
+        }
+        if (!ring.isVisible()) {
+            showLooked();
         }
         progress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
         ring.setProgress(progress);
@@ -467,9 +483,14 @@ public class Connect4 implements GameLifeCycle {
             light.setX(boardX + looked * cell);
             light.setY(boardY);
             light.setVisible(true);
-            ring.setSize(cell * 0.98);
-            ring.show(columnX(looked), ghostY());
-            ring.setProgress(progress);
+            if (gameContext.isSelectionBlocked()) {
+                // The column lit and the token shown, the ring once the delay is over
+                ring.stop();
+            } else {
+                ring.setSize(cell * 0.98);
+                ring.show(columnX(looked), ghostY());
+                ring.setProgress(progress);
+            }
         } else {
             ghost.setVisible(false);
             light.setVisible(false);
@@ -544,7 +565,7 @@ public class Connect4 implements GameLifeCycle {
             endGame(Connect4Board.EMPTY);
         } else {
             current = current == RED ? YELLOW : RED;
-            startTurn();
+            startTurn(true);
         }
     }
 

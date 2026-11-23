@@ -9,7 +9,7 @@ Aligne 4 jetons de ta couleur avant ton adversaire : en ligne, en colonne ou en 
 - Celui qui commence change à chaque partie.
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut, à qui le tour, et le score.
-- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+- Au début, rien ne peut être choisi avant le délai des réglages ; à chaque fois que c'est à un joueur de jouer, rien ne peut être choisi pendant ce délai (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Le premier qui aligne 4 jetons gagne la partie : ses 4 jetons sont entourés. Si la grille est pleine sans gagnant, c'est un match nul. Après 1, 3 ou 5 parties : si tu as gagné plus de parties que l'ordinateur, c'est « Bravo », puis les statistiques ; sinon, les statistiques tout de suite. À deux, c'est toujours « Bravo ». Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).

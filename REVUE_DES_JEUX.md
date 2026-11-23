@@ -197,7 +197,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     `MagicPotionsTest`, aide ; **à revoir à la fin** (demande du mainteneur : garder ou non ce délai sans cas
     involontaire). Répète après moi : délai quand vient le tour du joueur (après l'écoute ; à deux, avant d'ajouter une
     note : le bouton de la dernière note s'ajoutait seul), l'anneau réaffiché quand la fixation reprend (il restait
-    caché après un appui), `SimonTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    caché après un appui), `SimonTest`, aide. Quatre en ligne : délai à chaque tour d'un joueur après le premier (la
+    colonne restée sous la souris se rejouait aussitôt ; colonne éclairée et jeton montrés pendant le délai, anneau
+    ensuite), `Connect4Test`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

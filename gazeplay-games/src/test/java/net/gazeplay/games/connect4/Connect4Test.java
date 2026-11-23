@@ -395,6 +395,34 @@ class Connect4Test {
         assertEquals(RED, game.getCurrent());
     }
 
+    /**
+     * Point 22 (23/11/2026): the column left under the pointer used to be played again at once when the turn came back;
+     * each turn of a player after the first asks for the delay of the settings, during which nothing is played.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachTurnOfAPlayer() throws Exception {
+        final Connect4 game = playing(Connect4Opponent.NORMAL, Connect4End.ENDLESS, 5);
+        verify(gameContext, never()).onGameStarted();
+        fx(() -> {
+            game.lookAt(2);
+            return null;
+        });
+        steps(game, 1.05);
+        assertEquals(1, game.getBoard().count());
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        steps(game, 0.8 + Connect4.THINK + 0.8);
+        assertEquals(Connect4.Phase.PLAY, game.getPhase());
+        assertEquals(2, game.getBoard().count());
+        verify(gameContext).onGameStarted();
+        steps(game, 2);
+        assertEquals(2, game.getBoard().count(), "nothing played during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertEquals(2, game.getBoard().count(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertEquals(3, game.getBoard().count());
+    }
+
     @Test
     void shouldNotPlayAFullColumnNorDuringTheTurnOfTheComputer() throws Exception {
         final Connect4 game = playing(Connect4Opponent.EASY, Connect4End.ENDLESS, 7);
