@@ -124,6 +124,24 @@ class MagicCardsTest {
         }
     }
 
+    /**
+     * Tester's feedback of 20/11/2026, point 29: the face of a card is white in both themes, and the whole card is
+     * chosen with the mouse, not only the drawing.
+     */
+    @Test
+    void shouldPutThePicturesOnAWhiteCardChosenEverywhere() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
+        fx(() -> {
+            for (final MagicCards.Card card : game.getCards()) {
+                final javafx.scene.Group face = (javafx.scene.Group) card.getNode().getChildren().get(0);
+                final javafx.scene.shape.Rectangle surface = (javafx.scene.shape.Rectangle) face.getChildren().get(0);
+                assertTrue(surface.getStyle().contains("-fx-fill: #FFFFFF"), surface.getStyle());
+                assertFalse(surface.isMouseTransparent());
+            }
+            return null;
+        });
+    }
+
     @Test
     void shouldPutEveryGridInTheScreenWithoutOverlap() throws Exception {
         for (final MagicCardsCount count : MagicCardsCount.values()) {

@@ -694,7 +694,8 @@ public class MagicCards implements GameLifeCycle {
             this.slot = slot;
             final double w = cardWidth;
             final double h = cardHeight;
-            final Rectangle surface = GameStyle.targetCard(-w / 2, -h / 2, w, h);
+            // A white card in both themes, chosen on all its surface (point 29 of the tester's feedback)
+            final Rectangle surface = GameStyle.pictureCard(-w / 2, -h / 2, w, h);
             face = new Group(surface);
             if (image != null) {
                 final ImageView view = new ImageView(image);
