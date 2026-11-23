@@ -9,7 +9,7 @@ A ball is hidden under a cup. Follow that cup with your eyes while the cups are 
 - A ring fills during a fixation; it lasts the length of the settings.
 - At the top left, the lives (a red heart for each life); in the middle, the balls found.
 - The cups move at the speed of the settings.
-- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+- At the start, nothing can be chosen before the delay of the settings; when the cups stop, nothing can be chosen during this delay (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Escape key) is open.
 
 # How to win
 After 3, 5 or 10 balls found, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics; without end, leave by the menu (Escape key).

@@ -189,7 +189,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     `MagicCardsTest`, aide. Point par point : délai à chaque nouveau dessin (au début, en même temps que l'attente du
     début), `DotToDotTest`, aide. Pierre papier ciseaux : délai à chaque manche après la première (la carte gardée en
     mémoire comme regardée redémarrait son anneau aussitôt : le même signe se rejouait seul ; il ne repart qu'à la fin
-    du délai), `RockPaperScissorsTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    du délai), `RockPaperScissorsTest`, aide. Gobelets Pass Pass : délai quand les gobelets s'arrêtent (gobelet
+    regardé pendant les échanges : anneau aussitôt, comme dans Ordre ; il démarre à la fin du délai),
+    `CupsAndBallsTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

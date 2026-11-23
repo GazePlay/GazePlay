@@ -183,6 +183,31 @@ class CupsAndBallsTest {
         verify(gameContext.getSoundManager()).add("data/cups/sounds/found.wav");
     }
 
+    /**
+     * Point 22 (23/11/2026): when the cups stop and can be chosen, the delay of the settings is asked; a cup looked at
+     * while they moved is not chosen while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenTheCupsCanBeChosen() throws Exception {
+        final CupsAndBalls game = launched(CupsLevel.EASY, CupsEnd.ENDLESS, 7);
+        steps(game, 0.05);
+        final CupsAndBalls.Cup cup = game.getBallCup();
+        fx(() -> {
+            game.lookAt(cup);
+            return null;
+        });
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        untilPlay(game);
+        verify(gameContext).onGameStarted();
+        steps(game, 2);
+        assertEquals(CupsAndBalls.Phase.PLAY, game.getPhase(), "nothing chosen during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertEquals(CupsAndBalls.Phase.PLAY, game.getPhase(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertEquals(CupsAndBalls.Phase.REVEAL, game.getPhase());
+    }
+
     @Test
     void shouldShowTheBallAfterAWrongCupAndCostALife() throws Exception {
         final CupsAndBalls game = launched(CupsLevel.EASY, CupsEnd.ENDLESS, 9);

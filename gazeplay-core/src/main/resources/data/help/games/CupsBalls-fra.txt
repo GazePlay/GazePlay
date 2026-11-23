@@ -9,7 +9,7 @@ Une balle est cachée sous un gobelet. Suis bien ce gobelet des yeux pendant que
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut à gauche, les vies (un cœur rouge par vie) ; au milieu, les balles trouvées.
 - Les gobelets bougent à la vitesse des réglages.
-- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+- Au début, rien ne peut être choisi avant le délai des réglages ; quand les gobelets s'arrêtent, rien ne peut être choisi pendant ce délai (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Après 3, 5 ou 10 balles trouvées, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques ; sans fin, on quitte par le menu (touche Échap).

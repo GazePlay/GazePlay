@@ -308,6 +308,9 @@ public class CupsAndBalls implements GameLifeCycle {
                         phase = Phase.PLAY;
                         stats.incrementNumberOfGoalsToReach();
                         showHud();
+                        // The cups can be chosen, the last ones just moved, maybe under the pointer: nothing can be
+                        // chosen during the delay of the settings (tester's feedback of 20/11/2026, point 22)
+                        gameContext.onGameStarted();
                     } else {
                         startExchange();
                     }
@@ -390,6 +393,12 @@ public class CupsAndBalls implements GameLifeCycle {
         if (looked == null) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after the cups became choosable: the fixation starts once it is over
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             showRing(looked);
         }
@@ -424,7 +433,7 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private void showRing(final Cup cup) {
-        if (phase != Phase.PLAY) {
+        if (phase != Phase.PLAY || gameContext.isSelectionBlocked()) {
             return;
         }
         ring.setSize(cupWidth * 0.8);
