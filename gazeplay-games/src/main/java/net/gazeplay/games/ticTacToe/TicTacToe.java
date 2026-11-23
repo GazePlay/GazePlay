@@ -304,7 +304,14 @@ public class TicTacToe implements GameLifeCycle {
         ring.stop();
     }
 
-    private void startTurn() {
+    /**
+     * The turn of the player to play: the computer thinks, or a box can be chosen.
+     *
+     * @param delayed whether a player's turn follows another turn (a new game of a match frees the box under the
+     *                pointer): nothing can be chosen during the delay of the settings (tester's feedback of 20/11/2026,
+     *                point 22, as in Connect4; the first turn follows the wait of the start)
+     */
+    private void startTurn(final boolean delayed) {
         elapsed = 0;
         progress = 0;
         ring.stop();
@@ -317,6 +324,9 @@ public class TicTacToe implements GameLifeCycle {
             showGhost(sweep[0]);
         } else {
             phase = Phase.PLAY;
+            if (delayed) {
+                gameContext.onGameStarted();
+            }
             showLooked();
         }
         paintBoxes();
@@ -335,7 +345,7 @@ public class TicTacToe implements GameLifeCycle {
                 elapsed += seconds;
                 if (elapsed >= waiting) {
                     stats.notifyNewRoundReady();
-                    startTurn();
+                    startTurn(false);
                 }
             }
             case PLAY -> fixate(seconds);
@@ -366,7 +376,7 @@ public class TicTacToe implements GameLifeCycle {
                     } else {
                         newGame();
                         stats.notifyNewRoundReady();
-                        startTurn();
+                        startTurn(true);
                     }
                 }
             }
@@ -378,6 +388,15 @@ public class TicTacToe implements GameLifeCycle {
     private void fixate(final double seconds) {
         if (looked < 0 || !board.canPlay(looked)) {
             return;
+        }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay of a new turn: the fixation starts once it is over
+            progress = 0;
+            ring.stop();
+            return;
+        }
+        if (!ring.isVisible()) {
+            showLooked();
         }
         progress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
         ring.setProgress(progress);
@@ -421,9 +440,14 @@ public class TicTacToe implements GameLifeCycle {
     private void showLooked() {
         if (looked >= 0 && board.canPlay(looked)) {
             showGhost(looked);
-            ring.setSize(cell * 0.86);
-            ring.show(boxX(looked), boxY(looked));
-            ring.setProgress(progress);
+            if (gameContext.isSelectionBlocked()) {
+                // The mark shown in the box, the ring once the delay is over
+                ring.stop();
+            } else {
+                ring.setSize(cell * 0.86);
+                ring.show(boxX(looked), boxY(looked));
+                ring.setProgress(progress);
+            }
         } else {
             ghost.setVisible(false);
             ring.stop();
@@ -467,7 +491,7 @@ public class TicTacToe implements GameLifeCycle {
             endGame(TicTacToeBoard.EMPTY);
         } else {
             current = current == CROSS ? NOUGHT : CROSS;
-            startTurn();
+            startTurn(true);
         }
     }
 

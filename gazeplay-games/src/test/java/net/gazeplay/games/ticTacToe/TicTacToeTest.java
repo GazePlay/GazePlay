@@ -301,6 +301,33 @@ class TicTacToeTest {
         assertEquals(TicTacToe.Phase.PLAY, game.getPhase());
     }
 
+    /**
+     * Point 22 (23/11/2026): each turn of a player after the first asks for the delay of the settings, during which a
+     * box looked at is not played; then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachTurnOfAPlayer() throws Exception {
+        final TicTacToe game = playing(TicTacToeOpponent.NORMAL, TicTacToeEnd.ENDLESS, 5);
+        verify(gameContext, never()).onGameStarted();
+        playAndDraw(game, 0);
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        steps(game, TicTacToe.THINK + TicTacToe.DRAW + 0.1);
+        assertEquals(TicTacToe.Phase.PLAY, game.getPhase());
+        verify(gameContext).onGameStarted();
+        final int free = game.getBoard().free().get(0);
+        fx(() -> {
+            game.lookAt(free);
+            return null;
+        });
+        steps(game, 2);
+        assertEquals(2, game.getBoard().count(), "nothing played during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertEquals(2, game.getBoard().count(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertEquals(3, game.getBoard().count());
+    }
+
     @Test
     void shouldNotPlayATakenBoxNorDuringTheTurnOfTheComputer() throws Exception {
         final TicTacToe game = playing(TicTacToeOpponent.EASY, TicTacToeEnd.ENDLESS, 7);
