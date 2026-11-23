@@ -646,9 +646,14 @@ public class TrainSwitches implements GameLifeCycle {
         final boolean shown = isDepartWaiting();
         if (shown != departButton.isVisible()) {
             departButton.setVisible(shown);
+            if (shown && sent > 0) {
+                // The button comes back at its place, maybe under the pointer (no train moves): nothing can be chosen
+                // during the delay of the settings (tester's feedback of 20/11/2026, point 22; the next train used to
+                // leave at once). The first one follows the wait of the start
+                gameContext.onGameStarted();
+            }
             if (shown && looked == departButton) {
                 progress = 0;
-                showRing(departButton);
             }
         }
     }
@@ -875,9 +880,11 @@ public class TrainSwitches implements GameLifeCycle {
         placeResumeButton(sx(box[0]), sy(box[1]));
         resumeButton.setVisible(true);
         elapsed = 0;
+        // The button appears next to the switch, maybe under the pointer (every train stopped): nothing can be chosen
+        // during the delay of the settings (point 22)
+        gameContext.onGameStarted();
         if (looked == resumeButton) {
             progress = 0;
-            showRing(resumeButton);
         }
     }
 
@@ -972,7 +979,8 @@ public class TrainSwitches implements GameLifeCycle {
         if (looked == null) {
             return;
         }
-        if (!isEnabled(looked)) {
+        if (!isEnabled(looked) || gameContext.isSelectionBlocked()) {
+            // Not enabled, or during the delay after a button appeared: the fixation starts once it is over
             ring.stop();
             progress = 0;
             return;
@@ -1021,7 +1029,7 @@ public class TrainSwitches implements GameLifeCycle {
         looked = target;
         progress = 0;
         ring.stop();
-        if (isEnabled(target)) {
+        if (isEnabled(target) && !gameContext.isSelectionBlocked()) {
             showRing(target);
         }
     }

@@ -511,6 +511,67 @@ class TrainSwitchesTest {
     }
 
     /**
+     * Point 22 (23/11/2026): "Departure" and "Resume" ask for the delay of the settings when they appear; looked at,
+     * they are not chosen while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenDepartureOrResumeAppears() throws Exception {
+        final TrainSwitches departing = playing(TrainSwitchesLevel.EASY, TrainSwitchesRhythm.ONE_AT_A_TIME,
+            TrainSwitchesEnd.ENDLESS, 13);
+        steps(departing, STEP);
+        assertTrue(departing.isDepartShown());
+        // The first train follows the wait of the start: no other delay
+        verify(gameContext, never()).onGameStarted();
+        fx(() -> {
+            departing.depart();
+            return null;
+        });
+        steps(departing, STEP);
+        assertEquals(1, departing.getSent());
+        // The train arrived: the button comes back, maybe under the pointer, and asks for the delay
+        final int arrived = departing.getArrived();
+        setWays(departing, stationOf(departing, departing.getTrains().get(0).getColor()));
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        for (int i = 0; i < 6000 && departing.getArrived() == arrived; i++) {
+            steps(departing, STEP);
+        }
+        steps(departing, STEP);
+        assertTrue(departing.isDepartShown());
+        verify(gameContext).onGameStarted();
+        fx(() -> {
+            departing.lookAt(departing.getDepartButton());
+            return null;
+        });
+        steps(departing, 3);
+        assertEquals(1, departing.getSent(), "no train sent during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(departing, 0.9);
+        assertEquals(1, departing.getSent(), "the fixation counts from the end of the delay");
+        steps(departing, 0.15);
+        steps(departing, STEP);
+        assertEquals(2, departing.getSent());
+
+        final TrainSwitches pausing = playing(TrainSwitchesLevel.NORMAL, TrainSwitchesRhythm.PAUSE,
+            TrainSwitchesEnd.ENDLESS, 17);
+        clearInvocations(gameContext);
+        for (int i = 0; i < 1200 && pausing.getPaused() == null; i++) {
+            steps(pausing, STEP);
+        }
+        assertTrue(pausing.isResumeShown());
+        verify(gameContext).onGameStarted();
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        fx(() -> {
+            pausing.lookAt(pausing.getResumeButton());
+            return null;
+        });
+        steps(pausing, 3);
+        assertNotNull(pausing.getPaused(), "not resumed during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(pausing, 1.05);
+        assertNull(pausing.getPaused());
+    }
+
+    /**
      * The departure button is next to the hill of the tunnel, inside the screen under the band of the score, and on no
      * box with rails, a station or a switch.
      */
