@@ -1,5 +1,5 @@
 # The principle
-A picture is hidden under colored blocks. Make all the blocks vanish with your gaze to uncover it!
+A picture is hidden under colored blocks. Make the blocks vanish with your gaze to uncover it!
 
 # How to play
 - Vanish as soon as looked at: a block vanishes as soon as you look at it. Move your gaze around the screen to remove them all.
@@ -9,7 +9,7 @@ A picture is hidden under colored blocks. Make all the blocks vanish with your g
 - At the start, nothing happens during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-There are no lives and no mistakes. When all the blocks have vanished, a star and "Well done!": the whole picture stays 2 seconds, then another picture comes. As you chose, the game stops after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+There are no lives and no mistakes. When 90 % of the blocks are removed (all of them in Easy, 23 of 25 in Medium, 58 of 64 in Hard), the blocks left vanish by themselves, then a star and "Well done!": the whole picture stays 2 seconds, then another picture comes. As you chose, the game stops after 3, 5 or 10 pictures ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

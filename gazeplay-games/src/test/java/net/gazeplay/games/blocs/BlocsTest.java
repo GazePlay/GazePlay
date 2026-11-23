@@ -168,6 +168,32 @@ class BlocsTest {
         });
     }
 
+    /**
+     * Tester's feedback of 20/11/2026, point 25: the picture is uncovered once 90 % of the blocks are removed (rounded
+     * up), the blocks left vanish by themselves.
+     */
+    @Test
+    void shouldUncoverThePictureAtNinetyPercentOfTheBlocks() throws Exception {
+        assertEquals(9, launched(BlocsMode.GAZE, BlocsLevel.EASY, BlocsEnd.ENDLESS).blocksToRemove());
+        assertEquals(58, launched(BlocsMode.GAZE, BlocsLevel.HARD, BlocsEnd.ENDLESS).blocksToRemove());
+        final Blocs game = launched(BlocsMode.GAZE, BlocsLevel.NORMAL, BlocsEnd.ENDLESS);
+        assertEquals(23, game.blocksToRemove());
+        fx(() -> {
+            final List<Blocs.Block> all = List.copyOf(game.getBlocks());
+            for (int i = 0; i < 22; i++) {
+                game.lookAt(all.get(i));
+            }
+            assertEquals(3, game.getBlocks().size());
+            assertEquals(Blocs.Phase.PLAY, game.getPhase());
+            game.lookAt(all.get(22));
+            assertTrue(game.getBlocks().isEmpty(), "the 2 blocks left vanish by themselves");
+            assertEquals(Blocs.Phase.REWARD, game.getPhase());
+            assertEquals(1, game.getUncovered());
+            verify(stats).incrementNumberOfGoalsReached();
+            return null;
+        });
+    }
+
     @Test
     void shouldEndWithBravoAfterThePicturesOfTheVariant() throws Exception {
         final Blocs game = launched(BlocsMode.GAZE, BlocsLevel.EASY, BlocsEnd.PICTURES_3);

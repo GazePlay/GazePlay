@@ -232,7 +232,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     retour visuel `Feedback`)). **« Normal » remplacé par « Moyen »** (« Medium » en anglais) **partout** dans les textes affichés (une vingtaine de
     jeux), clés internes inchangées ; « Version normale » des Petits chevaux devient « **Plateau classique** » ; signaler
     les autres mots qui renvoient à une norme.
-25. **Blocs** : réussite à **90 %** des blocs retirés ; les blocs restants **disparaissent seuls**.
+25. **FAIT le 23/11/2026, validé par le mainteneur** (`Blocs.SUCCESS`, seuil arrondi au-dessus : 9 sur 9 en
+    3 × 3, gardé par le mainteneur, 23 sur 25, 58 sur 64 ; les blocs restants disparaissent avec l'animation d'un bloc
+    retiré, puis la récompense ; aide ; `BlocsTest`). **Blocs** : réussite à **90 %** des blocs retirés ; les blocs restants **disparaissent seuls**.
 26. **Photos avec une personne reconnaissable** (Où est le son ? : musiciens…) : **toutes remplacées** (objet seul ou
     mains sans visage), remplaçants montrés au mainteneur ; droit à l'image non vérifié, d'où ce choix.
 27. **GazePlay Eval**, aide « Comprendre les fichiers de résultats » : nouvelle mise en page (titre par fichier, à quoi

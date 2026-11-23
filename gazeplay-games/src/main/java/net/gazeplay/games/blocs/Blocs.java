@@ -36,7 +36,8 @@ import java.util.List;
  * "Blocs" (name code Blocks; reviewed on 13/11/2026, maintainer's rules): a picture hidden under a grid of blocks of soft
  * colors (3 × 3, 5 × 5 or 8 × 8), each block vanishing as soon as the gaze enters it (to learn that the gaze acts) or
  * after a fixation; the picture is one of the animals of the default images, or one of the images of the user. All the
- * blocks are to remove; after 5 s without removing one, those left blink softly. A picture uncovered: a star and "Bravo
+ * blocks are to remove (since 23/11/2026, point 25: 90 %, the blocks left then vanish by themselves); after 5 s
+ * without removing one, those left blink softly. A picture uncovered: a star and "Bravo
  * !", the whole picture 2 s, then another (never the same twice in a row); the game ends after 3, 5 or 10 pictures
  * ("Bravo", then the statistics), or has no end.
  * <p>
@@ -54,6 +55,13 @@ public class Blocs implements GameLifeCycle {
     static final double VANISH = 0.3;
     static final double HELP = 5;
     static final double REWARD = 2;
+
+    /**
+     * The part of the blocks to remove for the picture to be uncovered; the blocks left then vanish by themselves
+     * (tester's feedback of 20/11/2026, point 25: the last blocks were long to find). Rounded up: all the 9 blocks of
+     * 3 × 3, 23 of 25, 58 of 64.
+     */
+    static final double SUCCESS = 0.9;
 
     private static final Color[] PALETTE = {Color.rgb(120, 170, 230), Color.rgb(240, 150, 120),
         Color.rgb(130, 200, 150), Color.rgb(190, 150, 220), Color.rgb(245, 200, 90)};
@@ -410,7 +418,16 @@ public class Blocs implements GameLifeCycle {
     }
 
     /**
-     * A block removed: it vanishes; the last one uncovers the picture.
+     * @return the blocks to remove for the picture to be uncovered: {@link #SUCCESS} of them, rounded up
+     */
+    int blocksToRemove() {
+        final int total = level.getSide() * level.getSide();
+        return (int) Math.ceil(total * SUCCESS - 1e-9);
+    }
+
+    /**
+     * A block removed: it vanishes; once {@link #SUCCESS} of them are removed, the blocks left vanish by themselves
+     * and the picture is uncovered.
      */
     void remove(final Block block) {
         if (phase != Phase.PLAY || !blocks.contains(block)) {
@@ -428,6 +445,16 @@ public class Blocs implements GameLifeCycle {
             left.shape.setOpacity(1);
         }
         gameContext.getSoundManager().add(SOUNDS + "pop.wav");
+        final int total = level.getSide() * level.getSide();
+        if (!blocks.isEmpty() && total - blocks.size() >= blocksToRemove()) {
+            // Enough blocks removed: the blocks left vanish by themselves
+            for (final Block left : blocks) {
+                gameContext.getGazeDeviceManager().removeEventFilter(left.shape);
+                left.shape.setMouseTransparent(true);
+                vanishing.add(left);
+            }
+            blocks.clear();
+        }
         showHud();
         if (blocks.isEmpty()) {
             uncovered++;

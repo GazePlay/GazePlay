@@ -1,5 +1,5 @@
 # Le principe
-Une image est cachée sous des blocs de couleur. Fais disparaître tous les blocs avec ton regard pour la découvrir !
+Une image est cachée sous des blocs de couleur. Fais disparaître les blocs avec ton regard pour la découvrir !
 
 # Comment jouer
 - Disparaissent dès qu’on les regarde : un bloc disparaît dès que tu le regardes. Promène ton regard sur l’écran pour les enlever tous.
@@ -9,7 +9,7 @@ Une image est cachée sous des blocs de couleur. Fais disparaître tous les bloc
 - Au début, rien ne se passe pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Il n’y a pas de vies ni d’erreurs. Quand tous les blocs ont disparu, une étoile et « Bravo ! » : l’image reste en entier 2 secondes, puis une autre image arrive. Selon ton choix, le jeu s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+Il n’y a pas de vies ni d’erreurs. Quand 90 % des blocs sont enlevés (tous en Facile, 23 sur 25 en Moyen, 58 sur 64 en Difficile), ceux qui restent disparaissent seuls, puis une étoile et « Bravo ! » : l’image reste en entier 2 secondes, puis une autre image arrive. Selon ton choix, le jeu s’arrête après 3, 5 ou 10 images (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
