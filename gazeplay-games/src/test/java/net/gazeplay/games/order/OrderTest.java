@@ -190,6 +190,31 @@ class OrderTest {
         verify(gameContext.getSoundManager()).add("data/order/sounds/right.wav");
     }
 
+    /**
+     * Point 22 (23/11/2026): when the targets become choosable, the delay of the settings is asked; a target looked at
+     * since it appeared is not chosen while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenTheTargetsCanBeChosen() throws Exception {
+        final Order game = launched(OrderLevel.THREE, OrderEnd.ENDLESS, 5);
+        steps(game, 0.05);
+        final Order.Target first = game.getTargets().get(0);
+        fx(() -> {
+            game.lookAt(first);
+            return null;
+        });
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        untilPlay(game);
+        verify(gameContext).onGameStarted();
+        steps(game, 2);
+        assertFalse(first.isFound(), "nothing chosen during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertFalse(first.isFound(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertTrue(first.isFound());
+    }
+
     @Test
     void shouldWinARoundInOrderAndCountIt() throws Exception {
         final Order game = launched(OrderLevel.FIVE, OrderEnd.ENDLESS, 7);

@@ -290,6 +290,9 @@ public class Order implements GameLifeCycle {
                     stats.notifyNewRoundReady();
                     stats.incrementNumberOfGoalsToReach();
                     showHud();
+                    // The targets can be chosen, the last one maybe just appeared under the pointer: nothing can be
+                    // chosen during the delay of the settings (tester's feedback of 20/11/2026, point 22)
+                    gameContext.onGameStarted();
                 }
             }
             case PLAY -> fixate(seconds);
@@ -333,6 +336,12 @@ public class Order implements GameLifeCycle {
         if (looked == null || looked.found) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after the targets became choosable: the fixation starts once it is over
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             // Looked at since it appeared: the ring shows now that it can be chosen
             ring.setSize(radius * 2.5);
@@ -355,7 +364,7 @@ public class Order implements GameLifeCycle {
         looked = target;
         progress = 0;
         ring.stop();
-        if (phase == Phase.PLAY && !target.found) {
+        if (phase == Phase.PLAY && !target.found && !gameContext.isSelectionBlocked()) {
             ring.setSize(radius * 2.5);
             ring.show(target.x, target.y);
         }

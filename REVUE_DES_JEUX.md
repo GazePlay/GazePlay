@@ -182,7 +182,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     `DiceTest`, aide. Identifier les lettres : délai à chaque nouvelle lettre (au début, en même temps que l'attente
     du début, aussi longue), `LettersTest`, aide. Opinions : la règle « quitter la réponse puis la regarder de
     nouveau », qui existait déjà (souris et regard), remplacée par le délai à chaque image, première comprise
-    (décision du mainteneur : comme partout), `OpinionsGameTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    (décision du mainteneur : comme partout), `OpinionsGameTest`, aide. Ordre : délai quand toutes les cibles sont
+    apparues et deviennent choisissables (une cible regardée pendant l'apparition voyait son anneau démarrer aussitôt ;
+    elle démarre maintenant à la fin du délai), `OrderTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;
