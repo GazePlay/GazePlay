@@ -83,6 +83,7 @@ accordion.mp3 | Accordion registers.ogg | Necz0r | Public domain | https://commo
 drums.mp3 | Kevin MacLeod assorted rimshots - 4-second roll.wav | Kevin MacLeod | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Kevin_MacLeod_assorted_rimshots_-_4-second_roll.wav
 elephant.mp3 | Elephant voice - trumpeting.ogg | தகவலுழவன் | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg
 flute.mp3 | Flute 2.ogg | hokuspokus | Public domain | https://commons.wikimedia.org/wiki/File:Flute_2.ogg
+guitar.mp3 | Romance Anónimo (Jeux interdits).ogg | Jim Greeninger | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Romance_An%C3%B3nimo_(Jeux_interdits).ogg
 harp.mp3 | Harp Curtain 01.ogg | Miguel Ángel Zaragozá de León | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Harp_Curtain_01.ogg
 lion.mp3 | Lion raring-sound1TamilNadu178.ogg | த*உழவன் | Public domain | https://commons.wikimedia.org/wiki/File:Lion_raring-sound1TamilNadu178.ogg
 piano.mp3 | Satie Gymnopedie No. 3 for piano solo 01.wav | Satie | Public domain | https://commons.wikimedia.org/wiki/File:Satie_Gymnopedie_No._3_for_piano_solo_01.wav
@@ -90,12 +91,15 @@ sheep.mp3 | Sheep bleating.ogg | earthcalling | Public domain | https://commons.
 snake.mp3 | Rattlesnake.ogg | unknown | Public domain | https://commons.wikimedia.org/wiki/File:Rattlesnake.ogg
 triangle.mp3 | LatinTriangle.ogg | http://en.wikipedia.org/wiki/User:Freddythehat | Public domain | https://commons.wikimedia.org/wiki/File:LatinTriangle.ogg
 trumpet.mp3 | Natural trumpet B-flat.ogg | ПростоУчастник | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Natural_trumpet_B-flat.ogg
-violin.mp3 | 00 Jazz Violin Solo.ogg | VWD | Public domain | https://commons.wikimedia.org/wiki/File:00_Jazz_Violin_Solo.ogg
+violin.mp3 | Bach Partita 2 - Allemanda - 18-04-2013.ogg | unknown (recorded at Queen Mary University of London) | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Bach_Partita_2_-_Allemanda_-_18-04-2013.ogg
 
 lion.mp3 (23/11/2026, after a tester's feedback: the former roar sounded like a pig): the first 7.6 s (two roars).
+violin.mp3 (23/11/2026, after a tester's feedback: the former one had percussion and a guitar): a violin alone, the
+first 8 s.
+guitar.mp3 (23/11/2026, with the violin): a guitar alone, the first 8 s.
 
-applause.mp3, bird.mp3, car.mp3, cat.mp3, chicken.mp3, cow.mp3, dog.mp3, duck.mp3, guitar.mp3, pig.mp3,
-river.mp3, storm.mp3: La Sonothèque (https://lasonotheque.org), licence CC0 1.0.
+applause.mp3, bird.mp3, car.mp3, cat.mp3, chicken.mp3, cow.mp3, dog.mp3, duck.mp3, pig.mp3, river.mp3,
+storm.mp3: La Sonothèque (https://lasonotheque.org), licence CC0 1.0.
 
 Volume of the sounds: brought to the loudness of the voices of the games (-17 LUFS, peaks at most -1.5 dBFS) on
 20/11/2026 by gradle/images/normalize_sounds.py (a constant gain, and a limiter on the few peaks); nothing else changed.

@@ -246,7 +246,7 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (version modernisée, novembre 2026). Musique « Talking Cute (Chiptune) » de Pro
   Sensory (Alex McCulloch), OpenGameArt, CC0.
 - Photos des jeux « Où est l'animal ? » et « Où est le son ? » (data/whereIsTheAnimal/images,
-  data/whereIsTheSound/images) et 12 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
+  data/whereIsTheSound/images) et 13 sons de « Où est le son ? » : Wikimedia Commons, sous CC0, domaine
   public, CC BY ou CC BY-SA 4.0. L'auteur, la licence et la page de chaque fichier sont dans le fichier
   CREDITS.txt de chaque jeu (data/whereIsTheAnimal/CREDITS.txt, data/whereIsTheSound/CREDITS.txt).
   Photos redimensionnées, sons raccourcis et normalisés (octobre 2026).

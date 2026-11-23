@@ -142,7 +142,13 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     éléphant seul de face, trompe levée ; crédits, `choices.txt`, inventaire ; la revue de toutes les photos est faite
     avec le point 26). **Photo d'éléphants** à remplacer (accouplement visible) par un éléphant seul ; **revue de toutes les photos** d'Où
     est le son ? et d'Où est l'animal ? (contenu choquant), photos douteuses signalées au mainteneur.
-18. **Violon seul** (l'actuel a percussions et guitare), 2 ou 3 candidats à faire écouter ; analyser (FFmpeg) les autres
+18. **FAIT le 23/11/2026, candidat 2 choisi et validé par le mainteneur** (*Bach Partita 2 - Allemanda - 18-04-2013.ogg*,
+    Queen Mary University of London, CC0, 8 premières secondes, −17 LUFS ; écartés : Preludio de Musopen, Gavotte de
+    Vicond, Prélude sans interprète nommé ; crédits et inventaire. Autres instruments mesurés (part sous 120 Hz) :
+    piano normal, Satie ; flûte, harpe, trompette, accordéon, tambour, triangle sans grave ; la guitare de La
+    Sonothèque, que la mesure ne pouvait départager (une guitare seule a aussi beaucoup de grave), **remplacée à la
+    demande du mainteneur** par *Romance Anónimo (Jeux interdits)*, Jim Greeninger, CC0, 8 premières secondes ;
+    écartés : Recuerdos de la Alhambra, Jason Shaw, RyGuy ; licence affichée : 13 sons Commons). **Violon seul** (l'actuel a percussions et guitare), 2 ou 3 candidats à faire écouter ; analyser (FFmpeg) les autres
     sons d'instruments et signaler ceux à écouter.
 19. **Accordéon de musée** (`accordion_1.jpg`) remplacé par un accordéon courant ; pendant la revue des photos,
     vérifier que chaque objet ou animal est typique et reconnaissable.
