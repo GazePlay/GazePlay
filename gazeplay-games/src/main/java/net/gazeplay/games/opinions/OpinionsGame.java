@@ -146,7 +146,9 @@ public class OpinionsGame implements GameLifeCycle {
             : Math.min(cardHeight - 2 * padding, image.getHeight() * (cardWidth - 2 * padding) / image.getWidth());
         final double cardX = (width - shownWidth) / 2 - padding;
         final double cardY = band + (cardHeight - shownHeight) / 2 - padding;
-        final Rectangle card = GameStyle.targetCard(cardX, cardY, shownWidth + 2 * padding,
+        // White in both themes, under an image with a transparent background (point 29 of the tester's feedback); the
+        // image is not chosen (the answers are), so the whole picture stays transparent to the mouse
+        final Rectangle card = GameStyle.pictureCard(cardX, cardY, shownWidth + 2 * padding,
             shownHeight + 2 * padding);
         view.setLayoutX(cardX + padding);
         view.setLayoutY(cardY + padding);

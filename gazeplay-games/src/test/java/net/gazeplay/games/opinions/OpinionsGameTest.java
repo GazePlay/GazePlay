@@ -227,6 +227,21 @@ class OpinionsGameTest {
     }
 
     /**
+     * Tester's feedback of 20/11/2026, point 29: the image is on a white card in both themes; it is not chosen (the
+     * answers are), so it stays transparent to the mouse.
+     */
+    @Test
+    void shouldPutTheImageOnAWhiteCard() throws Exception {
+        givenImages("a.png");
+        launched();
+        final Group layer = (Group) gameArea.getChildren().get(0);
+        final Group picture = (Group) layer.getChildren().get(1);
+        final javafx.scene.shape.Rectangle card = (javafx.scene.shape.Rectangle) picture.getChildren().get(0);
+        assertTrue(card.getStyle().contains("-fx-fill: #FFFFFF"), card.getStyle());
+        assertTrue(picture.isMouseTransparent());
+    }
+
+    /**
      * Without images (the menu asks for them first): a message, nothing to answer.
      */
     @Test
