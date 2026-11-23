@@ -20,5 +20,12 @@ see REVUE_DES_JEUX.md). Kept to trace the choices; the results are in the games 
      order of the candidates (choices.txt: "1 7 8").
    - sound-accordion: accordion_1.jpg (candidate 8, an accordion of a museum) replaced by "Accordion Flli
      Alessandrini.jpg" (Pd4u, CC0), found by a wider search (not in choices.txt).
+   - Point 26 (photos with a recognizable person, or shocking, or not typical): 17 photos replaced and 25 added, so
+     that the same photos come back less often (folders of 3 to 6 photos), all found by new searches of Quality images
+     (not in choices.txt): animal deer_1, deer_2 (white stag) + deer_4, deer_5; dog_1 (puppies) + dog_4, dog_5;
+     fish_3 (dead goldfish) + fish_4, fish_5; vulture_1 (fight on a carcass) + vulture_3 to _5; sound cat_2 (a caught
+     lizard) + cat_4 to _6; car_3 (number plate) + car_4, car_5; accordion_2, _3 + _4 to _6; drums_1 + drums_4, _5;
+     guitar_1 to _3 + _4, _5; flute_2 (pan flute) + flute_3; trumpet_2 + trumpet_3; violin_1, _2 + _3, _4 (musicians
+     replaced by the instrument alone).
    - Sounds (not commons_audio.py): lion.mp3 (also in Sounds of Life), violin.mp3 and guitar.mp3, cut with ffmpeg
      the same way (without loudnorm), then brought to -17 LUFS by gradle/images/normalize_sounds.py.

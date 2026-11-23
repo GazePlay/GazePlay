@@ -653,12 +653,16 @@ gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crab/crab_3.jpg,o
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_1.jpg,oui,libre,"Wikimedia Commons, Carlos Valenzuela, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_2.jpg,oui,libre,"Wikimedia Commons, Fabian Roudra Baroi, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/crocodile/crocodile_3.jpg,oui,libre,"Wikimedia Commons, Fabian Roudra Baroi, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_1.jpg,oui,libre,"Wikimedia Commons, Isiwal, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_2.jpg,oui,libre,"Wikimedia Commons, Reinhold Möller Ermell, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_1.jpg,oui,libre,"Wikimedia Commons, Julian Herzog (Website), CC BY 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_2.jpg,oui,libre,"Wikimedia Commons, Gzen92, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_1.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_4.jpg,oui,libre,"Wikimedia Commons, Julian Herzog (Website), CC BY 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/deer/deer_5.jpg,oui,libre,"Wikimedia Commons, Gzen92, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_1.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_2.jpg,oui,libre,"Wikimedia Commons, Discott, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_3.jpg,oui,libre,"Wikimedia Commons, Barras, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_4.jpg,oui,libre,"Wikimedia Commons, Dllu, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dog/dog_5.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_1.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/dolphin/dolphin_3.jpg,oui,libre,"Wikimedia Commons, Martin Falbisoner, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -673,7 +677,9 @@ gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/elephant/elephant_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_1.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_2.jpg,oui,libre,"Wikimedia Commons, Diego Delso, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_3.jpg,oui,libre,"Wikimedia Commons, George Chernilevsky, Public domain",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_3.jpg,oui,libre,"Wikimedia Commons, James St. John, CC BY 2.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_4.jpg,oui,libre,"Wikimedia Commons, No machine-readable author provided. Heptagon assumed (based on copyright claims)., Public domain (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fish/fish_5.jpg,oui,libre,"Wikimedia Commons, Kateryna Martyniuk, CC BY 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_1.jpg,oui,libre,"Wikimedia Commons, Uoaei1, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_2.jpg,oui,libre,"Wikimedia Commons, Alexis Lours, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/fox/fox_3.jpg,oui,libre,"Wikimedia Commons, El Golli Mohamed, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -763,8 +769,11 @@ gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/tiger/tiger_3.jpg
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/turtle/turtle_3.jpg,oui,libre,"Wikimedia Commons, Andrew Mercer (www.baldwhiteguy.co.nz), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_1.jpg,oui,libre,"Wikimedia Commons, Prasan Shrestha, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_1.jpg,oui,libre,"Wikimedia Commons, Musicaline, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_3.jpg,oui,libre,"Wikimedia Commons, Uoaei1, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_4.jpg,oui,libre,"Wikimedia Commons, Ghasem bavi, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/vulture/vulture_5.jpg,oui,libre,"Wikimedia Commons, Prasan Shrestha, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_1.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_2.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheAnimal/images/whale/whale_3.jpg,oui,libre,"Wikimedia Commons, Giles Laurent, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -984,18 +993,26 @@ gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_5.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/triangle/triangle_6.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_1.jpg,oui,libre,"Wikimedia Commons, Pd4u, CC0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_2.jpg,oui,libre,"Wikimedia Commons, Ahmet Düz, Dreiländer- & Oberrheinfotograf, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_3.jpg,oui,libre,"Wikimedia Commons, Wilfredor, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_2.jpg,oui,libre,"Wikimedia Commons, Iain Cameron, CC BY 2.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_3.jpg,oui,libre,"Wikimedia Commons, Sabine Hoffmann, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_4.jpg,oui,libre,"Wikimedia Commons, Elke Ahrenholz, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_5.jpg,oui,libre,"Wikimedia Commons, MrYenis, CC0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/accordion/accordion_6.jpg,oui,libre,"Wikimedia Commons, Petey21, CC0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/applause/applause_1.jpg,oui,libre,"Wikimedia Commons, Mona Hassan Abo-Abda, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_1.jpg,oui,libre,"Wikimedia Commons, Alexis Lours, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_2.jpg,oui,libre,"Wikimedia Commons, Chme82, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/bird/bird_3.jpg,oui,libre,"Wikimedia Commons, Charles J. Sharp, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_1.jpg,oui,libre,"Wikimedia Commons, Ezarate This is a retouched picture, which means that it has been digitally altered from its original version. Modifications: rebuild from raw fixing light compensation in shadows and lights, White balance, tonemaping balance, fix lens distortion, fix vertical distortions, remove dust spots, noise reduction and chromatic aberration fix, cut element distracting and remove oil spot and finally export in full jpeg quality by The Photographer 13:39, 12 February 2017 (UTC)., CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_2.jpg,oui,libre,"Wikimedia Commons, Morio, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_3.jpg,oui,libre,"Wikimedia Commons, Benoît Prieur, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_3.jpg,oui,libre,"Wikimedia Commons, Petar Milošević, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_4.jpg,oui,libre,"Wikimedia Commons, Alexander-93, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/car/car_5.jpg,oui,libre,"Wikimedia Commons, Dietmar Rabich, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_1.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_2.jpg,oui,libre,"Wikimedia Commons, Basile Morin, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_2.jpg,oui,libre,"Wikimedia Commons, Paul Danese, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_3.jpg,oui,libre,"Wikimedia Commons, Fernando Losada Rodríguez, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_4.jpg,oui,libre,"Wikimedia Commons, Anil Öztas, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_5.jpg,oui,libre,"Wikimedia Commons, Romzig, CC0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/cat/cat_6.jpg,oui,libre,"Wikimedia Commons, Terragio67, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_1.jpg,oui,libre,"Wikimedia Commons, Frank Schulenburg, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_2.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/chicken/chicken_3.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -1005,9 +1022,11 @@ gazeplay-games/src/main/resources/data/whereIsTheSound/images/cow/cow_3.jpg,oui,
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_1.jpg,oui,libre,"Wikimedia Commons, Discott, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_2.jpg,oui,libre,"Wikimedia Commons, Rhododendrites, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/dog/dog_3.jpg,oui,libre,"Wikimedia Commons, Jakub Hałun, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_1.jpg,oui,libre,"Wikimedia Commons, Eric Magnan, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_1.jpg,oui,libre,"Wikimedia Commons, Artaxerxes, CC BY 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_2.jpg,oui,libre,"Wikimedia Commons, Ocdp, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_3.jpg,oui,libre,"Wikimedia Commons, Ocdp, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_4.jpg,oui,libre,"Wikimedia Commons, Pravito, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/drums/drums_5.jpg,oui,libre,"Wikimedia Commons, Markievee, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck_1.jpg,oui,libre,"Wikimedia Commons, Acarpentier, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck_2.jpg,oui,libre,"Wikimedia Commons, Jacek Halicki, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/duck/duck_3.jpg,oui,libre,"Wikimedia Commons, Nrik kiran, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -1015,10 +1034,13 @@ gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant_
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant_2.jpg,oui,libre,"Wikimedia Commons, Timothy A. Gonsalves, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/elephant/elephant_3.jpg,oui,libre,"Wikimedia Commons, Godot13, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_1.jpg,oui,libre,"Wikimedia Commons, Petar Milošević, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_2.jpg,oui,libre,"Wikimedia Commons, Simon Pierre Barrette (Cephas (talk)), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_1.jpg,oui,libre,"Wikimedia Commons, Harald Krichel, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_2.jpg,oui,libre,"Wikimedia Commons, BRAHIM DJELLOUL Mustapha, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_3.jpg,oui,libre,"Wikimedia Commons, Friedrich Haag, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_2.jpg,oui,libre,"Wikimedia Commons, Petar Milošević, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/flute/flute_3.jpg,oui,libre,"Wikimedia Commons, Thea Paraskevaides, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_1.jpg,oui,libre,"Wikimedia Commons, Elmschrat, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_2.jpg,oui,libre,"Wikimedia Commons, Elmschrat, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_3.jpg,oui,libre,"Wikimedia Commons, Niranjan Arminius, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_4.jpg,oui,libre,"Wikimedia Commons, Elmschrat, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/guitar/guitar_5.jpg,oui,libre,"Wikimedia Commons, Elmschrat, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_1.jpg,oui,libre,"Metropolitan Museum of Art, Open Access, CC0",2022-07-26,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_2.jpg,oui,libre,"Wikimedia Commons, Knud Peter Petersen, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/harp/harp_3.jpg,oui,libre,"Wikimedia Commons, Creator:Lyon & Healy, CC0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
@@ -1045,9 +1067,12 @@ gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/storm_2.jpg,
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/storm/storm_3.jpg,oui,libre,"Wikimedia Commons, Matti Blume, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/triangle/triangle_1.jpg,oui,libre,"dessiné pour le projet (gradle/images/make_triangle_image.py), GPL-3.0-or-later",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
 gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_1.jpg,oui,libre,"Wikimedia Commons, Eusebius, CC BY 3.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_2.jpg,oui,libre,"Wikimedia Commons, Manfred Werner (Tsui), CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_1.jpg,oui,libre,"Wikimedia Commons, Ermell, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
-gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_2.jpg,oui,libre,"Wikimedia Commons, Rs-foto, CC BY-SA 4.0",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_2.jpg,oui,libre,"Wikimedia Commons, Yamaha Corporation, CC BY-SA 4.0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/trumpet/trumpet_3.jpg,oui,libre,"Wikimedia Commons, JDN Team, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_1.jpg,oui,libre,"Wikimedia Commons, unknown, Public domain (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_2.jpg,oui,libre,"Wikimedia Commons, The Metropolitan Museum of Art (violin by Andrea Amati), CC0 (remplacement du 23/11/2026)",2026-10-29,,revue des jeux (REVUE_DES_JEUX.md)
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_3.jpg,oui,libre,"Wikimedia Commons, Just plain Bill, CC0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
+gazeplay-games/src/main/resources/data/whereIsTheSound/images/violin/violin_4.jpg,oui,libre,"Wikimedia Commons, Gert Haussner, CC BY-SA 4.0 (ajout du 23/11/2026)",2026-11-23,,"retours de la testeuse, point 26 (REVUE_DES_JEUX.md)"
 gazeplay-games/src/test/resources/images/black/black.jpg,non,source inconnue,,2017-11-25,schwab,"work on ""where is the it"" games (now two games: animals and colors)"
 gazeplay-games/src/test/resources/images/blue/blue.jpg,non,source inconnue,,2017-11-25,schwab,"work on ""where is the it"" games (now two games: animals and colors)"
 gazeplay-games/src/test/resources/images/brown/brown.jpg,non,source inconnue,,2017-11-25,schwab,"work on ""where is the it"" games (now two games: animals and colors)"

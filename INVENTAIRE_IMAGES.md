@@ -57,6 +57,10 @@ inconnue** (28 dans les jeux pas encore revus et les Biboules, 28 images commune
 (Biboule du Tir), la vignette refaite ; **1 034 images livrées, 708 libres, 173 de source inconnue** (15 dans les jeux
 pas encore revus et les Biboules, 27 images communes).
 
+**Retours de la testeuse, point 26 (23/11/2026)** : dans « Où est l'animal ? » et « Où est le son ? », 17 photos
+remplacées (personnes reconnaissables, contenu choquant ou sujet peu typique) et 25 photos ajoutées, toutes de Wikimedia
+Commons, libres, avec leur crédit dans le `CREDITS.txt` du jeu : **25 images livrées et 25 libres de plus**.
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

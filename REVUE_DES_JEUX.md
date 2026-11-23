@@ -237,6 +237,14 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     retiré, puis la récompense ; aide ; `BlocsTest`). **Blocs** : réussite à **90 %** des blocs retirés ; les blocs restants **disparaissent seuls**.
 26. **Photos avec une personne reconnaissable** (Où est le son ? : musiciens…) : **toutes remplacées** (objet seul ou
     mains sans visage), remplaçants montrés au mainteneur ; droit à l'image non vérifié, d'où ce choix.
+    **Fait le 23/11/2026** (209 photos revues, avec celles des points 17 et 19 ; choix du mainteneur) : 17 photos
+    remplacées, dont 9 avec des musiciens (accordéon 2 et 3, batterie 1, guitare 1 à 3, trompette 2, violon 1 et 2),
+    une flûte de Pan (flûte traversière à la place), cerf blanc et cerf aux organes visibles, chienne qui allaite (chien
+    seul), poisson rouge mort, vautours sur une carcasse, chat avec un lézard, plaque d'immatriculation ; et **25
+    photos ajoutées** (les autres candidats retenus : les mêmes photos reviennent moins souvent, 3 à 6 par dossier).
+    Wikimedia Commons, crédits dans les `CREDITS.txt`, `inventaire-images.csv`, `gradle/images/commons/README.txt`.
+    Gardés (choix du mainteneur) : éléphant `elephant_3`, pieuvres signées, dauphin en spectacle, pigeons avec passants
+    flous. Les guitares sont des guitares folk (pas de guitare classique seule de qualité sur Commons).
 27. **GazePlay Eval**, aide « Comprendre les fichiers de résultats » : nouvelle mise en page (titre par fichier, à quoi
     il sert, colonnes, exemples) ; reformulations à intégrer quand la testeuse aura dit quels passages la gênent.
 29. **Images à fond transparent** (OpenMoji : poulpe, lapin…) : en thème sombre, le fond sombre se voit à travers (Memory,
