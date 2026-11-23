@@ -202,7 +202,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     ensuite), `Connect4Test`, aide. Morpion : même règle que Quatre en ligne (seul cas involontaire : la case libérée
     sous la souris au début d'une nouvelle partie d'un match), `TicTacToeTest`, aide. Jeu de l'oie : délai quand le
     bouton « Lancer » revient pour un tour humain après le premier (le jeu y redémarrait l'anneau exprès),
-    `GooseGameTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    `GooseGameTest`, aide. Petits chevaux : délai quand le bouton du dé revient pour un joueur (premier tour compris,
+    le jeu n'avait pas d'attente au début) et quand les pions deviennent choisissables ; fixation de `ProgressButton`
+    à l'entrée du pointeur, rien d'autre à protéger ; `HorsesTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

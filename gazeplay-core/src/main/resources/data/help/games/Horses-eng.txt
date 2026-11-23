@@ -10,6 +10,7 @@ The game of horses (petits chevaux): take your pawns out of the stable, make the
 - A pawn cannot stop on a pawn of its own team. A pawn does not jump over another one: if it has squares left to go, it comes back.
 - On the ladder of your team, you need the exact number of the next square: a 1 for the first one, then a 2, and so on.
 - On the left you see which team plays; on the right, what to do.
+- When the die comes back and when the pawns can be chosen, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 
 # How to win
 The first pawn reaching the center makes its team win.

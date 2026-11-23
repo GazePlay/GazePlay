@@ -105,6 +105,8 @@ class HorsesTest {
         assertEquals(1, horses.getPawns().get(Horses.TEAMS.RED).size(), "1 pawn in Horses Simplified");
         assertEquals("HorsesRoll", horses.shownMessage(), "the player rolls the die first");
         verify(stats).incrementNumberOfGoalsToReach();
+        // Point 22 (23/11/2026): the button of the die waits for the delay of the settings
+        verify(gameContext).onGameStarted();
     }
 
     @Test

@@ -10,6 +10,7 @@ Le jeu des petits chevaux : sors tes pions de l'écurie, fais-leur faire le tou
 - On ne peut pas s'arrêter sur un pion de son équipe. Un pion ne saute pas par-dessus un autre : s'il lui reste des cases à faire, il revient en arrière.
 - Sur l'échelle de ton équipe, il faut le chiffre exact de la case suivante : un 1 pour la première, puis un 2, et ainsi de suite.
 - À gauche, tu vois quelle équipe joue ; à droite, ce qu'il faut faire.
+- Quand le dé revient et quand les pions peuvent être choisis, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 
 # Comment gagner
 Le premier pion qui arrive au centre fait gagner son équipe.

@@ -234,6 +234,9 @@ public class Horses implements GameLifeCycle {
             rollButton.active();
             foregroundLayer.getChildren().add(rollButton);
             showMessage(translator.translate(diceOutcome == 6 ? "HorsesPlayAgain" : "HorsesRoll"));
+            // The button of the die, maybe under the pointer: nothing can be chosen during the delay of the settings
+            // (tester's feedback of 20/11/2026, point 22; the first turn too, the game had no delay at the start)
+            gameContext.onGameStarted();
         }
     }
 
@@ -276,6 +279,8 @@ public class Horses implements GameLifeCycle {
             for (final Pawn pawn : movable) {
                 pawn.activate(() -> play(pawn));
             }
+            // The pawns can be chosen, one maybe under the pointer: the delay of the settings first (point 22)
+            gameContext.onGameStarted();
         }
     }
 
