@@ -274,6 +274,34 @@ class DotToDotTest {
         });
     }
 
+    /**
+     * Point 22 (23/11/2026): the dots of each new figure ask for the delay of the settings; nothing is joined while it
+     * runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachNewFigure() throws Exception {
+        final DotToDot game = launched(DotLevel.EASY, DotLabels.NUMBERS, DotEnd.ENDLESS);
+        fx(() -> {
+            finish(game);
+            clearInvocations(gameContext);
+            steps(game, DotToDot.SHOW + 0.05);
+            assertEquals(DotToDot.Phase.PLAY, game.getPhase());
+            verify(gameContext).onGameStarted();
+
+            final DotToDot.Dot first = game.getDots().get(0);
+            when(gameContext.isSelectionBlocked()).thenReturn(true);
+            Event.fireEvent(first.getZone(), new GazeEvent(GazeEvent.GAZE_ENTERED, 1, 0, 0));
+            steps(game, 2);
+            assertFalse(first.isJoined(), "nothing joined during the delay");
+            when(gameContext.isSelectionBlocked()).thenReturn(false);
+            steps(game, 0.4);
+            assertFalse(first.isJoined(), "the fixation counts from the end of the delay");
+            steps(game, 0.15);
+            assertTrue(first.isJoined());
+            return null;
+        });
+    }
+
     @Test
     void shouldHelpWithTheNextDotOnlyAtTheEasyLevel() throws Exception {
         final DotToDot easy = launched(DotLevel.EASY, DotLabels.NUMBERS, DotEnd.ENDLESS);

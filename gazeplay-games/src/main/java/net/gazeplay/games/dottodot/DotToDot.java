@@ -252,6 +252,9 @@ public class DotToDot implements GameLifeCycle {
         showHud();
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        // New dots, maybe under the pointer: nothing can be chosen during the delay of the settings (tester's feedback
+        // of 20/11/2026, point 22; at the start, it runs with the wait of the start, as long)
+        gameContext.onGameStarted();
     }
 
     private void clearFigure() {
@@ -422,6 +425,12 @@ public class DotToDot implements GameLifeCycle {
         if (looked == null || !isEnabled(looked)) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after new dots: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             showRing(looked);
         }
@@ -449,7 +458,7 @@ public class DotToDot implements GameLifeCycle {
         looked = dot;
         progress = 0;
         ring.stop();
-        if (isEnabled(dot)) {
+        if (isEnabled(dot) && !gameContext.isSelectionBlocked()) {
             showRing(dot);
         }
     }

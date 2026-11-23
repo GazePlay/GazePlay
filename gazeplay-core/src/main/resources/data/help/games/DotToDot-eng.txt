@@ -7,7 +7,7 @@ Join the dots in order, 1, 2, 3... or A, B, C... A drawing appears: guess what i
 - A wrong dot shakes in red and counts a mistake. The dots already joined do not count any more.
 - After the last dot, the line to the first one draws itself, the drawing gets colored and its name shows ("It's a fish!"). Then another drawing comes.
 - Easy: the next dot grows gently to help you.
-- At the start, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
+- At the start and at each new drawing, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
 A dot chosen out of order shakes and counts a mistake. With "With hearts", with or without end, you have 3 hearts at the top left: each dot out of order costs one; with no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. As you chose, the game stops after 3, 5 or 10 drawings ("Bravo", then the statistics), or has no end (leave by the menu (Esc key)).

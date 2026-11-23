@@ -186,7 +186,8 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     apparues et deviennent choisissables (une cible regardée pendant l'apparition voyait son anneau démarrer aussitôt ;
     elle démarre maintenant à la fin du délai), `OrderTest`, aide. Cartes magiques : délai à la fin du mélange (les
     dernières cartes posées sous la souris immobile la faisaient entrer juste après le passage en jeu),
-    `MagicCardsTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    `MagicCardsTest`, aide. Point par point : délai à chaque nouveau dessin (au début, en même temps que l'attente du
+    début), `DotToDotTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

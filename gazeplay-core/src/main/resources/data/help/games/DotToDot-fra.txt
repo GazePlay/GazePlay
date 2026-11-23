@@ -7,7 +7,7 @@ Relie les points dans l’ordre, 1, 2, 3… ou A, B, C… Un dessin apparaît : 
 - Un mauvais point tremble en rouge et compte une erreur. Les points déjà reliés ne comptent plus.
 - Après le dernier point, le trait vers le premier se trace tout seul, le dessin se colore et son nom s’affiche (« C’est un poisson ! »). Puis un autre dessin arrive.
 - En Facile, le point suivant grossit doucement pour t’aider.
-- Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
+- Au début et à chaque nouveau dessin, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Un point touché dans le mauvais ordre tremble et compte une erreur. Avec ou sans fin, avec « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque point dans le mauvais ordre en coûte un ; sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Selon ton choix, la partie s’arrête après 3, 5 ou 10 dessins (« Bravo », puis les statistiques), ou elle est sans fin (quitte par le menu (touche Échap)).
