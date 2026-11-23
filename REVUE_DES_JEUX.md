@@ -127,7 +127,12 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     `avoidSameWinnerAsPreviousRound` est retiré ; dans Trouve l'intrus, l'intrus vient de la liste, les autres images
     d'un dossier tiré au hasard ; Mes images comprises). **Où est…** et Trouve l'intrus : **tirage sans répétition** des bonnes réponses (liste mélangée, remélangée une fois
     épuisée, pas de répétition entre deux listes) ; Où est l'animal ? dynamique inchangé.
-16. **Où est le son ?** : nouveau **rugissement de lion** (l'actuel ressemble à un cochon), libre, 2 ou 3 candidats à
+16. **FAIT le 23/11/2026, candidat 1 choisi et validé par le mainteneur** (*Lion raring-sound1TamilNadu178.ogg*, Wikimedia
+    Commons, domaine public : lion mâle d'un zoo, 7,6 premières secondes, deux rugissements ; écartés : *Lionroar.wav*,
+    CC BY 4.0, 16 kHz sourd, et *Lion sound effect.wav*, CC0 douteux, compilation de 5 min ; même fichier dans Les sons
+    de la vie ; mis à −17 LUFS par `normalize_sounds.py` ; crédits des deux jeux, licence affichée (12 sons Commons) et
+    les 2 lignes de `inventaire-sons.csv` ; le reste du CSV, périmé depuis la mise au niveau du 20/11 et au champ
+    `trame` instable, n'a pas été régénéré). **Où est le son ?** : nouveau **rugissement de lion** (l'actuel ressemble à un cochon), libre, 2 ou 3 candidats à
     faire écouter ; aussi dans les Sons de la vie s'il y est ; crédits et inventaire.
 17. **Photo d'éléphants** à remplacer (accouplement visible) par un éléphant seul ; **revue de toutes les photos** d'Où
     est le son ? et d'Où est l'animal ? (contenu choquant), photos douteuses signalées au mainteneur.

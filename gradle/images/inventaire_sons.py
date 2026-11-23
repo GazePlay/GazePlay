@@ -73,6 +73,8 @@ KNOWN = {
     'soundsoflife/jungle/elephant.mp3': ('libre, source connue',
                                          'CC0 : Elephant voice - trumpeting.ogg, Wikimedia Commons'),
     'soundsoflife/jungle/snake.mp3': ('libre, source connue', 'domaine public : Rattlesnake.ogg, Wikimedia Commons'),
+    'soundsoflife/savanna/lion.mp3': ('libre, source connue',
+                                      'domaine public : Lion raring-sound1TamilNadu178.ogg, Wikimedia Commons'),
 }
 
 TEXT_FRAMES = {'TIT2': 'titre', 'TPE1': 'artiste', 'TALB': 'album', 'TCOP': 'copyright', 'TENC': 'encode_par',

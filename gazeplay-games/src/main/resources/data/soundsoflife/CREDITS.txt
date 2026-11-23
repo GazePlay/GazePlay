@@ -24,7 +24,8 @@ sea/octopus.mp3 | Water bubbles chortling.ogg | stephan | Public domain | https:
 sea/crab.mp3 | Bathtub water splashes.ogg | gradha | Public domain | https://commons.wikimedia.org/wiki/File:Bathtub_water_splashes.ogg
 
 Sounds taken from Where Is The Sound (see data/whereIsTheSound/CREDITS.txt):
-farm/cow.mp3, farm/pig.mp3, savanna/lion.mp3: La Sonothèque (https://lasonotheque.org), CC0 1.0;
+farm/cow.mp3, farm/pig.mp3: La Sonothèque (https://lasonotheque.org), CC0 1.0;
+savanna/lion.mp3: Lion raring-sound1TamilNadu178.ogg, த*உழவன், public domain (23/11/2026);
 farm/sheep.mp3: Sheep bleating.ogg, earthcalling, public domain;
 jungle/elephant.mp3: Elephant voice - trumpeting.ogg, CC0; jungle/snake.mp3: Rattlesnake.ogg, public domain.
 
