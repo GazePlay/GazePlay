@@ -184,6 +184,50 @@ class WhereIsItTest {
     }
 
     /**
+     * Tester's feedback of 20/11/2026, point 15: every answer is asked once before any comes back, never twice in a
+     * row, even between two lists.
+     */
+    @Test
+    void shouldAskEveryAnswerOnceBeforeAskingItAgain() {
+        final WhereIsIt animals = new WhereIsIt(WhereIsItGameType.ANIMALS_FARM, 2, 2, mockGameContext, mockStats);
+        final List<String> candidates = List.of("cow", "pig", "horse", "sheep", "duck");
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom(0.7);
+        String previous = null;
+        for (int list = 0; list < 40; list++) {
+            final Set<String> asked = new HashSet<>();
+            for (int screen = 0; screen < candidates.size(); screen++) {
+                final String answer = animals.nextWinner(candidates, random);
+                assertTrue(asked.add(answer), "list " + list + ": " + answer + " asked twice");
+                assertNotEquals(previous, answer, "list " + list + ", screen " + screen);
+                previous = answer;
+            }
+            assertEquals(Set.copyOf(candidates), asked);
+        }
+    }
+
+    /**
+     * The same shuffled lists in a whole game, screen after screen, in the real game: each answer of the farm once
+     * before any comes back.
+     */
+    @Test
+    void shouldAskEveryAnswerOfTheGameOnceBeforeAskingItAgain() throws Exception {
+        final WhereIsItGameType gameType = WhereIsItGameType.ANIMALS_FARM;
+        final String resources = "data/" + gameType.getResourcesDirectoryName();
+        final int answers = new SourceSet(resources + "/variants.json").getResources(gameType.getVariant()).size();
+        final WhereIsIt farm = new WhereIsIt(gameType, 2, 2, mockGameContext, mockStats);
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom(0.3);
+        for (int list = 0; list < 3; list++) {
+            final Set<String> asked = new HashSet<>();
+            for (int screen = 0; screen < answers; screen++) {
+                final int winner = random.nextInt(4);
+                final RoundDetails details = farm.pickAndBuildRandomPictures(4, random, winner);
+                asked.add(new File(details.getPictureCardList().get(winner).getImagePath()).getParentFile().getName());
+            }
+            assertEquals(answers, asked.size(), "list " + list + ": " + asked);
+        }
+    }
+
+    /**
      * The pictures stay above the band of the question; the band no longer keeps the corner of the old configuration
      * button (17/11/2026): the pictures get more room.
      */

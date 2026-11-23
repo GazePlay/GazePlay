@@ -92,6 +92,11 @@ public class WhereIsIt implements GameLifeCycle {
      */
     private String previousWinnerFolderName;
 
+    /**
+     * The right answers still to ask before the list is shuffled again (see {@link #nextWinner}).
+     */
+    private final List<String> winnersToAsk = new ArrayList<>();
+
     private final IGameContext gameContext;
     private final Stats stats;
     private RoundDetails currentRoundDetails;
@@ -707,32 +712,27 @@ public class WhereIsIt implements GameLifeCycle {
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, hasLives())
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
-        // The picture of each place of the grid. The draws are made in the order of the former versions (a folder,
-        // then a picture of it, and the voice of the question at the place of the right answer), so that a saved game
-        // is replayed with the same pictures, except where this version changes the rules (variants, repeated
-        // pictures, right answer of the previous round)
+        // The picture of each place of the grid. All the draws come from the generator of the game, so that a saved
+        // game is replayed with the same pictures by this version. The right answer is no longer drawn at random at
+        // each screen but taken from a shuffled list (tester's feedback of 20/11/2026, point 15): the replay of a game
+        // saved by a former version shows other pictures.
         final List<String> imagePaths = new ArrayList<>();
-        final List<String> folderNames = new ArrayList<>();
         String voice = null;
         String questionSoundPath;
         String question;
         List<Image> pictograms = null;
 
         if (this.gameType == FIND_ODD || this.gameType == ANIMALS_DYNAMIC) {
-            int index = random.nextInt(resourcesFolders.size());
-            String folder = resourcesFolders.remove((index) % directoriesCount);
-
-            String winnerFolder;
+            final String folder;
+            final String winnerFolder;
             if (this.gameType == FIND_ODD) {
-                index = random.nextInt(resourcesFolders.size());
-                winnerFolder = resourcesFolders.remove((index) % directoriesCount);
-                if (new File(winnerFolder).getName().equals(previousWinnerFolderName)) {
-                    // Not the same odd one out twice in a row: the two sets of pictures swap
-                    final String swapped = folder;
-                    folder = winnerFolder;
-                    winnerFolder = swapped;
-                }
+                // The odd one out from the shuffled list, the other pictures from another folder drawn at random
+                final String oddName = nextWinner(folderNamesOf(resourcesFolders), random);
+                winnerFolder = removeFolderNamed(resourcesFolders, oddName);
+                folder = resourcesFolders.remove(random.nextInt(resourcesFolders.size()));
             } else {
+                // Where is the animal? (dynamic) is unchanged: one cat among the animals of the level
+                folder = resourcesFolders.remove(random.nextInt(resourcesFolders.size()));
                 winnerFolder = winnerFolders.remove(0);
             }
             final String folderName = (new File(winnerFolder)).getName();
@@ -765,10 +765,22 @@ public class WhereIsIt implements GameLifeCycle {
                 question = getQuestionText(folderName, language);
             }
         } else {
+            // The right answer from the shuffled list, the other pictures from other folders drawn at random
+            final String folderName = nextWinner(this.gameType == CUSTOMIZED
+                ? imagesFolders.stream().map(File::getName).toList()
+                : folderNamesOf(resourcesFolders), random);
+            final File winnerCustomFolder = this.gameType == CUSTOMIZED
+                ? imagesFolders.stream().filter(file -> file.getName().equals(folderName)).findFirst().orElseThrow()
+                : null;
+            final String winnerResourceFolder = this.gameType == CUSTOMIZED
+                ? null
+                : removeFolderNamed(resourcesFolders, folderName);
+            imagesFolders.remove(winnerCustomFolder);
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+                final boolean winnerPlace = i == winnerImageIndexAmongDisplayedImages;
                 if (this.gameType == CUSTOMIZED) {
-                    int index = random.nextInt(imagesFolders.size());
-                    final File folder = imagesFolders.remove((index) % directoriesCount);
+                    final File folder = winnerPlace ? winnerCustomFolder
+                        : imagesFolders.remove(random.nextInt(imagesFolders.size()));
                     final List<File> validImageFiles = new ArrayList<>();
                     for (File file : getFiles(folder)) {
                         if (WhereIsItVaildator.fileIsImageFile(file)) {
@@ -777,21 +789,17 @@ public class WhereIsIt implements GameLifeCycle {
                     }
                     // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                     imagePaths.add("file:" + validImageFiles.get(random.nextInt(validImageFiles.size())));
-                    folderNames.add(folder.getName());
                 } else {
-                    int index = random.nextInt(resourcesFolders.size());
-                    final String folder = resourcesFolders.remove((index) % directoriesCount);
+                    final String folder = winnerPlace ? winnerResourceFolder
+                        : resourcesFolders.remove(random.nextInt(resourcesFolders.size()));
                     final Set<String> files = ResourceFileManager.getResourcePaths(folder);
                     imagePaths.add((String) files.toArray()[random.nextInt(files.size())]);
-                    folderNames.add(new File(folder).getName());
                 }
-                if (i == winnerImageIndexAmongDisplayedImages) {
+                if (winnerPlace) {
                     voice = drawVoice(language);
                 }
             }
-            avoidSameWinnerAsPreviousRound(folderNames, imagePaths, winnerImageIndexAmongDisplayedImages);
 
-            final String folderName = folderNames.get(winnerImageIndexAmongDisplayedImages);
             previousWinnerFolderName = folderName;
             questionSoundPath = getPathSound(folderName, language, voice);
             question = getQuestionText(folderName, language);
@@ -813,19 +821,49 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * Keeps the right answer of the previous round from being the right answer again: it swaps places with the next
-     * picture. No other draw is made, so that a round without this case is drawn as before.
+     * The right answer of the next screen (tester's feedback of 20/11/2026, point 15): taken from a shuffled list of
+     * all the possible answers, shuffled again once it is used up, so that no answer comes back before all the others
+     * have been asked, and never twice in a row, even between two lists.
      *
-     * @param folderNames the folder of the picture of each place
-     * @param imagePaths  the picture of each place
+     * @param candidates the names of the folders which can be the right answer
+     * @return the name of the folder of the right answer
      */
-    void avoidSameWinnerAsPreviousRound(final List<String> folderNames, final List<String> imagePaths,
-                                        final int winnerIndex) {
-        if (folderNames.size() > 1 && folderNames.get(winnerIndex).equals(previousWinnerFolderName)) {
-            final int other = (winnerIndex + 1) % folderNames.size();
-            Collections.swap(folderNames, winnerIndex, other);
-            Collections.swap(imagePaths, winnerIndex, other);
+    String nextWinner(final List<String> candidates, final ReplayablePseudoRandom random) {
+        // A folder no longer offered (none in the games of the application, but the user's folder could change)
+        winnersToAsk.retainAll(candidates);
+        if (winnersToAsk.isEmpty()) {
+            // Sorted first: the order of the folders found does not change the draw (replay)
+            final List<String> shuffled = new ArrayList<>(candidates.stream().sorted().distinct().toList());
+            for (int i = shuffled.size() - 1; i > 0; i--) {
+                Collections.swap(shuffled, i, random.nextInt(i + 1));
+            }
+            if (shuffled.size() > 1 && shuffled.get(0).equals(previousWinnerFolderName)) {
+                // The last answer of a list is not the first one of the next list
+                Collections.swap(shuffled, 0, shuffled.size() - 1);
+            }
+            winnersToAsk.addAll(shuffled);
         }
+        previousWinnerFolderName = winnersToAsk.remove(0);
+        return previousWinnerFolderName;
+    }
+
+    /**
+     * @return the names of the folders (their last part)
+     */
+    private static List<String> folderNamesOf(final List<String> folders) {
+        return folders.stream().map(folder -> new File(folder).getName()).toList();
+    }
+
+    /**
+     * Removes a folder from a list of folders.
+     *
+     * @return the folder whose name is the given one
+     */
+    private static String removeFolderNamed(final List<String> folders, final String name) {
+        final String folder = folders.stream().filter(path -> new File(path).getName().equals(name)).findFirst()
+            .orElseThrow();
+        folders.remove(folder);
+        return folder;
     }
 
     /**

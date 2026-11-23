@@ -122,7 +122,10 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     « Screen » à la place de `WhereIsItScreens` ; le compteur garde le numéro de l'écran trouvé jusqu'au suivant, jamais
     au-delà du dernier). **Où est…** et Trouve l'intrus : le compteur affiche **le numéro de l'écran en cours** dès l'arrivée des images
     (aujourd'hui le nombre d'écrans trouvés) ; en Sans fin, « Écran 7 ».
-15. **Où est…** et Trouve l'intrus : **tirage sans répétition** des bonnes réponses (liste mélangée, remélangée une fois
+15. **FAIT le 23/11/2026, validé par le mainteneur** (`WhereIsIt.nextWinner` : liste triée puis mélangée par le
+    générateur de la partie, le rejeu d'une partie de cette version reste identique ; l'ancien échange de places
+    `avoidSameWinnerAsPreviousRound` est retiré ; dans Trouve l'intrus, l'intrus vient de la liste, les autres images
+    d'un dossier tiré au hasard ; Mes images comprises). **Où est…** et Trouve l'intrus : **tirage sans répétition** des bonnes réponses (liste mélangée, remélangée une fois
     épuisée, pas de répétition entre deux listes) ; Où est l'animal ? dynamique inchangé.
 16. **Où est le son ?** : nouveau **rugissement de lion** (l'actuel ressemble à un cochon), libre, 2 ou 3 candidats à
     faire écouter ; aussi dans les Sons de la vie s'il y est ; crédits et inventaire.
