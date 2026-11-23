@@ -10,7 +10,7 @@ Une opération est écrite au tableau. Trouve la bonne réponse parmi les trois 
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut à gauche, les cœurs (un cœur rouge par vie), seulement avec cœurs ; au milieu, les opérations réussies.
 - Jamais de 0 : ni dans les opérations, ni dans les réponses.
-- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+- À chaque nouvelle opération, rien ne peut être choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Après 5, 10 ou 20 opérations réussies, c'est « Bravo », puis les statistiques. Avec cœurs, tu en as 3 : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue (avec cœurs, jusqu'à ce que tu n'en aies plus).

@@ -73,7 +73,7 @@ public class Math101 implements GameLifeCycle {
     private static final Color WRONG = Color.rgb(214, 64, 64);
     private static final Color GREYED = Color.rgb(150, 156, 170);
 
-    enum Phase { WAIT, PLAY, FOUND, REVEAL, SHOW, OVER }
+    enum Phase { PLAY, FOUND, REVEAL, SHOW, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -101,7 +101,6 @@ public class Math101 implements GameLifeCycle {
     @Getter
     private boolean bravo;
     private double elapsed;
-    private double waiting;
 
     private double width;
     private double height;
@@ -214,9 +213,9 @@ public class Math101 implements GameLifeCycle {
         solved = 0;
         bravo = false;
         elapsed = 0;
-        waiting = configuration.getGameStartDelay() / 1000.0;
-        phase = Phase.WAIT;
-        showHud();
+        // The first operation at once: its cards wait for the delay of the settings, like those of the next ones
+        // (23/11/2026, point 22; the board used to stay empty during the delay, the cards then chosen at once)
+        newQuestion();
         if (!manual) {
             loop.start();
         }
@@ -305,6 +304,9 @@ public class Math101 implements GameLifeCycle {
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
         showHud();
+        // New cards, maybe under the pointer: nothing can be chosen during the delay of the settings (tester's
+        // feedback of 20/11/2026, point 22)
+        gameContext.onGameStarted();
     }
 
     /**
@@ -371,12 +373,6 @@ public class Math101 implements GameLifeCycle {
         }
         cards.forEach(card -> card.shake(seconds));
         switch (phase) {
-            case WAIT -> {
-                elapsed += seconds;
-                if (elapsed >= waiting) {
-                    newQuestion();
-                }
-            }
             case PLAY -> fixate(seconds);
             case FOUND -> {
                 elapsed += seconds;
@@ -418,6 +414,12 @@ public class Math101 implements GameLifeCycle {
         if (looked == null || looked.done) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after new cards: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             showRing(looked);
         }
@@ -444,7 +446,7 @@ public class Math101 implements GameLifeCycle {
         progress = 0;
         ring.stop();
         paintCards();
-        if (phase == Phase.PLAY && !card.done) {
+        if (phase == Phase.PLAY && !card.done && !gameContext.isSelectionBlocked()) {
             showRing(card);
         }
     }

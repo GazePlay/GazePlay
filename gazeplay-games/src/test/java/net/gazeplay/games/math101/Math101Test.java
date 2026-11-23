@@ -186,13 +186,24 @@ class Math101Test {
 
     @Test
     void shouldChooseACardAfterAFixationOfTheLengthOfTheSettingsAfterTheDelay() throws Exception {
-        when(configuration.getGameStartDelay()).thenReturn(1000);
+        // Point 22 (23/11/2026): the cards are shown at once and wait for the delay of the settings (the game area
+        // disabled, and the fixation not counted while the context says so)
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
         final Math101 game = launched(MathTopic.ADDITION, MathLevel.UP_TO_10, MathEnd.ENDLESS,
             MathMistakes.SEARCH_AGAIN, 3 * 7919.37);
-        steps(game, 0.5);
-        assertEquals(Math101.Phase.WAIT, game.getPhase());
-        assertTrue(game.getCards().isEmpty());
-        steps(game, 0.6);
+        assertEquals(Math101.Phase.PLAY, game.getPhase());
+        verify(gameContext).onGameStarted();
+        fx(() -> {
+            game.lookAt(card(game, true));
+            return null;
+        });
+        steps(game, 2);
+        assertEquals(0, game.getSolved(), "nothing chosen during the delay");
+        fx(() -> {
+            game.lookAway(card(game, true));
+            return null;
+        });
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
         assertEquals(Math101.Phase.PLAY, game.getPhase());
         assertEquals(3, game.getCards().size());
         assertEquals(1, game.getCards().stream().filter(Math101.Card::isRight).count());
