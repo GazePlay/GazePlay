@@ -288,8 +288,15 @@ public class MagicPotions implements GameLifeCycle {
 
     /**
      * A new client, asking for another potion than the last one.
+     *
+     * @param delayed whether the client follows another one: the potions can be chosen again, nothing can be chosen
+     *                during the delay of the settings (tester's feedback of 20/11/2026, point 22, the rule of every
+     *                new choice; the first client follows the wait of the start)
      */
-    private void newClient() {
+    private void newClient(final boolean delayed) {
+        if (delayed) {
+            gameContext.onGameStarted();
+        }
         PotionMix next;
         do {
             next = PotionMix.values()[random.nextInt(PotionMix.values().length)];
@@ -381,7 +388,7 @@ public class MagicPotions implements GameLifeCycle {
             case WAIT -> {
                 elapsed += seconds;
                 if (elapsed >= waiting) {
-                    newClient();
+                    newClient(false);
                 }
             }
             case PLAY -> fixate(seconds);
@@ -503,11 +510,17 @@ public class MagicPotions implements GameLifeCycle {
             finish();
             return;
         }
-        newClient();
+        newClient(true);
     }
 
     private void fixate(final double seconds) {
         if (looked == null || mixture.contains(looked)) {
+            return;
+        }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay of a new client: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
             return;
         }
         if (!ring.isVisible()) {
@@ -542,7 +555,7 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     private void showRing(final PotionMix.Primary primary) {
-        if (phase != Phase.PLAY || mixture.contains(primary)) {
+        if (phase != Phase.PLAY || mixture.contains(primary) || gameContext.isSelectionBlocked()) {
             return;
         }
         final double[] home = homes.get(primary);

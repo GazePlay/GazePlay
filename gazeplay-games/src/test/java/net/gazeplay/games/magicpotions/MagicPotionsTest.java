@@ -158,6 +158,32 @@ class MagicPotionsTest {
         assertNotEquals(MagicPotions.Phase.POUR, game.getPhase());
     }
 
+    /**
+     * Point 22 (23/11/2026): each client after the first asks for the delay of the settings; a potion looked at is not
+     * poured while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachNewClient() throws Exception {
+        final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 3);
+        verify(gameContext, never()).onGameStarted();
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        serve(game);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        verify(gameContext).onGameStarted();
+        final PotionMix.Primary first = game.getRequest().getRecipe().iterator().next();
+        fx(() -> {
+            game.lookAt(first);
+            return null;
+        });
+        steps(game, 2);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase(), "nothing poured during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertEquals(MagicPotions.Phase.POUR, game.getPhase());
+    }
+
     @Test
     void shouldServeTheClientWhenTheRecipeIsCompleteInAnyOrder() throws Exception {
         for (int seed = 1; seed <= 30; seed++) {

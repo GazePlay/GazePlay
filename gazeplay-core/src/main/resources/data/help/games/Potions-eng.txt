@@ -9,7 +9,7 @@ A Biboule wants a potion of a color: make it by pouring the right potions into t
 - A ring fills during a fixation; it lasts the length of the settings.
 - At the top left, the lives (a red heart for each life); in the middle, the potions served.
 - The potions are poured at the speed of the settings.
-- Nothing can be chosen before the delay of the settings, nor while a potion is poured. Nothing moves while the menu (Escape key) is open.
+- Nothing can be chosen before the delay of the settings, nor while a potion is poured; at each new client, nothing can be chosen during this delay (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Escape key) is open.
 
 # How to win
 After 3, 5 or 10 potions served, it is "Bravo", then the statistics. You have 3 lives: at the third explosion, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left. With "Without hearts", there are no hearts and the game is never lost: the explosions are still counted as mistakes in the statistics; without end, leave by the menu (Escape key).

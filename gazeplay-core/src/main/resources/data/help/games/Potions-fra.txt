@@ -9,7 +9,7 @@ Une Biboule veut une potion d'une couleur : prépare-la en versant les bonnes po
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut à gauche, les vies (un cœur rouge par vie) ; au milieu, les potions servies.
 - Les potions se versent à la vitesse des réglages.
-- Rien ne peut être choisi avant le délai des réglages, ni pendant qu'une potion se verse. Rien ne bouge quand le menu (touche Échap) est ouvert.
+- Rien ne peut être choisi avant le délai des réglages, ni pendant qu'une potion se verse ; à chaque nouveau client, rien ne peut être choisi pendant ce délai (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Après 3, 5 ou 10 potions servies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième explosion, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les explosions restent comptées comme des erreurs dans les statistiques ; sans fin, on quitte par le menu (touche Échap).

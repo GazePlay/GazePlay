@@ -39,7 +39,8 @@ installé dans le Python du système (pas dans `build/piper/venv`).
 **À la fin des points (demande du mainteneur du 23/11/2026)** :
 1. refaire le tour de tous les points des retours de la testeuse (sauf ceux en attente) pour vérifier que chacun est
    bien fait (code, fichiers, crédits, inventaires, état noté ici) ;
-2. nettoyer les fichiers temporaires : dossier temporaire de la session (téléchargements Commons, extraits à écouter,
+2. revoir Magic Potions (point 22 : délai à chaque client sans cas involontaire trouvé, à garder ou retirer) ;
+3. nettoyer les fichiers temporaires : dossier temporaire de la session (téléchargements Commons, extraits à écouter,
    FFmpeg extrait du jar JavaCV, copies de l'inventaire des sons), en supprimant seulement les fichiers nommés, avec
    leur chemin complet.
 
@@ -191,7 +192,10 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     mémoire comme regardée redémarrait son anneau aussitôt : le même signe se rejouait seul ; il ne repart qu'à la fin
     du délai), `RockPaperScissorsTest`, aide. Gobelets Pass Pass : délai quand les gobelets s'arrêtent (gobelet
     regardé pendant les échanges : anneau aussitôt, comme dans Ordre ; il démarre à la fin du délai),
-    `CupsAndBallsTest`, aide. **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    `CupsAndBallsTest`, aide. Magic Potions : pas de cas involontaire trouvé (potions immobiles, potion regardée
+    oubliée à chaque client), délai à chaque client après le premier pour suivre la règle commune,
+    `MagicPotionsTest`, aide ; **à revoir à la fin** (demande du mainteneur : garder ou non ce délai sans cas
+    involontaire). **Reste** : les autres jeux de la liste. Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;
