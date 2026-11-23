@@ -51,6 +51,19 @@ class PictureCardTest {
         assert image.getUrl().contains(resource);
     }
 
+    /**
+     * Tester's feedback of 20/11/2026, point 29: the card is white in both themes, and receives the mouse on all its
+     * surface, not only on the picture.
+     */
+    @Test
+    void shouldPutThePictureOnAWhiteCardChosenEverywhere() {
+        PictureCard pictureCard = new PictureCard(2, 2, 200, 200, mockGameContext, true,
+            "images/blue/blue.jpg", mockStats, mockWhereIsIt);
+        assertTrue(pictureCard.getBackground().getStyle().contains("-fx-fill: #FFFFFF"),
+            pictureCard.getBackground().getStyle());
+        assertFalse(pictureCard.getBackground().isMouseTransparent());
+    }
+
     @Test
     void shouldCreateImageViewFromFile() {
         String resource = "file:" + System.getProperty("user.dir") + "src/test/resources/images/blue/blue.jpg";

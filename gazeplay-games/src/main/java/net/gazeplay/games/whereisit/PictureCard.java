@@ -89,7 +89,9 @@ class PictureCard extends Group {
         this.background = new Rectangle(posX, posY, width, height);
         background.setArcWidth(2 * radius);
         background.setArcHeight(2 * radius);
-        background.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        // White in both themes, under a picture with a transparent background (point 29 of the tester's feedback);
+        // the card already receives the mouse on all its surface
+        background.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
         background.setStrokeType(StrokeType.INSIDE);
 
         final boolean stretched = gameInstance.getGameType().toString().contains("COLORS");
