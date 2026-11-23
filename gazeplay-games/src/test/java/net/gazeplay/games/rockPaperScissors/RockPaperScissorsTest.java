@@ -142,6 +142,34 @@ class RockPaperScissorsTest {
         assertEquals(RockPaperScissorsGame.Phase.COUNT, game.getPhase());
     }
 
+    /**
+     * Point 22 (23/11/2026): the pointer left on the card just chosen used to play it again at once in the next round;
+     * each round after the first asks for the delay of the settings, during which nothing is chosen.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachNewRound() throws Exception {
+        final RockPaperScissorsGame game = playing(RockPaperScissorsMode.VERSUS, RockPaperScissorsEnd.ENDLESS, 3);
+        verify(gameContext, never()).onGameStarted();
+        fx(() -> {
+            game.lookAt(HandSign.PAPER);
+            return null;
+        });
+        steps(game, 1.05);
+        assertEquals(RockPaperScissorsGame.Phase.COUNT, game.getPhase());
+        steps(game, 3 * RockPaperScissorsGame.WORD + 0.05);
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        steps(game, RockPaperScissorsGame.REVEAL + 0.05);
+        assertEquals(RockPaperScissorsGame.Phase.PLAY, game.getPhase());
+        verify(gameContext).onGameStarted();
+        steps(game, 2);
+        assertNull(game.getPlayerSign(), "nothing chosen during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertNull(game.getPlayerSign(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertEquals(HandSign.PAPER, game.getPlayerSign());
+    }
+
     @Test
     void shouldCountThenShowBothSignsAndScoreTheRound() throws Exception {
         final RockPaperScissorsGame game = playing(RockPaperScissorsMode.VERSUS, RockPaperScissorsEnd.ENDLESS, 5);

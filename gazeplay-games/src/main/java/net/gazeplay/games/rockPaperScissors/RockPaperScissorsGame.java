@@ -318,8 +318,15 @@ public class RockPaperScissorsGame implements GameLifeCycle {
 
     /**
      * A new round: against the computer, both signs hidden; learning, the sign of the computer shown.
+     *
+     * @param delayed whether the round follows another one, the pointer maybe still on the card just chosen: nothing
+     *                can be chosen during the delay of the settings (tester's feedback of 20/11/2026, point 22; the
+     *                first round follows the wait of the start)
      */
-    private void newRound() {
+    private void newRound(final boolean delayed) {
+        if (delayed) {
+            gameContext.onGameStarted();
+        }
         greyed.clear();
         playerSign = null;
         firstTry = true;
@@ -355,7 +362,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
             case WAIT -> {
                 elapsed += seconds;
                 if (elapsed >= waiting) {
-                    newRound();
+                    newRound(false);
                 }
             }
             case PLAY -> {
@@ -404,6 +411,12 @@ public class RockPaperScissorsGame implements GameLifeCycle {
         if (looked == null || greyed.contains(looked)) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay of a new round: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             showLooked();
         }
@@ -438,7 +451,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
     }
 
     private void showLooked() {
-        if (looked != null && phase == Phase.PLAY && !greyed.contains(looked)) {
+        if (looked != null && phase == Phase.PLAY && !greyed.contains(looked) && !gameContext.isSelectionBlocked()) {
             final Group card = cards.get(looked);
             ring.setSize(cardWidth * 0.62);
             ring.show(card.getLayoutX() + cardWidth / 2, card.getLayoutY() + cardHeight * 0.44);
@@ -540,7 +553,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
             finish();
             return;
         }
-        newRound();
+        newRound(true);
     }
 
     private void endGame(final String key) {

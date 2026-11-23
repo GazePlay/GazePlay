@@ -7,7 +7,7 @@ Play rock, paper, scissors against the computer! The rock breaks the scissors, t
 - To learn the rule: the sign of the computer is shown; choose the one that beats it. A mistake tells why (for example "The paper wraps the rock") and greys your card: try again.
 - A ring fills during a fixation; it lasts the length of the settings.
 - At the top, the score (or the right answers).
-- Nothing can be chosen before the delay of the settings, nor while the round is shown. Nothing moves while the menu (Escape key) is open.
+- Nothing can be chosen before the delay of the settings, nor while the round is shown; at the start of each new round, nothing can be chosen during this delay (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Escape key) is open.
 
 # How to win
 Against the computer, the first one to win 2, 3 or 5 rounds wins the game: if it is you, it is "Bravo", then the statistics; if it is the computer, the statistics at once. To learn the rule, after 5 or 10 right answers, it is "Bravo". Without end, the game goes on until you leave it with the menu (Escape key).
