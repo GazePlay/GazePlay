@@ -19,7 +19,7 @@ Selon la variante : 1 ou 3 minutes de jeu, 20 ou 50 robots à détruire, ou sans
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 minute, 3 minutes, 20 robots, 50 robots ou sans fin : la fin de la partie.
 - En bas, le niveau. Facile : jusqu'à 2 robots à la fois, aucun ne tire.
-- Normal : jusqu'à 3 robots à la fois, 1 robot sur 5 tire (les rouges).
+- Moyen : jusqu'à 3 robots à la fois, 1 robot sur 5 tire (les rouges).
 - Difficile : jusqu'à 4 robots à la fois, 1 robot sur 3 tire (les rouges).
 - En bas aussi, le tir. Tir automatique : la Biboule vise toute seule le robot le plus proche ; il suffit de se déplacer pour éviter les robots.
 - Tir vers l'avant : la Biboule tire devant elle ; il faut aller vers les robots pour les toucher.

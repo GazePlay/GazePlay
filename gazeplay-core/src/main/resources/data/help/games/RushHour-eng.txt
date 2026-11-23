@@ -16,4 +16,4 @@ When the red car reaches the opening, it leaves the parking and the parking coun
 # The variants
 Choose a variant (it is circled), then press "Start".
 - 1 time, 3 times, 5 times or without end: the number of parkings to solve.
-- At the bottom, the level: Easy, 3 to 8 moves at least to get out; Normal, 9 to 16 moves; Hard, 17 to 27 moves. A move is one vehicle slid by as many boxes as wanted.
+- At the bottom, the level: Easy, 3 to 8 moves at least to get out; Medium, 9 to 16 moves; Hard, 17 to 27 moves. A move is one vehicle slid by as many boxes as wanted.

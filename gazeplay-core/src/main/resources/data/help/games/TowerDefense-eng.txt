@@ -19,5 +19,5 @@ Choose a variant (it is framed), then press "Start".
 - Without end, 10 waves or 20 waves: the end of the game.
 - At the bottom, the waves. On demand: a wave starts when you fixate the button "Send the next wave"; you play at your own pace. Automatic: a wave starts by itself 10 seconds after the end of the last one; the button sends it sooner.
 - At the bottom too, the level. Easy: 100 coins and 15 lives at the start; the monsters have 15 % more life every 2 waves.
-- Normal: 50 coins and 10 lives at the start; 25 % more life every 2 waves.
+- Medium: 50 coins and 10 lives at the start; 25 % more life every 2 waves.
 - Hard: 40 coins and 5 lives at the start; 40 % more life every 2 waves.

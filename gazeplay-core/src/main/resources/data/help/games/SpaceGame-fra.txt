@@ -17,6 +17,6 @@ Selon la variante : battre le boss, qui arrive après 1 ou 3 minutes de jeu, ou 
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 minute puis le boss, 3 minutes puis le boss, 20 extraterrestres puis le boss, 50 extraterrestres puis le boss, ou sans fin : la fin de la partie.
 - En bas, le niveau. Facile : 4 extraterrestres à la fois, chacun tire environ toutes les 6 secondes ; le boss a 15 points de vie (15 lasers pour le battre).
-- Normal : 6 extraterrestres à la fois, chacun tire environ toutes les 4 secondes ; le boss a 30 points de vie.
+- Moyen : 6 extraterrestres à la fois, chacun tire environ toutes les 4 secondes ; le boss a 30 points de vie.
 - Difficile : 8 extraterrestres à la fois, chacun tire environ toutes les 2,5 secondes ; le boss a 50 points de vie.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (on ne peut pas perdre).

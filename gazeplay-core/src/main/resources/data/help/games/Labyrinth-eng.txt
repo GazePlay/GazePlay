@@ -17,5 +17,5 @@ Each cheese reached counts a point, then a new labyrinth is dug. After 3, 5 or 1
 Choose a variant (it is circled), then press "Start".
 - 3 times, 5 times, 10 times or without end: the number of cheeses (or houses) to reach.
 - At the bottom, the character: the mouse and the cheese, or an animal at random and the house.
-- At the bottom too, the level: Easy, a labyrinth of 3 lines and 5 columns; Normal, 5 lines and 7 columns; Hard, 7 lines and 9 columns.
+- At the bottom too, the level: Easy, a labyrinth of 3 lines and 5 columns; Medium, 5 lines and 7 columns; Hard, 7 lines and 9 columns.
 - Last, the way of moving: arrows around the character, arrows around the labyrinth, or choose then guide.

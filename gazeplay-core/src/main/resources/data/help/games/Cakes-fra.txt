@@ -16,6 +16,6 @@ Pour copier le modèle, fais tout le gâteau, puis il est comparé au modèle. S
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le jeu : Copier le modèle, ou Libre (ton propre gâteau).
-- Pour copier le modèle : Facile (1 étage), Normal (3 étages) ou Difficile (3 étages, modèle caché).
+- Pour copier le modèle : Facile (1 étage), Moyen (3 étages) ou Difficile (3 étages, modèle caché).
 - En bas, la fin : 1, 3 ou 5 gâteaux, ou sans fin.
 - En bas, pour copier le modèle, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

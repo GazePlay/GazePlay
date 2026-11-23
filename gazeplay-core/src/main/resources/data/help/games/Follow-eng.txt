@@ -15,5 +15,5 @@ There are no lives. A map finished gives a star and "Well done!", then another m
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The game: Coins, or Keys.
-- The level: Easy (wide paths, 6 coins or 1 door), Normal (10 coins or 2 doors) or Hard (narrower paths, 14 coins or 3 doors).
+- The level: Easy (wide paths, 6 coins or 1 door), Medium (10 coins or 2 doors) or Hard (narrower paths, 14 coins or 3 doors).
 - At the bottom, the end: 1, 3 or 5 maps, or no end.

@@ -19,6 +19,6 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas aussi, le niveau : il change le nombre et la taille des briques. La raquette (30 % de l'écran) et la balle, lente, sont les mêmes à tous les niveaux ; la vitesse se règle avec la vitesse des éléments.
 - Découverte : une ligne de 6 très grosses briques, pour apprendre le jeu.
 - Facile : 4 lignes de 8 grosses briques.
-- Normal : 6 lignes de 13 briques.
+- Moyen : 6 lignes de 13 briques.
 - Difficile : 8 lignes de 15 petites briques.
 - En bas, les cœurs : Sans cœurs ou Avec cœurs (3 cœurs).

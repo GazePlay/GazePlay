@@ -14,7 +14,7 @@ Une mauvaise carte compte une erreur. Avec ou sans fin, avec « Avec cœurs »
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Le niveau. Facile : 6 cartes, la lettre demandée et une autre lettre qui ne lui ressemble pas. Normal : 12 cartes, 3 autres lettres. Difficile : 20 cartes, avec les lettres qui se ressemblent (b, d, p, q ; m, n ; u, v…). Un tiers des cartes environ porte la lettre demandée.
+- Le niveau. Facile : 6 cartes, la lettre demandée et une autre lettre qui ne lui ressemble pas. Moyen : 12 cartes, 3 autres lettres. Difficile : 20 cartes, avec les lettres qui se ressemblent (b, d, p, q ; m, n ; u, v…). Un tiers des cartes environ porte la lettre demandée.
 - En bas, les images cachées : Animaux, ou Mes images (dossier « Mes images » des réglages).
 - En bas, l’écriture : capitales, minuscules (écrites comme à l’école), ou les deux (le « A » demandé se trouve sous la forme « A » ou « a »).
 - En bas, la fin : 3, 5 ou 10 images, ou sans fin.

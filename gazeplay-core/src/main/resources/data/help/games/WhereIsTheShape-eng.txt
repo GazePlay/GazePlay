@@ -15,7 +15,7 @@ A shape is asked for ("Where is the triangle?"): find it among the others.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- At the bottom, the difficulty: Easy (6 shapes: oval, rectangle, rhombus, round, square, triangle), Normal (13 shapes, with arrow, crescent, cross, heart, star, trapeze, trefoil) or Hard (20 shapes, with the polygons: pentagon, hexagon, heptagon, octagon, nonagon, decagon, parallelogram).
+- At the bottom, the difficulty: Easy (6 shapes: oval, rectangle, rhombus, round, square, triangle), Medium (13 shapes, with arrow, crescent, cross, heart, star, trapeze, trefoil) or Hard (20 shapes, with the polygons: pentagon, hexagon, heptagon, octagon, nonagon, decagon, parallelogram).
 - The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.
 - At the bottom, the end of the game: 5, 10 or 15 screens, or without end.
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

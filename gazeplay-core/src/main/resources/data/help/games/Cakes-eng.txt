@@ -16,6 +16,6 @@ To copy the model, make the whole cake, then it is compared with the model. If i
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The game: Copy the model, or Free (your own cake).
-- To copy the model: Easy (1 layer), Normal (3 layers) or Hard (3 layers, hidden model).
+- To copy the model: Easy (1 layer), Medium (3 layers) or Hard (3 layers, hidden model).
 - At the bottom, the end: 1, 3 or 5 cakes, or without end.
 - At the bottom, to copy the model, the hearts: With hearts (3 hearts) or Without hearts.

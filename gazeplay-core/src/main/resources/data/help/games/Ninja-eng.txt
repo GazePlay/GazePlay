@@ -15,7 +15,7 @@ There are no lives and no penalty: a fruit missed simply goes on. As you chose, 
 Choose a variant (it is framed), then press "Start".
 - The way of the fruit: at random across the screen, vertical, horizontal, or on one of the two diagonals (back and forth).
 - At the bottom, Fruits or My images: your images, cut into a circle ("My images" folder of the settings).
-- At the bottom, the speed: Slow, the fruit goes through the height of the screen in 5 seconds; Normal, in 3 seconds; Fast, in 2 seconds.
-- Adaptive: starts as Normal. Every 3 fruits, it gets faster if all of them were cut in less than 1 second, and slower if all of them took more than 3 seconds, without counting the fixation. It stays between 8 seconds and 1.5 seconds to go through the height of the screen.
+- At the bottom, the speed: Slow, the fruit goes through the height of the screen in 5 seconds; Medium, in 3 seconds; Fast, in 2 seconds.
+- Adaptive: starts as Medium. Every 3 fruits, it gets faster if all of them were cut in less than 1 second, and slower if all of them took more than 3 seconds, without counting the fixation. It stays between 8 seconds and 1.5 seconds to go through the height of the screen.
 - At the bottom, how to cut: as soon as touched, or after a fixation.
 - At the bottom, the end of the game: 10, 20 or 30 to cut, or without end.

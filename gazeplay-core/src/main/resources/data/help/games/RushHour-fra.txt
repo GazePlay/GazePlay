@@ -16,4 +16,4 @@ Quand la voiture rouge arrive à l'ouverture, elle sort du parking et le parking
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 fois, 3 fois, 5 fois ou sans fin : le nombre de parkings à réussir.
-- En bas, le niveau : Facile, de 3 à 8 coups au moins pour sortir ; Normal, de 9 à 16 coups ; Difficile, de 17 à 27 coups. Un coup, c'est un véhicule glissé d'autant de cases qu'on veut.
+- En bas, le niveau : Facile, de 3 à 8 coups au moins pour sortir ; Moyen, de 9 à 16 coups ; Difficile, de 17 à 27 coups. Un coup, c'est un véhicule glissé d'autant de cases qu'on veut.

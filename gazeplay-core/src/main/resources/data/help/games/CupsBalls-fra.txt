@@ -17,5 +17,5 @@ Après 3, 5 ou 10 balles trouvées, c'est « Bravo », puis les statistiques. Tu
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 3 balles, 5 balles, 10 balles ou sans fin : le nombre de balles à trouver.
-- En bas, le niveau : Facile, 3 gobelets et 5 échanges lents ; Normal, 4 gobelets et 8 échanges ; Difficile, 5 gobelets et 12 échanges rapides.
+- En bas, le niveau : Facile, 3 gobelets et 5 échanges lents ; Moyen, 4 gobelets et 8 échanges ; Difficile, 5 gobelets et 12 échanges rapides.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

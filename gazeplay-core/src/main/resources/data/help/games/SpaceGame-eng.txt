@@ -17,6 +17,6 @@ As chosen in the variant: beat the boss, who comes after 1 or 3 minutes of play,
 Choose a variant (it is framed), then press "Start".
 - 1 minute then the boss, 3 minutes then the boss, 20 aliens then the boss, 50 aliens then the boss, or without end: the end of the game.
 - At the bottom, the level. Easy: 4 aliens at a time, each shoots about every 6 seconds; the boss has 15 points of life (15 lasers to beat it).
-- Normal: 6 aliens at a time, each shoots about every 4 seconds; the boss has 30 points of life.
+- Medium: 6 aliens at a time, each shoots about every 4 seconds; the boss has 30 points of life.
 - Hard: 8 aliens at a time, each shoots about every 2.5 seconds; the boss has 50 points of life.
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts (the game cannot be lost).

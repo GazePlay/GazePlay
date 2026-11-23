@@ -16,5 +16,5 @@ Il n'y a ni vies ni pénalité : une cible manquée rentre simplement dans son t
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Sans fin, 1 minute, 3 minutes, 20 cibles ou 50 cibles : la fin de la partie.
 - En bas, ce qui sort des trous : les taupes, les Biboules, ou Mes images (tes images, découpées en rond ; dossier « Mes images » des réglages).
-- En bas, le niveau. Facile : 6 trous, 1 cible à la fois, qui reste dehors 3 secondes de plus que la fixation. Normal : 9 trous, 2 cibles à la fois, 2 secondes de plus que la fixation. Difficile : 9 trous, 3 cibles à la fois, 1,5 seconde de plus que la fixation.
+- En bas, le niveau. Facile : 6 trous, 1 cible à la fois, qui reste dehors 3 secondes de plus que la fixation. Moyen : 9 trous, 2 cibles à la fois, 2 secondes de plus que la fixation. Difficile : 9 trous, 3 cibles à la fois, 1,5 seconde de plus que la fixation.
 - En bas, comment toucher : dès qu'on regarde, ou après une fixation. Sans fixation, la cible reste dehors le temps du niveau seulement.

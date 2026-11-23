@@ -16,5 +16,5 @@ Tu as 3 vies. Si tu touches une voiture ou une barrière, tu perds une vie : ta 
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 minute, 3 minutes ou sans fin : sans fin, la partie dure jusqu'à la perte des 3 vies (au premier choc avec « Sans cœurs »).
 - En bas, la route : horizontale (elle va de gauche à droite) ou verticale (elle monte).
-- En bas aussi, le niveau. Facile : 1 ou 2 voitures par seconde ; au départ, la route traverse l'écran en 8 secondes, et en 4 secondes au plus vite. Normal : 2 ou 3 voitures par seconde ; 6,4 secondes au départ, 2,1 secondes au plus vite. Difficile : 3 ou 4 voitures par seconde ; 4,5 secondes au départ, 1,6 seconde au plus vite. La route atteint sa plus grande vitesse après 50 secondes sans choc.
+- En bas aussi, le niveau. Facile : 1 ou 2 voitures par seconde ; au départ, la route traverse l'écran en 8 secondes, et en 4 secondes au plus vite. Moyen : 2 ou 3 voitures par seconde ; 6,4 secondes au départ, 2,1 secondes au plus vite. Difficile : 3 ou 4 voitures par seconde ; 4,5 secondes au départ, 1,6 seconde au plus vite. La route atteint sa plus grande vitesse après 50 secondes sans choc.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (le premier choc fait perdre).

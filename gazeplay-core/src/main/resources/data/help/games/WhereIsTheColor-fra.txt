@@ -15,7 +15,7 @@ Une couleur est demandée (« Où est le rouge ? ») : trouve-la parmi les a
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- En bas, la difficulté : Facile (6 couleurs : noir, bleu, vert, rouge, blanc, jaune), Normal (11 couleurs, avec marron, gris, orange, rose, violet) ou Difficile (16 couleurs, avec bronze, cyan, or, magenta, argent).
+- En bas, la difficulté : Facile (6 couleurs : noir, bleu, vert, rouge, blanc, jaune), Moyen (11 couleurs, avec marron, gris, orange, rose, violet) ou Difficile (16 couleurs, avec bronze, cyan, or, magenta, argent).
 - La taille de la grille : 2, 4, 6 ou 9 images (6 au plus en Facile). Plus il y a d'images, plus c'est difficile.
 - En bas, la fin de la partie : 5, 10 ou 15 écrans, ou sans fin.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

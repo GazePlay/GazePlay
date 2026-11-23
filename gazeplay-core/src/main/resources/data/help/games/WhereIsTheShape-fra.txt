@@ -15,7 +15,7 @@ Une forme est demandée (« Où est le triangle ? ») : trouve-la parmi les 
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- En bas, la difficulté : Facile (6 formes : ovale, rectangle, losange, rond, carré, triangle), Normal (13 formes, avec flèche, croissant, croix, cœur, étoile, trapèze, trèfle) ou Difficile (20 formes, avec les polygones : pentagone, hexagone, heptagone, octogone, ennéagone, décagone, parallélogramme).
+- En bas, la difficulté : Facile (6 formes : ovale, rectangle, losange, rond, carré, triangle), Moyen (13 formes, avec flèche, croissant, croix, cœur, étoile, trapèze, trèfle) ou Difficile (20 formes, avec les polygones : pentagone, hexagone, heptagone, octogone, ennéagone, décagone, parallélogramme).
 - La taille de la grille : 2, 4, 6 ou 9 images. Plus il y a d'images, plus c'est difficile.
 - En bas, la fin de la partie : 5, 10 ou 15 écrans, ou sans fin.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -15,5 +15,5 @@ Il n’y a pas de vies. Une carte finie donne une étoile et « Bravo ! », puis
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le jeu : Pièces, ou Clés.
-- Le niveau : Facile (chemins larges, 6 pièces ou 1 porte), Normal (10 pièces ou 2 portes) ou Difficile (chemins plus étroits, 14 pièces ou 3 portes).
+- Le niveau : Facile (chemins larges, 6 pièces ou 1 porte), Moyen (10 pièces ou 2 portes) ou Difficile (chemins plus étroits, 14 pièces ou 3 portes).
 - En bas, la fin : 1, 3 ou 5 cartes, ou sans fin.

@@ -14,7 +14,7 @@ A dot chosen out of order shakes and counts a mistake. With "With hearts", with 
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- The level. Easy: 4 to 7 dots, the next dot helps. Normal: 8 to 12 dots. Hard: 13 to 20 dots. Progressive: starts easy and goes to the next level after 3 drawings in a row without a mistake.
+- The level. Easy: 4 to 7 dots, the next dot helps. Medium: 8 to 12 dots. Hard: 13 to 20 dots. Progressive: starts easy and goes to the next level after 3 drawings in a row without a mistake.
 - At the bottom, the dots: numbers (1, 2, 3...) or letters (A, B, C...).
 - At the bottom, the end: 3, 5 or 10 drawings, or without end.
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

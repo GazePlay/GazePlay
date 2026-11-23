@@ -14,6 +14,6 @@ When all the differences of a picture are found: "Bravo", then a new picture (8 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - Easy: 3 big differences per picture.
-- Normal: 5 differences.
+- Medium: 5 differences.
 - Hard: 7 differences, some of them small (a color that changes, a small object).
 - At the bottom, "Without the fixation ring": nothing shows while you look. "With the fixation ring": a ring fills round the difference you look at (easier: it shows where it is).

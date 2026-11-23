@@ -15,5 +15,5 @@ Tu as 3 vies. Si la Biboule tombe sous l'écran, tu perds une vie : elle repart 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 minute, 3 minutes ou sans fin : sans fin et avec cœurs, la partie dure jusqu'à la perte des 3 vies.
-- En bas, le niveau. Facile : nuages larges (un cinquième de l'écran), proches, aucun ne bouge. Normal : nuages moyens (un septième de l'écran), plus éloignés, 1 sur 4 bouge. Difficile : petits nuages (un neuvième de l'écran), les plus éloignés, 1 sur 2 bouge.
+- En bas, le niveau. Facile : nuages larges (un cinquième de l'écran), proches, aucun ne bouge. Moyen : nuages moyens (un septième de l'écran), plus éloignés, 1 sur 4 bouge. Difficile : petits nuages (un neuvième de l'écran), les plus éloignés, 1 sur 2 bouge.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -14,7 +14,7 @@ A wrong card counts a mistake. With or without end, with "With hearts", you have
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- The level. Easy: 6 cards, the letter asked and another letter which does not look like it. Normal: 12 cards, 3 other letters. Hard: 20 cards, with the letters which look alike (b, d, p, q; m, n; u, v...). About a third of the cards show the letter asked.
+- The level. Easy: 6 cards, the letter asked and another letter which does not look like it. Medium: 12 cards, 3 other letters. Hard: 20 cards, with the letters which look alike (b, d, p, q; m, n; u, v...). About a third of the cards show the letter asked.
 - At the bottom, the hidden pictures: Animals, or My images ("My images" folder of the settings).
 - At the bottom, the writing: capitals, small letters (written as at school), or both (the "A" asked is found as "A" or "a").
 - At the bottom, the end: 3, 5 or 10 pictures, or without end.

@@ -19,7 +19,7 @@ As chosen in the variant: 1 or 3 minutes of play, 20 or 50 robots to destroy, or
 Choose a variant (it is framed), then press "Start".
 - 1 minute, 3 minutes, 20 robots, 50 robots or without end: the end of the game.
 - At the bottom, the level. Easy: up to 2 robots at a time, none shoots.
-- Normal: up to 3 robots at a time, 1 robot in 5 shoots (the red ones).
+- Medium: up to 3 robots at a time, 1 robot in 5 shoots (the red ones).
 - Hard: up to 4 robots at a time, 1 robot in 3 shoots (the red ones).
 - At the bottom too, the shots. Automatic shots: the Biboule aims by itself at the nearest robot; you only have to move to avoid the robots.
 - Shots forwards: the Biboule shoots in front of it; you have to go towards the robots to hit them.

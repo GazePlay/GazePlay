@@ -16,5 +16,5 @@ Le chat attrapé : la même carte recommence. La gamelle atteinte : la carte sui
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Facile, Normal, Difficile : 5, 10 ou 15 cartes à gagner. Les cartes sont tirées au hasard et deviennent plus difficiles au fil de la partie : d'abord la prairie, puis une haie avec un passage, une barrière, la gamelle dans un enclos, puis les rondins ; plus de chiens dans la seconde moitié.
+- Facile, Moyen, Difficile : 5, 10 ou 15 cartes à gagner. Les cartes sont tirées au hasard et deviennent plus difficiles au fil de la partie : d'abord la prairie, puis une haie avec un passage, une barrière, la gamelle dans un enclos, puis les rondins ; plus de chiens dans la seconde moitié.
 - En bas, la façon de jouer : seul (le chat suit le regard ou la souris), ou à deux (un joueur au clavier, l'autre au regard).

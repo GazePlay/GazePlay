@@ -15,7 +15,7 @@ Il n'y a ni vies ni pénalité : un fruit manqué continue simplement sa route. 
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le chemin du fruit : au hasard à travers l'écran, vertical, horizontal, ou sur l'une des deux diagonales (aller-retour).
 - En bas, Fruits ou Mes images : tes images, découpées en rond (dossier « Mes images » des réglages).
-- En bas, la vitesse : Lente, le fruit traverse la hauteur de l'écran en 5 secondes ; Normale, en 3 secondes ; Rapide, en 2 secondes.
-- Adaptative : commence comme Normale. Tous les 3 fruits, elle accélère s'ils ont tous été coupés en moins de 1 seconde, et ralentit s'ils ont tous pris plus de 3 secondes, sans compter la fixation. Elle reste entre 8 secondes et 1,5 seconde pour traverser la hauteur de l'écran.
+- En bas, la vitesse : Lente, le fruit traverse la hauteur de l'écran en 5 secondes ; Moyenne, en 3 secondes ; Rapide, en 2 secondes.
+- Adaptative : commence comme Moyenne. Tous les 3 fruits, elle accélère s'ils ont tous été coupés en moins de 1 seconde, et ralentit s'ils ont tous pris plus de 3 secondes, sans compter la fixation. Elle reste entre 8 secondes et 1,5 seconde pour traverser la hauteur de l'écran.
 - En bas, comment couper : dès qu'on touche, ou après une fixation.
 - En bas, la fin de la partie : 10, 20 ou 30 à couper, ou sans fin.

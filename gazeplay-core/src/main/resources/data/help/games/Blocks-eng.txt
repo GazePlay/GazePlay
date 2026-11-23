@@ -14,5 +14,5 @@ There are no lives and no mistakes. When all the blocks have vanished, a star an
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The blocks: vanish as soon as looked at, or after a fixation.
-- The level: Easy (3 × 3 blocks), Normal (5 × 5) or Hard (8 × 8).
+- The level: Easy (3 × 3 blocks), Medium (5 × 5) or Hard (8 × 8).
 - At the bottom, the end (3, 5 or 10 pictures, or no end) and the pictures: the animals, or My images (the folder "My images" of the settings).

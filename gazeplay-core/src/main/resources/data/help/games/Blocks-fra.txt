@@ -14,5 +14,5 @@ Il n’y a pas de vies ni d’erreurs. Quand tous les blocs ont disparu, une ét
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Les blocs : disparaissent dès qu’on les regarde, ou après une fixation.
-- Le niveau : Facile (3 × 3 blocs), Normal (5 × 5) ou Difficile (8 × 8).
+- Le niveau : Facile (3 × 3 blocs), Moyen (5 × 5) ou Difficile (8 × 8).
 - En bas, la fin (3, 5 ou 10 images, ou sans fin) et les images : les animaux, ou Mes images (le dossier « Mes images » des réglages).

@@ -12,6 +12,6 @@ Un mauvais départ compte une erreur. Avec « Avec cœurs », avec ou sans fin
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Le niveau : Facile (3 cordes), Normal (4 cordes) ou Difficile (5 cordes et plus de barreaux).
+- Le niveau : Facile (3 cordes), Moyen (4 cordes) ou Difficile (5 cordes et plus de barreaux).
 - En bas, la fin (3, 5 ou 10 parties, ou sans fin) et les images : les animaux, ou Mes images (le dossier « Mes images » des réglages).
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

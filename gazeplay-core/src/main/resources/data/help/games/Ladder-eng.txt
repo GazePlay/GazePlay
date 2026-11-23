@@ -12,6 +12,6 @@ A wrong start counts a mistake. With "With hearts", with or without end, you hav
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- The level: Easy (3 ropes), Normal (4 ropes) or Hard (5 ropes and more rungs).
+- The level: Easy (3 ropes), Medium (4 ropes) or Hard (5 ropes and more rungs).
 - At the bottom, the end (3, 5 or 10 games, or no end) and the pictures: the animals, or My images (the folder "My images" of the settings).
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

@@ -222,7 +222,14 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     repart sans historique ; aide corrigée aussi : elle décrivait encore la vérification à chaque choix, retirée le
     16/11 ; `CakesTest`). **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;
     en mode Copier, l'erreur reste comptée et le cœur perdu ne revient pas.
-24. **« Normal » remplacé par « Moyen »** (« Medium » en anglais) **partout** dans les textes affichés (une vingtaine de
+24. **FAIT le 23/11/2026, validé par le mainteneur ; les autres mots signalés restent tels quels (décision du
+    mainteneur)** (22 textes de `multilinguism.csv`, colonnes français et anglais
+    seulement, dont la clé générique `Normal` lue par plusieurs jeux et la fenêtre des variantes ; « Moyenne » pour la
+    vitesse de Ninja ; Petits chevaux « Plateau classique » / « Classic board » ; 56 aides de jeux ; clés, noms d'enum,
+    `levels.txt`, `circuits.txt`, `variants.json` inchangés. Autres mots qui renvoient à une norme, signalés : «
+    Classique » (Répète après moi, mode ; Jeu de l'oie, « Règles classiques » ; GazePlay Eval, mode de passation ;
+    images « Classique / Contrastes élevés » de la fenêtre des variantes des jeux non revus), « Standard » (réglage du
+    retour visuel `Feedback`)). **« Normal » remplacé par « Moyen »** (« Medium » en anglais) **partout** dans les textes affichés (une vingtaine de
     jeux), clés internes inchangées ; « Version normale » des Petits chevaux devient « **Plateau classique** » ; signaler
     les autres mots qui renvoient à une norme.
 25. **Blocs** : réussite à **90 %** des blocs retirés ; les blocs restants **disparaissent seuls**.

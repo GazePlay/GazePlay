@@ -19,6 +19,6 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom too, the level: it changes the number and the size of the bricks. The paddle (30 % of the screen) and the slow ball are the same in every level; the speed is set with the speed of the elements.
 - Discovery: one line of 6 very big bricks, to learn the game.
 - Easy: 4 lines of 8 big bricks.
-- Normal: 6 lines of 13 bricks.
+- Medium: 6 lines of 13 bricks.
 - Hard: 8 lines of 15 small bricks.
 - At the bottom, the hearts: Without hearts or With hearts (3 hearts).

@@ -19,5 +19,5 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Sans fin, 10 vagues ou 20 vagues : la fin de la partie.
 - En bas, les vagues. À la demande : une vague part quand tu fixes le bouton « Envoyer la vague suivante » ; tu joues à ton rythme. Automatiques : une vague part toute seule 10 secondes après la fin de la précédente ; le bouton l'envoie plus tôt.
 - En bas aussi, le niveau. Facile : 100 pièces et 15 vies au départ ; les monstres ont 15 % de vie en plus toutes les 2 vagues.
-- Normal : 50 pièces et 10 vies au départ ; 25 % de vie en plus toutes les 2 vagues.
+- Moyen : 50 pièces et 10 vies au départ ; 25 % de vie en plus toutes les 2 vagues.
 - Difficile : 40 pièces et 5 vies au départ ; 40 % de vie en plus toutes les 2 vagues.

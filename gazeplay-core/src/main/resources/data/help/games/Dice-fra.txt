@@ -16,6 +16,6 @@ Lancer les dés n’a pas de fin : c’est un outil pour jouer à un jeu de soci
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas, le mode : Compter les points ou Lancer les dés.
-- Compter les points, le niveau : Facile, 1 dé (de 1 à 6 points) ; Normal, 2 dés (de 2 à 12) ; Difficile, 3 dés (de 3 à 18). Les mauvais totaux sont toujours proches du bon.
+- Compter les points, le niveau : Facile, 1 dé (de 1 à 6 points) ; Moyen, 2 dés (de 2 à 12) ; Difficile, 3 dés (de 3 à 18). Les mauvais totaux sont toujours proches du bon.
 - Compter les points, en bas : la fin (5, 10 ou 20 totaux, ou sans fin) et les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (chercher jusqu’à trouver).
 - Lancer les dés : de 1 à 6 dés.

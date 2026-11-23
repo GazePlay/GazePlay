@@ -17,5 +17,5 @@ Chaque fromage atteint compte un point, puis un nouveau labyrinthe se creuse. Ap
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 3 fois, 5 fois, 10 fois ou sans fin : le nombre de fromages (ou de maisons) à atteindre.
 - En bas, le personnage : la souris et le fromage, ou un animal au hasard et la maison.
-- En bas aussi, le niveau : Facile, un labyrinthe de 3 lignes et 5 colonnes ; Normal, 5 lignes et 7 colonnes ; Difficile, 7 lignes et 9 colonnes.
+- En bas aussi, le niveau : Facile, un labyrinthe de 3 lignes et 5 colonnes ; Moyen, 5 lignes et 7 colonnes ; Difficile, 7 lignes et 9 colonnes.
 - Enfin, la façon de déplacer : flèches autour du personnage, flèches autour du labyrinthe, ou choisir puis guider.

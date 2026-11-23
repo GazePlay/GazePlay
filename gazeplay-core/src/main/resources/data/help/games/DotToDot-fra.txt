@@ -14,7 +14,7 @@ Un point touché dans le mauvais ordre tremble et compte une erreur. Avec ou san
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Le niveau. Facile : 4 à 7 points, le point suivant aide. Normal : 8 à 12 points. Difficile : 13 à 20 points. Progressif : commence en Facile et passe au niveau suivant après 3 dessins de suite sans erreur.
+- Le niveau. Facile : 4 à 7 points, le point suivant aide. Moyen : 8 à 12 points. Difficile : 13 à 20 points. Progressif : commence en Facile et passe au niveau suivant après 3 dessins de suite sans erreur.
 - En bas, les points : des nombres (1, 2, 3…) ou des lettres (A, B, C…).
 - En bas, la fin : 3, 5 ou 10 dessins, ou sans fin.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.
