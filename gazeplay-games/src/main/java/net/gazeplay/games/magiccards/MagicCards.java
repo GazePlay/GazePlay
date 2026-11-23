@@ -433,6 +433,9 @@ public class MagicCards implements GameLifeCycle {
             phase = Phase.PLAY;
             phaseTime = 0;
             showBand(winners.size() > 1 ? "MagicWhereMany" : "MagicWhere");
+            // The cards can be chosen, the last ones just landed, maybe under the pointer: nothing can be chosen during
+            // the delay of the settings (tester's feedback of 20/11/2026, point 22)
+            gameContext.onGameStarted();
             return;
         }
         swapsLeft--;
@@ -456,7 +459,14 @@ public class MagicCards implements GameLifeCycle {
         if (looked == null) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after the cards became choosable: the fixation starts once it is over
+            progress = 0;
+            looked.showRing(false);
+            return;
+        }
         if (!looked.isRingShown()) {
+            looked.setRing(0);
             looked.showRing(true);
         }
         progress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
@@ -480,7 +490,7 @@ public class MagicCards implements GameLifeCycle {
         looked = card;
         progress = 0;
         card.setRing(0);
-        card.showRing(true);
+        card.showRing(!gameContext.isSelectionBlocked());
     }
 
     void lookAway(final Card card) {

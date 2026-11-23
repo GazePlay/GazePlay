@@ -170,6 +170,31 @@ class MagicCardsTest {
         });
     }
 
+    /**
+     * Point 22 (23/11/2026): when the shuffled cards can be chosen, the delay of the settings is asked; a card looked
+     * at meanwhile is not turned over, then after the fixation counted from the end of the delay.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenTheCardsCanBeChosen() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
+        fx(() -> {
+            clearInvocations(gameContext);
+            when(gameContext.isSelectionBlocked()).thenReturn(true);
+            untilPlay(game);
+            verify(gameContext).onGameStarted();
+            final MagicCards.Card card = wrongCard(game);
+            game.lookAt(card);
+            steps(game, 2);
+            assertFalse(card.isTurned(), "nothing chosen during the delay");
+            when(gameContext.isSelectionBlocked()).thenReturn(false);
+            steps(game, 0.4);
+            assertFalse(card.isTurned(), "the fixation counts from the end of the delay");
+            steps(game, 0.15);
+            assertTrue(card.isTurned());
+            return null;
+        });
+    }
+
     @Test
     void shouldCountAWrongCardThatStaysTurnedOver() throws Exception {
         final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.SIX, MagicCardsEnd.ENDLESS);
