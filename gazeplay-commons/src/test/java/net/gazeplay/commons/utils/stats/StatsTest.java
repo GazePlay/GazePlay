@@ -326,8 +326,12 @@ class StatsTest {
         assertEquals(6, replayData.get("formatVersion").getAsInt());
         assertEquals(Set.of("formatVersion", "gameSeed", "gameName", "gameVariant", "gameStartedTime", "screenAspectRatio",
             "sceneAspectRatio", "statsNbGoalsReached", "statsNbGoalsToReach", "statsNbUnCountedGoalsReached",
-            "statsNbMistakes", "lifeCycle", "roundsDurationReport", "fixationSequence", "coordinatesAndTimeStamp"),
+            "statsNbMistakes", "lifeCycle", "roundsDurationReport", "settings", "selectionDelays", "fixationSequence",
+            "coordinatesAndTimeStamp"),
             replayData.keySet());
+        // The settings of the game and the delays before a selection (23/11/2026, point 22)
+        assertEquals(Set.of("fixationLength", "selectionDelay", "inputMode", "movingFixationKept", "animationSpeedRatio"),
+            replayData.getAsJsonObject("settings").keySet());
         // stopTime and menuDuration (format 6) are written even when null (round not stopped yet)
         assertEquals(Set.of("startTime", "stopTime", "menuDuration"),
             replayData.getAsJsonObject("lifeCycle").keySet());

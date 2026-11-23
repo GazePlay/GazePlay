@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReplayDataWriterTest {
 
@@ -43,6 +44,28 @@ class ReplayDataWriterTest {
                 + "\"fixationSequence\":[[],[{\"timeGaze\":1100,\"gazeDuration\":300,\"x\":10,\"y\":40}]],"
                 + "\"coordinatesAndTimeStamp\":[{\"X\":0.25,\"Y\":0.5,\"time\":120,\"event\":\"gaze\"}]}",
             ReplayDataWriter.toJson(round(fixationSequence)).toString());
+    }
+
+    /**
+     * The settings of the game and the delays before a selection (23/11/2026, point 22), after "roundsDurationReport".
+     */
+    @Test
+    void shouldWriteTheSettingsAndTheDelaysBeforeASelection() {
+        final ReplayDataWriter.Round base = round(null);
+        final ReplayDataWriter.Round round = new ReplayDataWriter.Round(base.gameSeed(), base.gameName(),
+            base.gameVariant(), base.gameStartedTime(), base.screenAspectRatio(), base.sceneAspectRatio(),
+            base.nbGoalsReached(), base.nbGoalsToReach(), base.nbUnCountedGoalsReached(), base.nbMistakes(),
+            base.lifeCycleStartTime(), base.lifeCycleStopTime(), base.lifeCycleMenuDuration(),
+            base.totalAdditiveDuration(), base.durationBetweenGoals(), null, base.coordinates(),
+            new GameSettings(1200, 1000, "tobii_and_mouse", false, 1.5),
+            List.of(new long[]{2000L, 3000L}, new long[]{5000L, 5800L}));
+
+        final String json = ReplayDataWriter.toJson(round).toString();
+        assertTrue(json.contains("\"roundsDurationReport\":{\"totalAdditiveDuration\":4500,"
+            + "\"durationBetweenGoals\":[1200,3300]},\"settings\":{\"fixationLength\":1200,\"selectionDelay\":1000,"
+            + "\"inputMode\":\"tobii_and_mouse\",\"movingFixationKept\":false,\"animationSpeedRatio\":1.5},"
+            + "\"selectionDelays\":[{\"start\":2000,\"end\":3000},{\"start\":5000,\"end\":5800}],"
+            + "\"fixationSequence\":"), json);
     }
 
     /**

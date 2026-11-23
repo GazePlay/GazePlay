@@ -23,6 +23,10 @@ final class ReplayDataWriter {
      * @param fixationSequence mouse then gaze fixation sequences (convention of the memory, see
      *                         {@link ReplayDataFormat}), null when disabled in the settings
      * @param coordinates      raw samples ("coordinatesAndTimeStamp")
+     * @param settings         the settings of the game at its start ("settings"), null when unknown (not written)
+     * @param selectionDelays  the delays before a selection of the round, each its start and its end in ms since
+     *                         "gameStartedTime", as the "time" of the samples ("selectionDelays"), null when unknown (not
+     *                         written)
      */
     record Round(
         double gameSeed,
@@ -41,8 +45,25 @@ final class ReplayDataWriter {
         long totalAdditiveDuration,
         List<Long> durationBetweenGoals,
         List<LinkedList<FixationPoint>> fixationSequence,
-        JsonArray coordinates
+        JsonArray coordinates,
+        GameSettings settings,
+        List<long[]> selectionDelays
     ) {
+
+        /**
+         * A round without its settings nor its delays before a selection (tests of the other keys).
+         */
+        Round(final double gameSeed, final String gameName, final String gameVariant, final long gameStartedTime,
+              final String screenAspectRatio, final double sceneAspectRatio, final int nbGoalsReached,
+              final int nbGoalsToReach, final int nbUnCountedGoalsReached, final int nbMistakes,
+              final Long lifeCycleStartTime, final Long lifeCycleStopTime, final Long lifeCycleMenuDuration,
+              final long totalAdditiveDuration, final List<Long> durationBetweenGoals,
+              final List<LinkedList<FixationPoint>> fixationSequence, final JsonArray coordinates) {
+            this(gameSeed, gameName, gameVariant, gameStartedTime, screenAspectRatio, sceneAspectRatio, nbGoalsReached,
+                nbGoalsToReach, nbUnCountedGoalsReached, nbMistakes, lifeCycleStartTime, lifeCycleStopTime,
+                lifeCycleMenuDuration, totalAdditiveDuration, durationBetweenGoals, fixationSequence, coordinates, null,
+                null);
+        }
     }
 
     private ReplayDataWriter() {
@@ -85,6 +106,28 @@ final class ReplayDataWriter {
         roundsDurationReportObject.addProperty("totalAdditiveDuration", round.totalAdditiveDuration());
         roundsDurationReportObject.add("durationBetweenGoals", durationBetweenGoalsArray);
         json.add("roundsDurationReport", roundsDurationReportObject);
+
+        // Since 23/11/2026 (format 6): the settings of the game, and the delays before a selection, during which the
+        // gaze and the mouse are recorded though nothing can be chosen
+        if (round.settings() != null) {
+            final JsonObject settingsObject = new JsonObject();
+            settingsObject.addProperty("fixationLength", round.settings().fixationLength());
+            settingsObject.addProperty("selectionDelay", round.settings().selectionDelay());
+            settingsObject.addProperty("inputMode", round.settings().inputMode());
+            settingsObject.addProperty("movingFixationKept", round.settings().movingFixationKept());
+            settingsObject.addProperty("animationSpeedRatio", round.settings().animationSpeedRatio());
+            json.add("settings", settingsObject);
+        }
+        if (round.selectionDelays() != null) {
+            final JsonArray delaysArray = new JsonArray();
+            for (final long[] delay : round.selectionDelays()) {
+                final JsonObject delayObject = new JsonObject();
+                delayObject.addProperty("start", delay[0]);
+                delayObject.addProperty("end", delay[1]);
+                delaysArray.add(delayObject);
+            }
+            json.add("selectionDelays", delaysArray);
+        }
 
         json.add("fixationSequence", fixationSequenceArray);
         json.add("coordinatesAndTimeStamp", round.coordinates());

@@ -1581,6 +1581,19 @@ Décision du mainteneur du 20/11/2026 : la version refaite n'est utilisée qu'en
 - **Gardé** : le numéro 6 (revenir à 2 ferait porter le même numéro à des fichiers de bêta v2 de contenu différent). Les sections 2i, 2v, 2aj, 2ap et 2aq restent le journal des étapes ; les numéros 2 à 5 qui y figurent sont des étapes de la bêta.
 - **Impact sur les données** : aucun fichier n'est réécrit. Les fichiers de bêta des versions 2 à 5 ne sont pas gardés (décision du mainteneur) ; le rejeu les lit toujours comme des fichiers v6 pour les coordonnées.
 
+## 2as. Réglages de la partie et délais avant sélection dans `replayData.json` (23/11/2026, décision du mainteneur)
+
+Avec le point 22 des retours de la testeuse (délai des réglages à chaque apparition de nouveaux choix, `REVUE_DES_JEUX.md`), le mainteneur a demandé que les résultats disent la durée de ce délai, puisque le regard et la souris sont enregistrés pendant qu'il court. Constat : `replayData.json` n'enregistrait aucun réglage.
+
+- **Ajouté à la v6, sans changer de numéro** (décision du mainteneur : la v6 n'est pas encore publiée, et seuls v1 et v6 existent, 2ar) :
+  - `settings` : les réglages au début de la partie, `fixationLength` et `selectionDelay` en ms, `inputMode` (`mouse_control`, `tobii`, `tobii_and_mouse`), `movingFixationKept`, `animationSpeedRatio` (`GameSettings`, module `gazeplay-results`). Un réglage changé pendant la partie dans le menu Échap n'y est pas suivi ;
+  - `selectionDelays` : chaque délai de la partie, `start` et `end` en ms depuis `gameStartedTime`, comme le `time` des points de `coordinatesAndTimeStamp` (`SelectionDelays`, module `gazeplay-commons`, alimenté par `GameContext.onGameStarted`, garde l'heure de l'horloge, convertie par `Stats`) ; un délai relancé pendant qu'il court reste une seule période ; un délai encore en cours à l'arrêt finit à l'arrêt.
+  - **Essai du mainteneur (23/11/2026)**, La Fabrique à gâteaux, délai réglé à 2 s : `settings` juste, 4 délais de 2,0 s (un par rangée de boutons) ; 663 des 842 points de souris de la partie tombent dans les délais : l'enregistrement continue bien pendant le blocage. La première version écrivait les délais en heure de l'horloge alors que le `time` des points compte depuis `gameStartedTime` : corrigé après cet essai. Corrigé aussi dans la javadoc de `ReplayDataFormat` : elle disait le `time` des points « à l'heure de l'horloge » (seul `timeGaze` des fixations l'est).
+- **Placement** : après `roundsDurationReport`, avant `fixationSequence` ; documenté dans la javadoc de `ReplayDataFormat`.
+- **Impact sur les données** : des clés en plus seulement ; aucun fichier n'est réécrit ; le rejeu lit le fichier avec Gson, qui ignore les clés inconnues (`ReplayingGameFromJsonTest` passe). Les fichiers v1 n'ont aucune de ces clés.
+- **GazePlay Eval** : rien à changer, `session.json` enregistre déjà les réglages de la passation, et Eval n'utilise pas le délai.
+- **Tests** : `ReplayDataWriterTest.shouldWriteTheSettingsAndTheDelaysBeforeASelection`, `SelectionDelaysTest`, liste des clés de `StatsTest.shouldSaveStats`.
+
 ---
 
 ## 9. État à la fin de la modernisation (26/10/2026)

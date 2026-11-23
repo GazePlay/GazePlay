@@ -37,9 +37,17 @@ import java.util.List;
  * <li>the time spent with the menu of the game screen open (Esc) is not counted in the durations. "lifeCycle" has
  * "menuDuration", the time spent in the menu between "startTime" and "stopTime" (times of the clock): the duration of
  * the game is "stopTime" - "startTime" - "menuDuration". The durations of the rounds ("roundsDurationReport":
- * "totalAdditiveDuration", "durationBetweenGoals") do not include the menu time. The "time" of the samples and the
- * "timeGaze" of the fixations are times of the clock: nothing is recorded while the menu is open, which leaves a gap.
+ * "totalAdditiveDuration", "durationBetweenGoals") do not include the menu time. The "time" of the samples (in ms since
+ * "gameStartedTime") and the "timeGaze" of the fixations (times of the clock) go on during the menu: nothing is recorded
+ * while it is open, which leaves a gap.
  * In version 1, the durations included the time spent in the menu, which cannot be known afterwards.</li>
+ * <li>(23/11/2026, keys added to version 6 before its publication, maintainer's decision) "settings" holds the settings
+ * the game started with: "fixationLength" and "selectionDelay" in ms, "inputMode" ("mouse_control", "tobii",
+ * "tobii_and_mouse"), "movingFixationKept", "animationSpeedRatio" (a setting changed during the game in the menu is not
+ * followed). "selectionDelays" lists the delays before a selection of the round, each its "start" and "end" in ms since
+ * "gameStartedTime", like the "time" of the samples: nothing could be chosen meanwhile, though the samples are
+ * recorded. A file
+ * of version 1 has neither key, nor the delays, which were then only run at the start of 3 games.</li>
  * </ul>
  * <p>
  * In memory, {@link FixationPoint} keeps the convention of version 1 (Y in "x", X in "y"), which the drawing code

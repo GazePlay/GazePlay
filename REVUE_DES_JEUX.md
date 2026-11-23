@@ -211,8 +211,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     pointeur, nouveau parking déjà précédé du délai (`WAIT`) ; `RushHourTest`, aide. Aiguillages : délai quand
     « Départ » revient après un train (le train suivant partait seul ; pas au premier, qui suit l'attente du début) et
     quand « Reprendre » apparaît à une pause, trains toujours arrêtés à ces moments ; aiguillages oubliés après un
-    changement, nouveau circuit déjà précédé du délai ; `TrainSwitchesTest`, aide. **Liste du point 22 terminée** ;
-    suite : étape à part des résultats (bloc `settings` et périodes bloquées dans `replayData.json`, v6). Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
+    changement, nouveau circuit déjà précédé du délai ; `TrainSwitchesTest`, aide. **Liste du point 22 terminée.**
+    Étape des résultats codée le 23/11 : `settings` et `selectionDelays` dans `replayData.json`, v6 (`MODERNIZATION.md`
+    2as). Texte d'origine : **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les
     jeux** où de nouveaux boutons apparaissent sous le pointeur (liste à montrer au mainteneur au moment de coder).
 23. **La Fabrique à gâteaux** : bouton **« Annuler »**, sans limite (jusqu'au début du gâteau, étages terminés compris) ;

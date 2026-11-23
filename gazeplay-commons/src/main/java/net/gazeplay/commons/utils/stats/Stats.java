@@ -143,6 +143,12 @@ public class Stats {
     @Getter
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;
 
+    /**
+     * The settings at the start of the round ("settings" of replayData.json, 23/11/2026), null before it starts.
+     */
+    @Getter
+    private GameSettings settingsAtStart;
+
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
@@ -480,6 +486,8 @@ public class Stats {
                 fixationSequence = new ArrayList<LinkedList<FixationPoint>>(List.of(new LinkedList<FixationPoint>(), new LinkedList<FixationPoint>()));
             }
             startTime = clock.getAsLong();
+            settingsAtStart = new GameSettings(config.getFixationLength(), config.getGameStartDelay(),
+                config.getEyeTracker(), config.isMovingFixationKept(), config.getAnimationSpeedRatio());
 
             recordGazeMovements = e -> {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
@@ -1062,12 +1070,18 @@ public class Stats {
     }
 
     private JsonObject buildSavedDataJSON(JsonArray data) {
+        // The delays before a selection of the round (23/11/2026): from its start to its stop (or to now), in ms since
+        // "gameStartedTime", as the "time" of the samples of "coordinatesAndTimeStamp"
+        final List<long[]> selectionDelays = lifeCycle.getStartTime() == null ? null
+            : SelectionDelays.between(lifeCycle.getStartTime(),
+                lifeCycle.getStopTime() == null ? System.currentTimeMillis() : lifeCycle.getStopTime()).stream()
+                .map(delay -> new long[]{delay[0] - startTime, delay[1] - startTime}).toList();
         return ReplayDataWriter.toJson(new ReplayDataWriter.Round(
             currentGameSeed, currentGameNameCode, currentGameVariant, startTime, getScreenRatio(), getSceneRatio(),
             nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, nbMistakes,
             lifeCycle.getStartTime(), lifeCycle.getStopTime(), lifeCycle.getMenuDuration(),
             roundsDurationReport.getTotalAdditiveDuration(), roundsDurationReport.getDurationBetweenGoals(),
-            fixationSequence, data));
+            fixationSequence, data, settingsAtStart, selectionDelays));
     }
 
     private JsonArray saveCoordinates(JsonObject coordinates) {

@@ -39,6 +39,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.commons.utils.stats.SelectionDelays;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -398,10 +399,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             selectionDelay.stop();
         }
         gamingRoot.setDisable(true);
+        // Recorded in the results ("selectionDelays" of replayData.json): the gaze is recorded meanwhile
+        SelectionDelays.begin();
         final PauseTransition wait = new PauseTransition(Duration.millis(delay));
         wait.setOnFinished(waitEvent -> {
             selectionDelay = null;
             gamingRoot.setDisable(false);
+            SelectionDelays.end();
         });
         selectionDelay = wait;
         wait.play();
