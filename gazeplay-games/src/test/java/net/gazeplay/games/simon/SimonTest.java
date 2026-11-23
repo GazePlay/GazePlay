@@ -210,6 +210,33 @@ class SimonTest {
         assertEquals(2, game.getLit());
     }
 
+    /**
+     * Point 22 (23/11/2026): when the player's turn comes, the delay of the settings is asked; the button looked at is
+     * not pressed while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenThePlayersTurnComes() throws Exception {
+        final Simon game = launched(SimonMode.CLASSIC, SimonEnd.ENDLESS, 5);
+        steps(game, 0.05);
+        final int note = game.getMelody().get(0);
+        fx(() -> {
+            game.lookAt(note);
+            return null;
+        });
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        listen(game);
+        assertEquals(Simon.Phase.INPUT, game.getPhase());
+        verify(gameContext).onGameStarted();
+        steps(game, 2);
+        assertEquals(1, game.getMelody().size(), "nothing pressed during the delay");
+        assertEquals(Simon.Phase.INPUT, game.getPhase());
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        steps(game, 0.9);
+        assertEquals(Simon.Phase.INPUT, game.getPhase(), "the fixation counts from the end of the delay");
+        steps(game, 0.15);
+        assertEquals(2, game.getMelody().size(), "the note repeated, a new one added");
+    }
+
     @Test
     void shouldNotChooseWhileTheDevicePlays() throws Exception {
         final Simon game = launched(SimonMode.CLASSIC, SimonEnd.ENDLESS, 11);

@@ -431,6 +431,9 @@ public class Simon implements GameLifeCycle {
         phase = Phase.INPUT;
         position = 0;
         elapsed = 0;
+        // The buttons can be chosen again, one maybe under the pointer: nothing can be chosen during the delay of the
+        // settings (tester's feedback of 20/11/2026, point 22)
+        gameContext.onGameStarted();
         showLooked();
         paint();
         showHud();
@@ -446,6 +449,15 @@ public class Simon implements GameLifeCycle {
     private void fixate(final double seconds) {
         if (looked < 0) {
             return;
+        }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after the buttons became choosable: the fixation starts once it is over
+            progress = 0;
+            ring.stop();
+            return;
+        }
+        if (!ring.isVisible()) {
+            showLooked();
         }
         progress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
         ring.setProgress(progress);
@@ -478,7 +490,7 @@ public class Simon implements GameLifeCycle {
     }
 
     private void showLooked() {
-        if (looked >= 0 && (phase == Phase.INPUT || phase == Phase.ADD)) {
+        if (looked >= 0 && (phase == Phase.INPUT || phase == Phase.ADD) && !gameContext.isSelectionBlocked()) {
             final double angle = Math.toRadians(ANGLES[looked] + 45);
             ring.setSize(radius * 0.42);
             ring.show(centerX + Math.cos(angle) * radius * 0.62, centerY - Math.sin(angle) * radius * 0.62);
@@ -552,10 +564,12 @@ public class Simon implements GameLifeCycle {
             melody.add(random.nextInt(BUTTONS));
             listenAgain();
         } else {
-            // Two players: the one who repeated adds a note
+            // Two players: the one who repeated adds a note; the button of the last note, still under the pointer,
+            // used to add itself at once: the delay of the settings first (point 22)
             phase = Phase.ADD;
             ring.stop();
             progress = 0;
+            gameContext.onGameStarted();
             showLooked();
             paint();
             showHud();

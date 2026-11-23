@@ -9,7 +9,7 @@
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - Au milieu, le nombre de notes de la mélodie. En haut à gauche, les vies (un cœur rouge par vie) ; en haut, les notes.
 - Les notes vont à la vitesse des réglages.
-- Rien ne peut être choisi avant le délai des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
+- Au début, rien ne peut être choisi avant le délai des réglages ; à chaque fois que c'est à toi de jouer, rien ne peut être choisi pendant ce délai (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
 Quand la mélodie a 5, 8 ou 12 notes et que tu l'as répétée, c'est « Mélodie réussie ! », puis « Bravo » et les statistiques. En mode classique, tu as 3 vies : chaque erreur en coûte une ; à la troisième, la partie s'arrête et montre ta plus longue mélodie, puis les statistiques. Sans fin, la mélodie grandit jusqu'à ce que tu n'aies plus de vie.

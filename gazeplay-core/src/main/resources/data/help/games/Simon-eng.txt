@@ -9,7 +9,7 @@ Listen to the melody of the device, then repeat it by looking at its buttons! Ea
 - A ring fills during a fixation; it lasts the length of the settings.
 - In the middle, the number of notes of the melody. At the top left, the lives (a red heart for each life); at the top, the notes.
 - The notes go at the speed of the settings.
-- Nothing can be chosen before the delay of the settings. Nothing moves while the menu (Escape key) is open.
+- At the start, nothing can be chosen before the delay of the settings; each time it is your turn, nothing can be chosen during this delay (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Escape key) is open.
 
 # How to win
 When the melody has 5, 8 or 12 notes and you repeated it, it is "Melody complete!", then "Bravo" and the statistics. In the classic mode, you have 3 lives: each mistake costs one; at the third one, the game stops and shows your longest melody, then the statistics. Without end, the melody grows until you have no life left.
