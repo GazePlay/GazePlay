@@ -145,6 +145,38 @@ class GooseGameTest {
         });
     }
 
+    /**
+     * Point 22 (23/11/2026): the "Roll" button coming back for another turn asks for the delay of the settings; looked
+     * at, it rolls nothing while it runs, then after the fixation counted from its end.
+     */
+    @Test
+    void shouldWaitForTheDelayWhenTheRollButtonComesBack() throws Exception {
+        final GooseGame game = launched(GooseRules.SIMPLE, GoosePlayers.PLAYERS_2);
+        fx(() -> {
+            verify(gameContext, never()).onGameStarted();
+            game.rollWith(3);
+            when(gameContext.isSelectionBlocked()).thenReturn(true);
+            untilReady(game);
+            assertEquals(1, game.getCurrent());
+            verify(gameContext).onGameStarted();
+            game.lookAtButton(true);
+            for (int i = 0; i < 100; i++) {
+                game.step(0.02);
+            }
+            assertEquals(GooseGame.Phase.READY, game.getPhase(), "nothing rolled during the delay");
+            when(gameContext.isSelectionBlocked()).thenReturn(false);
+            for (int i = 0; i < 20; i++) {
+                game.step(0.02);
+            }
+            assertEquals(GooseGame.Phase.READY, game.getPhase(), "the fixation counts from the end of the delay");
+            for (int i = 0; i < 8; i++) {
+                game.step(0.02);
+            }
+            assertEquals(GooseGame.Phase.ROLLING, game.getPhase());
+            return null;
+        });
+    }
+
     @Test
     void shouldMoveAgainOnAGoose() throws Exception {
         final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);

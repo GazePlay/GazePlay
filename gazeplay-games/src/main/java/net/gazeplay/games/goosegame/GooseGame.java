@@ -335,7 +335,7 @@ public class GooseGame implements GameLifeCycle {
         lookingAtButton = looking;
         progress = 0;
         ring.stop();
-        if (looking && phase == Phase.READY) {
+        if (looking && phase == Phase.READY && !gameContext.isSelectionBlocked()) {
             showRing();
         }
     }
@@ -356,7 +356,8 @@ public class GooseGame implements GameLifeCycle {
             case WAIT -> {
                 elapsed += seconds;
                 if (elapsed >= configuration.getGameStartDelay() / 1000.0) {
-                    startTurn();
+                    // The delay of the start is over: no other one for this first turn
+                    startTurn(false);
                 }
             }
             case READY -> fixate(seconds);
@@ -388,6 +389,12 @@ public class GooseGame implements GameLifeCycle {
         if (!lookingAtButton) {
             return;
         }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after the button came back: the fixation starts once it is over
+            progress = 0;
+            ring.stop();
+            return;
+        }
         if (!ring.isVisible()) {
             showRing();
         }
@@ -413,13 +420,17 @@ public class GooseGame implements GameLifeCycle {
     /**
      * The turn of the current pawn: a pawn asleep or waiting passes its turn; a person rolls with the button, the
      * computer by itself.
+     *
+     * @param delayed whether the "Roll" button comes back after another turn, maybe under the pointer: nothing can be
+     *                chosen during the delay of the settings (tester's feedback of 20/11/2026, point 22; the first
+     *                turn follows the wait of the start)
      */
-    private void startTurn() {
+    private void startTurn(final boolean delayed) {
         diceGroup.setVisible(false);
         if (pawns.stream().allMatch(Pawn::isWaiting)) {
             pawns.forEach(pawn -> pawn.waiting = false);
             say("GooseAllFree");
-            after(1.6, this::startTurn);
+            after(1.6, () -> startTurn(true));
             return;
         }
         final Pawn pawn = pawns.get(current);
@@ -445,7 +456,10 @@ public class GooseGame implements GameLifeCycle {
             rollButton.setVisible(true);
             phase = Phase.READY;
             progress = 0;
-            if (lookingAtButton) {
+            if (delayed) {
+                gameContext.onGameStarted();
+            }
+            if (lookingAtButton && !gameContext.isSelectionBlocked()) {
                 showRing();
             }
         } else {
@@ -456,7 +470,7 @@ public class GooseGame implements GameLifeCycle {
 
     private void nextTurn() {
         current = (current + 1) % pawns.size();
-        startTurn();
+        startTurn(true);
     }
 
     /**
