@@ -5,6 +5,55 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU MARDI 24/11/2026 (fin de la séance du lundi 23/11/2026)
+
+**Méthode inchangée** : un point à la fois, dans l'ordre des numéros ; je code, le mainteneur vérifie, puis commit et
+suite ; titre du point en cours dans chaque message ; tests locaux ciblés seulement, build complet et all-games en CI.
+
+**Fait le 23/11/2026** (chaque étape validée par le mainteneur) :
+- CI du push du 20/11 vérifiée, verte. Points 14 à 19 et 22 faits, **poussés** jusqu'à `976fa2aa7` (CI run
+  45184197472, verte après relance d'un échec Maven 429 de SpotBugs).
+- **Commités, NON poussés (10 commits, `0b7f43927` à `8903e6a9b`)** :
+  - 23. Fabrique à gâteaux, bouton « Annuler » jusqu'au début du gâteau (`0b7f43927`) ;
+  - 24. « Normal » devient « Moyen » / « Medium », « Plateau classique » aux Petits chevaux ; les autres mots
+    (Classique, Standard) gardés (`adabe1b69`) ;
+  - 25. Blocs, image réussie à 90 % des blocs (arrondi au-dessus : tous les blocs en 3 × 3, gardé), les restants
+    disparaissent seuls (`8083aabcb`) ;
+  - 26. 209 photos d'Où est le son ? et d'Où est l'animal ? revues : 17 remplacées (musiciens, flûte de Pan, cerfs,
+    chienne qui allaite, poisson mort, vautours, chat et lézard, plaque) et 25 ajoutées (`153d11a21`) ;
+  - 27. aide Eval « Comprendre les fichiers de résultats » en tableaux, avec exemples ; `HelpDialog` lit `## `,
+    `| nom | sens` et `> ` (`6091c97b6`) ; reformulations toujours en attente ;
+  - 29. (en cours) carte à choisir blanche dans les deux thèmes (`GameStyle.pictureCard`, `PICTURE_BACKGROUND`,
+    `CARD_TEXT` = texte du thème clair `#2B2118`), choisie sur toute sa surface : Memory, images, lettres et chiffres
+    (`a9ab50a15`), Cartes magiques (`e8472447c`), famille Où est… (`87fa9ba20`), Opinions (`18eadf455`), Blocs
+    (`8903e6a9b`).
+- Remarque du mainteneur sur le fond de l'écran en thème sombre : **rien à faire**, le réglage « Couleur de fond » des
+  réglages du menu principal le règle déjà (son réglage à lui est blanc).
+
+**Ordre du jour du mardi 24/11/2026** :
+1. Demander au mainteneur s'il faut pousser les 10 commits du 23/11, puis vérifier la CI (tests JDK 25 et 26,
+   all-games, paquets).
+2. **Point 29, suite** :
+   - **Identifier les lettres** (`literacy/Letters.java`) : fond blanc sous l'image placée sous la grille
+     (`showPicture`, aujourd'hui sans fond dessous) ; cartes de lettres (`letterCard`, `-gp-surface`) et disque du
+     haut (`disc`) à passer en carte blanche, texte `GameStyle.CARD_TEXT`, choisies sur toute leur surface ;
+   - puis relever, jeu par jeu, **les autres cartes à lettre, chiffre ou mot à choisir** posées sur `-gp-surface` ou
+     `targetCard` (piste : chercher `-gp-surface` et `targetCard` dans `gazeplay-games`, garder seulement les cartes
+     qu'on choisit), montrer la liste au mainteneur avant de coder ;
+   - exclus (décision du mainteneur) : La pièce, GazePlay Eval, objets posés sur un décor sans carte ; déjà blancs :
+     Cartes à gratter, modèle du Taquin, Pierre papier ciseaux.
+3. **Tâches de fin** (demandes du mainteneur du 23/11) :
+   1. refaire le tour de tous les points des retours de la testeuse (sauf ceux en attente) : code, fichiers, crédits,
+      inventaires, état noté ici ;
+   2. revoir Magic Potions (point 22 : délai à chaque client, sans cas involontaire trouvé, à garder ou retirer) ;
+   3. nettoyer le dossier temporaire de la session (téléchargements Commons, `candidats\`, `photos\`, `accordion\`,
+      `lion\`, `violin\`, `guitar\`, `elephant\`, `scripts\`, FFmpeg extrait du jar JavaCV, copies de l'inventaire des
+      sons), **fichiers nommés seulement, avec leur chemin complet** ; le dossier change avec la session : le relever
+      au début de la séance.
+4. Puis : liste des jeux du menu dans l'ordre alphabétique ; notes de version 2.0 au feu vert du mainteneur seulement.
+5. En attente (inchangé) : 13 (débit de la voix), 20 (réaction aux erreurs : réunion avec Amélie), 27 (reformulations),
+   28 (croix d'Eval), 31 (Où est-ce ?).
+
 ## REPRISE DU LUNDI 23/11/2026 (fin de la séance du vendredi 20/11/2026)
 
 **Méthode du mainteneur (depuis le 20/11)** : un point à la fois ; je code, il vérifie, puis commit et point suivant ;
