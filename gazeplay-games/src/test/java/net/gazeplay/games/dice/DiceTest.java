@@ -170,6 +170,37 @@ class DiceTest {
         });
     }
 
+    /**
+     * Point 22 (23/11/2026): the cards of the answer and the "Roll" button coming back ask for the delay of the
+     * settings; nothing is chosen while it runs.
+     */
+    @Test
+    void shouldWaitForTheDelayAtEachNewChoice() throws Exception {
+        final Dice game = launched(DiceMode.COUNT, 1, DiceEnd.ENDLESS, DiceMistakes.SEARCH_AGAIN);
+        fx(() -> {
+            clearInvocations(gameContext);
+            roll(game);
+            assertEquals(Dice.Phase.ANSWER, game.getPhase());
+            verify(gameContext).onGameStarted();
+
+            final Dice.Card right = game.getCards().stream().filter(Dice.Card::isRight).findFirst().orElseThrow();
+            when(gameContext.isSelectionBlocked()).thenReturn(true);
+            enter(right.getSpot());
+            steps(game, 2);
+            assertEquals(Dice.Phase.ANSWER, game.getPhase(), "nothing chosen during the delay");
+            when(gameContext.isSelectionBlocked()).thenReturn(false);
+            steps(game, 0.6);
+            assertEquals(Dice.Phase.FOUND, game.getPhase());
+            exit(right.getSpot());
+
+            clearInvocations(gameContext);
+            steps(game, Dice.FOUND + 0.05);
+            assertEquals(Dice.Phase.READY, game.getPhase());
+            verify(gameContext).onGameStarted();
+            return null;
+        });
+    }
+
     @Test
     void shouldGreyAWrongCardAndLookAgain() throws Exception {
         final Dice game = launched(DiceMode.COUNT, 1, DiceEnd.ENDLESS, DiceMistakes.SEARCH_AGAIN);

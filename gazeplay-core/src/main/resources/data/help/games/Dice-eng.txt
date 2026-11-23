@@ -6,7 +6,7 @@ Dice on a game table. Count their points and find the right total, or just throw
 - Count the points: when the dice have stopped, three cards show numbers. Look at the card of the right total: it turns green with a check, then you roll the dice again.
 - A wrong card shows a cross. With hearts, you lose one of 3 hearts and the right total is shown; without hearts, it turns grey and you look again.
 - Throw the dice: the total is shown at the top when the dice have stopped. Look at one die to roll it alone.
-- Nothing rolls while the dice are rolling. At the start, nothing rolls during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
+- Nothing rolls while the dice are rolling. At the start, when the dice settle and when the "Roll" button comes back, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - Nothing moves while the menu (Esc key) is open.
 
 # How to win

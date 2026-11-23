@@ -341,7 +341,8 @@ public class Dice implements GameLifeCycle {
             case WAIT -> {
                 elapsed += seconds;
                 if (elapsed >= configuration.getGameStartDelay() / 1000.0) {
-                    ready();
+                    // The delay of the start is over: no other one
+                    ready(false);
                 }
             }
             case READY, ANSWER -> fixate(seconds);
@@ -358,7 +359,7 @@ public class Dice implements GameLifeCycle {
                         bravo = true;
                         finish();
                     } else {
-                        ready();
+                        ready(true);
                     }
                 }
             }
@@ -368,7 +369,7 @@ public class Dice implements GameLifeCycle {
                     if (lives <= 0) {
                         endGame();
                     } else {
-                        ready();
+                        ready(true);
                     }
                 }
             }
@@ -385,13 +386,19 @@ public class Dice implements GameLifeCycle {
 
     /**
      * The dice can be rolled: the "Roll" button shows (the cards of the last roll go).
+     *
+     * @param delayed whether the button comes back after an answer, maybe under the pointer: nothing can be chosen
+     *                during the delay of the settings (tester's feedback of 20/11/2026, point 22)
      */
-    private void ready() {
+    private void ready(final boolean delayed) {
         clearCards();
         rollSpot.node.setVisible(true);
         phase = Phase.READY;
         elapsed = 0;
-        if (looked != null && isEnabled(looked)) {
+        if (delayed) {
+            gameContext.onGameStarted();
+        }
+        if (looked != null && isEnabled(looked) && !gameContext.isSelectionBlocked()) {
             showRing(looked);
         }
     }
@@ -408,6 +415,12 @@ public class Dice implements GameLifeCycle {
 
     private void fixate(final double seconds) {
         if (looked == null || !isEnabled(looked)) {
+            return;
+        }
+        if (gameContext.isSelectionBlocked()) {
+            // During the delay after new choices: the fixation does not start (it starts once the delay is over)
+            progress = 0;
+            ring.stop();
             return;
         }
         if (!ring.isVisible()) {
@@ -436,7 +449,7 @@ public class Dice implements GameLifeCycle {
         progress = 0;
         ring.stop();
         paintCards();
-        if (isEnabled(spot)) {
+        if (isEnabled(spot) && !gameContext.isSelectionBlocked()) {
             showRing(spot);
         }
     }
@@ -497,6 +510,9 @@ public class Dice implements GameLifeCycle {
      * The dice have settled: throwing, the total is shown; counting, the three cards come.
      */
     private void rolled() {
+        // The cards come (counting), or the dice settle under the pointer, which they may leave and enter again
+        // (throwing): nothing can be chosen during the delay of the settings (tester's feedback of 20/11/2026, point 22)
+        gameContext.onGameStarted();
         if (mode == DiceMode.THROW) {
             showTotal();
             phase = Phase.READY;
