@@ -433,7 +433,8 @@ public class RushHour implements GameLifeCycle {
         if (looked == null) {
             return;
         }
-        if (!isEnabled(looked)) {
+        if (!isEnabled(looked) || gameContext.isSelectionBlocked()) {
+            // Not enabled, or during the delay after a restart: the fixation starts once it is over
             ring.stop();
             progress = 0;
             return;
@@ -484,7 +485,7 @@ public class RushHour implements GameLifeCycle {
         looked = target;
         progress = 0;
         ring.stop();
-        if (isEnabled(target)) {
+        if (isEnabled(target) && !gameContext.isSelectionBlocked()) {
             showRing(target);
         }
     }
@@ -551,6 +552,9 @@ public class RushHour implements GameLifeCycle {
         selected = null;
         cars.forEach(car -> car.shine(false));
         clearMarks();
+        // The vehicles slide back to their start, one maybe under the pointer: nothing can be chosen during the delay of
+        // the settings (tester's feedback of 20/11/2026, point 22)
+        gameContext.onGameStarted();
     }
 
     private void showMarks() {

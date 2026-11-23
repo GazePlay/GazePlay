@@ -346,6 +346,23 @@ class RushHourTest {
         assertEquals(start, game.getParking().boxes());
         assertNull(game.getSelected());
         assertEquals(0, game.getMoves());
+        // Point 22 (23/11/2026): the vehicles slide back, maybe under the pointer: the delay of the settings, during
+        // which a vehicle looked at is not chosen
+        verify(gameContext).onGameStarted();
+        when(gameContext.isSelectionBlocked()).thenReturn(true);
+        final Object car = game.carOf(game.getParking().red());
+        fx(() -> {
+            game.lookAt(car);
+            steps(game, 2);
+            return null;
+        });
+        assertNull(game.getSelected(), "nothing chosen during the delay");
+        when(gameContext.isSelectionBlocked()).thenReturn(false);
+        fx(() -> {
+            steps(game, 1.05);
+            return null;
+        });
+        assertNotNull(game.getSelected());
     }
 
     @Test
