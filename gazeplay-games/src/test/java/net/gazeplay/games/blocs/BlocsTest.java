@@ -194,6 +194,30 @@ class BlocsTest {
         });
     }
 
+    /**
+     * Tester's feedback of 20/11/2026, point 29: the picture is on a white frame in both themes, seen through its
+     * transparent parts.
+     */
+    @Test
+    void shouldPutThePictureOnAWhiteFrame() throws Exception {
+        launched(BlocsMode.GAZE, BlocsLevel.EASY, BlocsEnd.ENDLESS);
+        fx(() -> {
+            assertTrue(rectangles(gameArea).anyMatch(rectangle -> rectangle.getStyle()
+                .startsWith("-fx-fill: #FFFFFF; -fx-stroke: -gp-border")), "the white frame under the picture");
+            return null;
+        });
+    }
+
+    private static java.util.stream.Stream<javafx.scene.shape.Rectangle> rectangles(final javafx.scene.Parent parent) {
+        return parent.getChildrenUnmodifiable().stream().flatMap(node -> {
+            final java.util.stream.Stream<javafx.scene.shape.Rectangle> self = node instanceof
+                javafx.scene.shape.Rectangle rectangle ? java.util.stream.Stream.of(rectangle)
+                : java.util.stream.Stream.empty();
+            return node instanceof javafx.scene.Parent child ? java.util.stream.Stream.concat(self, rectangles(child))
+                : self;
+        });
+    }
+
     @Test
     void shouldEndWithBravoAfterThePicturesOfTheVariant() throws Exception {
         final Blocs game = launched(BlocsMode.GAZE, BlocsLevel.EASY, BlocsEnd.PICTURES_3);

@@ -218,7 +218,8 @@ public class Blocs implements GameLifeCycle {
         final Rectangle frame = new Rectangle(left - 6, top - 6, w + 12, h + 12);
         frame.setArcWidth(24);
         frame.setArcHeight(24);
-        frame.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        // White in both themes, under a picture with a transparent background (point 29 of the tester's feedback)
+        frame.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
         final ImageView view = new ImageView(image);
         view.setFitWidth(w);
         view.setFitHeight(h);

@@ -262,7 +262,7 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     (celui du thème clair) : fond blanc, bordure du thème, image, ou lettre, chiffre, mot en `#2B2118` (texte du thème
     clair) ; elle reçoit la souris sur toute sa surface (le regard marchait déjà partout, la souris seulement sur les
     pixels du dessin). Commun : `GameStyle.pictureCard`, `PICTURE_BACKGROUND`, `CARD_TEXT`. Liste validée : Memory
-    (**fait** : images, lettres et chiffres), Cartes magiques (**fait**), Où est… (**fait** : toute la famille, `PictureCard` ; carte entière déjà sélectionnable), Opinions (**fait** : l'image n'est pas choisie, elle reste transparente à la souris), Blocs, Identifier les lettres (image et
+    (**fait** : images, lettres et chiffres), Cartes magiques (**fait**), Où est… (**fait** : toute la famille, `PictureCard` ; carte entière déjà sélectionnable), Opinions (**fait** : l'image n'est pas choisie, elle reste transparente à la souris), Blocs (**fait** : cadre blanc sous l'image ; les blocs se choisissent un par un, rien d'autre à changer), Identifier les lettres (image et
     cartes de lettres), et les autres cartes à lettre ou à chiffre sur le fond du thème (à relever jeu par jeu). Déjà
     blancs : Cartes à gratter, modèle du Taquin, Pierre papier ciseaux. **Exclus** (choix du mainteneur) : La pièce,
     GazePlay Eval ; les objets posés sur un décor sans carte (Ninja, taupes, lapins, Tartes à la crème, Bulles, Œuf).
