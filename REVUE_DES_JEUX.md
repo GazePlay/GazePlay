@@ -34,7 +34,14 @@ jar JavaCV (`org.bytedeco:ffmpeg:8.1.2-1.5.14`, windows-x86_64) dans le dossier 
 installé dans le Python du système (pas dans `build/piper/venv`).
 
 **Ordre suivi depuis le 23/11/2026 (décision du mainteneur) : l'ordre des numéros** (17, 18, 19, 22, 23, 24, 25,
-26, 27, 29 ; 20, 28, 31 et les reformulations du 27 en attente). Faits le 23/11 : CI verte, 14, 15, 16.
+26, 27, 29 ; 20, 28, 31 et les reformulations du 27 en attente). Faits le 23/11 : CI verte, 14, 15, 16, 17, 18, 19.
+
+**À la fin des points (demande du mainteneur du 23/11/2026)** :
+1. refaire le tour de tous les points des retours de la testeuse (sauf ceux en attente) pour vérifier que chacun est
+   bien fait (code, fichiers, crédits, inventaires, état noté ici) ;
+2. nettoyer les fichiers temporaires : dossier temporaire de la session (téléchargements Commons, extraits à écouter,
+   FFmpeg extrait du jar JavaCV, copies de l'inventaire des sons), en supprimant seulement les fichiers nommés, avec
+   leur chemin complet.
 
 **Ordre du jour du lundi 23/11/2026** (écrit le 20/11, remplacé par l'ordre des numéros) :
 1. Vérifier la CI du push du 20/11 (tests JDK 25 et 26, all-games, paquets) ; corriger si besoin.
@@ -150,7 +157,11 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     demande du mainteneur** par *Romance Anónimo (Jeux interdits)*, Jim Greeninger, CC0, 8 premières secondes ;
     écartés : Recuerdos de la Alhambra, Jason Shaw, RyGuy ; licence affichée : 13 sons Commons). **Violon seul** (l'actuel a percussions et guitare), 2 ou 3 candidats à faire écouter ; analyser (FFmpeg) les autres
     sons d'instruments et signaler ceux à écouter.
-19. **Accordéon de musée** (`accordion_1.jpg`) remplacé par un accordéon courant ; pendant la revue des photos,
+19. **FAIT le 23/11/2026, candidat 14 choisi et validé par le mainteneur** (*Accordion Flli Alessandrini.jpg*, Pd4u, CC0 :
+    accordéon à touches piano rouge sur fond blanc ; écartés : Alfred Arnold du musée de Berlin, Weltmeister sur une
+    moquette ; crédits, inventaire, note dans `gradle/images/commons/README.txt` ; la vérification « typique et
+    reconnaissable » de toutes les photos est faite avec le point 26 ; les deux autres photos d'accordéon montrent des
+    personnes reconnaissables, point 26). **Accordéon de musée** (`accordion_1.jpg`) remplacé par un accordéon courant ; pendant la revue des photos,
     vérifier que chaque objet ou animal est typique et reconnaissable.
 22. **Sélection involontaire à la souris** : après un choix, un bouton n'est choisissable **qu'après avoir été quitté
     puis retrouvé**, plus un blocage de 0,5 s à l'apparition des nouveaux choix ; La Fabrique à gâteaux et **tous les

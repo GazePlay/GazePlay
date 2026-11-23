@@ -13,3 +13,12 @@ see REVUE_DES_JEUX.md). Kept to trace the choices; the results are in the games 
    harp=2 piano=3 sheep=4 snake=0 triangle=0 trumpet=4 violin=0), converted with ffmpeg:
    silenceremove (start, -45 dB), atrim 0-8 s, afade out 0.6 s, loudnorm (I=-16, TP=-1.5, LRA=11), mono, 44.1 kHz,
    MP3 128 kb/s.
+
+5. Changes made by hand on 23/11/2026, after a tester's feedback (REVUE_DES_JEUX.md, points 16 to 19); the credits
+   of the games are up to date, and running install_photos.py again would undo the accordion:
+   - sound-elephant: candidate 3 (two young elephants) replaced by candidate 7 of a new commons_fetch.py search, same
+     order of the candidates (choices.txt: "1 7 8").
+   - sound-accordion: accordion_1.jpg (candidate 8, an accordion of a museum) replaced by "Accordion Flli
+     Alessandrini.jpg" (Pd4u, CC0), found by a wider search (not in choices.txt).
+   - Sounds (not commons_audio.py): lion.mp3 (also in Sounds of Life), violin.mp3 and guitar.mp3, cut with ffmpeg
+     the same way (without loudnorm), then brought to -17 LUFS by gradle/images/normalize_sounds.py.
