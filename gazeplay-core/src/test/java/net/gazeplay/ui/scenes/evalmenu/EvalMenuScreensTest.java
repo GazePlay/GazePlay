@@ -312,7 +312,51 @@ class EvalMenuScreensTest {
     }
 
     private static char kind(String line) {
-        return line.isBlank() ? ' ' : line.startsWith("# ") ? '#' : line.startsWith("- ") ? '-' : 'p';
+        if (line.isBlank()) {
+            return ' ';
+        }
+        if (line.startsWith("## ")) {
+            return 's';
+        }
+        if (line.startsWith("| ")) {
+            return '|';
+        }
+        if (line.startsWith("> ")) {
+            return '>';
+        }
+        return line.startsWith("# ") ? '#' : line.startsWith("- ") ? '-' : 'p';
+    }
+
+    /**
+     * Tester's feedback of 20/11/2026, point 27: the help on the files gives, for each file, what it is for, its
+     * columns in a table and an example.
+     */
+    @Test
+    void shouldGiveEachFileItsUseItsColumnsAndAnExample() throws Exception {
+        List<String> french = EvalFilesHelpDialog.read("fra");
+        assertEquals(7, french.stream().filter(line -> line.startsWith("# ")).count());
+        assertEquals(6, french.stream().filter(line -> line.equals("## À quoi il sert")
+            || line.equals("## À quoi elle sert")).count());
+        assertTrue(french.stream().filter(line -> line.startsWith("## Exemple")).count() >= 5);
+        assertTrue(french.contains("| Fin de l'écran | validé, temps écoulé, délai écoulé, fixation, passé par "
+            + "l'examinateur, média illisible ou interrompu."));
+
+        List<javafx.scene.Node> nodes = WaitForAsyncUtils.asyncFx(() -> EvalHelpDialog.build(List.of("# Fichier",
+            "## Colonnes", "| Écran | Le numéro de l'écran.", "| Essai | Le numéro de l'essai.", "## Exemple",
+            "> 3;1;stimuli", "> 4;1;transition", "Un paragraphe."))).get();
+
+        assertEquals(6, nodes.size(), "heading, subheading, one table, subheading, one example, paragraph");
+        assertTrue(nodes.get(1).getStyleClass().contains("gp-help-subheading"));
+        javafx.scene.layout.GridPane table = assertInstanceOf(javafx.scene.layout.GridPane.class, nodes.get(2));
+        assertEquals(2, table.getRowCount());
+        assertEquals(4, table.getChildren().size());
+        assertEquals("Écran", ((Label) table.getChildren().get(0)).getText());
+        assertTrue(table.getChildren().get(0).getStyleClass().contains("gp-help-term"));
+        assertEquals("Le numéro de l'écran.", ((Label) table.getChildren().get(1)).getText());
+        javafx.scene.layout.VBox example = assertInstanceOf(javafx.scene.layout.VBox.class, nodes.get(4));
+        assertTrue(example.getStyleClass().contains("gp-help-example"));
+        assertEquals("4;1;transition", ((Label) example.getChildren().get(1)).getText());
+        assertEquals("Un paragraphe.", ((Label) nodes.get(5)).getText());
     }
 
     /**

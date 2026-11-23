@@ -805,6 +805,44 @@
     -fx-padding: 0 0 0 12;
 }
 
+/* Subheadings, tables of two columns and examples of a help (point 27 of the tester's feedback, 23/11/2026) */
+.gp-menu .gp-help-subheading {
+    -fx-font-family: "Fredoka SemiBold";
+    -fx-font-size: 13.5pt;
+    -fx-text-fill: -gp-accent;
+}
+
+.gp-menu .gp-help-table {
+    -fx-border-color: -gp-border;
+    -fx-border-width: 1 0 0 0;
+}
+
+.gp-menu .gp-help-cell {
+    -fx-padding: 6 10 6 10;
+    -fx-border-color: -gp-border;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gp-menu .gp-help-term {
+    -fx-font-size: 13pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: -gp-text;
+}
+
+.gp-menu .gp-help-example {
+    -fx-background-color: -gp-surface-hover;
+    -fx-background-radius: 8;
+    -fx-border-color: -gp-border;
+    -fx-border-radius: 8;
+    -fx-padding: 10 14 10 14;
+}
+
+.gp-menu .gp-help-example-text {
+    -fx-font-family: "Consolas", "DejaVu Sans Mono", "Menlo", monospace;
+    -fx-font-size: 11.5pt;
+    -fx-text-fill: -gp-text;
+}
+
 /* Window of the variants (GameVariantDialog) */
 
 .gp-menu .gp-dialog-prompt {

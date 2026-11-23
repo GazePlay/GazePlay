@@ -247,6 +247,14 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     flous. Les guitares sont des guitares folk (pas de guitare classique seule de qualité sur Commons).
 27. **GazePlay Eval**, aide « Comprendre les fichiers de résultats » : nouvelle mise en page (titre par fichier, à quoi
     il sert, colonnes, exemples) ; reformulations à intégrer quand la testeuse aura dit quels passages la gênent.
+    **Mise en page faite le 23/11/2026** (reformulations toujours en attente) : `HelpDialog` lit trois nouveaux types de
+    lignes (`## ` sous-titre, `| nom | sens` ligne d'un tableau à deux colonnes, `> ` ligne d'un exemple encadré, en
+    police à chasse fixe ; `menus.css`), utilisés seulement par cette aide. Pour chaque fichier : « À quoi il sert »,
+    ses colonnes en tableau, un exemple (valeurs inventées, signalé en tête), « Bon à savoir ». Une section « Avant de
+    commencer » réunit le dossier, les unités, le point-virgule et les données personnelles. Corrigé en passant :
+    `modePassation` vaut `Classique`, `Autonomie_Soutien_Oral`, `Autonomie_Soutien_Visuel` ou `Autonomie_Total` (l'aide
+    donnait d'autres noms) ; `application` et `formatResultats` sont décrits. Test :
+    `EvalMenuScreensTest.shouldGiveEachFileItsUseItsColumnsAndAnExample`.
 29. **Images à fond transparent** (OpenMoji : poulpe, lapin…) : en thème sombre, le fond sombre se voit à travers (Memory,
     Cartes à gratter), et il faut viser le dessin, pas la carte. **Toujours un fond blanc sous les images**, **carte
     entière sélectionnable**, dans **tous les jeux** qui affichent ces images (liste à établir).

@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -35,7 +37,10 @@ import java.util.MissingResourceException;
  * <p>
  * The texts are in files {@code <prefix><language>.txt} (French and English; English for the other languages), not in
  * multilinguism.csv, whose values can hold neither commas nor line breaks. A line starting with {@code "# "} is a
- * heading, a line starting with {@code "- "} an item of a list, any other line a paragraph; blank lines are ignored.
+ * heading, {@code "## "} a subheading, {@code "- "} an item of a list, {@code "| name | meaning"} a row of a table of
+ * two columns (rows following each other make one table), {@code "> "} a line of an example (lines following each
+ * other make one framed example), any other line a paragraph; blank lines are ignored. Tester's feedback of
+ * 20/11/2026, point 27: subheadings, tables and examples for the help on the files of results of GazePlay Eval.
  */
 @Slf4j
 public class HelpDialog extends Stage {
@@ -148,11 +153,53 @@ public class HelpDialog extends Stage {
      */
     public static List<Node> build(final List<String> lines) {
         final List<Node> nodes = new ArrayList<>();
+        GridPane table = null;
+        VBox example = null;
         for (final String line : lines) {
             if (line.isBlank()) {
                 continue;
             }
-            if (line.startsWith("# ")) {
+            // Rows of a table and lines of an example follow each other: one table, one box
+            if (!line.startsWith("| ")) {
+                table = null;
+            }
+            if (!line.startsWith("> ")) {
+                example = null;
+            }
+            if (line.startsWith("## ")) {
+                final Label subheading = text(line.substring(3), "gp-help-subheading");
+                VBox.setMargin(subheading, new Insets(6, 0, 0, 0));
+                nodes.add(subheading);
+            } else if (line.startsWith("| ")) {
+                if (table == null) {
+                    table = new GridPane();
+                    table.getStyleClass().add("gp-help-table");
+                    final ColumnConstraints term = new ColumnConstraints();
+                    term.setPercentWidth(30);
+                    final ColumnConstraints meaning = new ColumnConstraints();
+                    meaning.setPercentWidth(70);
+                    table.getColumnConstraints().addAll(term, meaning);
+                    nodes.add(table);
+                }
+                final String[] cells = line.substring(2).split(" \\| ", 2);
+                final int row = table.getRowCount();
+                final Label name = text(cells[0].trim(), "gp-help-term");
+                final Label meaning = text(cells.length > 1 ? cells[1].trim() : "", "gp-help-text");
+                for (final Label cell : List.of(name, meaning)) {
+                    cell.setMaxWidth(Double.MAX_VALUE);
+                    cell.setMaxHeight(Double.MAX_VALUE);
+                    cell.getStyleClass().add("gp-help-cell");
+                }
+                table.add(name, 0, row);
+                table.add(meaning, 1, row);
+            } else if (line.startsWith("> ")) {
+                if (example == null) {
+                    example = new VBox(2);
+                    example.getStyleClass().add("gp-help-example");
+                    nodes.add(example);
+                }
+                example.getChildren().add(text(line.substring(2), "gp-help-example-text"));
+            } else if (line.startsWith("# ")) {
                 final Label heading = text(line.substring(2), "gp-help-heading");
                 // Room above each section but the first
                 if (!nodes.isEmpty()) {
