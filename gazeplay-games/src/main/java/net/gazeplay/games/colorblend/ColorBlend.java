@@ -783,7 +783,8 @@ public class ColorBlend implements GameLifeCycle {
             this.pot = pot;
             this.picture = picture;
             disc = new Circle(buttonRadius());
-            disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+            // Light or dark as chosen in the settings, whatever the theme (24/11/2026)
+            disc.setStyle(GameStyle.BUTTON_STYLE);
             hint = new Circle(buttonRadius() * 1.14);
             hint.setFill(null);
             hint.setStyle("-fx-stroke: -gp-accent;");
