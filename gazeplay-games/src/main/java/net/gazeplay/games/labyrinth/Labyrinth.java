@@ -733,8 +733,9 @@ public class Labyrinth implements GameLifeCycle {
             this.direction = direction;
             this.size = size;
             final Circle button = new Circle(size / 2);
-            button.setFill(Color.rgb(255, 252, 244, 0.92));
-            button.setStroke(Color.rgb(90, 96, 110));
+            // Light or dark as chosen in the settings, whatever the theme (24/11/2026; a cream white before), the
+            // dark grey outline kept so that it is seen on the maze
+            button.setStyle("-fx-fill: -gp-button; -fx-stroke: rgb(90, 96, 110);");
             button.setStrokeWidth(Math.max(2, size * 0.03));
             final double d = size;
             final Polygon shape = new Polygon(0, -0.32 * d, 0.26 * d, -0.02 * d, 0.1 * d, -0.02 * d, 0.1 * d, 0.3 * d,
