@@ -21,6 +21,7 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 | **En attente** | 13, 20, 27 (reformulations), 28, 31 |
 | **Refusé / laissé tel quel** | 21, 30, 32, retours positifs |
 | **Fait aussi** (demande du mainteneur en cours de route) | liste des jeux du menu dans l'ordre alphabétique (24/11) |
+| **Nouveaux retours du 23 et 24/11** (à décider) | 33 à 83, voir la dernière partie ; 6 déjà réglés entre-temps, 2 en partie |
 
 ## Faits
 
@@ -75,3 +76,83 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 
 - **Liste des jeux du menu dans l'ordre alphabétique** (demande du 20/11) : **faite le 24/11/2026**, d'après les noms
   affichés dans la langue choisie (accents, ligatures et majuscules ignorés).
+
+# Nouveaux retours du 23 et du 24/11/2026
+
+Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retours du 23-11-26 » et « Retours sur GPL
+24-11-26 »), partie GazePlay Learning seulement. **Rien n'est encore décidé** : chaque point attend la décision du
+mainteneur. Ordre de travail décidé : d'abord les deux défauts (58 et 33).
+
+## Déjà réglés par les changements faits entre-temps
+
+| Retour | État |
+|---|---|
+| Identifier les lettres : la lettre du haut peu lisible en thème sombre | Réglé le 24/11 : carte blanche, lettre foncée dans les deux thèmes (point 29) |
+| Changer de thème depuis le menu Échap | Fait le 24/11 : ligne « Thème des jeux », appliquée en direct |
+| Trouve l'intrus : consigne dite en anglais | Probablement réglé : la voix française dit « Trouve l'intrus » depuis le 20/11 (voix refaites) ; à lui faire revérifier avec la version actuelle |
+| Cartes à gratter : la grosse pièce en premier | Fait le 20/11 (point 3) |
+| Bouteille : les grosses bouteilles en premier | Fait le 20/11 (point 3) |
+| Les bruits de la vie : le lion | Fait le 23/11 (point 16, même son que dans Où est le son ?) |
+| Cartes magiques : contraste entre la carte et le fond | En partie : face des cartes blanche (point 29) ; un cadre plus marqué reste à décider (point 79) |
+| Fleur des nombres : contraste des cases | En partie : cartes des valeurs blanches le 24/11 ; les cadres restent à décider (point 68) |
+
+## À décider
+
+| N° | Jeu | Retour | Remarque |
+|---|---|---|---|
+| 33 | Tous | **Défaut** : l'anneau de fixation paraît plein avant de l'être (bouts arrondis) | Anneau commun (`FixationRing`) et `ProgressButton` encore arrondis |
+| 34 | Page des jeux | Catégories par compétence (découverte du regard, fixation, exploration…), jeux rangés par difficulté | À l'encontre du tri alphabétique du 24/11 ; elle demande s'il faut y travailler maintenant |
+| 35 | Où est… | Délai trop long entre la consigne et les réponses | |
+| 36 | Où est la forme, la couleur | Modes de consigne avec exemple (pendant la sélection, avant seulement, sans) ; réponses déjà affichées à la consigne | |
+| 37 | Où est la forme | Le losange ressemble à un carré | |
+| 38 | Piano | Version courte (début de la chanson, puis la chanson en récompense) | |
+| 39 | Piano | Choisir la chanson | |
+| 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |
+| 41 | Piano | Animation de fin | |
+| 42 | Identifier les lettres | Images pas à la bonne taille par rapport aux lettres (2 × 3) | |
+| 43 | Gobelets Pass Pass | Transition entre deux tours trompeuse (la balle d'avant semble encore là) | |
+| 44 | Gribouille | Impossible de quitter la gomme en arc-en-ciel | |
+| 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | |
+| 46 | Gribouille | Couleur blanche à la place de la gomme | |
+| 47 | Gribouille | Points d'épaisseur de la couleur choisie | |
+| 48 | Gribouille | Mode « la fixation commence et finit le trait » | |
+| 49 | Bulles | Mode plus facile (moins de bulles, plus grosses) | |
+| 50 | Bulles | Jeu lent avec de grosses images (Mes images) | |
+| 51 | Bulles (et d'autres jeux) | Image gardée 5 s, avec un bouton « suite » | |
+| 52 | Biboule Jump | Saut et chute plus lents | |
+| 53 | Diviseur | Choix du fond | |
+| 54 | Course du regard | Adaptation au regard ; récompense à mesure qu'on évite les voitures | |
+| 55 | Course de grenouilles | Trois niveaux trop faciles ; grenouilles plus visibles que les Biboules | |
+| 56 | Survivre contre des robots | Nouveaux robots loin du Biboule | |
+| 57 | Tir | Nom « Invasion » | |
+| 58 | Dés | **Défaut** : un dé passe devant le menu Échap au survol de la souris | |
+| 59 | Dés | Icône « Lancer » ; dé à lancer surligné | |
+| 60 | Dés | Inverser les deux modes | |
+| 61 | Dés | Total plus visible (dit à voix haute, calcul décomposé) | |
+| 62 | Apprends les Maths | Répétitions autour d'un même calcul | Seule la répétition immédiate est évitée aujourd'hui |
+| 63 | Embouteillage | Niveau facile trop difficile | |
+| 64 | Jeu de l'oie | Visuel : contraste et taille des pions, pion actif et dé surlignés, plateau sans cases inutiles en version simple | |
+| 65 | Jeu de l'oie | Règles adoucies : dés aidés, pas de retour au départ, prison réduite, arrivée aidée | |
+| 66 | Jeu de l'oie | Compréhension : pion plus lent, points du dé remplis case par case, couleur du pion choisie | |
+| 67 | Fleur des nombres | Variante « même nombre dans chaque pétale » | |
+| 68 | Fleur des nombres | Cadres de la couleur des pétales, plus épais ou remplis | |
+| 69 | Morpion | Écran de récompense | |
+| 70 | Morpion | Niveaux moyen et difficile inversés | |
+| 71 | Pierre papier ciseaux | Erreur plus visible pour qui n'entend pas | |
+| 72 | Coloriage | Même palette à tous les niveaux | |
+| 73 | Coloriage | Couleurs du « + » : fixation qui reprend à zéro, points qui bougent | |
+| 74 | Coloriage | Bouton « Imprimer » à pouvoir masquer | |
+| 75 | Coloriage | Enregistrement dans un dossier défini, à pouvoir interdire | |
+| 76 | Petits chevaux | Dés aidés après plusieurs échecs | |
+| 77 | Petits chevaux | L'ordinateur fait avancer tous ses pions | |
+| 78 | Bouteille | Mode « casser librement », avec ou sans fixation | Le mode « Tout casser » a été retiré le 17/11 (décision du mainteneur) |
+| 79 | Cartes magiques | Une seule carte à retrouver ; mouvements plus lents ; cadre plus marqué | Le mode « Chercher » a été retiré le 17/11 |
+| 80 | La maison du chat | Sons sur les actions ; plus de choix (jeux, plats) | |
+| 81 | Les bruits de la vie | Sons du singe et du dauphin ; scène de la mer avec une surface | |
+| 82 | Mélanger les couleurs | Tirage sans répétition ; ce jeu remplace-t-il Magic Potions ? | Seule la répétition immédiate est évitée ; Magic Potions est toujours au menu |
+| 83 | Cartes à gratter | La pièce suit le regard qui sort de la zone | |
+
+## Rien à faire
+
+Labyrinthe, Quatre en ligne, Ordre, Jeu de taquin, Défendre le château, La bataille de l'espace, Sprint jusqu'à
+l'arrivée, Suivre le chemin, Échelle, J'ai un œuf : « nickel » selon la testeuse.
