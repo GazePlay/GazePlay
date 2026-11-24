@@ -45,20 +45,22 @@ seulement, build complet et all-games en CI.
   - Pas de changement de format des résultats : aucun thème n'y est écrit ; seul l'aspect des captures derrière les
     cartes de chaleur d'Eval change.
 
+**Aussi fait le 24/11/2026 (après-midi), tout commité et poussé** :
+- Correctif SpotBugs du choix clair/sombre des réglages (`7e856cf4e`, CI verte).
+- **Tâches de fin** : tour des retours de la testeuse (`RETOURS_TESTEUSE.md`, écarts corrigés, `inventaire-sons.csv`
+  régénéré) ; Magic Potions : délai seulement au début de chaque nouvelle potion, la première comprise (`85f1b7ec1`) ;
+  dossier temporaire nettoyé (21 dossiers de sessions passées, environ 445 Mo ; FFmpeg sera à réextraire du jar JavaCV
+  pour retravailler des sons).
+- **Restes des thèmes** (`9c56edc45`) : volume de la musique réappliqué au menu en fin de partie ; cartes des grilles
+  de GazePlay Eval blanches dans les deux thèmes ; `BACKGROUND_STYLE` retiré (image de la Course toujours opaque).
+- **Menu des jeux dans l'ordre alphabétique** des noms affichés, selon la langue (`GameSummaryComparator`, `Collator` :
+  accents, ligatures et majuscules ignorés ; les articles comptent) ; plus de priorité ni de regroupement par catégorie
+  (les catégories restent des filtres) ; Ninja, Point par point et La tarte à la crème ne sont plus en tête.
+
 **Ordre du jour du mercredi 25/11/2026** :
-1. Vérifier la CI du push du 24/11 (tests JDK 25 et 26, all-games, paquets, dont macOS).
-2. **Tâches de fin** (demandes du mainteneur du 23/11) :
-   1. ~~tour des retours de la testeuse~~ **fait le 24/11** (`RETOURS_TESTEUSE.md`, écarts corrigés : voir la section
-      des retours) ;
-   2. ~~Magic Potions~~ **fait le 24/11** : délai seulement au début de chaque nouvelle potion, la première comprise ;
-   3. nettoyer le dossier temporaire de la session : fichiers nommés seulement, avec leur chemin complet ; le dossier
-      change avec la session (téléchargements Commons, `candidats\`, `photos\`, FFmpeg extrait, copies de l'inventaire
-      des sons…), le relever au début de la séance.
-3. Restes des thèmes, à voir avec le mainteneur : volume de la musique changé dans le menu Échap, non vérifié dans le
-   lecteur du menu principal ; cartes des grilles de GazePlay Eval toujours au thème (exclues du point 29) ; la Course
-   lit encore l'ancien `BACKGROUND_STYLE` (opacité de son image).
-4. Puis : liste des jeux du menu dans l'ordre alphabétique ; notes de version 2.0 au feu vert du mainteneur seulement.
-5. En attente (inchangé) : 13 (débit de la voix), 20 (réaction aux erreurs : réunion avec Amélie), 27 (reformulations),
+1. Vérifier la CI du dernier push du 24/11 (tests JDK 25 et 26, all-games, paquets, dont macOS).
+2. Notes de version 2.0, au feu vert du mainteneur seulement.
+3. En attente (inchangé) : 13 (débit de la voix), 20 (réaction aux erreurs : réunion avec Amélie), 27 (reformulations),
    28 (croix d'Eval), 31 (Où est-ce ?).
 
 ## REPRISE DU MARDI 24/11/2026 (fin de la séance du lundi 23/11/2026)

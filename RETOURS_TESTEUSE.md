@@ -20,7 +20,7 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 | **Fait** (commité et poussé, validé par le mainteneur) | 1 à 12, 14 à 19, 22 à 26, 27 (mise en page), 29 |
 | **En attente** | 13, 20, 27 (reformulations), 28, 31 |
 | **Refusé / laissé tel quel** | 21, 30, 32, retours positifs |
-| **Reste à faire** (demande du mainteneur en cours de route) | liste des jeux du menu dans l'ordre alphabétique |
+| **Fait aussi** (demande du mainteneur en cours de route) | liste des jeux du menu dans l'ordre alphabétique (24/11) |
 
 ## Faits
 
@@ -71,7 +71,7 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 | 32 | Eval : supprimer une évaluation importée | Existe déjà, dans les réglages du mode Évaluations |
 | — | Retours positifs (écran des statistiques, menus, menu Échap, Labyrinthe, Quatre en ligne, Biboule Jump, Ordre, Jeu de taquin, Bulles) | Rien à faire |
 
-## Reste à faire
+## Demande du mainteneur en cours de route
 
-- **Liste des jeux du menu dans l'ordre alphabétique** (demande du mainteneur du 20/11), d'après les noms affichés dans
-  la langue choisie.
+- **Liste des jeux du menu dans l'ordre alphabétique** (demande du 20/11) : **faite le 24/11/2026**, d'après les noms
+  affichés dans la langue choisie (accents, ligatures et majuscules ignorés).
