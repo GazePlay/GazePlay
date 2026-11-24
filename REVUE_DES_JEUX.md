@@ -48,9 +48,9 @@ seulement, build complet et all-games en CI.
 **Ordre du jour du mercredi 25/11/2026** :
 1. Vérifier la CI du push du 24/11 (tests JDK 25 et 26, all-games, paquets, dont macOS).
 2. **Tâches de fin** (demandes du mainteneur du 23/11) :
-   1. refaire le tour de tous les points des retours de la testeuse (sauf ceux en attente) : code, fichiers, crédits,
-      inventaires, état noté ici ;
-   2. revoir Magic Potions (point 22 : délai à chaque client, sans cas involontaire trouvé, à garder ou retirer) ;
+   1. ~~tour des retours de la testeuse~~ **fait le 24/11** (`RETOURS_TESTEUSE.md`, écarts corrigés : voir la section
+      des retours) ;
+   2. ~~Magic Potions~~ **fait le 24/11** : délai seulement au début de chaque nouvelle potion, la première comprise ;
    3. nettoyer le dossier temporaire de la session : fichiers nommés seulement, avec leur chemin complet ; le dossier
       change avec la session (téléchargements Commons, `candidats\`, `photos\`, FFmpeg extrait, copies de l'inventaire
       des sons…), le relever au début de la séance.
@@ -166,7 +166,13 @@ installé dans le Python du système (pas dans `build/piper/venv`).
 5. À la fin : liste des jeux du menu dans l'ordre alphabétique ; puis, au feu vert du mainteneur seulement, les notes
    de version 2.0.
 
-## RETOURS DE LA TESTEUSE (20/11/2026) : DÉCISIONS DU MAINTENEUR (POINTS 1 À 12 FAITS LE 20/11)
+## RETOURS DE LA TESTEUSE (20/11/2026) : DÉCISIONS DU MAINTENEUR (TOUS FAITS SAUF CEUX EN ATTENTE, 24/11)
+
+**Récapitulatif à jour, point par point (décision, fait, refusé, en attente et pourquoi) : `RETOURS_TESTEUSE.md`.**
+Tour de vérification fait le 24/11/2026 : commits, code, crédits, inventaires et aides ; corrigés à cette occasion :
+7 aides anglaises qui gardaient l'ancien nom du réglage du délai, la phrase du délai ajoutée aux aides de Coloriage et
+de la famille Où est…, le compteur des aides de la famille Où est… (numéro de l'écran en cours, point 14),
+`inventaire-sons.csv` régénéré.
 
 Source : le document de retours de la testeuse (non publié), partie GazePlay Learning seulement ; la partie sur le
 site de création d'évaluations n'est pas traitée ici. Tests de la testeuse faits **avant le 20/11** : elle a entendu les anciennes voix.
@@ -269,7 +275,8 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
     reconnaissable » de toutes les photos est faite avec le point 26 ; les deux autres photos d'accordéon montrent des
     personnes reconnaissables, point 26). **Accordéon de musée** (`accordion_1.jpg`) remplacé par un accordéon courant ; pendant la revue des photos,
     vérifier que chaque objet ou animal est typique et reconnaissable.
-22. **EN COURS le 23/11/2026. Décision du mainteneur** : pas de « quitter puis revenir » (perturbant, même à la
+22. **FAIT le 23/11/2026, validé par le mainteneur ; Magic Potions revu le 24/11 (décision du mainteneur : délai
+    seulement au début de chaque nouvelle potion à faire, la première comprise, `85f1b7ec1`). Décision du mainteneur** : pas de « quitter puis revenir » (perturbant, même à la
     souris) ; à chaque apparition de nouveaux choix, rien n'est choisissable, au regard comme à la souris, pendant le
     délai des réglages (`GAME_START_DELAY`, 1 s par défaut, intitulé devenu « Délai avant de pouvoir sélectionner de
     nouveaux choix », aide de 27 jeux mise à jour) : `IGameContext.onGameStarted()`, un seul délai à la fois, relancé à
@@ -363,7 +370,9 @@ Chaque point a été vérifié dans le code, puis validé un par un par le maint
 29. **Images à fond transparent** (OpenMoji : poulpe, lapin…) : en thème sombre, le fond sombre se voit à travers (Memory,
     Cartes à gratter), et il faut viser le dessin, pas la carte. **Toujours un fond blanc sous les images**, **carte
     entière sélectionnable**, dans **tous les jeux** qui affichent ces images (liste à établir).
-    **EN COURS le 23/11/2026. Décisions du mainteneur** : une carte à choisir a **le même aspect dans les deux thèmes**
+    **FAIT les 23 et 24/11/2026, validé par le mainteneur** (le 24/11 : Identifier les lettres, Fleur des nombres,
+    Opinions ; puis, à partir de ce point, les thèmes des jeux et des évaluations et les boutons clairs ou sombres,
+    voir « REPRISE DU MERCREDI 25/11/2026 »). **Décisions du mainteneur** : une carte à choisir a **le même aspect dans les deux thèmes**
     (celui du thème clair) : fond blanc, bordure du thème, image, ou lettre, chiffre, mot en `#2B2118` (texte du thème
     clair) ; elle reçoit la souris sur toute sa surface (le regard marchait déjà partout, la souris seulement sur les
     pixels du dessin). Commun : `GameStyle.pictureCard`, `PICTURE_BACKGROUND`, `CARD_TEXT`. Liste validée : Memory

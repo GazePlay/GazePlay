@@ -7,6 +7,12 @@ candidats écartés) est dans `REVUE_DES_JEUX.md`, section « RETOURS DE LA TEST
 
 Les tests de la testeuse ont été faits **avant le 20/11** : elle a entendu les anciennes voix.
 
+**Tour de vérification du 24/11/2026** : commits, code, crédits des sons et des photos, inventaires, licence affichée et
+aides vérifiés point par point. Corrigé à cette occasion : 7 aides anglaises qui gardaient l'ancien nom du réglage du
+délai (point 22) ; la phrase du délai ajoutée aux aides de Coloriage et des 9 jeux de la famille Où est… ; dans ces 9
+aides, le compteur décrit comme le numéro de l'écran en cours (point 14) ; `gradle/images/inventaire-sons.csv`
+régénéré (1 080 sons, tous libres et de source connue ; deux générations de suite identiques).
+
 ## En résumé
 
 | État | Points |
