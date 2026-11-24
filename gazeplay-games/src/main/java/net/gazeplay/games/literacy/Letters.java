@@ -283,8 +283,8 @@ public class Letters implements GameLifeCycle {
         final double cx = width - size * 0.9;
         final double cy = bandHeight / 2;
         final Circle disc = new Circle(cx, cy, size / 2);
-        // White in both themes, as the cards to choose (tester's feedback of 20/11/2026, point 29)
-        disc.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        // Light or dark as chosen in the settings, whatever the theme (24/11/2026)
+        disc.setStyle(GameStyle.BUTTON_STYLE);
         final double iconSize = size * 0.55;
         final SVGPath icon = GameStyle.icon("volume_up_fill1", iconSize);
         icon.setStyle("-fx-fill: -gp-accent;");
