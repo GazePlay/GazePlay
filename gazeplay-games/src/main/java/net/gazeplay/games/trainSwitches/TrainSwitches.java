@@ -545,9 +545,15 @@ public class TrainSwitches implements GameLifeCycle {
         return node;
     }
 
+    /**
+     * The round buttons "Resume" and "Depart": light or dark as chosen in the settings, whatever the theme
+     * (24/11/2026; a cream white before), the dark grey outline kept so that they are seen on the meadow.
+     */
+    private static final String BUTTON_STYLE = "-fx-fill: -gp-button; -fx-stroke: rgb(90, 96, 110);";
+
     private void drawResumeButton() {
-        final Circle disc = new Circle(resumeSize / 2, Color.rgb(255, 252, 244, 0.96));
-        disc.setStroke(Color.rgb(90, 96, 110));
+        final Circle disc = new Circle(resumeSize / 2);
+        disc.setStyle(BUTTON_STYLE);
         disc.setStrokeWidth(Math.max(2, resumeSize * 0.03));
         final SVGPath icon = GameStyle.icon("play_arrow_fill1", resumeSize * 0.62);
         icon.setStyle("-fx-fill: -gp-accent;");
@@ -572,8 +578,8 @@ public class TrainSwitches implements GameLifeCycle {
         final double[] place = freePlaceNear(center[0], center[1], cell, departSize / 2 + cell * 0.06);
         departX = place[0];
         departY = place[1];
-        final Circle disc = new Circle(departSize / 2, Color.rgb(255, 252, 244, 0.96));
-        disc.setStroke(Color.rgb(90, 96, 110));
+        final Circle disc = new Circle(departSize / 2);
+        disc.setStyle(BUTTON_STYLE);
         disc.setStrokeWidth(Math.max(2, departSize * 0.03));
         final SVGPath icon = GameStyle.icon("train_fill1", departSize * 0.6);
         icon.setStyle("-fx-fill: -gp-accent;");
