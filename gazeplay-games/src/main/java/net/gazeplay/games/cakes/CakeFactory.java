@@ -1353,7 +1353,8 @@ public class CakeFactory implements GameLifeCycle {
             this.picture = picture;
             this.label = label;
             disc = new Circle(buttonRadius());
-            disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+            // Light or dark as chosen in the settings, whatever the theme (24/11/2026)
+            disc.setStyle(GameStyle.BUTTON_STYLE);
         }
 
         void place(final double cx, final double cy) {
