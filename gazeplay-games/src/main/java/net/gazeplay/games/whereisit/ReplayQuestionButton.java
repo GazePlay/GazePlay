@@ -51,7 +51,8 @@ class ReplayQuestionButton extends Group {
         this.onActivated = onActivated;
 
         disc = new Circle(centerX, centerY, size / 2);
-        disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        // Light or dark as chosen in the settings, whatever the theme (24/11/2026)
+        disc.setStyle(GameStyle.BUTTON_STYLE);
 
         final double iconSize = size * 0.55;
         final SVGPath icon = GameStyle.icon("volume_up_fill1", iconSize);
