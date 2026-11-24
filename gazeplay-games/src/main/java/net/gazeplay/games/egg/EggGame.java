@@ -274,7 +274,7 @@ public class EggGame implements GameLifeCycle {
         ring.setType(ArcType.OPEN);
         ring.setFill(null);
         RingThickness.apply(ring, Math.max(5, eggWidth * 0.035));
-        ring.setStrokeLineCap(StrokeLineCap.ROUND);
+        ring.setStrokeLineCap(StrokeLineCap.BUTT); // straight ends: full only when it is (tester, point 33)
         ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setMouseTransparent(true);
         egg = new Group(shell(), crackLines, ring);

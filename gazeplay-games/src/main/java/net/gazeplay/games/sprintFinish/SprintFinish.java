@@ -972,7 +972,7 @@ public class SprintFinish implements GameLifeCycle {
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
             RingThickness.apply(ring, Math.max(4, cell * 0.07));
-            ring.setStrokeLineCap(StrokeLineCap.ROUND);
+            ring.setStrokeLineCap(StrokeLineCap.BUTT); // straight ends: full only when it is (tester, point 33)
             ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));

@@ -173,7 +173,7 @@ public class ProgressButton extends StackPane {
         ringBackground.setStyle("-fx-fill: rgba(255, 255, 255, 0.35); -fx-stroke: -gp-border; -fx-stroke-width: 2;");
         ringArc.setType(ArcType.OPEN);
         ringArc.setFill(null);
-        ringArc.setStrokeLineCap(StrokeLineCap.ROUND);
+        ringArc.setStrokeLineCap(StrokeLineCap.BUTT); // straight ends: full only when it is (tester, point 33)
         ringArc.setStartAngle(90);
         ringArc.setStyle("-fx-stroke: -gp-ring;");
         ringArc.strokeWidthProperty().addListener((observable, oldValue, newValue) -> placeArc());

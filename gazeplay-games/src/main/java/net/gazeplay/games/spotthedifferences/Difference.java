@@ -78,7 +78,7 @@ public class Difference {
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
             RingThickness.apply(ring, Math.max(5, radius * 0.12));
-            ring.setStrokeLineCap(StrokeLineCap.ROUND);
+            ring.setStrokeLineCap(StrokeLineCap.BUTT); // straight ends: full only when it is (tester, point 33)
             ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             ring.setVisible(false);

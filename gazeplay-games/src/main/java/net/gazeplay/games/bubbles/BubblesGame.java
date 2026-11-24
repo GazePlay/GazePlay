@@ -443,7 +443,7 @@ public class BubblesGame implements GameLifeCycle {
             ring = new Arc(0, 0, 10, 10, 90, 0);
             ring.setType(ArcType.OPEN);
             ring.setFill(null);
-            ring.setStrokeLineCap(StrokeLineCap.ROUND);
+            ring.setStrokeLineCap(StrokeLineCap.BUTT); // straight ends: full only when it is (tester, point 33)
             ring.setStyle("-fx-stroke: -gp-ring;");
             ring.setMouseTransparent(true);
             progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));

@@ -37,7 +37,7 @@ public class FixationRing extends Group {
         progressArc = new Arc();
         progressArc.setType(ArcType.OPEN);
         progressArc.setFill(null);
-        progressArc.setStrokeLineCap(StrokeLineCap.ROUND);
+        progressArc.setStrokeLineCap(StrokeLineCap.BUTT); // straight ends: full only when it is (tester, point 33)
         progressArc.setStartAngle(90);
         progressArc.setStyle("-fx-stroke: -gp-ring;");
         getChildren().addAll(background, progressArc);
