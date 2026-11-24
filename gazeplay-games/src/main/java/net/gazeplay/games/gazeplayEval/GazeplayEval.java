@@ -733,12 +733,12 @@ public class GazeplayEval implements GameLifeCycle {
                 double pad = margin / 2;
                 area = transparentArea(view.getLayoutX() - pad, view.getLayoutY() - pad, imageWidth + 2 * pad,
                     imageHeight + 2 * pad);
-                visuals.add(0, GameStyle.targetCard(area.getX(), area.getY(), area.getWidth(), area.getHeight()));
+                visuals.add(0, gridCard(area.getX(), area.getY(), area.getWidth(), area.getHeight()));
             }
             if (area == null) {
                 // A cell with a sound only (or whose image cannot be read): a card with a loudspeaker
                 area = transparentArea(x0, y0, width, height);
-                visuals.add(GameStyle.targetCard(x0, y0, width, height));
+                visuals.add(gridCard(x0, y0, width, height));
                 double iconSize = Math.min(width, height) * 0.4;
                 Group speaker = speakerIcon(iconSize);
                 speaker.setLayoutX(x0 + (width - iconSize) / 2);
@@ -1181,6 +1181,17 @@ public class GazeplayEval implements GameLifeCycle {
     private double unit() {
         Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         return Math.min(dimension.getWidth(), dimension.getHeight()) / 100;
+    }
+
+    /**
+     * @return the card of a cell of a grid: white in both themes, as the cards to choose of the games (maintainer's
+     * decision of 24/11/2026, point 29 of the tester's feedback: a picture with a transparent background no longer
+     * shows the dark background through it); the target is the transparent area over it, so the card ignores the mouse
+     */
+    private static Rectangle gridCard(double x, double y, double width, double height) {
+        Rectangle card = GameStyle.pictureCard(x, y, width, height);
+        card.setMouseTransparent(true);
+        return card;
     }
 
     /**

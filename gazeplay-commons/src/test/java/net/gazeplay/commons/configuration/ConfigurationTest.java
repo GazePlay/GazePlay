@@ -96,6 +96,26 @@ class ConfigurationTest {
         assertEquals("another/path", read.getWhereIsItDir());
     }
 
+    /**
+     * 24/11/2026: what is bound to a setting (the players of the music of the menu) is not told by the reading of the
+     * file; the setting set to its own value tells it (GazePlay.onGameProcessEnded).
+     */
+    @Test
+    void shouldTellTheBoundPlayersOfAVolumeChangedByAGame() {
+        final javafx.beans.property.DoubleProperty player = new javafx.beans.property.SimpleDoubleProperty();
+        player.bindBidirectional(configuration.getMusicVolumeProperty());
+        final double before = player.get();
+        final Configuration game = ConfigurationSource.createFromPropertiesResource(testProperties);
+        game.getMusicVolumeProperty().set(before == 0.8 ? 0.3 : 0.8);
+        final double chosen = game.getMusicVolume();
+
+        configuration.reloadFromFile();
+        assertEquals(before, player.get(), 1e-9, "not told by the reading");
+        configuration.getMusicVolumeProperty().set(configuration.getMusicVolume());
+
+        assertEquals(chosen, player.get(), 1e-9);
+    }
+
     @Test
     void shouldStoreTheApplicationConfig() {
         String oldPath = configuration.getWhereIsItDir();
@@ -397,22 +417,6 @@ class ConfigurationTest {
     @Test
     void shouldGetMusicFolder() {
         assertEquals(properties.get("MUSIC_DIR"), configuration.getMusicDir());
-    }
-
-    @Test
-    void shouldGetBackgroundStyle() {
-        assertEquals(properties.get("BACKGROUND_STYLE"), configuration.getBackgroundStyle().toString());
-    }
-
-    @Test
-    void shouldSetBackgroundStyle() {
-        BackgroundStyle oldStyle = configuration.getBackgroundStyle();
-        BackgroundStyle newStyle = BackgroundStyle.DARK;
-
-        configuration.setBackgroundStyle(newStyle);
-        assertEquals(newStyle, configuration.getBackgroundStyle());
-
-        configuration.setBackgroundStyle(oldStyle);
     }
 
     @Test

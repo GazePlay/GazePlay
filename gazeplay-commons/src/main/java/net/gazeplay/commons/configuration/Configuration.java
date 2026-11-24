@@ -61,7 +61,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_FIXATION_LENGTH = "FIXATION_LENGTH";
     /* Graphics settings */
     private static final String PROPERTY_NAME_CSS_FILE = "CSS_FILE";
-    private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
+    // BACKGROUND_STYLE (light or dark background of the games), shown by no page, removed on 24/11/2026: only Race read
+    // it; kept in the files as it is
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_DARK_THEME_ENABLED = "DARK_THEME_ENABLED";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
@@ -125,7 +126,6 @@ public class Configuration {
     private static final int DEFAULT_VALUE_GAME_START_DELAY = 1000;
     /* Graphics settings */
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
-    private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_DARK_THEME_ENABLED = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
@@ -246,8 +246,6 @@ public class Configuration {
     @Getter
     private final StringProperty cssFileProperty;
     @Getter
-    private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
-    @Getter
     private final BooleanProperty backgroundEnabledProperty;
     @Getter
     private final BooleanProperty darkThemeEnabledProperty;
@@ -358,8 +356,6 @@ public class Configuration {
 
         /* Graphics settings */
         cssFileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSS_FILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
-        backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
-            new EnumMarshaller<>(), new EnumUnmarshaller<>(BackgroundStyle.class));
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
         darkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_THEME_ENABLED, DEFAULT_VALUE_DARK_THEME_ENABLED, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
@@ -595,10 +591,6 @@ public class Configuration {
         return cssFileProperty.getValue();
     }
 
-    public BackgroundStyle getBackgroundStyle() {
-        return backgroundStyleProperty.getValue();
-    }
-
     public Boolean isBackgroundEnabled() {
         return backgroundEnabledProperty.getValue();
     }
@@ -806,10 +798,6 @@ public class Configuration {
 
     public void setCssFile(final String cssFile) {
         cssFileProperty.setValue(cssFile);
-    }
-
-    public void setBackgroundStyle(final BackgroundStyle newValue) {
-        backgroundStyleProperty.setValue(newValue);
     }
 
     public void setDarkThemeEnabled(final boolean darkThemeEnabled) {

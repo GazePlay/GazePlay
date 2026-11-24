@@ -248,6 +248,9 @@ public class GazePlay {
         final Configuration config = ActiveConfigurationContext.getInstance();
         config.reloadFromFile();
         CssUtil.setPreferredStylesheets(config, primaryScene);
+        // The music of the menu follows the volume chosen in the game: read again, the setting does not notify the
+        // players bound to it; set to its own value, it does (all the players of the playlist follow, none playing too)
+        config.getMusicVolumeProperty().set(config.getMusicVolume());
         final boolean menuShown = primaryScene != null && (homeMenuScreen != null
             && primaryScene.getRoot() == homeMenuScreen.getRoot()
             || evalMenuScreen != null && primaryScene.getRoot() == evalMenuScreen.getRoot());

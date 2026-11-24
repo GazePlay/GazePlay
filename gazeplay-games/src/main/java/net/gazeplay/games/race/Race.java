@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -177,19 +176,9 @@ public class Race extends Parent implements GameLifeCycle {
         final ImageView background = new ImageView(new Image(IMAGES + "background.png"));
         background.setFitWidth(dimension.getWidth());
         background.setFitHeight(dimension.getHeight());
-        final double styleCoefficient = gameContext.getConfiguration().getBackgroundStyle()
-            .accept(new BackgroundStyleVisitor<Double>() {
-                @Override
-                public Double visitLight() {
-                    return 0.5;
-                }
-
-                @Override
-                public Double visitDark() {
-                    return 1.d;
-                }
-            });
-        background.setOpacity(gameContext.getConfiguration().isBackgroundEnabled() ? styleCoefficient : 0);
+        // Fully opaque: the former setting BACKGROUND_STYLE (50 % when "light"), shown by no page and so "dark" for
+        // everyone, was removed on 24/11/2026 (maintainer's decision)
+        background.setOpacity(gameContext.getConfiguration().isBackgroundEnabled() ? 1 : 0);
         background.setMouseTransparent(true);
         return background;
     }

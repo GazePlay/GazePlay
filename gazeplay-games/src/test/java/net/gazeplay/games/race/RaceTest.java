@@ -9,7 +9,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.ui.Translator;
@@ -66,7 +65,6 @@ class RaceTest {
         when(gameContext.getTranslator()).thenReturn(translator);
         when(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty()).thenReturn(new SimpleDoubleProperty(1));
         when(translator.translate(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(configuration.getBackgroundStyle()).thenReturn(BackgroundStyle.DARK);
         when(configuration.isBackgroundEnabled()).thenReturn(true);
     }
 

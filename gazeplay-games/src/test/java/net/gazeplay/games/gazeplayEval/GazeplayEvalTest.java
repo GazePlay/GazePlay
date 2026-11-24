@@ -637,8 +637,12 @@ class GazeplayEvalTest {
         Rectangle blue = imageTargets().get(1);
         double x = blue.getBoundsInParent().getCenterX();
         double y = blue.getBoundsInParent().getCenterY();
-        int cornerX = (int) blue.getBoundsInParent().getMinX() + 12;
-        int cornerY = (int) blue.getBoundsInParent().getMinY() + 12;
+        // A corner of the blue image itself, not of its target, whose margin is on the white card of the cell (24/11/2026)
+        javafx.geometry.Bounds image = onFx(() -> find(ImageView.class).stream()
+            .filter(view -> view.getImage() != null && view.getImage().getUrl().endsWith("bleu.png"))
+            .findFirst().orElseThrow().getBoundsInParent());
+        int cornerX = (int) image.getMinX() + 12;
+        int cornerY = (int) image.getMinY() + 12;
         Platform.runLater(() -> {
             scene.getRoot().fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED, x, y, x, y, MouseButton.NONE, 0, false,
                 false, false, false, false, false, false, false, false, false, null));
