@@ -891,7 +891,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             @Override
             public Boolean fromString(final String text) {
-                return null;
+                // Not used by a choice box; the text of "dark" gives dark (a Boolean, never null: SpotBugs)
+                return text != null && text.equals(translator.translate(darkKey));
             }
         });
         choiceBox.setValue(dark != null && dark.get());
