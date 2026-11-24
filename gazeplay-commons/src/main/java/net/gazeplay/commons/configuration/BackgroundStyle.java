@@ -2,7 +2,8 @@ package net.gazeplay.commons.configuration;
 
 /**
  * Light or dark background of the games (BACKGROUND_STYLE setting). The setting is still saved, but no page shows it
- * anymore: the background color (BACKGROUND_COLOR) replaced it.
+ * anymore: the themes of the games and of the evaluations replaced it (24/11/2026); only Race still reads it, for the
+ * opacity of its picture.
  */
 public enum BackgroundStyle {
     LIGHT {

@@ -27,6 +27,83 @@ public class CssUtil {
     static final String MENUS_STYLESHEET = "data/stylesheets/menus.css";
 
     /**
+     * What a JVM shows, and so its theme and its buttons (maintainer's decisions of 24/11/2026): the menus (theme of the
+     * menus), a game (theme and buttons of the games) or an evaluation (theme and buttons of the evaluations).
+     */
+    public enum Process { MENUS, GAME, EVALUATION }
+
+    private static volatile Process process = Process.MENUS;
+
+    /**
+     * Makes this JVM take the theme and the buttons of the games, before its first scene.
+     */
+    public static void useTheThemeOfTheGames() {
+        process = Process.GAME;
+    }
+
+    /**
+     * Makes this JVM take the theme and the buttons of the evaluations (GazePlay Eval and Eval Test), before its first
+     * scene.
+     */
+    public static void useTheThemeOfTheEvaluations() {
+        process = Process.EVALUATION;
+    }
+
+    /**
+     * For the tests: back to the theme of the menus.
+     */
+    public static void useTheThemeOfTheMenus() {
+        process = Process.MENUS;
+    }
+
+    /**
+     * @return what this JVM shows
+     */
+    public static Process process() {
+        return process;
+    }
+
+    /**
+     * @return whether this JVM shows a game or an evaluation (not the menus): its own theme can be changed on its
+     * screens (menu Esc of a game, statistics screen)
+     */
+    public static boolean usesTheThemeOfTheGames() {
+        return process != Process.MENUS;
+    }
+
+    /**
+     * @return the setting of the theme of this JVM (true for dark): of the games, of the evaluations, or of the menus
+     */
+    public static javafx.beans.property.BooleanProperty darkThemeProperty(final Configuration config) {
+        return switch (process) {
+            case GAME -> config.getGameDarkThemeEnabledProperty();
+            case EVALUATION -> config.getEvalDarkThemeEnabledProperty();
+            case MENUS -> config.getDarkThemeEnabledProperty();
+        };
+    }
+
+    /**
+     * @return whether the scenes of this JVM are in the dark theme: the theme of the games in the JVM of a game, of the
+     * evaluations in that of an evaluation, of the menus elsewhere
+     */
+    public static boolean isDarkTheme(final Configuration config) {
+        return Boolean.TRUE.equals(switch (process) {
+            case GAME -> config.isGameDarkThemeEnabled();
+            case EVALUATION -> config.isEvalDarkThemeEnabled();
+            case MENUS -> config.isDarkThemeEnabled();
+        });
+    }
+
+    /**
+     * @return whether the buttons of this JVM are dark: those of the evaluations in the JVM of an evaluation, of the
+     * games elsewhere
+     */
+    public static boolean isDarkButtons(final Configuration config) {
+        return Boolean.TRUE.equals(process == Process.EVALUATION ? config.isEvalDarkButtonsEnabled()
+            : config.isDarkButtonsEnabled());
+    }
+
+    /**
      * Replaces the stylesheets of a scene by those of the current settings. A theme that is neither built in nor an
      * existing file gives the default theme.
      */
@@ -49,7 +126,7 @@ public class CssUtil {
                 styleSheetPath = cssfile;
             }
         }
-        final boolean dark = config.isDarkThemeEnabled();
+        final boolean dark = isDarkTheme(config);
         stylesheets.clear();
         if (dark) {
            stylesheets.add("data/stylesheets/base-dark.css");
@@ -61,7 +138,7 @@ public class CssUtil {
         stylesheets.add(accentStylesheet(configuredBuiltInUiTheme.orElse(BuiltInUiTheme.DEFAULT_THEME)
             .getAccentColor(dark)));
         // The buttons of the games, light or dark whatever the theme (24/11/2026)
-        stylesheets.add(buttonsStylesheet(Boolean.TRUE.equals(config.isDarkButtonsEnabled())));
+        stylesheets.add(buttonsStylesheet(isDarkButtons(config)));
 
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);

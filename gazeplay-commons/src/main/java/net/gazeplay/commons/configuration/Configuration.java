@@ -65,8 +65,12 @@ public class Configuration {
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_DARK_THEME_ENABLED = "DARK_THEME_ENABLED";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
-    private static final String PROPERTY_NAME_BACKGROUND_COLOR = "BACKGROUND_COLOR";
+    // BACKGROUND_COLOR, the background of the games and of the evaluations, no longer read since 24/11/2026 (the
+    // background of their theme); kept in the files as it is
     private static final String PROPERTY_NAME_DARK_BUTTONS_ENABLED = "DARK_BUTTONS_ENABLED";
+    private static final String PROPERTY_NAME_GAME_DARK_THEME_ENABLED = "GAME_DARK_THEME_ENABLED";
+    private static final String PROPERTY_NAME_EVAL_DARK_THEME_ENABLED = "EVAL_DARK_THEME_ENABLED";
+    private static final String PROPERTY_NAME_EVAL_DARK_BUTTONS_ENABLED = "EVAL_DARK_BUTTONS_ENABLED";
     /* Directories settings */
     // FILE_DIR, the files folder of a profile, no longer read (3/11/2026: the images of the user are in one folder,
     // GazePlayDirectories.getImagesDirectory); kept in the files as it is
@@ -126,14 +130,22 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_DARK_THEME_ENABLED = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     /**
-     * Since 24/11/2026, read by GazePlay Eval only: the games take the background of the theme.
-     */
-    private static final String DEFAULT_VALUE_BACKGROUND_COLOR = "BLACK";
-    /**
      * The buttons of the games, light or dark whatever the theme (maintainer's decision of 24/11/2026: 4 looks, light
      * or dark theme with light or dark buttons): light by default, well seen in both themes.
      */
     private static final boolean DEFAULT_VALUE_DARK_BUTTONS_ENABLED = false;
+    /**
+     * The theme of the games, apart from the theme of the menus (DARK_THEME_ENABLED, maintainer's decision of
+     * 24/11/2026): chosen in the settings and in the menu Esc of a game; light by default.
+     */
+    private static final boolean DEFAULT_VALUE_GAME_DARK_THEME_ENABLED = false;
+    /**
+     * The theme and the buttons of the evaluations (GazePlay Eval and Eval Test), apart from those of the games
+     * (maintainer's decision of 24/11/2026): chosen in the settings of the mode Evaluations only, never during an
+     * evaluation (its menu Esc offers nothing more, so as not to disturb the results); light by default.
+     */
+    private static final boolean DEFAULT_VALUE_EVAL_DARK_THEME_ENABLED = false;
+    private static final boolean DEFAULT_VALUE_EVAL_DARK_BUTTONS_ENABLED = false;
     /* Directories settings */
     public static final String DEFAULT_VALUE_MUSIC_DIR = "";
     public static final String DEFAULT_VALUE_WHERE_IS_IT_DIR = "";
@@ -240,9 +252,13 @@ public class Configuration {
     @Getter
     private final BooleanProperty darkThemeEnabledProperty;
     @Getter
-    private final StringProperty backgroundColorProperty;
-    @Getter
     private final BooleanProperty darkButtonsEnabledProperty;
+    @Getter
+    private final BooleanProperty gameDarkThemeEnabledProperty;
+    @Getter
+    private final BooleanProperty evalDarkThemeEnabledProperty;
+    @Getter
+    private final BooleanProperty evalDarkButtonsEnabledProperty;
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
     /* Directories settings */
@@ -347,8 +363,10 @@ public class Configuration {
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
         darkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_THEME_ENABLED, DEFAULT_VALUE_DARK_THEME_ENABLED, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
-        backgroundColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_COLOR, DEFAULT_VALUE_BACKGROUND_COLOR, propertyChangeListener);
         darkButtonsEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_BUTTONS_ENABLED, DEFAULT_VALUE_DARK_BUTTONS_ENABLED, propertyChangeListener);
+        gameDarkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAME_DARK_THEME_ENABLED, DEFAULT_VALUE_GAME_DARK_THEME_ENABLED, propertyChangeListener);
+        evalDarkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_EVAL_DARK_THEME_ENABLED, DEFAULT_VALUE_EVAL_DARK_THEME_ENABLED, propertyChangeListener);
+        evalDarkButtonsEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_EVAL_DARK_BUTTONS_ENABLED, DEFAULT_VALUE_EVAL_DARK_BUTTONS_ENABLED, propertyChangeListener);
 
         /* Directories settings */
         musicDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_DIR, DEFAULT_VALUE_MUSIC_DIR, propertyChangeListener);
@@ -429,6 +447,20 @@ public class Configuration {
             }
         } finally {
             Files.deleteIfExists(temporaryFile);
+        }
+    }
+
+    /**
+     * Reads the file again, e.g. when a game ends: a game runs in its own JVM, which writes the settings changed in its
+     * menu (Esc) in the same file. Without this, the menus kept their former values in memory, showed them in the
+     * settings, and wrote them back at their next change of a setting, erasing those of the game (seen on 24/11/2026).
+     * The values are read from the file at each access: nothing else to update. A missing or unreadable file keeps the
+     * values in memory.
+     */
+    public void reloadFromFile() {
+        final java.util.Properties properties = ConfigurationSource.readProperties(configFile);
+        if (properties != null) {
+            applicationConfig.replaceAll(properties);
         }
     }
 
@@ -580,6 +612,27 @@ public class Configuration {
      */
     public Boolean isDarkButtonsEnabled() {
         return darkButtonsEnabledProperty.getValue();
+    }
+
+    /**
+     * @return whether the games are in the dark theme (else light), apart from the theme of the menus
+     */
+    public Boolean isGameDarkThemeEnabled() {
+        return gameDarkThemeEnabledProperty.getValue();
+    }
+
+    /**
+     * @return whether the evaluations are in the dark theme (else light), apart from the games and the menus
+     */
+    public Boolean isEvalDarkThemeEnabled() {
+        return evalDarkThemeEnabledProperty.getValue();
+    }
+
+    /**
+     * @return whether the buttons of the evaluations are dark (else light), whatever their theme
+     */
+    public Boolean isEvalDarkButtonsEnabled() {
+        return evalDarkButtonsEnabledProperty.getValue();
     }
 
     public String getMenuButtonsOrientation() {

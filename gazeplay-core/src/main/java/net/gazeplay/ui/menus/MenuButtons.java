@@ -7,7 +7,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.components.CssUtil;
@@ -59,19 +58,38 @@ public final class MenuButtons {
      * setting of the current profile is saved, and the stylesheets of the page are applied again at once
      */
     public static Button themeButton(final GazePlay gazePlay, final Translator translator) {
+        return themeButton(translator, ActiveConfigurationContext.getInstance().getDarkThemeEnabledProperty(),
+            gazePlay::getPrimaryScene);
+    }
+
+    /**
+     * @return the same round button for the theme of this JVM (24/11/2026), on the statistics screen at the end of a
+     *   game or of an evaluation: it changes the theme of the games or of the evaluations, kept for the next ones and
+     *   read again by the menu
+     */
+    public static Button gameThemeButton(final Translator translator,
+                                         final java.util.function.Supplier<javafx.scene.Scene> scene) {
+        return themeButton(translator, CssUtil.darkThemeProperty(ActiveConfigurationContext.getInstance()), scene);
+    }
+
+    private static Button themeButton(final Translator translator,
+                                      final javafx.beans.property.BooleanProperty darkTheme,
+                                      final java.util.function.Supplier<javafx.scene.Scene> scene) {
         final Button button = MenuStyle.roundButton(MenuIcon.LIGHT_THEME, "gold", "", () -> {
         });
         final Runnable update = () -> {
-            final boolean dark = ActiveConfigurationContext.getInstance().isDarkThemeEnabled();
+            final boolean dark = darkTheme.get();
             button.setGraphic((dark ? MenuIcon.DARK_THEME : MenuIcon.LIGHT_THEME).create(40));
             final String text = translator.translate(dark ? "ThemeLight" : "ThemeDark");
             button.setText(text);
             button.getTooltip().setText(text);
         };
         button.setOnAction(e -> {
-            final Configuration config = ActiveConfigurationContext.getInstance();
-            config.setDarkThemeEnabled(!config.isDarkThemeEnabled());
-            CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
+            darkTheme.set(!darkTheme.get());
+            final javafx.scene.Scene current = scene.get();
+            if (current != null) {
+                CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), current);
+            }
             update.run();
         });
         update.run();

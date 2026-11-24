@@ -281,8 +281,7 @@ public class DotToDot implements GameLifeCycle {
         score.setLayoutY(margin);
         hud.getChildren().add(score);
         if (hasLives()) {
-            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
-                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3);
             hearts.setLayoutX(height * 0.025);
             hearts.setLayoutY(height * 0.015);
             hud.getChildren().add(hearts);

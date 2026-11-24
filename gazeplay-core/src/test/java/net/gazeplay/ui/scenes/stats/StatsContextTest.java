@@ -106,6 +106,31 @@ class StatsContextTest {
     }
 
     /**
+     * 24/11/2026: in the JVM of a game, the sun or the moon at the top right changes the theme of the games; none in the
+     * JVM of the menus.
+     */
+    @Test
+    void shouldChangeTheThemeOfTheGamesFromTheStatistics() throws Exception {
+        final javafx.beans.property.BooleanProperty dark = new javafx.beans.property.SimpleBooleanProperty(false);
+        when(config.getGameDarkThemeEnabledProperty()).thenReturn(dark);
+        assertNull(screen(mockStats).getThemeButton(), "not in the JVM of the menus");
+        net.gazeplay.components.CssUtil.useTheThemeOfTheGames();
+        try {
+            final StatsContext screen = screen(mockStats);
+            assertNotNull(screen.getThemeButton());
+
+            fx(() -> {
+                screen.getThemeButton().fire();
+                return null;
+            });
+
+            assertTrue(dark.get());
+        } finally {
+            net.gazeplay.components.CssUtil.useTheThemeOfTheMenus();
+        }
+    }
+
+    /**
      * Maintainer's decision of 16/11/2026: the screen always opens in the simple mode; the switch shows the advanced
      * one and back.
      */

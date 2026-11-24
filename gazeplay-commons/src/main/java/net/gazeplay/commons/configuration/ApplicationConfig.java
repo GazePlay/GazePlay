@@ -39,6 +39,14 @@ public class ApplicationConfig {
     }
 
     /**
+     * Replaces all the pairs by those given (the file read again, e.g. after a game changed it).
+     */
+    public synchronized void replaceAll(final Properties newProperties) {
+        properties.clear();
+        properties.putAll(newProperties);
+    }
+
+    /**
      * Writes all the pairs in the format of {@link Properties#store}, with {@code comments} as first line.
      */
     public synchronized void store(final OutputStream out, final String comments) throws IOException {

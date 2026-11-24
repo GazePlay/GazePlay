@@ -139,9 +139,12 @@ class ConfigurationContextTest {
             // Eye tracker, fixation length
             assertInstanceOf(ChoiceBox.class, control(sections, "EyeTracker"));
             assertInstanceOf(Spinner.class, control(sections, "FixationLength"));
-            // Appearance: theme, background color (the dark theme has its button on every page)
+            // Appearance: main color, theme and buttons of the evaluations (24/11/2026), no background color nor
+            // theme and buttons of the games (the dark theme of the menus has its button on every page)
             assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
-            assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "EvalTheme"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "EvalButtons"));
+            assertFalse(has(sections, "BackgroundColor"));
             assertFalse(has(sections, "DarkTh"));
             // Evaluations: imported evaluations, way of taking them, delay before selection, sound blocking the
             // selection. No quit key (the menu leaves an evaluation); the import and the results folder are on
@@ -159,7 +162,7 @@ class ConfigurationContextTest {
             assertInstanceOf(HBox.class, control(sections, "HeatMapColors"));
             assertEquals(List.of("HeatMapSettings"),
                 sections.getLast().groups().stream().map(SettingsPage.Group::titleKey).toList());
-            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation", "GameButtons",
+            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation", "GameTheme", "GameButtons",
                 ConfigurationContext.USER_IMAGES_KEY, ConfigurationContext.USER_COLORING_KEY,
                 ConfigurationContext.DRAWINGS_KEY, "ResultDir", "EnableAreaOfInterest", "EnableVideoRecording")) {
                 assertFalse(has(sections, gamesOnly), gamesOnly);
@@ -224,7 +227,10 @@ class ConfigurationContextTest {
             assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
             // No background color for the games since 24/11/2026: the background of the theme
             assertFalse(has(sections, "BackgroundColor"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "GameTheme"));
             assertInstanceOf(ChoiceBox.class, control(sections, "GameButtons"));
+            assertFalse(has(sections, "EvalTheme"));
+            assertFalse(has(sections, "EvalButtons"));
             assertInstanceOf(ChoiceBox.class, control(sections, "MenuOrientation"));
             assertInstanceOf(CheckBox.class, control(sections, "BackgroundEnabled"));
             assertFalse(has(sections, "DarkTh"));

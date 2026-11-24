@@ -606,8 +606,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         if (!withLives) {
             return;
         }
-        livesGroup = GameStyle.lives(lives, LIVES, 46, 300,
-            Boolean.TRUE.equals(gameContext.getConfiguration().isDarkThemeEnabled()));
+        livesGroup = GameStyle.lives(lives, LIVES, 46, 300);
         livesGroup.setLayoutX(CX - livesGroup.getBoundsInLocal().getWidth() / 2);
         livesGroup.setLayoutY(14);
         livesGroup.setMouseTransparent(true);

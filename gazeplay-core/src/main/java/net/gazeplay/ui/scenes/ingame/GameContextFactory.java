@@ -124,10 +124,11 @@ public class GameContextFactory implements Supplier<GameContext> {
 
         applyInputMode(gamingRoot, EyeTracker.fromConfigValue(config.getEyeTracker()));
 
-        // The background of the theme (24/11/2026, maintainer's decision: the setting "Background color" is removed
-        // for the games; GazePlay Eval still sets its own until its turn)
+        // The background of the theme (24/11/2026, maintainer's decision: the setting "Background color" is removed):
+        // in a game or an evaluation, -gp-bg in the style of the area (applyRingColor), which follows a change of theme
+        // at once
         gamingRoot.setBackground(new Background(new BackgroundFill(
-            Color.web(CssUtil.backgroundColor(Boolean.TRUE.equals(config.isDarkThemeEnabled()))), null, null)));
+            Color.web(CssUtil.backgroundColor(CssUtil.isDarkTheme(config))), null, null)));
         // The color of the rings of the fixations (menu Esc, 17/11/2026), followed at once, even during a fixation
         applyRingColor(gamingRoot, config.getProgressBarColor());
         config.getProgressBarColorProperty().addListener(
@@ -188,8 +189,16 @@ public class GameContextFactory implements Supplier<GameContext> {
                 log.warn("Unknown color of the rings: {}", colorName);
             }
         }
-        gamingRoot.setStyle(ring == null ? "" : "-gp-ring: " + toWeb(ring) + ";");
+        // In a game, the background of the theme in the style too (an inline style wins over setBackground, which an
+        // evaluation still uses for its own color)
+        final String background = CssUtil.usesTheThemeOfTheGames() ? GAME_AREA_BACKGROUND : "";
+        gamingRoot.setStyle(background + (ring == null ? "" : "-gp-ring: " + toWeb(ring) + ";"));
     }
+
+    /**
+     * The background of the game area in a game: the one of the theme, followed when the theme changes (24/11/2026).
+     */
+    static final String GAME_AREA_BACKGROUND = "-fx-background-color: -gp-bg; ";
 
     private static String toWeb(final Color color) {
         return String.format("#%02X%02X%02X", Math.round(color.getRed() * 255), Math.round(color.getGreen() * 255),

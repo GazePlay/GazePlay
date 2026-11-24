@@ -86,10 +86,21 @@ class GameMenuViewTest {
      */
     @Test
     void shouldOfferOnlyTheVolumeResumeAndQuitToAnEvaluation() {
-        final GameMenuView view = new GameMenuView(translator, Locale.FRENCH, config, null,
-            GameMenuView.Kind.EVALUATION, () -> { });
+        // In the JVM of an evaluation: nothing more, neither its theme nor its buttons (maintainer's decision of
+        // 24/11/2026: they are changed in the settings of the main menu, so as not to disturb the results)
+        net.gazeplay.components.CssUtil.useTheThemeOfTheEvaluations();
+        final GameMenuView view;
+        try {
+            view = new GameMenuView(translator, Locale.FRENCH, config, null, GameMenuView.Kind.EVALUATION, () -> { });
+        } finally {
+            net.gazeplay.components.CssUtil.useTheThemeOfTheMenus();
+        }
 
         final List<String> texts = texts(view.getCard());
+        for (final String themeOrButtons : List.of("GameTheme", "GameButtons", "EvalTheme", "EvalButtons")) {
+            assertFalse(texts.contains(themeOrButtons), themeOrButtons);
+        }
+        assertNull(view.getGameThemeRow());
         assertTrue(texts.containsAll(List.of("EvalMenuTitle", "GameMenuResume", "EvalMenuQuit", "GameMenuVolume",
             "EvalMenuEscHint")), texts.toString());
         assertFalse(texts.contains("GameMenuRestart"));
@@ -138,6 +149,69 @@ class GameMenuViewTest {
         fixation.setValue(1500);
 
         assertEquals(1500, config.getFixationLength());
+    }
+
+    /**
+     * The theme of the games (24/11/2026): a row "Theme of the games" above the buttons of the games, never greyed, in a
+     * game only (not in the menus, an evaluation or a replay); a choice changes it at once.
+     */
+    @Test
+    void shouldChangeTheThemeOfTheGamesFromTheMenu() {
+        final boolean before = Boolean.TRUE.equals(config.isGameDarkThemeEnabled());
+        try {
+            assertNull(new GameMenuView(translator, Locale.FRENCH, config, null, GameMenuView.Kind.GAME, () -> { })
+                .getGameThemeRow(), "not in the JVM of a game");
+            net.gazeplay.components.CssUtil.useTheThemeOfTheGames();
+            assertNull(new GameMenuView(translator, Locale.FRENCH, config, null, GameMenuView.Kind.EVALUATION,
+                () -> { }).getGameThemeRow());
+            assertNull(new GameMenuView(translator, Locale.FRENCH, config, null, GameMenuView.Kind.REPLAY,
+                () -> { }).getGameThemeRow());
+            final GameMenuView view = new GameMenuView(translator, Locale.FRENCH, config, null,
+                GameMenuView.Kind.GAME, net.gazeplay.MenuSetting.fixationWithSharedRing(), () -> { });
+            final javafx.scene.layout.HBox row = view.getGameThemeRow();
+            assertNotNull(row);
+            assertFalse(row.isDisabled(), "acts on every game");
+            final javafx.scene.layout.VBox game = (javafx.scene.layout.VBox) row.getParent();
+            assertEquals(game.getChildren().size() - 2, game.getChildren().indexOf(row), "above the buttons");
+            assertTrue(texts(row).contains("GameTheme"));
+            final javafx.scene.layout.HBox choice = (javafx.scene.layout.HBox) row.getChildren().get(1);
+
+            ((javafx.scene.control.ToggleButton) choice.getChildren().get(before ? 0 : 1)).fire();
+
+            assertEquals(!before, config.isGameDarkThemeEnabled());
+        } finally {
+            net.gazeplay.components.CssUtil.useTheThemeOfTheMenus();
+            config.getGameDarkThemeEnabledProperty().set(before);
+        }
+    }
+
+    /**
+     * The buttons of the games (24/11/2026): greyed in a game without buttons, changed at once in a game with buttons.
+     */
+    @Test
+    void shouldChangeTheButtonsOfTheGames() {
+        final boolean before = Boolean.TRUE.equals(config.isDarkButtonsEnabled());
+        try {
+            final GameMenuView without = new GameMenuView(translator, Locale.FRENCH, config, null,
+                GameMenuView.Kind.GAME, net.gazeplay.MenuSetting.fixationWithSharedRing(), () -> { });
+            final javafx.scene.layout.VBox game = (javafx.scene.layout.VBox) without.getFixationRow().getParent();
+            assertTrue(game.getChildren().getLast().isDisabled(), "no buttons in this game");
+            assertTrue(texts(game.getChildren().getLast()).contains("GameButtons"));
+
+            final GameMenuView with = new GameMenuView(translator, Locale.FRENCH, config, null,
+                GameMenuView.Kind.GAME,
+                net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.GAME_BUTTONS), () -> { });
+            final javafx.scene.layout.HBox row = (javafx.scene.layout.HBox)
+                ((javafx.scene.layout.VBox) with.getFixationRow().getParent()).getChildren().getLast();
+            assertFalse(row.isDisabled());
+            final javafx.scene.layout.HBox choice = (javafx.scene.layout.HBox) row.getChildren().get(1);
+
+            ((javafx.scene.control.ToggleButton) choice.getChildren().get(before ? 0 : 1)).fire();
+
+            assertEquals(!before, config.isDarkButtonsEnabled());
+        } finally {
+            config.getDarkButtonsEnabledProperty().set(before);
+        }
     }
 
     private static void click(final Node node) {

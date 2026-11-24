@@ -273,7 +273,6 @@ public class GazeplayEval implements GameLifeCycle {
     @Override
     public void launch() {
         cleanUp();
-        keepTheFormerBackground();
         // A replay is a new session: leaving it before its start must not write again in the folder of the previous one
         recorder = null;
         sessionFolder = null;
@@ -598,8 +597,8 @@ public class GazeplayEval implements GameLifeCycle {
         double centerY = dimension.getHeight() / 2;
         Rectangle horizontal = new Rectangle(centerX - size / 2, centerY - size / 14, size, size / 7);
         Rectangle vertical = new Rectangle(centerX - size / 14, centerY - size / 2, size / 7, size);
-        horizontal.setFill(foreground());
-        vertical.setFill(foreground());
+        horizontal.setStyle(FOREGROUND_STYLE);
+        vertical.setStyle(FOREGROUND_STYLE);
         horizontal.setMouseTransparent(true);
         vertical.setMouseTransparent(true);
         gameContext.getChildren().addAll(horizontal, vertical);
@@ -628,8 +627,7 @@ public class GazeplayEval implements GameLifeCycle {
                     Text text = new Text(instruction.content());
                     double textSize = unit() * 5.5;
                     text.setFont(Font.font(GameStyle.TEXT_FONT_FAMILY, textSize));
-                    text.setStyle(GameStyle.textFontStyle(textSize));
-                    text.setFill(foreground());
+                    text.setStyle(GameStyle.textFontStyle(textSize) + " " + FOREGROUND_STYLE);
                     text.setTextAlignment(TextAlignment.CENTER);
                     text.setWrappingWidth(mediaWidth);
                     Bounds bounds = text.getLayoutBounds();
@@ -893,7 +891,7 @@ public class GazeplayEval implements GameLifeCycle {
         recorder.event("proposition", source, choice == Choice.RESTART ? "recommencer" : "continuer", null, null, "");
         // The proposed button: a thick border of the main color
         choiceButtons.forEach((buttonChoice, button) -> button.setStyle(buttonChoice == choice
-            ? "-fx-fill: -gp-surface; -fx-stroke: -gp-accent; -fx-stroke-width: " + unit() * 1.4 + ";"
+            ? "-fx-fill: -gp-button; -fx-stroke: -gp-accent; -fx-stroke-width: " + unit() * 1.4 + ";"
             : ROUNDED_BUTTON_STYLE));
     }
 
@@ -1171,10 +1169,10 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     /**
-     * Style of the buttons of the screens (start, restart, continue): a rounded card of the surface color with a border
-     * of the main color.
+     * Style of the buttons of the screens (start, restart, continue): a rounded card, light or dark as the setting
+     * "Buttons of the evaluations" (24/11/2026), with a border of the main color.
      */
-    private static final String ROUNDED_BUTTON_STYLE = "-fx-fill: -gp-surface; -fx-stroke: -gp-accent;"
+    private static final String ROUNDED_BUTTON_STYLE = "-fx-fill: -gp-button; -fx-stroke: -gp-accent;"
         + " -fx-stroke-width: 3;";
 
     /**
@@ -1217,7 +1215,8 @@ public class GazeplayEval implements GameLifeCycle {
         double fontSize = Math.min(unit() * 4.5, height * 0.3);
         Text label = new Text(text);
         label.setFont(GameStyle.titleFont(fontSize));
-        label.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: -gp-text;");
+        // The text of the buttons, seen on a light or a dark button
+        label.setStyle(GameStyle.titleFontStyle(fontSize) + " " + GameStyle.BUTTON_TEXT_STYLE);
         double iconSize = fontSize * 1.3;
         SVGPath shape = GameStyle.icon(icon, iconSize);
         shape.setStyle("-fx-fill: -gp-accent;");
@@ -1247,30 +1246,10 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     /**
-     * The games take the background of the theme since 24/11/2026; GazePlay Eval keeps the color of the setting
-     * "Background color" (black by default) until it follows the theme too (maintainer's decision: a later step).
+     * The color of the texts and of the fixation cross on the background (24/11/2026): the text of the theme of the
+     * evaluations (it used to be black or white after the setting "Background color", removed).
      */
-    private void keepTheFormerBackground() {
-        try {
-            Color background = Color.web(gameContext.getConfiguration().getBackgroundColorProperty().getValue());
-            gameContext.getRoot().setBackground(new javafx.scene.layout.Background(
-                new javafx.scene.layout.BackgroundFill(background, null, null)));
-        } catch (RuntimeException e) {
-            log.warn("Background of the evaluation not set", e);
-        }
-    }
-
-    /**
-     * @return black on a light background, white on a dark one
-     */
-    private Color foreground() {
-        try {
-            Color background = Color.web(gameContext.getConfiguration().getBackgroundColorProperty().getValue());
-            return background.getBrightness() > 0.6 ? Color.BLACK : Color.WHITE;
-        } catch (RuntimeException e) {
-            return Color.WHITE;
-        }
-    }
+    private static final String FOREGROUND_STYLE = "-fx-fill: -gp-text;";
 
     private String translate(String key) {
         return gameContext.getTranslator().translate(key);

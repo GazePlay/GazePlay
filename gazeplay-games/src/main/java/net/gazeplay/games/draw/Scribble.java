@@ -684,6 +684,6 @@ public class Scribble implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.GAME_BUTTONS);
     }
 }

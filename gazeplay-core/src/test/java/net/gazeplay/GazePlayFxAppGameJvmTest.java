@@ -34,4 +34,29 @@ class GazePlayFxAppGameJvmTest {
         assertFalse(GazePlayFxApp.startsAGame(parse("--default-user")));
     }
 
+    /**
+     * The theme of the games (24/11/2026): in the JVM of a game, not in that of the menus nor of an evaluation.
+     */
+    @Test
+    void shouldTakeTheThemeOfTheGamesInAGameOnly() {
+        assertTrue(GazePlayFxApp.takesTheThemeOfTheGames(parse("--game", "Biboule")));
+        assertTrue(GazePlayFxApp.takesTheThemeOfTheGames(parse("--random-game")));
+        assertFalse(GazePlayFxApp.takesTheThemeOfTheGames(parse("--game", "GazePlayEval")));
+        assertFalse(GazePlayFxApp.takesTheThemeOfTheGames(parse("--game", "GazePlayEvalTest")));
+        assertFalse(GazePlayFxApp.takesTheThemeOfTheGames(parse("--default-user")));
+        assertFalse(GazePlayFxApp.takesTheThemeOfTheGames(null));
+    }
+
+    /**
+     * The theme and the buttons of the evaluations (24/11/2026): GazePlay Eval and Eval Test only.
+     */
+    @Test
+    void shouldTakeTheThemeOfTheEvaluationsInAnEvaluationOnly() {
+        assertTrue(GazePlayFxApp.startsAnEvaluation(parse("--game", "GazePlayEval")));
+        assertTrue(GazePlayFxApp.startsAnEvaluation(parse("--game", "GazePlayEvalTest")));
+        assertFalse(GazePlayFxApp.startsAnEvaluation(parse("--game", "Biboule")));
+        assertFalse(GazePlayFxApp.startsAnEvaluation(parse("--random-game")));
+        assertFalse(GazePlayFxApp.startsAnEvaluation(null));
+    }
+
 }

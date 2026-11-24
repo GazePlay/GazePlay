@@ -267,4 +267,13 @@ public class SpotTheDifferences implements GameLifeCycle {
         scorePill = null;
         stats.setTargetAOIList(targetAOIList);
     }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game: those by default and the buttons of the games (the
+     * button "Next", 24/11/2026)
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.GAME_BUTTONS);
+    }
 }

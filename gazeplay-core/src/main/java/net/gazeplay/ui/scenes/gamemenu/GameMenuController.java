@@ -143,7 +143,9 @@ public class GameMenuController {
         displayLoadingContextThread.start();
 
         try {
-            shareOutput(builder, GazePlayLauncher.runsWithoutConsole()).start();
+            final Process game = shareOutput(builder, GazePlayLauncher.runsWithoutConsole()).start();
+            // The settings changed in the game are read again when it ends (24/11/2026)
+            game.onExit().thenRun(() -> Platform.runLater(gazePlay::onGameProcessEnded));
         } catch (Exception e) {
             log.error("Cannot start the game process", e);
         }

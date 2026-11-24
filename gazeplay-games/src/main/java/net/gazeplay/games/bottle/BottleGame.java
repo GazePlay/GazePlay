@@ -341,8 +341,7 @@ public class BottleGame implements GameLifeCycle {
         hud.getChildren().setAll(bottlesPill, seriesPill);
         if (hasLives()) {
             // The hearts at the top left as in the other games, the bottles just after them
-            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
-                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3);
             hearts.setLayoutX(height * 0.025);
             hearts.setLayoutY(height * 0.015);
             hud.getChildren().add(hearts);

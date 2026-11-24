@@ -523,8 +523,7 @@ public class Letters implements GameLifeCycle {
         hud.getChildren().add(score);
         if (hasLives()) {
             // The hearts at the left of the band as in the other games, the pictures just after them
-            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
-                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3);
             hearts.setLayoutX(margin);
             hearts.setLayoutY((gridY - hearts.getBoundsInLocal().getHeight()) / 2);
             hud.getChildren().add(hearts);
@@ -945,6 +944,6 @@ public class Letters implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.GAME_BUTTONS);
     }
 }

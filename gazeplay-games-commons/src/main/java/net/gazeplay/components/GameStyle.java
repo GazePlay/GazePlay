@@ -249,6 +249,25 @@ public final class GameStyle {
      */
     public static Group lives(final int lives, final int total, final double size, final double maxWidth,
                               final boolean onDark) {
+        return lives(lives, total, size, maxWidth, Boolean.valueOf(onDark));
+    }
+
+    /**
+     * The lives on the background of the theme of the game (24/11/2026): the empty hearts, the count and the bar take
+     * the colors of the theme ({@code -gp-life-lost}, {@code -gp-life-count}, {@code -gp-life-track} of base-light.css
+     * and base-dark.css), so that they follow a change of theme at once, without being drawn again.
+     *
+     * @see #lives(int, int, double, double, boolean)
+     */
+    public static Group lives(final int lives, final int total, final double size, final double maxWidth) {
+        return lives(lives, total, size, maxWidth, (Boolean) null);
+    }
+
+    /**
+     * @param onDark whether the background is dark, or null for the background of the theme
+     */
+    private static Group lives(final int lives, final int total, final double size, final double maxWidth,
+                               final Boolean onDark) {
         if (total > MAX_HEARTS) {
             return livesBar(lives, total, Math.min(size, maxWidth / 6), onDark);
         }
@@ -256,7 +275,13 @@ public final class GameStyle {
         final Group row = new Group();
         for (int i = 0; i < total; i++) {
             final SVGPath icon = icon(i < lives ? "favorite_fill1" : "favorite", heart);
-            icon.setFill(i < lives ? LIFE : onDark ? LIFE_LOST_ON_DARK : LIFE_LOST);
+            if (i < lives) {
+                icon.setFill(LIFE);
+            } else if (onDark == null) {
+                icon.setStyle("-fx-fill: -gp-life-lost;");
+            } else {
+                icon.setFill(onDark ? LIFE_LOST_ON_DARK : LIFE_LOST);
+            }
             icon.setStroke(Color.WHITE);
             // In the units of the icon (960 for its height)
             icon.setStrokeWidth(18);
@@ -270,17 +295,21 @@ public final class GameStyle {
     /**
      * More than {@link #MAX_HEARTS} lives: a red heart, "lives / total", and a green bar shorter at each life lost.
      */
-    private static Group livesBar(final int lives, final int total, final double size, final boolean onDark) {
+    private static Group livesBar(final int lives, final int total, final double size, final Boolean onDark) {
         final SVGPath heart = icon("favorite_fill1", size);
         heart.setFill(LIFE);
         heart.setStroke(Color.WHITE);
         heart.setStrokeWidth(18);
         final Text count = new Text(Math.max(0, lives) + " / " + total);
         count.setFont(titleFont(size * 0.7));
-        count.setStyle(titleFontStyle(size * 0.7));
-        count.setFill(onDark ? Color.WHITE : Color.rgb(43, 33, 24));
-        if (onDark) {
-            count.setEffect(new javafx.scene.effect.DropShadow(4, Color.rgb(0, 0, 0, 0.6)));
+        if (onDark == null) {
+            count.setStyle(titleFontStyle(size * 0.7) + " -fx-fill: -gp-life-count;");
+        } else {
+            count.setStyle(titleFontStyle(size * 0.7));
+            count.setFill(onDark ? Color.WHITE : Color.rgb(43, 33, 24));
+            if (onDark) {
+                count.setEffect(new javafx.scene.effect.DropShadow(4, Color.rgb(0, 0, 0, 0.6)));
+            }
         }
         count.setTextOrigin(javafx.geometry.VPos.CENTER);
         count.setX(size * 1.2);
@@ -291,7 +320,11 @@ public final class GameStyle {
         final Rectangle back = new Rectangle(barX, (size - barHeight) / 2, barWidth, barHeight);
         back.setArcWidth(barHeight);
         back.setArcHeight(barHeight);
-        back.setFill(Color.rgb(40, 44, 52, onDark ? 0.55 : 0.18));
+        if (onDark == null) {
+            back.setStyle("-fx-fill: -gp-life-track;");
+        } else {
+            back.setFill(Color.rgb(40, 44, 52, onDark ? 0.55 : 0.18));
+        }
         back.setStroke(Color.WHITE);
         back.setStrokeWidth(Math.max(1, size * 0.04));
         final double left = Math.max(0, Math.min(1, lives / (double) total));

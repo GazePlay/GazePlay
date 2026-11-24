@@ -1088,8 +1088,7 @@ public class TrainSwitches implements GameLifeCycle {
         count.setLayoutY(height * 0.02);
         hud.getChildren().addAll(good, count);
         if (hasLives()) {
-            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
-                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3);
             hearts.setLayoutX(height * 0.025);
             hearts.setLayoutY(height * 0.015);
             hud.getChildren().add(hearts);
@@ -1557,6 +1556,6 @@ public class TrainSwitches implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.ANIMATION_SPEED, net.gazeplay.MenuSetting.GAME_BUTTONS);
     }
 }

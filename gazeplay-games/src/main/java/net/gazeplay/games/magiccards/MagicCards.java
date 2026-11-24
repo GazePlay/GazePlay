@@ -317,8 +317,7 @@ public class MagicCards implements GameLifeCycle {
         score.setLayoutY(height * 0.025);
         hud.getChildren().setAll(order, score);
         if (hasLives()) {
-            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
-                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3);
             hearts.setLayoutX(height * 0.025);
             hearts.setLayoutY(height * 0.015);
             hud.getChildren().add(hearts);

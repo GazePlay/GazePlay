@@ -270,8 +270,7 @@ public class WhereIsIt implements GameLifeCycle {
             return;
         }
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        livesGroup = GameStyle.lives(lives, LIVES, dimension.getHeight() * 0.055, dimension.getWidth() * 0.3,
-            Boolean.TRUE.equals(gameContext.getConfiguration().isDarkThemeEnabled()));
+        livesGroup = GameStyle.lives(lives, LIVES, dimension.getHeight() * 0.055, dimension.getWidth() * 0.3);
         livesGroup.setLayoutX(dimension.getHeight() * 0.025);
         livesGroup.setLayoutY(dimension.getHeight() * 0.015);
         gameContext.getChildren().add(livesGroup);
@@ -1120,5 +1119,14 @@ public class WhereIsIt implements GameLifeCycle {
     static double chi2Threshold(final int replays) {
         final int index = replays > 4 ? replays - 1 : 3;
         return CHI2_THEORETIC[Math.min(index, CHI2_THEORETIC.length - 1)];
+    }
+
+    /**
+     * @return the settings of the menu (Esc) acting on this game: those by default and the buttons of the games (the
+     * loudspeaker saying the question again, 24/11/2026)
+     */
+    @Override
+    public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
+        return net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.GAME_BUTTONS);
     }
 }

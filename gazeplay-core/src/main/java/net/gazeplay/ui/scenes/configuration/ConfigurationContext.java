@@ -321,12 +321,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             MenuIcon.APPEARANCE)
             .add("AccentColor", mainColorChooser);
         if (evaluations) {
-            // GazePlay Eval keeps its background color until it follows the theme (24/11/2026: removed for the games,
-            // whose background is the one of the theme)
-            section.add("BackgroundColor", chooseColorHBox(config.getBackgroundColorProperty()));
+            // The theme and the buttons of the evaluations, apart from those of the games (24/11/2026): changed here
+            // only, never during an evaluation (its menu Esc offers nothing more, so as not to disturb the results)
+            section.add("EvalTheme", lightOrDarkChooser(config.getEvalDarkThemeEnabledProperty(), translator,
+                    "GameThemeLight", "GameThemeDark"))
+                .add("EvalButtons", lightOrDarkChooser(config.getEvalDarkButtonsEnabledProperty(), translator,
+                    "GameButtonsLight", "GameButtonsDark"));
         } else {
-            // The buttons of the games, light or dark (24/11/2026); GazePlay Eval keeps its own
-            section.add("GameButtons", buildButtonsChooser(config, translator));
+            // The theme and the buttons of the games, light or dark, apart from the theme of the menus (24/11/2026);
+            // GazePlay Eval keeps its own until its turn
+            section.add("GameTheme", buildGameThemeChooser(config, translator))
+                .add("GameButtons", buildButtonsChooser(config, translator));
             final ChoiceBox<GameButtonOrientation> orientation = buildGameButtonOrientationChooser(config, translator);
             // The menu is built again when it is shown next: the new orientation is seen without restarting
             orientation.valueProperty().addListener((observable, oldValue, newValue) -> getGazePlay().refreshMenu());
@@ -854,15 +859,34 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * 24/11/2026), bound to the DARK_BUTTONS_ENABLED setting; the next game uses it
      */
     static ChoiceBox<Boolean> buildButtonsChooser(final Configuration configuration, final Translator translator) {
+        return lightOrDarkChooser(configuration.getDarkButtonsEnabledProperty(), translator, "GameButtonsLight",
+            "GameButtonsDark");
+    }
+
+    /**
+     * @return the choice of the theme of the games, light or dark, apart from the theme of the menus (maintainer's
+     * decision of 24/11/2026), bound to the GAME_DARK_THEME_ENABLED setting; the next game uses it
+     */
+    static ChoiceBox<Boolean> buildGameThemeChooser(final Configuration configuration, final Translator translator) {
+        return lightOrDarkChooser(configuration.getGameDarkThemeEnabledProperty(), translator, "GameThemeLight",
+            "GameThemeDark");
+    }
+
+    /**
+     * @return a choice "light" or "dark" bound to a setting (true for dark)
+     */
+    private static ChoiceBox<Boolean> lightOrDarkChooser(final javafx.beans.property.BooleanProperty dark,
+                                                         final Translator translator, final String lightKey,
+                                                         final String darkKey) {
         final ChoiceBox<Boolean> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(false, true);
         choiceBox.setConverter(new StringConverter<>() {
             @Override
-            public String toString(final Boolean dark) {
-                if (dark == null) {
+            public String toString(final Boolean value) {
+                if (value == null) {
                     return "";
                 }
-                return translator.translate(dark ? "GameButtonsDark" : "GameButtonsLight");
+                return translator.translate(value ? darkKey : lightKey);
             }
 
             @Override
@@ -870,11 +894,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 return null;
             }
         });
-        choiceBox.setValue(Boolean.TRUE.equals(configuration.isDarkButtonsEnabled()));
+        choiceBox.setValue(dark != null && dark.get());
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
-        choiceBox.valueProperty().addListener((observable, before, now) ->
-            configuration.getDarkButtonsEnabledProperty().set(Boolean.TRUE.equals(now)));
+        choiceBox.valueProperty().addListener((observable, before, now) -> {
+            if (dark != null) {
+                dark.set(Boolean.TRUE.equals(now));
+            }
+        });
         return choiceBox;
     }
 
@@ -1084,18 +1111,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
             hbox.getChildren().add(colorPicker);
         }
-    }
-
-    /**
-     * @return a color picker bound to a color setting
-     */
-    private HBox chooseColorHBox(StringProperty property){
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-        ColorPicker colorPicker = new ColorPicker(Color.web(property.getValue()));
-        colorPicker.valueProperty().addListener((observableValue, color, t1) -> property.setValue(colorPicker.getValue().toString()));
-        hBox.getChildren().add(colorPicker);
-        return hBox;
     }
 
     /**

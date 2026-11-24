@@ -110,6 +110,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     @Getter(AccessLevel.PACKAGE)
     private VBox advancedBody;
 
+    /**
+     * The sun or the moon of the theme of the games at the top right (24/11/2026), null out of the JVM of a game.
+     */
+    @Getter(AccessLevel.PACKAGE)
+    private javafx.scene.control.Button themeButton;
+
     @Getter(AccessLevel.PACKAGE)
     private ToggleButton simpleSwitch;
 
@@ -221,6 +227,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         final HBox header = new HBox(24, identity, modes);
         header.setAlignment(Pos.CENTER_LEFT);
+        if (net.gazeplay.components.CssUtil.usesTheThemeOfTheGames()) {
+            // The theme of the games, changed at once (maintainer's request of 24/11/2026: the sun and the moon of the
+            // menus, so as not to load the screen), kept for the next games
+            themeButton = net.gazeplay.ui.menus.MenuButtons.gameThemeButton(translator,
+                () -> getRoot().getScene());
+            header.getChildren().add(themeButton);
+        }
         return header;
     }
 

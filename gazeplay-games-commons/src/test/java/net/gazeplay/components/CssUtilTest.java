@@ -73,6 +73,49 @@ class CssUtilTest {
     }
 
     /**
+     * The theme of the games apart from that of the menus (24/11/2026): the JVM of a game takes the first one.
+     */
+    @Test
+    void shouldTakeTheThemeOfTheGamesInTheJvmOfAGame() throws Exception {
+        Configuration config = config("builtin:GREEN", false);
+        when(config.isGameDarkThemeEnabled()).thenReturn(true);
+        try {
+            assertEquals(false, CssUtil.isDarkTheme(config));
+            CssUtil.useTheThemeOfTheGames();
+            assertEquals(true, CssUtil.isDarkTheme(config));
+            // The stylesheets chosen: the dark base (its colors are checked in gazeplay-core, where it lives)
+            Scene scene = WaitForAsyncUtils.asyncFx(() -> new Scene(new Pane())).get();
+            WaitForAsyncUtils.asyncFx(() -> CssUtil.setPreferredStylesheets(config, scene)).get();
+            assertEquals("data/stylesheets/base-dark.css", scene.getStylesheets().getFirst());
+        } finally {
+            CssUtil.useTheThemeOfTheMenus();
+        }
+    }
+
+    /**
+     * The theme and the buttons of the evaluations, apart from those of the games and of the menus (24/11/2026).
+     */
+    @Test
+    void shouldTakeTheThemeAndTheButtonsOfTheEvaluationsInTheJvmOfAnEvaluation() throws Exception {
+        Configuration config = config("builtin:GREEN", false);
+        when(config.isGameDarkThemeEnabled()).thenReturn(false);
+        when(config.isEvalDarkThemeEnabled()).thenReturn(true);
+        when(config.isDarkButtonsEnabled()).thenReturn(false);
+        when(config.isEvalDarkButtonsEnabled()).thenReturn(true);
+        try {
+            CssUtil.useTheThemeOfTheEvaluations();
+            assertEquals(true, CssUtil.isDarkTheme(config));
+            assertEquals(true, CssUtil.isDarkButtons(config));
+            assertEquals(Color.web("#2A221C"), colorOf(config, "-gp-button"));
+            CssUtil.useTheThemeOfTheGames();
+            assertEquals(false, CssUtil.isDarkTheme(config));
+            assertEquals(false, CssUtil.isDarkButtons(config));
+        } finally {
+            CssUtil.useTheThemeOfTheMenus();
+        }
+    }
+
+    /**
      * @return the color of a region filled with -gp-accent, once the stylesheets of the settings are applied
      */
     private static Color accentOf(String cssFile, boolean dark) throws Exception {

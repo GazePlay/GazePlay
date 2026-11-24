@@ -16,6 +16,7 @@ import lombok.Getter;
 import net.gazeplay.MenuSetting;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.AnimationSpeedRatioControl;
 import net.gazeplay.ui.ElementSizeControl;
 import net.gazeplay.ui.FixationLengthControl;
@@ -72,6 +73,13 @@ final class GameMenuView {
 
     @Getter(AccessLevel.PACKAGE)
     private final Button quitButton;
+
+    /**
+     * The row "Theme of the games" (light or dark, 24/11/2026), above the buttons of the games; null when the menu has
+     * none (a replay, an evaluation, or the JVM of the menus).
+     */
+    @Getter(AccessLevel.PACKAGE)
+    private HBox gameThemeRow;
 
     /**
      * The row of the fixation length, which a game can take away (Race), or null when the menu has none.
@@ -249,7 +257,7 @@ final class GameMenuView {
         }
         fixationRow = greyedUnless(MenuSetting.FIXATION_LENGTH, sliderRow(text("GameMenuFixation"), fixationSlider,
             value -> String.format(locale, "%.1f s", value / 1000), Configuration.DEFAULT_VALUE_FIXATION_LENGTH));
-        return settingsCard(text("GameMenuGame"), fixationRow,
+        final VBox card = settingsCard(text("GameMenuGame"), fixationRow,
             // 0 on the slider of the speed is the speed by default (× 1)
             greyedUnless(MenuSetting.ANIMATION_SPEED, sliderRow(text("GameMenuSpeed"), speedSlider,
                 value -> String.format(locale, "× %.2f", speed.sliderValueToSpeedRatio(value)),
@@ -257,6 +265,47 @@ final class GameMenuView {
             greyedUnless(MenuSetting.ELEMENT_SIZE, sliderRow(text("GameMenuSize"), sizeSlider,
                 value -> Math.round(value) + " %", Configuration.DEFAULT_VALUE_ELEMENT_SIZE)),
             greyedUnless(MenuSetting.MOVING_FIXATION, movingFixationRow(config)));
+        if (CssUtil.process() == CssUtil.Process.GAME) {
+            // The theme of the games, as in the settings of the main menu (maintainer's request of 24/11/2026: a row
+            // rather than the sun and moon of the menus), acting on every game: never greyed
+            gameThemeRow = lightOrDarkRow(config, "GameTheme", config.getGameDarkThemeEnabledProperty(),
+                "GameThemeLight", "GameThemeDark");
+            card.getChildren().add(gameThemeRow);
+        }
+        card.getChildren().add(greyedUnless(MenuSetting.GAME_BUTTONS, lightOrDarkRow(config, "GameButtons",
+            config.getDarkButtonsEnabledProperty(), "GameButtonsLight", "GameButtonsDark")));
+        return card;
+    }
+
+    /**
+     * @return a row "name: light | dark" (the theme or the buttons of the games, 24/11/2026), applied at once to the
+     *   game screen; a click on the name puts back the default (light)
+     */
+    private HBox lightOrDarkRow(final Configuration config, final String nameKey,
+                                final javafx.beans.property.BooleanProperty dark, final String lightKey,
+                                final String darkKey) {
+        final HBox choice = GameMenuControls.lightOrDarkChoice(translator, dark, lightKey, darkKey,
+            () -> restyle(config));
+        final Label label = new Label(text(nameKey));
+        label.getStyleClass().add("gp-game-menu-label");
+        label.setWrapText(true);
+        label.setPrefWidth(170);
+        label.setMinWidth(Region.USE_PREF_SIZE);
+        resetOnClick(label, () -> GameMenuControls.selectMovingFixation(choice, false));
+        final HBox row = new HBox(12, label, choice);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
+    }
+
+    /**
+     * Applies the stylesheets of the settings again to the game screen: what takes its colors in the style (the
+     * background, the labels, the cards, the hearts, the buttons, this menu) changes at once.
+     */
+    private void restyle(final Configuration config) {
+        final Scene scene = card.getScene();
+        if (scene != null) {
+            CssUtil.setPreferredStylesheets(config, scene);
+        }
     }
 
     /**

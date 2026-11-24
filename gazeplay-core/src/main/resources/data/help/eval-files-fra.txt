@@ -118,7 +118,7 @@ C'est la donnée brute : une ligne par position du regard et par déplacement de
 ## À quoi il sert
 Voir d'un coup d'œil où le participant a regardé, écran par écran ou sur toute la passation.
 ## Les fichiers
-| ecran-NN-type-essai-K-regard.png | La carte de chaleur du regard sur un écran. Le fond est l'écran à sa fin ; si l'option de cacher les images est active, c'est la grille complète, à son affichage.
+| ecran-NN-type-essai-K-regard.png | La carte de chaleur du regard sur un écran. Le fond est l'écran à sa fin ; si l'option de cacher les images est active, c'est la grille complète, à son affichage. La couleur du fond de l'écran est celle du réglage « Thème des évaluations » : crème en thème clair, brun très foncé en thème sombre.
 | ecran-NN-type-essai-K-souris.png | La même chose pour la souris. Sans aucune position sur l'écran, il y a seulement l'image de l'écran.
 | passation-regard.png, passation-souris.png | Toute la passation sur une seule image, avec le parcours et les fixations numérotées.
 | passation-regard-et-souris.png | Le regard et la souris ensemble. Ce sont les images de l'écran des statistiques ; leur fond est blanc, car les écrans y sont mélangés.

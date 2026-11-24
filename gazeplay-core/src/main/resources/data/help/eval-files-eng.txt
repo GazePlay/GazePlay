@@ -118,7 +118,7 @@ It is the raw data: one row per position of the gaze and per move of the mouse. 
 ## What it is for
 Seeing at a glance where the participant looked, screen by screen or over the whole session.
 ## The files
-| ecran-NN-type-essai-K-regard.png | The heat map of the gaze on a screen. The background is the screen at its end; when the option hiding the pictures is on, it is the full grid, when it was shown.
+| ecran-NN-type-essai-K-regard.png | The heat map of the gaze on a screen. The background is the screen at its end; when the option hiding the pictures is on, it is the full grid, when it was shown. The colour of the background of the screen is the one of the setting "Theme of the evaluations": cream with the light theme, very dark brown with the dark theme.
 | ecran-NN-type-essai-K-souris.png | The same for the mouse. Without any position on the screen, there is only the picture of the screen.
 | passation-regard.png, passation-souris.png | The whole session in one picture, with the path and the numbered fixations.
 | passation-regard-et-souris.png | The gaze and the mouse together. These are the pictures of the statistics screen; their background is white, as the screens are mixed in them.

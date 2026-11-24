@@ -33,7 +33,13 @@ public enum MenuSetting {
      * progress (20/11/2026). Only for the fixations of moving targets: Ninja, Bubbles, Cream pie with moving targets,
      * Divisor.
      */
-    MOVING_FIXATION;
+    MOVING_FIXATION,
+
+    /**
+     * The buttons of the game, light or dark whatever the theme (24/11/2026): only for the games with buttons
+     * ({@code GameStyle.BUTTON_STYLE} or {@code -gp-button}), applied at once.
+     */
+    GAME_BUTTONS;
 
     /**
      * @return the settings given, in a set that can be changed

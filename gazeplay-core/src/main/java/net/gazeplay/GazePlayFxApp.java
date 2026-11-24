@@ -106,6 +106,13 @@ public class GazePlayFxApp extends Application {
             }
         }
         log.info("showUserSelectPage = {}", showUserSelectPage);
+        if (takesTheThemeOfTheGames(options)) {
+            // The theme and the buttons of the games, apart from those of the menus (24/11/2026), before the first scene
+            CssUtil.useTheThemeOfTheGames();
+        } else if (startsAnEvaluation(options)) {
+            // Those of the evaluations, apart from those of the games (24/11/2026)
+            CssUtil.useTheThemeOfTheEvaluations();
+        }
 
         final Scene primaryScene;
         if (options != null) {
@@ -297,6 +304,34 @@ public class GazePlayFxApp extends Application {
         }
         final GameSelectionOptions game = options.getGameSelectionOptions();
         return game.getGameNameCode() != null || game.isRandomGame();
+    }
+
+    /**
+     * The evaluations (GazePlay Eval and Eval Test): their own theme and buttons (maintainer's decision of 24/11/2026).
+     */
+    static final java.util.Set<String> EVALUATIONS = java.util.Set.of("GazePlayEval", "GazePlayEvalTest");
+
+    /**
+     * @return whether this JVM is that of an evaluation: it takes the theme and the buttons of the evaluations
+     */
+    static boolean startsAnEvaluation(final ReusableOptions options) {
+        if (!startsAGame(options)) {
+            return false;
+        }
+        final String game = options.getGameSelectionOptions().getGameNameCode();
+        return game != null && EVALUATIONS.contains(game);
+    }
+
+    /**
+     * @return whether this JVM is that of a game other than an evaluation: it takes the theme of the games
+     */
+    static boolean takesTheThemeOfTheGames(final ReusableOptions options) {
+        if (!startsAGame(options)) {
+            return false;
+        }
+        // A game drawn at random (--random) has no name here: never an evaluation (Set.of refuses null)
+        final String game = options.getGameSelectionOptions().getGameNameCode();
+        return game == null || !EVALUATIONS.contains(game);
     }
 
     /**

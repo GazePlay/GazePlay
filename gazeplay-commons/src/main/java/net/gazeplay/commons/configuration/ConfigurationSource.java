@@ -45,29 +45,41 @@ public class ConfigurationSource {
      * @return the configuration, which writes the file back at each change of a setting
      */
     public static Configuration createFromPropertiesResource(final File propertiesFile) {
-        Properties properties;
-
         // First launch, or new profile: not an error (it used to be logged as one, with a stack trace)
         if (!propertiesFile.exists()) {
             log.info("No Properties file {} yet: default settings", propertiesFile);
             return new Configuration(propertiesFile, new ApplicationConfig(new Properties()));
         }
+        Properties properties = readProperties(propertiesFile);
+        if (properties == null) {
+            properties = new Properties();
+            log.info("Properties loaded : {}", properties);
+        }
+        final ApplicationConfig applicationConfig = new ApplicationConfig(properties);
+        return new Configuration(propertiesFile, applicationConfig);
+    }
 
+    /**
+     * Reads a GazePlay.properties file, its former keys migrated and its paths moved to the GazePlay folder.
+     *
+     * @return the settings of the file, or null when it is missing or unreadable (the error in the log)
+     */
+    static Properties readProperties(final File propertiesFile) {
+        if (!propertiesFile.exists()) {
+            return null;
+        }
         try {
             log.info("Loading Properties from : {}", propertiesFile);
-            properties = loadProperties(propertiesFile);
+            final Properties properties = loadProperties(propertiesFile);
             LegacyConfigurationKeys.migrate(properties);
             // Paths saved when the GazePlay folder was still in the home directory (moved to Documents in 2026)
             GazePlayDirectories.relocateMovedPaths(properties);
             log.info("Properties loaded : {}", properties);
+            return properties;
         } catch (final IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);
-            properties = new Properties();
-            log.info("Properties loaded : {}", properties);
+            return null;
         }
-
-        final ApplicationConfig applicationConfig = new ApplicationConfig(properties);
-        return new Configuration(propertiesFile, applicationConfig);
     }
 
     private static Properties loadProperties(final File propertiesFile) throws IOException {

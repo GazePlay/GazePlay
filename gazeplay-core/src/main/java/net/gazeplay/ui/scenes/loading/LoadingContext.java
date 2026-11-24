@@ -27,7 +27,7 @@ public class LoadingContext extends BorderPane {
     public void gazePlayLoadingContext(GazePlay gazePlay){
         I18NLabel loadingLabel = new I18NLabel(gazePlay.getTranslator(), "Loading...");
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isDarkThemeEnabled()) {
+        if (net.gazeplay.components.CssUtil.isDarkTheme(config)) {
             loadingLabel.setStyle("\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-weight: bold;\n" +
@@ -48,7 +48,7 @@ public class LoadingContext extends BorderPane {
         loadingLabel.setAlignment(Pos.CENTER);
         stackPane.setAlignment(Pos.CENTER);
 
-        if (config.isDarkThemeEnabled()) {
+        if (net.gazeplay.components.CssUtil.isDarkTheme(config)) {
             this.setStyle("-fx-background-color: black");
         }
         else {

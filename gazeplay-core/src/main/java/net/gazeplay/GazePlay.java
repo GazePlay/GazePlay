@@ -240,6 +240,31 @@ public class GazePlay {
     }
 
     /**
+     * When the JVM of a game ends: the settings it changed (menu Esc, theme of the games, buttons...) are read again
+     * from the file of the profile, the menu and the settings page are built again with them, and the menu shown again
+     * if it is on the screen (24/11/2026).
+     */
+    public void onGameProcessEnded() {
+        final Configuration config = ActiveConfigurationContext.getInstance();
+        config.reloadFromFile();
+        CssUtil.setPreferredStylesheets(config, primaryScene);
+        final boolean menuShown = primaryScene != null && (homeMenuScreen != null
+            && primaryScene.getRoot() == homeMenuScreen.getRoot()
+            || evalMenuScreen != null && primaryScene.getRoot() == evalMenuScreen.getRoot());
+        this.loadedHomePage = false;
+        this.loadedSettingsPage = false;
+        if (menuShown) {
+            // Not onReturnToMenu: the music of the menu already came back when the menu was shown after the start
+            this.loadHomePage();
+            if (mode == AppMode.EVALUATIONS) {
+                evalMenuScreen.setUpOnStage(primaryScene);
+            } else {
+                homeMenuScreen.setUpOnStage(primaryScene);
+            }
+        }
+    }
+
+    /**
      * Builds the menu again when it is shown next, e.g. after a change of the orientation of its cards in the settings.
      */
     public void refreshMenu() {

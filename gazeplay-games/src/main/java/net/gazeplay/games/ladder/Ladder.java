@@ -433,8 +433,7 @@ public class Ladder implements GameLifeCycle {
         hud.getChildren().setAll(count);
         if (hasLives()) {
             // The hearts at the top left as in the other games, the count of the games just after them
-            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3,
-                Boolean.TRUE.equals(configuration.isDarkThemeEnabled()));
+            final Group hearts = GameStyle.lives(lives, LIVES, height * 0.055, width * 0.3);
             hearts.setLayoutX(height * 0.025);
             hearts.setLayoutY(height * 0.015);
             hud.getChildren().add(hearts);
@@ -898,6 +897,6 @@ public class Ladder implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+        return net.gazeplay.MenuSetting.fixationWithSharedRing(net.gazeplay.MenuSetting.GAME_BUTTONS);
     }
 }

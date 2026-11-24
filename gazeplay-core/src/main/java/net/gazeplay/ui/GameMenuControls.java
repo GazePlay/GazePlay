@@ -223,6 +223,37 @@ public final class GameMenuControls {
     }
 
     /**
+     * @param dark    the setting, true for dark
+     * @param changed run after a change (e.g. the stylesheets applied again), may be null
+     * @return a choice "light | dark" in the look of {@link #movingFixationChoice} (24/11/2026: the buttons of the
+     * games in the menu Esc); {@link #selectMovingFixation} chooses in it too (false: light)
+     */
+    public static HBox lightOrDarkChoice(final Translator translator, final javafx.beans.property.BooleanProperty dark,
+                                         final String lightKey, final String darkKey, final Runnable changed) {
+        final javafx.scene.control.ToggleGroup group = new javafx.scene.control.ToggleGroup();
+        final javafx.scene.control.ToggleButton light = segment(text(translator, lightKey), group);
+        final javafx.scene.control.ToggleButton darkSegment = segment(text(translator, darkKey), group);
+        (dark.get() ? darkSegment : light).setSelected(true);
+        group.selectedToggleProperty().addListener((observable, before, now) -> {
+            if (now == null) {
+                // A click on the chosen segment: it stays chosen
+                before.setSelected(true);
+                return;
+            }
+            dark.set(now == darkSegment);
+            if (changed != null) {
+                changed.run();
+            }
+        });
+        final HBox choice = new HBox(2, light, darkSegment);
+        choice.getStyleClass().add("gp-game-menu-segmented");
+        choice.setAlignment(Pos.CENTER_LEFT);
+        choice.setMaxWidth(Region.USE_PREF_SIZE);
+        choice.setUserData(group);
+        return choice;
+    }
+
+    /**
      * Chooses a value in a choice made by {@link #movingFixationChoice}.
      */
     public static void selectMovingFixation(final HBox choice, final boolean kept) {

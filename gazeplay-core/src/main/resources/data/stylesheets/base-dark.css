@@ -27,6 +27,11 @@
     -gp-danger: #FF6B6B;
     -gp-on-danger: #1B1612;
     -gp-shadow: rgba(0, 0, 0, 0.45);
+    /* The lives of the games on the background of the theme (GameStyle.lives, 24/11/2026): an empty heart, the count
+       and the track of the bar above 5 lives */
+    -gp-life-lost: rgba(200, 200, 215, 0.8);
+    -gp-life-count: white;
+    -gp-life-track: rgba(40, 44, 52, 0.55);
 }
 
 .choice-box {

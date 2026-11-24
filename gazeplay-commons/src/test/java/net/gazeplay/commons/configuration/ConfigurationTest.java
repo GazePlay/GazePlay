@@ -76,6 +76,26 @@ class ConfigurationTest {
         Locale.setDefault(original);
     }
 
+    /**
+     * 24/11/2026: a game, in its own JVM, writes the settings changed in its menu Esc; the menu reads them again when
+     * the game ends, and no longer erases them at its next change of a setting.
+     */
+    @Test
+    void shouldKeepTheSettingsChangedByAGame() {
+        final Configuration game = ConfigurationSource.createFromPropertiesResource(testProperties);
+        game.getGameDarkThemeEnabledProperty().set(true);
+        game.getDarkButtonsEnabledProperty().set(true);
+        assertFalse(configuration.isGameDarkThemeEnabled(), "the menu still has its former value");
+
+        configuration.reloadFromFile();
+        configuration.getWhereIsItDirProperty().set("another/path");
+
+        final Configuration read = ConfigurationSource.createFromPropertiesResource(testProperties);
+        assertTrue(read.isGameDarkThemeEnabled());
+        assertTrue(read.isDarkButtonsEnabled());
+        assertEquals("another/path", read.getWhereIsItDir());
+    }
+
     @Test
     void shouldStoreTheApplicationConfig() {
         String oldPath = configuration.getWhereIsItDir();

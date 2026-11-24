@@ -1,7 +1,6 @@
 package net.gazeplay.games.gazeplayEval;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -120,7 +119,6 @@ class GazeplayEvalTest {
         when(config.isEvalSoundBlocksSelection()).thenReturn(true);
         when(config.getProgressBarSize()).thenReturn(50);
         when(config.getProgressBarColor()).thenReturn("#00FF00");
-        when(config.getBackgroundColorProperty()).thenReturn(new SimpleStringProperty("#000000"));
         when(config.getEyeTracker()).thenReturn("mouse_control");
         when(config.getFixationLength()).thenReturn(100);
         when(config.getUserName()).thenReturn("");
