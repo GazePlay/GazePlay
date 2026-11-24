@@ -159,9 +159,10 @@ class MemoryTest {
     }
 
     /**
-     * The ring of the fixation stands out from the card: not of the main color on the back of a card, which has that
-     * color (maintainer's remark of 4/11/2026: it could not be seen), of the color of the rings of the settings on a
-     * face (17/11/2026, {@code -gp-ring}: the main color by default).
+     * The ring of the fixation has the color of the rings of the settings ({@code -gp-ring}, the main color by default),
+     * on a face and on the back too (24/11/2026: on the back, it used to take the color of the "?", whatever the
+     * setting); on the back, which has the main color, a light edge under it so that it is seen (maintainer's remark of
+     * 4/11/2026).
      */
     @Test
     void shouldShowTheRingOfTheFixationInAColorSeenOnTheCard() throws Exception {
@@ -169,7 +170,8 @@ class MemoryTest {
         WaitForAsyncUtils.asyncFx(() -> javafx.event.Event.fireEvent(hidden.getCards().get(0),
             new net.gazeplay.commons.gaze.devicemanager.GazeEvent(
                 net.gazeplay.commons.gaze.devicemanager.GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
-        assertEquals("-fx-stroke: -gp-on-accent;", hidden.getCards().get(0).getRingStyle());
+        assertEquals("-fx-stroke: -gp-ring;", hidden.getCards().get(0).getRingStyle());
+        assertTrue(hidden.getCards().get(0).isHaloShown(), "a light edge on the back");
         assertEquals(-1, hidden.getCards().get(0).getRingScaleX(), "mirrored, to go clockwise");
         WaitForAsyncUtils.asyncFx(hidden::dispose).get();
 
@@ -178,6 +180,7 @@ class MemoryTest {
             new net.gazeplay.commons.gaze.devicemanager.GazeEvent(
                 net.gazeplay.commons.gaze.devicemanager.GazeEvent.GAZE_ENTERED, 1, 0, 0))).get();
         assertEquals("-fx-stroke: -gp-ring;", visible.getCards().get(0).getRingStyle());
+        assertFalse(visible.getCards().get(0).isHaloShown(), "no edge on a face, which is white");
     }
 
     /**

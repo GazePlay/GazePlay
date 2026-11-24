@@ -48,9 +48,12 @@ public class MagicCardsGameLauncher implements IGameLauncher<Stats, IGameVariant
                              final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             final var extras = grouped.getExtras();
-            return withLives(new MagicCards(gameContext, stats, MagicCardsMode.of(grouped.getGroup()),
+            final MagicCards game = withLives(new MagicCards(gameContext, stats, MagicCardsMode.of(grouped.getGroup()),
                 MagicCardsPictures.of(grouped.getSubGroup()), MagicCardsCount.of(grouped.getValue()),
                 MagicCardsEnd.of(extras.isEmpty() ? null : extras.get(0)), gameSeed), gameVariant);
+            // The cards to find (24/11/2026); half of the cards for a variant of before
+            game.setFind(MagicCardsFind.of(extras));
+            return game;
         }
         MagicCardsCount count = MagicCardsCount.FOUR;
         if (gameVariant instanceof DimensionGameVariant grid) {

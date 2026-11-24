@@ -2,7 +2,7 @@
 Des images sont montrées sur des cartes, puis les cartes se retournent et se mélangent sous tes yeux : retrouve les cartes des images !
 
 # Comment jouer
-- La moitié des cartes a une image : 1 carte sur 3, 2 sur 4, 3 sur 6, 4 sur 9. Elles sont d’abord montrées face visible. Puis elles se retournent et les cartes se mélangent : suis bien les cartes des images !
+- 1, 2 ou 3 cartes ont une image, selon la variante choisie (toujours moins que de cartes). Elles sont d’abord montrées face visible. Puis elles se retournent et les cartes se mélangent : suis bien les cartes des images !
 - Quand les cartes s’arrêtent, regarde une carte : un anneau fait le tour de la carte. Quand il est plein, la carte se retourne. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Une carte d’image reste face visible. Une mauvaise carte montre une croix et reste retournée, en gris : tu sais qu’elle est déjà vue.
 - Pour passer à la suite, trouve toutes les cartes des images : les autres s’effacent, une étoile et « Bravo ! » (une seule image grandit au milieu). Puis d’autres cartes arrivent.
@@ -18,3 +18,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas, les images : des animaux, ou Mes images (les images du dossier commun, à ajouter dans les réglages, Dossiers, « Mes images »).
 - En bas, la fin : 3, 5 ou 10 manches, ou sans fin.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.
+- En bas, les cartes à trouver : 1 (la plus facile, proposée d’abord), 2 ou 3 ; avec 3 cartes, 1 ou 2.

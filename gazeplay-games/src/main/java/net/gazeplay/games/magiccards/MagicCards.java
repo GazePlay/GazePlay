@@ -62,6 +62,11 @@ public class MagicCards implements GameLifeCycle {
     static final double GROW = 0.6;
     static final double REWARD = 2;
 
+    /**
+     * The thin light edge on each side of the ring of the fixation on the back of a card, in pixels (24/11/2026).
+     */
+    static final double HALO_EDGE = 2;
+
     private static final String FLIP_SOUND = "data/magiccards/sounds/flip.wav";
     private static final String SLIDE_SOUND = "data/cups/sounds/slide.wav";
     private static final String WRONG_SOUND = "data/dice/sounds/wrong.wav";
@@ -249,8 +254,32 @@ public class MagicCards implements GameLifeCycle {
     }
 
     /**
-     * A new round: the cards of the pictures face up for the show (half of the cards, each its own picture), the others
-     * face down.
+     * The cards to find chosen in the variant (24/11/2026), null for a variant of before.
+     */
+    @Getter
+    private MagicCardsFind find;
+
+    /**
+     * @param find the cards to find, before the launch; null: half of the cards, as before
+     */
+    void setFind(final MagicCardsFind find) {
+        this.find = find;
+    }
+
+    /**
+     * @return the cards to find in a round: those of the variant, always fewer than the cards; half of the cards for a
+     *   variant of before
+     */
+    int toFind() {
+        if (find == null) {
+            return count.getToFind();
+        }
+        return Math.min(find.getCards(), count.getCards() - 1);
+    }
+
+    /**
+     * A new round: the cards of the pictures face up for the show (1, 2 or 3 as chosen, each its own picture), the
+     * others face down.
      */
     private void newRound() {
         removeCards();
@@ -260,7 +289,7 @@ public class MagicCards implements GameLifeCycle {
             places.add(i);
         }
         final List<Integer> pictured = new ArrayList<>();
-        for (int i = 0; i < count.getToFind(); i++) {
+        for (int i = 0; i < toFind(); i++) {
             pictured.add(places.remove(random.nextInt(places.size())));
         }
         for (int i = 0; i < slots.length; i++) {
@@ -675,6 +704,11 @@ public class MagicCards implements GameLifeCycle {
         private final Group cross;
         private final Rectangle ring;
         private final double ringPerimeter;
+        /**
+         * A light edge under the ring on the back of the card, so that a ring of the main color is seen on it.
+         */
+        private final Rectangle halo;
+        private final double haloPerimeter;
         @Getter
         private int slot;
         @Getter
@@ -733,9 +767,26 @@ public class MagicCards implements GameLifeCycle {
             RingThickness.apply(ring, Math.max(5, Math.min(w, h) * 0.045));
             ring.setVisible(false);
             ring.setMouseTransparent(true);
+            // Always the color of the settings (24/11/2026: on the back of a card, the ring took the color written on
+            // the main color, whatever the setting); under it on the back, a light edge a little wider, following it,
+            // so that a ring of the main color (by default) is seen on the back, which is of that color
+            ring.setStyle("-fx-stroke: -gp-ring;");
+            // A thin edge on each side of the ring, the ring of its color in the middle (24/11/2026: wider than the
+            // ring on the inside only, the white took half of the line)
+            halo = new Rectangle(-w / 2 - HALO_EDGE, -h / 2 - HALO_EDGE, w + 2 * HALO_EDGE, h + 2 * HALO_EDGE);
+            halo.setArcWidth(2 * (corner + HALO_EDGE));
+            halo.setArcHeight(2 * (corner + HALO_EDGE));
+            halo.setFill(null);
+            halo.setStrokeType(StrokeType.INSIDE);
+            halo.setStrokeLineCap(StrokeLineCap.BUTT);
+            halo.strokeWidthProperty().bind(ring.strokeWidthProperty().add(2 * HALO_EDGE));
+            halo.setStyle("-fx-stroke: -gp-on-accent;");
+            halo.setVisible(false);
+            halo.setMouseTransparent(true);
             ringPerimeter = GameStyle.clockwiseRing(ring);
+            haloPerimeter = GameStyle.clockwiseRing(halo);
 
-            node = new Group(face, back, ring);
+            node = new Group(face, back, halo, ring);
             node.setLayoutX(slots[slot][0]);
             node.setLayoutY(slots[slot][1]);
             final EventHandler<Event> handler = event -> {
@@ -858,12 +909,15 @@ public class MagicCards implements GameLifeCycle {
         }
 
         void showRing(final boolean shown) {
-            ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-ring") + ";");
             ring.setVisible(shown);
+            // The edge only when the ring has the main color, that of the back (another color is seen on it: no white,
+            // maintainer's remark of 24/11/2026); the setting read at each fixation, the menu Esc may change it
+            halo.setVisible(shown && back.isVisible() && GameStyle.ringOfTheMainColor(configuration));
         }
 
         void setRing(final double value) {
             GameStyle.fillRing(ring, ringPerimeter, Math.min(1, value));
+            GameStyle.fillRing(halo, haloPerimeter, Math.min(1, value));
         }
 
         Group getNode() {

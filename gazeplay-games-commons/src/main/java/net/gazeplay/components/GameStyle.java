@@ -172,6 +172,24 @@ public final class GameStyle {
     }
 
     /**
+     * @return whether the rings of the fixations have the main color (the setting by default, or a value that is not a
+     *   color, see GameContextFactory.applyRingColor): on a card back of the main color (Memory, Magic cards), only
+     *   then the ring needs a light edge to be seen (24/11/2026)
+     */
+    public static boolean ringOfTheMainColor(final net.gazeplay.commons.configuration.Configuration configuration) {
+        final String color = configuration.getProgressBarColor();
+        if (color == null || net.gazeplay.commons.configuration.Configuration.RING_COLOR_ACCENT.equals(color)) {
+            return true;
+        }
+        try {
+            Color.web(color);
+            return false;
+        } catch (final IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    /**
      * @return the radius of the corners of a card of this size
      */
     public static double cardRadius(final double width, final double height) {

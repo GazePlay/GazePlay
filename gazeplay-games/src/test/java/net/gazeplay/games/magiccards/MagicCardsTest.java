@@ -125,6 +125,57 @@ class MagicCardsTest {
     }
 
     /**
+     * Point 79 (24/11/2026): the cards to find chosen in the variant, 1, 2 or 3, always fewer than the cards; half of
+     * the cards for a variant of before (no choice).
+     */
+    @Test
+    void shouldHideTheCardsToFindChosen() throws Exception {
+        for (final MagicCardsFind find : MagicCardsFind.values()) {
+            final MagicCards game = fx(() -> {
+                gameArea.getChildren().clear();
+                final MagicCards created = new MagicCards(gameContext, stats, MagicCardsMode.MAGIC,
+                    MagicCardsPictures.ANIMALS, MagicCardsCount.NINE, MagicCardsEnd.ENDLESS, 4);
+                created.setFind(find);
+                created.setManual();
+                launchedGames.add(created).launch();
+                created.step(0.02);
+                return created;
+            });
+            fx(() -> {
+                assertEquals(find.getCards(), game.getWinners().size(), find.toString());
+                return null;
+            });
+        }
+    }
+
+    /**
+     * 24/11/2026: the ring of the fixation has the color of the rings of the settings on the back of a card too (it
+     * took the color of the "?"); a light edge under it there, so that a ring of the main color is seen.
+     */
+    @Test
+    void shouldShowTheRingInTheColorOfTheSettingsOnTheBackToo() throws Exception {
+        final MagicCards game = launched(MagicCardsMode.MAGIC, MagicCardsCount.FOUR, MagicCardsEnd.ENDLESS);
+        fx(() -> {
+            untilPlay(game);
+            final MagicCards.Card card = game.getCards().getFirst();
+            card.showRing(true);
+            final javafx.scene.Group node = card.getNode();
+            final List<javafx.scene.shape.Rectangle> rings = node.getChildren().stream()
+                .filter(child -> child instanceof javafx.scene.shape.Rectangle)
+                .map(child -> (javafx.scene.shape.Rectangle) child).toList();
+            assertEquals(List.of("-fx-stroke: -gp-on-accent;", "-fx-stroke: -gp-ring;"),
+                rings.stream().map(javafx.scene.Node::getStyle).toList(), "the edge under the ring");
+            assertTrue(rings.stream().allMatch(javafx.scene.Node::isVisible), "both on the back");
+            // Another color is seen on the back: no white edge (maintainer's remark of 24/11/2026)
+            when(configuration.getProgressBarColor()).thenReturn("#FFA500");
+            card.showRing(true);
+            assertFalse(rings.getFirst().isVisible(), "no edge with another color than the main one");
+            assertTrue(rings.getLast().isVisible());
+            return null;
+        });
+    }
+
+    /**
      * Tester's feedback of 20/11/2026, point 29: the face of a card is white in both themes, and the whole card is
      * chosen with the mouse, not only the drawing.
      */
@@ -411,8 +462,16 @@ class MagicCardsTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new MagicCardsGameVariantGenerator().getVariants();
-        // One mode (the search removed on 17/11/2026), 2 kinds of pictures, each end with or without hearts, 4 counts
-        assertEquals(2 * 4 * 2 * 4, variants.size());
+        // One mode (the search removed on 17/11/2026), 2 kinds of pictures, each end with or without hearts, and the
+        // cards to find (24/11/2026): 1 or 2 with the 4 counts, 3 with 4, 6 or 9 cards (fewer than the cards)
+        assertEquals(2 * 4 * 2 * (4 + 4 + 3), variants.size());
+        final GroupedGameVariant first = (GroupedGameVariant) variants.iterator().next();
+        assertTrue(first.getSwitches().contains("MagicFind1"), "1 card to find, chosen by default");
+        assertTrue(variants.stream().noneMatch(variant -> ((GroupedGameVariant) variant).getSwitches()
+            .contains("MagicFind3") && "MagicCards3".equals(((GroupedGameVariant) variant).getValue())));
+        assertEquals(MagicCardsFind.TWO, MagicCardsGameLauncher.create(gameContext,
+            new GroupedGameVariant("MagicShuffle", "MagicAnimals", "MagicCards9", null, "MagicEnd5",
+                LivesVariant.WITH, "MagicFind2"), stats, 1).getFind());
         assertEquals(List.of(MagicCardsMode.MAGIC), List.of(MagicCardsMode.values()));
         assertTrue(MagicCardsGameLauncher.create(gameContext,
             new GroupedGameVariant("MagicShuffle", "MagicAnimals", "MagicCards9", null, "MagicEndless",

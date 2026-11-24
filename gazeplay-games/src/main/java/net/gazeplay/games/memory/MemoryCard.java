@@ -53,6 +53,19 @@ public class MemoryCard extends Group {
 
     private final double ringPerimeter;
 
+    /**
+     * A light edge under the ring on the back of the card (24/11/2026), so that a ring of the main color (the color of
+     * the settings by default) is seen on the back, which is of that color.
+     */
+    private final Rectangle halo;
+
+    private final double haloPerimeter;
+
+    /**
+     * The thin light edge on each side of the ring on the back, in pixels.
+     */
+    static final double HALO_EDGE = 2;
+
     private final DoubleProperty fixationProgress = new SimpleDoubleProperty(0);
 
     private Timeline fixation;
@@ -123,10 +136,25 @@ public class MemoryCard extends Group {
         ring.setVisible(false);
         ring.setMouseTransparent(true);
         ringPerimeter = GameStyle.clockwiseRing(ring);
-        fixationProgress.addListener((observable, oldValue, newValue) ->
-            GameStyle.fillRing(ring, ringPerimeter, newValue.doubleValue()));
+        // A thin edge on each side of the ring, the ring of its color in the middle (24/11/2026: wider than the ring on
+        // the inside only, the white took half of the line)
+        halo = new Rectangle(-HALO_EDGE, -HALO_EDGE, width + 2 * HALO_EDGE, height + 2 * HALO_EDGE);
+        halo.setArcWidth(2 * (radius + HALO_EDGE));
+        halo.setArcHeight(2 * (radius + HALO_EDGE));
+        halo.setFill(null);
+        halo.setStrokeType(StrokeType.INSIDE);
+        halo.setStrokeLineCap(StrokeLineCap.BUTT);
+        halo.strokeWidthProperty().bind(ring.strokeWidthProperty().add(2 * HALO_EDGE));
+        halo.setStyle("-fx-stroke: -gp-on-accent;");
+        halo.setVisible(false);
+        halo.setMouseTransparent(true);
+        haloPerimeter = GameStyle.clockwiseRing(halo);
+        fixationProgress.addListener((observable, oldValue, newValue) -> {
+            GameStyle.fillRing(ring, ringPerimeter, newValue.doubleValue());
+            GameStyle.fillRing(halo, haloPerimeter, newValue.doubleValue());
+        });
 
-        getChildren().addAll(face, back, ring);
+        getChildren().addAll(face, back, halo, ring);
 
         addEventFilter(MouseEvent.MOUSE_ENTERED, this::onEnter);
         addEventFilter(GazeEvent.GAZE_ENTERED, this::onEnter);
@@ -164,15 +192,20 @@ public class MemoryCard extends Group {
             return;
         }
         stopFixation();
-        // On the back of a card, which has the main color, the ring would not be seen in that color (maintainer's remark
-        // of 4/11/2026): it takes the color of the "?"
-        ring.setStyle("-fx-stroke: " + (back.isVisible() ? "-gp-on-accent" : "-gp-ring") + ";");
+        // Always the color of the rings of the settings (24/11/2026: on the back, it used to take the color of the "?",
+        // whatever the setting); on the back, which has the main color, a light edge under it so that a ring of that
+        // color is seen (maintainer's remark of 4/11/2026)
+        ring.setStyle("-fx-stroke: -gp-ring;");
         ring.setVisible(true);
+        // The edge only when the ring has the main color, that of the back (another color is seen on it: no white,
+        // maintainer's remark of 24/11/2026)
+        halo.setVisible(back.isVisible() && GameStyle.ringOfTheMainColor(gameContext.getConfiguration()));
         fixationProgress.set(0);
         fixation = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
             new KeyValue(fixationProgress, 1)));
         fixation.setOnFinished(e -> {
             ring.setVisible(false);
+            halo.setVisible(false);
             game.cardFixated(this);
         });
         fixation.playFromStart();
@@ -186,6 +219,7 @@ public class MemoryCard extends Group {
         if (!selected) {
             ring.setVisible(false);
         }
+        halo.setVisible(false);
     }
 
     /**
@@ -220,6 +254,7 @@ public class MemoryCard extends Group {
     void reset(final boolean faceDown) {
         selected = false;
         ring.setVisible(false);
+        halo.setVisible(false);
         if (faceDown) {
             turn(false);
         }
@@ -261,6 +296,13 @@ public class MemoryCard extends Group {
     }
 
     /**
+     * @return whether the light edge under the ring is shown (on the back of the card, during a fixation)
+     */
+    boolean isHaloShown() {
+        return halo.isVisible();
+    }
+
+    /**
      * @return whether the face is shown
      */
     boolean isFaceShown() {
@@ -269,6 +311,7 @@ public class MemoryCard extends Group {
 
     private void frame(final String color) {
         fixationProgress.set(1);
+        halo.setVisible(false);
         ring.getStrokeDashArray().clear();
         ring.setStyle("-fx-stroke: " + color + ";");
         ring.setVisible(true);

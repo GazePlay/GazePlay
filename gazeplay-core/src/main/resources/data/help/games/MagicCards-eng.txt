@@ -2,7 +2,7 @@
 Pictures are shown on some cards, then the cards turn over and are shuffled before your eyes: find the cards of the pictures again!
 
 # How to play
-- Half of the cards have a picture: 1 of 3 cards, 2 of 4, 3 of 6, 4 of 9. They are first shown face up. Then they turn over and the cards are shuffled: follow the cards of the pictures!
+- 1, 2 or 3 cards have a picture, as chosen in the variants (always fewer than the cards). They are first shown face up. Then they turn over and the cards are shuffled: follow the cards of the pictures!
 - When the cards stop, look at a card: a ring goes around the card. When it is full, the card turns over. The length of the ring is that of the settings, also changed in the menu (Esc key).
 - A card of a picture stays face up. A wrong card shows a cross and stays turned over, in grey: you know it is already seen.
 - To go on, find all the cards of the pictures: the others fade, a star and "Well done!" (a single picture grows in the middle). Then other cards come.
@@ -18,3 +18,4 @@ Choose a variant (it is framed), then press "Start".
 - At the bottom, the pictures: animals, or My images (the images of the shared folder, added in the settings, Folders, "My images").
 - At the bottom, the end: 3, 5 or 10 rounds, or without end.
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
+- At the bottom, the cards to find: 1 (the easiest, chosen at first), 2 or 3; with 3 cards, 1 or 2.
