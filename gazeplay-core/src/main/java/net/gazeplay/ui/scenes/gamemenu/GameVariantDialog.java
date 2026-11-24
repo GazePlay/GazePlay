@@ -573,8 +573,13 @@ public class GameVariantDialog extends Stage {
             panes.computeIfAbsent(String.join("|", values), key -> createFlowPane()).getChildren().add(button);
         }
         final String[] chosen = new String[rowCount];
+        // What the user chose in each row (the first values at the start): given back when a row offers it again
+        // (24/11/2026: in Bottle, "Détruire les cibles" has only "after a fixation"; back to "Tout casser", the window
+        // kept that forced value instead of "as soon as looked at")
+        final String[] picked = new String[rowCount];
         for (int i = 0; i < rowCount; i++) {
             chosen[i] = rows.get(i).iterator().next();
+            picked[i] = chosen[i];
         }
         // The values of the other rows within each group: a game whose modes have different choices (12/11/2026, Dice:
         // the end and the mistakes only in the counting mode) shows, for the chosen group, only its rows with at least
@@ -611,15 +616,14 @@ public class GameVariantDialog extends Stage {
                 // The values possible with the choices of the rows above (16/11/2026: the lives only in the modes and
                 // the ends that have them; before, with the group only)
                 final Set<String> values = valuesOfRow(variants, chosen, i);
-                if (!values.contains(chosen[i])) {
-                    chosen[i] = values.iterator().next();
-                }
+                chosen[i] = valueToShow(values, picked[i], chosen[i]);
                 if (values.size() < 2) {
                     continue;
                 }
                 final int row = i;
                 final FlowPane switchRow = switches(values, chosen[i], translator, value -> {
                     chosen[row] = value;
+                    picked[row] = value;
                     showOtherRows[0].run();
                     show.run();
                 });
@@ -633,6 +637,7 @@ public class GameVariantDialog extends Stage {
         if (groupSwitches) {
             final FlowPane switchRow = switches(rows.get(0), chosen[0], translator, value -> {
                 chosen[0] = value;
+                picked[0] = value;
                 showOtherRows[0].run();
                 show.run();
             });
@@ -657,6 +662,20 @@ public class GameVariantDialog extends Stage {
         }
         showOtherRows[0].run();
         show.run();
+    }
+
+    /**
+     * @param values  the values of a row with the choices of the rows above
+     * @param picked  what the user chose in this row (its first value at the start)
+     * @param current the value of the row now
+     * @return the value to show: the one the user chose when the row offers it, else the value of now when it is still
+     *   possible, else the first one
+     */
+    static String valueToShow(final Set<String> values, final String picked, final String current) {
+        if (values.contains(picked)) {
+            return picked;
+        }
+        return values.contains(current) ? current : values.iterator().next();
     }
 
     /**

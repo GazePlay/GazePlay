@@ -48,8 +48,11 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IGameV
                              final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             final String size = grouped.getExtras().isEmpty() ? null : grouped.getExtras().get(0);
-            return withLives(new BottleGame(gameContext, stats, BottleMode.of(grouped.getGroup()),
+            final BottleGame game = withLives(new BottleGame(gameContext, stats, BottleMode.of(grouped.getGroup()),
                 BottleCount.of(grouped.getValue()), BottleSize.of(size), BottleEnd.of(grouped.getSubGroup()), gameSeed), gameVariant);
+            // As soon as looked at or after a fixation (24/11/2026), to break them all
+            game.setThrowWay(BottleThrow.of(grouped.getExtras()));
+            return game;
         }
         if (gameVariant instanceof IntStringGameVariant former) {
             final String type = former.getStringValue();

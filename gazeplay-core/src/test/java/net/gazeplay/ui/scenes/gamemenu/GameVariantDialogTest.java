@@ -430,4 +430,21 @@ class GameVariantDialogTest {
         assertEquals(List.of("End3", "Endless"), List.copyOf(
             GameVariantDialog.valuesOfRow(variants, new String[]{"Magic", "Animals", null, null}, 2)));
     }
+
+    /**
+     * 24/11/2026 (Bottle): a value forced by a mode where the row has only one value is not kept when the row offers
+     * several again: the value chosen by the user (its first one at the start) comes back.
+     */
+    @Test
+    void shouldGiveBackTheValueChosenWhenARowOffersItAgain() {
+        final java.util.LinkedHashSet<String> both = new java.util.LinkedHashSet<>(List.of("AtOnce", "AfterFixation"));
+        // "Détruire les cibles": a single value, forced
+        assertEquals("AfterFixation", GameVariantDialog.valueToShow(Set.of("AfterFixation"), "AtOnce", "AtOnce"));
+        // Back to "Tout casser": the value of the user, not the one forced
+        assertEquals("AtOnce", GameVariantDialog.valueToShow(both, "AtOnce", "AfterFixation"));
+        assertEquals("AfterFixation", GameVariantDialog.valueToShow(both, "AfterFixation", "AtOnce"));
+        // A value the row does not offer: the value of now if possible, else the first one
+        assertEquals("AfterFixation", GameVariantDialog.valueToShow(both, "Other", "AfterFixation"));
+        assertEquals("AtOnce", GameVariantDialog.valueToShow(both, "Other", "Other"));
+    }
 }

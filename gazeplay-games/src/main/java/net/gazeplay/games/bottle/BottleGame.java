@@ -36,8 +36,8 @@ import java.util.Locale;
  * a fair, everything drawn by the game. A fixation on a bottle throws a ball from the bottom of the screen, under it,
  * which breaks it into pieces of glass; several balls can fly at once.
  * <p>
- * A card asks for a color ("Casse les bouteilles rouges"; the mode "break them all" was removed on 17/11/2026); a
- * bottle of another color shakes without breaking and counts a mistake (with the hearts, with or without end, it costs
+ * Tout casser (back on 24/11/2026, first, the easier): a series ends when all the bottles are broken, no mistake, no
+ * life. Détruire les cibles: a card asks for a color ("Casse les bouteilles rouges"); a bottle of another color shakes without breaking and counts a mistake (with the hearts, with or without end, it costs
  * one of 3 lives, 16/11 and 17/11/2026, the last one loses the game: "Lost!", then the statistics); the series
  * ends when the bottles of that color are broken, the next one asks for another color. The bottles are red, blue, green
  * or yellow, each with its symbol on its label (round, star, heart, triangle). A series finished: a star and
@@ -176,9 +176,9 @@ public class BottleGame implements GameLifeCycle {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
-        // On the right of the card of the color
-        left = width * 0.34;
-        right = width * 0.95;
+        // On the right of the card of the color; all the width to break them all, without card
+        left = mode == BottleMode.COLOR ? width * 0.34 : width * 0.08;
+        right = width * (mode == BottleMode.COLOR ? 0.95 : 0.92);
         shelves[0] = height * 0.45;
         shelves[1] = height * 0.77;
         final double gap = shelves[1] - shelves[0];
@@ -365,8 +365,24 @@ public class BottleGame implements GameLifeCycle {
     /**
      * @return whether the game has lives: the hearts chosen, with or without end (17/11/2026)
      */
+    /**
+     * When the ball is thrown (24/11/2026, point 78): to break them all, as soon as a bottle is looked at or after a
+     * fixation; the targets, and a variant of before, after a fixation.
+     */
+    @lombok.Getter
+    private BottleThrow throwWay = BottleThrow.FIXATION;
+
+    /**
+     * @param way when the ball is thrown, before the launch: as soon as looked at only to break them all; the targets
+     *            always after a fixation (maintainer's decision of 24/11/2026)
+     */
+    void setThrowWay(final BottleThrow way) {
+        this.throwWay = mode == BottleMode.ALL ? way : BottleThrow.FIXATION;
+    }
+
     boolean hasLives() {
-        return withLives;
+        // No life to lose when all the bottles are to break: no bottle is a mistake
+        return withLives && mode == BottleMode.COLOR;
     }
 
     /**
@@ -390,6 +406,10 @@ public class BottleGame implements GameLifeCycle {
      */
     private void showCard() {
         card.getChildren().clear();
+        if (mode != BottleMode.COLOR) {
+            // Break them all: no color asked, no card
+            return;
+        }
         final double cardLeft = width * 0.04;
         final double cardTop = height * 0.17;
         final double cardWidth = width * 0.26;
@@ -408,39 +428,46 @@ public class BottleGame implements GameLifeCycle {
     // --- The game ---
 
     /**
-     * New bottles on the shelves, a color to break (never the one just asked), a quarter of the bottles of that color
-     * and the others of the other colors.
+     * New bottles on the shelves: to break them all, of colors drawn at random; for the targets, a color to break
+     * (never the one just asked), a quarter of the bottles of that color and the others of the other colors.
      */
     private void newSeries() {
         clearBottles();
         final int n = count.getBottles();
         final BottleColor[] all = BottleColor.values();
         final List<BottleColor> colors = new ArrayList<>();
-        BottleColor next;
-        do {
-            next = all[random.nextInt(all.length)];
-        } while (next == target);
-        target = next;
-        final int targets = Math.max(1, n / 4);
-        for (int i = 0; i < targets; i++) {
-            colors.add(target);
-        }
-        final List<BottleColor> others = new ArrayList<>();
-        for (final BottleColor color : all) {
-            if (color != target) {
-                others.add(color);
+        if (mode == BottleMode.ALL) {
+            for (int i = 0; i < n; i++) {
+                colors.add(all[random.nextInt(all.length)]);
             }
+            toBreak = n;
+        } else {
+            BottleColor next;
+            do {
+                next = all[random.nextInt(all.length)];
+            } while (next == target);
+            target = next;
+            final int targets = Math.max(1, n / 4);
+            for (int i = 0; i < targets; i++) {
+                colors.add(target);
+            }
+            final List<BottleColor> others = new ArrayList<>();
+            for (final BottleColor color : all) {
+                if (color != target) {
+                    others.add(color);
+                }
+            }
+            for (int i = 0; colors.size() < n; i++) {
+                colors.add(i < others.size() ? others.get(i) : others.get(random.nextInt(others.size())));
+            }
+            for (int i = colors.size() - 1; i > 0; i--) {
+                final int j = random.nextInt(i + 1);
+                final BottleColor swap = colors.get(i);
+                colors.set(i, colors.get(j));
+                colors.set(j, swap);
+            }
+            toBreak = targets;
         }
-        for (int i = 0; colors.size() < n; i++) {
-            colors.add(i < others.size() ? others.get(i) : others.get(random.nextInt(others.size())));
-        }
-        for (int i = colors.size() - 1; i > 0; i--) {
-            final int j = random.nextInt(i + 1);
-            final BottleColor swap = colors.get(i);
-            colors.set(i, colors.get(j));
-            colors.set(j, swap);
-        }
-        toBreak = targets;
         broken = 0;
         final int perShelf = n / 2;
         final double slot = (right - left) / perShelf;
@@ -532,6 +559,14 @@ public class BottleGame implements GameLifeCycle {
             lookAway(looked);
             return;
         }
+        if (throwWay == BottleThrow.LOOK) {
+            // As soon as looked at: the ball goes, no ring (after the delay of the start, which is the phase WAIT)
+            final Bottle bottle = looked;
+            looked = null;
+            progress = 0;
+            choose(bottle);
+            return;
+        }
         if (!ring.isVisible()) {
             ring.setSize(Math.max(height * 0.07, bottleWidth * 1.2));
             ring.show(looked.x, looked.y - bottleHeight * 0.3);
@@ -571,7 +606,7 @@ public class BottleGame implements GameLifeCycle {
         if (phase != Phase.PLAY || bottle.state != State.STANDING) {
             return;
         }
-        if (bottle.color != target) {
+        if (mode == BottleMode.COLOR && bottle.color != target) {
             stats.incrementNumberOfMistakes();
             gameContext.getSoundManager().add("data/dice/sounds/wrong.wav");
             bottle.shaking = SHAKE;
@@ -812,6 +847,8 @@ public class BottleGame implements GameLifeCycle {
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.fixationWithSharedRing();
+        // As soon as looked at: no fixation nor ring, so their settings are greyed (24/11/2026)
+        return throwWay == BottleThrow.LOOK ? net.gazeplay.MenuSetting.of()
+            : net.gazeplay.MenuSetting.fixationWithSharedRing();
     }
 }

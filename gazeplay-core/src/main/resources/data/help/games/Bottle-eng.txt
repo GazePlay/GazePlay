@@ -1,18 +1,21 @@
 # The principle
-At the stall of the fair, break bottles with a ball! Break only the bottles of the color asked for.
+At the stall of the fair, break bottles with a ball! Break them all, or only those of the color asked for.
 
 # How to play
 - Look at a bottle: a ring fills, then a ball flies from the bottom of the screen and breaks it into pieces of glass. Several balls can fly at once. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
 - The bottles are red, blue, green or yellow, and each color has its symbol on the label: a round, a star, a heart, a triangle.
-- The card on the left says which color to break ("Break the red bottles"). A bottle of another color shakes without breaking.
+- Break them all: every bottle breaks; the series is finished when none is left.
+- Break the targets: the card on the left says which color to break ("Break the red bottles"). A bottle of another color shakes without breaking.
 - At the top, the bottles broken and the series finished.
 - At the start, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-A bottle of the wrong color shakes and counts a mistake. With "With hearts", with or without end, you have 3 hearts at the top left: each bottle of the wrong color costs one; with no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. A finished series gives a star and "Well done!", then new bottles and another color to break. As you chose, the game stops after 1, 3 or 5 series ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+In "Break them all", no mistake is possible, so there are no hearts. In "Break the targets", a bottle of the wrong color shakes and counts a mistake. With "With hearts", with or without end, you have 3 hearts at the top left: each bottle of the wrong color costs one; with no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. A finished series gives a star and "Well done!", then new bottles and another color to break. As you chose, the game stops after 1, 3 or 5 series ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
+- At the top, the mode: Break them all (the easier) or Break the targets.
+- Break them all, at the bottom: the ball goes "As soon as it is looked at" (the easier, chosen at first: the gaze makes something happen) or "After a fixation" (to train the fixation). Break the targets is always after a fixation.
 - The number of bottles: 4, 8, 12 or 16, on two shelves.
 - At the bottom, the end (1, 3 or 5 series, or no end) and the size of the bottles (small, medium or big).
-- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
+- At the bottom, the hearts (Break the targets only): With hearts (3 hearts) or Without hearts.

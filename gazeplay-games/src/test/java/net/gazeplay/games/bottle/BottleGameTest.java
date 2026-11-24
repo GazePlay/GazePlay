@@ -113,6 +113,50 @@ class BottleGameTest {
         }
     }
 
+    /**
+     * "Tout casser" (back on 24/11/2026, point 78): every bottle breaks, none is a mistake, the series ends when they
+     * are all broken.
+     */
+    @Test
+    void shouldBreakThemAllWithoutMistake() throws Exception {
+        final BottleGame game = launched(BottleMode.ALL, BottleCount.FOUR, BottleSize.LARGE, BottleEnd.ENDLESS);
+        fx(() -> {
+            assertEquals(4, game.getToBreak());
+            for (final BottleGame.Bottle bottle : List.copyOf(game.getBottles())) {
+                game.choose(bottle);
+                assertEquals(BottleGame.State.TARGETED, bottle.getState());
+            }
+            steps(game, BottleGame.THROW + 0.04);
+            assertEquals(BottleGame.Phase.REWARD, game.getPhase());
+            return null;
+        });
+        verify(stats, never()).incrementNumberOfMistakes();
+    }
+
+    /**
+     * "Dès qu'on regarde" (24/11/2026, point 78): to break them all, a bottle looked at is broken without fixation.
+     */
+    @Test
+    void shouldBreakABottleAsSoonAsItIsLookedAt() throws Exception {
+        final BottleGame game = fx(() -> {
+            gameArea.getChildren().clear();
+            final BottleGame created = new BottleGame(gameContext, stats, BottleMode.ALL, BottleCount.FOUR,
+                BottleSize.LARGE, BottleEnd.ENDLESS, 8);
+            created.setThrowWay(BottleThrow.LOOK);
+            created.setManual();
+            launchedGames.add(created).launch();
+            created.step(0.02);
+            return created;
+        });
+        fx(() -> {
+            final BottleGame.Bottle bottle = game.getBottles().getFirst();
+            game.lookAt(bottle);
+            game.step(0.02);
+            assertEquals(BottleGame.State.TARGETED, bottle.getState(), "thrown at the first step, no ring");
+            return null;
+        });
+    }
+
     @Test
     void shouldChooseNothingDuringTheDelayThenAfterTheFixationOnly() throws Exception {
         when(configuration.getGameStartDelay()).thenReturn(1000);
@@ -293,16 +337,32 @@ class BottleGameTest {
     @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new BottleGameVariantGenerator().getVariants();
-        // One mode ("break them all" removed on 17/11/2026), the hearts with or without with every end (17/11/2026)
-        assertEquals(4 * 2 * 3 * 4, variants.size());
+        // Two modes again (24/11/2026): "break them all" first, without hearts, as soon as looked at (first) or after a
+        // fixation; the targets always after a fixation, with the hearts or without with every end (17/11/2026)
+        assertEquals(4 * 3 * 1 * 2 * 4 + 4 * 3 * 2 * 1 * 4, variants.size());
+        final GroupedGameVariant first = (GroupedGameVariant) variants.iterator().next();
+        assertTrue(first.getSwitches().contains("BottleAtOnce"), "as soon as looked at, chosen by default");
+        final BottleGame atOnce = BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleBreakAll", "BottleEnd5", "Bottles12", null, "BottleLarge",
+                LivesVariant.WITHOUT, "BottleAtOnce"), stats, 1);
+        assertEquals(BottleThrow.LOOK, atOnce.getThrowWay());
+        assertTrue(atOnce.menuSettings().isEmpty(), "no fixation nor ring to set");
+        // Never as soon as looked at with targets, nor for a variant of before
+        assertEquals(BottleThrow.FIXATION, BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleColorMode", "BottleEnd5", "Bottles12", null, "BottleLarge",
+                LivesVariant.WITH, "BottleAtOnce"), stats, 1).getThrowWay());
+        assertEquals(BottleThrow.FIXATION, BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleBreakAll", "BottleEnd5", "Bottles12", null, "BottleLarge"), stats, 1)
+            .getThrowWay());
         assertTrue(BottleGameLauncher.create(gameContext,
             new GroupedGameVariant("BottleColorMode", "BottleEndless", "Bottles12", null, "BottleLarge",
                 LivesVariant.WITH), stats, 1).hasLives());
-        assertEquals(List.of(BottleMode.COLOR), List.of(BottleMode.values()));
-        // A variant of "break them all" of before: played in the right color
-        assertEquals(BottleMode.COLOR, BottleGameLauncher.create(gameContext,
-            new GroupedGameVariant("BottleBreakAll", "BottleEnd5", "Bottles12", null, "BottleLarge"), stats, 1)
-            .getMode());
+        assertEquals(List.of(BottleMode.ALL, BottleMode.COLOR), List.of(BottleMode.values()));
+        final BottleGame all = BottleGameLauncher.create(gameContext,
+            new GroupedGameVariant("BottleBreakAll", "BottleEnd5", "Bottles12", null, "BottleLarge",
+                LivesVariant.WITH), stats, 1);
+        assertEquals(BottleMode.ALL, all.getMode());
+        assertFalse(all.hasLives(), "no life to lose when all the bottles are to break");
         assertTrue(BottleGameLauncher.create(gameContext,
             new GroupedGameVariant("BottleColorMode", "BottleEnd5", "Bottles12", null, "BottleLarge",
                 LivesVariant.WITH), stats, 1).hasLives());
