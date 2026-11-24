@@ -306,8 +306,10 @@ public class RushHour implements GameLifeCycle {
     }
 
     private Group restartButton() {
-        final Circle disc = new Circle(restartSize / 2, Color.rgb(255, 252, 244, 0.95));
-        disc.setStroke(Color.rgb(90, 96, 110));
+        final Circle disc = new Circle(restartSize / 2);
+        // Light or dark as chosen in the settings, whatever the theme (24/11/2026; a cream white before), the dark
+        // grey outline kept
+        disc.setStyle("-fx-fill: -gp-button; -fx-stroke: rgb(90, 96, 110);");
         disc.setStrokeWidth(Math.max(2, restartSize * 0.03));
         final SVGPath icon = GameStyle.icon("restart_alt", restartSize * 0.62);
         icon.setStyle("-fx-fill: -gp-accent;");
