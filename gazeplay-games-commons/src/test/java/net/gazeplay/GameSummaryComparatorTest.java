@@ -1,161 +1,93 @@
 package net.gazeplay;
 
 import net.gazeplay.commons.ui.Translator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * The menu in the alphabetical order of the names shown (24/11/2026), whatever the categories and the former
+ * priorities.
+ */
 class GameSummaryComparatorTest {
 
-    @Mock
-    private Translator mockTranslator;
+    private static List<String> sorted(final Locale locale, final Map<String, String> names,
+                                       final List<GameSummary> summaries) {
+        final Translator translator = mock(Translator.class);
+        when(translator.currentLocale()).thenReturn(locale);
+        when(translator.translate(anyString())).thenAnswer(invocation -> names.get((String) invocation.getArgument(0)));
+        final List<GameSummary> list = new ArrayList<>(summaries);
+        list.sort(new GameSummaryComparator(translator));
+        return list.stream().map(summary -> names.get(summary.getNameCode())).toList();
+    }
 
-    @Mock
-    private IGameLauncher mockLauncher;
-
-    private GameSummary actionGameSummary;
-    private GameSummary selectionGameSummary;
-    private GameSummary memorizationGameSummary;
-    private GameSummary logicGameSummary;
-    private GameSummary literacyGameSummary;
-    private GameSummary multimediaGameSummary;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.initMocks(this);
+    private static GameSummary game(final String code, final GameCategories.Category category, final int priority) {
+        return GameSummary.builder().gameThumbnail("thumbnail.png").nameCode(code).category(category)
+            .absolutePriority(priority).build();
     }
 
     @Test
-    void shouldSortAbsolutePriorityInCorrectOrder() {
-        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).absolutePriority(3).build();
-        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.SELECTION).build();
-        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MEMORIZATION).absolutePriority(2).build();
-        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LOGIC_MATHS).absolutePriority(1).build();
-        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LITERACY).build();
-        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MULTIMEDIA).build();
+    void shouldSortByTheNameShownWhateverTheCategoriesAndPriorities() {
+        final Map<String, String> names = Map.of("Ninja", "Ninja", "DotToDot", "Point par point", "Creampie",
+            "La tarte à la crème", "Bubbles", "Bulles", "Memory", "Memory");
+        final List<String> order = sorted(Locale.FRENCH, names, List.of(
+            game("Ninja", GameCategories.Category.ACTION_REACTION, 1),
+            game("DotToDot", GameCategories.Category.LOGIC_MATHS, 1),
+            game("Creampie", GameCategories.Category.ACTION_REACTION, 2),
+            game("Memory", GameCategories.Category.MEMORIZATION, 0),
+            game("Bubbles", GameCategories.Category.ACTION_REACTION, 0)));
 
-        // This list is intentionally in the wrong order
-        ArrayList<GameSpec> specs = new ArrayList<>(List.of(
-            new GameSpec(selectionGameSummary, mockLauncher),
-            new GameSpec(actionGameSummary, mockLauncher),
-            new GameSpec(logicGameSummary, mockLauncher),
-            new GameSpec(memorizationGameSummary, mockLauncher),
-            new GameSpec(multimediaGameSummary, mockLauncher),
-            new GameSpec(literacyGameSummary, mockLauncher)
-        ));
-
-        specs.sort(Comparator.comparing(GameSpec::getGameSummary, new GameSummaryComparator(mockTranslator)));
-
-        assertEquals(actionGameSummary, specs.get(0).getGameSummary());
-        assertEquals(memorizationGameSummary, specs.get(1).getGameSummary());
-        assertEquals(logicGameSummary, specs.get(2).getGameSummary());
-        assertEquals(selectionGameSummary, specs.get(3).getGameSummary());
-        assertEquals(literacyGameSummary, specs.get(4).getGameSummary());
-        assertEquals(multimediaGameSummary, specs.get(5).getGameSummary());
+        assertEquals(List.of("Bulles", "La tarte à la crème", "Memory", "Ninja", "Point par point"), order);
     }
 
     @Test
-    void shouldSortCategoriesInCorrectOrder() {
-        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).build();
-        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.SELECTION).build();
-        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MEMORIZATION).build();
-        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LOGIC_MATHS).build();
-        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LITERACY).build();
-        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MULTIMEDIA).build();
+    void shouldIgnoreTheAccentsTheLigaturesAndTheCapitals() {
+        final Map<String, String> names = Map.of("Ladder", "Échelle", "RushHour", "Embouteillage", "Dice", "Dés",
+            "Egg", "Œuf", "Order", "ordre", "Opinions", "Opinions");
+        final List<String> order = sorted(Locale.FRENCH, names, List.of(
+            game("Egg", GameCategories.Category.ACTION_REACTION, 0),
+            game("Order", GameCategories.Category.LOGIC_MATHS, 0),
+            game("RushHour", GameCategories.Category.LOGIC_MATHS, 0),
+            game("Ladder", GameCategories.Category.SELECTION, 0),
+            game("Opinions", GameCategories.Category.SELECTION, 0),
+            game("Dice", GameCategories.Category.LOGIC_MATHS, 0)));
 
-        // This list is intentionally in the wrong order
-        ArrayList<GameSpec> specs = new ArrayList<>(List.of(
-            new GameSpec(selectionGameSummary, mockLauncher),
-            new GameSpec(actionGameSummary, mockLauncher),
-            new GameSpec(logicGameSummary, mockLauncher),
-            new GameSpec(memorizationGameSummary, mockLauncher),
-            new GameSpec(multimediaGameSummary, mockLauncher),
-            new GameSpec(literacyGameSummary, mockLauncher)
-        ));
-
-        specs.sort(Comparator.comparing(GameSpec::getGameSummary, new GameSummaryComparator(mockTranslator)));
-
-        assertEquals(actionGameSummary, specs.get(0).getGameSummary());
-        assertEquals(selectionGameSummary, specs.get(1).getGameSummary());
-        assertEquals(memorizationGameSummary, specs.get(2).getGameSummary());
-        assertEquals(logicGameSummary, specs.get(3).getGameSummary());
-        assertEquals(literacyGameSummary, specs.get(4).getGameSummary());
-        assertEquals(multimediaGameSummary, specs.get(5).getGameSummary());
+        assertEquals(List.of("Dés", "Échelle", "Embouteillage", "Œuf", "Opinions", "ordre"), order);
     }
 
     @Test
-    void shouldSortPriorityInCorrectOrder() {
-        // Ignore the variable names, these need to be the same category to test the priority
-        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(2).build();
-        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(1).build();
-        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(4).build();
-        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(0).build();
-        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(3).build();
-        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(5).build();
+    void shouldSortInTheLanguageChosen() {
+        final Map<String, String> names = Map.of("Ladder", "Ladder", "RushHour", "Rush hour", "Dice", "Dice");
+        final List<String> order = sorted(Locale.ENGLISH, names, List.of(
+            game("RushHour", GameCategories.Category.LOGIC_MATHS, 0),
+            game("Ladder", GameCategories.Category.SELECTION, 0),
+            game("Dice", GameCategories.Category.LOGIC_MATHS, 0)));
 
-        // This list is intentionally in the wrong order
-        ArrayList<GameSpec> specs = new ArrayList<>(List.of(
-            new GameSpec(selectionGameSummary, mockLauncher),
-            new GameSpec(actionGameSummary, mockLauncher),
-            new GameSpec(logicGameSummary, mockLauncher),
-            new GameSpec(memorizationGameSummary, mockLauncher),
-            new GameSpec(multimediaGameSummary, mockLauncher),
-            new GameSpec(literacyGameSummary, mockLauncher)
-        ));
-
-        specs.sort(Comparator.comparing(GameSpec::getGameSummary, new GameSummaryComparator(mockTranslator)));
-
-        assertEquals(multimediaGameSummary, specs.get(0).getGameSummary());
-        assertEquals(memorizationGameSummary, specs.get(1).getGameSummary());
-        assertEquals(literacyGameSummary, specs.get(2).getGameSummary());
-        assertEquals(actionGameSummary, specs.get(3).getGameSummary());
-        assertEquals(selectionGameSummary, specs.get(4).getGameSummary());
-        assertEquals(logicGameSummary, specs.get(5).getGameSummary());
+        assertEquals(List.of("Dice", "Ladder", "Rush hour"), order);
     }
 
     @Test
-    void shouldSortNameCodeInCorrectOrder() {
-        // This simply returns whatever we pass in
-        when(mockTranslator.translate(anyString())).thenAnswer((Answer<String>) invocation -> {
-            Object[] args = invocation.getArguments();
-            return (String) args[0];
-        });
+    void shouldGiveTheSameOrderToTheGameSpecsAsTheLocator() {
+        final Map<String, String> names = Map.of("B", "Bulles", "A", "Aiguillages");
+        final Translator translator = mock(Translator.class);
+        when(translator.currentLocale()).thenReturn(Locale.FRENCH);
+        when(translator.translate(anyString())).thenAnswer(invocation -> names.get((String) invocation.getArgument(0)));
+        final IGameLauncher launcher = mock(IGameLauncher.class);
+        final List<GameSpec> specs = new ArrayList<>(List.of(
+            new GameSpec(game("B", GameCategories.Category.ACTION_REACTION, 0), launcher),
+            new GameSpec(game("A", GameCategories.Category.LOGIC_MATHS, 0), launcher)));
 
-        // Ignore the variable names, these need to be the same category to test the name code
-        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Action").category(GameCategories.Category.ACTION_REACTION).build();
-        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Selection").category(GameCategories.Category.ACTION_REACTION).build();
-        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Memorization").category(GameCategories.Category.ACTION_REACTION).build();
-        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Logic").category(GameCategories.Category.ACTION_REACTION).build();
-        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Literacy").category(GameCategories.Category.ACTION_REACTION).build();
-        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Multimedia").category(GameCategories.Category.ACTION_REACTION).build();
+        specs.sort(Comparator.comparing(GameSpec::getGameSummary, new GameSummaryComparator(translator)));
 
-        // This list is intentionally in the wrong order
-        ArrayList<GameSpec> specs = new ArrayList<>(List.of(
-            new GameSpec(selectionGameSummary, mockLauncher),
-            new GameSpec(actionGameSummary, mockLauncher),
-            new GameSpec(logicGameSummary, mockLauncher),
-            new GameSpec(memorizationGameSummary, mockLauncher),
-            new GameSpec(multimediaGameSummary, mockLauncher),
-            new GameSpec(literacyGameSummary, mockLauncher)
-        ));
-
-        specs.sort(Comparator.comparing(GameSpec::getGameSummary, new GameSummaryComparator(mockTranslator)));
-
-        assertEquals(actionGameSummary, specs.get(0).getGameSummary());
-        assertEquals(literacyGameSummary, specs.get(1).getGameSummary());
-        assertEquals(logicGameSummary, specs.get(2).getGameSummary());
-        assertEquals(memorizationGameSummary, specs.get(3).getGameSummary());
-        assertEquals(multimediaGameSummary, specs.get(4).getGameSummary());
-        assertEquals(selectionGameSummary, specs.get(5).getGameSummary());
+        assertEquals("A", specs.getFirst().getGameSummary().getNameCode());
     }
 }
