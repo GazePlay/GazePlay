@@ -452,7 +452,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
             final int column = byColumn ? i / rows : i % columns;
             final int row = byColumn ? i % rows : i / columns;
             final ValueTarget target = new ValueTarget(gameContext, value,
-                content(petal, value, cellWidth, cellHeight), cellWidth, cellHeight, "-gp-bg", null);
+                content(petal, value, cellWidth, cellHeight), cellWidth, cellHeight, null);
             target.setAction(() -> choose(petal, target));
             target.setLayoutX(left + CARD_PADDING + column * (cellWidth + gap));
             target.setLayoutY(top + CARD_PADDING + row * (cellHeight + gap));
@@ -477,15 +477,18 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         };
     }
 
+    /**
+     * @return a digit or a word of a card, in the text color of the white cards ({@link GameStyle#CARD_TEXT})
+     */
     private static Text text(final String content, final boolean title, final double size, final double maxWidth) {
         final Text text = new Text(content);
         double fontSize = size;
         for (int i = 0; i < 2; i++) {
             if (title) {
                 text.setFont(GameStyle.titleFont(fontSize));
-                text.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: -gp-text;");
+                text.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: " + GameStyle.CARD_TEXT + ";");
             } else {
-                text.setStyle(GameStyle.textFontStyle(fontSize) + " -fx-fill: -gp-text;");
+                text.setStyle(GameStyle.textFontStyle(fontSize) + " -fx-fill: " + GameStyle.CARD_TEXT + ";");
                 text.setFont(Font.font(GameStyle.TEXT_FONT_FAMILY, fontSize));
             }
             final double width = text.getLayoutBounds().getWidth();
@@ -524,7 +527,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         final double width = word ? WORD_SLOT_WIDTH : SLOT;
         final double height = word ? WORD_SLOT_HEIGHT : SLOT;
         final ValueTarget value = new ValueTarget(gameContext, choice.getValue(),
-            content(petal, choice.getValue(), width, height), width, height, "-gp-surface",
+            content(petal, choice.getValue(), width, height), width, height,
             () -> takeBack(petal, index));
         placed.get(petal)[index] = value;
         value.setEnabled(false);

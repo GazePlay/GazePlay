@@ -60,11 +60,13 @@ class ValueTarget extends Group {
     private boolean enabled = true;
 
     /**
+     * The card is white in both themes, as every card to choose (tester's feedback of 20/11/2026, point 29): a picture
+     * with a transparent background (fingers, dice, money) no longer shows the dark background through it.
+     *
      * @param content the picture or the text, its top left corner at (0, 0), centered on the card
-     * @param fill    the color of the card (CSS)
      */
     ValueTarget(final IGameContext gameContext, final int value, final Node content, final double width,
-                final double height, final String fill, final Runnable action) {
+                final double height, final Runnable action) {
         this.gameContext = gameContext;
         this.value = value;
         this.width = width;
@@ -76,7 +78,7 @@ class ValueTarget extends Group {
         background.setArcWidth(2 * radius);
         background.setArcHeight(2 * radius);
         background.setStrokeType(StrokeType.INSIDE);
-        background.setStyle("-fx-fill: " + fill + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        background.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
 
         content.setLayoutX((width - content.getLayoutBounds().getWidth()) / 2 - content.getLayoutBounds().getMinX());
         content.setLayoutY((height - content.getLayoutBounds().getHeight()) / 2 - content.getLayoutBounds().getMinY());
