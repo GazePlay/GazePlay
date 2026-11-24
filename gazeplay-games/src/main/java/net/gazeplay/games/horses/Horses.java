@@ -21,6 +21,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
+import net.gazeplay.components.DiceView;
 import net.gazeplay.components.GameStyle;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressButton;
@@ -455,10 +456,13 @@ public class Horses implements GameLifeCycle {
         backgroundLayer.getChildren().add(stableHighlight);
 
         die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
-        diceContainer.getChildren().setAll(die);
-        final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
-        diceContainer.setLayoutX(xOffset + diePositionInImage);
-        diceContainer.setLayoutY(yOffset + diePositionInImage);
+        // In its own 3D sub-scene: a 3D die could come in front of the menu Esc (tester's feedback, point 58); the
+        // view is larger than the die, so its container is moved for the die to stay at the middle of the board
+        final DiceView view = new DiceView(die, gridElementSize);
+        diceContainer.getChildren().setAll(view);
+        final double dieCenterInImage = imageSize / 2;
+        diceContainer.setLayoutX(xOffset + dieCenterInImage - view.getSize() / 2);
+        diceContainer.setLayoutY(yOffset + dieCenterInImage - view.getSize() / 2);
 
         rollButton = new ProgressButton();
         rollButton.assignIndicatorUpdatable(event -> {

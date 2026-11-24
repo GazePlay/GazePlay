@@ -49,4 +49,23 @@ class DiceRollerTest {
         // 1000 expected for each face; 3 and 4 used to come up about 1500 times, the others about 750
         counts.forEach((face, count) -> assertTrue(count > 880 && count < 1120, "face " + face + ": " + count));
     }
+
+    /**
+     * Point 58 (24/11/2026): the die in its own 3D sub-scene, an ordinary 2D node whose origin is the center of the die,
+     * with room for its diagonal when it turns.
+     */
+    @Test
+    void shouldShowTheDieInItsOwnSubSceneCenteredOnItsOrigin() throws Exception {
+        javafx.geometry.Bounds bounds = WaitForAsyncUtils.asyncFx(() -> {
+            DiceRoller die = new DiceRoller(50, mock(SoundManager.class), new ReplayablePseudoRandom(2026));
+            DiceView view = new DiceView(die, 100);
+            assertTrue(view.getChildren().getFirst() instanceof javafx.scene.SubScene);
+            assertEquals(die, view.getDie());
+            return view.getLayoutBounds();
+        }).get();
+
+        assertEquals(180, bounds.getWidth(), 1e-6, "1.8 times the side");
+        assertEquals(0, bounds.getMinX() + bounds.getWidth() / 2, 1e-6, "centered on the origin");
+        assertEquals(0, bounds.getMinY() + bounds.getHeight() / 2, 1e-6, "centered on the origin");
+    }
 }

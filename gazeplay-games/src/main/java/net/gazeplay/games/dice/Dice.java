@@ -27,6 +27,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
+import net.gazeplay.components.DiceView;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 
@@ -209,16 +210,18 @@ public class Dice implements GameLifeCycle {
             faces[i] = 1;
             final double x = startX + i * dieSide * spacing;
             final DiceRoller die = new DiceRoller((float) (dieSide / 2), gameContext.getSoundManager(), random);
-            die.setLayoutX(x);
-            die.setLayoutY(diceY);
-            die.setMouseTransparent(true);
+            // In its own 3D sub-scene: it used to come in front of the menu Esc (tester's feedback, point 58)
+            final DiceView view = new DiceView(die, dieSide);
+            view.setLayoutX(x);
+            view.setLayoutY(diceY);
+            view.setMouseTransparent(true);
             // A soft shadow on the felt, under the die
             final Ellipse shadow = new Ellipse(x + dieSide * 0.06, diceY + dieSide * 0.62, dieSide * 0.56,
                 dieSide * 0.14);
             shadow.setFill(Color.rgb(0, 0, 0, 0.25));
             shadow.setMouseTransparent(true);
             final Circle zone = new Circle(x, diceY, dieSide * 0.82, Color.TRANSPARENT);
-            diceLayer.getChildren().addAll(shadow, zone, die);
+            diceLayer.getChildren().addAll(shadow, zone, view);
             dice.add(die);
             final int index = i;
             final Spot spot = new Spot(zone, x, diceY, dieSide * 1.75, () -> rollOne(index));

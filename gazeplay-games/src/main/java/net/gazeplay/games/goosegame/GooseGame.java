@@ -26,6 +26,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
+import net.gazeplay.components.DiceView;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 
@@ -278,10 +279,12 @@ public class GooseGame implements GameLifeCycle {
         final Group group = new Group(card);
         for (int i = 0; i < 2; i++) {
             final DiceRoller die = new DiceRoller((float) (side / 2), gameContext.getSoundManager(), random);
-            die.setLayoutX(width / 2 + (i == 0 ? -side * 0.95 : side * 0.95));
-            die.setLayoutY(height / 2);
+            // In its own 3D sub-scene: a 3D die could come in front of the menu Esc (tester's feedback, point 58)
+            final DiceView view = new DiceView(die, side);
+            view.setLayoutX(width / 2 + (i == 0 ? -side * 0.95 : side * 0.95));
+            view.setLayoutY(height / 2);
             dice.add(die);
-            group.getChildren().add(die);
+            group.getChildren().add(view);
         }
         group.setMouseTransparent(true);
         return group;
