@@ -72,12 +72,12 @@ class OpinionButton extends Group {
         final double fontSize = Math.min(width * 0.13, height * 0.1);
         final Text label = new Text(gameContext.getTranslator().translate(choice.getLabel()));
         label.setFont(GameStyle.titleFont(fontSize));
-        label.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: -gp-text;");
+        label.setStyle(GameStyle.titleFontStyle(fontSize) + " -fx-fill: " + GameStyle.CARD_TEXT + ";");
         double size = fontSize;
         if (label.getLayoutBounds().getWidth() > width * 0.9) {
             size = fontSize * width * 0.9 / label.getLayoutBounds().getWidth();
             label.setFont(GameStyle.titleFont(size));
-            label.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: -gp-text;");
+            label.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: " + GameStyle.CARD_TEXT + ";");
         }
         label.setX((width - label.getLayoutBounds().getWidth()) / 2 - label.getLayoutBounds().getMinX());
         label.setY(height * 0.12 + iconSize + (height * 0.88 - iconSize - label.getLayoutBounds().getHeight()) / 2
@@ -144,10 +144,12 @@ class OpinionButton extends Group {
     }
 
     /**
-     * Shows the card as the answer just given (framed in the color of the answer) or not.
+     * Shows the card as the answer just given (framed in the color of the answer) or not. The card is white in both
+     * themes, its word in {@link GameStyle#CARD_TEXT}, as every card to choose (tester's feedback of 20/11/2026,
+     * point 29).
      */
     void setChosen(final boolean chosen) {
-        background.setStyle("-fx-fill: -gp-surface; -fx-stroke: " + (chosen ? choice.getColor() : "-gp-border")
+        background.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: " + (chosen ? choice.getColor() : "-gp-border")
             + "; -fx-stroke-width: " + (chosen ? 10 : 2) + ";");
     }
 
