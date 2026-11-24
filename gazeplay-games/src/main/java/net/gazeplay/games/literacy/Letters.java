@@ -283,7 +283,8 @@ public class Letters implements GameLifeCycle {
         final double cx = width - size * 0.9;
         final double cy = bandHeight / 2;
         final Circle disc = new Circle(cx, cy, size / 2);
-        disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        // White in both themes, as the cards to choose (tester's feedback of 20/11/2026, point 29)
+        disc.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
         final double iconSize = size * 0.55;
         final SVGPath icon = GameStyle.icon("volume_up_fill1", iconSize);
         icon.setStyle("-fx-fill: -gp-accent;");
@@ -439,7 +440,13 @@ public class Letters implements GameLifeCycle {
         clip.setArcWidth(gridHeight * 0.06);
         clip.setArcHeight(gridHeight * 0.06);
         view.setClip(clip);
-        pictureLayer.getChildren().add(view);
+        // A white card under the picture, whatever the theme: a picture with a transparent background (OpenMoji, a PNG
+        // of the user) no longer shows the dark background through it (tester's feedback of 20/11/2026, point 29)
+        final Rectangle under = new Rectangle(gridX, gridY, gridWidth, gridHeight);
+        under.setArcWidth(gridHeight * 0.06);
+        under.setArcHeight(gridHeight * 0.06);
+        under.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + ";");
+        pictureLayer.getChildren().addAll(under, view);
     }
 
     private Image nextImage() {
@@ -469,14 +476,16 @@ public class Letters implements GameLifeCycle {
         final Rectangle letterCard = new Rectangle(cardSize * (letterCase == LettersCase.BOTH ? 1.7 : 1), cardSize);
         letterCard.setArcWidth(cardSize * 0.25);
         letterCard.setArcHeight(cardSize * 0.25);
-        letterCard.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-accent; -fx-stroke-width: 4;");
+        // White in both themes, the letter in the text color of the light theme (point 29)
+        letterCard.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND
+            + "; -fx-stroke: -gp-accent; -fx-stroke-width: 4;");
         final String shown = switch (letterCase) {
             case CAPITALS -> String.valueOf(Character.toUpperCase(asked));
             case SMALL -> String.valueOf(asked);
             case BOTH -> Character.toUpperCase(asked) + " " + asked;
         };
         final Text text = letterText(shown, cardSize * 0.72, letterCase == LettersCase.SMALL);
-        text.setFill(INK);
+        text.setFill(Color.web(GameStyle.CARD_TEXT));
         text.setX((letterCard.getWidth() - text.getLayoutBounds().getWidth()) / 2 - text.getLayoutBounds().getMinX());
         text.setY(cardSize / 2);
         final Group letterGroup = new Group(letterCard, text);
