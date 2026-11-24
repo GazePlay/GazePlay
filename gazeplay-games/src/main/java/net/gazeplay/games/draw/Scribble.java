@@ -614,7 +614,8 @@ public class Scribble implements GameLifeCycle {
             this.y = y;
             this.radius = radius;
             disc = new Circle(x, y, radius);
-            disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+            // Light or dark as chosen in the settings, whatever the theme (24/11/2026)
+            disc.setStyle(GameStyle.BUTTON_STYLE);
             mark = new Circle(x, y, radius * 1.12);
             mark.setFill(null);
             mark.setStyle("-fx-stroke: -gp-accent;");
@@ -650,7 +651,8 @@ public class Scribble implements GameLifeCycle {
                 }
                 case WIDTH -> {
                     final Circle size = new Circle(x, y, Math.max(2, height * WIDTHS[widthIndex] * 0.9));
-                    size.setStyle("-fx-fill: -gp-text;");
+                    // The text color of the button, so that the dot is seen on a light or a dark button
+                    size.setStyle(GameStyle.BUTTON_TEXT_STYLE);
                     yield size;
                 }
                 case NEW_SHEET -> icon("add");
