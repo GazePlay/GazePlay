@@ -5,6 +5,62 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU MERCREDI 25/11/2026 (fin de la séance du mardi 24/11/2026)
+
+**Méthode inchangée** : un point à la fois ; je code, le mainteneur vérifie, puis commit et suite ; tests locaux ciblés
+seulement, build complet et all-games en CI.
+
+**Fait le 24/11/2026, tout commité et poussé** (`718bd2606` à `62ad247de`, CI à vérifier) :
+- CI du push du 23/11 : verte sauf `package-macos`, jamais lancé (aucune machine macOS arm64 libre chez GitHub) ;
+  relancé par le push du 24/11.
+- **Point 29 terminé** : cartes à choisir blanches dans les deux thèmes, aussi dans Identifier les lettres (fond blanc
+  sous l'image, carte de la lettre ; cartes pastel de la grille gardées), Fleur des nombres (cartes des cadres et
+  valeurs posées, `ValueTarget` sans paramètre de couleur) et Opinions (boutons de réponse). Exclus : La pièce,
+  GazePlay Eval, objets sur un décor sans carte.
+- **Thèmes refaits (décisions du mainteneur du 24/11)** :
+  - 3 thèmes indépendants : celui du **menu** (`DARK_THEME_ENABLED`, bouton soleil/lune des pages du menu), celui des
+    **jeux** (`GAME_DARK_THEME_ENABLED`) et celui des **évaluations** (`EVAL_DARK_THEME_ENABLED`) ; et les boutons, clairs
+    ou sombres quel que soit le thème : **boutons des jeux** (`DARK_BUTTONS_ENABLED`) et **boutons des évaluations**
+    (`EVAL_DARK_BUTTONS_ENABLED`). Tout est clair par défaut. `CssUtil` choisit selon la JVM (menu, jeu, évaluation :
+    `CssUtil.Process`), couleurs `-gp-button` et `-gp-button-text` (`GameStyle.BUTTON_STYLE`, `BUTTON_TEXT_STYLE`).
+  - Réglages, section Apparence : « Thème des jeux » et « Boutons des jeux » en mode Jeux, « Thème des évaluations » et
+    « Boutons des évaluations » en mode Évaluations. **« Couleur de fond » retirée partout** (`BACKGROUND_COLOR` gardée
+    dans les fichiers, plus lue) : le fond des parties et des évaluations est celui de leur thème (`-gp-bg`). Une
+    évaluation passe donc d'un fond noir par défaut à un fond crème.
+  - Boutons sur ces couleurs : `GazeRoundButton` (Coloriage, La maison du chat, Trouve les différences), haut-parleurs
+    d'Où est… et d'Identifier les lettres, Fabrique à gâteaux, Mélanger les couleurs, Gribouille (point des épaisseurs
+    en couleur de texte du bouton), départs de l'Échelle, flèches du Labyrinthe, « Recommencer » d'Embouteillage,
+    « Départ » et « Reprendre » des Aiguillages, boutons de GazePlay Eval (« Commencer », « Recommencer », « Continuer »).
+  - **Menu Échap d'un jeu** : lignes « Thème des jeux » (jamais grisée) puis « Boutons des jeux » (grisée sauf dans les
+    12 jeux à boutons, `MenuSetting.GAME_BUTTONS`), appliquées en direct, la partie continue. **Rien de plus dans celui
+    d'une évaluation** : on change le thème dans les réglages et on relance (pour ne pas perturber les résultats).
+  - **Écran des statistiques** (fin d'un jeu ou d'une passation) : soleil/lune du thème des jeux ou des évaluations,
+    en direct.
+  - Ce qui était calculé en Java d'après le thème suit maintenant le style : cœurs des 10 jeux qui passaient le thème
+    (`GameStyle.lives` sans paramètre, couleurs `-gp-life-*`), fond de la zone de jeu, écran de chargement.
+  - **Réglages changés dans une partie gardés** : le menu relit `GazePlay.properties` à la fin de la JVM d'une partie
+    (`Configuration.reloadFromFile`, `GazePlay.onGameProcessEnded`). Avant, il gardait ses valeurs en mémoire et
+    réécrivait tout le fichier à son changement suivant, ce qui effaçait ceux du menu Échap (tous les réglages).
+  - Aide « Comprendre les fichiers de résultats » : couleur du fond des cartes de chaleur par écran.
+  - Pas de changement de format des résultats : aucun thème n'y est écrit ; seul l'aspect des captures derrière les
+    cartes de chaleur d'Eval change.
+
+**Ordre du jour du mercredi 25/11/2026** :
+1. Vérifier la CI du push du 24/11 (tests JDK 25 et 26, all-games, paquets, dont macOS).
+2. **Tâches de fin** (demandes du mainteneur du 23/11) :
+   1. refaire le tour de tous les points des retours de la testeuse (sauf ceux en attente) : code, fichiers, crédits,
+      inventaires, état noté ici ;
+   2. revoir Magic Potions (point 22 : délai à chaque client, sans cas involontaire trouvé, à garder ou retirer) ;
+   3. nettoyer le dossier temporaire de la session : fichiers nommés seulement, avec leur chemin complet ; le dossier
+      change avec la session (téléchargements Commons, `candidats\`, `photos\`, FFmpeg extrait, copies de l'inventaire
+      des sons…), le relever au début de la séance.
+3. Restes des thèmes, à voir avec le mainteneur : volume de la musique changé dans le menu Échap, non vérifié dans le
+   lecteur du menu principal ; cartes des grilles de GazePlay Eval toujours au thème (exclues du point 29) ; la Course
+   lit encore l'ancien `BACKGROUND_STYLE` (opacité de son image).
+4. Puis : liste des jeux du menu dans l'ordre alphabétique ; notes de version 2.0 au feu vert du mainteneur seulement.
+5. En attente (inchangé) : 13 (débit de la voix), 20 (réaction aux erreurs : réunion avec Amélie), 27 (reformulations),
+   28 (croix d'Eval), 31 (Où est-ce ?).
+
 ## REPRISE DU MARDI 24/11/2026 (fin de la séance du lundi 23/11/2026)
 
 **Méthode inchangée** : un point à la fois, dans l'ordre des numéros ; je code, le mainteneur vérifie, puis commit et
