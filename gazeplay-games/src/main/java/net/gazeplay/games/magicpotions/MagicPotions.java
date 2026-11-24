@@ -63,7 +63,7 @@ public class MagicPotions implements GameLifeCycle {
     private static final String SOUNDS = "data/potions/sounds/";
     private static final Color EMPTY = Color.rgb(226, 236, 246);
 
-    enum Phase { WAIT, PLAY, POUR, FAILED, SERVED, SHOW, OVER }
+    enum Phase { PLAY, POUR, FAILED, SERVED, SHOW, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -93,8 +93,6 @@ public class MagicPotions implements GameLifeCycle {
     private boolean bravo;
     private PotionMix.Primary pouring;
     private double elapsed;
-    @Getter
-    private double waiting;
 
     private double width;
     private double height;
@@ -259,10 +257,9 @@ public class MagicPotions implements GameLifeCycle {
         lives = LIVES;
         served = 0;
         elapsed = 0;
-        waiting = configuration.getGameStartDelay() / 1000.0;
-        phase = Phase.WAIT;
-        placePotions();
-        showHud();
+        // The first potion to make, with the delay of the settings as every new potion (maintainer's decision of
+        // 24/11/2026: the delay only at the start of each new potion; there used to be a wait with no client first)
+        newClient();
         if (!manual) {
             loop.start();
         }
@@ -287,16 +284,12 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     /**
-     * A new client, asking for another potion than the last one.
-     *
-     * @param delayed whether the client follows another one: the potions can be chosen again, nothing can be chosen
-     *                during the delay of the settings (tester's feedback of 20/11/2026, point 22, the rule of every
-     *                new choice; the first client follows the wait of the start)
+     * A new client, asking for another potion than the last one: nothing can be chosen during the delay of the
+     * settings (tester's feedback of 20/11/2026, point 22; maintainer's decision of 24/11/2026: at the start of each new
+     * potion to make, the first one included, and nowhere else: not between two potions poured for the same client).
      */
-    private void newClient(final boolean delayed) {
-        if (delayed) {
-            gameContext.onGameStarted();
-        }
+    private void newClient() {
+        gameContext.onGameStarted();
         PotionMix next;
         do {
             next = PotionMix.values()[random.nextInt(PotionMix.values().length)];
@@ -385,12 +378,6 @@ public class MagicPotions implements GameLifeCycle {
         }
         final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
         switch (phase) {
-            case WAIT -> {
-                elapsed += seconds;
-                if (elapsed >= waiting) {
-                    newClient(false);
-                }
-            }
             case PLAY -> fixate(seconds);
             case POUR -> pour(scaled);
             case FAILED -> {
@@ -510,7 +497,7 @@ public class MagicPotions implements GameLifeCycle {
             finish();
             return;
         }
-        newClient(true);
+        newClient();
     }
 
     private void fixate(final double seconds) {

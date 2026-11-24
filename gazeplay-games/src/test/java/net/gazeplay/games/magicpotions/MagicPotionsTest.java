@@ -159,17 +159,25 @@ class MagicPotionsTest {
     }
 
     /**
-     * Point 22 (23/11/2026): each client after the first asks for the delay of the settings; a potion looked at is not
-     * poured while it runs, then after the fixation counted from its end.
+     * Point 22 (maintainer's decision of 24/11/2026): the delay of the settings at the start of each new potion to make,
+     * the first one included, and nowhere else (not between two potions poured for the same client); a potion looked
+     * at is not poured while it runs, then after the fixation counted from its end.
      */
     @Test
-    void shouldWaitForTheDelayAtEachNewClient() throws Exception {
+    void shouldWaitForTheDelayAtTheStartOfEachNewPotion() throws Exception {
         final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 3);
-        verify(gameContext, never()).onGameStarted();
+        verify(gameContext, times(1)).onGameStarted();
+        // The potions of the recipe poured one by one: no delay between them for the same client
+        for (final PotionMix.Primary primary : game.getRequest().getRecipe()) {
+            verify(gameContext, times(1)).onGameStarted();
+            pour(game, primary);
+        }
+        assertEquals(MagicPotions.Phase.SERVED, game.getPhase());
+        // The next client: its potion waits for the delay
         when(gameContext.isSelectionBlocked()).thenReturn(true);
-        serve(game);
+        steps(game, MagicPotions.RESULT + 0.05);
         assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
-        verify(gameContext).onGameStarted();
+        verify(gameContext, times(2)).onGameStarted();
         final PotionMix.Primary first = game.getRequest().getRecipe().iterator().next();
         fx(() -> {
             game.lookAt(first);
