@@ -60,6 +60,8 @@ public class CssUtil {
         // The main color of the menus, after the base, whose -gp-accent it replaces (the coral of a stylesheet file)
         stylesheets.add(accentStylesheet(configuredBuiltInUiTheme.orElse(BuiltInUiTheme.DEFAULT_THEME)
             .getAccentColor(dark)));
+        // The buttons of the games, light or dark whatever the theme (24/11/2026)
+        stylesheets.add(buttonsStylesheet(Boolean.TRUE.equals(config.isDarkButtonsEnabled())));
 
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);
@@ -77,6 +79,27 @@ public class CssUtil {
      */
     static String accentStylesheet(final String color) {
         final String css = ".root { -gp-accent: " + color + "; }";
+        return "data:text/css;base64," + Base64.getEncoder().encodeToString(css.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Light buttons: white, the text of the light theme. Dark buttons: the surface and the text of the dark theme.
+     */
+    static final String LIGHT_BUTTON = "#FFFFFF";
+    static final String LIGHT_BUTTON_TEXT = "#2B2118";
+    static final String DARK_BUTTON = "#2A221C";
+    static final String DARK_BUTTON_TEXT = "#FFF4E8";
+
+    /**
+     * Maintainer's decision of 24/11/2026: the theme (light or dark) and the buttons of the games (light or dark) are
+     * chosen apart, 4 looks; the light buttons are well seen on the dark theme. A button of a game is filled with
+     * {@code -gp-button}, its text in {@code -gp-button-text} (see {@link GameStyle#BUTTON_STYLE}).
+     *
+     * @return a stylesheet setting the colors of the buttons of the games, as a data URI
+     */
+    static String buttonsStylesheet(final boolean dark) {
+        final String css = ".root { -gp-button: " + (dark ? DARK_BUTTON : LIGHT_BUTTON) + "; -gp-button-text: "
+            + (dark ? DARK_BUTTON_TEXT : LIGHT_BUTTON_TEXT) + "; }";
         return "data:text/css;base64," + Base64.getEncoder().encodeToString(css.getBytes(StandardCharsets.UTF_8));
     }
 

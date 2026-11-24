@@ -66,6 +66,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_DARK_THEME_ENABLED = "DARK_THEME_ENABLED";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_BACKGROUND_COLOR = "BACKGROUND_COLOR";
+    private static final String PROPERTY_NAME_DARK_BUTTONS_ENABLED = "DARK_BUTTONS_ENABLED";
     /* Directories settings */
     // FILE_DIR, the files folder of a profile, no longer read (3/11/2026: the images of the user are in one folder,
     // GazePlayDirectories.getImagesDirectory); kept in the files as it is
@@ -125,6 +126,11 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_DARK_THEME_ENABLED = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final String DEFAULT_VALUE_BACKGROUND_COLOR = "BLACK";
+    /**
+     * The buttons of the games, light or dark whatever the theme (maintainer's decision of 24/11/2026: 4 looks, light
+     * or dark theme with light or dark buttons): light by default, well seen in both themes.
+     */
+    private static final boolean DEFAULT_VALUE_DARK_BUTTONS_ENABLED = false;
     /* Directories settings */
     public static final String DEFAULT_VALUE_MUSIC_DIR = "";
     public static final String DEFAULT_VALUE_WHERE_IS_IT_DIR = "";
@@ -233,6 +239,8 @@ public class Configuration {
     @Getter
     private final StringProperty backgroundColorProperty;
     @Getter
+    private final BooleanProperty darkButtonsEnabledProperty;
+    @Getter
     private final StringProperty menuButtonsOrientationProperty;
     /* Directories settings */
     @Getter
@@ -337,6 +345,7 @@ public class Configuration {
         darkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_THEME_ENABLED, DEFAULT_VALUE_DARK_THEME_ENABLED, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
         backgroundColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_COLOR, DEFAULT_VALUE_BACKGROUND_COLOR, propertyChangeListener);
+        darkButtonsEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_BUTTONS_ENABLED, DEFAULT_VALUE_DARK_BUTTONS_ENABLED, propertyChangeListener);
 
         /* Directories settings */
         musicDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_DIR, DEFAULT_VALUE_MUSIC_DIR, propertyChangeListener);
@@ -561,6 +570,13 @@ public class Configuration {
 
     public Boolean isDarkThemeEnabled() {
         return darkThemeEnabledProperty.getValue();
+    }
+
+    /**
+     * @return whether the buttons of the games are dark (else light), whatever the theme
+     */
+    public Boolean isDarkButtonsEnabled() {
+        return darkButtonsEnabledProperty.getValue();
     }
 
     public String getMenuButtonsOrientation() {

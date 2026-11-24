@@ -133,6 +133,18 @@ public final class GameStyle {
     }
 
     /**
+     * The style of a button of a game (a disc or a card with an icon or a word, chosen by a fixation): light or dark
+     * as chosen in the settings, whatever the theme (24/11/2026, {@link CssUtil#buttonsStylesheet}); its text in
+     * {@link #BUTTON_TEXT_STYLE}.
+     */
+    public static final String BUTTON_STYLE = "-fx-fill: -gp-button; -fx-stroke: -gp-border; -fx-stroke-width: 2;";
+
+    /**
+     * The color of a text on a button of a game.
+     */
+    public static final String BUTTON_TEXT_STYLE = "-fx-fill: -gp-button-text;";
+
+    /**
      * The color under a picture, whatever the theme.
      */
     public static final String PICTURE_BACKGROUND = "#FFFFFF";

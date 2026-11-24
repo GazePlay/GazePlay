@@ -159,7 +159,7 @@ class ConfigurationContextTest {
             assertInstanceOf(HBox.class, control(sections, "HeatMapColors"));
             assertEquals(List.of("HeatMapSettings"),
                 sections.getLast().groups().stream().map(SettingsPage.Group::titleKey).toList());
-            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation",
+            for (String gamesOnly : List.of("CreateShortcut", "QuestionLength", "MenuOrientation", "GameButtons",
                 ConfigurationContext.USER_IMAGES_KEY, ConfigurationContext.USER_COLORING_KEY,
                 ConfigurationContext.DRAWINGS_KEY, "ResultDir", "EnableAreaOfInterest", "EnableVideoRecording")) {
                 assertFalse(has(sections, gamesOnly), gamesOnly);
@@ -223,6 +223,7 @@ class ConfigurationContextTest {
             // button on every page)
             assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
             assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
+            assertInstanceOf(ChoiceBox.class, control(sections, "GameButtons"));
             assertInstanceOf(ChoiceBox.class, control(sections, "MenuOrientation"));
             assertInstanceOf(CheckBox.class, control(sections, "BackgroundEnabled"));
             assertFalse(has(sections, "DarkTh"));

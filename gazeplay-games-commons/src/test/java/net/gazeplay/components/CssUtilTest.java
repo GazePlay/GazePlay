@@ -18,7 +18,8 @@ import static org.mockito.Mockito.when;
 
 /**
  * The main color of the menus (REFONTE_GRAPHIQUE.md 3.3): its stylesheet replaces the -gp-accent of the base, on the
- * light and on the dark theme, and the former stylesheet of the color is still loaded for the games.
+ * light and on the dark theme, and the former stylesheet of the color is still loaded for the games; the buttons of
+ * the games are light or dark as chosen (24/11/2026).
  */
 @ExtendWith(ApplicationExtension.class)
 class CssUtilTest {
@@ -53,18 +54,41 @@ class CssUtilTest {
         List<String> stylesheets = scene.getStylesheets();
         assertEquals("data/stylesheets/base-light.css", stylesheets.get(0));
         assertEquals(CssUtil.accentStylesheet("#D13D7A"), stylesheets.get(1));
+        assertEquals(CssUtil.buttonsStylesheet(false), stylesheets.get(2));
         assertEquals(List.of("data/stylesheets/main-pink-purple.css", CssUtil.MENUS_STYLESHEET),
-            stylesheets.subList(2, 4));
+            stylesheets.subList(3, 5));
+    }
+
+    /**
+     * The 4 looks (24/11/2026): the buttons of the games are light or dark as chosen, whatever the theme.
+     */
+    @Test
+    void shouldColorTheButtonsAsChosenWhateverTheTheme() throws Exception {
+        for (boolean darkTheme : new boolean[]{false, true}) {
+            assertEquals(Color.web("#FFFFFF"), colorOf("-gp-button", darkTheme, false));
+            assertEquals(Color.web("#2B2118"), colorOf("-gp-button-text", darkTheme, false));
+            assertEquals(Color.web("#2A221C"), colorOf("-gp-button", darkTheme, true));
+            assertEquals(Color.web("#FFF4E8"), colorOf("-gp-button-text", darkTheme, true));
+        }
     }
 
     /**
      * @return the color of a region filled with -gp-accent, once the stylesheets of the settings are applied
      */
     private static Color accentOf(String cssFile, boolean dark) throws Exception {
-        Configuration config = config(cssFile, dark);
+        return colorOf(config(cssFile, dark), "-gp-accent");
+    }
+
+    private static Color colorOf(String lookup, boolean darkTheme, boolean darkButtons) throws Exception {
+        Configuration config = config("builtin:GREEN", darkTheme);
+        when(config.isDarkButtonsEnabled()).thenReturn(darkButtons);
+        return colorOf(config, lookup);
+    }
+
+    private static Color colorOf(Configuration config, String lookup) throws Exception {
         return WaitForAsyncUtils.asyncFx(() -> {
             Region region = new Region();
-            region.setStyle("-fx-background-color: -gp-accent;");
+            region.setStyle("-fx-background-color: " + lookup + ";");
             Scene scene = new Scene(new Pane(region));
             CssUtil.setPreferredStylesheets(config, scene);
             region.applyCss();

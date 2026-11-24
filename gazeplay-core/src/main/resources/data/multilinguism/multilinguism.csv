@@ -921,6 +921,9 @@ FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني
 
 # GRAPHICS SETTINGS
 AccentColor,,,,,,,Main color,,Couleur principale,,,,,,,,,,,,
+GameButtons,,,,,,,Buttons of the games,,Boutons des jeux,,,,,,,,,,,,
+GameButtonsLight,,,,,,,Light,,Clairs,,,,,,,,,,,,
+GameButtonsDark,,,,,,,Dark,,Sombres,,,,,,,,,,,,
 AccentCoral,,,,,,,Coral,,Corail,,,,,,,,,,,,
 AccentOrange,,,,,,,Orange,,Orange,,,,,,,,,,,,
 AccentGreen,,,,,,,Green,,Vert,,,,,,,,,,,,

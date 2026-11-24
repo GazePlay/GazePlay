@@ -59,7 +59,8 @@ public class GazeRoundButton extends Group {
         this.action = action;
 
         disc = new Circle(size / 2, size / 2, size / 2);
-        disc.setStyle("-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        // Light or dark as chosen in the settings, whatever the theme (24/11/2026)
+        disc.setStyle(GameStyle.BUTTON_STYLE);
 
         final double iconSize = size * 0.55;
         final SVGPath shape = GameStyle.icon(iconName, iconSize);
@@ -145,8 +146,8 @@ public class GazeRoundButton extends Group {
      */
     public void setActive(final boolean active) {
         disc.setStyle(active
-            ? "-fx-fill: -gp-surface; -fx-stroke: -gp-accent; -fx-stroke-width: " + Math.max(3, size * 0.06) + ";"
-            : "-fx-fill: -gp-surface; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+            ? "-fx-fill: -gp-button; -fx-stroke: -gp-accent; -fx-stroke-width: " + Math.max(3, size * 0.06) + ";"
+            : GameStyle.BUTTON_STYLE);
     }
 
     /**

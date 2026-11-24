@@ -322,6 +322,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             .add("AccentColor", mainColorChooser)
             .add("BackgroundColor", chooseColorHBox(config.getBackgroundColorProperty()));
         if (!evaluations) {
+            // The buttons of the games, light or dark (24/11/2026); GazePlay Eval keeps its own
+            section.add("GameButtons", buildButtonsChooser(config, translator));
             final ChoiceBox<GameButtonOrientation> orientation = buildGameButtonOrientationChooser(config, translator);
             // The menu is built again when it is shown next: the new orientation is seen without restarting
             orientation.valueProperty().addListener((observable, oldValue, newValue) -> getGazePlay().refreshMenu());
@@ -841,6 +843,35 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
         choiceBox.valueProperty().addListener((observable, before, now) -> configuration.getVoiceProperty().set(now));
+        return choiceBox;
+    }
+
+    /**
+     * @return the choice of the buttons of the games, light or dark whatever the theme (maintainer's decision of
+     * 24/11/2026), bound to the DARK_BUTTONS_ENABLED setting; the next game uses it
+     */
+    static ChoiceBox<Boolean> buildButtonsChooser(final Configuration configuration, final Translator translator) {
+        final ChoiceBox<Boolean> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll(false, true);
+        choiceBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(final Boolean dark) {
+                if (dark == null) {
+                    return "";
+                }
+                return translator.translate(dark ? "GameButtonsDark" : "GameButtonsLight");
+            }
+
+            @Override
+            public Boolean fromString(final String text) {
+                return null;
+            }
+        });
+        choiceBox.setValue(Boolean.TRUE.equals(configuration.isDarkButtonsEnabled()));
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+        choiceBox.valueProperty().addListener((observable, before, now) ->
+            configuration.getDarkButtonsEnabledProperty().set(Boolean.TRUE.equals(now)));
         return choiceBox;
     }
 
