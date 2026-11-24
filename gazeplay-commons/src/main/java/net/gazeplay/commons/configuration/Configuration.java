@@ -125,6 +125,9 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_DARK_THEME_ENABLED = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
+    /**
+     * Since 24/11/2026, read by GazePlay Eval only: the games take the background of the theme.
+     */
     private static final String DEFAULT_VALUE_BACKGROUND_COLOR = "BLACK";
     /**
      * The buttons of the games, light or dark whatever the theme (maintainer's decision of 24/11/2026: 4 looks, light

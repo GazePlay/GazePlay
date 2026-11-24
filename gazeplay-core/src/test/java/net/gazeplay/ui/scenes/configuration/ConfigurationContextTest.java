@@ -222,7 +222,8 @@ class ConfigurationContextTest {
             // Appearance: theme, background color, orientation of the cards, background enabled (the dark theme has its
             // button on every page)
             assertInstanceOf(ComboBox.class, control(sections, "AccentColor"));
-            assertInstanceOf(HBox.class, control(sections, "BackgroundColor"));
+            // No background color for the games since 24/11/2026: the background of the theme
+            assertFalse(has(sections, "BackgroundColor"));
             assertInstanceOf(ChoiceBox.class, control(sections, "GameButtons"));
             assertInstanceOf(ChoiceBox.class, control(sections, "MenuOrientation"));
             assertInstanceOf(CheckBox.class, control(sections, "BackgroundEnabled"));

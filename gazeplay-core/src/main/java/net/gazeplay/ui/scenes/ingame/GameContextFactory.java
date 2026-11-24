@@ -27,6 +27,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.menus.MenuStyle;
 
 import java.util.Objects;
@@ -123,9 +124,10 @@ public class GameContextFactory implements Supplier<GameContext> {
 
         applyInputMode(gamingRoot, EyeTracker.fromConfigValue(config.getEyeTracker()));
 
-        Color color = Color.web(config.getBackgroundColorProperty().getValue());
-
-        gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
+        // The background of the theme (24/11/2026, maintainer's decision: the setting "Background color" is removed
+        // for the games; GazePlay Eval still sets its own until its turn)
+        gamingRoot.setBackground(new Background(new BackgroundFill(
+            Color.web(CssUtil.backgroundColor(Boolean.TRUE.equals(config.isDarkThemeEnabled()))), null, null)));
         // The color of the rings of the fixations (menu Esc, 17/11/2026), followed at once, even during a fixation
         applyRingColor(gamingRoot, config.getProgressBarColor());
         config.getProgressBarColorProperty().addListener(

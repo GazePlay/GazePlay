@@ -83,6 +83,20 @@ public class CssUtil {
     }
 
     /**
+     * The background of the games: -gp-bg of base-light.css and base-dark.css (to keep the same).
+     */
+    static final String LIGHT_BACKGROUND = "#FFF8EF";
+    static final String DARK_BACKGROUND = "#1B1612";
+
+    /**
+     * @return the background color of the game area for this theme (24/11/2026: the setting "Background color" is
+     * removed for the games, maintainer's decision)
+     */
+    public static String backgroundColor(final boolean darkTheme) {
+        return darkTheme ? DARK_BACKGROUND : LIGHT_BACKGROUND;
+    }
+
+    /**
      * Light buttons: white, the text of the light theme. Dark buttons: the surface and the text of the dark theme.
      */
     static final String LIGHT_BUTTON = "#FFFFFF";

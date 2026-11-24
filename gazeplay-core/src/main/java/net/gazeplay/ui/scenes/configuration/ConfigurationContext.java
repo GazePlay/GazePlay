@@ -319,9 +319,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         mainColorChooser = buildMainColorChooser(config, this, translator);
         final SettingsPage.SectionBuilder section = new SettingsPage.SectionBuilder("SettingsAppearance",
             MenuIcon.APPEARANCE)
-            .add("AccentColor", mainColorChooser)
-            .add("BackgroundColor", chooseColorHBox(config.getBackgroundColorProperty()));
-        if (!evaluations) {
+            .add("AccentColor", mainColorChooser);
+        if (evaluations) {
+            // GazePlay Eval keeps its background color until it follows the theme (24/11/2026: removed for the games,
+            // whose background is the one of the theme)
+            section.add("BackgroundColor", chooseColorHBox(config.getBackgroundColorProperty()));
+        } else {
             // The buttons of the games, light or dark (24/11/2026); GazePlay Eval keeps its own
             section.add("GameButtons", buildButtonsChooser(config, translator));
             final ChoiceBox<GameButtonOrientation> orientation = buildGameButtonOrientationChooser(config, translator);

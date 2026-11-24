@@ -273,6 +273,7 @@ public class GazeplayEval implements GameLifeCycle {
     @Override
     public void launch() {
         cleanUp();
+        keepTheFormerBackground();
         // A replay is a new session: leaving it before its start must not write again in the folder of the previous one
         recorder = null;
         sessionFolder = null;
@@ -1243,6 +1244,20 @@ public class GazeplayEval implements GameLifeCycle {
         Group icon = new Group(shape);
         icon.setMouseTransparent(true);
         return icon;
+    }
+
+    /**
+     * The games take the background of the theme since 24/11/2026; GazePlay Eval keeps the color of the setting
+     * "Background color" (black by default) until it follows the theme too (maintainer's decision: a later step).
+     */
+    private void keepTheFormerBackground() {
+        try {
+            Color background = Color.web(gameContext.getConfiguration().getBackgroundColorProperty().getValue());
+            gameContext.getRoot().setBackground(new javafx.scene.layout.Background(
+                new javafx.scene.layout.BackgroundFill(background, null, null)));
+        } catch (RuntimeException e) {
+            log.warn("Background of the evaluation not set", e);
+        }
     }
 
     /**
