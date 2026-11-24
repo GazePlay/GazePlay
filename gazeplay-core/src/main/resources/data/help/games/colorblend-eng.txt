@@ -5,7 +5,7 @@ Pour pots of paint into the big pot and mix them, like a painter: yellow and blu
 - At the bottom, round buttons show the pots of paint. Look at a pot: a ring fills, then a drop falls into the big pot and the paint mixes. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
 - A small number on a pot tells how many times it is in the mix. At the top left, the number of pots poured.
 - The card on the left shows the color to make and its name. Pour the pots of its recipe, in any order: 2 pots in Easy and Medium, 3 in Hard. The mix is checked after the last pot. If it is not the right color, the big pot shows what you made (with its name when it has one) and "Not yet!", then it empties: try again. After 2 tries, the pots of the recipe are framed.
-- At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+- At the start, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
 With "With hearts", with or without end, you have 3 hearts at the top left: each wrong mix costs one (it also counts a mistake in the statistics). With no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. A right color gives a star and "Well done!", then another color to make. As you chose, the game stops after 5, 10 or 20 colors ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).

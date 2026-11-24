@@ -8,6 +8,7 @@ Color a black and white drawing, area by area, with your gaze.
 - "Undo" undoes the last coloring (up to 10 times); "Start the drawing again" makes it white again.
 - The arrows at the bottom change the drawing ("3 / 8" shows where you are).
 - The file buttons load one of your pictures, save or print the drawing.
+- At the start, nothing can be colored or chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 
 # How to win
 There is no end: color as you like, then go to the next drawing. Each area colored counts one point. Leave by the menu (Esc key).

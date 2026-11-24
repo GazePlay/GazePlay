@@ -6,7 +6,7 @@ Walk around the rooms of a house: the living room, the kitchen, the bedroom and 
 - In Search: the card at the top asks for an object ("Where is the bed?"), with its picture or its name only. Turn to find it, then look at it: it jumps. Another object shakes and shows its name. If you do not find it, after 15 seconds the arrow leading to it the soonest blinks.
 - With "All the rooms", each question can be in another room: the house changes by itself.
 - In Explore: look at an object, it jumps and shows its name.
-- At the start, nothing can be chosen during the delay of the settings (Games, delay before a selection at the start of a game). Nothing moves while the menu (Esc key) is open.
+- At the start, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
 There are no lives: another object only counts a mistake in the statistics. A found object gives a star and "Well done!", then another question. As you chose, the search stops after 5, 10 or 20 objects ("Bravo", then the statistics), or has no end. The Explore mode has no end (quit with the menu (Esc key)).

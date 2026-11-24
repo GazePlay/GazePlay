@@ -9,6 +9,7 @@ The same game as "Where is the animal?", with your own pictures: a question asks
 # How to play
 - The question is written in the middle of the screen and said aloud, then it goes down to the band at the bottom.
 - The pictures appear. Look at the right answer: a ring goes around the picture while you look at it, and the picture is chosen when it is full (fixation length of the settings).
+- When the pictures appear, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - To hear the question again, look at the loudspeaker of the band.
 
 # How to win
@@ -16,7 +17,7 @@ The same game as "Where is the animal?", with your own pictures: a question asks
 - Wrong answer: the picture is crossed out and greyed, and cannot be chosen again; look again (the question is said again if the settings ask for it). If the question has a sound, a bubble reminds you that you can hear it again with the loudspeaker.
 - With or without end, with "With hearts", you have 3 hearts at the top left: each wrong answer costs one. With no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: a wrong answer only counts a mistake in the statistics.
 - Depending on the variant, the game stops after 5, 10 or 15 screens found: "Bravo", then the statistics; without end, leave by the menu (Esc key).
-- At the bottom left, the counter shows the screens found.
+- At the bottom left, the counter shows the number of the current screen: "Screen 3 / 10", or "Screen 7" without end.
 
 # The variants
 Choose a variant (it is framed), then press "Start".

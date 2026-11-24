@@ -4,6 +4,7 @@
 # Comment jouer
 - « Écoute le son » s'affiche et un haut-parleur bat pendant que le son est joué.
 - Les images apparaissent. Regarde la bonne réponse : un anneau fait le tour de l'image pendant que tu la regardes, et l'image est choisie quand il est complet (durée de fixation des réglages).
+- Quand les images apparaissent, rien ne peut être choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - Pour réentendre le son, regarde le haut-parleur du bandeau.
 
 # Comment gagner
@@ -11,7 +12,7 @@
 - Mauvaise réponse : l'image est barrée et grisée, et ne peut plus être choisie ; cherche encore (la question est redite si le réglage le demande). Si la question a un son, une bulle rappelle que tu peux la réécouter avec le haut-parleur.
 - Avec ou sans fin, avec « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise réponse en coûte un. Sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : une mauvaise réponse compte seulement une erreur dans les statistiques.
 - Selon la variante, le jeu s'arrête après 5, 10 ou 15 écrans trouvés : « Bravo », puis les statistiques ; sans fin, quitte par le menu (touche Échap).
-- En bas à gauche, le compteur montre les écrans trouvés.
+- En bas à gauche, le compteur montre le numéro de l'écran en cours : « Écran 3 / 10 », ou « Écran 7 » sans fin.
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
