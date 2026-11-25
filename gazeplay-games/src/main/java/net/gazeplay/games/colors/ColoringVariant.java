@@ -4,19 +4,19 @@ import lombok.Getter;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 
 /**
- * Variants of the game "Coloring": the coloring pages of a level, given by their number of zones to fill, shown as the
- * size of the palette (small: 1 or 2 zones, medium: 3 to 6, large: 7 or more), or the images given by the user in the
- * settings (custom palette, folder images/Coloring). The names of the values are kept: they are written in the saved
- * games.
+ * Variants of the game "Coloring": the coloring pages of a level, named after their number of zones to fill (easy: 1 or 2
+ * zones, medium: 3 to 6, hard: 7 or more), or the images given by the user in the settings ("My drawings"). The palette
+ * is the same everywhere: they were named after its size, which did not change (tester's feedback of 24/11/2026, point
+ * 72). The names of the values are kept: they are written in the saved games.
  */
 public enum ColoringVariant implements UserImagesVariant {
-    EASY("easy", "SmallPalette"),
-    NORMAL("normal", "MediumPalette"),
-    HARD("hard", "LargePalette"),
-    CUSTOM(null, "CustomPalette");
+    EASY("easy", "ColoringEasy"),
+    NORMAL("normal", "ColoringNormal"),
+    HARD("hard", "ColoringHard"),
+    CUSTOM(null, "ColoringMyDrawings");
 
     /**
-     * Folder of the images given by the user for the custom palette, in the images folder.
+     * Folder of the images given by the user.
      */
     static final String USER_IMAGES_FOLDER = UserImagesVariant.COLORING;
 

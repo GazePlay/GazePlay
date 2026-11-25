@@ -120,11 +120,11 @@ class ColorsGameTest {
     }
 
     /**
-     * The custom palette plays the images given by the user in the settings (folder images/Coloring); without images, a
+     * "My drawings" plays the images given by the user in the settings (folder images/Coloring); without images, a
      * message instead of a drawing.
      */
     @Test
-    void shouldPlayTheImagesOfTheUserInTheCustomPalette() throws Exception {
+    void shouldPlayTheImagesOfTheUser() throws Exception {
         assertEquals("coloriages", UserImagesVariant.folderOf(new EnumGameVariant<>(ColoringVariant.CUSTOM)));
         assertNull(UserImagesVariant.folderOf(new EnumGameVariant<>(ColoringVariant.EASY)));
         final File image = new File(UserImagesVariant.directory(UserImagesVariant.COLORING), "test-drawing.png");
@@ -144,12 +144,12 @@ class ColorsGameTest {
     }
 
     /**
-     * Four variants, named after their palette (the names of the values stay those written in the saved
-     * games).
+     * Four variants, named after their drawings (tester's feedback of 24/11/2026, point 72: the palette is the same
+     * everywhere; the names of the values stay those written in the saved games).
      */
     @Test
-    void shouldNameTheVariantsAfterTheirPalette() {
-        assertEquals(List.of("SmallPalette", "MediumPalette", "LargePalette", "CustomPalette"),
+    void shouldNameTheVariantsAfterTheirDrawings() {
+        assertEquals(List.of("ColoringEasy", "ColoringNormal", "ColoringHard", "ColoringMyDrawings"),
             new ColorsGameVariantGenerator().getVariants().stream().map(variant -> variant.getLabel(translator)).toList());
     }
 

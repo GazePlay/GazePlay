@@ -44,7 +44,7 @@ import java.util.List;
  * Game where you select a color in order to colorize a white and black draw: a fixation on a zone of the drawing (or a
  * click) fills it with the chosen color, one goal counted per filled zone. The drawings, browsed with the previous and
  * next buttons, are those of the variant: the coloring pages of a level (data/colors/images/&lt;level&gt;/draw-*.png), or
- * the images given by the user in the settings (custom palette, images/Coloring of the files folder).
+ * the images given by the user in the settings ("My drawings", images/Coloring of the files folder).
  * <p>
  * The pixels are kept in an array (ARGB): the drawing turned into black and white, the fillings, and the copies kept to
  * undo them.
@@ -134,7 +134,7 @@ public class ColorsGame implements GameLifeCycle {
     private Group counter;
 
     /**
-     * Shown instead of a drawing when the custom palette has no image (game started without the menu, which asks
+     * Shown instead of a drawing when "My drawings" has no image (game started without the menu, which asks
      * for images first).
      */
     private Group noDrawingMessage;
@@ -327,7 +327,7 @@ public class ColorsGame implements GameLifeCycle {
 
     /**
      * @return the drawings of the variant, in the order of their names: the coloring pages of its level, or the images
-     * given by the user in the settings (custom palette)
+     * given by the user in the settings ("My drawings")
      */
     private List<String> findDrawings() {
         if (variant.getUserImagesFolder() != null) {
@@ -352,7 +352,7 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     /**
-     * Shows, instead of a drawing, that the custom palette has no image yet.
+     * Shows, instead of a drawing, that "My drawings" has no image yet.
      */
     private void showNoDrawing() {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();

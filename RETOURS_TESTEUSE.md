@@ -118,6 +118,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 57 | Tir | Nom « Invasion » | Renommé en français et en anglais (nom code `Shooter` gardé), licence |
 | 62, 82 | Apprends les Maths, Mélanger les couleurs | Répétitions | Rien ne revient avant que tout le niveau soit passé ; maths : 3 + 4 et 4 + 3 comptent pour un, et les calculs autour des mêmes nombres sont séparés (`MathDeck`) |
 | 70 | Morpion | Niveaux moyen et difficile inversés | L'ordinateur moyen oublie de bloquer une fois sur deux : un joueur attentif gagne 77, 58 et 30 parties sur 100 (facile, moyen, difficile ; 77, 9 et 30 avant) |
+| 72 | Coloriage | Même palette à tous les niveaux | La palette (« nickel » pour elle) est gardée, les niveaux sont renommés d'après leurs dessins : Facile : 1 ou 2 zones, Moyen : 3 à 6, Difficile : 7 ou plus, Mes dessins ; aide corrigée |
 
 ## À décider
 
@@ -153,7 +154,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 68 | Fleur des nombres | Cadres de la couleur des pétales, plus épais ou remplis | |
 | 69 | Morpion | Écran de récompense | |
 | 71 | Pierre papier ciseaux | Erreur plus visible pour qui n'entend pas | |
-| 72 | Coloriage | Même palette à tous les niveaux | |
 | 74 | Coloriage | Bouton « Imprimer » à pouvoir masquer | |
 | 75 | Coloriage | Enregistrement dans un dossier défini, à pouvoir interdire | |
 | 76 | Petits chevaux | Dés aidés après plusieurs échecs | |
