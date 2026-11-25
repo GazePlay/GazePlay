@@ -176,10 +176,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   Learning (gradle/images/make_space_images.py), sous la licence du projet.
 - Images du jeu « Survivre contre des robots » (data/surviveAgainstRobots) : ciel, jardin, cour de l'école et
   bonus faits pour GazePlay Learning (gradle/images/make_survive_images.py), sous la licence du projet ; la Biboule
-  et les robots sont ceux du jeu « Tir ».
+  et les robots sont ceux du jeu « Invasion ».
 - Images et sons de « Biboule Jump » (data/biboulejump) : ciel, nuages, tremplin et sons faits pour GazePlay Learning
   (gradle/images/make_biboulejump_images.py, make_biboulejump_sounds.py), sous la licence du projet ; les Biboules du jeu
-  sont celles du jeu « Tir ».
+  sont celles du jeu « Invasion ».
 - Images du « Labyrinthe » (data/labyrinth) : souris, fromage et maison faits pour GazePlay Learning
   (gradle/images/make_labyrinth_images.py), sous la licence du projet ; animaux d'OpenMoji (CC BY-SA 4.0).
 - Images de « Course du regard » (data/gazeRace) : voitures, barrière de travaux et choc faits pour GazePlay Learning
@@ -210,13 +210,13 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   sous la licence du projet.
 - Sons d'« Apprends les Maths » (data/math101) : faits pour GazePlay Learning
   (gradle/images/make_math101_sounds.py), sous la licence du projet ; tableau et cartes dessinés par le jeu, la
-  Biboule est celle du jeu « Tir ».
+  Biboule est celle du jeu « Invasion ».
 - Dé des jeux « Dés », « Petits chevaux » et « Jeu de l'oie » (data/common/images/dice.png,
   data/common/sounds/diceRollSound.wav) et sons de « Dés » (data/dice) : faits pour GazePlay Learning
   (gradle/images/make_dice_images.py, make_dice_sounds.py), sous la licence du projet.
 - Plateau et sons du « Jeu de l'oie » (data/goosegame) : faits pour GazePlay Learning
   (gradle/images/make_goose_images.py, make_goose_sounds.py), sous la licence du projet ; les Biboules sont celles du
-  jeu « Tir ».
+  jeu « Invasion ».
 - Sons des « Cartes à gratter » (data/scratchcard) : faits pour GazePlay Learning
   (gradle/images/make_scratchcard_sounds.py), sous la licence du projet ; la pièce et la couche argentée sont dessinées par le jeu.
 - Son des « Cartes magiques » (data/magiccards/sounds/flip.wav) : fait pour GazePlay Learning
@@ -239,10 +239,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   projet ; les sons sont ceux du jeu « Bulles ».
 - Images et sons du « Jeu de la taupe » (data/whackmole) : pré, trou, taupe et sons faits pour GazePlay Learning
   (gradle/images/make_moles_images.py, make_moles_sounds.py), sous la licence du projet ; les Biboules sont celles du
-  jeu « Tir ».
+  jeu « Invasion ».
 - Images et sons du jeu « Ninja ! » (data/ninja) : verger, fruits et sons faits pour GazePlay Learning
   (gradle/images/make_ninja_images.py, make_ninja_sounds.py), sous la licence du projet.
-- Images et sons du jeu « Tir » (data/shooter) : salle de classe, rue et sons faits pour GazePlay Learning
+- Images et sons du jeu « Invasion » (data/shooter) : salle de classe, rue et sons faits pour GazePlay Learning
   (gradle/images/make_shooter_images.py, make_shooter_sounds.py), sous la licence du projet, avec les robots,
   la cage, la soucoupe, la baguette et le canon ; les Biboules, mascotte du laboratoire, y sont redessinées
   (version modernisée, novembre 2026). Musique « Talking Cute (Chiptune) » de Pro

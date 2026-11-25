@@ -8,7 +8,7 @@ import net.gazeplay.GameSummary;
 import java.net.URL;
 
 /**
- * Declares the shooting game to the menu: its name, thumbnail, categories, variants and launcher (see
+ * Declares "Invasion" ("Tir" until 25/11/2026, point 57) to the menu: its name, thumbnail, variants, launcher (see
  * {@code GameSpecSource}). It replaces "ShootTheBiboules" and "ShootTheRobots" (2/11/2026), now its scenes. Music:
  * "Talking Cute (Chiptune)" by Pro Sensory (Alex McCulloch), OpenGameArt, CC0, delivered with the game since 4/11/2026
  * (maintainer's decision): it used to be downloaded at the first game, so that there was no music without internet.

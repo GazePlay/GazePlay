@@ -115,6 +115,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 42 | Identifier les lettres | Images pas à la bonne taille par rapport aux lettres (2 × 3) | Image entière (elle était coupée, jusqu'à 44 %), sans ses marges blanches ou transparentes, sous des cartes carrées, aux 3 niveaux ; vignette refaite |
 | 37 | Où est la forme | Le losange ressemble à un carré | C'était un carré sur sa pointe : redessiné plus haut que large (340 × 580), vignette et inventaire |
 | 56 | Survivre contre des robots | Nouveaux robots loin du Biboule | À 0,7 hauteur d'écran au moins de la Biboule (0,45 avant) et 0,45 de l'endroit où elle va |
+| 57 | Tir | Nom « Invasion » | Renommé en français et en anglais (nom code `Shooter` gardé), licence |
 
 ## À décider
 
@@ -139,7 +140,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 53 | Diviseur | Choix du fond | |
 | 54 | Course du regard | Adaptation au regard ; récompense à mesure qu'on évite les voitures | |
 | 55 | Course de grenouilles | Trois niveaux trop faciles ; grenouilles plus visibles que les Biboules | |
-| 57 | Tir | Nom « Invasion » | |
 | 59 | Dés | Icône « Lancer » ; dé à lancer surligné | |
 | 60 | Dés | Inverser les deux modes | |
 | 61 | Dés | Total plus visible (dit à voix haute, calcul décomposé) | |
