@@ -5,6 +5,50 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU JEUDI 26/11/2026 (fin de la séance du mercredi 25/11/2026)
+
+**Méthode inchangée** : un point à la fois ; je code, le mainteneur vérifie, puis commit et suite ; tests locaux ciblés
+seulement, build complet et all-games en CI.
+
+**Fait le 25/11/2026** (chaque point validé par le mainteneur, commité ; détail par point dans `RETOURS_TESTEUSE.md`) :
+- **Recettes magiques (82)** terminé : anneau de fixation au bord des cartes, vignette, inventaire des images
+  (`465a7174c`, CI verte). Installeur Windows construit à la demande depuis ce commit (sans le groupe 2).
+- **Groupe 2 terminé**, poussé jusqu'à `cf7f61e88`, CI verte (run 45640092343) :
+  - 73. Coloriage, « + » : positions fixes des pastilles (le trait de l'anneau dépasse la place de sa pastille ; un
+    premier correctif ne suffisait pas, son test n'avait pas les couleurs du style) ;
+  - 44. Gribouille : crayon arc-en-ciel pour quitter la gomme ;
+  - 42. Identifier les lettres : image entière sans ses marges, cartes carrées, vignette refaite ;
+  - 37. Où est la forme : vrai losange (`make_rhombus_image.py`) ;
+  - 56. Survivre contre des robots : ils arrivent à 0,7 hauteur d'écran au moins de la Biboule ;
+  - 57. Tir devient « Invasion » (nom code `Shooter` gardé) ;
+  - 62, 82. Apprends les Maths (`MathDeck`) et Mélanger les couleurs : tirage sans répétition ;
+  - 70. Morpion : l'ordinateur moyen oublie de bloquer une fois sur deux (parties simulées : 77, 58, 30 gagnées sur 100
+    par un joueur attentif en facile, moyen, difficile ; Quatre en ligne non vérifié) ;
+  - 72. Coloriage : niveaux nommés d'après leurs dessins, aide corrigée.
+- **Demandes du mainteneur du 25/11** (points 84 à 87) :
+  - 84. « Où est l'ovale ? » (`f0ac78095`) ;
+  - 85. Recettes magiques : recette visible ou cachée (`830039555`) ;
+  - 86 (et 31). « Où est-ce ? » : jeux faits par l'utilisateur dans une fenêtre (`9e465f232`, maquette A choisie sur une
+    page Design ; fenêtre « Mes jeux » avec slider, éditeur écran par écran, dossier `ou-est-ce\<nom>\jeu.json`) ;
+  - **87 (croix de fixation dans les résultats d'Eval) : à faire en dernier** (décision du mainteneur).
+- Les retours de la testeuse sont dans le Google Doc « Retours sur GAZEPLAY » (Drive, partie 1) : y relire sa phrase
+  exacte avant de coder un point.
+
+**Ordre du jour du jeudi 26/11/2026** :
+1. **CI du push du 25/11 au soir** (84, 85, 86 et ces notes) à vérifier : tests JDK 25 et 26, all-games (« Où est-ce ? »
+   s'y lance maintenant sans variante, aucun jeu créé), paquets.
+2. **Changements moyens, à décider point par point** (proposé, à confirmer : Gribouille d'abord, ou l'ordre des numéros) :
+   - Gribouille : 45 (« + » qui efface tout), 46 (blanc à la place de la gomme), 47 (points d'épaisseur de la couleur
+     choisie), 48 (la fixation commence et finit le trait) ; elle propose aussi d'y reprendre la palette du Coloriage ;
+   - 35 (Où est… : délai entre la consigne et les réponses), 36 (forme et couleur : consigne avec exemple), 43 (Gobelets),
+     49 et 51 (Bulles), 52 (Biboule Jump), 53 (Diviseur), 55 (Grenouilles), 59 à 61 (Dés), 63 (Embouteillage), 67 et 68
+     (Fleur des nombres), 71 (Pierre papier ciseaux), 74 et 75 (Coloriage), 76 et 77 (Petits chevaux), 83 (Cartes à
+     gratter).
+3. **Gros ajouts**, ensuite : Piano (38 à 41), 50 (Bulles avec de grosses images), 54 (Course du regard), Jeu de l'oie
+   (64 à 66), 69 (Morpion, récompense), 80 (La maison du chat), 81 (Les bruits de la vie).
+4. **En dernier : 87** (Eval, croix de fixation), avec la présentation du format et de son impact avant de coder.
+5. En attente (inchangé) : 34, 13, 20, 27, 28 (lié au 87). Notes de version 2.0 au feu vert du mainteneur seulement.
+
 ## REPRISE DU MERCREDI 25/11/2026 (fin de la séance du mardi 24/11/2026)
 
 **Méthode inchangée** : un point à la fois ; je code, le mainteneur vérifie, puis commit et suite ; tests locaux ciblés
