@@ -989,7 +989,7 @@ gazeplay-games/src/main/resources/data/whereIsTheShape/images/parallelogram/Para
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/pentagon/pentagon_1.jpg,oui,source inconnue,,2022-07-25,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/pentagon/pentagon_2.jpg,oui,source inconnue,,2022-07-26,Sakraft,Improve Where is it? games
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/rectangle/rectangle.jpg,oui,source inconnue,,2021-12-06,Sacha,Add game variant Where is the shape ?
-gazeplay-games/src/main/resources/data/whereIsTheShape/images/rhombus/rhombus.jpg,oui,source inconnue,,2021-12-06,Sacha,Add game variant Where is the shape ?
+gazeplay-games/src/main/resources/data/whereIsTheShape/images/rhombus/rhombus.jpg,oui,libre,"dessiné pour le projet (gradle/images/make_rhombus_image.py), GPL-3.0-or-later",2026-11-25,GazePlay Learning,retours de la testeuse (point 37)
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/round/round.jpg,oui,source inconnue,,2021-12-06,Sacha,Add game variant Where is the shape ?
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/square/square.jpg,oui,source inconnue,,2021-12-06,Sacha,Add game variant Where is the shape ?
 gazeplay-games/src/main/resources/data/whereIsTheShape/images/star/star_1.jpg,oui,source inconnue,,2021-12-06,Sacha,Add game variant Where is the shape ?

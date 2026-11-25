@@ -353,6 +353,8 @@ CREDITS.txt file of each game (data/whereIsTheAnimal/CREDITS.txt, data/whereIsTh
 the game. The photos were resized to 1280 pixels at most; the sounds shortened to 8 seconds, normalized and made mono.
 The triangle of Where Is The Sound (data/whereIsTheSound/images/triangle/triangle_1.jpg) is drawn by
 make_triangle_image.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later).
+The rhombus of Where Is The Shape (data/whereIsTheShape/images/rhombus/rhombus.jpg) is drawn by make_rhombus_image.py
+(this folder), under the same license; the former one was a square on its corner (25/11/2026).
 
 Thumbnails of the menu of the Where Is It family and of Coloring (gazeplay-core: data/common/Thumbnails: colors.png,
 findTheOddOneOut.jpg,

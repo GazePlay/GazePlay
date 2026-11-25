@@ -66,6 +66,9 @@ OpenMoji (CC BY-SA 4.0, `data/potions/images/ingredients`) ajoutés, bulle de `B
 flacon, vignette `potions.jpg` refaite (capture du jeu) ; **1 048 images livrées, 745 libres, 130 libres probables, 173
 de source inconnue** (comptées dans le CSV, retrait des 23 drapeaux compris).
 
+**Retours de la testeuse, point 37 (25/11/2026)** : le losange d'« Où est la forme ? » (un carré sur sa pointe) est
+redessiné pour le projet ; **1 048 images livrées, 746 libres, 130 libres probables, 172 de source inconnue**.
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

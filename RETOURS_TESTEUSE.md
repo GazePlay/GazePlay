@@ -113,6 +113,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 73 | Coloriage | Couleurs du « + » : fixation qui reprend à zéro, points qui bougent | Le trait de l'anneau dépassait la place de sa pastille et la grille les replaçait toutes : positions fixes, 5 par rangée ; la fenêtre fermée ne suit plus le regard |
 | 44 | Gribouille | Impossible de quitter la gomme en arc-en-ciel | Bouton « crayon arc-en-ciel » à côté de la gomme, entouré au départ ; aides |
 | 42 | Identifier les lettres | Images pas à la bonne taille par rapport aux lettres (2 × 3) | Image entière (elle était coupée, jusqu'à 44 %), sans ses marges blanches ou transparentes, sous des cartes carrées, aux 3 niveaux ; vignette refaite |
+| 37 | Où est la forme | Le losange ressemble à un carré | C'était un carré sur sa pointe : redessiné plus haut que large (340 × 580), vignette et inventaire |
 
 ## À décider
 
@@ -121,7 +122,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 34 | Page des jeux | Catégories par compétence (découverte du regard, fixation, exploration…), jeux rangés par difficulté | **Mis de côté** (mainteneur, 24/11 : « à débattre ») |
 | 35 | Où est… | Délai trop long entre la consigne et les réponses | |
 | 36 | Où est la forme, la couleur | Modes de consigne avec exemple (pendant la sélection, avant seulement, sans) ; réponses déjà affichées à la consigne | |
-| 37 | Où est la forme | Le losange ressemble à un carré | |
 | 38 | Piano | Version courte (début de la chanson, puis la chanson en récompense) | |
 | 39 | Piano | Choisir la chanson | |
 | 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |
