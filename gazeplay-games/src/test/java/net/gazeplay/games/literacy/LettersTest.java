@@ -1,8 +1,15 @@
 package net.gazeplay.games.literacy;
 
 import javafx.event.Event;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
@@ -163,6 +170,51 @@ class LettersTest {
             verify(gameContext.getSoundManager(), times(2)).add(argThat(path -> path.endsWith(question)));
             return null;
         });
+    }
+
+    /**
+     * Tester's feedback of 23/11/2026, point 42: the picture whole under square cards, at all the levels.
+     */
+    @Test
+    void shouldShowTheWholePictureUnderTheCards() throws Exception {
+        for (final LettersLevel level : LettersLevel.values()) {
+            final Letters game = launched(level, LettersCase.CAPITALS, LettersEnd.ENDLESS);
+            final ImageView picture = game.getPicture();
+            assertEquals(Letters.withoutMargins(picture.getImage()), picture.getViewport(), "only its margins left out");
+            assertEquals(picture.getViewport().getWidth() / picture.getViewport().getHeight(),
+                picture.getFitWidth() / picture.getFitHeight(), 1e-6);
+            final Bounds cards = game.getCards().stream().map(card -> card.getSpot().getNode().getParent())
+                .map(Node::getBoundsInParent)
+                .reduce((a, b) -> new BoundingBox(Math.min(a.getMinX(), b.getMinX()), Math.min(a.getMinY(), b.getMinY()),
+                    Math.max(a.getMaxX(), b.getMaxX()) - Math.min(a.getMinX(), b.getMinX()),
+                    Math.max(a.getMaxY(), b.getMaxY()) - Math.min(a.getMinY(), b.getMinY()))).orElseThrow();
+            // The gap around the cards: a little larger than them
+            final double cell = cards.getHeight() / level.getLines();
+            assertTrue(picture.getFitHeight() <= cards.getHeight() + cell * 0.2);
+            assertTrue(Math.abs(cards.getHeight() - picture.getFitHeight()) < cell * 0.2
+                || Math.abs(cards.getWidth() - picture.getFitWidth()) < cell * 0.3, "as large as the grid");
+            assertEquals((double) level.getColumns() / level.getLines(), cards.getWidth() / cards.getHeight(), 0.05,
+                "square cards");
+            assertEquals(cards.getCenterX(), picture.getX() + picture.getFitWidth() / 2, 1);
+            assertTrue(picture.getFitWidth() <= cards.getWidth() + cell * 0.2);
+        }
+    }
+
+    @Test
+    void shouldLeaveOutTheWhiteOrTransparentMarginsOnly() {
+        final WritableImage image = new WritableImage(40, 30);
+        assertEquals(new Rectangle2D(0, 0, 40, 30), Letters.withoutMargins(image), "nothing drawn: whole");
+        for (int x = 0; x < 20; x++) {
+            for (int y = 0; y < 30; y++) {
+                image.getPixelWriter().setColor(x, y, Color.WHITE);
+            }
+        }
+        image.getPixelWriter().setColor(5, 10, Color.RED);
+        image.getPixelWriter().setColor(30, 20, Color.BLACK);
+        assertEquals(new Rectangle2D(5, 10, 26, 11), Letters.withoutMargins(image));
+        image.getPixelWriter().setColor(0, 0, Color.BLUE);
+        image.getPixelWriter().setColor(39, 29, Color.BLUE);
+        assertEquals(new Rectangle2D(0, 0, 40, 30), Letters.withoutMargins(image), "no margin: whole");
     }
 
     @Test

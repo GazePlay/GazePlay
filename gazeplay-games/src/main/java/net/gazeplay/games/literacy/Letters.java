@@ -10,6 +10,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -82,6 +84,10 @@ public class Letters implements GameLifeCycle {
      */
     static final double SHAKE = 0.5;
     static final double PICTURE = 2.2;
+    /**
+     * The part of the grid the picture takes: a small margin stays around it.
+     */
+    static final double PICTURE_PART = 0.96;
 
     /**
      * The lives of a game with the hearts (maintainer's requests of 16/11 and 17/11/2026, with or without end): a card
@@ -231,9 +237,10 @@ public class Letters implements GameLifeCycle {
         final double bandHeight = height * 0.17;
         gridY = bandHeight;
         gridHeight = height - bandHeight - height * 0.03;
-        // Cards a little wider than high, the grid centered
-        final double cell = Math.min(gridHeight / level.getLines(), width * 0.94 / level.getColumns() / 1.2);
-        gridWidth = cell * 1.2 * level.getColumns();
+        // Square cards, the grid centered: wider cards made a grid too wide for the pictures (tester's feedback of
+        // 23/11/2026, point 42)
+        final double cell = Math.min(gridHeight / level.getLines(), width * 0.94 / level.getColumns());
+        gridWidth = cell * level.getColumns();
         gridHeight = cell * level.getLines();
         gridX = (width - gridWidth) / 2;
 
@@ -416,27 +423,25 @@ public class Letters implements GameLifeCycle {
     }
 
     /**
-     * The picture under the grid, cut to fill it, keeping its proportions.
+     * The picture under the grid, whole and as large as the grid, keeping its proportions (tester's feedback of
+     * 23/11/2026, point 42: cut to fill the grid, it lost up to 44 % of its height, e.g. the head of the giraffe); only
+     * its white or transparent margins are left out, so that the drawing is as large as the grid allows.
      */
     private void showPicture() {
         pictureLayer.getChildren().clear();
         final Image image = nextImage();
         final ImageView view = new ImageView(image);
-        view.setFitWidth(gridWidth);
-        view.setFitHeight(gridHeight);
-        view.setLayoutX(gridX);
-        view.setLayoutY(gridY);
         if (image != null && image.getWidth() > 0 && image.getHeight() > 0) {
-            final double ratio = gridWidth / gridHeight;
-            double w = image.getWidth();
-            double h = w / ratio;
-            if (h > image.getHeight()) {
-                h = image.getHeight();
-                w = h * ratio;
-            }
-            view.setViewport(new Rectangle2D((image.getWidth() - w) / 2, (image.getHeight() - h) / 2, w, h));
+            final Rectangle2D drawing = withoutMargins(image);
+            final double scale = PICTURE_PART
+                * Math.min(gridWidth / drawing.getWidth(), gridHeight / drawing.getHeight());
+            view.setViewport(drawing);
+            view.setFitWidth(drawing.getWidth() * scale);
+            view.setFitHeight(drawing.getHeight() * scale);
+            view.setX(gridX + (gridWidth - view.getFitWidth()) / 2);
+            view.setY(gridY + (gridHeight - view.getFitHeight()) / 2);
         }
-        final Rectangle clip = new Rectangle(gridWidth, gridHeight);
+        final Rectangle clip = new Rectangle(gridX, gridY, gridWidth, gridHeight);
         clip.setArcWidth(gridHeight * 0.06);
         clip.setArcHeight(gridHeight * 0.06);
         view.setClip(clip);
@@ -447,6 +452,44 @@ public class Letters implements GameLifeCycle {
         under.setArcHeight(gridHeight * 0.06);
         under.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + ";");
         pictureLayer.getChildren().addAll(under, view);
+    }
+
+    /**
+     * @return the part of a picture inside its white or transparent margins; the whole picture when it has none (a
+     * photo) or cannot be read
+     */
+    static Rectangle2D withoutMargins(final Image image) {
+        final int w = (int) image.getWidth();
+        final int h = (int) image.getHeight();
+        final Rectangle2D whole = new Rectangle2D(0, 0, w, h);
+        final PixelReader reader = image.getPixelReader();
+        if (reader == null) {
+            return whole;
+        }
+        final int[] row = new int[w];
+        int left = w;
+        int right = -1;
+        int top = h;
+        int bottom = -1;
+        for (int y = 0; y < h; y++) {
+            reader.getPixels(0, y, w, 1, PixelFormat.getIntArgbInstance(), row, 0, w);
+            for (int x = 0; x < w; x++) {
+                if (!isMargin(row[x])) {
+                    left = Math.min(left, x);
+                    right = Math.max(right, x);
+                    top = Math.min(top, y);
+                    bottom = y;
+                }
+            }
+        }
+        return right < 0 ? whole : new Rectangle2D(left, top, right - left + 1.0, bottom - top + 1.0);
+    }
+
+    private static boolean isMargin(final int argb) {
+        final boolean transparent = (argb >>> 24) < 16;
+        // Almost white too: the edges of a JPEG picture
+        final boolean white = (argb >> 16 & 0xFF) > 240 && (argb >> 8 & 0xFF) > 240 && (argb & 0xFF) > 240;
+        return transparent || white;
     }
 
     private Image nextImage() {
@@ -813,6 +856,13 @@ public class Letters implements GameLifeCycle {
 
     Spot getReplay() {
         return replay;
+    }
+
+    /**
+     * @return the picture under the cards
+     */
+    ImageView getPicture() {
+        return (ImageView) pictureLayer.getChildren().getLast();
     }
 
     FixationRing getRing() {
