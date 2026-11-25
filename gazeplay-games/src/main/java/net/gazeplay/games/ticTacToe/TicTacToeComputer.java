@@ -9,7 +9,10 @@ import java.util.List;
  * The computer of the Morpion (maintainer's choices of 10/11/2026), at 3 levels:
  * <ul>
  * <li>easy: it wins if it can, else it plays at random;</li>
- * <li>medium: it wins if it can, else it blocks a line of the player, else it takes the middle, else a corner;</li>
+ * <li>medium: it wins if it can, else it blocks a line of the player one time out of two, else it takes the middle,
+ * else a corner (tester's feedback of 23/11/2026, point 70: it blocked each time, and was harder than the hard one;
+ * measured on 25/11/2026, a player who wins and blocks when possible and plays at random otherwise won 77 games out of
+ * 100 against the easy computer, 9 against this one, now about 58, and 30 against the hard one);</li>
  * <li>hard: it plays the best move (a perfect computer never loses at the Morpion), but makes a mistake about once in
  * five moves, so that it can be beaten (maintainer's choice A; measured on 10/11/2026: against a perfect player, it
  * loses 419 games out of 1000 and draws the others).</li>
@@ -22,6 +25,10 @@ final class TicTacToeComputer {
      * How often the hard computer makes a mistake.
      */
     static final double MISTAKES = 0.2;
+    /**
+     * How often the medium computer forgets to block.
+     */
+    static final double FORGETS = 0.5;
     private static final int[] CORNERS = {0, 2, 6, 8};
 
     private final TicTacToeOpponent level;
@@ -29,11 +36,12 @@ final class TicTacToeComputer {
     private final double mistakes;
 
     TicTacToeComputer(final TicTacToeOpponent level, final ReplayablePseudoRandom random) {
-        this(level, random, MISTAKES);
+        this(level, random, level == TicTacToeOpponent.NORMAL ? FORGETS : MISTAKES);
     }
 
     /**
-     * @param mistakes how often the hard computer makes a mistake (0 for the tests: a perfect computer)
+     * @param mistakes how often the hard computer makes a mistake, or the medium one forgets to block (0 for the tests:
+     *                 a perfect computer, or one which always blocks)
      */
     TicTacToeComputer(final TicTacToeOpponent level, final ReplayablePseudoRandom random, final double mistakes) {
         this.level = level;
@@ -60,10 +68,11 @@ final class TicTacToeComputer {
 
     private int careful(final TicTacToeBoard board, final int me, final int other) {
         final List<Integer> free = board.free();
-        for (final int box : free) {
-            if (board.wins(box, other)) {
-                return box;
-            }
+        final List<Integer> blocks = free.stream().filter(box -> board.wins(box, other)).toList();
+        if (!blocks.isEmpty()) {
+            final List<Integer> elsewhere = free.stream().filter(box -> !blocks.contains(box)).toList();
+            final boolean forgets = !elsewhere.isEmpty() && random.nextDouble() < mistakes;
+            return forgets ? elsewhere.get(random.nextInt(elsewhere.size())) : blocks.getFirst();
         }
         if (board.canPlay(4)) {
             return 4;

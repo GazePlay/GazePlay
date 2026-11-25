@@ -17,4 +17,4 @@ The first one to line up 3 marks wins the game: a yellow band joins them. If the
 # The variants
 Choose a variant (it is circled), then press "Start".
 - In 1 game, in 3 games, in 5 games or without end: the number of games of the match.
-- At the bottom, the opponent: easy computer (it wins if it can, else it plays at random); medium computer (it wins if it can, else it blocks you, else it takes the middle or a corner); hard computer (it plays the best move, but makes a mistake about once in five moves: make the most of its mistakes to beat it); or two players.
+- At the bottom, the opponent: easy computer (it wins if it can, else it plays at random); medium computer (it wins if it can, else it blocks you one time out of two, else it takes the middle or a corner); hard computer (it plays the best move, but makes a mistake about once in five moves: make the most of its mistakes to beat it); or two players.

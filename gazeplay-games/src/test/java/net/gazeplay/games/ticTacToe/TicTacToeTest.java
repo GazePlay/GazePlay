@@ -18,6 +18,8 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -201,13 +203,15 @@ class TicTacToeTest {
                     level.name());
             }
         }
-        // X threatens 2 (0 and 1), O cannot win: the medium and hard computers block
+        // X threatens 2 (0 and 1), O cannot win: the hard computer blocks, the medium one too unless it forgets
         final TicTacToeBoard threat = new TicTacToeBoard();
         threat.play(0, X);
         threat.play(1, X);
         threat.play(4, O);
         for (int seed = 1; seed <= 10; seed++) {
-            assertEquals(2, new TicTacToeComputer(TicTacToeOpponent.NORMAL, new ReplayablePseudoRandom(seed))
+            assertEquals(2, new TicTacToeComputer(TicTacToeOpponent.NORMAL, new ReplayablePseudoRandom(seed), 0)
+                .choose(threat, O, X));
+            assertNotEquals(2, new TicTacToeComputer(TicTacToeOpponent.NORMAL, new ReplayablePseudoRandom(seed), 1)
                 .choose(threat, O, X));
             assertEquals(2, new TicTacToeComputer(TicTacToeOpponent.HARD, new ReplayablePseudoRandom(seed), 0)
                 .choose(threat, O, X));
@@ -233,6 +237,51 @@ class TicTacToeTest {
             player = player == X ? O : X;
         }
         return board.winner();
+    }
+
+    /**
+     * Tester's feedback of 23/11/2026, point 70: the medium computer was harder than the hard one. A player who wins and
+     * blocks when possible, and plays at random otherwise, beats each level less often than the one before.
+     */
+    @Test
+    void shouldBeHarderAtEachLevel() {
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom(4321.5);
+        final int games = 300;
+        final List<Integer> won = new ArrayList<>();
+        for (final TicTacToeOpponent level : new TicTacToeOpponent[]{TicTacToeOpponent.EASY, TicTacToeOpponent.NORMAL,
+            TicTacToeOpponent.HARD}) {
+            final TicTacToeComputer computer = new TicTacToeComputer(level, random);
+            int wins = 0;
+            for (int game = 0; game < games; game++) {
+                final TicTacToeBoard board = new TicTacToeBoard();
+                boolean playerToPlay = game % 2 == 0;
+                while (board.winner() == TicTacToeBoard.EMPTY && !board.isFull()) {
+                    if (playerToPlay) {
+                        board.play(attentive(board, random), X);
+                    } else {
+                        board.play(computer.choose(board, O, X), O);
+                    }
+                    playerToPlay = !playerToPlay;
+                }
+                wins += board.winner() == X ? 1 : 0;
+            }
+            won.add(wins * 100 / games);
+        }
+        assertTrue(won.get(0) > won.get(1) + 10, "easy, medium, hard: " + won);
+        assertTrue(won.get(1) > won.get(2) + 10, "easy, medium, hard: " + won);
+        assertTrue(won.get(2) >= 20, "the hard one can be beaten: " + won);
+    }
+
+    private static int attentive(final TicTacToeBoard board, final ReplayablePseudoRandom random) {
+        final List<Integer> free = board.free();
+        for (final int player : new int[]{X, O}) {
+            for (final int box : free) {
+                if (board.wins(box, player)) {
+                    return box;
+                }
+            }
+        }
+        return free.get(random.nextInt(free.size()));
     }
 
     @Test
