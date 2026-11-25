@@ -21,6 +21,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.menus.HelpDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
+import net.gazeplay.ui.scenes.whereisit.WhereIsItGamesDialog;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +44,8 @@ public class GameMenuController {
 
     /**
      * Starts a game chosen in the menu: shows its variants when it has several, or a single one playing with the
-     * images of the user (see {@link #showsTheVariants}); otherwise shows its help with a button
+     * images of the user (see {@link #showsTheVariants}), or the games of the user for "Where is it?"; otherwise shows
+     * its help with a button
      * starting it, when it has a help (see {@link GameHelp}), or starts it directly.
      */
     public void onGameSelection(
@@ -52,8 +54,17 @@ public class GameMenuController {
         @NonNull GameSpec gameSpec,
         String gameName
     ) {
-        Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
         final String nameCode = gameSpec.getGameSummary().getNameCode();
+        if (WhereIsItGamesDialog.NAME_CODE.equals(nameCode)) {
+            // The games made by the user, instead of variants (25/11/2026, point 86)
+            root.setEffect(new BoxBlur());
+            root.setDisable(true);
+            final WhereIsItGamesDialog games = new WhereIsItGamesDialog(gazePlay, this, gameSpec, root);
+            games.show();
+            games.toFront();
+            return;
+        }
+        Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
         if (showsTheVariants(variants)) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);

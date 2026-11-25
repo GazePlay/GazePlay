@@ -342,7 +342,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the folders of the images, of the music and of "Where is it?"
+     * @return the folders of the images and of the music (the one of "Where is it?" is made by its own window,
+     *   25/11/2026)
      */
     private SettingsPage.Section foldersSection(Configuration config, Translator translator) {
         // The images of the user, shared by all the games, then the drawings to color (maintainer's decision of
@@ -353,7 +354,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             // The drawings kept in "Gribouille" (12/11/2026)
             .add(DRAWINGS_KEY, buildOpenFolderButton(translator, GazePlayDirectories::getDrawingsDirectory))
             .add("MusicFolder", buildDirectoryChooser(config, this, translator, DirectoryType.MUSIC))
-            .add("WhereIsItDirectory", buildDirectoryChooser(config, this, translator, DirectoryType.WHERE_IS_IT))
             .build();
     }
 
@@ -522,7 +522,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * Folders that can be chosen in the settings.
      */
     enum DirectoryType {
-        WHERE_IS_IT, MUSIC, SHORTCUT
+        MUSIC, SHORTCUT
     }
 
     /**
@@ -549,7 +549,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * @return the button choosing a folder of a setting (files, "Where is it?" images, music or shortcuts), showing the
+     * @return the button choosing a folder of a setting (music or shortcuts), showing the
      *   current folder, and a reset button going back to the default folder
      */
     Node buildDirectoryChooser(
@@ -564,9 +564,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Button buttonLoad;
 
         switch (type) {
-            case WHERE_IS_IT:
-                fileDir = configuration.getWhereIsItDir();
-                break;
             case MUSIC:
                 changeMusicFolder(configuration.getMusicDir(), configuration);
                 fileDir = configuration.getMusicDir();
@@ -576,7 +573,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         buttonLoad = new Button(fileDir);
-        // No folder chosen (e.g. "Where is it?"): "Select" instead of an empty button
+        // No folder chosen: "Select" instead of an empty button
         final Runnable showSelectWhenEmpty = () -> {
             if (buttonLoad.getText() == null || buttonLoad.getText().isBlank()) {
                 buttonLoad.setText(translator.translate("Select"));
@@ -596,9 +593,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final File currentFolder;
 
             switch (type) {
-                case WHERE_IS_IT:
-                    currentFolder = new File(configuration.getWhereIsItDir());
-                    break;
                 case MUSIC:
                     currentFolder = new File(configuration.getMusicDir());
                     break;
@@ -625,9 +619,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             buttonLoad.textProperty().setValue(newPropertyValue);
 
             switch (type) {
-                case WHERE_IS_IT:
-                    configuration.setWhereIsItDir(newPropertyValue);
-                    break;
                 case MUSIC:
                     changeMusicFolder(newPropertyValue, configuration);
                     break;
@@ -640,14 +631,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final I18NButton resetButton = new I18NButton(translator, "Reset");
 
         switch (type) {
-            case WHERE_IS_IT:
-                resetButton.setOnAction(
-                    e -> {
-                        String defaultValue = Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR;
-                        configuration.setWhereIsItDir(defaultValue);
-                        buttonLoad.textProperty().setValue(defaultValue);
-                    });
-                break;
             case MUSIC:
                 resetButton.setOnAction(
                     e -> {

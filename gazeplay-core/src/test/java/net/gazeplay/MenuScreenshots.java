@@ -17,12 +17,14 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.whereisit.CustomGame;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.menus.MenuMessageDialog;
 import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
-import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonPane;
 import net.gazeplay.ui.scenes.gamemenu.GameHelp;
+import net.gazeplay.ui.scenes.whereisit.WhereIsItEditorDialog;
+import net.gazeplay.ui.scenes.whereisit.WhereIsItGamesDialog;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -197,14 +199,11 @@ public final class MenuScreenshots {
                 captureDialog(gazePlay, output, "3i-aide-sans-variante", () -> GameHelp.dialog(
                     gazePlay.getPrimaryStage(), gazePlay.getTranslator(), "FrogsRace",
                     gazePlay.getTranslator().translate("FrogsRace"), () -> { }).show());
-                // The window asking for the folder of "Where is it?" (no folder in the settings of the captures)
-                captureDialog(gazePlay, output, "3d-ou-est-ce-dossier", () -> {
-                    final GameWhereIsItErrorPathDialog dialog = new GameWhereIsItErrorPathDialog(gazePlay, null,
-                        gazePlay.getPrimaryStage(), null, gazePlay.getPrimaryScene().getRoot(),
-                        "WhereIsItDirNotConfig", null);
-                    dialog.setTitle(gazePlay.getTranslator().translate("WhereIsIt"));
-                    dialog.show();
-                });
+                // The games of the user for "Where is it?", and the window making one
+                captureDialog(gazePlay, output, "3d-ou-est-ce-jeux", () -> new WhereIsItGamesDialog(gazePlay, null,
+                    null, gazePlay.getPrimaryScene().getRoot()).show());
+                captureDialog(gazePlay, output, "3d-ou-est-ce-faire", () -> new WhereIsItEditorDialog(
+                    gazePlay.getPrimaryStage(), gazePlay.getTranslator(), new CustomGame()).show());
                 // The window asking for the images of a variant played with images of the user (none in the captures)
                 captureDialog(gazePlay, output, "3e-images-utilisateur", () -> {
                     final UserImagesDialog dialog = new UserImagesDialog(gazePlay.getPrimaryStage(),

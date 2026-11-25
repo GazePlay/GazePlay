@@ -173,6 +173,14 @@ public class GazePlayDirectories {
     }
 
     /**
+     * @return the folder of the games made by the user for "Where is it?" (25/11/2026), shared by all the profiles as
+     * the evaluations
+     */
+    public static File getWhereIsItFolder() {
+        return new File(getGazePlayFolder(), "ou-est-ce");
+    }
+
+    /**
      * Creates a folder if missing (no log: this class is used by the launcher before the logs are set up; a folder
      * that cannot be created shows as empty).
      */

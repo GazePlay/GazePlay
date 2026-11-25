@@ -2,25 +2,27 @@
 The same game as "Where is the animal?", with your own pictures: a question asks for a picture, find it among the others.
 
 # Preparing your pictures
-- In the settings (Folders section), choose the "Where is it? Game directory".
-- This folder holds an "images" folder, with a folder for each possible answer (its photos inside): its name is the answer asked for.
-- If you want, the folder can also hold the questions ("questions.csv"), their sounds ("sounds") and pictograms.
+- In the window of the game, "Make my Where is it?" opens a page to fill in. Give your game a name.
+- For each screen, choose the size of the grid (2, 4, 6 or 9 pictures), then click on a place to choose its picture, or drop pictures on it.
+- Press "Right answer" under the right picture.
+- If you want, write a sentence and add a sound (mp3 or wav).
+- Add, copy or remove screens on the left. A screen to complete (in red) is saved, but not played.
+- "Save": GazePlay makes the folder of the game itself (Documents, GazePlay_Learning, ou-est-ce) and copies the pictures and sounds into it. The game is the same for all the profiles.
+- "Change" changes a game, the red bin deletes it (your original pictures are kept).
 
 # How to play
-- The question is written in the middle of the screen and said aloud, then it goes down to the band at the bottom.
-- The pictures appear. Look at the right answer: a ring goes around the picture while you look at it, and the picture is chosen when it is full (fixation length of the settings).
+- The sentence, if the screen has one, is written in the middle of the screen (and the sound is played), then it goes down to the band at the bottom. Without sentence nor sound, the pictures come at once.
+- The pictures appear, at the places chosen. The screens come in a different order at each game. Look at the right answer: a ring goes around the picture while you look at it, and the picture is chosen when it is full (fixation length of the settings).
 - When the pictures appear, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
-- To hear the question again, look at the loudspeaker of the band.
+- To hear the sound again, look at the loudspeaker of the band.
 
 # How to win
 - Right answer: the picture is circled in green, it grows, then "Bravo" and a new question.
 - Wrong answer: the picture is crossed out and greyed, and cannot be chosen again; look again (the question is said again if the settings ask for it). If the question has a sound, a bubble reminds you that you can hear it again with the loudspeaker.
-- With or without end, with "With hearts", you have 3 hearts at the top left: each wrong answer costs one. With no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: a wrong answer only counts a mistake in the statistics.
-- Depending on the variant, the game stops after 5, 10 or 15 screens found: "Bravo", then the statistics; without end, leave by the menu (Esc key).
-- At the bottom left, the counter shows the number of the current screen: "Screen 3 / 10", or "Screen 7" without end.
+- With "With hearts", you have 3 hearts at the top left: each wrong answer costs one. With no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: a wrong answer only counts a mistake in the statistics.
+- The game stops when each screen has been found once: "Bravo", then the statistics.
+- At the bottom left, the counter shows the number of the current screen: "Screen 3 / 8".
 
 # The variants
-Choose a variant (it is framed), then press "Start".
-- The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.
-- At the bottom, the end of the game: 5, 10 or 15 screens, or without end.
-- At the bottom, the hearts: With hearts (3 hearts) or Without hearts.
+Choose a Where is it? (it is framed) and press "Play".
+- The hearts: Without hearts, or With hearts (3 hearts).

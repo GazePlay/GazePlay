@@ -61,7 +61,6 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 | 20 | Point par point : le son et la secousse d'une erreur peuvent pousser à la refaire exprès | Question pédagogique | Réunion avec Amélie. Pistes : A rien changer, B ne rien montrer, C option dans les variantes, D option générale pour tous les jeux qui réagissent aux erreurs |
 | 27 | Passages de l'aide Eval difficiles à comprendre | La mise en page est faite, mais on ne sait pas quels passages la gênent | Qu'elle indique les passages à reformuler |
 | 28 | Eval : la croix de fixation n'apparaît pas dans `echantillons.csv` (« - ») | Le mainteneur trouve bizarre de la mettre dans la colonne des zones, qui ne liste que des cibles choisissables | En parler avec elle. Piste : une colonne à part (`sur_la_croix`). **Demande du mainteneur du 25/11 : point 87** |
-| 31 | Où est-ce ? (avec ses images) : elle n'a pas réussi | Jeu et fonctionnement gardés tels quels | Revoir avec elle : dossier `images\<réponse>\`, textes dans `questions.csv`, sons dans `sounds\`. Limite notée : chaque sous-dossier peut devenir la réponse. **Demande du mainteneur du 25/11 : point 86** |
 
 ## Refusés ou laissés tels quels (décisions du mainteneur)
 
@@ -121,6 +120,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 72 | Coloriage | Même palette à tous les niveaux | La palette (« nickel » pour elle) est gardée, les niveaux sont renommés d'après leurs dessins : Facile : 1 ou 2 zones, Moyen : 3 à 6, Difficile : 7 ou plus, Mes dessins ; aide corrigée |
 | 84 | Où est la forme (demande du mainteneur) | « ovale » avec un « e » | Texte français et `voix.csv` ; enregistrements gardés (même prononciation) |
 | 85 | Recettes magiques (demande du mainteneur) | Recette visible ou cachée | Choix en haut des variantes ; cachée : montrée 3, 4 ou 5 s, puis des « ? » ; un ingrédient trouvé réapparaît coché ; rappel en fondu à chaque erreur ; rien à choisir pendant qu'elle est montrée |
+| 86, 31 | Où est-ce ? (demande du mainteneur ; la testeuse n'avait pas réussi avec le dossier) | Faire soi-même son jeu dans une fenêtre | Maquette A : « Mes jeux » (slider, au moins 2 visibles, « Créer mon Où est-ce ? » toujours à droite, rond rouge pour supprimer), éditeur écran par écran (grille, images, phrase, son, bonne réponse) ; dossier fait par GazePlay (`ou-est-ce\<nom>\jeu.json`, copies des images et des sons) ; chaque écran une fois, mélangés ; cœurs ; ancien dossier `images\<réponse>`, `questions.csv` et ligne des réglages retirés |
 
 ## À décider
 
@@ -170,8 +170,7 @@ Notées telles que demandées ; rien n'est codé.
 
 | N° | Jeu | Demande | Remarque |
 |---|---|---|---|
-| 86 | Où est-ce ? (menu principal) | Revoir l'option du dossier : une **fenêtre** où la personne choisit la taille de la grille, donne ses images, la phrase à afficher (si elle veut) et la bonne réponse ; **GazePlay fait lui-même le dossier** d'Où est-ce ? | Répond au point 31 (elle n'avait pas réussi avec le dossier `images\<réponse>\`, `questions.csv`, `sounds\`). Maquette à montrer avant de coder |
-| 87 | Eval | Écrans avec une **croix de fixation** : noter quand la personne entre dessus, en sort, combien de temps elle y reste, etc., **que la croix soit fixable ou non** | Répond au point 28 (croix absente d'`echantillons.csv`). Touche les fichiers de résultats d'Eval : expliquer l'impact et versionner (`formatVersion`) avant de coder, et mettre à jour l'aide « Comprendre les fichiers de résultats » |
+| 87 | Eval | **À faire en dernier (mainteneur, 25/11).** Écrans avec une **croix de fixation** : noter quand la personne entre dessus, en sort, combien de temps elle y reste, etc., **que la croix soit fixable ou non** | Répond au point 28 (croix absente d'`echantillons.csv`). Touche les fichiers de résultats d'Eval : expliquer l'impact et versionner (`formatVersion`) avant de coder, et mettre à jour l'aide « Comprendre les fichiers de résultats » |
 
 ## Rien à faire
 

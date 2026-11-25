@@ -9,19 +9,15 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import java.util.Set;
 
 /**
- * Gives the variants of the game "WhereIsIt" proposed in the menu: each theme and size of grid with each end (5,
- * 10 or 15 screens, or without end, 16/11/2026; see {@link WhereIsItVariants}).
+ * Gives the variants of a game of the family "Where is it?" without themes ("Where is the number?"): each size of grid
+ * with each end (5, 10 or 15 screens, or without end, 16/11/2026; see {@link WhereIsItVariants}).
  */
 public class WhereIsItGameVariantGenerator implements IGameVariantGenerator {
 
     /**
-     * The hidden theme of the variants: the name of the game ("Where is the number?" shares these sizes).
+     * The hidden theme of the variants: the name of the game.
      */
     private final String theme;
-
-    public WhereIsItGameVariantGenerator() {
-        this("WhereIsIt");
-    }
 
     public WhereIsItGameVariantGenerator(final String theme) {
         this.theme = theme;

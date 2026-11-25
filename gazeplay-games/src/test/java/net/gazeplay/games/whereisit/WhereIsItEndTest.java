@@ -12,7 +12,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItGameVariantGenerator;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheAnimalGameVariantGenerator;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheColorGameVariantGenerator;
-import net.gazeplay.games.whereisit.launcher.WhereIsItGameLauncher;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheAnimalGameLauncher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,10 +84,10 @@ class WhereIsItEndTest {
 
     @Test
     void shouldGiveOneThemeToAGameWithoutThemes() {
-        final Set<IGameVariant> variants = new WhereIsItGameVariantGenerator().getVariants();
+        final Set<IGameVariant> variants = new WhereIsItGameVariantGenerator("WhereIsTheNumber").getVariants();
         assertEquals(5 * 8, variants.size());
         assertTrue(variants.stream().map(GroupedGameVariant.class::cast)
-            .allMatch(variant -> variant.getGroup().equals("WhereIsIt") && variant.isSize()));
+            .allMatch(variant -> variant.getGroup().equals("WhereIsTheNumber") && variant.isSize()));
     }
 
     @Test
@@ -99,10 +98,6 @@ class WhereIsItEndTest {
         assertEquals(3, game.getNbLines());
         assertEquals(2, game.getNbColumns());
         assertEquals(WhereIsItEnd.SCREENS_15, game.getEnd());
-        final WhereIsIt replayed = (WhereIsIt) new WhereIsItGameLauncher().replayGame(gameContext,
-            IGameVariant.toGameVariant("GroupedGameVariant:WhereIsIt:WhereIsItEnd5:2x2:-"), stats, 42);
-        assertEquals(WhereIsItGameType.CUSTOMIZED, replayed.getGameType());
-        assertEquals(WhereIsItEnd.SCREENS_5, replayed.getEnd());
     }
 
     /**
@@ -116,11 +111,6 @@ class WhereIsItEndTest {
         assertEquals(2, animal.getNbLines());
         assertEquals(3, animal.getNbColumns());
         assertEquals(WhereIsItEnd.ENDLESS, animal.getEnd());
-        final WhereIsIt custom = (WhereIsIt) new WhereIsItGameLauncher().createNewGame(gameContext,
-            IGameVariant.toGameVariant("DimensionGameVariant:3:3"), stats);
-        assertEquals(3, custom.getNbLines());
-        assertEquals(3, custom.getNbColumns());
-        assertEquals(WhereIsItEnd.ENDLESS, custom.getEnd());
     }
 
     @Test

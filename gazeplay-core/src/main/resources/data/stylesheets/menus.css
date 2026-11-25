@@ -998,6 +998,7 @@
 .gp-menu .gp-round-violet { -gp-round-color: -gp-violet; }
 .gp-menu .gp-round-accent { -gp-round-color: -gp-accent; }
 .gp-menu .gp-round-gold { -gp-round-color: -gp-gold; }
+.gp-menu .gp-round-danger { -gp-round-color: -gp-danger; }
 
 .gp-menu .gp-icon-button.gp-round {
     -fx-background-color: -gp-round-color;

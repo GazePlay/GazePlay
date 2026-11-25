@@ -31,6 +31,8 @@ public interface IGameVariant {
         switch (split[0]) {
             case GazeplayEvalGameVariant.TYPE:
                 return new GazeplayEvalGameVariant(gameVariantTotext.substring(GazeplayEvalGameVariant.TYPE.length() + 1));
+            case CustomWhereIsItVariant.TYPE:
+                return CustomWhereIsItVariant.read(split);
             case "StringGameVariant":
                 return new StringGameVariant(split[1], split[2]);
             case "IntGameVariant":

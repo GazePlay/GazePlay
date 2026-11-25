@@ -95,6 +95,7 @@ GazePlay Learning) relevés dans `RETOURS_TESTEUSE.md` (points 33 à 83), puis, 
    **Groupe 2 TERMINÉ le 25/11** : 73, 44, 42, 37, 56, 57, 62 et 82, 70, 72, tous validés et commités.
    **Nouvelles demandes du mainteneur (25/11)** : 84 (« ovale »), 85 (Recettes magiques : recette cachée), 86 (Où est-ce ? :
    fenêtre pour faire le dossier), 87 (Eval : croix de fixation dans les résultats), voir `RETOURS_TESTEUSE.md`.
+   **Faits le 25/11** : 84, 85, 86 (commités). **87 : à faire en dernier** (décision du mainteneur).
 4. Ensuite, à décider point par point (classement proposé, à confirmer) :
    - changements moyens : 35, 36, 43, 45 à 48, 49, 51, 52, 53, 55, 59 à 61, 63, 67, 68, 71, 74 à 77, 83 ;
    - gros ajouts : Piano (38 à 41), 50, 54, Jeu de l'oie (64 à 66), 69, 80, 81.

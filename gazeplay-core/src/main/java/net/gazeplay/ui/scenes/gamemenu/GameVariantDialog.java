@@ -31,7 +31,6 @@ import net.gazeplay.ui.menus.MenuDialog;
 import net.gazeplay.ui.menus.MenuIcon;
 import net.gazeplay.ui.menus.MenuStyle;
 import net.gazeplay.ui.scenes.configuration.UserImagesDialog;
-import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -368,9 +367,7 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 final String userImages = UserImagesVariant.folderOf(variant);
-                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
-                    whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
-                } else if (userImages != null && UserImagesVariant.images(userImages).isEmpty()) {
+                if (userImages != null && UserImagesVariant.images(userImages).isEmpty()) {
                     userImagesErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant, userImages);
                 } else {
                     gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
@@ -735,21 +732,6 @@ public class GameVariantDialog extends Stage {
         button.setMaxWidth(primaryStage.getWidth() / 8);
         button.setMaxHeight(primaryStage.getHeight() / 8);
         return button;
-    }
-
-    /**
-     * Asks for the folder of the custom images of "Where is it?" before starting it.
-     */
-    private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        // The menu stays blurred and disabled behind this window, until it closes
-        root.setEffect(new BoxBlur());
-        root.setDisable(true);
-        // "WhereIsItNot Config Directory" used to be asked: a key missing from the translations, shown as it was
-        String whereIsItPromptLabel = "WhereIsItDirNotConfig";
-        GameWhereIsItErrorPathDialog errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
-        errorDialog.setTitle(gazePlay.getTranslator().translate("WhereIsIt"));
-        errorDialog.show();
-        errorDialog.toFront();
     }
 
     /**

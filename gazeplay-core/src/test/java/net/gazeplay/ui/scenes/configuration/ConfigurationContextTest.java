@@ -243,7 +243,8 @@ class ConfigurationContextTest {
             assertFalse(has(sections, "FileDir"));
             assertFalse(has(sections, "Coloring"));
             assertInstanceOf(HBox.class, control(sections, "MusicFolder"));
-            assertInstanceOf(HBox.class, control(sections, "WhereIsItDirectory"));
+            // "Where is it?": its games are made by its own window (25/11/2026)
+            assertFalse(has(sections, "WhereIsItDirectory"));
             // Statistics: results folder, then heatmap (disabled, opacity, colors), AOI (enabled), sequence and
             // video, each group in its own card
             assertInstanceOf(Button.class, control(sections, "ResultDir"));
@@ -409,15 +410,11 @@ class ConfigurationContextTest {
         Window mockWindow = mock(Window.class);
 
         Map<ConfigurationContext.DirectoryType, String> answers = Map.of(
-            ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR,
             ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath()
         );
 
-        when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getMusicDir()).thenAnswer(invocation -> fileDirProperty.getValue());
         when(mockConfig.getMusicDirProperty()).thenReturn(fileDirProperty);
-        writeInto(fileDirProperty).when(mockConfig).setWhereIsItDir(anyString());
         writeInto(fileDirProperty).when(mockConfig).setMusicDir(anyString());
 
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);

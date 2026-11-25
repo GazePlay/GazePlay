@@ -11,9 +11,6 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -25,16 +22,16 @@ import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
-import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
+import net.gazeplay.commons.whereisit.CustomGame;
+import net.gazeplay.commons.whereisit.CustomScreen;
 import net.gazeplay.components.GameStyle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,8 +52,6 @@ import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
  */
 @Slf4j
 public class WhereIsIt implements GameLifeCycle {
-    private static final int NBMAXPICTO = 10;
-    private static final double MAXSIZEPICTO = 250;
 
     /**
      * Languages whose voices say the questions: French and English, the only languages of GazePlay Learning since
@@ -71,15 +66,40 @@ public class WhereIsIt implements GameLifeCycle {
 
     private Group questionPill;
 
+    /**
+     * The animation of the question being shown, stopped when the game is left meanwhile.
+     */
+    private Transition questionAnimation;
+
     private ReplayQuestionButton replayButton;
 
     @Getter
     private final WhereIsItGameType gameType;
 
+    /**
+     * The grid of the screen being played: that of the variant, or of each screen of a game made by the user.
+     */
     @Getter
-    private final int nbLines;
+    private int nbLines;
     @Getter
-    private final int nbColumns;
+    private int nbColumns;
+
+    /**
+     * The game made by the user ("Where is it?", 25/11/2026), null for the other games, or when it no longer exists.
+     */
+    @Getter
+    private CustomGame customGame;
+
+    /**
+     * The screens of the game made by the user still to play, before they are shuffled again.
+     */
+    private final List<CustomScreen> screensToPlay = new ArrayList<>();
+
+    /**
+     * The screen being played of the game made by the user.
+     */
+    @Getter
+    private CustomScreen customScreen;
 
     private int level = 1;
     private int lvlReplays = 1;
@@ -202,13 +222,68 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
+     * A game made by the user (maintainer's request of 25/11/2026, point 86): each of its screens once, in an order drawn
+     * at random, with its grid, its pictures at their places, its sentence and sound.
+     *
+     * @param customGame the game, null when it no longer exists: the game says so
+     */
+    public WhereIsIt(final IGameContext gameContext, final Stats stats, final CustomGame customGame,
+                     final boolean withLives) {
+        this(CUSTOMIZED, 2, 2, gameContext, stats, WhereIsItEnd.ENDLESS, withLives);
+        this.customGame = customGame;
+    }
+
+    /**
+     * The same, replayed with a saved seed.
+     */
+    public WhereIsIt(final IGameContext gameContext, final Stats stats, final CustomGame customGame,
+                     final boolean withLives, final double gameSeed) {
+        this(CUSTOMIZED, 2, 2, gameContext, stats, WhereIsItEnd.ENDLESS, withLives, gameSeed);
+        this.customGame = customGame;
+    }
+
+    /**
+     * @return the screens to find to end the game, 0 without end
+     */
+    int screensToFind() {
+        if (gameType == CUSTOMIZED) {
+            return customGame != null ? customGame.playableScreens().size() : 0;
+        }
+        return end.getScreens();
+    }
+
+    /**
+     * Takes the next screen of the game made by the user: from its playable screens, shuffled, shuffled again once they
+     * have all been played, never the same twice in a row.
+     */
+    void nextCustomScreen() {
+        final List<CustomScreen> playable = customGame == null ? List.of() : customGame.playableScreens();
+        if (playable.isEmpty()) {
+            customScreen = null;
+            return;
+        }
+        if (screensToPlay.isEmpty()) {
+            screensToPlay.addAll(playable);
+            for (int i = screensToPlay.size() - 1; i > 0; i--) {
+                Collections.swap(screensToPlay, i, randomGenerator.nextInt(i + 1));
+            }
+            if (screensToPlay.getFirst() == customScreen) {
+                Collections.swap(screensToPlay, 0, screensToPlay.size() - 1);
+            }
+        }
+        customScreen = screensToPlay.removeFirst();
+        nbLines = customScreen.getLines();
+        nbColumns = customScreen.getColumns();
+    }
+
+    /**
      * Counts a screen found (its right picture chosen).
      *
      * @return whether it was the last screen of the game
      */
     boolean screenFound() {
         screensFound++;
-        ended = end.getScreens() > 0 && screensFound >= end.getScreens();
+        ended = screensToFind() > 0 && screensFound >= screensToFind();
         // The counter keeps the number of the screen just found until the next one appears
         return ended;
     }
@@ -219,7 +294,7 @@ public class WhereIsIt implements GameLifeCycle {
      */
     int currentScreen() {
         final int current = screensFound + 1;
-        return end.getScreens() > 0 ? Math.min(current, end.getScreens()) : current;
+        return screensToFind() > 0 ? Math.min(current, screensToFind()) : current;
     }
 
     /**
@@ -231,7 +306,7 @@ public class WhereIsIt implements GameLifeCycle {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns, hasLives()).computeGameSizing(dimension);
         final String text = gameContext.getTranslator().translate("WhereIsItScreen") + " " + currentScreen()
-            + (end.getScreens() > 0 ? " / " + end.getScreens() : "");
+            + (screensToFind() > 0 ? " / " + screensToFind() : "");
         final double room = sizing.bandLeft() - 2 * sizing.gap();
         final double font = sizing.bandHeight() * 0.18;
         counterPill = GameStyle.pill(text, font);
@@ -394,13 +469,18 @@ public class WhereIsIt implements GameLifeCycle {
             screensFound = 0;
             lives = LIVES;
             lost = false;
+            screensToPlay.clear();
+        }
+        if (gameType == CUSTOMIZED) {
+            nextCustomScreen();
         }
         showCounter();
         showLives();
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
+        final int winnerImageIndexAmongDisplayedImages = customScreen != null ? customScreen.getRightAnswer()
+            : randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
         if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
@@ -429,8 +509,8 @@ public class WhereIsIt implements GameLifeCycle {
             winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
-            final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
-            animation.play();
+            questionAnimation = createQuestionTransition(currentRoundDetails.getQuestion());
+            questionAnimation.play();
             if (currentRoundDetails.getQuestionSoundPath() != null) {
                 playQuestionSound();
             }
@@ -445,15 +525,19 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * @return the animation showing the question (with its pictograms, or a loudspeaker for the sounds) in the middle
-     *   of the screen, then moving it to the band at the bottom before the pictures appear
+     * @return the animation showing the question (or a loudspeaker for the sounds) in the middle of the screen, then
+     *   moving it to the band at the bottom before the pictures appear
      */
-    private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
+    private Transition createQuestionTransition(final String question) {
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double width = gamePaneDimension2D.getWidth();
         final double height = gamePaneDimension2D.getHeight();
         final GameSizing sizing = new GameSizingComputer(nbLines, nbColumns, hasLives()).computeGameSizing(gamePaneDimension2D);
-        final long questionLength = gameContext.getConfiguration().getQuestionLength();
+        // A screen made by the user may have no sentence, and no sound either: its pictures then come at once
+        final boolean withoutSentence = gameType == CUSTOMIZED && (question == null || question.isBlank());
+        final boolean withSound = currentRoundDetails != null && currentRoundDetails.getQuestionSoundPath() != null;
+        final long questionLength = withoutSentence && !withSound ? 0
+            : gameContext.getConfiguration().getQuestionLength();
 
         // In the middle: as large as the screen allows
         final double largeFont = Math.min(height / 9, width / 14);
@@ -464,10 +548,10 @@ public class WhereIsIt implements GameLifeCycle {
             pillWidth = questionPill.getLayoutBounds().getWidth();
         }
         final double pillHeight = questionPill.getLayoutBounds().getHeight();
-        final boolean withPictos = listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO;
-        final double pillCenterY = height * (withPictos ? 0.3 : 0.45);
+        final double pillCenterY = height * 0.45;
         questionPill.setLayoutX(width / 2 - pillWidth / 2);
         questionPill.setLayoutY(pillCenterY - pillHeight / 2);
+        questionPill.setVisible(!withoutSentence);
         gameContext.getChildren().add(questionPill);
 
         final long timeStarted = System.currentTimeMillis();
@@ -478,22 +562,8 @@ public class WhereIsIt implements GameLifeCycle {
         // Shown with the question, removed when the pictures appear
         final List<Node> questionDecorations = new ArrayList<>();
 
-        if (withPictos) {
-            final double nbPicto = listOfPictos.size();
-            final double pictoSize = Math.min(width / (nbPicto + 1), MAXSIZEPICTO);
-            final double shift = width / 2 - ((nbPicto / 2) * pictoSize * 1.1);
-            int i = 0;
-            for (final Image picto : listOfPictos) {
-                final Rectangle pictoRectangle = new Rectangle(pictoSize, pictoSize);
-                pictoRectangle.setFill(new ImagePattern(picto));
-                pictoRectangle.setY(pillCenterY + pillHeight / 2 + sizing.gap() * 2);
-                pictoRectangle.setX(shift + (i++ * pictoSize * 1.1));
-                questionDecorations.add(pictoRectangle);
-            }
-        }
-
         final List<Transition> decorationAnimations = new ArrayList<>();
-        if (gameType.toString().contains("SOUNDS")) {
+        if (gameType.toString().contains("SOUNDS") || withoutSentence && withSound) {
             // A loudspeaker beating above the question while the sound is played
             final double speakerSize = height * 0.22;
             final SVGPath speakerIcon = GameStyle.icon("volume_up_fill1", speakerSize);
@@ -577,6 +647,10 @@ public class WhereIsIt implements GameLifeCycle {
      */
     @Override
     public void dispose() {
+        if (questionAnimation != null) {
+            questionAnimation.stop();
+            questionAnimation = null;
+        }
         gameContext.getChildren().remove(counterPill);
         gameContext.getChildren().remove(livesGroup);
         hideReplayHint();
@@ -626,21 +700,6 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * @return whether the system recognises a file as an image
-     */
-    static boolean fileIsImageFile(File file) {
-        try {
-            String mimetype = Files.probeContentType(file.toPath());
-            if (mimetype != null && mimetype.split("/")[0].equals("image")) {
-                return true;
-            }
-        } catch (IOException ignored) {
-
-        }
-        return false;
-    }
-
-    /**
      * @param folders  resource folders of pictures (e.g. "data/whereIsTheLetter/images/A")
      * @param variant  names of the folders of a variant (e.g. "A", "E"); empty for all the folders
      * @return the folders whose name is one of the variant. The whole name is compared: a part of the path used to be
@@ -663,17 +722,16 @@ public class WhereIsIt implements GameLifeCycle {
                                             final int winnerImageIndexAmongDisplayedImages) {
         final Configuration config = gameContext.getConfiguration();
 
+        if (this.gameType == CUSTOMIZED) {
+            return buildCustomScreen();
+        }
+
         int directoriesCount;
         final String directoryName;
-        List<File> imagesFolders = new LinkedList<>();
         List<String> resourcesFolders = new LinkedList<>();
         List<String> winnerFolders = new LinkedList<>();
 
-        if (this.gameType == CUSTOMIZED) {
-            final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
-            directoryName = imagesDirectory.getPath();
-            directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
-        } else if (this.gameType == ANIMALS_DYNAMIC) {
+        if (this.gameType == ANIMALS_DYNAMIC) {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             directoryName = resourcesDirectory;
 
@@ -708,9 +766,6 @@ public class WhereIsIt implements GameLifeCycle {
             return null;
         }
 
-        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, hasLives())
-            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
-
         // The picture of each place of the grid. All the draws come from the generator of the game, so that a saved
         // game is replayed with the same pictures by this version. The right answer is no longer drawn at random at
         // each screen but taken from a shuffled list (tester's feedback of 20/11/2026, point 15): the replay of a game
@@ -719,7 +774,6 @@ public class WhereIsIt implements GameLifeCycle {
         String voice = null;
         String questionSoundPath;
         String question;
-        List<Image> pictograms = null;
 
         if (this.gameType == FIND_ODD || this.gameType == ANIMALS_DYNAMIC) {
             final String folder;
@@ -765,35 +819,14 @@ public class WhereIsIt implements GameLifeCycle {
             }
         } else {
             // The right answer from the shuffled list, the other pictures from other folders drawn at random
-            final String folderName = nextWinner(this.gameType == CUSTOMIZED
-                ? imagesFolders.stream().map(File::getName).toList()
-                : folderNamesOf(resourcesFolders), random);
-            final File winnerCustomFolder = this.gameType == CUSTOMIZED
-                ? imagesFolders.stream().filter(file -> file.getName().equals(folderName)).findFirst().orElseThrow()
-                : null;
-            final String winnerResourceFolder = this.gameType == CUSTOMIZED
-                ? null
-                : removeFolderNamed(resourcesFolders, folderName);
-            imagesFolders.remove(winnerCustomFolder);
+            final String folderName = nextWinner(folderNamesOf(resourcesFolders), random);
+            final String winnerResourceFolder = removeFolderNamed(resourcesFolders, folderName);
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
                 final boolean winnerPlace = i == winnerImageIndexAmongDisplayedImages;
-                if (this.gameType == CUSTOMIZED) {
-                    final File folder = winnerPlace ? winnerCustomFolder
-                        : imagesFolders.remove(random.nextInt(imagesFolders.size()));
-                    final List<File> validImageFiles = new ArrayList<>();
-                    for (File file : getFiles(folder)) {
-                        if (WhereIsItVaildator.fileIsImageFile(file)) {
-                            validImageFiles.add(file);
-                        }
-                    }
-                    // The image file needs 'file:' prepended as this will get images from a local source, not resources.
-                    imagePaths.add("file:" + validImageFiles.get(random.nextInt(validImageFiles.size())));
-                } else {
-                    final String folder = winnerPlace ? winnerResourceFolder
-                        : resourcesFolders.remove(random.nextInt(resourcesFolders.size()));
-                    final Set<String> files = ResourceFileManager.getResourcePaths(folder);
-                    imagePaths.add((String) files.toArray()[random.nextInt(files.size())]);
-                }
+                final String folder = winnerPlace ? winnerResourceFolder
+                    : resourcesFolders.remove(random.nextInt(resourcesFolders.size()));
+                final Set<String> files = ResourceFileManager.getResourcePaths(folder);
+                imagePaths.add((String) files.toArray()[random.nextInt(files.size())]);
                 if (winnerPlace) {
                     voice = drawVoice(language);
                 }
@@ -802,21 +835,46 @@ public class WhereIsIt implements GameLifeCycle {
             previousWinnerFolderName = folderName;
             questionSoundPath = getPathSound(folderName, language, voice);
             question = getQuestionText(folderName, language);
-            pictograms = getPictograms(folderName);
         }
 
+        return new RoundDetails(pictureCards(imagePaths, winnerImageIndexAmongDisplayedImages),
+            winnerImageIndexAmongDisplayedImages, questionSoundPath, question);
+    }
+
+    /**
+     * @return the pictures of a screen at their places, each with its area of interest
+     */
+    private List<PictureCard> pictureCards(final List<String> imagePaths, final int winner) {
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, hasLives())
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
         final List<PictureCard> pictureCardList = new ArrayList<>();
         for (int i = 0; i < imagePaths.size(); i++) {
             final double x = gameSizing.cellX(i % nbColumns);
             final double y = gameSizing.cellY(i / nbColumns);
             pictureCardList.add(new PictureCard(x, y, gameSizing.cellWidth(), gameSizing.cellHeight(), gameContext,
-                winnerImageIndexAmongDisplayedImages == i, imagePaths.get(i), stats, this));
+                winner == i, imagePaths.get(i), stats, this));
 
             final TargetAOI targetAOI = new TargetAOI(x + gameSizing.cellWidth() / 2, y + gameSizing.cellHeight() / 2,
                 (int) (Math.max(gameSizing.cellWidth(), gameSizing.cellHeight()) / 2), System.currentTimeMillis());
             targetAOIList.add(targetAOI);
         }
-        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question, pictograms);
+        return pictureCardList;
+    }
+
+    /**
+     * @return the screen being played of the game made by the user; null, with a message, when there is none
+     */
+    private RoundDetails buildCustomScreen() {
+        if (customScreen == null) {
+            log.warn("No game of the user to play");
+            message(gameContext.getTranslator().translate("WhereIsItNoGame"));
+            return null;
+        }
+        final List<String> imagePaths = customScreen.getPictures().stream().map(path -> path.toUri().toString()).toList();
+        final String sound = customScreen.getSound() != null && Files.isRegularFile(customScreen.getSound())
+            ? customScreen.getSound().toAbsolutePath().toString() : null;
+        return new RoundDetails(pictureCards(imagePaths, customScreen.getRightAnswer()), customScreen.getRightAnswer(),
+            sound, customScreen.getSentence());
     }
 
     /**
@@ -866,24 +924,19 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * Return all files which don't start with a point
-     */
-    private File[] getFiles(final File folder) {
-        return folder.listFiles(file -> !file.getName().startsWith("."));
-    }
-
-    /**
      * Shows an error message when the pictures cannot be found, on a rounded label in the middle of the game area.
      */
     private void error(final String language) {
+        message(MultilinguismFactory.getSingleton().getTranslation("WII-error", language));
+    }
+
+    private void message(final String message) {
         gameContext.clear();
 
-        final Multilinguism multilinguism = MultilinguismFactory.getSingleton();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double width = dimension == null ? 0 : dimension.getWidth();
         final double height = dimension == null ? 0 : dimension.getHeight();
 
-        final String message = multilinguism.getTranslation("WII-error", language);
         final double fontSize = Math.max(16, height / 20);
         Group label = GameStyle.pill(message, fontSize);
         final Bounds bounds = label.getLayoutBounds();
@@ -901,7 +954,7 @@ public class WhereIsIt implements GameLifeCycle {
      *   game is replayed with the same pictures.
      */
     String drawVoice(final String language) {
-        if (this.gameType == CUSTOMIZED || !LANGUAGES_WITH_VOICES.contains(language)) {
+        if (!LANGUAGES_WITH_VOICES.contains(language)) {
             return null;
         }
         // Still drawn, so that a saved game is replayed with the same pictures; the voice is the one of the settings
@@ -917,31 +970,6 @@ public class WhereIsIt implements GameLifeCycle {
      *   language
      */
     String getPathSound(final String folder, final String language, final String voice) {
-        if (this.gameType == CUSTOMIZED) {
-            final Configuration config = gameContext.getConfiguration();
-            try {
-                log.debug("CUSTOMIZED");
-                final String path = config.getWhereIsItDir() + "/sounds/";
-                final File soundsDirectory = new File(path);
-                final String[] soundsDirectoryFiles = soundsDirectory.list();
-                if (soundsDirectoryFiles != null) {
-                    for (final String file : soundsDirectoryFiles) {
-                        log.debug("file " + file);
-                        log.debug("folder " + folder);
-                        if (file.contains(folder)) {
-                            final File f = new File(path + file);
-                            log.debug("file " + f.getAbsolutePath());
-                            return f.getAbsolutePath();
-                        }
-                    }
-                }
-            } catch (final Exception e) {
-                log.debug("Problem with customized folder");
-                error(config.getLanguage());
-            }
-            return "";
-        }
-
         log.debug("language is " + language);
 
         if (gameType.toString().contains("SOUNDS")) {
@@ -973,53 +1001,12 @@ public class WhereIsIt implements GameLifeCycle {
         log.debug("folder: {}", folder);
         log.debug("language: {}", language);
 
-        if (this.gameType == CUSTOMIZED) {
-            final Configuration config = gameContext.getConfiguration();
-            final File questionFile = new File(config.getWhereIsItDir() + "/questions.csv");
-            final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
-
-            return localMultilinguism.getTranslation(folder, language);
-        }
-
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(gameType.getLanguageResourceLocation());
 
         if (gameType.toString().contains("SOUNDS")) {
             return localMultilinguism.getTranslation("listen", language);
         }
         return localMultilinguism.getTranslation(folder, language);
-    }
-
-    /**
-     * @return the pictograms illustrating the question of a folder
-     */
-    private List<Image> getPictograms(final String folder) {
-        final String language = "pictos";
-
-        if (this.gameType != CUSTOMIZED) {
-            return null;
-        }
-
-        final Configuration config = gameContext.getConfiguration();
-        final File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
-        final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
-        final String traduction = localMultilinguism.getTranslation(folder, language);
-        log.debug("traduction: {}", traduction);
-
-        final StringTokenizer st = new StringTokenizer(traduction, ";");
-        final List<Image> imageList = new ArrayList<>(20);
-
-        while (st.hasMoreTokens()) {
-            final String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace(' ', ' ').trim();
-            log.debug("token \"{}\"", token);
-            final File tokenFile = new File(token);
-            log.debug("Exists {}", tokenFile.exists());
-            if (tokenFile.exists()) {
-                imageList.add(new Image(tokenFile.toURI().toString(), 500, 500, true, false));
-            }
-        }
-
-        log.debug("imageList: {}", imageList);
-        return imageList;
     }
 
     /**

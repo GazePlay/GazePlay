@@ -395,6 +395,37 @@ RoomEnd20,,,,,,,20 objects,,20 objets,,,,,,,,,,,,
 RoomEndless,,,,,,,Without end,,Sans fin,,,,,,,,,,,,
 LivesWith,,,,,,,With hearts,,Avec cœurs,,,,,,,,,,,,
 LivesWithout,,,,,,,Without hearts,,Sans cœurs,,,,,,,,,,,,
+WhereIsItNoGame,,,,,,,This game no longer exists or none of its screens is complete.,,Ce jeu n’existe plus ou aucun de ses écrans n’est complet.,,,,,,,,,,,,
+OwnGameChoose,,,,,,,Choose a Where is it? and press "Play",,Choisis un Où est-ce ? et appuie sur « Jouer »,,,,,,,,,,,,
+OwnGameCreate,,,,,,,Make my Where is it?,,Créer mon Où est-ce ?,,,,,,,,,,,,
+OwnGameEdit,,,,,,,Change,,Modifier,,,,,,,,,,,,
+OwnGamePlay,,,,,,,Play,,Jouer,,,,,,,,,,,,
+OwnGameScreens,,,,,,,Screens:,,Écrans :,,,,,,,,,,,,
+OwnGameIncomplete,,,,,,,To complete:,,À compléter :,,,,,,,,,,,,
+OwnGameDeleteQuestion,,,,,,,Delete this game and its copies of the pictures? Your original pictures are kept.,,Supprimer ce jeu et ses copies des images ? Tes images d’origine sont gardées.,,,,,,,,,,,,
+OwnGameMake,,,,,,,Make a game,,Faire un jeu,,,,,,,,,,,,
+OwnGameNew,,,,,,,My game,,Mon jeu,,,,,,,,,,,,
+OwnGameName,,,,,,,Name,,Nom,,,,,,,,,,,,
+OwnGameScreensTitle,,,,,,,The screens,,Les écrans,,,,,,,,,,,,
+OwnGameAddScreen,,,,,,,Add a screen,,Ajouter un écran,,,,,,,,,,,,
+OwnGameCopyScreen,,,,,,,Copy,,Copier,,,,,,,,,,,,
+OwnGameRemoveScreen,,,,,,,Remove,,Enlever,,,,,,,,,,,,
+OwnGameSize,,,,,,,Size of the grid,,Taille de la grille,,,,,,,,,,,,
+OwnGameSentence,,,,,,,Sentence (if you want),,Phrase (si tu veux),,,,,,,,,,,,
+OwnGameNoSentence,,,,,,,Without sentence,,Sans phrase,,,,,,,,,,,,
+OwnGameAddSound,,,,,,,Add a sound…,,Ajouter un son…,,,,,,,,,,,,
+OwnGameRemoveSound,,,,,,,Remove the sound,,Enlever le son,,,,,,,,,,,,
+OwnGameSounds,,,,,,,Sounds,,Sons,,,,,,,,,,,,
+OwnGameHint,,,,,,,Click on a place to choose its picture then on "Right answer".,,Clique sur une case pour choisir son image puis sur « Bonne réponse ».,,,,,,,,,,,,
+OwnGamePicture,,,,,,,Picture,,Image,,,,,,,,,,,,
+OwnGameRightAnswer,,,,,,,Right answer,,Bonne réponse,,,,,,,,,,,,
+OwnGameMissingPictures,,,,,,,Pictures are missing,,Il manque des images,,,,,,,,,,,,
+OwnGameMissingAnswer,,,,,,,Choose the right answer,,Choisis la bonne réponse,,,,,,,,,,,,
+OwnGameNotPlayed,,,,,,,The screens to complete are saved but not played.,,Les écrans à compléter sont enregistrés mais ne sont pas joués.,,,,,,,,,,,,
+OwnGameSave,,,,,,,Save,,Enregistrer,,,,,,,,,,,,
+OwnGameNotSaved,,,,,,,The game could not be saved.,,Le jeu n’a pas pu être enregistré.,,,,,,,,,,,,
+OwnGameCloseQuestion,,,,,,,Close without saving the changes?,,Fermer sans enregistrer les changements ?,,,,,,,,,,,,
+OwnGameCloseAnyway,,,,,,,Close without saving,,Fermer sans enregistrer,,,,,,,,,,,,
 WhereIsItEnd5,,,,,,,5 screens,,5 écrans,,,,,,,,,,,,
 WhereIsItEnd10,,,,,,,10 screens,,10 écrans,,,,,,,,,,,,
 WhereIsItEnd15,,,,,,,15 screens,,15 écrans,,,,,,,,,,,,
@@ -946,7 +977,6 @@ Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 # FOLDERS SETTINGS
 ImportEval,,,,,,,Import eval,,Importer une eval,,,,,,,,,,,,
 MusicFolder,Direktoria e muzikës,ملف الموسيقى,Тэчка Музыка,音乐目录,Musikmappe,φάκελος μουσικής,music folder,musiikkikansio,Dossier musiques,,Datoteka Muzika,folder muzik,Cartella musica,,Muziek folder,folder muzyczny,*pasta de musica,Папка Музыка,Carpeta de música,Thư mục âm nhạc,Folder muzik
-WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,Дзе гэта? папка гульні,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? »,,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,« Waar is het » Spel bestandslocatie,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,Где это? папка игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game,« Di mana? » Arahan permainan
 
 # STATS SETTINGS
 DisableHeatMap,Çaktivizo Heat Map,الغاء خريطة الحرارة,Адключыць цеплавую карту,关闭眼动追踪地图,Deaktivieren Sie die Heat Map,Απενεργοποιήστε το χάρτη θερμότητας,Disable Heat Map,estää lämpökartta,Désactiver la carte de chaleur,,Deaktiviraj mapu za toplinu,Lumpuhkan Peta Haba,Disattiva mappa di calore,,Deactiveer Heat Map,Wyłącz mapę ciepła,Desactivar heatmap,Отключить тепловую карту,Desactivar mapa de calor,Tắt,Lumpuhkan Peta Haba
@@ -976,9 +1006,6 @@ YesRemove,Po (fshi),نعم (محو),Так (выдаліць),确定（删除）
 NoCancel,Jo (anullo),لا (الغاء),Не (адмяніць),取消,Nein (Annullierer),Όχι (ακύρωση),No (cancel),Ei kumota,Non (annuler),,Ne (poništi),Tidak (membatalkan),No (annulla),,Nee (annuleer),Nie (anuluj),*Não (cancelar),Нет (отменить),No (anular),Không (quay Lại),Tidak (membatalkan)
 
 # WHERE IS IT? ERROR PATH DIALOG
-WhereIsItDirNotConfig,,,Папка для Дзе гэта? ненастроена,,,,Where is it? directory not configured,,Répertoire Où est-ce ? non configuré,,,,,,,,,Папка для Где это? ненастроенна,,,
-ConfigWhereIsItDir,,,Налады для Где гэта?,,,,Where is it? configuration,,Configuration du répertoire Où est-ce ?,,,,,,,,,Настройки для Где это?,,,
-PickedWrongDir,,,Вы выбралі няправільную тэчку,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,Вы выбрали неправильную папку,,,
 Done,,,Гатова,,,,Done,,Valider,,,,,,,,,Готово,,,
 
 # STATS CONTEXT

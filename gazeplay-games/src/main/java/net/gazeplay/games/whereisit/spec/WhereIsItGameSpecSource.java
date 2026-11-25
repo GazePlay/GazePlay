@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.CustomWhereIsItVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsItGameLauncher;
 
 /**
@@ -18,6 +18,6 @@ public class WhereIsItGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("WhereIsIt").gameThumbnail("whereIsIt")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItGameVariantGenerator(), new WhereIsItGameLauncher());
+            new CustomWhereIsItVariantGenerator(), new WhereIsItGameLauncher());
     }
 }

@@ -131,8 +131,24 @@ public final class MenuMessageDialog extends Stage {
      */
     public static boolean confirmByClick(final Stage owner, final String title, final String message,
                                          final String okText, final String cancelText, final String closeText) {
+        return confirmByClick(new MenuMessageDialog(owner, title, message, false, okText, cancelText, closeText));
+    }
+
+    /**
+     * Asks whether something can be deleted: only a click accepts ({@link #confirmByClick}), on a red button.
+     *
+     * @return whether the "OK" button was clicked
+     */
+    public static boolean confirmDeletion(final Stage owner, final String title, final String message,
+                                          final String okText, final String cancelText, final String closeText) {
         final MenuMessageDialog dialog = new MenuMessageDialog(owner, title, message, false, okText, cancelText,
             closeText);
+        dialog.okButton.getStyleClass().remove("gp-button-primary");
+        dialog.okButton.getStyleClass().add("gp-button-danger");
+        return confirmByClick(dialog);
+    }
+
+    private static boolean confirmByClick(final MenuMessageDialog dialog) {
         dialog.okButton.setDefaultButton(false);
         dialog.okButton.setFocusTraversable(false);
         dialog.cancelButton.setDefaultButton(true);

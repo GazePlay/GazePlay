@@ -38,8 +38,6 @@ class WhereIsItTest {
     @Mock
     Configuration mockConfig;
 
-    private static final String FILESEPARATOR = File.separator;
-
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -52,20 +50,6 @@ class WhereIsItTest {
     @EnumSource(value = WhereIsItGameType.class, mode = EnumSource.Mode.EXCLUDE, names = {"CUSTOMIZED"})
     void shouldPickAndBuildRandomPictures(final WhereIsItGameType gameType) {
         final WhereIsIt whereIsIt = new WhereIsIt(gameType, 2, 2, mockGameContext, mockStats);
-
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-        final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
-        assertEquals(4, randomPictures.getPictureCardList().size());
-    }
-
-    @Test
-    void shouldPickAndBuildRandomCustomPictures() {
-        final WhereIsIt whereIsIt = new WhereIsIt(WhereIsItGameType.CUSTOMIZED, 2, 2, mockGameContext, mockStats);
-        final String currentDir = System.getProperty("user.dir") +
-            FILESEPARATOR + "src" +
-            FILESEPARATOR + "test" +
-            FILESEPARATOR + "resources";
-        when(mockConfig.getWhereIsItDir()).thenReturn(currentDir);
 
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);

@@ -2,25 +2,27 @@
 Le même jeu que « Où est l'animal ? », avec tes propres images : une question demande une image, trouve-la parmi les autres.
 
 # Préparer ses images
-- Dans les réglages (section Dossiers), choisis le « Répertoire du jeu Où est-ce ? ».
-- Ce dossier contient un dossier « images », avec un dossier par réponse possible (ses photos dedans) : son nom est la réponse demandée.
-- Si tu veux, le dossier peut aussi contenir les questions (« questions.csv »), leurs sons (« sounds ») et des pictogrammes.
+- Dans la fenêtre du jeu, « Créer mon Où est-ce ? » ouvre une page à remplir. Donne un nom à ton jeu.
+- Pour chaque écran, choisis la taille de la grille (2, 4, 6 ou 9 images), puis clique sur une case pour choisir son image, ou glisse des images dessus.
+- Appuie sur « Bonne réponse » sous la bonne image.
+- Si tu veux, écris une phrase et ajoute un son (mp3 ou wav).
+- Ajoute, copie ou enlève des écrans à gauche. Un écran à compléter (en rouge) est enregistré, mais pas joué.
+- « Enregistrer » : GazePlay fait lui-même le dossier du jeu (Documents, GazePlay_Learning, ou-est-ce) et y copie les images et les sons. Le jeu est le même pour tous les profils.
+- « Modifier » change un jeu, la corbeille rouge le supprime (tes images d’origine sont gardées).
 
 # Comment jouer
-- La question est écrite au milieu de l'écran et dite à voix haute, puis elle descend dans le bandeau du bas.
-- Les images apparaissent. Regarde la bonne réponse : un anneau fait le tour de l'image pendant que tu la regardes, et l'image est choisie quand il est complet (durée de fixation des réglages).
+- La phrase, si l’écran en a une, est écrite au milieu de l’écran (et le son est joué), puis elle descend dans le bandeau du bas. Sans phrase ni son, les images viennent tout de suite.
+- Les images apparaissent, à la place choisie. Les écrans viennent dans un ordre différent à chaque partie. Regarde la bonne réponse : un anneau fait le tour de l'image pendant que tu la regardes, et l'image est choisie quand il est complet (durée de fixation des réglages).
 - Quand les images apparaissent, rien ne peut être choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
-- Pour réentendre la question, regarde le haut-parleur du bandeau.
+- Pour réentendre le son, regarde le haut-parleur du bandeau.
 
 # Comment gagner
 - Bonne réponse : l'image est entourée de vert, elle grandit, puis « Bravo » et une nouvelle question.
 - Mauvaise réponse : l'image est barrée et grisée, et ne peut plus être choisie ; cherche encore (la question est redite si le réglage le demande). Si la question a un son, une bulle rappelle que tu peux la réécouter avec le haut-parleur.
-- Avec ou sans fin, avec « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise réponse en coûte un. Sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : une mauvaise réponse compte seulement une erreur dans les statistiques.
-- Selon la variante, le jeu s'arrête après 5, 10 ou 15 écrans trouvés : « Bravo », puis les statistiques ; sans fin, quitte par le menu (touche Échap).
-- En bas à gauche, le compteur montre le numéro de l'écran en cours : « Écran 3 / 10 », ou « Écran 7 » sans fin.
+- Avec « Avec cœurs », tu as 3 cœurs en haut à gauche : chaque mauvaise réponse en coûte un. Sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : une mauvaise réponse compte seulement une erreur dans les statistiques.
+- Le jeu s’arrête quand chaque écran a été trouvé une fois : « Bravo », puis les statistiques.
+- En bas à gauche, le compteur montre le numéro de l’écran en cours : « Écran 3 / 8 ».
 
 # Les variantes
-Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- La taille de la grille : 2, 4, 6 ou 9 images. Plus il y a d'images, plus c'est difficile.
-- En bas, la fin de la partie : 5, 10 ou 15 écrans, ou sans fin.
-- En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.
+Choisis un Où est-ce ? (il est entouré) et appuie sur « Jouer ».
+- Les cœurs : Sans cœurs, ou Avec cœurs (3 cœurs).
