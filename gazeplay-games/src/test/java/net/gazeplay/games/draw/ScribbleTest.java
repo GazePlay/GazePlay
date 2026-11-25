@@ -218,6 +218,34 @@ class ScribbleTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 44: in the rainbow mode, nothing left the eraser.
+     */
+    @Test
+    void shouldGoBackFromTheEraserToTheRainbowPencil() throws Exception {
+        final Scribble game = launched(ScribbleMode.RAINBOW, ScribbleBackground.SHEET);
+        fx(() -> {
+            final Scribble.Tool rainbow = tool(game, Scribble.Tool.Kind.RAINBOW);
+            final Scribble.Tool eraser = tool(game, Scribble.Tool.Kind.ERASER);
+            assertTrue(rainbow.isChosen());
+            game.use(eraser);
+            assertTrue(game.isEraser());
+            assertTrue(eraser.isChosen());
+            assertFalse(rainbow.isChosen());
+            game.lookAt(rainbow);
+            game.step(0.55);
+            assertFalse(game.isEraser());
+            assertTrue(rainbow.isChosen());
+            assertFalse(eraser.isChosen());
+            line(game, game.getGazePen(), Scribble.GAZE_SMOOTHING);
+            assertNotEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 200));
+            return null;
+        });
+        // In the palette mode, a color leaves the eraser: no rainbow pencil
+        final Scribble palette = launched(ScribbleMode.PALETTE, ScribbleBackground.SHEET);
+        assertTrue(palette.getTools().stream().noneMatch(tool -> tool.getKind() == Scribble.Tool.Kind.RAINBOW));
+    }
+
     @Test
     void shouldCountEachSheetDrawnOnce() throws Exception {
         final Scribble game = launched(ScribbleMode.PALETTE, ScribbleBackground.SHEET);

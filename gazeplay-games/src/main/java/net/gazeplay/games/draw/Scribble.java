@@ -13,6 +13,9 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
@@ -38,6 +41,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * "Gribouille" (name code Scribble, folder draw; reviewed on 12/11/2026, maintainer's rules): drawing with the eyes.
@@ -78,6 +82,11 @@ public class Scribble implements GameLifeCycle {
 
     private static final Color[] COLORS = {null, Color.rgb(229, 57, 53), Color.rgb(251, 140, 0), Color.rgb(253, 216, 53),
         Color.rgb(67, 160, 71), Color.rgb(30, 136, 229), Color.rgb(142, 36, 170), Color.rgb(240, 98, 146)};
+    /**
+     * The picture of the rainbow pencil: the hues of its line.
+     */
+    private static final LinearGradient RAINBOW = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
+        IntStream.rangeClosed(0, 6).mapToObj(i -> new Stop(i / 6.0, Color.hsb(i * 50, 0.72, 0.95))).toList());
     private static final DateTimeFormatter FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     enum Phase { WAIT, PLAY, OVER }
@@ -231,14 +240,14 @@ public class Scribble implements GameLifeCycle {
     }
 
     /**
-     * The buttons of the tool bar, in a grid of two columns: the colors (palette mode), the eraser and the three
-     * widths, a new sheet and keeping the drawing.
+     * The buttons of the tool bar, in a grid of two columns: the colors (palette mode) or the rainbow pencil (rainbow
+     * mode), the eraser and the three widths, a new sheet and keeping the drawing.
      */
     private void buildTools(final double x0, final double top, final double cell) {
         final double radius = cell * 0.4;
         // Centered in the height (the rainbow mode has no colors): the rows of the colors, of the eraser and the
         // widths, and of the last two buttons
-        final int rows = (mode == ScribbleMode.PALETTE ? COLORS.length / 2 : 0) + 2 + 1;
+        final int rows = (mode == ScribbleMode.PALETTE ? COLORS.length / 2 + 2 : 3) + 1;
         final double y0 = top + (7 - rows) * cell / 2;
         int slot = 0;
         if (mode == ScribbleMode.PALETTE) {
@@ -246,10 +255,15 @@ public class Scribble implements GameLifeCycle {
                 final Color tool = base == null ? background.getInk() : base;
                 addTool(slot++, x0, y0, cell, radius, Tool.Kind.COLOR, tool, 0);
             }
+        } else {
+            // Without colors, nothing left the eraser (tester's feedback of 23/11/2026, point 44)
+            addTool(slot++, x0, y0, cell, radius, Tool.Kind.RAINBOW, null, 0);
         }
         addTool(slot++, x0, y0, cell, radius, Tool.Kind.ERASER, null, 0);
         for (int i = 0; i < WIDTHS.length; i++) {
-            addTool(slot++, x0, y0, cell, radius, Tool.Kind.WIDTH, null, i);
+            // Alone on its row (rainbow mode), the last width is in its middle
+            final boolean alone = i == WIDTHS.length - 1 && slot % 2 == 0;
+            addTool(slot++, alone ? x0 + cell / 2 : x0, y0, cell, radius, Tool.Kind.WIDTH, null, i);
         }
         // The last two buttons on a row of their own
         if (slot % 2 != 0) {
@@ -286,6 +300,7 @@ public class Scribble implements GameLifeCycle {
         for (final Tool tool : tools) {
             final boolean chosen = switch (tool.kind) {
                 case COLOR -> !eraser && tool.color.equals(color);
+                case RAINBOW -> !eraser;
                 case ERASER -> eraser;
                 case WIDTH -> tool.widthIndex == widthIndex;
                 default -> false;
@@ -449,6 +464,7 @@ public class Scribble implements GameLifeCycle {
                 color = tool.color;
                 eraser = false;
             }
+            case RAINBOW -> eraser = false;
             case ERASER -> eraser = true;
             case WIDTH -> widthIndex = tool.widthIndex;
             case NEW_SHEET -> newSheet();
@@ -590,7 +606,7 @@ public class Scribble implements GameLifeCycle {
      * A round button of the tool bar.
      */
     final class Tool {
-        enum Kind { COLOR, ERASER, WIDTH, NEW_SHEET, SAVE }
+        enum Kind { COLOR, RAINBOW, ERASER, WIDTH, NEW_SHEET, SAVE }
 
         @Getter
         private final Kind kind;
@@ -630,12 +646,17 @@ public class Scribble implements GameLifeCycle {
         }
 
         /**
-         * @return what the button shows: its color, an eraser, a dot of its width, or an icon
+         * @return what the button shows: its color, the rainbow, an eraser, a dot of its width, or an icon
          */
         private Node picture() {
             return switch (kind) {
                 case COLOR -> {
                     final Circle swatch = new Circle(x, y, radius * 0.72, color);
+                    swatch.setStroke(Color.rgb(0, 0, 0, 0.2));
+                    yield swatch;
+                }
+                case RAINBOW -> {
+                    final Circle swatch = new Circle(x, y, radius * 0.72, RAINBOW);
                     swatch.setStroke(Color.rgb(0, 0, 0, 0.2));
                     yield swatch;
                 }

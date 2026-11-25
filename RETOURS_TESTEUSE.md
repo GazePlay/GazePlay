@@ -111,6 +111,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | N° | Jeu | Retour | Ce qui a été fait |
 |---|---|---|---|
 | 73 | Coloriage | Couleurs du « + » : fixation qui reprend à zéro, points qui bougent | Le trait de l'anneau dépassait la place de sa pastille et la grille les replaçait toutes : positions fixes, 5 par rangée ; la fenêtre fermée ne suit plus le regard |
+| 44 | Gribouille | Impossible de quitter la gomme en arc-en-ciel | Bouton « crayon arc-en-ciel » à côté de la gomme, entouré au départ ; aides |
 
 ## À décider
 
@@ -126,7 +127,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 41 | Piano | Animation de fin | |
 | 42 | Identifier les lettres | Images pas à la bonne taille par rapport aux lettres (2 × 3) | |
 | 43 | Gobelets Pass Pass | Transition entre deux tours trompeuse (la balle d'avant semble encore là) | |
-| 44 | Gribouille | Impossible de quitter la gomme en arc-en-ciel | |
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | |
 | 46 | Gribouille | Couleur blanche à la place de la gomme | |
 | 47 | Gribouille | Points d'épaisseur de la couleur choisie | |
