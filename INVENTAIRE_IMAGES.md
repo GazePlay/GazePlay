@@ -61,6 +61,11 @@ pas encore revus et les Biboules, 27 images communes).
 remplacées (personnes reconnaissables, contenu choquant ou sujet peu typique) et 25 photos ajoutées, toutes de Wikimedia
 Commons, libres, avec leur crédit dans le `CREDITS.txt` du jeu : **25 images livrées et 25 libres de plus**.
 
+**Retours de la testeuse, point 82 (24 et 25/11/2026)** : Magic Potions devient « Recettes magiques » ; 12 ingrédients
+OpenMoji (CC BY-SA 4.0, `data/potions/images/ingredients`) ajoutés, bulle de `Biboule-Client.png` redessinée sans
+flacon, vignette `potions.jpg` refaite (capture du jeu) ; **1 048 images livrées, 745 libres, 130 libres probables, 173
+de source inconnue** (comptées dans le CSV, retrait des 23 drapeaux compris).
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

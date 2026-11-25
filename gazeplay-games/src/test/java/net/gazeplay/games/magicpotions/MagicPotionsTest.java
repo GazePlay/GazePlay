@@ -2,6 +2,7 @@ package net.gazeplay.games.magicpotions;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
@@ -18,7 +19,8 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.util.WaitForAsyncUtils;
 
-import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -29,9 +31,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
- * "Magic Potions" (name code Potions; reviewed on 10/11/2026, maintainer's rules): the recipes, a potion poured at the
- * speed of the settings after a fixation of the length of the settings, the cauldron taking the color of the mixture,
- * the client served or the cauldron exploding, the lives, the ends, the recipe shown or not, the variants.
+ * "Recettes magiques" (name code Potions; Magic Potions until 24/11/2026, maintainer's rules): the recipes of 2, 3 or 4
+ * ingredients and the shelf, an ingredient flying into the cauldron after a fixation of the length of the settings, the
+ * ingredients out of the recipe, the explosion only for a recipe complete, the lives, the ends, the variants.
  */
 @ExtendWith(ApplicationExtension.class)
 class MagicPotionsTest {
@@ -73,10 +75,10 @@ class MagicPotionsTest {
         return WaitForAsyncUtils.asyncFx(action).get();
     }
 
-    private MagicPotions playing(final PotionsLevel level, final PotionsEnd end, final double seed) throws Exception {
+    private MagicPotions playing(final RecipeSize size, final PotionsEnd end, final double seed) throws Exception {
         final MagicPotions game = fx(() -> {
             gameArea.getChildren().clear();
-            final MagicPotions created = new MagicPotions(gameContext, stats, level, end, seed);
+            final MagicPotions created = new MagicPotions(gameContext, stats, size, end, seed);
             created.setManual();
             launchedGames.add(created).launch();
             return created;
@@ -95,48 +97,57 @@ class MagicPotionsTest {
         });
     }
 
-    private static void pour(final MagicPotions game, final PotionMix.Primary primary) throws Exception {
+    private static void choose(final MagicPotions game, final Ingredient ingredient) throws Exception {
         fx(() -> {
-            game.choose(primary);
+            game.choose(ingredient);
             return null;
         });
-        steps(game, MagicPotions.POUR + 0.05);
+    }
+
+    private static void put(final MagicPotions game, final Ingredient ingredient) throws Exception {
+        choose(game, ingredient);
+        steps(game, MagicPotions.FLY + 0.05);
     }
 
     /**
-     * Serves the client its potion.
+     * Makes the recipe and serves the client.
      */
     private static void serve(final MagicPotions game) throws Exception {
-        for (final PotionMix.Primary primary : game.getRequest().getRecipe()) {
-            pour(game, primary);
+        for (final Ingredient ingredient : List.copyOf(game.getRecipe())) {
+            put(game, ingredient);
         }
-        assertEquals(MagicPotions.Phase.SERVED, game.getPhase());
-        steps(game, MagicPotions.RESULT + 0.05);
+        assertEquals(MagicPotions.Phase.FUSION, game.getPhase());
+        steps(game, MagicPotions.FUSION + MagicPotions.DRINK + MagicPotions.SERVED + 0.1);
     }
 
-    private static PotionMix.Primary outOfRecipe(final MagicPotions game) {
-        for (final PotionMix.Primary primary : PotionMix.Primary.values()) {
-            if (!game.getRequest().getRecipe().contains(primary)) {
-                return primary;
-            }
-        }
-        return null;
+    private static List<Ingredient> outOfRecipe(final MagicPotions game) {
+        return game.getShelf().stream().filter(i -> !game.getRecipe().contains(i)).toList();
+    }
+
+    private static void refuse(final MagicPotions game, final Ingredient ingredient) throws Exception {
+        choose(game, ingredient);
+        steps(game, MagicPotions.SHAKE + 0.05);
     }
 
     @Test
-    void shouldMixTheColorsAsPaints() {
-        assertEquals(PotionMix.ORANGE, PotionMix.of(EnumSet.of(PotionMix.Primary.RED, PotionMix.Primary.YELLOW)));
-        assertEquals(PotionMix.GREEN, PotionMix.of(EnumSet.of(PotionMix.Primary.BLUE, PotionMix.Primary.YELLOW)));
-        assertEquals(PotionMix.PURPLE, PotionMix.of(EnumSet.of(PotionMix.Primary.RED, PotionMix.Primary.BLUE)));
-        assertEquals(PotionMix.BROWN, PotionMix.of(EnumSet.allOf(PotionMix.Primary.class)));
-        assertEquals(PotionMix.BLUE, PotionMix.of(EnumSet.of(PotionMix.Primary.BLUE)));
-        assertNull(PotionMix.of(EnumSet.noneOf(PotionMix.Primary.class)));
+    void shouldShowARecipeOfTheSizeChosenAndTwoOtherIngredientsOnTheShelf() throws Exception {
+        for (final RecipeSize size : RecipeSize.values()) {
+            final MagicPotions game = playing(size, PotionsEnd.ENDLESS, 5);
+            assertEquals(size.getIngredients(), game.getRecipe().size());
+            assertEquals(size.getIngredients(), new HashSet<>(game.getRecipe()).size(), "no ingredient twice");
+            assertEquals(size.getIngredients() + 2, game.getShelf().size());
+            assertEquals(game.getShelf().size(), new HashSet<>(game.getShelf()).size());
+            assertTrue(game.getShelf().containsAll(game.getRecipe()));
+            assertEquals(2, outOfRecipe(game).size());
+            assertEquals(size.getIngredients(), game.recipeShown());
+            assertEquals(0, game.ticked());
+        }
     }
 
     @Test
-    void shouldPourAPotionAfterAFixationOfTheLengthOfTheSettingsReadAtEachStep() throws Exception {
-        final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 3);
-        final PotionMix.Primary first = game.getRequest().getRecipe().iterator().next();
+    void shouldPutAnIngredientAfterAFixationOfTheLengthOfTheSettingsReadAtEachStep() throws Exception {
+        final MagicPotions game = playing(RecipeSize.TWO, PotionsEnd.ENDLESS, 3);
+        final Ingredient first = game.getRecipe().getFirst();
         fx(() -> {
             game.lookAt(first);
             return null;
@@ -147,149 +158,165 @@ class MagicPotionsTest {
         steps(game, 0.25);
         assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
         steps(game, 0.07);
-        assertEquals(MagicPotions.Phase.POUR, game.getPhase());
-        // Poured in the middle of its way, at the speed of the settings
-        assertTrue(game.getMixture().isEmpty());
+        assertEquals(MagicPotions.Phase.FLY, game.getPhase());
+        assertTrue(game.getAdded().isEmpty(), "in the cauldron at the end of its flight");
         when(configuration.getAnimationSpeedRatio()).thenReturn(2.0);
-        steps(game, MagicPotions.POUR / 4 + 0.05);
-        assertTrue(game.getMixture().contains(first));
+        steps(game, MagicPotions.FLY / 2 + 0.05);
+        assertEquals(Set.of(first), game.getAdded());
+        assertEquals(1, game.ticked());
+        // An empty card stays on the shelf
+        assertFalse(game.cardOf(first).getChildren().get(1).isVisible());
         verify(gameContext.getSoundManager()).add("data/potions/sounds/pour.wav");
-        steps(game, MagicPotions.POUR / 4);
-        assertNotEquals(MagicPotions.Phase.POUR, game.getPhase());
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        assertFalse(game.isExploding(), "no explosion before the recipe is complete");
     }
 
     /**
-     * Point 22 (maintainer's decision of 24/11/2026): the delay of the settings at the start of each new potion to make,
-     * the first one included, and nowhere else (not between two potions poured for the same client); a potion looked
-     * at is not poured while it runs, then after the fixation counted from its end.
+     * Maintainer's request of 24/11/2026: the ring of the fixation along the edge of the card, as in Memory.
      */
     @Test
-    void shouldWaitForTheDelayAtTheStartOfEachNewPotion() throws Exception {
-        final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 3);
-        verify(gameContext, times(1)).onGameStarted();
-        // The potions of the recipe poured one by one: no delay between them for the same client
-        for (final PotionMix.Primary primary : game.getRequest().getRecipe()) {
-            verify(gameContext, times(1)).onGameStarted();
-            pour(game, primary);
+    void shouldFillTheRingAlongTheEdgeOfTheCardLookedAt() throws Exception {
+        for (final RecipeSize size : RecipeSize.values()) {
+            final MagicPotions game = playing(size, PotionsEnd.ENDLESS, 3);
+            assertFalse(game.getRing().isVisible());
+            for (final Ingredient ingredient : game.getShelf()) {
+                fx(() -> {
+                    game.lookAt(ingredient);
+                    return null;
+                });
+                steps(game, 0.5);
+                assertTrue(game.getRing().isVisible());
+                // The geometry, not the bounds: those of a dashed line only hold its filled part
+                final Rectangle ring = game.getRing();
+                final Rectangle card = (Rectangle) game.cardOf(ingredient).getChildren().getFirst();
+                assertEquals(card.getX(), ring.getLayoutX() + ring.getX(), 0.01);
+                assertEquals(card.getY(), ring.getLayoutY() + ring.getY(), 0.01);
+                assertEquals(card.getWidth(), ring.getWidth(), 0.01);
+                assertEquals(card.getHeight(), ring.getHeight(), 0.01);
+                assertEquals(card.getArcWidth(), ring.getArcWidth(), 0.01);
+                final List<Double> dashes = game.getRing().getStrokeDashArray();
+                assertEquals(0.5, dashes.get(0) / (dashes.get(0) + dashes.get(1)), 0.03, "half filled");
+                final int index = game.getShelf().indexOf(ingredient);
+                fx(() -> {
+                    game.lookAway(index);
+                    return null;
+                });
+                assertFalse(game.getRing().isVisible());
+            }
         }
-        assertEquals(MagicPotions.Phase.SERVED, game.getPhase());
-        // The next client: its potion waits for the delay
+    }
+
+    /**
+     * Point 22: the delay of the settings at the start of each new recipe, the first one included, and nowhere else.
+     */
+    @Test
+    void shouldWaitForTheDelayAtTheStartOfEachNewRecipe() throws Exception {
+        final MagicPotions game = playing(RecipeSize.TWO, PotionsEnd.ENDLESS, 3);
+        verify(gameContext, times(1)).onGameStarted();
+        for (final Ingredient ingredient : List.copyOf(game.getRecipe())) {
+            verify(gameContext, times(1)).onGameStarted();
+            put(game, ingredient);
+        }
         when(gameContext.isSelectionBlocked()).thenReturn(true);
-        steps(game, MagicPotions.RESULT + 0.05);
+        steps(game, MagicPotions.FUSION + MagicPotions.DRINK + MagicPotions.SERVED + 0.1);
         assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
         verify(gameContext, times(2)).onGameStarted();
-        final PotionMix.Primary first = game.getRequest().getRecipe().iterator().next();
+        final Ingredient first = game.getRecipe().getFirst();
         fx(() -> {
             game.lookAt(first);
             return null;
         });
         steps(game, 2);
-        assertEquals(MagicPotions.Phase.PLAY, game.getPhase(), "nothing poured during the delay");
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase(), "nothing chosen during the delay");
         when(gameContext.isSelectionBlocked()).thenReturn(false);
         steps(game, 0.9);
         assertEquals(MagicPotions.Phase.PLAY, game.getPhase(), "the fixation counts from the end of the delay");
         steps(game, 0.15);
-        assertEquals(MagicPotions.Phase.POUR, game.getPhase());
+        assertEquals(MagicPotions.Phase.FLY, game.getPhase());
+    }
+
+    /**
+     * Maintainer's decision of 24/11/2026: the explosion only when the whole recipe is right (the ingredients merged),
+     * then the Biboule drinks the potion.
+     */
+    @Test
+    void shouldExplodeThenServeWhenTheRecipeIsCompleteInAnyOrder() throws Exception {
+        final MagicPotions game = playing(RecipeSize.THREE, PotionsEnd.ENDLESS, 7);
+        final List<Ingredient> asked = List.copyOf(game.getRecipe());
+        for (final Ingredient ingredient : asked.reversed()) {
+            put(game, ingredient);
+        }
+        assertEquals(MagicPotions.Phase.FUSION, game.getPhase());
+        assertTrue(game.isExploding());
+        verify(gameContext.getSoundManager()).add("data/potions/sounds/boom.wav");
+        verify(stats, never()).incrementNumberOfGoalsReached();
+        steps(game, MagicPotions.FUSION + 0.05);
+        assertEquals(MagicPotions.Phase.DRINK, game.getPhase());
+        assertFalse(game.isExploding());
+        steps(game, MagicPotions.DRINK + 0.05);
+        assertEquals(MagicPotions.Phase.SERVED, game.getPhase());
+        assertEquals(1, game.getServed());
+        verify(stats).incrementNumberOfGoalsReached();
+        verify(gameContext.getSoundManager()).add("data/potions/sounds/served.wav");
+        steps(game, MagicPotions.SERVED + 0.05);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        assertNotEquals(new HashSet<>(asked), new HashSet<>(game.getRecipe()), "another recipe");
+        assertEquals(0, game.ticked());
+        verify(stats, times(2)).incrementNumberOfGoalsToReach();
     }
 
     @Test
-    void shouldServeTheClientWhenTheRecipeIsCompleteInAnyOrder() throws Exception {
-        for (int seed = 1; seed <= 30; seed++) {
-            final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, seed * 7919.37);
-            if (game.getRequest().getRecipe().size() < 2) {
-                continue;
-            }
-            final PotionMix asked = game.getRequest();
-            serve(game);
-            assertEquals(1, game.getServed());
-            verify(stats).incrementNumberOfGoalsReached();
-            verify(gameContext.getSoundManager()).add("data/potions/sounds/served.wav");
-            assertNotSame(asked, game.getRequest());
-            assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
-            return;
-        }
-        fail("no mixture asked for in 30 games");
+    void shouldShakeAnIngredientOutOfTheRecipeCostALifeAndNotExplode() throws Exception {
+        final MagicPotions game = playing(RecipeSize.TWO, PotionsEnd.ENDLESS, 9);
+        final Ingredient wrong = outOfRecipe(game).getFirst();
+        choose(game, wrong);
+        assertEquals(MagicPotions.Phase.WRONG, game.getPhase());
+        assertEquals(MagicPotions.LIVES - 1, game.getLives());
+        verify(stats).incrementNumberOfMistakes();
+        verify(gameContext.getSoundManager()).add("data/dice/sounds/wrong.wav");
+        steps(game, MagicPotions.SHAKE / 4);
+        assertNotEquals(0, game.cardOf(wrong).getTranslateX(), "it shakes");
+        steps(game, MagicPotions.SHAKE);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        assertEquals(0, game.cardOf(wrong).getTranslateX());
+        assertFalse(game.isExploding());
+        assertTrue(game.getAdded().isEmpty());
+        verify(gameContext.getSoundManager(), never()).add("data/potions/sounds/boom.wav");
+        // Greyed, it can no longer be chosen
+        assertTrue(game.cardOf(wrong).getOpacity() < 1);
+        choose(game, wrong);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        assertEquals(MagicPotions.LIVES - 1, game.getLives());
+        verify(stats, times(1)).incrementNumberOfGoalsToReach();
     }
 
     @Test
-    void shouldColorTheCauldronWithTheMixture() throws Exception {
-        for (int seed = 1; seed <= 30; seed++) {
-            final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, seed * 7919.37);
-            if (game.getRequest() != PotionMix.BROWN) {
-                continue;
-            }
-            pour(game, PotionMix.Primary.RED);
-            assertEquals(PotionMix.RED.getColor(), game.potColor());
-            pour(game, PotionMix.Primary.BLUE);
-            assertEquals(PotionMix.PURPLE.getColor(), game.potColor());
-            pour(game, PotionMix.Primary.YELLOW);
-            assertEquals(PotionMix.BROWN.getColor(), game.potColor());
-            assertEquals(MagicPotions.Phase.SERVED, game.getPhase());
-            return;
-        }
-        fail("brown never asked for in 30 games");
+    void shouldNotPutAnIngredientTwiceNorWhileAnotherFlies() throws Exception {
+        final MagicPotions game = playing(RecipeSize.THREE, PotionsEnd.ENDLESS, 4);
+        final Ingredient first = game.getRecipe().get(0);
+        final Ingredient second = game.getRecipe().get(1);
+        fx(() -> {
+            game.choose(first);
+            game.choose(second);
+            return null;
+        });
+        steps(game, MagicPotions.FLY + 0.05);
+        assertEquals(Set.of(first), game.getAdded());
+        put(game, first);
+        assertEquals(Set.of(first), game.getAdded());
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
     }
 
     @Test
-    void shouldExplodeWithAPotionOutOfTheRecipeAndCostALife() throws Exception {
-        for (int seed = 1; seed <= 30; seed++) {
-            final MagicPotions game = playing(PotionsLevel.WITHOUT_RECIPE, PotionsEnd.ENDLESS, seed * 7919.37);
-            final PotionMix.Primary wrong = outOfRecipe(game);
-            if (wrong == null) {
-                continue;
-            }
-            pour(game, wrong);
-            assertEquals(MagicPotions.Phase.FAILED, game.getPhase());
-            assertTrue(game.isExploding());
-            assertEquals(MagicPotions.LIVES - 1, game.getLives());
-            verify(gameContext.getSoundManager()).add("data/potions/sounds/boom.wav");
-            verify(stats, never()).incrementNumberOfGoalsReached();
-            steps(game, MagicPotions.RESULT + 0.05);
-            assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
-            assertTrue(game.getMixture().isEmpty());
-            verify(stats, times(2)).incrementNumberOfGoalsToReach();
-            return;
+    void shouldEndWithLostAfterThreeMistakesAndNoBravo() throws Exception {
+        final MagicPotions game = playing(RecipeSize.TWO, PotionsEnd.ENDLESS, 11);
+        for (final Ingredient wrong : outOfRecipe(game)) {
+            refuse(game, wrong);
         }
-        fail("only brown asked for in 30 games");
-    }
-
-    @Test
-    void shouldNotPourAPotionTwiceNorWhileAnotherIsPoured() throws Exception {
-        for (int seed = 1; seed <= 30; seed++) {
-            final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, seed * 7919.37);
-            if (game.getRequest().getRecipe().size() < 2) {
-                continue;
-            }
-            final PotionMix.Primary first = game.getRequest().getRecipe().iterator().next();
-            fx(() -> {
-                game.choose(first);
-                game.choose(PotionMix.Primary.values()[(first.ordinal() + 1) % 3]);
-                return null;
-            });
-            steps(game, MagicPotions.POUR + 0.05);
-            assertEquals(Set.of(first), game.getMixture());
-            pour(game, first);
-            assertEquals(Set.of(first), game.getMixture());
-            assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
-            return;
-        }
-        fail("no mixture asked for in 30 games");
-    }
-
-    @Test
-    void shouldEndWithLostAfterThreeExplosionsAndNoBravo() throws Exception {
-        final MagicPotions game = playing(PotionsLevel.WITHOUT_RECIPE, PotionsEnd.ENDLESS, 11);
-        int explosions = 0;
-        for (int round = 0; round < 40 && explosions < MagicPotions.LIVES; round++) {
-            final PotionMix.Primary wrong = outOfRecipe(game);
-            if (wrong == null) {
-                serve(game);
-                continue;
-            }
-            pour(game, wrong);
-            steps(game, MagicPotions.RESULT + 0.05);
-            explosions++;
-        }
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        // The third mistake on the next recipe (the greyed ingredients come back on the shelf)
+        serve(game);
+        refuse(game, outOfRecipe(game).getFirst());
         assertEquals(MagicPotions.Phase.SHOW, game.getPhase());
         steps(game, MagicPotions.SHOW + 0.05);
         assertFalse(game.isBravo());
@@ -298,42 +325,35 @@ class MagicPotionsTest {
     }
 
     /**
-     * "Without hearts" (17/11/2026): no life lost and the game never lost, the explosions counted as mistakes.
+     * "Without hearts": no life lost and the game never lost, the ingredients out of the recipe counted as mistakes.
      */
     @Test
     void shouldNeverLoseWithoutHearts() throws Exception {
         final MagicPotions game = fx(() -> {
             gameArea.getChildren().clear();
-            final MagicPotions created = new MagicPotions(gameContext, stats, PotionsLevel.WITHOUT_RECIPE,
-                PotionsEnd.ENDLESS, 11);
+            final MagicPotions created = new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 11);
             created.setWithLives(false);
             created.setManual();
             launchedGames.add(created).launch();
             return created;
         });
         steps(game, 0.05);
-        int explosions = 0;
-        for (int round = 0; round < 60 && explosions < MagicPotions.LIVES + 1; round++) {
-            final PotionMix.Primary wrong = outOfRecipe(game);
-            if (wrong == null) {
-                serve(game);
-                continue;
+        for (int round = 0; round < 2; round++) {
+            for (final Ingredient wrong : outOfRecipe(game)) {
+                refuse(game, wrong);
             }
-            pour(game, wrong);
-            steps(game, MagicPotions.RESULT + 0.05);
-            explosions++;
+            serve(game);
         }
-        assertEquals(MagicPotions.LIVES + 1, explosions);
         assertEquals(MagicPotions.LIVES, game.getLives());
         assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
-        verify(stats, times(MagicPotions.LIVES + 1)).incrementNumberOfMistakes();
+        verify(stats, times(4)).incrementNumberOfMistakes();
         verify(gameContext, never()).showRoundStats(any(), any());
     }
 
     @Test
-    void shouldEndWithBravoAfterThePotionsToServe() throws Exception {
-        final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.SERVED_3, 13);
-        for (int potion = 0; potion < 3; potion++) {
+    void shouldEndWithBravoAfterTheRecipesToMake() throws Exception {
+        final MagicPotions game = playing(RecipeSize.FOUR, PotionsEnd.SERVED_3, 13);
+        for (int recipe = 0; recipe < 3; recipe++) {
             serve(game);
         }
         assertEquals(MagicPotions.Phase.OVER, game.getPhase());
@@ -342,36 +362,8 @@ class MagicPotionsTest {
     }
 
     @Test
-    void shouldShowTheRecipeOnlyWithTheRecipe() throws Exception {
-        final MagicPotions with = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 15);
-        assertEquals(with.getRequest().getRecipe().size(), with.recipeShown());
-        final MagicPotions without = playing(PotionsLevel.WITHOUT_RECIPE, PotionsEnd.ENDLESS, 15);
-        assertEquals(0, without.recipeShown());
-    }
-
-    /**
-     * Maintainer's remark after his trial of 10/11/2026: only the round body of a flask reacted to the gaze.
-     */
-    @Test
-    void shouldLookAtTheWholeFlaskItsNeckToo() throws Exception {
-        final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 3);
-        double right = 0;
-        for (final PotionMix.Primary primary : PotionMix.Primary.values()) {
-            final var zone = game.zoneOf(primary).getBoundsInParent();
-            final var picture = game.potionOf(primary).getBoundsInParent();
-            assertTrue(zone.contains(picture), primary.name());
-            // The neck, at the top middle of the picture
-            assertTrue(zone.contains(picture.getMinX() + picture.getWidth() / 2, picture.getMinY() + 2),
-                primary.name());
-            assertTrue(game.potionOf(primary).isMouseTransparent());
-            assertTrue(zone.getMinX() > right, primary.name());
-            right = zone.getMaxX();
-        }
-    }
-
-    @Test
     void shouldStopAfterDispose() throws Exception {
-        final MagicPotions game = playing(PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 2);
+        final MagicPotions game = playing(RecipeSize.TWO, PotionsEnd.ENDLESS, 2);
         fx(() -> {
             game.dispose();
             return null;
@@ -379,35 +371,31 @@ class MagicPotionsTest {
         steps(game, 2);
         assertEquals(MagicPotions.Phase.OVER, game.getPhase());
         assertTrue(gameArea.getChildren().isEmpty());
-        verify(gameContext.getGazeDeviceManager(), times(3)).removeEventFilter(any());
+        // The cards of the shelf
+        verify(gameContext.getGazeDeviceManager(), times(4)).removeEventFilter(any());
     }
 
     @Test
-    void shouldGiveAllTheVariantsAndPlayAnOldGame() {
+    void shouldGiveAllTheVariantsTheEasiestFirst() {
         final Set<IGameVariant> variants = new PotionsGameVariantGenerator().getVariants();
-        // With or without hearts with every end, without end too (17/11/2026)
-        assertEquals(2 * 4 * 2, variants.size());
+        // 3 sizes, 4 ends, with or without hearts (maintainer's choices of 24/11/2026)
+        assertEquals(3 * 4 * 2, variants.size());
+        assertEquals(new GroupedGameVariant(PotionsGameVariantGenerator.GROUP, PotionsEnd.SERVED_3.getKey(),
+            RecipeSize.TWO.getKey(), null, LivesVariant.WITHOUT), variants.iterator().next());
         final IGameVariant variant = new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
-            PotionsLevel.WITHOUT_RECIPE.getKey(), PotionsEnd.SERVED_10.getKey(), null, LivesVariant.WITH);
+            PotionsEnd.SERVED_10.getKey(), RecipeSize.FOUR.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
-        assertEquals(PotionsLevel.WITHOUT_RECIPE, PotionsGameLauncher.levelOf(variant));
+        assertEquals(RecipeSize.FOUR, PotionsGameLauncher.sizeOf(variant));
         assertEquals(PotionsEnd.SERVED_10, PotionsGameLauncher.endOf(variant));
         final IGameVariant endlessWithout = new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
-            PotionsLevel.WITH_RECIPE.getKey(), PotionsEnd.ENDLESS.getKey(), null, LivesVariant.WITHOUT);
+            PotionsEnd.ENDLESS.getKey(), RecipeSize.THREE.getKey(), null, LivesVariant.WITHOUT);
         assertTrue(variants.contains(endlessWithout));
-        assertTrue(variants.contains(new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
-            PotionsLevel.WITH_RECIPE.getKey(), PotionsEnd.ENDLESS.getKey(), null, LivesVariant.WITH)));
         assertTrue(PotionsGameLauncher.withLives(
-            new MagicPotions(gameContext, stats, PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 1), variant).isWithLives());
+            new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 1), variant).isWithLives());
         assertFalse(PotionsGameLauncher.withLives(
-            new MagicPotions(gameContext, stats, PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 1), endlessWithout)
+            new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 1), endlessWithout)
             .isWithLives());
-        // A variant of before the hearts keeps them
-        assertTrue(PotionsGameLauncher.withLives(
-            new MagicPotions(gameContext, stats, PotionsLevel.WITH_RECIPE, PotionsEnd.ENDLESS, 1),
-            new GroupedGameVariant(PotionsGameVariantGenerator.GROUP, PotionsLevel.WITH_RECIPE.getKey(),
-                PotionsEnd.SERVED_5.getKey(), null)).isWithLives());
-        assertEquals(PotionsLevel.WITH_RECIPE, PotionsGameLauncher.levelOf(null));
+        assertEquals(RecipeSize.TWO, PotionsGameLauncher.sizeOf(null));
         assertEquals(PotionsEnd.ENDLESS, PotionsGameLauncher.endOf(null));
     }
 }

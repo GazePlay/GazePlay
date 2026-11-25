@@ -1,13 +1,14 @@
-"""Draws the images of Magic Potions (gazeplay-games: data/potions/images), made for GazePlay Learning in October 2026
-to replace images of Freepik, which were not free. Same license as GazePlay Learning (GPL-3.0-or-later).
+"""Draws the images of Magic Potions, "Recettes magiques" since 24/11/2026 (gazeplay-games: data/potions/images), made
+for GazePlay Learning in October 2026 to replace images of Freepik, which were not free. Same license as GazePlay
+Learning (GPL-3.0-or-later). The ingredients are made by make_magicrecipes_images.py.
 
 python make_potions_images.py <images folder of Magic Potions>
 Pillow is required. Biboule (Biboule-Client.png) is taken from biboulejump/biboules/Yellow.png of the same module.
 The sizes and the transparent areas are those the game expects (MagicPotions.launch):
 - the potions are 150 x 300;
 - the mixing pot is 150 x 136, with a transparent opening around (75, 45), where the color of the mix is drawn behind;
-- in Biboule-Client.png (670 x 422), the body of the flask is transparent around (449, 160), where the color asked
-  by the client is drawn behind.
+- in Biboule-Client.png (670 x 422), the bubble is the ellipse (244, 8) - (666, 236), empty: the game shows the
+  ingredients of the recipe in it.
 """
 import os
 import sys
@@ -81,18 +82,12 @@ draw.ellipse(s(14, 22, 136, 62), fill=(0, 0, 0, 0), outline=INK, width=4 * SCALE
 draw.arc(s(24, 60, 126, 120), 120, 160, fill=(255, 255, 255, 120), width=6 * SCALE)
 finish(image, 150, 136).save(os.path.join(folder, 'mixingPot.png'), optimize=True)
 
-# Biboule asking for a potion: Biboule of Biboule Jump, a speech bubble and a flask with a transparent body
+# Biboule asking for a recipe: Biboule of Biboule Jump and an empty speech bubble (ellipse (244, 8) - (666, 236)),
+# where the game shows the ingredients ("Recettes magiques", 24/11/2026; there was a flask for the color asked before)
 image, draw = canvas(670, 422)
-# The bubble hides the colored circle drawn behind it (center (466, 127), radius 97 on a screen 1920 pixels wide)
 draw.polygon(s(338, 200, 392, 220, 300, 272), fill=(255, 255, 255, 255), outline=INK, width=6 * SCALE)
 draw.ellipse(s(244, 8, 666, 236), fill=(255, 255, 255, 255), outline=INK, width=6 * SCALE)
-# Body centered on (449, 160): top = 160 - radius - neck - cork
-assert flask(draw, 449, 160 - 52 - 16 - 34, 52, 34, 16, None) == 160
 bubble = finish(image, 670, 422)
-# The body of the flask stays fully transparent, as the game draws the asked color behind it
-hole = Image.new('L', bubble.size, 0)
-ImageDraw.Draw(hole).ellipse((449 - 46, 160 - 46, 449 + 46, 160 + 46), fill=255)
-bubble.putalpha(Image.composite(Image.new('L', bubble.size, 0), bubble.getchannel('A'), hole))
 biboule = Image.open(os.path.join(folder, '..', '..', 'biboulejump', 'biboules', 'Yellow.png')).convert('RGBA')
 biboule = biboule.crop(biboule.getbbox())
 biboule = biboule.resize((300, round(300 * biboule.height / biboule.width)), Image.LANCZOS)

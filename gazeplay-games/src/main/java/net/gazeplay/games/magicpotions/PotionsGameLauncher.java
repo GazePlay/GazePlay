@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Creates "Magic Potions" (name code Potions) and its statistics, for a new game or for the replay of a saved one (see
- * {@code IGameLauncher}). A game of before the review of 10/11/2026 (it had no variant) is played with the recipe,
- * without end.
+ * Creates "Recettes magiques" (name code Potions) and its statistics, for a new game or for the replay of a saved one
+ * (see {@code IGameLauncher}). Without a variant of the game: recipes of 2 ingredients, without end.
  */
 public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGameVariant> {
 
@@ -40,14 +39,14 @@ public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGa
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                        final MagicPotionsStats stats) {
-        return withLives(new MagicPotions(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), -1),
+        return withLives(new MagicPotions(gameContext, stats, sizeOf(gameVariant), endOf(gameVariant), -1),
             gameVariant);
     }
 
     @Override
     public GameLifeCycle replayGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                     final MagicPotionsStats stats, final double gameSeed) {
-        return withLives(new MagicPotions(gameContext, stats, levelOf(gameVariant), endOf(gameVariant), gameSeed),
+        return withLives(new MagicPotions(gameContext, stats, sizeOf(gameVariant), endOf(gameVariant), gameSeed),
             gameVariant);
     }
 
@@ -59,13 +58,13 @@ public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGa
         return game;
     }
 
-    static PotionsLevel levelOf(final IGameVariant gameVariant) {
-        return gameVariant instanceof GroupedGameVariant grouped ? PotionsLevel.of(grouped.getSubGroup())
-            : PotionsLevel.WITH_RECIPE;
+    static RecipeSize sizeOf(final IGameVariant gameVariant) {
+        return gameVariant instanceof GroupedGameVariant grouped ? RecipeSize.of(grouped.getValue())
+            : RecipeSize.TWO;
     }
 
     static PotionsEnd endOf(final IGameVariant gameVariant) {
-        return gameVariant instanceof GroupedGameVariant grouped ? PotionsEnd.of(grouped.getValue())
+        return gameVariant instanceof GroupedGameVariant grouped ? PotionsEnd.of(grouped.getSubGroup())
             : PotionsEnd.ENDLESS;
     }
 }

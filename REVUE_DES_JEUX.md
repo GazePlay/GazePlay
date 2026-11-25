@@ -57,11 +57,46 @@ seulement, build complet et all-games en CI.
   accents, ligatures et majuscules ignorés ; les articles comptent) ; plus de priorité ni de regroupement par catégorie
   (les catégories restent des filtres) ; Ninja, Point par point et La tarte à la crème ne sont plus en tête.
 
+**Aussi fait le 24/11/2026 (soir)** : nouveaux retours de la testeuse (Google Doc, sections du 23 et du 24/11, partie
+GazePlay Learning) relevés dans `RETOURS_TESTEUSE.md` (points 33 à 83), puis, validés par le mainteneur :
+- **Commités, NON poussés** (`b2c9bf76c` à `1ad767ed0`, 5 commits) :
+  - 33. Anneaux à bouts droits (`FixationRing`, `ProgressButton`) : l'anneau ne paraît plein que lorsqu'il l'est ;
+  - 58. Dés : le dé 3D dans sa propre sous-scène (`DiceView`), il ne passe plus devant le menu Échap ;
+  - 78. Bouteille : « Tout casser » de retour à côté de « Détruire les cibles » ; « Dès qu'on regarde » (par défaut)
+    ou « Après une fixation » en « Tout casser » seulement ; la fenêtre des variantes montre la valeur choisie par
+    l'utilisateur (`GameVariantDialog.valueToShow`) ;
+  - 79. Cartes magiques : 1, 2 ou 3 cartes à trouver (`MagicCardsFind`, 1 par défaut, toujours moins que de cartes) ;
+    anneau de la couleur des réglages aussi sur le dos des cartes (Cartes magiques et Memory) avec un fin liseré clair
+    seulement quand l'anneau a la couleur principale, celle du dos (`GameStyle.ringOfTheMainColor`). Eval vérifié par
+    le mainteneur : rien à changer.
+- **Validé, commité le 25/11/2026** : 82. **Magic Potions devient « Recettes magiques »** (nom code `Potions` gardé) : la
+  Biboule montre une recette de 2, 3 ou 4 ingrédients en images (boutons principaux, `RecipeSize`) ; l'étagère en
+  montre 2 de plus ; un bon ingrédient vole dans le chaudron et est coché dans la bulle (carte vide sur l'étagère) ;
+  un mauvais tremble, reste grisé, erreur et cœur perdu (pas d'explosion) ; recette complète : explosion (fusion),
+  la Biboule boit la potion et saute de joie. Cœurs avec ou sans ; 3, 5, 10 recettes ou sans fin. Pas de voix.
+  12 ingrédients OpenMoji (`gradle/images/make_magicrecipes_images.py`, `data/potions/images/ingredients`), bulle
+  redessinée sans flacon (`make_potions_images.py`), `PotionMix` et `PotionsLevel` supprimés, catégorie Sélection
+  seulement, aides, traductions (nom en anglais et en français seulement), licence. 11 tests, SpotBugs vert.
+- 34 (catégories par compétence et difficulté) : mis de côté (« à débattre »).
+
 **Ordre du jour du mercredi 25/11/2026** :
-1. Vérifier la CI du dernier push du 24/11 (tests JDK 25 et 26, all-games, paquets, dont macOS).
-2. Notes de version 2.0, au feu vert du mainteneur seulement.
-3. En attente (inchangé) : 13 (débit de la voix), 20 (réaction aux erreurs : réunion avec Amélie), 27 (reformulations),
-   28 (croix d'Eval), 31 (Où est-ce ?).
+1. **FAIT le 25/11 (validé, commité)** : **Recettes magiques, fixation** (demande du mainteneur du 24/11 au soir) : les ingrédients sont des cartes, donc
+   l'anneau qui fait le tour du bord de la carte (comme Memory et Cartes magiques : `GameStyle.clockwiseRing`,
+   `fillRing`, `RingThickness`, couleur `-gp-ring`) à la place de l'anneau rond (`FixationRing`). Essai du mainteneur,
+   puis **commit du jeu** (tout le point 82), avec la vignette du menu refaite (`potions.jpg` montre l'ancien jeu) et
+   les 12 ingrédients et la nouvelle bulle dans l'inventaire des images (`inventaire-images.csv`,
+   `INVENTAIRE_IMAGES.md`).
+2. **Pousser** (sur accord) les commits du 24/11 au soir et Recettes magiques ; vérifier la CI (tests JDK 25 et 26,
+   all-games, paquets dont macOS ; le push du 24/11 après-midi, `35f4aaee3`, à vérifier aussi).
+3. **Groupe 2, corrections courtes** (`RETOURS_TESTEUSE.md`) : 73 (Coloriage, couleurs du « + »), 44 (Gribouille,
+   quitter la gomme arc-en-ciel), 42 (Identifier les lettres, taille des images), 37 (losange), 56 (Survivre : robots
+   loin du Biboule), 57 (Tir : nom « Invasion »), 62 et 82 (tirage sans répétition : Apprends les Maths, Mélanger les
+   couleurs), 70 (Morpion : niveaux inversés), 72 (Coloriage : même palette).
+4. Ensuite, à décider point par point (classement proposé, à confirmer) :
+   - changements moyens : 35, 36, 43, 45 à 48, 49, 51, 52, 53, 55, 59 à 61, 63, 67, 68, 71, 74 à 77, 83 ;
+   - gros ajouts : Piano (38 à 41), 50, 54, Jeu de l'oie (64 à 66), 69, 80, 81.
+5. En attente (inchangé) : 34, 13 (débit de la voix), 20 (réaction aux erreurs : réunion avec Amélie), 27
+   (reformulations), 28 (croix d'Eval), 31 (Où est-ce ?). Notes de version 2.0 au feu vert du mainteneur seulement.
 
 ## REPRISE DU MARDI 24/11/2026 (fin de la séance du lundi 23/11/2026)
 

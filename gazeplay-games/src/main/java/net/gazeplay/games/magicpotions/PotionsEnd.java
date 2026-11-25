@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * When "Magic Potions" ends (maintainer's choice of 10/11/2026): after 3, 5 or 10 potions served, or never (until the
- * lives are lost).
+ * When "Recettes magiques" ends (maintainer's choices of 10 and 24/11/2026): after 3, 5 or 10 recipes made, or never
+ * (until the lives are lost, with the hearts).
  */
 @Getter
 @RequiredArgsConstructor

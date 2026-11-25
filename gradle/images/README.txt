@@ -13,10 +13,14 @@ Made in October 2026 by make_default_images.py (this folder), from the 618x618 P
 (https://github.com/hfg-gmuend/openmoji, color/618x618). They replace images of Freepik, which were not free.
 These images, and any change to them, stay under CC BY-SA 4.0 (compatible with the GPL version 3 of GazePlay Learning).
 
-Images of Magic Potions (gazeplay-games: data/potions/images): potionRed.png, potionYellow.png, potionBlue.png,
+Images of "Recettes magiques", Magic Potions until 24/11/2026 (gazeplay-games: data/potions/images):
+potionRed.png, potionYellow.png, potionBlue.png,
 mixingPot.png, background-potions.jpg and the speech bubble of Biboule-Client.png are drawn by make_potions_images.py
 (this folder), under the license of GazePlay Learning (GPL-3.0-or-later); Biboule is the one of Biboule Jump. They
-replace images of Freepik (October 2026). The script keeps the sizes and the transparent areas the game expects.
+replace images of Freepik (October 2026). The script keeps the sizes and the transparent areas the game expects; since
+24/11/2026 the bubble is empty (no more flask): the game shows the ingredients of the recipe in it. The 12 ingredients
+(images/ingredients) are emojis of OpenMoji (https://openmoji.org/), CC BY-SA 4.0, cropped and resized by
+make_magicrecipes_images.py (this folder).
 
 Images of Frogs Race (gazeplay-games: data/race/images): the racing frogs (frog-<color>.png, frog-<color>-jump.png),
 the frog catching the bugs (frog-catcher.png) and the pond (background.png) are drawn by make_race_images.py (this
@@ -179,10 +183,11 @@ found.wav, missed.wav) are made by make_cups_sounds.py (this folder), under the 
 (GPL-3.0-or-later). The thumbnail (gazeplay-core: data/common/Thumbnails/passpass.png, 960 x 540) is a capture of the
 game, reduced by half.
 
-Sounds of "Magic Potions" (name code Potions; gazeplay-games: data/potions): the sounds (sounds/pour.wav, served.wav,
+Sounds of "Recettes magiques" (Magic Potions until 24/11/2026; name code Potions; gazeplay-games: data/potions):
+the sounds (sounds/pour.wav, served.wav,
 boom.wav) are made by make_potions_sounds.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later),
 10/11/2026. The thumbnail (gazeplay-core: data/common/Thumbnails/potions.jpg, 960 x 540) is a capture of the game,
-reduced by half.
+reduced by half (made again on 25/11/2026).
 
 Image and sounds of "Apprends les Maths" (name code Math101; gazeplay-games: data/math101): the blackboard and the
 cards are drawn by the game, in place of 6 pictures (5 of unknown source, 10/11/2026); images/biboule.png is the

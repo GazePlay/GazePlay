@@ -1,21 +1,22 @@
 # Le principe
-Une Biboule veut une potion d'une couleur : prépare-la en versant les bonnes potions dans le chaudron ! Rouge et jaune font de l'orange, jaune et bleu du vert, rouge et bleu du violet, et les trois ensemble du marron.
+Une Biboule veut une potion magique : sa bulle montre la recette, des ingrédients en images. Trouve-les sur l'étagère et mets-les dans le chaudron !
 
 # Comment jouer
-- La bulle de la Biboule montre la couleur voulue, et son nom dessous. Avec la recette, les potions à verser sont montrées aussi.
-- Fixe une potion de la table (rouge, jaune ou bleue) : elle va au-dessus du chaudron et s'y verse. Le chaudron prend la couleur du mélange.
-- Chaque potion ne se verse qu'une fois par cliente ; l'ordre ne compte pas.
-- Le mélange est réussi : la Biboule boit sa potion et saute de joie. Une potion qui n'est pas dans la recette : le chaudron explose, et tu perds une vie. Puis une nouvelle cliente arrive.
+- La bulle de la Biboule montre la recette : 2, 3 ou 4 ingrédients (champignon, plume, étoile, fleur, feuille, pomme, cristal, lune, coquillage, carotte, flocon, trèfle).
+- Sur l'étagère, il y a les ingrédients de la recette et 2 autres, dans le désordre.
+- Fixe un ingrédient de la recette : il vole dans le chaudron, et il est coché en vert dans la bulle. L'ordre ne compte pas.
+- Un ingrédient qui n'est pas dans la recette tremble et reste sur l'étagère, grisé : c'est une erreur, et tu perds une vie avec les cœurs.
+- La recette est complète : le chaudron explose, les ingrédients ont fusionné en une potion. La Biboule la boit et saute de joie, puis une nouvelle cliente arrive.
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
-- En haut à gauche, les vies (un cœur rouge par vie) ; au milieu, les potions servies.
-- Les potions se versent à la vitesse des réglages.
-- Au début de chaque nouvelle potion à faire, la première comprise, rien ne peut être choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix ») ; rien non plus pendant qu'une potion se verse. Rien ne bouge quand le menu (touche Échap) est ouvert.
+- En haut à gauche, les vies (un cœur rouge par vie) ; à côté, les potions servies.
+- Les ingrédients volent à la vitesse des réglages.
+- Au début de chaque nouvelle recette, la première comprise, rien ne peut être choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix ») ; rien non plus pendant qu'un ingrédient vole ou tremble. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Après 3, 5 ou 10 potions servies, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième explosion, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les explosions restent comptées comme des erreurs dans les statistiques ; sans fin, on quitte par le menu (touche Échap).
+Après 3, 5 ou 10 recettes, c'est « Bravo », puis les statistiques. Tu as 3 vies : à la troisième erreur, c'est « Perdu ! », puis les statistiques. Sans fin, la partie continue jusqu'à ce que tu n'aies plus de vie. Avec « Sans cœurs », il n'y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques ; sans fin, on quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- 3 potions, 5 potions, 10 potions ou sans fin : le nombre de potions à servir.
-- En bas, le niveau : avec la recette (les potions à verser sont montrées sous la bulle), ou sans la recette (à toi de savoir les mélanges).
+- 2, 3 ou 4 ingrédients : la taille des recettes.
+- En bas, la fin : 3, 5 ou 10 recettes, ou sans fin.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

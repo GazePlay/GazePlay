@@ -9,10 +9,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Gives the variants of "Magic Potions" (maintainer's choices of 10/11/2026): when it ends (buttons, see
- * {@link PotionsEnd}), and at the bottom the level (see {@link PotionsLevel}) and the hearts (see {@link LivesVariant},
- * with every end, maintainer's choice of 17/11/2026). One group only: the window of the variants shows no switch for
- * it. (Before the review: no variant.)
+ * Gives the variants of "Recettes magiques" (maintainer's choices of 24/11/2026): the ingredients of a recipe (buttons,
+ * see {@link RecipeSize}: 2, 3 or 4), and at the bottom when it ends (see {@link PotionsEnd}: 3, 5 or 10 recipes, or
+ * without end) and the hearts (see {@link LivesVariant}). The easiest first, chosen when the window opens. One group
+ * only: the window of the variants shows no switch for it.
  */
 public class PotionsGameVariantGenerator implements IGameVariantGenerator {
 
@@ -21,10 +21,10 @@ public class PotionsGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
-        for (final PotionsLevel level : PotionsLevel.values()) {
+        for (final PotionsEnd end : PotionsEnd.values()) {
             for (final String lives : LivesVariant.options(true)) {
-                for (final PotionsEnd end : PotionsEnd.values()) {
-                    variants.add(new GroupedGameVariant(GROUP, level.getKey(), end.getKey(), null, lives));
+                for (final RecipeSize size : RecipeSize.values()) {
+                    variants.add(new GroupedGameVariant(GROUP, end.getKey(), size.getKey(), null, lives));
                 }
             }
         }

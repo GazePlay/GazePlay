@@ -1,21 +1,22 @@
 # The principle
-A Biboule wants a potion of a color: make it by pouring the right potions into the cauldron! Red and yellow make orange, yellow and blue green, red and blue purple, and the three together brown.
+A Biboule wants a magic potion: its bubble shows the recipe, ingredients in pictures. Find them on the shelf and put them into the cauldron!
 
 # How to play
-- The bubble of the Biboule shows the color wanted, and its name under it. With the recipe, the potions to pour are shown too.
-- Fixate a potion of the table (red, yellow or blue): it goes above the cauldron and pours. The cauldron takes the color of the mixture.
-- Each potion is poured only once per client; the order does not matter.
-- The mixture is right: the Biboule drinks its potion and jumps for joy. A potion out of the recipe: the cauldron explodes, and you lose a life. Then a new client comes.
+- The bubble of the Biboule shows the recipe: 2, 3 or 4 ingredients (mushroom, feather, star, flower, leaf, apple, crystal, moon, shell, carrot, snowflake, clover).
+- On the shelf are the ingredients of the recipe and 2 others, in any order.
+- Fixate an ingredient of the recipe: it flies into the cauldron, and it is ticked in green in the bubble. The order does not matter.
+- An ingredient out of the recipe shakes and stays on the shelf, greyed: it is a mistake, and you lose a life with the hearts.
+- The recipe is complete: the cauldron explodes, the ingredients have merged into a potion. The Biboule drinks it and jumps for joy, then a new client comes.
 - A ring fills during a fixation; it lasts the length of the settings.
-- At the top left, the lives (a red heart for each life); in the middle, the potions served.
-- The potions are poured at the speed of the settings.
-- At the start of each new potion to make, the first one included, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"); nothing either while a potion is poured. Nothing moves while the menu (Escape key) is open.
+- At the top left, the lives (a red heart for each life); next to them, the potions served.
+- The ingredients fly at the speed of the settings.
+- At the start of each new recipe, the first one included, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"); nothing either while an ingredient flies or shakes. Nothing moves while the menu (Escape key) is open.
 
 # How to win
-After 3, 5 or 10 potions served, it is "Bravo", then the statistics. You have 3 lives: at the third explosion, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left. With "Without hearts", there are no hearts and the game is never lost: the explosions are still counted as mistakes in the statistics; without end, leave by the menu (Escape key).
+After 3, 5 or 10 recipes, it is "Bravo", then the statistics. You have 3 lives: at the third mistake, it is "Lost!", then the statistics. Without end, the game goes on until you have no life left. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics; without end, leave by the menu (Escape key).
 
 # The variants
 Choose a variant (it is circled), then press "Start".
-- 3 potions, 5 potions, 10 potions or without end: the number of potions to serve.
-- At the bottom, the level: with the recipe (the potions to pour shown under the bubble), or without the recipe (you have to know the mixtures).
+- 2, 3 or 4 ingredients: the size of the recipes.
+- At the bottom, the end: 3, 5 or 10 recipes, or without end.
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

@@ -95,7 +95,7 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   distributions.
 - Images : les animaux par défaut (data/common/default/images : bear, dog, elephant, elephant2, fox, giraffe,
   hippo, lion, snake, turtle, et depuis le 30/10/2026 chouette, crabe, ecureuil, herisson, lapin, meduse,
-  poulpe, penguin, frog), leurs versions sans fond du labyrinthe et l'explosion de Magic Potions
+  poulpe, penguin, frog), leurs versions sans fond du labyrinthe et l'explosion de Recettes magiques
   (data/common/images/explosion.gif) :
   All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji and icon project.
   License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
@@ -108,8 +108,10 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   licensed by Creative Commons BY 3.0 (https://creativecommons.org/licenses/by/3.0/).
 - Objets du jeu « La pièce » (data/room/objects) : OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0 ;
   recadrés (gradle/images/make_room_images.py) ; les murs, les meubles et les flèches sont dessinés par le jeu.
-- Images de Magic Potions (fioles, chaudron, bulle, décor) : dessinées pour GazePlay Learning
-  (gradle/images/make_potions_images.py), sous la licence du projet.
+- Images de « Recettes magiques », ancien Magic Potions (fioles, chaudron, bulle, décor) : dessinées pour
+  GazePlay Learning (gradle/images/make_potions_images.py), sous la licence du projet. Ingrédients
+  (data/potions/images/ingredients) : OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0 ; recadrés
+  (gradle/images/make_magicrecipes_images.py).
   Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
 - Images de La course des grenouilles (grenouilles et décor de la mare) : dessinées pour GazePlay Learning
   (gradle/images/make_race_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 une
@@ -204,7 +206,7 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   GazePlay Learning (gradle/images/make_rockpaperscissors_sounds.py), sous la licence du projet.
 - Sons de « Gobelets Pass Pass » (data/cups) : faits pour GazePlay Learning (gradle/images/make_cups_sounds.py),
   sous la licence du projet ; gobelets, balle et table dessinés par le jeu.
-- Sons de « Magic Potions » (data/potions) : faits pour GazePlay Learning (gradle/images/make_potions_sounds.py),
+- Sons de « Recettes magiques » (data/potions) : faits pour GazePlay Learning (gradle/images/make_potions_sounds.py),
   sous la licence du projet.
 - Sons d'« Apprends les Maths » (data/math101) : faits pour GazePlay Learning
   (gradle/images/make_math101_sounds.py), sous la licence du projet ; tableau et cartes dessinés par le jeu, la

@@ -80,8 +80,8 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 # Nouveaux retours du 23 et du 24/11/2026
 
 Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retours du 23-11-26 » et « Retours sur GPL
-24-11-26 »), partie GazePlay Learning seulement. **Rien n'est encore décidé** : chaque point attend la décision du
-mainteneur. Ordre de travail décidé : d'abord les deux défauts (58 et 33).
+24-11-26 »), partie GazePlay Learning seulement. Ordre de travail décidé : d'abord les deux défauts (58 et 33), puis le groupe 1
+(34, 78, 79, 82), le soir du 24/11. Les autres points attendent la décision du mainteneur.
 
 ## Déjà réglés par les changements faits entre-temps
 
@@ -96,12 +96,21 @@ mainteneur. Ordre de travail décidé : d'abord les deux défauts (58 et 33).
 | Cartes magiques : contraste entre la carte et le fond | En partie : face des cartes blanche (point 29) ; un cadre plus marqué reste à décider (point 79) |
 | Fleur des nombres : contraste des cases | En partie : cartes des valeurs blanches le 24/11 ; les cadres restent à décider (point 68) |
 
+## Faits le 24/11/2026 au soir (validés par le mainteneur)
+
+| N° | Jeu | Retour | Ce qui a été fait |
+|---|---|---|---|
+| 33 | Tous | Anneau qui paraît plein avant de l'être | Bouts droits (`StrokeLineCap.BUTT`) dans l'anneau commun et `ProgressButton` (`800b00856`) |
+| 58 | Dés | Un dé passe devant le menu Échap | Le dé 3D dans sa propre sous-scène (`DiceView`, `e499ec1ba`) |
+| 78 | Bouteille | Casser librement, avec ou sans fixation | Modes « Tout casser » (de retour) et « Détruire les cibles » ; « Dès qu'on regarde » (par défaut) ou « Après une fixation » en « Tout casser » seulement ; « Détruire les cibles » toujours avec une fixation (`1d6793c13`) |
+| 79 | Cartes magiques | Une seule carte à retrouver | Choix 1, 2 ou 3 cartes à trouver (1 par défaut) ; anneau de la couleur des réglages aussi sur le dos des cartes, Memory compris, liseré clair seulement avec la couleur principale (`1ad767ed0`) |
+| 82 | Mélanger les couleurs / Magic Potions | Deux fois le même jeu | Magic Potions devient **Recettes magiques** : recette de 2, 3 ou 4 ingrédients en images (OpenMoji) à trouver sur l'étagère ; cœurs ; 3, 5, 10 recettes ou sans fin ; explosion seulement à la recette complète, puis la Biboule boit la potion ; pas de voix ; anneau de fixation au bord des cartes (25/11). Validé et commité le 25/11. Le tirage sans répétition de Mélanger les couleurs reste dans le groupe 2 |
+
 ## À décider
 
 | N° | Jeu | Retour | Remarque |
 |---|---|---|---|
-| 33 | Tous | **Défaut** : l'anneau de fixation paraît plein avant de l'être (bouts arrondis) | Anneau commun (`FixationRing`) et `ProgressButton` encore arrondis |
-| 34 | Page des jeux | Catégories par compétence (découverte du regard, fixation, exploration…), jeux rangés par difficulté | À l'encontre du tri alphabétique du 24/11 ; elle demande s'il faut y travailler maintenant |
+| 34 | Page des jeux | Catégories par compétence (découverte du regard, fixation, exploration…), jeux rangés par difficulté | **Mis de côté** (mainteneur, 24/11 : « à débattre ») |
 | 35 | Où est… | Délai trop long entre la consigne et les réponses | |
 | 36 | Où est la forme, la couleur | Modes de consigne avec exemple (pendant la sélection, avant seulement, sans) ; réponses déjà affichées à la consigne | |
 | 37 | Où est la forme | Le losange ressemble à un carré | |
@@ -125,7 +134,6 @@ mainteneur. Ordre de travail décidé : d'abord les deux défauts (58 et 33).
 | 55 | Course de grenouilles | Trois niveaux trop faciles ; grenouilles plus visibles que les Biboules | |
 | 56 | Survivre contre des robots | Nouveaux robots loin du Biboule | |
 | 57 | Tir | Nom « Invasion » | |
-| 58 | Dés | **Défaut** : un dé passe devant le menu Échap au survol de la souris | |
 | 59 | Dés | Icône « Lancer » ; dé à lancer surligné | |
 | 60 | Dés | Inverser les deux modes | |
 | 61 | Dés | Total plus visible (dit à voix haute, calcul décomposé) | |
@@ -145,11 +153,8 @@ mainteneur. Ordre de travail décidé : d'abord les deux défauts (58 et 33).
 | 75 | Coloriage | Enregistrement dans un dossier défini, à pouvoir interdire | |
 | 76 | Petits chevaux | Dés aidés après plusieurs échecs | |
 | 77 | Petits chevaux | L'ordinateur fait avancer tous ses pions | |
-| 78 | Bouteille | Mode « casser librement », avec ou sans fixation | Le mode « Tout casser » a été retiré le 17/11 (décision du mainteneur) |
-| 79 | Cartes magiques | Une seule carte à retrouver ; mouvements plus lents ; cadre plus marqué | Le mode « Chercher » a été retiré le 17/11 |
 | 80 | La maison du chat | Sons sur les actions ; plus de choix (jeux, plats) | |
 | 81 | Les bruits de la vie | Sons du singe et du dauphin ; scène de la mer avec une surface | |
-| 82 | Mélanger les couleurs | Tirage sans répétition ; ce jeu remplace-t-il Magic Potions ? | Seule la répétition immédiate est évitée ; Magic Potions est toujours au menu |
 | 83 | Cartes à gratter | La pièce suit le regard qui sort de la zone | |
 
 ## Rien à faire

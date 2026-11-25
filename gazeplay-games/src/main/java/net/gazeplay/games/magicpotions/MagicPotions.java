@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -13,8 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.shape.StrokeType;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -22,82 +24,113 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * "Magic Potions" (name code Potions; reviewed on 10/11/2026, maintainer's rules): a Biboule asks for a potion of a
- * color, shown in its bubble with the name of the color (and the potions to pour, with the recipe). A fixation on a
- * potion of the table (red, yellow, blue) pours it into the cauldron, which takes the color of the mixture; each
- * potion once per client, in any order. The potion asked for made: the client drinks it, one more served. A potion out
- * of the recipe: the cauldron explodes, a mistake is counted, a life is lost, and a new client comes. Three lives
- * (hearts); the game ends after 3, 5 or 10 potions served ("Bravo"), or never, or when the lives are lost ("Lost!").
- * Without hearts (variant of 17/11/2026), the game is never lost. The three potions together make brown (black before).
+ * "Recettes magiques" (name code Potions; until 24/11/2026 "Magic Potions", a game of colors to mix, the same as
+ * "Mélanger les couleurs": maintainer's decisions after the tester's feedback, point 82). A Biboule shows a recipe in
+ * its bubble: 2, 3 or 4 ingredients in pictures (main choice of the variants, {@link RecipeSize}). The shelf shows them
+ * and 2 others, in any order. A fixation on an ingredient of the recipe makes it fly into the cauldron, and it is ticked
+ * in the bubble; the order does not count. An ingredient out of the recipe shakes and stays on the shelf, greyed: a
+ * mistake is counted and, with the hearts, a life is lost (no explosion: point 20, a reaction too spectacular gives a
+ * wish to fail on purpose). The recipe complete, the cauldron explodes (the ingredients merge into a potion), then the
+ * Biboule drinks the potion and jumps for joy. The game ends after 3, 5 or 10 recipes ("Bravo"), never, or when the
+ * lives are lost ("Lost!"); without hearts, it is never lost. No voice (maintainer's decision).
  * <p>
- * The pictures are those drawn for the project in October 2026 (gradle/images/make_potions_images.py). One loop, in
- * real seconds: the potions are poured at the speed of the settings, the fixations last the length of the settings
- * (read at each step), nothing can be chosen before the delay of the settings nor while a potion is poured, and
- * nothing moves while the menu of the game is open. (Before the review: the pouring counted in images of the screen
- * as if there were always 60 a second, no end, no lives, only a spot of color for the request, a goal to reach added
- * at each right potion, the limiters.)
+ * One loop, in real seconds: the ingredients fly at the speed of the settings, the fixations last the length of the
+ * settings (read at each step), nothing can be chosen during the delay of the settings at the start of each recipe nor
+ * while something moves, and nothing moves while the menu of the game is open.
  */
 public class MagicPotions implements GameLifeCycle {
 
     static final int LIVES = 3;
     /**
-     * In seconds (at the speed of the settings): a potion poured (going, tilted, back), the explosion or the client
-     * served, the end shown.
+     * In seconds (at the speed of the settings): an ingredient flying into the cauldron, an ingredient out of the
+     * recipe shaking, the explosion of the recipe complete, the potion going to the Biboule, the Biboule jumping, and
+     * the end shown (in real seconds).
      */
-    static final double POUR = 1.4;
-    static final double RESULT = 1.8;
+    static final double FLY = 0.9;
+    static final double SHAKE = 0.6;
+    static final double FUSION = 1.4;
+    static final double DRINK = 1.0;
+    static final double SERVED = 1.2;
     static final double SHOW = 2.2;
 
     private static final String IMAGES = "data/potions/images/";
     private static final String SOUNDS = "data/potions/sounds/";
+    private static final String WRONG_SOUND = "data/dice/sounds/wrong.wav";
     private static final Color EMPTY = Color.rgb(226, 236, 246);
+    private static final Color TICK = Color.rgb(46, 160, 67);
+    /**
+     * The potions made: their picture and the color of the cauldron.
+     */
+    private static final String[] POTIONS = {"potionRed.png", "potionYellow.png", "potionBlue.png"};
+    private static final Color[] POTION_COLORS = {Color.rgb(229, 57, 53), Color.rgb(253, 216, 53),
+        Color.rgb(30, 136, 229)};
 
-    enum Phase { PLAY, POUR, FAILED, SERVED, SHOW, OVER }
+    enum Phase { PLAY, FLY, WRONG, FUSION, DRINK, SERVED, SHOW, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
     private final Stats stats;
     @Getter
-    private final PotionsLevel level;
+    private final RecipeSize size;
     @Getter
     private final PotionsEnd end;
     private final ReplayablePseudoRandom random;
 
     @Getter
     private Phase phase = Phase.OVER;
+    /**
+     * The ingredients asked for, in the order of the bubble.
+     */
     @Getter
-    private PotionMix request;
+    private final List<Ingredient> recipe = new ArrayList<>();
+    /**
+     * The ingredients of the shelf, from left to right.
+     */
     @Getter
-    private final Set<PotionMix.Primary> mixture = EnumSet.noneOf(PotionMix.Primary.class);
+    private final List<Ingredient> shelf = new ArrayList<>();
+    /**
+     * The ingredients of the recipe already in the cauldron.
+     */
+    @Getter
+    private final Set<Ingredient> added = EnumSet.noneOf(Ingredient.class);
+    /**
+     * The ingredients out of the recipe already chosen for this recipe (greyed, no longer chosen).
+     */
+    private final Set<Ingredient> refused = EnumSet.noneOf(Ingredient.class);
     @Getter
     private int lives;
     /**
-     * Whether the user chose the hearts (variant "with hearts / without hearts", 17/11/2026, with every end); without
-     * them, no hearts shown and the game is never lost; the explosions are still counted as mistakes.
+     * Whether the user chose the hearts (see {@code LivesVariant}); without them, no hearts shown and the game is never
+     * lost; the ingredients out of the recipe are still counted as mistakes.
      */
     @Getter
     private boolean withLives = true;
     @Getter
     private int served;
     private boolean bravo;
-    private PotionMix.Primary pouring;
     private double elapsed;
+    /**
+     * The ingredient flying into the cauldron, or shaking, and the slot of the shelf it comes from.
+     */
+    private Ingredient moving;
+    private int movingSlot = -1;
+    private int potion;
 
     private double width;
     private double height;
-    private double potionWidth;
-    private double potionHeight;
+    private double cardSize;
     private double potSize;
     private double potX;
     private double potY;
@@ -106,21 +139,24 @@ public class MagicPotions implements GameLifeCycle {
     private double clientY;
 
     private Group layer;
-    private final Map<PotionMix.Primary, ImageView> potions = new EnumMap<>(PotionMix.Primary.class);
-    private final Map<PotionMix.Primary, Rectangle> zones = new EnumMap<>(PotionMix.Primary.class);
-    private final Map<PotionMix.Primary, double[]> homes = new EnumMap<>(PotionMix.Primary.class);
-    private final Map<PotionMix.Primary, Image> potionImages = new EnumMap<>(PotionMix.Primary.class);
+    private final List<Group> cards = new ArrayList<>();
+    private final List<ImageView> cardPictures = new ArrayList<>();
+    private final List<double[]> slots = new ArrayList<>();
+    private final Map<Ingredient, Image> pictures = new EnumMap<>(Ingredient.class);
+    private final Map<Ingredient, Group> ticks = new EnumMap<>(Ingredient.class);
     private Ellipse potColor;
-    private Circle requestColor;
     private ImageView client;
-    private Group requestText;
+    private Group bubble;
+    private ImageView flying;
+    private ImageView flask;
     private ImageView explosion;
-    private FixationRing ring;
+    private Rectangle ring;
+    private double ringPerimeter;
     private Group hud;
     private Group message;
     private final List<Node> gazeNodes = new ArrayList<>();
 
-    private PotionMix.Primary looked;
+    private int looked = -1;
     @Getter
     private double progress;
 
@@ -147,12 +183,12 @@ public class MagicPotions implements GameLifeCycle {
     /**
      * @param gameSeed the seed of the game to replay, or a negative value for a new game
      */
-    MagicPotions(final IGameContext gameContext, final Stats stats, final PotionsLevel level, final PotionsEnd end,
+    MagicPotions(final IGameContext gameContext, final Stats stats, final RecipeSize size, final PotionsEnd end,
                  final double gameSeed) {
         this.gameContext = gameContext;
         this.configuration = gameContext.getConfiguration();
         this.stats = stats;
-        this.level = level;
+        this.size = size;
         this.end = end;
         if (gameSeed < 0) {
             random = new ReplayablePseudoRandom();
@@ -164,7 +200,7 @@ public class MagicPotions implements GameLifeCycle {
 
     @Override
     public void launch() {
-        // The game counts the mistakes: 0 until the first one (statistics, format 5)
+        // The game counts the mistakes: 0 until the first one
         stats.countMistakes();
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
@@ -181,8 +217,11 @@ public class MagicPotions implements GameLifeCycle {
             ((Rectangle) background).setFill(Color.rgb(70, 54, 110));
         }
         background.setMouseTransparent(true);
+        for (final Ingredient ingredient : Ingredient.values()) {
+            pictures.put(ingredient, new Image(ingredient.picture()));
+        }
 
-        // The cauldron at the left, the potions at the right, at the bottom
+        // The cauldron at the left, at the bottom
         potSize = height * 0.32;
         final double potScale = potSize / 136;
         potX = width * 0.22 - 75 * potScale;
@@ -195,47 +234,62 @@ public class MagicPotions implements GameLifeCycle {
         pot.setFitHeight(potSize);
         pot.setX(potX);
         pot.setY(potY);
-        potionHeight = height * 0.3;
-        potionWidth = potionHeight / 2;
-        final Group potionsLayer = new Group();
-        final Group zonesLayer = new Group();
-        final String[] files = {"potionRed.png", "potionYellow.png", "potionBlue.png"};
-        for (final PotionMix.Primary primary : PotionMix.Primary.values()) {
-            final Image image = new Image(IMAGES + files[primary.ordinal()]);
-            potionImages.put(primary, image);
-            final ImageView view = new ImageView(image);
-            view.setFitWidth(potionWidth);
-            view.setFitHeight(potionHeight);
-            final double x = width * (0.5 + 0.16 * primary.ordinal());
-            final double y = height * 0.95 - potionHeight / 2;
-            homes.put(primary, new double[]{x, y});
-            potions.put(primary, view);
+        pot.setMouseTransparent(true);
+
+        // The shelf at the right, at the bottom: white cards on a plank (point 29: pictures on white cards)
+        final int count = size.getShelf();
+        final double left = width * 0.4;
+        final double right = width * 0.98;
+        final double slot = (right - left) / count;
+        cardSize = Math.min(height * 0.2, slot * 0.84);
+        final double cardsY = height * 0.78;
+        final Rectangle plank = new Rectangle(left - width * 0.01, cardsY + cardSize / 2 + height * 0.012,
+            right - left + width * 0.02, height * 0.028);
+        plank.setArcWidth(height * 0.012);
+        plank.setArcHeight(height * 0.012);
+        plank.setFill(Color.rgb(139, 94, 60));
+        plank.setStroke(Color.rgb(34, 30, 38));
+        plank.setStrokeWidth(2);
+        plank.setMouseTransparent(true);
+        final Group shelfLayer = new Group(plank);
+        for (int i = 0; i < count; i++) {
+            final double x = left + slot * (i + 0.5);
+            slots.add(new double[]{x, cardsY});
+            final Rectangle surface = GameStyle.pictureCard(x - cardSize / 2, cardsY - cardSize / 2, cardSize,
+                cardSize);
+            final ImageView view = new ImageView();
+            view.setFitWidth(cardSize * 0.78);
+            view.setFitHeight(cardSize * 0.78);
+            view.setX(x - cardSize * 0.39);
+            view.setY(cardsY - cardSize * 0.39);
             view.setMouseTransparent(true);
-            potionsLayer.getChildren().add(view);
-            // The gaze looks at the whole flask, its neck too (maintainer's remark after his trial of 10/11/2026: only
-            // the round body reacted, the picture being picked by its drawn pixels), a little wider than it
-            final Rectangle zone = new Rectangle(x - potionWidth * 0.6, y - potionHeight / 2, potionWidth * 1.2,
-                potionHeight);
-            zone.setFill(Color.TRANSPARENT);
-            zones.put(primary, zone);
-            zonesLayer.getChildren().add(zone);
-            listen(zone, () -> lookAt(primary), () -> lookAway(primary));
+            final Group card = new Group(surface, view);
+            cards.add(card);
+            cardPictures.add(view);
+            shelfLayer.getChildren().add(card);
+            final int index = i;
+            listen(card, () -> lookAt(index), () -> lookAway(index));
         }
 
-        // The client at the top right, its bubble asking for the potion
+        // The client at the top right, its bubble showing the recipe
         clientScale = Math.min(width * 0.42 / 670, height * 0.42 / 422);
         clientX = width * 0.5 + (width * 0.5 - 670 * clientScale) / 2;
-        clientY = height * 0.1;
-        // Behind the transparent body of the flask of the bubble (centered on (449, 160), radius 46 in the picture)
-        requestColor = new Circle(clientX + 449 * clientScale, clientY + 160 * clientScale, 50 * clientScale);
+        clientY = height * 0.06;
         client = new ImageView(new Image(IMAGES + "Biboule-Client.png"));
         client.setFitWidth(670 * clientScale);
         client.setFitHeight(422 * clientScale);
         client.setX(clientX);
         client.setY(clientY);
         client.setMouseTransparent(true);
-        requestText = new Group();
-        requestText.setMouseTransparent(true);
+        bubble = new Group();
+        bubble.setMouseTransparent(true);
+
+        flying = new ImageView();
+        flying.setVisible(false);
+        flying.setMouseTransparent(true);
+        flask = new ImageView();
+        flask.setVisible(false);
+        flask.setMouseTransparent(true);
         explosion = new ImageView(new Image("data/common/images/explosion.gif"));
         // An animated picture of 700 x 316, growing from its middle
         explosion.setPreserveRatio(true);
@@ -244,25 +298,43 @@ public class MagicPotions implements GameLifeCycle {
         explosion.setY(potY + 45 * potScale - potSize * 2.6 * 316 / 700 / 2);
         explosion.setVisible(false);
         explosion.setMouseTransparent(true);
-        ring = new FixationRing();
+        ring = newRing();
+        ringPerimeter = GameStyle.clockwiseRing(ring);
         hud = new Group();
         hud.setMouseTransparent(true);
         message = new Group();
         message.setMouseTransparent(true);
-        layer = new Group(background, requestColor, client, requestText, potColor, pot, potionsLayer, zonesLayer,
-            explosion, ring, hud, message);
+        layer = new Group(background, client, bubble, potColor, pot, shelfLayer, flying, flask, explosion, ring, hud,
+            message);
         gameContext.getChildren().add(layer);
 
         gameContext.getGazeDeviceManager().addStats(stats);
         lives = LIVES;
         served = 0;
         elapsed = 0;
-        // The first potion to make, with the delay of the settings as every new potion (maintainer's decision of
-        // 24/11/2026: the delay only at the start of each new potion; there used to be a wait with no client first)
-        newClient();
+        newRecipe();
         if (!manual) {
             loop.start();
         }
+    }
+
+    /**
+     * The ring of a fixation, along the edge of the card looked at, as in Memory and Magic Cards (maintainer's request of
+     * 24/11/2026: the ingredients are cards), centered on (0, 0).
+     */
+    private Rectangle newRing() {
+        final double corner = GameStyle.cardRadius(cardSize, cardSize);
+        final Rectangle created = new Rectangle(-cardSize / 2, -cardSize / 2, cardSize, cardSize);
+        created.setArcWidth(2 * corner);
+        created.setArcHeight(2 * corner);
+        created.setFill(null);
+        created.setStrokeType(StrokeType.INSIDE);
+        created.setStrokeLineCap(StrokeLineCap.BUTT);
+        RingThickness.apply(created, Math.max(5, cardSize * 0.045));
+        created.setStyle("-fx-stroke: -gp-ring;");
+        created.setMouseTransparent(true);
+        created.setVisible(false);
+        return created;
     }
 
     /**
@@ -284,32 +356,52 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     /**
-     * A new client, asking for another potion than the last one: nothing can be chosen during the delay of the
-     * settings (tester's feedback of 20/11/2026, point 22; maintainer's decision of 24/11/2026: at the start of each new
-     * potion to make, the first one included, and nowhere else: not between two potions poured for the same client).
+     * A new client and its recipe, other ingredients than the last one, and the shelf: nothing can be chosen during the
+     * delay of the settings (point 22, at the start of each recipe, the first one included, and nowhere else).
      */
-    private void newClient() {
+    private void newRecipe() {
         gameContext.onGameStarted();
-        PotionMix next;
+        final Set<Ingredient> last = new HashSet<>(recipe);
         do {
-            next = PotionMix.values()[random.nextInt(PotionMix.values().length)];
-        } while (next == request);
-        request = next;
-        mixture.clear();
-        pouring = null;
+            recipe.clear();
+            final List<Ingredient> all = new ArrayList<>(List.of(Ingredient.values()));
+            for (int i = 0; i < size.getIngredients(); i++) {
+                recipe.add(all.remove(random.nextInt(all.size())));
+            }
+        } while (new HashSet<>(recipe).equals(last));
+        final List<Ingredient> others = new ArrayList<>(List.of(Ingredient.values()));
+        others.removeAll(recipe);
+        final List<Ingredient> onShelf = new ArrayList<>(recipe);
+        while (onShelf.size() < size.getShelf()) {
+            onShelf.add(others.remove(random.nextInt(others.size())));
+        }
+        shelf.clear();
+        while (!onShelf.isEmpty()) {
+            shelf.add(onShelf.remove(random.nextInt(onShelf.size())));
+        }
+        for (int i = 0; i < shelf.size(); i++) {
+            cardPictures.get(i).setImage(pictures.get(shelf.get(i)));
+            cardPictures.get(i).setVisible(true);
+            cards.get(i).setOpacity(1);
+            cards.get(i).setTranslateX(0);
+        }
+        added.clear();
+        refused.clear();
+        moving = null;
+        movingSlot = -1;
         potColor.setFill(EMPTY);
+        potColor.setScaleX(1);
+        potColor.setScaleY(1);
         explosion.setVisible(false);
-        client.setScaleX(1);
-        client.setScaleY(1);
+        flying.setVisible(false);
+        flask.setVisible(false);
         client.setTranslateY(0);
-        requestColor.setFill(request.getColor());
-        requestColor.setTranslateY(0);
+        bubble.setTranslateY(0);
         message.getChildren().clear();
-        showRequest();
-        looked = null;
+        showRecipe();
+        looked = -1;
         progress = 0;
-        ring.stop();
-        placePotions();
+        ring.setVisible(false);
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
         phase = Phase.PLAY;
@@ -318,54 +410,40 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     /**
-     * Under the bubble: the name of the color, and with the recipe the potions to pour.
+     * In the bubble (the ellipse (244, 8) - (666, 236) of the picture): the ingredients of the recipe in a row, each
+     * with a green tick, hidden until it is in the cauldron.
      */
-    private void showRequest() {
-        final double centerX = clientX + 449 * clientScale;
-        final Group name = GameStyle.pill(gameContext.getTranslator().translate(request.getKey()), height * 0.04);
-        name.setLayoutX(centerX - name.getBoundsInLocal().getWidth() / 2);
-        name.setLayoutY(clientY + 300 * clientScale);
-        requestText.getChildren().setAll(name);
-        if (level != PotionsLevel.WITH_RECIPE) {
-            return;
-        }
-        final double small = height * 0.1;
-        final List<PotionMix.Primary> recipe = new ArrayList<>(request.getRecipe());
-        final double gap = small * 0.45;
-        final double total = recipe.size() * small * 0.5 + (recipe.size() - 1) * gap;
-        double x = centerX - total / 2;
-        final double y = clientY + 300 * clientScale + name.getBoundsInLocal().getHeight() + height * 0.015;
-        for (int i = 0; i < recipe.size(); i++) {
-            final ImageView flask = new ImageView(potionImages.get(recipe.get(i)));
-            flask.setFitWidth(small * 0.5);
-            flask.setFitHeight(small);
-            flask.setX(x);
-            flask.setY(y);
-            requestText.getChildren().add(flask);
-            x += small * 0.5;
-            if (i < recipe.size() - 1) {
-                final Text plus = new Text("+");
-                plus.setFont(GameStyle.titleFont(small * 0.45));
-                plus.setFill(Color.WHITE);
-                plus.setTextOrigin(VPos.CENTER);
-                plus.setX(x + (gap - plus.getLayoutBounds().getWidth()) / 2);
-                plus.setY(y + small * 0.6);
-                requestText.getChildren().add(plus);
-                x += gap;
-            }
-        }
-    }
-
-    private void placePotions() {
-        for (final PotionMix.Primary primary : PotionMix.Primary.values()) {
-            final ImageView view = potions.get(primary);
-            final double[] home = homes.get(primary);
-            if (primary != pouring) {
-                view.setRotate(0);
-                view.setX(home[0] - potionWidth / 2);
-                view.setY(home[1] - potionHeight / 2);
-            }
-            view.setOpacity(mixture.contains(primary) && primary != pouring ? 0.35 : 1);
+    private void showRecipe() {
+        bubble.getChildren().clear();
+        ticks.clear();
+        final double centerX = clientX + 455 * clientScale;
+        final double centerY = clientY + 122 * clientScale;
+        final int n = recipe.size();
+        final double slot = Math.min(422 * clientScale * 0.8 / n, 228 * clientScale * 0.6);
+        final double icon = slot * 0.84;
+        for (int i = 0; i < n; i++) {
+            final Ingredient ingredient = recipe.get(i);
+            final double x = centerX + (i - (n - 1) / 2.0) * slot;
+            final ImageView view = new ImageView(pictures.get(ingredient));
+            view.setFitWidth(icon);
+            view.setFitHeight(icon);
+            view.setX(x - icon / 2);
+            view.setY(centerY - icon / 2);
+            final double r = icon * 0.2;
+            final Circle disc = new Circle(x + icon * 0.36, centerY + icon * 0.36, r, TICK);
+            disc.setStroke(Color.WHITE);
+            disc.setStrokeWidth(Math.max(2, r * 0.18));
+            final Polyline check = new Polyline(x + icon * 0.36 - r * 0.5, centerY + icon * 0.36,
+                x + icon * 0.36 - r * 0.12, centerY + icon * 0.36 + r * 0.4,
+                x + icon * 0.36 + r * 0.52, centerY + icon * 0.36 - r * 0.38);
+            check.setStroke(Color.WHITE);
+            check.setStrokeWidth(Math.max(2, r * 0.32));
+            check.setStrokeLineCap(StrokeLineCap.ROUND);
+            check.setStrokeLineJoin(StrokeLineJoin.ROUND);
+            final Group tick = new Group(disc, check);
+            tick.setVisible(false);
+            ticks.put(ingredient, tick);
+            bubble.getChildren().addAll(view, tick);
         }
     }
 
@@ -379,21 +457,23 @@ public class MagicPotions implements GameLifeCycle {
         final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
         switch (phase) {
             case PLAY -> fixate(seconds);
-            case POUR -> pour(scaled);
-            case FAILED -> {
+            case FLY -> fly(scaled);
+            case WRONG -> shake(scaled);
+            case FUSION -> {
                 elapsed += scaled;
-                if (elapsed >= RESULT) {
+                if (elapsed >= FUSION) {
                     explosion.setVisible(false);
-                    afterClient();
+                    startDrink();
                 }
             }
+            case DRINK -> drink(scaled);
             case SERVED -> {
                 elapsed += scaled;
                 // The client jumps for joy, its potion drunk
                 final double jump = Math.abs(Math.sin(elapsed * Math.PI * 2.5)) * height * 0.03;
                 client.setTranslateY(-jump);
-                requestColor.setTranslateY(-jump);
-                if (elapsed >= RESULT) {
+                bubble.setTranslateY(-jump);
+                if (elapsed >= SERVED) {
                     afterClient();
                 }
             }
@@ -409,160 +489,223 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     /**
-     * The potion goes above the cauldron, tilts and pours (the mixture changes color), then comes back.
+     * The ingredient flies from the shelf into the cauldron, in an arc, getting smaller, and disappears in it.
      */
-    private void pour(final double seconds) {
-        final double before = elapsed;
+    private void fly(final double seconds) {
         elapsed += seconds;
-        final ImageView view = potions.get(pouring);
-        final double[] home = homes.get(pouring);
-        final double aboveX = potX + 75 * potSize / 136 + potionWidth * 0.6;
-        final double aboveY = potY - potionHeight * 0.45;
-        final double go = POUR * 0.35;
-        final double back = POUR * 0.65;
-        final double t;
-        final double tilt;
-        if (elapsed < go) {
-            t = smooth(elapsed / go);
-            tilt = 0;
-        } else if (elapsed < back) {
-            t = 1;
-            tilt = Math.min(1, (elapsed - go) / (POUR * 0.15));
-        } else {
-            t = 1 - smooth(Math.min(1, (elapsed - back) / (POUR - back)));
-            tilt = t;
-        }
-        view.setX(home[0] + (aboveX - home[0]) * t - potionWidth / 2);
-        view.setY(home[1] + (aboveY - home[1]) * t - potionHeight / 2);
-        view.setRotate(-110 * tilt);
-        final double poured = POUR * 0.5;
-        if (before < poured && elapsed >= poured) {
-            mixture.add(pouring);
-            final PotionMix made = PotionMix.of(mixture);
-            potColor.setFill(made == null ? EMPTY : made.getColor());
+        final double t = Math.min(1, elapsed / FLY);
+        final double eased = t * t * (3 - 2 * t);
+        final double[] from = slots.get(movingSlot);
+        final double toX = potColor.getCenterX();
+        final double toY = potColor.getCenterY();
+        final double x = from[0] + (toX - from[0]) * eased;
+        final double y = from[1] + (toY - from[1]) * eased - Math.sin(Math.PI * eased) * height * 0.25;
+        final double shown = cardSize * 0.78 * (1 - 0.5 * eased);
+        flying.setFitWidth(shown);
+        flying.setFitHeight(shown);
+        flying.setX(x - shown / 2);
+        flying.setY(y - shown / 2);
+        flying.setOpacity(t < 0.8 ? 1 : (1 - t) / 0.2);
+        if (t >= 1) {
+            flying.setVisible(false);
+            added.add(moving);
+            ticks.get(moving).setVisible(true);
             gameContext.getSoundManager().add(SOUNDS + "pour.wav");
+            moving = null;
+            movingSlot = -1;
+            elapsed = 0;
+            if (added.size() == recipe.size()) {
+                // The recipe complete: the ingredients merge into a potion
+                potion = random.nextInt(POTIONS.length);
+                potColor.setFill(POTION_COLORS[potion]);
+                explosion.setVisible(true);
+                gameContext.getSoundManager().add(SOUNDS + "boom.wav");
+                phase = Phase.FUSION;
+            } else {
+                // The surface of the cauldron moves a little
+                potColor.setFill(EMPTY.interpolate(Color.rgb(180, 150, 230), (double) added.size() / recipe.size()));
+                phase = Phase.PLAY;
+            }
         }
-        if (elapsed >= POUR) {
-            final PotionMix.Primary done = pouring;
-            pouring = null;
-            placePotions();
-            poured(done);
-        }
-    }
-
-    private static double smooth(final double t) {
-        return t * t * (3 - 2 * t);
     }
 
     /**
-     * A potion poured: out of the recipe, the cauldron explodes; the recipe complete, the client is served.
+     * An ingredient out of the recipe shakes on the shelf, then stays there greyed.
      */
-    private void poured(final PotionMix.Primary primary) {
+    private void shake(final double seconds) {
+        elapsed += seconds;
+        final Group card = cards.get(movingSlot);
+        if (elapsed < SHAKE) {
+            card.setTranslateX(Math.sin(elapsed / SHAKE * Math.PI * 6) * cardSize * 0.08 * (1 - elapsed / SHAKE));
+            return;
+        }
+        card.setTranslateX(0);
+        card.setOpacity(0.35);
+        moving = null;
+        movingSlot = -1;
         elapsed = 0;
-        if (!request.getRecipe().contains(primary)) {
-            stats.incrementNumberOfMistakes();
-            if (withLives) {
-                lives--;
-            }
-            potColor.setFill(Color.rgb(70, 70, 76));
-            explosion.setVisible(true);
-            gameContext.getSoundManager().add(SOUNDS + "boom.wav");
-            phase = Phase.FAILED;
-        } else if (mixture.equals(request.getRecipe())) {
+        if (lives <= 0) {
+            showLost();
+        } else {
+            phase = Phase.PLAY;
+        }
+    }
+
+    private void startDrink() {
+        flask.setImage(new Image(IMAGES + POTIONS[potion]));
+        phase = Phase.DRINK;
+        elapsed = 0;
+        drink(0);
+    }
+
+    /**
+     * The potion made goes from the cauldron to the mouth of the Biboule, getting smaller: it drinks it.
+     */
+    private void drink(final double seconds) {
+        elapsed += seconds;
+        final double t = Math.min(1, elapsed / DRINK);
+        final double eased = t * t * (3 - 2 * t);
+        final double fromX = potColor.getCenterX();
+        final double fromY = potColor.getCenterY() - potSize * 0.45;
+        // The mouth of the Biboule, drawn at (24, 392 - its height) and 300 wide in the picture
+        final double toX = clientX + 174 * clientScale;
+        final double toY = clientY + 345 * clientScale;
+        final double h = potSize * 0.7 * (1 - 0.6 * eased);
+        flask.setFitHeight(h);
+        flask.setFitWidth(h / 2);
+        flask.setX(fromX + (toX - fromX) * eased - h / 4);
+        flask.setY(fromY + (toY - fromY) * eased - Math.sin(Math.PI * eased) * height * 0.12 - h / 2);
+        flask.setOpacity(t < 0.85 ? 1 : (1 - t) / 0.15);
+        flask.setVisible(true);
+        if (t >= 1) {
+            flask.setVisible(false);
+            potColor.setFill(EMPTY);
             served++;
             stats.incrementNumberOfGoalsReached();
             gameContext.getSoundManager().add(SOUNDS + "served.wav");
             phase = Phase.SERVED;
-        } else {
-            phase = Phase.PLAY;
+            elapsed = 0;
+            showHud();
         }
-        showHud();
     }
 
     private void afterClient() {
         client.setTranslateY(0);
-        requestColor.setTranslateY(0);
-        if (lives <= 0) {
-            bravo = false;
-            final Group pill = GameStyle.pill(gameContext.getTranslator().translate("PotionsLost"), height * 0.05);
-            pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
-            pill.setLayoutY(height * 0.45 - pill.getBoundsInLocal().getHeight() / 2);
-            message.getChildren().setAll(pill);
-            phase = Phase.SHOW;
-            elapsed = 0;
-            return;
-        }
+        bubble.setTranslateY(0);
         if (end.getServed() > 0 && served >= end.getServed()) {
             bravo = true;
             finish();
             return;
         }
-        newClient();
+        newRecipe();
+    }
+
+    private void showLost() {
+        bravo = false;
+        final Group pill = GameStyle.pill(gameContext.getTranslator().translate("PotionsLost"), height * 0.05);
+        pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
+        pill.setLayoutY(height * 0.45 - pill.getBoundsInLocal().getHeight() / 2);
+        message.getChildren().setAll(pill);
+        phase = Phase.SHOW;
+        elapsed = 0;
+    }
+
+    private boolean choosable(final int index) {
+        final Ingredient ingredient = shelf.get(index);
+        return !added.contains(ingredient) && !refused.contains(ingredient);
     }
 
     private void fixate(final double seconds) {
-        if (looked == null || mixture.contains(looked)) {
+        if (looked < 0 || !choosable(looked)) {
             return;
         }
         if (gameContext.isSelectionBlocked()) {
-            // During the delay of a new client: the fixation does not start (it starts once the delay is over)
+            // During the delay of a new recipe: the fixation does not start (it starts once the delay is over)
             progress = 0;
-            ring.stop();
+            ring.setVisible(false);
             return;
         }
         if (!ring.isVisible()) {
             showRing(looked);
         }
         progress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
-        ring.setProgress(progress);
+        GameStyle.fillRing(ring, ringPerimeter, Math.min(1, progress));
         if (progress >= 1) {
-            final PotionMix.Primary primary = looked;
+            final Ingredient ingredient = shelf.get(looked);
             progress = 0;
-            ring.stop();
-            choose(primary);
+            ring.setVisible(false);
+            choose(ingredient);
         }
     }
 
-    void lookAt(final PotionMix.Primary primary) {
-        if (looked == primary) {
+    void lookAt(final int index) {
+        if (looked == index) {
             return;
         }
-        looked = primary;
+        looked = index;
         progress = 0;
-        ring.stop();
-        showRing(primary);
+        ring.setVisible(false);
+        showRing(index);
     }
 
-    void lookAway(final PotionMix.Primary primary) {
-        if (looked == primary) {
-            looked = null;
+    void lookAway(final int index) {
+        if (looked == index) {
+            looked = -1;
             progress = 0;
-            ring.stop();
+            ring.setVisible(false);
         }
-    }
-
-    private void showRing(final PotionMix.Primary primary) {
-        if (phase != Phase.PLAY || mixture.contains(primary) || gameContext.isSelectionBlocked()) {
-            return;
-        }
-        final double[] home = homes.get(primary);
-        ring.setSize(potionWidth * 1.2);
-        ring.show(home[0], home[1] + potionHeight * 0.18);
     }
 
     /**
-     * A potion of the table chosen: it is poured into the cauldron.
+     * For the tests: looks at an ingredient of the shelf.
      */
-    void choose(final PotionMix.Primary primary) {
-        if (phase != Phase.PLAY || mixture.contains(primary)) {
+    void lookAt(final Ingredient ingredient) {
+        lookAt(shelf.indexOf(ingredient));
+    }
+
+    private void showRing(final int index) {
+        if (phase != Phase.PLAY || !choosable(index) || gameContext.isSelectionBlocked()) {
             return;
         }
-        pouring = primary;
-        looked = null;
-        ring.stop();
-        potions.get(primary).toFront();
-        phase = Phase.POUR;
+        final double[] slot = slots.get(index);
+        ring.setLayoutX(slot[0]);
+        ring.setLayoutY(slot[1]);
+        GameStyle.fillRing(ring, ringPerimeter, progress);
+        ring.setVisible(true);
+    }
+
+    /**
+     * An ingredient of the shelf chosen: into the cauldron if it is in the recipe, otherwise it shakes.
+     */
+    void choose(final Ingredient ingredient) {
+        final int index = shelf.indexOf(ingredient);
+        if (phase != Phase.PLAY || index < 0 || !choosable(index)) {
+            return;
+        }
+        looked = -1;
+        ring.setVisible(false);
+        moving = ingredient;
+        movingSlot = index;
         elapsed = 0;
+        if (recipe.contains(ingredient)) {
+            // It leaves the shelf: an empty card stays (a refused ingredient stays greyed, its picture shown)
+            cards.get(index).setOpacity(0.35);
+            cardPictures.get(index).setVisible(false);
+            flying.setImage(pictures.get(ingredient));
+            flying.setOpacity(1);
+            flying.setVisible(true);
+            phase = Phase.FLY;
+            fly(0);
+        } else {
+            refused.add(ingredient);
+            stats.incrementNumberOfMistakes();
+            if (withLives) {
+                lives--;
+            }
+            gameContext.getSoundManager().add(WRONG_SOUND);
+            phase = Phase.WRONG;
+            showHud();
+        }
     }
 
     private void finish() {
@@ -585,31 +728,31 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     /**
-     * @return the zone looked at to choose a potion of the table
+     * @return the ring of the fixation, along the edge of a card
      */
-    Rectangle zoneOf(final PotionMix.Primary primary) {
-        return zones.get(primary);
+    Rectangle getRing() {
+        return ring;
     }
 
     /**
-     * @return the picture of a potion of the table
+     * @return the card of an ingredient of the shelf
      */
-    ImageView potionOf(final PotionMix.Primary primary) {
-        return potions.get(primary);
+    Group cardOf(final Ingredient ingredient) {
+        return cards.get(shelf.indexOf(ingredient));
     }
 
     /**
-     * @return the color of the cauldron
+     * @return the ingredients ticked in the bubble
      */
-    Color potColor() {
-        return (Color) potColor.getFill();
+    long ticked() {
+        return ticks.values().stream().filter(Node::isVisible).count();
     }
 
     /**
-     * @return the potions of the recipe shown under the request (none without the recipe)
+     * @return the ingredients shown in the bubble
      */
     long recipeShown() {
-        return requestText.getChildren().stream().filter(child -> child instanceof ImageView).count();
+        return bubble.getChildren().stream().filter(child -> child instanceof ImageView).count();
     }
 
     private void showHud() {
@@ -624,7 +767,7 @@ public class MagicPotions implements GameLifeCycle {
         }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("PotionsScore") + " " + served
             + (end.getServed() > 0 ? " / " + end.getServed() : ""), fontSize);
-        pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
+        pill.setLayoutX((width * 0.5 - pill.getBoundsInLocal().getWidth()) / 2);
         pill.setLayoutY(margin * 0.6);
         hud.getChildren().add(pill);
     }
@@ -648,9 +791,6 @@ public class MagicPotions implements GameLifeCycle {
     public void dispose() {
         phase = Phase.OVER;
         loop.stop();
-        if (ring != null) {
-            ring.stop();
-        }
         for (final Node node : new ArrayList<>(gazeNodes)) {
             gameContext.getGazeDeviceManager().removeEventFilter(node);
         }
@@ -662,7 +802,7 @@ public class MagicPotions implements GameLifeCycle {
     }
 
     /**
-     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     * @return the settings of the menu (Esc) acting on this game: the others are greyed
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
