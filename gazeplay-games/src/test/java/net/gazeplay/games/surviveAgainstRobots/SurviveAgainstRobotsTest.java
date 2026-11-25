@@ -266,6 +266,41 @@ class SurviveAgainstRobotsTest {
         assertEquals(4, hard.wantedRobots());
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 56: the robots come far from the Biboule and from where it goes.
+     */
+    @Test
+    void shouldBringTheRobotsFarFromTheBibouleAndFromWhereItGoes() throws Exception {
+        final double[][] aims = {{683, 400}, {70, 140}, {1300, 710}, {70, 710}, {1300, 140}};
+        for (int seed = 1; seed <= 8; seed++) {
+            for (final double[] aim : aims) {
+                final SurviveAgainstRobots game = launched(SurviveLevel.EASY, SurviveShot.FORWARD,
+                    SurviveEnd.ENDLESS, seed * 1000.0);
+                fx(() -> {
+                    game.aimAt(aim[0], aim[1]);
+                    for (int i = 0; i < 100 && game.getRobots().isEmpty(); i++) {
+                        game.step(0.02);
+                    }
+                    final SurviveAgainstRobots.Robot robot = game.getRobots().getFirst();
+                    final double fromPlayer = Math.hypot(robot.getX() - game.getPlayerX(),
+                        robot.getY() - game.getPlayerY());
+                    final double fromAim = Math.hypot(robot.getX() - aim[0], robot.getY() - aim[1]);
+                    assertTrue(fromPlayer > 768 * SurviveAgainstRobots.SPAWN_DISTANCE, "from it " + fromPlayer);
+                    assertTrue(fromAim > 768 * SurviveAgainstRobots.SPAWN_AIM_DISTANCE, "from its aim " + fromAim);
+                    // Still far when it becomes dangerous, the Biboule going straight to it
+                    game.aimAt(robot.getX(), robot.getY());
+                    while (robot.isAppearing()) {
+                        game.step(0.02);
+                    }
+                    assertTrue(Math.hypot(robot.getX() - game.getPlayerX(), robot.getY() - game.getPlayerY())
+                        > 768 * 0.3);
+                    game.dispose();
+                    return null;
+                });
+            }
+        }
+    }
+
     @Test
     void shouldHurtTheBibouleWithTheShotsOfARedRobot() throws Exception {
         final SurviveAgainstRobots game = launched(SurviveLevel.HARD, SurviveShot.FORWARD,

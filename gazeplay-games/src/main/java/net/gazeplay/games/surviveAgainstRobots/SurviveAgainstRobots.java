@@ -67,6 +67,14 @@ public class SurviveAgainstRobots implements GameLifeCycle {
     static final double BONUS_EFFECT = 8;
     static final double SPAWN_DELAY = 1.2;
     static final double APPEARING = 0.6;
+    /**
+     * How far, in heights of the screen, a robot comes from the Biboule, and from the point where the Biboule goes
+     * (tester's feedback of 23/11/2026, point 56: it was 0.45 from the Biboule only, which flies 0.33 while the robot
+     * fades in: a robot could become dangerous just beside it).
+     */
+    static final double SPAWN_DISTANCE = 0.7;
+    static final double SPAWN_AIM_DISTANCE = 0.45;
+    private static final int SPAWN_TRIES = 60;
     static final double SLOW_FACTOR = 0.5;
 
     /**
@@ -427,22 +435,21 @@ public class SurviveAgainstRobots implements GameLifeCycle {
             return;
         }
         spawnWait = SPAWN_DELAY;
-        // A place far enough from the Biboule (the farthest of a few tries, never a loop without end)
+        // A place far from the Biboule and from where it goes (the best of some tries, never a loop without end)
         final double size = robotSize();
         double bestX = width / 2;
         double bestY = top + size;
         double best = -1;
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < SPAWN_TRIES && best < 1; i++) {
             final double x = size * 0.6 + (width - size * 1.2) * random.nextDouble();
             final double y = top + size / 2 + (height - top - size) * random.nextDouble();
-            final double distance = Math.hypot(x - playerX, y - playerY);
-            if (distance > best) {
-                best = distance;
+            final double fromPlayer = Math.hypot(x - playerX, y - playerY) / (SPAWN_DISTANCE * height);
+            final double fromAim = Math.hypot(x - aimX, y - aimY) / (SPAWN_AIM_DISTANCE * height);
+            final double far = Math.min(fromPlayer, fromAim);
+            if (far > best) {
+                best = far;
                 bestX = x;
                 bestY = y;
-            }
-            if (distance > height * 0.45) {
-                break;
             }
         }
         final boolean shooter = random.nextDouble() < level.getShooters();
