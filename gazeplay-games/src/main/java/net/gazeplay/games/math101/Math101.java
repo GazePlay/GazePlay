@@ -87,6 +87,7 @@ public class Math101 implements GameLifeCycle {
     @Getter
     private final MathMistakes mistakes;
     private final ReplayablePseudoRandom random;
+    private final MathDeck deck;
 
     @Getter
     private Phase phase = Phase.OVER;
@@ -164,6 +165,7 @@ public class Math101 implements GameLifeCycle {
         } else {
             random = new ReplayablePseudoRandom(gameSeed);
         }
+        deck = new MathDeck(topic, level);
     }
 
     @Override
@@ -266,7 +268,7 @@ public class Math101 implements GameLifeCycle {
     }
 
     /**
-     * A new operation, never the same as the previous one, with its three cards in an order drawn at random.
+     * A new operation, without repetition ({@link MathDeck}), with its three cards in an order drawn at random.
      */
     private void newQuestion() {
         cards.forEach(card -> forget(card.node));
@@ -277,12 +279,7 @@ public class Math101 implements GameLifeCycle {
         ring.stop();
         biboule.setTranslateY(0);
 
-        final MathQuestion previous = question;
-        MathQuestion next = MathQuestion.draw(topic, level, random);
-        for (int i = 0; i < 20 && previous != null && next.text().equals(previous.text()); i++) {
-            next = MathQuestion.draw(topic, level, random);
-        }
-        question = next;
+        question = deck.next(random);
         writeFormula(false);
 
         final List<Integer> values = new ArrayList<>(question.wrongAnswers(random));

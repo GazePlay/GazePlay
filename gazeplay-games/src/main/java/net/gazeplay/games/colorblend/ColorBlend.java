@@ -33,6 +33,7 @@ import net.gazeplay.games.colorblend.PaintMix.Pot;
 import net.gazeplay.games.colorblend.PaintMix.Target;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -104,6 +105,10 @@ public class ColorBlend implements GameLifeCycle {
     private Target target;
     @Getter
     private final List<Pot> mix = new ArrayList<>();
+    /**
+     * The colors of the level still to make before the list is shuffled again.
+     */
+    private final List<Target> targetsToMake = new ArrayList<>();
     @Getter
     private int done;
     @Getter
@@ -492,15 +497,21 @@ public class ColorBlend implements GameLifeCycle {
     // --- The game ---
 
     /**
-     * A new color to make, never the one just made.
+     * A new color to make, from a shuffled list of those of the level, shuffled again once it is used up: none comes
+     * back before all the others, and never twice in a row (tester's feedback of 23/11/2026, points 62 and 82).
      */
     private void newTarget() {
-        final List<Target> targets = level.getTargets();
-        Target next;
-        do {
-            next = targets.get(random.nextInt(targets.size()));
-        } while (next == target && targets.size() > 1);
-        target = next;
+        if (targetsToMake.isEmpty()) {
+            targetsToMake.addAll(level.getTargets());
+            for (int i = targetsToMake.size() - 1; i > 0; i--) {
+                Collections.swap(targetsToMake, i, random.nextInt(i + 1));
+            }
+            // The last color of a list is not the first one of the next list
+            if (targetsToMake.getFirst() == target) {
+                Collections.swap(targetsToMake, 0, targetsToMake.size() - 1);
+            }
+        }
+        target = targetsToMake.removeFirst();
         mistakesOnTarget = 0;
         emptyPot();
         showCard();

@@ -9,7 +9,7 @@ An operation is written on the board. Find the right answer among the three card
 - A mistake: the card shows a cross. Depending on the variant, it turns grey and you look again; or you lose a life, the right answer is shown, then another operation comes.
 - A ring fills during a fixation; it lasts the length of the settings.
 - At the top left, the hearts (a red heart for each life), only with hearts; in the middle, the operations solved.
-- Never a 0: neither in the operations nor in the answers.
+- Never a 0: neither in the operations nor in the answers. An operation does not come back before all those of the level have been asked (3 + 4 and 4 + 3 count as one).
 - At each new operation, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Escape key) is open.
 
 # How to win

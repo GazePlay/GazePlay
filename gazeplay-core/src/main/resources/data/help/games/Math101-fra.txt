@@ -9,7 +9,7 @@ Une opération est écrite au tableau. Trouve la bonne réponse parmi les trois 
 - Une erreur : la carte montre une croix. Selon la variante, elle devient grise et tu cherches encore ; ou tu perds une vie, la bonne réponse est montrée, puis une autre opération arrive.
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut à gauche, les cœurs (un cœur rouge par vie), seulement avec cœurs ; au milieu, les opérations réussies.
-- Jamais de 0 : ni dans les opérations, ni dans les réponses.
+- Jamais de 0 : ni dans les opérations, ni dans les réponses. Une opération ne revient pas avant que toutes celles du niveau soient passées (3 + 4 et 4 + 3 comptent pour une seule).
 - À chaque nouvelle opération, rien ne peut être choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner

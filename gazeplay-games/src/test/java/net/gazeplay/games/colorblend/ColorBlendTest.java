@@ -187,6 +187,31 @@ class ColorBlendTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026: all the colors of the level before one comes back, never twice in a row.
+     */
+    @Test
+    void shouldAskAllTheColorsOfTheLevelBeforeAskingOneAgain() throws Exception {
+        for (final ColorBlendLevel level : ColorBlendLevel.values()) {
+            final ColorBlend game = launched(ColorBlendMode.CHALLENGE, level, ColorBlendEnd.ENDLESS);
+            fx(() -> {
+                Target previous = null;
+                for (int round = 0; round < 4; round++) {
+                    final java.util.Set<Target> asked = new java.util.HashSet<>();
+                    for (int i = 0; i < level.getTargets().size(); i++) {
+                        final Target target = game.getTarget();
+                        assertNotEquals(previous, target);
+                        assertTrue(asked.add(target), level + ": " + target + " again");
+                        previous = target;
+                        target.getRecipe().forEach(pot -> pour(game, pot));
+                        steps(game, ColorBlend.REWARD + 0.04);
+                    }
+                }
+                return null;
+            });
+        }
+    }
+
     @Test
     void shouldCountAWrongMixShowItThenAskTheSameColorWithAHintAfterTwo() throws Exception {
         final ColorBlend game = launched(ColorBlendMode.CHALLENGE, ColorBlendLevel.HARD, ColorBlendEnd.ENDLESS);

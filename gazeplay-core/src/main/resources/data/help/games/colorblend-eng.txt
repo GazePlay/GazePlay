@@ -8,7 +8,7 @@ Pour pots of paint into the big pot and mix them, like a painter: yellow and blu
 - At the start, nothing can be chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-With "With hearts", with or without end, you have 3 hearts at the top left: each wrong mix costs one (it also counts a mistake in the statistics). With no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. A right color gives a star and "Well done!", then another color to make. As you chose, the game stops after 5, 10 or 20 colors ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
+With "With hearts", with or without end, you have 3 hearts at the top left: each wrong mix costs one (it also counts a mistake in the statistics). With no heart left, "Lost!", then the statistics. With "Without hearts", there are no hearts and the game is never lost: the mistakes are still counted in the statistics. A right color gives a star and "Well done!", then another color to make (none comes back before all those of the level). As you chose, the game stops after 5, 10 or 20 colors ("Bravo", then the statistics), or has no end (quit with the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".

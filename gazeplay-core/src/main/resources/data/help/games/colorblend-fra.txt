@@ -8,7 +8,7 @@ Verse des pots de peinture dans le grand pot et mélange-les, comme un peintre 
 - Au début, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Avec « Avec cœurs », avec ou sans fin, tu as 3 cœurs en haut à gauche : chaque mauvais mélange en coûte un (il compte aussi une erreur dans les statistiques). Sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Une bonne couleur donne une étoile et « Bravo ! », puis une autre couleur à faire. Selon ton choix, le jeu s’arrête après 5, 10 ou 20 couleurs (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
+Avec « Avec cœurs », avec ou sans fin, tu as 3 cœurs en haut à gauche : chaque mauvais mélange en coûte un (il compte aussi une erreur dans les statistiques). Sans cœur, « Perdu ! », puis les statistiques. Avec « Sans cœurs », il n’y a pas de cœurs et on ne perd jamais : les erreurs restent comptées dans les statistiques. Une bonne couleur donne une étoile et « Bravo ! », puis une autre couleur à faire (aucune ne revient avant que toutes celles du niveau soient passées). Selon ton choix, le jeu s’arrête après 5, 10 ou 20 couleurs (« Bravo », puis les statistiques), ou il est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

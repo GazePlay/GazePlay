@@ -184,6 +184,47 @@ class Math101Test {
         return false;
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 62: no operation twice before all of them (3 + 4 and 4 + 3 are the same),
+     * and no operation around the same numbers just after another.
+     */
+    @Test
+    void shouldAskAllTheOperationsBeforeAskingOneAgain() {
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom(987.5);
+        for (final MathTopic topic : MathTopic.values()) {
+            for (final MathLevel level : topic.levels()) {
+                final MathDeck deck = new MathDeck(topic, level);
+                final int different = deck.getDifferent();
+                final String name = topic + " " + level;
+                for (int round = 0; round < (different > 300 ? 1 : 3); round++) {
+                    final java.util.Set<String> asked = new java.util.HashSet<>();
+                    String previous = "";
+                    final int count = Math.min(different, 300);
+                    for (int i = 0; i < count; i++) {
+                        final MathQuestion next = deck.next(random);
+                        assertTrue(asked.add(next.key()), name + ": " + next.text() + " twice");
+                        // At the end of the list, only operations around the same numbers may be left
+                        if (i < different / 2) {
+                            assertNotEquals(previous, next.family(), name);
+                        }
+                        previous = next.family();
+                    }
+                }
+            }
+        }
+        assertEquals(10, new MathDeck(MathTopic.MULTIPLICATION, MathLevel.TABLE_7).getDifferent());
+        assertEquals(25, new MathDeck(MathTopic.ADDITION, MathLevel.UP_TO_10).getDifferent());
+        // Around the same numbers
+        final MathQuestion sum = new MathQuestion(3, MathOperation.PLUS, 4, 7, 0);
+        final MathQuestion other = new MathQuestion(4, MathOperation.PLUS, 3, 7, 0);
+        final MathQuestion difference = new MathQuestion(7, MathOperation.MINUS, 3, 4, 0);
+        assertEquals(sum.key(), other.key());
+        assertNotEquals(sum.key(), difference.key());
+        assertEquals(sum.family(), difference.family());
+        assertEquals(new MathQuestion(7, MathOperation.MULTIPLY, 4, 28, 7).family(),
+            new MathQuestion(28, MathOperation.DIVID, 7, 4, 7).family());
+    }
+
     @Test
     void shouldChooseACardAfterAFixationOfTheLengthOfTheSettingsAfterTheDelay() throws Exception {
         // Point 22 (23/11/2026): the cards are shown at once and wait for the delay of the settings (the game area

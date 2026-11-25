@@ -68,6 +68,58 @@ public final class MathQuestion {
     }
 
     /**
+     * @return all the operations {@link #draw} can give
+     */
+    static List<MathQuestion> all(final MathTopic topic, final MathLevel level) {
+        final List<MathQuestion> all = new ArrayList<>();
+        for (final MathOperation operation : topic.getOperations()) {
+            if (operation == MathOperation.PLUS || operation == MathOperation.MINUS) {
+                for (int total = 2; total <= level.getUpTo(); total++) {
+                    for (int part = 1; part < total; part++) {
+                        all.add(operation == MathOperation.PLUS
+                            ? new MathQuestion(part, operation, total - part, total, 0)
+                            : new MathQuestion(total, operation, part, total - part, 0));
+                    }
+                }
+                continue;
+            }
+            for (final int table : level.getTables()) {
+                for (int factor = 1; factor <= MathLevel.FACTORS; factor++) {
+                    if (operation == MathOperation.MULTIPLY) {
+                        all.add(new MathQuestion(table, operation, factor, table * factor, table));
+                        all.add(new MathQuestion(factor, operation, table, table * factor, table));
+                    } else {
+                        all.add(new MathQuestion(table * factor, operation, table, factor, table));
+                    }
+                }
+            }
+        }
+        return all;
+    }
+
+    /**
+     * @return what makes it the same operation as another one: the same numbers, in any order for an addition or a
+     * multiplication (3 + 4 and 4 + 3)
+     */
+    String key() {
+        final boolean anyOrder = operation == MathOperation.PLUS || operation == MathOperation.MULTIPLY;
+        return operation + " " + (anyOrder ? Math.min(first, second) + " " + Math.max(first, second)
+            : first + " " + second);
+    }
+
+    /**
+     * @return the operations around the same numbers: 3 + 4, 4 + 3, 7 - 3 and 7 - 4, or 3 x 4, 4 x 3, 12 : 3 and 12 : 4
+     */
+    String family() {
+        return switch (operation) {
+            case PLUS -> "+ " + Math.min(first, second) + " " + Math.max(first, second);
+            case MINUS -> "+ " + Math.min(answer, second) + " " + Math.max(answer, second);
+            case MULTIPLY -> "x " + Math.min(first, second) + " " + Math.max(first, second);
+            default -> "x " + Math.min(answer, second) + " " + Math.max(answer, second);
+        };
+    }
+
+    /**
      * @return the operation as written on the board, without its answer: "7 + 5 ="
      */
     public String text() {

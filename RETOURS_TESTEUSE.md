@@ -104,7 +104,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 58 | Dés | Un dé passe devant le menu Échap | Le dé 3D dans sa propre sous-scène (`DiceView`, `e499ec1ba`) |
 | 78 | Bouteille | Casser librement, avec ou sans fixation | Modes « Tout casser » (de retour) et « Détruire les cibles » ; « Dès qu'on regarde » (par défaut) ou « Après une fixation » en « Tout casser » seulement ; « Détruire les cibles » toujours avec une fixation (`1d6793c13`) |
 | 79 | Cartes magiques | Une seule carte à retrouver | Choix 1, 2 ou 3 cartes à trouver (1 par défaut) ; anneau de la couleur des réglages aussi sur le dos des cartes, Memory compris, liseré clair seulement avec la couleur principale (`1ad767ed0`) |
-| 82 | Mélanger les couleurs / Magic Potions | Deux fois le même jeu | Magic Potions devient **Recettes magiques** : recette de 2, 3 ou 4 ingrédients en images (OpenMoji) à trouver sur l'étagère ; cœurs ; 3, 5, 10 recettes ou sans fin ; explosion seulement à la recette complète, puis la Biboule boit la potion ; pas de voix ; anneau de fixation au bord des cartes (25/11). Validé et commité le 25/11. Le tirage sans répétition de Mélanger les couleurs reste dans le groupe 2 |
+| 82 | Mélanger les couleurs / Magic Potions | Deux fois le même jeu | Magic Potions devient **Recettes magiques** : recette de 2, 3 ou 4 ingrédients en images (OpenMoji) à trouver sur l'étagère ; cœurs ; 3, 5, 10 recettes ou sans fin ; explosion seulement à la recette complète, puis la Biboule boit la potion ; pas de voix ; anneau de fixation au bord des cartes (25/11). Validé et commité le 25/11. Le tirage sans répétition de Mélanger les couleurs : fait le 25/11 |
 
 ## Faits le 25/11/2026, groupe 2 (validés par le mainteneur)
 
@@ -116,6 +116,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 37 | Où est la forme | Le losange ressemble à un carré | C'était un carré sur sa pointe : redessiné plus haut que large (340 × 580), vignette et inventaire |
 | 56 | Survivre contre des robots | Nouveaux robots loin du Biboule | À 0,7 hauteur d'écran au moins de la Biboule (0,45 avant) et 0,45 de l'endroit où elle va |
 | 57 | Tir | Nom « Invasion » | Renommé en français et en anglais (nom code `Shooter` gardé), licence |
+| 62, 82 | Apprends les Maths, Mélanger les couleurs | Répétitions | Rien ne revient avant que tout le niveau soit passé ; maths : 3 + 4 et 4 + 3 comptent pour un, et les calculs autour des mêmes nombres sont séparés (`MathDeck`) |
 
 ## À décider
 
@@ -143,7 +144,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 59 | Dés | Icône « Lancer » ; dé à lancer surligné | |
 | 60 | Dés | Inverser les deux modes | |
 | 61 | Dés | Total plus visible (dit à voix haute, calcul décomposé) | |
-| 62 | Apprends les Maths | Répétitions autour d'un même calcul | Seule la répétition immédiate est évitée aujourd'hui |
 | 63 | Embouteillage | Niveau facile trop difficile | |
 | 64 | Jeu de l'oie | Visuel : contraste et taille des pions, pion actif et dé surlignés, plateau sans cases inutiles en version simple | |
 | 65 | Jeu de l'oie | Règles adoucies : dés aidés, pas de retour au départ, prison réduite, arrivée aidée | |
