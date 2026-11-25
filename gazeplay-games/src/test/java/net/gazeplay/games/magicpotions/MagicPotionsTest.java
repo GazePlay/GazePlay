@@ -361,6 +361,83 @@ class MagicPotionsTest {
         verify(gameContext).playWinTransition(anyLong(), any());
     }
 
+    private MagicPotions hidden(final RecipeSize size) throws Exception {
+        return fx(() -> {
+            gameArea.getChildren().clear();
+            final MagicPotions created = new MagicPotions(gameContext, stats, size, PotionsEnd.ENDLESS, 21);
+            created.setHiddenRecipe(true);
+            created.setManual();
+            launchedGames.add(created).launch();
+            return created;
+        });
+    }
+
+    /**
+     * Maintainer's request of 25/11/2026 (point 85): the recipe shown 3, 4 or 5 seconds, nothing to choose meanwhile,
+     * then chosen from memory; an ingredient found shows again, ticked.
+     */
+    @Test
+    void shouldHideTheRecipeAfterAFewSecondsThenShowTheIngredientsFound() throws Exception {
+        for (final RecipeSize size : RecipeSize.values()) {
+            final MagicPotions game = hidden(size);
+            assertEquals(MagicPotions.Phase.MEMORIZE, game.getPhase());
+            final Ingredient first = game.getRecipe().getFirst();
+            fx(() -> {
+                game.lookAt(first);
+                return null;
+            });
+            steps(game, size.getIngredients() + 0.9);
+            assertEquals(MagicPotions.Phase.MEMORIZE, game.getPhase(), "nothing chosen while it is shown");
+            assertFalse(game.getRing().isVisible());
+            assertTrue(game.getRecipe().stream().allMatch(ingredient -> game.seen(ingredient) == 1));
+            steps(game, 0.1 + MagicPotions.FADE + 0.05);
+            assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+            assertTrue(game.getRecipe().stream().allMatch(ingredient -> game.seen(ingredient) == 0));
+            put(game, first);
+            assertEquals(1, game.seen(first), "found: shown again");
+            assertEquals(1, game.ticked());
+            assertTrue(game.getRecipe().stream().skip(1).allMatch(ingredient -> game.seen(ingredient) == 0));
+            serve(game);
+            assertEquals(MagicPotions.Phase.MEMORIZE, game.getPhase(), "the next recipe is shown too");
+            assertTrue(game.getRecipe().stream().allMatch(ingredient -> game.seen(ingredient) == 1));
+        }
+    }
+
+    @Test
+    void shouldShowTheHiddenRecipeAgainForAMomentAfterAMistake() throws Exception {
+        final MagicPotions game = hidden(RecipeSize.THREE);
+        steps(game, MagicPotions.MEMORIZE + 3 + MagicPotions.FADE + 0.05);
+        final Ingredient found = game.getRecipe().getFirst();
+        put(game, found);
+        refuse(game, outOfRecipe(game).getFirst());
+        assertEquals(MagicPotions.Phase.REMIND, game.getPhase());
+        final Ingredient missing = game.getRecipe().get(1);
+        steps(game, MagicPotions.FADE / 2);
+        assertTrue(game.seen(missing) > 0.3 && game.seen(missing) < 0.9, "fading in " + game.seen(missing));
+        steps(game, MagicPotions.FADE / 2);
+        assertEquals(1, game.seen(missing), 1e-9);
+        // Nothing can be chosen meanwhile
+        choose(game, missing);
+        assertEquals(MagicPotions.Phase.REMIND, game.getPhase());
+        steps(game, MagicPotions.REMIND + MagicPotions.FADE + 0.05);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+        assertEquals(0, game.seen(missing), 1e-9);
+        assertEquals(1, game.seen(found), 1e-9);
+        // The last life lost: the recipe is shown
+        refuse(game, outOfRecipe(game).getLast());
+        steps(game, MagicPotions.REMIND + 2 * MagicPotions.FADE + 0.05);
+        serveHidden(game);
+        refuse(game, outOfRecipe(game).getFirst());
+        assertEquals(MagicPotions.Phase.SHOW, game.getPhase());
+        assertEquals(1, game.seen(game.getRecipe().getFirst()), 1e-9);
+    }
+
+    private static void serveHidden(final MagicPotions game) throws Exception {
+        serve(game);
+        steps(game, MagicPotions.MEMORIZE + game.getRecipe().size() + MagicPotions.FADE + 0.1);
+        assertEquals(MagicPotions.Phase.PLAY, game.getPhase());
+    }
+
     @Test
     void shouldStopAfterDispose() throws Exception {
         final MagicPotions game = playing(RecipeSize.TWO, PotionsEnd.ENDLESS, 2);
@@ -378,21 +455,29 @@ class MagicPotionsTest {
     @Test
     void shouldGiveAllTheVariantsTheEasiestFirst() {
         final Set<IGameVariant> variants = new PotionsGameVariantGenerator().getVariants();
-        // 3 sizes, 4 ends, with or without hearts (maintainer's choices of 24/11/2026)
-        assertEquals(3 * 4 * 2, variants.size());
-        assertEquals(new GroupedGameVariant(PotionsGameVariantGenerator.GROUP, PotionsEnd.SERVED_3.getKey(),
+        // Recipe visible or hidden, 3 sizes, 4 ends, with or without hearts (maintainer's choices of 24 and 25/11/2026)
+        assertEquals(2 * 3 * 4 * 2, variants.size());
+        final IGameVariant hidden = new GroupedGameVariant(PotionsGameVariantGenerator.HIDDEN,
+            PotionsEnd.SERVED_5.getKey(), RecipeSize.THREE.getKey(), null, LivesVariant.WITH);
+        assertTrue(variants.contains(hidden));
+        assertTrue(PotionsGameLauncher.withOptions(
+            new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 1), hidden).isHiddenRecipe());
+        assertFalse(PotionsGameLauncher.withOptions(
+            new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 1), variants.iterator().next())
+            .isHiddenRecipe());
+        assertEquals(new GroupedGameVariant(PotionsGameVariantGenerator.VISIBLE, PotionsEnd.SERVED_3.getKey(),
             RecipeSize.TWO.getKey(), null, LivesVariant.WITHOUT), variants.iterator().next());
-        final IGameVariant variant = new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
+        final IGameVariant variant = new GroupedGameVariant(PotionsGameVariantGenerator.VISIBLE,
             PotionsEnd.SERVED_10.getKey(), RecipeSize.FOUR.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
         assertEquals(RecipeSize.FOUR, PotionsGameLauncher.sizeOf(variant));
         assertEquals(PotionsEnd.SERVED_10, PotionsGameLauncher.endOf(variant));
-        final IGameVariant endlessWithout = new GroupedGameVariant(PotionsGameVariantGenerator.GROUP,
+        final IGameVariant endlessWithout = new GroupedGameVariant(PotionsGameVariantGenerator.VISIBLE,
             PotionsEnd.ENDLESS.getKey(), RecipeSize.THREE.getKey(), null, LivesVariant.WITHOUT);
         assertTrue(variants.contains(endlessWithout));
-        assertTrue(PotionsGameLauncher.withLives(
+        assertTrue(PotionsGameLauncher.withOptions(
             new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 1), variant).isWithLives());
-        assertFalse(PotionsGameLauncher.withLives(
+        assertFalse(PotionsGameLauncher.withOptions(
             new MagicPotions(gameContext, stats, RecipeSize.TWO, PotionsEnd.ENDLESS, 1), endlessWithout)
             .isWithLives());
         assertEquals(RecipeSize.TWO, PotionsGameLauncher.sizeOf(null));

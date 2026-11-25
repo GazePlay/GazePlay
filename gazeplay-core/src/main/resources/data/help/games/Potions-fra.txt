@@ -6,6 +6,7 @@ Une Biboule veut une potion magique : sa bulle montre la recette, des ingrédien
 - Sur l'étagère, il y a les ingrédients de la recette et 2 autres, dans le désordre.
 - Fixe un ingrédient de la recette : il vole dans le chaudron, et il est coché en vert dans la bulle. L'ordre ne compte pas.
 - Un ingrédient qui n'est pas dans la recette tremble et reste sur l'étagère, grisé : c'est une erreur, et tu perds une vie avec les cœurs.
+- Recette cachée : la recette est montrée quelques secondes (3, 4 ou 5 selon sa taille), puis chaque ingrédient devient un « ? ». Choisis-les de mémoire : un ingrédient trouvé se montre de nouveau, coché. À chaque erreur, toute la recette réapparaît un moment, puis disparaît. Rien ne peut être choisi pendant qu'elle est montrée.
 - La recette est complète : le chaudron explose, les ingrédients ont fusionné en une potion. La Biboule la boit et saute de joie, puis une nouvelle cliente arrive.
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut à gauche, les vies (un cœur rouge par vie) ; à côté, les potions servies.
@@ -17,6 +18,7 @@ Après 3, 5 ou 10 recettes, c'est « Bravo », puis les statistiques. Tu as 3 vi
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
+- En haut, la recette : visible tout le temps, ou cachée après quelques secondes (de mémoire).
 - 2, 3 ou 4 ingrédients : la taille des recettes.
 - En bas, la fin : 3, 5 ou 10 recettes, ou sans fin.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

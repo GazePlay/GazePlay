@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -17,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -46,6 +48,10 @@ import java.util.Set;
  * Biboule drinks the potion and jumps for joy. The game ends after 3, 5 or 10 recipes ("Bravo"), never, or when the
  * lives are lost ("Lost!"); without hearts, it is never lost. No voice (maintainer's decision).
  * <p>
+ * Hidden recipe (a choice of the variants, maintainer's request of 25/11/2026, point 85): the recipe is shown for a few
+ * seconds, then each ingredient fades into a "?"; the ingredients are chosen from memory, an ingredient found shows
+ * again, ticked, and a mistake shows the whole recipe again for a moment. Nothing can be chosen while it is shown.
+ * <p>
  * One loop, in real seconds: the ingredients fly at the speed of the settings, the fixations last the length of the
  * settings (read at each step), nothing can be chosen during the delay of the settings at the start of each recipe nor
  * while something moves, and nothing moves while the menu of the game is open.
@@ -64,12 +70,20 @@ public class MagicPotions implements GameLifeCycle {
     static final double DRINK = 1.0;
     static final double SERVED = 1.2;
     static final double SHOW = 2.2;
+    /**
+     * Hidden recipe, in real seconds: the recipe shown at first (and one more second for each ingredient: 3, 4 or 5),
+     * shown again after a mistake, and its fade in or out.
+     */
+    static final double MEMORIZE = 1;
+    static final double REMIND = 1.2;
+    static final double FADE = 0.5;
 
     private static final String IMAGES = "data/potions/images/";
     private static final String SOUNDS = "data/potions/sounds/";
     private static final String WRONG_SOUND = "data/dice/sounds/wrong.wav";
     private static final Color EMPTY = Color.rgb(226, 236, 246);
     private static final Color TICK = Color.rgb(46, 160, 67);
+    private static final Color QUESTION_MARK = Color.rgb(110, 90, 160);
     /**
      * The potions made: their picture and the color of the cauldron.
      */
@@ -77,7 +91,7 @@ public class MagicPotions implements GameLifeCycle {
     private static final Color[] POTION_COLORS = {Color.rgb(229, 57, 53), Color.rgb(253, 216, 53),
         Color.rgb(30, 136, 229)};
 
-    enum Phase { PLAY, FLY, WRONG, FUSION, DRINK, SERVED, SHOW, OVER }
+    enum Phase { MEMORIZE, PLAY, FLY, WRONG, REMIND, FUSION, DRINK, SERVED, SHOW, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -117,6 +131,11 @@ public class MagicPotions implements GameLifeCycle {
      */
     @Getter
     private boolean withLives = true;
+    /**
+     * Whether the recipe is hidden after a few seconds (a choice of the variants).
+     */
+    @Getter
+    private boolean hiddenRecipe;
     @Getter
     private int served;
     private boolean bravo;
@@ -144,6 +163,8 @@ public class MagicPotions implements GameLifeCycle {
     private final List<double[]> slots = new ArrayList<>();
     private final Map<Ingredient, Image> pictures = new EnumMap<>(Ingredient.class);
     private final Map<Ingredient, Group> ticks = new EnumMap<>(Ingredient.class);
+    private final Map<Ingredient, ImageView> recipePictures = new EnumMap<>(Ingredient.class);
+    private final Map<Ingredient, Text> questionMarks = new EnumMap<>(Ingredient.class);
     private Ellipse potColor;
     private ImageView client;
     private Group bubble;
@@ -404,18 +425,20 @@ public class MagicPotions implements GameLifeCycle {
         ring.setVisible(false);
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
-        phase = Phase.PLAY;
+        phase = hiddenRecipe ? Phase.MEMORIZE : Phase.PLAY;
         elapsed = 0;
         showHud();
     }
 
     /**
      * In the bubble (the ellipse (244, 8) - (666, 236) of the picture): the ingredients of the recipe in a row, each
-     * with a green tick, hidden until it is in the cauldron.
+     * with a green tick, hidden until it is in the cauldron (and, for a hidden recipe, a "?" in its place meanwhile).
      */
     private void showRecipe() {
         bubble.getChildren().clear();
         ticks.clear();
+        recipePictures.clear();
+        questionMarks.clear();
         final double centerX = clientX + 455 * clientScale;
         final double centerY = clientY + 122 * clientScale;
         final int n = recipe.size();
@@ -443,7 +466,53 @@ public class MagicPotions implements GameLifeCycle {
             final Group tick = new Group(disc, check);
             tick.setVisible(false);
             ticks.put(ingredient, tick);
-            bubble.getChildren().addAll(view, tick);
+            recipePictures.put(ingredient, view);
+            final Text mark = new Text("?");
+            mark.setFont(GameStyle.titleFont(icon * 0.9));
+            mark.setStyle(GameStyle.titleFontStyle(icon * 0.9));
+            mark.setFill(QUESTION_MARK);
+            mark.setTextOrigin(VPos.CENTER);
+            mark.setX(x - mark.getLayoutBounds().getWidth() / 2 - mark.getLayoutBounds().getMinX());
+            mark.setY(centerY);
+            mark.setOpacity(0);
+            questionMarks.put(ingredient, mark);
+            bubble.getChildren().addAll(view, mark, tick);
+        }
+    }
+
+    /**
+     * Hidden recipe: how much the ingredients not yet found are seen in the bubble, from 0 (a "?" for each) to 1.
+     */
+    private void showHidden(final double seen) {
+        for (final Ingredient ingredient : recipe) {
+            final double shown = added.contains(ingredient) ? 1 : Math.max(0, Math.min(1, seen));
+            recipePictures.get(ingredient).setOpacity(shown);
+            questionMarks.get(ingredient).setOpacity(1 - shown);
+        }
+    }
+
+    /**
+     * Hidden recipe, at first: shown, then fading into the "?".
+     */
+    private void memorize(final double seconds) {
+        elapsed += seconds;
+        final double shown = MEMORIZE + recipe.size();
+        showHidden(1 - (elapsed - shown) / FADE);
+        if (elapsed >= shown + FADE) {
+            phase = Phase.PLAY;
+            elapsed = 0;
+        }
+    }
+
+    /**
+     * Hidden recipe, after a mistake: it fades in, stays a moment, fades out.
+     */
+    private void remind(final double seconds) {
+        elapsed += seconds;
+        showHidden(Math.min(elapsed / FADE, 1 - (elapsed - FADE - REMIND) / FADE));
+        if (elapsed >= 2 * FADE + REMIND) {
+            phase = Phase.PLAY;
+            elapsed = 0;
         }
     }
 
@@ -456,6 +525,8 @@ public class MagicPotions implements GameLifeCycle {
         }
         final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
         switch (phase) {
+            case MEMORIZE -> memorize(seconds);
+            case REMIND -> remind(seconds);
             case PLAY -> fixate(seconds);
             case FLY -> fly(scaled);
             case WRONG -> shake(scaled);
@@ -510,6 +581,9 @@ public class MagicPotions implements GameLifeCycle {
             flying.setVisible(false);
             added.add(moving);
             ticks.get(moving).setVisible(true);
+            if (hiddenRecipe) {
+                showHidden(0);
+            }
             gameContext.getSoundManager().add(SOUNDS + "pour.wav");
             moving = null;
             movingSlot = -1;
@@ -545,9 +619,12 @@ public class MagicPotions implements GameLifeCycle {
         movingSlot = -1;
         elapsed = 0;
         if (lives <= 0) {
+            if (hiddenRecipe) {
+                showHidden(1);
+            }
             showLost();
         } else {
-            phase = Phase.PLAY;
+            phase = hiddenRecipe ? Phase.REMIND : Phase.PLAY;
         }
     }
 
@@ -777,6 +854,20 @@ public class MagicPotions implements GameLifeCycle {
      */
     void setWithLives(final boolean withLives) {
         this.withLives = withLives;
+    }
+
+    /**
+     * @param hiddenRecipe whether the recipe is hidden after a few seconds, before the launch
+     */
+    void setHiddenRecipe(final boolean hiddenRecipe) {
+        this.hiddenRecipe = hiddenRecipe;
+    }
+
+    /**
+     * @return how much an ingredient of the recipe is seen in the bubble, from 0 to 1
+     */
+    double seen(final Ingredient ingredient) {
+        return recipePictures.get(ingredient).getOpacity();
     }
 
     /**

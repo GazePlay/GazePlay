@@ -6,6 +6,7 @@ A Biboule wants a magic potion: its bubble shows the recipe, ingredients in pict
 - On the shelf are the ingredients of the recipe and 2 others, in any order.
 - Fixate an ingredient of the recipe: it flies into the cauldron, and it is ticked in green in the bubble. The order does not matter.
 - An ingredient out of the recipe shakes and stays on the shelf, greyed: it is a mistake, and you lose a life with the hearts.
+- Hidden recipe: the recipe is shown for a few seconds (3, 4 or 5 depending on its size), then each ingredient becomes a "?". Choose them from memory: an ingredient found shows again, ticked. At each mistake, the whole recipe shows again for a moment, then disappears. Nothing can be chosen while it is shown.
 - The recipe is complete: the cauldron explodes, the ingredients have merged into a potion. The Biboule drinks it and jumps for joy, then a new client comes.
 - A ring fills during a fixation; it lasts the length of the settings.
 - At the top left, the lives (a red heart for each life); next to them, the potions served.
@@ -17,6 +18,7 @@ After 3, 5 or 10 recipes, it is "Bravo", then the statistics. You have 3 lives: 
 
 # The variants
 Choose a variant (it is circled), then press "Start".
+- At the top, the recipe: always visible, or hidden after a few seconds (from memory).
 - 2, 3 or 4 ingredients: the size of the recipes.
 - At the bottom, the end: 3, 5 or 10 recipes, or without end.
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

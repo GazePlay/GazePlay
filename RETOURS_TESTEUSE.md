@@ -119,6 +119,8 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 62, 82 | Apprends les Maths, Mélanger les couleurs | Répétitions | Rien ne revient avant que tout le niveau soit passé ; maths : 3 + 4 et 4 + 3 comptent pour un, et les calculs autour des mêmes nombres sont séparés (`MathDeck`) |
 | 70 | Morpion | Niveaux moyen et difficile inversés | L'ordinateur moyen oublie de bloquer une fois sur deux : un joueur attentif gagne 77, 58 et 30 parties sur 100 (facile, moyen, difficile ; 77, 9 et 30 avant) |
 | 72 | Coloriage | Même palette à tous les niveaux | La palette (« nickel » pour elle) est gardée, les niveaux sont renommés d'après leurs dessins : Facile : 1 ou 2 zones, Moyen : 3 à 6, Difficile : 7 ou plus, Mes dessins ; aide corrigée |
+| 84 | Où est la forme (demande du mainteneur) | « ovale » avec un « e » | Texte français et `voix.csv` ; enregistrements gardés (même prononciation) |
+| 85 | Recettes magiques (demande du mainteneur) | Recette visible ou cachée | Choix en haut des variantes ; cachée : montrée 3, 4 ou 5 s, puis des « ? » ; un ingrédient trouvé réapparaît coché ; rappel en fondu à chaque erreur ; rien à choisir pendant qu'elle est montrée |
 
 ## À décider
 
@@ -168,8 +170,6 @@ Notées telles que demandées ; rien n'est codé.
 
 | N° | Jeu | Demande | Remarque |
 |---|---|---|---|
-| 84 | Où est la forme | Écrire « ovale » avec un « e » | Fait constaté : « Où est l’oval ? » dans `whereIsTheShape.csv` (français) et dans `gradle/images/voix.csv` (texte des deux voix françaises) ; les aides disent déjà « ovale » |
-| 85 | Recettes magiques | Nouvelle variante : recette visible ou **recette cachée**. Cachée : la recette est montrée (3 s par exemple) puis disparaît ; on choisit ensuite les ingrédients de mémoire ; à chaque ingrédient faux, la recette réapparaît brièvement, en fondu (apparaît puis disparaît) | À préciser : rien à choisir pendant qu'elle est montrée, ni pendant le rappel ? La recette redevient-elle visible par les ingrédients déjà trouvés (coches) ? |
 | 86 | Où est-ce ? (menu principal) | Revoir l'option du dossier : une **fenêtre** où la personne choisit la taille de la grille, donne ses images, la phrase à afficher (si elle veut) et la bonne réponse ; **GazePlay fait lui-même le dossier** d'Où est-ce ? | Répond au point 31 (elle n'avait pas réussi avec le dossier `images\<réponse>\`, `questions.csv`, `sounds\`). Maquette à montrer avant de coder |
 | 87 | Eval | Écrans avec une **croix de fixation** : noter quand la personne entre dessus, en sort, combien de temps elle y reste, etc., **que la croix soit fixable ou non** | Répond au point 28 (croix absente d'`echantillons.csv`). Touche les fichiers de résultats d'Eval : expliquer l'impact et versionner (`formatVersion`) avant de coder, et mettre à jour l'aide « Comprendre les fichiers de résultats » |
 

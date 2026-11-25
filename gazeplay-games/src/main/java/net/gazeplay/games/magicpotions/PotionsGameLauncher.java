@@ -39,22 +39,24 @@ public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGa
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                        final MagicPotionsStats stats) {
-        return withLives(new MagicPotions(gameContext, stats, sizeOf(gameVariant), endOf(gameVariant), -1),
+        return withOptions(new MagicPotions(gameContext, stats, sizeOf(gameVariant), endOf(gameVariant), -1),
             gameVariant);
     }
 
     @Override
     public GameLifeCycle replayGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                     final MagicPotionsStats stats, final double gameSeed) {
-        return withLives(new MagicPotions(gameContext, stats, sizeOf(gameVariant), endOf(gameVariant), gameSeed),
+        return withOptions(new MagicPotions(gameContext, stats, sizeOf(gameVariant), endOf(gameVariant), gameSeed),
             gameVariant);
     }
 
     /**
-     * @return the game, with the hearts or not as chosen in the variant (17/11/2026)
+     * @return the game, with the hearts or not and the recipe hidden or not as chosen in the variant
      */
-    static MagicPotions withLives(final MagicPotions game, final IGameVariant gameVariant) {
+    static MagicPotions withOptions(final MagicPotions game, final IGameVariant gameVariant) {
         game.setWithLives(LivesVariant.withLives(gameVariant));
+        game.setHiddenRecipe(gameVariant instanceof GroupedGameVariant grouped
+            && PotionsGameVariantGenerator.HIDDEN.equals(grouped.getGroup()));
         return game;
     }
 
