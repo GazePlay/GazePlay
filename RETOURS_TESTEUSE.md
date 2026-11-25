@@ -60,8 +60,8 @@ régénéré (1 080 sons, tous libres et de source connue ; deux générations d
 | 13 | Voix trop rapides, sans intonation | Les voix ont toutes été refaites le 20/11, après ses essais | Qu'elle écoute les nouvelles voix ; si besoin, un réglage Normal / Lent (voix lentes générées avec Piper) |
 | 20 | Point par point : le son et la secousse d'une erreur peuvent pousser à la refaire exprès | Question pédagogique | Réunion avec Amélie. Pistes : A rien changer, B ne rien montrer, C option dans les variantes, D option générale pour tous les jeux qui réagissent aux erreurs |
 | 27 | Passages de l'aide Eval difficiles à comprendre | La mise en page est faite, mais on ne sait pas quels passages la gênent | Qu'elle indique les passages à reformuler |
-| 28 | Eval : la croix de fixation n'apparaît pas dans `echantillons.csv` (« - ») | Le mainteneur trouve bizarre de la mettre dans la colonne des zones, qui ne liste que des cibles choisissables | En parler avec elle. Piste : une colonne à part (`sur_la_croix`) |
-| 31 | Où est-ce ? (avec ses images) : elle n'a pas réussi | Jeu et fonctionnement gardés tels quels | Revoir avec elle : dossier `images\<réponse>\`, textes dans `questions.csv`, sons dans `sounds\`. Limite notée : chaque sous-dossier peut devenir la réponse |
+| 28 | Eval : la croix de fixation n'apparaît pas dans `echantillons.csv` (« - ») | Le mainteneur trouve bizarre de la mettre dans la colonne des zones, qui ne liste que des cibles choisissables | En parler avec elle. Piste : une colonne à part (`sur_la_croix`). **Demande du mainteneur du 25/11 : point 87** |
+| 31 | Où est-ce ? (avec ses images) : elle n'a pas réussi | Jeu et fonctionnement gardés tels quels | Revoir avec elle : dossier `images\<réponse>\`, textes dans `questions.csv`, sons dans `sounds\`. Limite notée : chaque sous-dossier peut devenir la réponse. **Demande du mainteneur du 25/11 : point 86** |
 
 ## Refusés ou laissés tels quels (décisions du mainteneur)
 
@@ -161,6 +161,17 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 80 | La maison du chat | Sons sur les actions ; plus de choix (jeux, plats) | |
 | 81 | Les bruits de la vie | Sons du singe et du dauphin ; scène de la mer avec une surface | |
 | 83 | Cartes à gratter | La pièce suit le regard qui sort de la zone | |
+
+## Demandes du mainteneur du 25/11/2026 (à faire)
+
+Notées telles que demandées ; rien n'est codé.
+
+| N° | Jeu | Demande | Remarque |
+|---|---|---|---|
+| 84 | Où est la forme | Écrire « ovale » avec un « e » | Fait constaté : « Où est l’oval ? » dans `whereIsTheShape.csv` (français) et dans `gradle/images/voix.csv` (texte des deux voix françaises) ; les aides disent déjà « ovale » |
+| 85 | Recettes magiques | Nouvelle variante : recette visible ou **recette cachée**. Cachée : la recette est montrée (3 s par exemple) puis disparaît ; on choisit ensuite les ingrédients de mémoire ; à chaque ingrédient faux, la recette réapparaît brièvement, en fondu (apparaît puis disparaît) | À préciser : rien à choisir pendant qu'elle est montrée, ni pendant le rappel ? La recette redevient-elle visible par les ingrédients déjà trouvés (coches) ? |
+| 86 | Où est-ce ? (menu principal) | Revoir l'option du dossier : une **fenêtre** où la personne choisit la taille de la grille, donne ses images, la phrase à afficher (si elle veut) et la bonne réponse ; **GazePlay fait lui-même le dossier** d'Où est-ce ? | Répond au point 31 (elle n'avait pas réussi avec le dossier `images\<réponse>\`, `questions.csv`, `sounds\`). Maquette à montrer avant de coder |
+| 87 | Eval | Écrans avec une **croix de fixation** : noter quand la personne entre dessus, en sort, combien de temps elle y reste, etc., **que la croix soit fixable ou non** | Répond au point 28 (croix absente d'`echantillons.csv`). Touche les fichiers de résultats d'Eval : expliquer l'impact et versionner (`formatVersion`) avant de coder, et mettre à jour l'aide « Comprendre les fichiers de résultats » |
 
 ## Rien à faire
 

@@ -92,6 +92,9 @@ GazePlay Learning) relevés dans `RETOURS_TESTEUSE.md` (points 33 à 83), puis, 
    quitter la gomme arc-en-ciel), 42 (Identifier les lettres, taille des images), 37 (losange), 56 (Survivre : robots
    loin du Biboule), 57 (Tir : nom « Invasion »), 62 et 82 (tirage sans répétition : Apprends les Maths, Mélanger les
    couleurs), 70 (Morpion : niveaux inversés), 72 (Coloriage : même palette).
+   **Faits le 25/11** : 73, 44, 42, 37 (commités) ; suite : 56, 57, 62 et 82, 70, 72.
+   **Nouvelles demandes du mainteneur (25/11)** : 84 (« ovale »), 85 (Recettes magiques : recette cachée), 86 (Où est-ce ? :
+   fenêtre pour faire le dossier), 87 (Eval : croix de fixation dans les résultats), voir `RETOURS_TESTEUSE.md`.
 4. Ensuite, à décider point par point (classement proposé, à confirmer) :
    - changements moyens : 35, 36, 43, 45 à 48, 49, 51, 52, 53, 55, 59 à 61, 63, 67, 68, 71, 74 à 77, 83 ;
    - gros ajouts : Piano (38 à 41), 50, 54, Jeu de l'oie (64 à 66), 69, 80, 81.
