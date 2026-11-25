@@ -106,6 +106,12 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 79 | Cartes magiques | Une seule carte à retrouver | Choix 1, 2 ou 3 cartes à trouver (1 par défaut) ; anneau de la couleur des réglages aussi sur le dos des cartes, Memory compris, liseré clair seulement avec la couleur principale (`1ad767ed0`) |
 | 82 | Mélanger les couleurs / Magic Potions | Deux fois le même jeu | Magic Potions devient **Recettes magiques** : recette de 2, 3 ou 4 ingrédients en images (OpenMoji) à trouver sur l'étagère ; cœurs ; 3, 5, 10 recettes ou sans fin ; explosion seulement à la recette complète, puis la Biboule boit la potion ; pas de voix ; anneau de fixation au bord des cartes (25/11). Validé et commité le 25/11. Le tirage sans répétition de Mélanger les couleurs reste dans le groupe 2 |
 
+## Faits le 25/11/2026, groupe 2 (validés par le mainteneur)
+
+| N° | Jeu | Retour | Ce qui a été fait |
+|---|---|---|---|
+| 73 | Coloriage | Couleurs du « + » : fixation qui reprend à zéro, points qui bougent | Le trait de l'anneau dépassait la place de sa pastille et la grille les replaçait toutes : positions fixes, 5 par rangée ; la fenêtre fermée ne suit plus le regard |
+
 ## À décider
 
 | N° | Jeu | Retour | Remarque |
@@ -148,7 +154,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 70 | Morpion | Niveaux moyen et difficile inversés | |
 | 71 | Pierre papier ciseaux | Erreur plus visible pour qui n'entend pas | |
 | 72 | Coloriage | Même palette à tous les niveaux | |
-| 73 | Coloriage | Couleurs du « + » : fixation qui reprend à zéro, points qui bougent | |
 | 74 | Coloriage | Bouton « Imprimer » à pouvoir masquer | |
 | 75 | Coloriage | Enregistrement dans un dossier défini, à pouvoir interdire | |
 | 76 | Petits chevaux | Dés aidés après plusieurs échecs | |

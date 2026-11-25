@@ -5,11 +5,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageLayout;
 import javafx.print.PrinterJob;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -59,6 +59,8 @@ public class ColorToolBox extends Pane {
         Color.YELLOWGREEN, Color.PEACHPUFF, Color.LIGHTPINK, Color.NAVY, Color.DARKGREEN};
 
     private static final int COLUMNS = 3;
+
+    private static final int OTHER_COLORS_COLUMNS = 5;
 
     private final IGameContext gameContext;
 
@@ -208,26 +210,30 @@ public class ColorToolBox extends Pane {
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.TRANSPARENT);
         dialog.setAlwaysOnTop(true);
-        dialog.setOnHidden(event -> colorsGame.setEnableColorization(coloringWasEnabled));
 
         final double size = Math.max(60, gameContext.getGamePanelDimensionProvider().getDimension2D().getHeight() / 9);
-        final FlowPane grid = new FlowPane(size * 0.2, size * 0.2);
-        grid.setPrefWrapLength(5 * size + 4 * size * 0.2);
-        grid.setAlignment(Pos.CENTER);
+        final List<ColorBox> otherColors = new ArrayList<>();
         for (final Color color : CUSTOM_COLORS) {
-            grid.getChildren().add(new ColorBox(gameContext, color, size, chosen -> {
+            otherColors.add(new ColorBox(gameContext, color, size, chosen -> {
                 customBox.setColor(chosen.getColor());
                 select(customBox);
                 dialog.close();
             }));
         }
+        final Pane grid = otherColorsGrid(otherColors, size);
 
         final Label title = new Label(gameContext.getTranslator().translate("customColorDialogTitle"));
         title.setStyle(GameStyle.titleFontStyle(size * 0.4) + " -fx-text-fill: -gp-text;");
         final GazeRoundButton closeButton = new GazeRoundButton(gameContext, size * 0.8, "close",
             gameContext.getTranslator().translate("Close"), dialog::close);
+        dialog.setOnHidden(event -> {
+            // Closed, the window no longer follows the gaze (a fixation started in it could still choose a color)
+            otherColors.forEach(ColorBox::dispose);
+            closeButton.dispose();
+            colorsGame.setEnableColorization(coloringWasEnabled);
+        });
 
-        final VBox card = new VBox(size * 0.25, title, grid, closeButton);
+        final VBox card = new VBox(size * 0.25, title, grid, fixedPane(size * 0.8, size * 0.8, closeButton));
         card.setAlignment(Pos.CENTER);
         card.setPadding(new Insets(size * 0.3));
         card.setStyle("-fx-background-color: -gp-surface; -fx-background-radius: 24; -fx-border-color: -gp-border;"
@@ -239,6 +245,34 @@ public class ColorToolBox extends Pane {
         customColorDialog = dialog;
         dialog.show();
         dialog.centerOnScreen();
+    }
+
+    /**
+     * The other colors, {@value #OTHER_COLORS_COLUMNS} on a row, each at its own place: the ring of a fixation being
+     * filled goes a little out of its swatch, and a layout (FlowPane) placed them all again meanwhile, the one looked at
+     * leaving the gaze and its fixation starting again from zero (tester's feedback of 23/11/2026, point 73).
+     */
+    static Pane otherColorsGrid(final List<ColorBox> colors, final double size) {
+        final double step = size * 1.2;
+        for (int i = 0; i < colors.size(); i++) {
+            final int row = i / OTHER_COLORS_COLUMNS;
+            colors.get(i).setLayoutX(i % OTHER_COLORS_COLUMNS * step);
+            colors.get(i).setLayoutY(row * step);
+        }
+        final int rows = (colors.size() + OTHER_COLORS_COLUMNS - 1) / OTHER_COLORS_COLUMNS;
+        return fixedPane((OTHER_COLORS_COLUMNS - 1) * step + size, (rows - 1) * step + size,
+            colors.toArray(new Node[0]));
+    }
+
+    /**
+     * @return a pane of a fixed size, whatever the rings of the fixations in it
+     */
+    private static Pane fixedPane(final double width, final double height, final Node... nodes) {
+        final Pane pane = new Pane(nodes);
+        pane.setMinSize(width, height);
+        pane.setPrefSize(width, height);
+        pane.setMaxSize(width, height);
+        return pane;
     }
 
     /**

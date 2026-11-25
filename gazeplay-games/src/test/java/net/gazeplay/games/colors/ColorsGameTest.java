@@ -1,9 +1,18 @@
 package net.gazeplay.games.colors;
 
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.stage.Stage;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +32,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -198,6 +208,64 @@ class ColorsGameTest {
         }).get();
         // The first fillings cannot be undone any more: the background is not white again
         assertNotEquals(WHITE, game.getWritableImg().getPixelReader().getArgb(1, 1));
+    }
+
+    /**
+     * Tester's feedback of 23/11/2026, point 73: in the window of the other colors, the ring of a fixation going out of
+     * its swatch made the layout place all the swatches again, and the one looked at left the gaze: the fixation started
+     * again from zero. In a window with the color of the rings, without which the ring has no line.
+     */
+    @Test
+    void shouldNotMoveTheColorsDuringAFixation() throws Exception {
+        when(configuration.getFixationLength()).thenReturn(800);
+        final double size = 120;
+        final List<ColorBox> chosen = new ArrayList<>();
+        final List<ColorBox> colors = new ArrayList<>();
+        final Stage stage = WaitForAsyncUtils.asyncFx(() -> {
+            for (int i = 0; i < 15; i++) {
+                colors.add(new ColorBox(gameContext, Color.GOLD, size, chosen::add));
+            }
+            final VBox card = new VBox(size * 0.25, new Label("title"), ColorToolBox.otherColorsGrid(colors, size));
+            card.setAlignment(Pos.CENTER);
+            card.setStyle("-gp-ring: red; -gp-accent: red; -gp-text-muted: gray;");
+            final Stage shown = new Stage();
+            shown.setScene(new Scene(card));
+            shown.show();
+            return shown;
+        }).get();
+        try {
+            final List<Point2D> before = WaitForAsyncUtils.asyncFx(() -> corners(colors)).get();
+            assertEquals(before.getFirst().getX(), before.get(5).getX(), 0.01, "5 colors on a row");
+            assertEquals(before.getFirst().getY(), before.get(4).getY(), 0.01, "5 colors on a row");
+            final double width = stage.getWidth();
+            final ColorBox looked = colors.get(7);
+            final Arc ring = (Arc) looked.getChildren().stream().filter(child -> child instanceof Arc).findFirst()
+                .orElseThrow();
+            WaitForAsyncUtils.asyncFx(() -> looked.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, 0, 0, 0))).get();
+            final long start = System.currentTimeMillis();
+            double filled = 0;
+            while (chosen.isEmpty() && System.currentTimeMillis() - start < 5000) {
+                final List<Point2D> during = WaitForAsyncUtils.asyncFx(() -> corners(colors)).get();
+                for (int i = 0; i < before.size(); i++) {
+                    assertEquals(0, before.get(i).distance(during.get(i)), 0.01, "color " + i);
+                }
+                assertEquals(width, stage.getWidth(), 0.01);
+                filled = Math.max(filled, -ring.getLength());
+                Thread.sleep(20);
+            }
+            assertNotNull(ring.getStroke(), "the ring has its line");
+            assertTrue(filled > 270, "checked while the ring was filled");
+            assertEquals(List.of(looked), chosen);
+        } finally {
+            WaitForAsyncUtils.asyncFx(stage::close).get();
+        }
+    }
+
+    /**
+     * @return where the colors are drawn in the scene (not their bounds, which hold the ring being filled)
+     */
+    private static List<Point2D> corners(final List<ColorBox> colors) {
+        return colors.stream().map(color -> color.localToScene(0, 0)).toList();
     }
 
     private ColorsGame launchedGame() throws Exception {
