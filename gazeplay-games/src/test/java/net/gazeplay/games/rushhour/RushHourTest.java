@@ -176,7 +176,8 @@ class RushHourTest {
     void shouldGiveThirtyParkingsOfEachLevelAllDifferentWithTheirFewestMovesInTheRange() {
         final Map<String, List<String[]>> parkings = RushHour.parkings();
         final Set<String> seen = new HashSet<>();
-        final int[][] ranges = {{3, 8}, {9, 16}, {17, 30}};
+        // Very easy since 26/11/2026 (point 63): a single vehicle in the way, 2 moves
+        final int[][] ranges = {{2, 2}, {3, 8}, {9, 16}, {17, 30}};
         for (final RushHourLevel level : RushHourLevel.values()) {
             final List<String[]> list = parkings.get(level.getFileName());
             assertEquals(30, list.size(), level.name());
@@ -189,6 +190,11 @@ class RushHourTest {
                 final Parking read = new Parking(parking[1], moves);
                 assertEquals(parking[1], read.boxes());
                 assertFalse(read.isSolved());
+                if (level == RushHourLevel.VERY_EASY) {
+                    // 3 to 6 vehicles besides the red car
+                    final long vehicles = parking[1].chars().filter(c -> c != '.').distinct().count() - 1;
+                    assertTrue(vehicles >= 3 && vehicles <= 6, parking[1]);
+                }
             }
         }
     }
@@ -473,7 +479,9 @@ class RushHourTest {
     @Test
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new RushHourGameVariant().getVariants();
-        assertEquals(12, variants.size());
+        // 4 levels (very easy first since 26/11/2026) x 4 ends
+        assertEquals(16, variants.size());
+        assertEquals(RushHourLevel.VERY_EASY, RushHourGameLauncher.levelOf(variants.iterator().next()));
         final IGameVariant variant = new GroupedGameVariant(RushHourGameVariant.GROUP, RushHourLevel.HARD.getKey(),
             RushHourEnd.SOLVED_3.getKey(), null);
         assertTrue(variants.contains(variant));

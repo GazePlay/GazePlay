@@ -14,6 +14,12 @@ Each line of the file: <level> <moves> <36 characters, line by line from the top
 other letters the other vehicles (a vehicle of 2 boxes is a car, of 3 boxes a truck or a bus).
 
 python make_trafficjam_levels.py <levels.txt>
+
+The very easy level (26/11/2026, point 63 of the tester's feedback): a single vehicle in the way of the red car (2
+moves), among 3 to 6 vehicles; made apart, with its own seed, and written at the top of the file without changing the
+other lines:
+
+python make_trafficjam_levels.py --very-easy <levels.txt>
 """
 import random
 import sys
@@ -161,7 +167,77 @@ def mutate(rnd, vehicles, state):
     return vehicles, tuple(state)
 
 
+VERY_EASY = 'veryeasy'
+VERY_EASY_SEED = 20261126
+
+
+def very_easy(count=PER_LEVEL):
+    """The parkings of the very easy level (tester's feedback of 23/11/2026, point 63: the easy level was not easy):
+    a single vehicle to move away for the red car to leave (2 moves), among 3 to 6 vehicles, the counts of vehicles
+    spread; their own seed, so that the other levels do not change."""
+    rnd = random.Random(VERY_EASY_SEED)
+    found = {}
+    by_count = {}
+    tries = 0
+    while len(found) < count and tries < 200000:
+        tries += 1
+        others = rnd.randint(3, 6)
+        vehicles = [Vehicle(True, 2, EXIT_LINE)]
+        positions = [rnd.randint(0, 2)]
+        taken = bits(vehicles[0], positions[0])
+        attempts = 0
+        while len(vehicles) < others + 1 and attempts < 200:
+            attempts += 1
+            horizontal = rnd.random() < 0.5
+            length = 3 if rnd.random() < 0.25 else 2
+            fixed = rnd.randrange(SIZE)
+            if horizontal and fixed == EXIT_LINE:
+                continue
+            vehicle = Vehicle(horizontal, length, fixed)
+            position = rnd.randint(0, SIZE - length)
+            mask = bits(vehicle, position)
+            if not mask & taken:
+                vehicles.append(vehicle)
+                positions.append(position)
+                taken |= mask
+        if len(vehicles) < others + 1:
+            continue
+        start = tuple(positions)
+        distance = explore(vehicles, start, 30000)
+        # Exactly one vehicle in the way: it moves, then the red car leaves
+        if distance is None or distance.get(start) != 2:
+            continue
+        # The counts of vehicles spread: at most a quarter of the parkings with the same count
+        if by_count.get(others, 0) >= (count + 3) // 4:
+            continue
+        grid = text(vehicles, start)
+        if grid not in found:
+            found[grid] = 2
+            by_count[others] = by_count.get(others, 0) + 1
+    return found
+
+
+def add_very_easy(path):
+    """Writes the very easy parkings at the top of the file, keeping the lines of the other levels as they are."""
+    with open(path, encoding='utf-8') as file:
+        lines = file.read().splitlines()
+    header = [line for line in lines if line.startswith('#')]
+    others = [line for line in lines if line and not line.startswith('#') and not line.startswith(VERY_EASY + ' ')]
+    found = very_easy()
+    with open(path, 'w', encoding='utf-8', newline='\n') as file:
+        for line in header:
+            file.write(line + '\n')
+        for grid, moves in sorted(found.items(), key=lambda item: (sum(c != '.' for c in set(item[0])), item[0])):
+            file.write(f'{VERY_EASY} {moves} {grid}\n')
+        for line in others:
+            file.write(line + '\n')
+    print(VERY_EASY, len(found))
+
+
 def main():
+    if sys.argv[1] == '--very-easy':
+        add_very_easy(sys.argv[2])
+        return
     rnd = random.Random(20261109)
     found = {name: {} for name, _, _ in LEVELS}
 

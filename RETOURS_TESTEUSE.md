@@ -128,6 +128,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 63 | Embouteillage | Niveau facile trop difficile | Niveau « Très facile » en premier (proposé par défaut) : 30 parkings 6 × 6, un seul véhicule à déplacer (2 coups) parmi 3 à 6 ; faits par `make_trafficjam_levels.py --very-easy` (tirage à part, les 90 autres parkings inchangés) ; aides |
 | 59 | Dés | Icône « Lancer » ; dé à lancer surligné | Choix du mainteneur après essai : le bouton « Lancer » gardé dans les deux modes, avec un halo jaune qui pulse tant qu'on peut lancer (les dés à fixer en « compter » essayés puis écartés) ; aides |
 | 60 | Dés | Inverser les deux modes | « Lancer les dés » en premier (proposé à l'ouverture), puis « Compter les points », qui s'ouvre sur 5 totaux (fin cachée propre à « lancer ») |
 | 61 | Dés | Total plus visible (dit à voix haute, calcul décomposé) | Calcul écrit pas à pas en haut (« 3 + 5 = 8 », un élément toutes les 0,6 s, plus grand à la fin), chaque dé grossit quand son nombre s'écrit ; un seul dé : son nombre ; « Total » retiré ; **sans voix** (il faudrait générer les nombres 1 à 36, « plus », « égale ») |
@@ -156,7 +157,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 41 | Piano | Animation de fin | |
 | 50 | Bulles | Jeu lent avec de grosses images (Mes images) | |
 | 54 | Course du regard | Adaptation au regard ; récompense à mesure qu'on évite les voitures | |
-| 63 | Embouteillage | Niveau facile trop difficile | |
 | 64 | Jeu de l'oie | Visuel : contraste et taille des pions, pion actif et dé surlignés, plateau sans cases inutiles en version simple | |
 | 65 | Jeu de l'oie | Règles adoucies : dés aidés, pas de retour au départ, prison réduite, arrivée aidée | |
 | 66 | Jeu de l'oie | Compréhension : pion plus lent, points du dé remplis case par case, couleur du pion choisie | |
