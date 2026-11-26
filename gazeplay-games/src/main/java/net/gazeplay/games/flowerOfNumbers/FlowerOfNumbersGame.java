@@ -82,7 +82,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
     private static final double COLUMN_WIDTH = 334;
     private static final double LEFT_X = 16;
     private static final double RIGHT_X = BOARD_WIDTH - 16 - COLUMN_WIDTH;
-    private static final double CARD_PADDING = 12;
+    private static final double CARD_PADDING = 16;
+    /**
+     * The border of the cards of the values, of the color of their petal (5 before 26/11/2026, point 68).
+     */
+    static final double CARD_BORDER = 10;
     private static final double CARD_GAP = 16;
 
     /**
@@ -442,7 +446,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         card.setArcWidth(2 * GameStyle.cardRadius(width, height));
         card.setArcHeight(card.getArcWidth());
         card.setStrokeType(StrokeType.INSIDE);
-        card.setStyle("-fx-fill: -gp-surface; -fx-stroke: " + petal.getColor() + "; -fx-stroke-width: 5;");
+        // The color of its petal, a little lighter, under the white values, and a thick border of it (tester's feedback
+        // of 24/11/2026, point 68: the values hardly stood out, the thin border hardly told the petal; maintainer's
+        // choice of 26/11/2026: the cards stay at their places), the same in both themes
+        card.setStyle("-fx-fill: derive(" + petal.getColor() + ", 40%); -fx-stroke: " + petal.getColor()
+            + "; -fx-stroke-width: " + CARD_BORDER + ";");
         card.setMouseTransparent(true);
         board.getChildren().add(card);
 
