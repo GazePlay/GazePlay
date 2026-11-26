@@ -85,6 +85,10 @@ public class GazePlay {
 
     Boolean loadedHomePage = false;
     Boolean loadedSettingsPage = false;
+    /**
+     * What the user set in the menu of the games, for the menu built again (see {@link #keepMenuState()}).
+     */
+    private HomeMenuScreen.State keptMenuState;
 
     public GazePlay(final Translator translator, final GamesLocator gamesLocator, final Screens screens) {
         this.translator = translator;
@@ -183,6 +187,8 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
+        // Another profile: its menu starts empty
+        this.keptMenuState = null;
         this.loadedHomePage = false;
         this.loadedSettingsPage = false;
 
@@ -235,7 +241,21 @@ public class GazePlay {
                 evalMenuScreen = screens.newEvalMenuScreen();
             } else {
                 homeMenuScreen = screens.newHomeMenuScreen();
+                if (keptMenuState != null) {
+                    homeMenuScreen.restore(keptMenuState);
+                }
             }
+            keptMenuState = null;
+        }
+    }
+
+    /**
+     * Keeps the search, the "Favorites" switch and the scrolling of the menu of the games for the menu built again
+     * (after a game, or a change of the orientation of the cards); not after a change of profile.
+     */
+    private void keepMenuState() {
+        if (homeMenuScreen != null && loadedHomePage) {
+            keptMenuState = homeMenuScreen.state();
         }
     }
 
@@ -254,6 +274,7 @@ public class GazePlay {
         final boolean menuShown = primaryScene != null && (homeMenuScreen != null
             && primaryScene.getRoot() == homeMenuScreen.getRoot()
             || evalMenuScreen != null && primaryScene.getRoot() == evalMenuScreen.getRoot());
+        keepMenuState();
         this.loadedHomePage = false;
         this.loadedSettingsPage = false;
         if (menuShown) {
@@ -271,6 +292,7 @@ public class GazePlay {
      * Builds the menu again when it is shown next, e.g. after a change of the orientation of its cards in the settings.
      */
     public void refreshMenu() {
+        keepMenuState();
         this.loadedHomePage = false;
     }
 

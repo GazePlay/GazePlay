@@ -243,6 +243,20 @@
     -fx-padding: 6 0 6 0;
 }
 
+/* The cross emptying the search (26/11/2026): flat in the box, grey while nothing is written */
+.gp-menu .gp-search .gp-icon-button.gp-clear-search {
+    -fx-effect: null;
+}
+
+.gp-menu .gp-search .gp-icon-button.gp-clear-search:disabled {
+    -fx-background-color: -gp-border;
+    -fx-opacity: 0.6;
+}
+
+.gp-menu .gp-search .gp-icon-button.gp-clear-search:disabled .gp-icon-shape {
+    -fx-fill: -gp-text-muted;
+}
+
 .gp-menu .gp-chips {
     -fx-padding: 0 24 8 24;
 }

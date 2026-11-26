@@ -84,11 +84,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private FlowPane allGamesPanel;
     private Label noGameLabel;
     private TextField searchBar;
+    @Getter
+    private Button clearSearchButton;
 
     /**
      * Whether the "Favorites" switch shows only the favorite games.
      */
     private boolean onlyFavorites;
+    private ToggleButton favoritesChip;
 
     /**
      * Kept here: the setting holds it weakly.
@@ -179,7 +182,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private HBox createTopBar(final GazePlay gazePlay, final Translator translator, final List<GameSpec> allGames,
                               final Node logo) {
         final StackPane searchIcon = MenuIcon.SEARCH.create(24);
-        final HBox search = new HBox(8, searchIcon, searchBar);
+        // A round button with a cross empties the search bar, lit only when something is written (maintainer's
+        // feedback of 26/11/2026)
+        clearSearchButton = MenuStyle.smallRoundButton(MenuIcon.CLOSE, "accent", translator.translate("ClearSearch"),
+            () -> {
+                searchBar.clear();
+                searchBar.requestFocus();
+            });
+        clearSearchButton.getStyleClass().add("gp-clear-search");
+        clearSearchButton.disableProperty().bind(searchBar.textProperty().isEmpty());
+        final HBox search = new HBox(8, searchIcon, searchBar, clearSearchButton);
         search.getStyleClass().add("gp-search");
         search.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(searchBar, Priority.ALWAYS);
@@ -365,7 +377,32 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             onlyFavorites = chip.isSelected();
             filterGames(config, translator);
         });
+        favoritesChip = chip;
         return chip;
+    }
+
+    /**
+     * What the user set in the menu without it being a setting: the text of the search bar, the "Favorites" switch and
+     * how far the games are scrolled.
+     */
+    public record State(String search, boolean onlyFavorites, double scroll) {
+    }
+
+    /**
+     * @return what the user set in this menu, to give to the menu built again after a game (maintainer's feedback of
+     * 26/11/2026: the menu built again at the end of each game, since 24/11/2026, emptied the search bar)
+     */
+    public State state() {
+        return new State(searchBar.getText(), onlyFavorites, choicePanelScroller.getVvalue());
+    }
+
+    /**
+     * Puts back what the user set in the menu before it was built again.
+     */
+    public void restore(final State state) {
+        searchBar.setText(state.search());
+        favoritesChip.setSelected(state.onlyFavorites());
+        choicePanelScroller.setVvalue(state.scroll());
     }
 
     /**

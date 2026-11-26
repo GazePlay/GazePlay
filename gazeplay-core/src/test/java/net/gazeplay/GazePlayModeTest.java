@@ -102,6 +102,33 @@ class GazePlayModeTest {
     }
 
     /**
+     * Maintainer's feedback of 26/11/2026: the menu built again (after a game, or a change of the orientation of the
+     * cards) emptied the search bar. It keeps the search, the "Favorites" switch and the scrolling; another profile
+     * starts with an empty menu.
+     */
+    @Test
+    void shouldKeepTheSearchWhenTheMenuIsBuiltAgain() throws Exception {
+        final HomeMenuScreen first = mock(HomeMenuScreen.class);
+        final HomeMenuScreen second = mock(HomeMenuScreen.class);
+        final HomeMenuScreen third = mock(HomeMenuScreen.class);
+        final HomeMenuScreen.State searched = new HomeMenuScreen.State("oeuf", true, 0.4);
+        when(first.state()).thenReturn(searched);
+        when(second.state()).thenReturn(searched);
+        when(screens.newHomeMenuScreen()).thenReturn(first, second, third);
+        WaitForAsyncUtils.asyncFx(() -> {
+            gazePlay.chooseMode(AppMode.GAMES);
+            gazePlay.loadHomePage();
+            gazePlay.refreshMenu();
+            gazePlay.loadHomePage();
+            gazePlay.goToUserPage();
+            gazePlay.loadHomePage();
+        }).get();
+        verify(first, never()).restore(any());
+        verify(second).restore(searched);
+        verify(third, never()).restore(any());
+    }
+
+    /**
      * A window in full screen is never centered: centerOnScreen would move it up in the screen without the taskbar
      * (top cut, taskbar seen below). Leaving the full screen centers the window.
      */
