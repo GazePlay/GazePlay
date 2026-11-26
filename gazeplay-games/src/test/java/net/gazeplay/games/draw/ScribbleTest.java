@@ -265,6 +265,92 @@ class ScribbleTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 45: the new sheet erased the drawing at once. It is now alone at the
+     * bottom, apart, and asks first: ✔ erases, ✖ or no answer keeps the drawing.
+     */
+    @Test
+    void shouldAskBeforeErasingTheDrawing() throws Exception {
+        for (final ScribbleMode mode : ScribbleMode.values()) {
+            final Scribble game = launched(mode, ScribbleBackground.SHEET);
+            fx(() -> {
+                final Scribble.Tool newSheet = tool(game, Scribble.Tool.Kind.NEW_SHEET);
+                final Scribble.Tool confirm = tool(game, Scribble.Tool.Kind.CONFIRM);
+                final Scribble.Tool cancel = tool(game, Scribble.Tool.Kind.CANCEL);
+                final double radius = game.getTools().get(0).getDisc().getRadius();
+                // Below all the other buttons, with space between, and in the middle of its row
+                for (final Scribble.Tool other : game.getTools()) {
+                    if (other != newSheet && other != confirm && other != cancel) {
+                        assertTrue(newSheet.getY() - other.getY() > 2.5 * radius, other.getKind().toString());
+                    }
+                }
+                assertTrue(confirm.getX() < newSheet.getX() && newSheet.getX() < cancel.getX());
+                assertFalse(isShown(confirm));
+                assertTrue(isShown(newSheet));
+
+                line(game, game.getGazePen(), Scribble.GAZE_SMOOTHING);
+                game.lookAt(newSheet);
+                game.step(0.55);
+                assertTrue(game.isAsking());
+                assertTrue(game.isDrawn());
+                assertNotEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 200));
+                assertTrue(isShown(confirm) && isShown(cancel));
+                assertFalse(isShown(newSheet));
+                assertFalse(game.getMessage().getChildren().isEmpty());
+
+                // ✖: the drawing stays
+                game.use(cancel);
+                assertFalse(game.isAsking());
+                assertTrue(isShown(newSheet));
+                assertFalse(isShown(confirm));
+                assertTrue(game.getMessage().getChildren().isEmpty());
+                assertNotEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 200));
+
+                // No answer: the question goes away, still after the message would have
+                game.use(newSheet);
+                game.step(Scribble.MESSAGE + 0.1);
+                assertTrue(game.isAsking());
+                game.step(Scribble.ASK);
+                assertFalse(game.isAsking());
+                assertTrue(isShown(newSheet));
+                assertEquals(1, game.getSheets());
+
+                // The time stops while ✔ or ✖ is being chosen (maintainer, 26/11/2026), with a slow fixation
+                when(configuration.getFixationLength()).thenReturn(8000);
+                game.use(newSheet);
+                game.lookAt(cancel);
+                game.step(Scribble.ASK + 1);
+                assertTrue(game.isAsking());
+                assertTrue(isShown(cancel));
+                assertFalse(game.getMessage().getChildren().isEmpty());
+                game.lookAway(cancel);
+                game.step(Scribble.ASK);
+                assertFalse(game.isAsking());
+                when(configuration.getFixationLength()).thenReturn(500);
+
+                // Another button: the question goes away too
+                game.use(newSheet);
+                game.use(tool(game, Scribble.Tool.Kind.ERASER));
+                assertFalse(game.isAsking());
+
+                // ✔ by a fixation: the sheet is erased
+                game.use(newSheet);
+                game.lookAt(confirm);
+                game.step(0.55);
+                assertFalse(game.isAsking());
+                assertEquals(2, game.getSheets());
+                assertFalse(game.isDrawn());
+                assertEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 200));
+                assertTrue(isShown(newSheet));
+                return null;
+            });
+        }
+    }
+
+    private static boolean isShown(final Scribble.Tool tool) {
+        return tool.getNode().getParent() != null;
+    }
+
     @Test
     void shouldKeepTheDrawingAsAPictureInTheDrawingsFolder() throws Exception {
         final Scribble game = launched(ScribbleMode.PALETTE, ScribbleBackground.BOARD);

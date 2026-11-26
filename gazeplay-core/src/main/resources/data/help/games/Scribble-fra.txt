@@ -5,7 +5,8 @@ Dessine avec tes yeux ! Ton regard est un crayon : là où tu regardes sur la fe
 - Regarde la feuille : le trait suit ton regard. Il est lissé, pour que les petits tremblements ne se voient pas.
 - Le crayon se lève quand ton regard quitte la feuille, ou quand l’oculomètre te perd un instant (un clignement). Il se pose de nouveau là où tu regardes.
 - À droite, les boutons ronds se choisissent en les regardant : un anneau se remplit. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
-- Les couleurs (en Palette) ou le crayon arc-en-ciel (en Arc-en-ciel), la gomme, trois épaisseurs de trait, « Nouvelle feuille » (le plus) et « Garder mon dessin » (la disquette). Le bouton choisi est entouré. Pour quitter la gomme, choisis une couleur ou le crayon arc-en-ciel.
+- Les couleurs (en Palette) ou le crayon arc-en-ciel (en Arc-en-ciel), la gomme, trois épaisseurs de trait et « Garder mon dessin » (la disquette). Le bouton choisi est entouré. Pour quitter la gomme, choisis une couleur ou le crayon arc-en-ciel.
+- « Nouvelle feuille » (la corbeille) est tout en bas, à part, pour ne pas le choisir sans le vouloir. Il n’efface rien tout de suite : il demande « Effacer le dessin ? » et montre ✔ et ✖ à sa place. Regarde ✔ pour effacer, ✖ pour garder ton dessin. Sans réponse, la question disparaît au bout de 5 secondes et le dessin reste ; ce temps s’arrête pendant que tu regardes ✔ ou ✖.
 - « Garder mon dessin » enregistre une image dans le dossier des dessins de GazePlay (Documents, GazePlay_Learning, dessins). Il s’ouvre depuis les réglages, Dossiers, « Mes dessins (Gribouille) ».
 - Avec la souris, le trait suit le pointeur, sans cliquer.
 - Au début, rien ne se dessine ni ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.

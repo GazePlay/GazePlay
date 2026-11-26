@@ -122,6 +122,12 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 85 | Recettes magiques (demande du mainteneur) | Recette visible ou cachée | Choix en haut des variantes ; cachée : montrée 3, 4 ou 5 s, puis des « ? » ; un ingrédient trouvé réapparaît coché ; rappel en fondu à chaque erreur ; rien à choisir pendant qu'elle est montrée |
 | 86, 31 | Où est-ce ? (demande du mainteneur ; la testeuse n'avait pas réussi avec le dossier) | Faire soi-même son jeu dans une fenêtre | Maquette A : « Mes jeux » (slider, au moins 2 visibles, « Créer mon Où est-ce ? » toujours à droite, rond rouge pour supprimer), éditeur écran par écran (grille, images, phrase, son, bonne réponse) ; dossier fait par GazePlay (`ou-est-ce\<nom>\jeu.json`, copies des images et des sons) ; chaque écran une fois, mélangés ; cœurs ; ancien dossier `images\<réponse>`, `questions.csv` et ligne des réglages retirés |
 
+## Faits le 26/11/2026 (validés par le mainteneur)
+
+| N° | Jeu | Retour | Ce qui a été fait |
+|---|---|---|---|
+| 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
+
 ## À décider
 
 | N° | Jeu | Retour | Remarque |
@@ -134,7 +140,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |
 | 41 | Piano | Animation de fin | |
 | 43 | Gobelets Pass Pass | Transition entre deux tours trompeuse (la balle d'avant semble encore là) | |
-| 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | |
 | 46 | Gribouille | Couleur blanche à la place de la gomme | |
 | 47 | Gribouille | Points d'épaisseur de la couleur choisie | |
 | 48 | Gribouille | Mode « la fixation commence et finit le trait » | |

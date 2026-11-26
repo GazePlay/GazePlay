@@ -5,7 +5,8 @@ Draw with your eyes! Your gaze is a pencil: where you look on the sheet, a line 
 - Look at the sheet: the line follows your gaze. It is smoothed, so that small trembling does not show.
 - The pencil lifts when your gaze leaves the sheet, or when the eye tracker loses you for a moment (a blink). It goes down again where you look.
 - On the right, the round buttons are chosen by looking at them: a ring fills. The length of the ring is that of the settings, also changed in the menu (Esc key).
-- The colors (Palette) or the rainbow pencil (Rainbow), the eraser, three widths of line, "New sheet" (the plus) and "Keep my drawing" (the floppy disk). The button chosen is framed. To leave the eraser, choose a color or the rainbow pencil.
+- The colors (Palette) or the rainbow pencil (Rainbow), the eraser, three widths of line and "Keep my drawing" (the floppy disk). The button chosen is framed. To leave the eraser, choose a color or the rainbow pencil.
+- "New sheet" (the bin) is at the very bottom, apart, so as not to be chosen by mistake. It erases nothing at once: it asks "Erase the drawing?" and shows ✔ and ✖ in its place. Look at ✔ to erase, at ✖ to keep your drawing. Without an answer, the question goes away after 5 seconds and the drawing stays; this time stops while you look at ✔ or ✖.
 - "Keep my drawing" saves a picture in the drawings folder of GazePlay (Documents, GazePlay_Learning, dessins). It opens from the settings, Folders, "My drawings (Scribble)".
 - With the mouse, the line follows the pointer, without clicking.
 - At the start, nothing is drawn nor chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.

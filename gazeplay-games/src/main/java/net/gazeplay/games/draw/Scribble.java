@@ -17,6 +17,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
@@ -79,6 +80,15 @@ public class Scribble implements GameLifeCycle {
      * The seconds a message shows.
      */
     static final double MESSAGE = 2.5;
+    /**
+     * The seconds the question "Erase the drawing?" waits for an answer before it goes away (tester's feedback of
+     * 23/11/2026, point 45: the new sheet erased everything at once).
+     */
+    static final double ASK = 5;
+    /**
+     * The height of the tool bar, in rows of buttons: 7 rows, half a row of space, the row of the new sheet alone.
+     */
+    static final double TOOL_ROWS = 8.5;
 
     private static final Color[] COLORS = {null, Color.rgb(229, 57, 53), Color.rgb(251, 140, 0), Color.rgb(253, 216, 53),
         Color.rgb(67, 160, 71), Color.rgb(30, 136, 229), Color.rgb(142, 36, 170), Color.rgb(240, 98, 146)};
@@ -121,6 +131,14 @@ public class Scribble implements GameLifeCycle {
     private double clock;
     private double elapsed;
     private double messageLeft;
+    /**
+     * The seconds left to answer the question "Erase the drawing?", 0 when it is not asked.
+     */
+    @Getter
+    private double askLeft;
+    private Tool newSheetTool;
+    private Tool confirmTool;
+    private Tool cancelTool;
 
     private double width;
     private double height;
@@ -192,7 +210,7 @@ public class Scribble implements GameLifeCycle {
 
         // The tool bar at the right, two buttons a row; the sheet in the rest of the screen
         final double margin = height * 0.03;
-        final double cell = (height - 2 * margin) / 7;
+        final double cell = (height - 2 * margin) / TOOL_ROWS;
         final double toolsWidth = cell * 2;
         // Whole pixels: the picture kept has the size of the sheet
         canvas = new Canvas(Math.floor(width - toolsWidth - 3 * margin), Math.floor(height - 2 * margin));
@@ -241,47 +259,52 @@ public class Scribble implements GameLifeCycle {
 
     /**
      * The buttons of the tool bar, in a grid of two columns: the colors (palette mode) or the rainbow pencil (rainbow
-     * mode), the eraser and the three widths, a new sheet and keeping the drawing.
+     * mode), the eraser and the three widths, keeping the drawing; then, apart under half a row of space, the new
+     * sheet alone in the middle of its row (point 45), whose ✔ and ✖ take its row while the question is asked.
      */
     private void buildTools(final double x0, final double top, final double cell) {
         final double radius = cell * 0.4;
-        // Centered in the height (the rainbow mode has no colors): the rows of the colors, of the eraser and the
-        // widths, and of the last two buttons
-        final int rows = (mode == ScribbleMode.PALETTE ? COLORS.length / 2 + 2 : 3) + 1;
-        final double y0 = top + (7 - rows) * cell / 2;
-        int slot = 0;
+        record Spec(Tool.Kind kind, Color color, int widthIndex) {
+        }
+        final List<Spec> grid = new ArrayList<>();
         if (mode == ScribbleMode.PALETTE) {
             for (final Color base : COLORS) {
-                final Color tool = base == null ? background.getInk() : base;
-                addTool(slot++, x0, y0, cell, radius, Tool.Kind.COLOR, tool, 0);
+                grid.add(new Spec(Tool.Kind.COLOR, base == null ? background.getInk() : base, 0));
             }
         } else {
             // Without colors, nothing left the eraser (tester's feedback of 23/11/2026, point 44)
-            addTool(slot++, x0, y0, cell, radius, Tool.Kind.RAINBOW, null, 0);
+            grid.add(new Spec(Tool.Kind.RAINBOW, null, 0));
         }
-        addTool(slot++, x0, y0, cell, radius, Tool.Kind.ERASER, null, 0);
+        grid.add(new Spec(Tool.Kind.ERASER, null, 0));
         for (int i = 0; i < WIDTHS.length; i++) {
-            // Alone on its row (rainbow mode), the last width is in its middle
-            final boolean alone = i == WIDTHS.length - 1 && slot % 2 == 0;
-            addTool(slot++, alone ? x0 + cell / 2 : x0, y0, cell, radius, Tool.Kind.WIDTH, null, i);
+            grid.add(new Spec(Tool.Kind.WIDTH, null, i));
         }
-        // The last two buttons on a row of their own
-        if (slot % 2 != 0) {
-            slot++;
+        grid.add(new Spec(Tool.Kind.SAVE, null, 0));
+        final int rows = (grid.size() + 1) / 2;
+        // Centered in the height (the rainbow mode has fewer rows)
+        final double y0 = top + (TOOL_ROWS - (rows + 1.5)) * cell / 2;
+        for (int slot = 0; slot < grid.size(); slot++) {
+            final Spec spec = grid.get(slot);
+            // Alone on its row, the last button is in its middle
+            final boolean alone = slot == grid.size() - 1 && slot % 2 == 0;
+            final double cx = x0 + (alone ? 1 : slot % 2 + 0.5) * cell;
+            final double cy = y0 + (slot / 2 + 0.5) * cell;
+            addTool(cx, cy, radius, spec.kind(), spec.color(), spec.widthIndex(), true);
         }
-        addTool(slot++, x0, y0, cell, radius, Tool.Kind.NEW_SHEET, null, 0);
-        addTool(slot, x0, y0, cell, radius, Tool.Kind.SAVE, null, 0);
+        final double lastY = y0 + (rows + 1) * cell;
+        newSheetTool = addTool(x0 + cell, lastY, radius, Tool.Kind.NEW_SHEET, null, 0, true);
+        confirmTool = addTool(x0 + cell / 2, lastY, radius, Tool.Kind.CONFIRM, null, 0, false);
+        cancelTool = addTool(x0 + cell * 1.5, lastY, radius, Tool.Kind.CANCEL, null, 0, false);
         paintTools();
     }
 
-    private void addTool(final int slot, final double x0, final double y0, final double cell, final double radius,
-                         final Tool.Kind kind, final Color toolColor, final int widthIndex) {
-        final double cx = x0 + (slot % 2 + 0.5) * cell;
-        final int row = slot / 2;
-        final double cy = y0 + (row + 0.5) * cell;
+    private Tool addTool(final double cx, final double cy, final double radius, final Tool.Kind kind,
+                         final Color toolColor, final int widthIndex, final boolean shown) {
         final Tool tool = new Tool(kind, toolColor, widthIndex, cx, cy, radius);
         tools.add(tool);
-        toolsLayer.getChildren().add(tool.node);
+        if (shown) {
+            toolsLayer.getChildren().add(tool.node);
+        }
         final EventHandler<Event> handler = event -> {
             if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
                 lookAt(tool);
@@ -294,6 +317,7 @@ public class Scribble implements GameLifeCycle {
         tool.disc.addEventFilter(GazeEvent.ANY, handler);
         gameContext.getGazeDeviceManager().addEventFilter(tool.disc);
         gazeNodes.add(tool.disc);
+        return tool;
     }
 
     private void paintTools() {
@@ -392,7 +416,8 @@ public class Scribble implements GameLifeCycle {
             return;
         }
         clock += seconds;
-        if (messageLeft > 0) {
+        // The question stays as long as ✔ and ✖ (they take it away)
+        if (messageLeft > 0 && askLeft <= 0) {
             messageLeft -= seconds;
             if (messageLeft <= 0) {
                 message.getChildren().clear();
@@ -404,6 +429,13 @@ public class Scribble implements GameLifeCycle {
                 phase = Phase.PLAY;
             }
             return;
+        }
+        // The time to answer stops while ✔ or ✖ is being chosen: they never go away under the ring
+        if (askLeft > 0 && looked != confirmTool && looked != cancelTool) {
+            askLeft -= seconds;
+            if (askLeft <= 0) {
+                endAsking();
+            }
         }
         fixate(seconds);
     }
@@ -459,6 +491,10 @@ public class Scribble implements GameLifeCycle {
         if (phase != Phase.PLAY) {
             return;
         }
+        // Any other button forgets the question
+        if (askLeft > 0 && tool.kind != Tool.Kind.CONFIRM) {
+            endAsking();
+        }
         switch (tool.kind) {
             case COLOR -> {
                 color = tool.color;
@@ -467,12 +503,49 @@ public class Scribble implements GameLifeCycle {
             case RAINBOW -> eraser = false;
             case ERASER -> eraser = true;
             case WIDTH -> widthIndex = tool.widthIndex;
-            case NEW_SHEET -> newSheet();
+            case NEW_SHEET -> ask();
+            case CONFIRM -> {
+                endAsking();
+                newSheet();
+            }
             case SAVE -> save();
             default -> {
             }
         }
         paintTools();
+    }
+
+    /**
+     * The new sheet chosen: nothing is erased yet, its row shows ✔ (erase) and ✖ (keep), to choose by another fixation,
+     * with the question at the top of the sheet; without an answer, all goes back after {@link #ASK} seconds. The ✔
+     * and ✖ are on each side of the place of the new sheet, not under the gaze still on it.
+     */
+    private void ask() {
+        toolsLayer.getChildren().remove(newSheetTool.node);
+        toolsLayer.getChildren().addAll(confirmTool.node, cancelTool.node);
+        askLeft = ASK;
+        say("ScribbleEraseQuestion");
+        messageLeft = ASK;
+    }
+
+    private void endAsking() {
+        askLeft = 0;
+        toolsLayer.getChildren().removeAll(confirmTool.node, cancelTool.node);
+        if (!toolsLayer.getChildren().contains(newSheetTool.node)) {
+            toolsLayer.getChildren().add(newSheetTool.node);
+        }
+        if (looked == confirmTool || looked == cancelTool) {
+            lookAway(looked);
+        }
+        message.getChildren().clear();
+        messageLeft = 0;
+    }
+
+    /**
+     * @return whether the question "Erase the drawing?" is asked: ✔ and ✖ shown in place of the new sheet
+     */
+    boolean isAsking() {
+        return askLeft > 0;
     }
 
     /**
@@ -606,7 +679,7 @@ public class Scribble implements GameLifeCycle {
      * A round button of the tool bar.
      */
     final class Tool {
-        enum Kind { COLOR, RAINBOW, ERASER, WIDTH, NEW_SHEET, SAVE }
+        enum Kind { COLOR, RAINBOW, ERASER, WIDTH, NEW_SHEET, SAVE, CONFIRM, CANCEL }
 
         @Getter
         private final Kind kind;
@@ -676,9 +749,32 @@ public class Scribble implements GameLifeCycle {
                     size.setStyle(GameStyle.BUTTON_TEXT_STYLE);
                     yield size;
                 }
-                case NEW_SHEET -> icon("add");
+                // A bin: clearer than a plus (maintainer, 26/11/2026)
+                case NEW_SHEET -> icon("delete");
                 case SAVE -> icon("save");
+                case CONFIRM -> mark(Color.web(GameStyle.SUCCESS_COLOR), -0.36, 0.02, -0.1, 0.28, 0.38, -0.26);
+                case CANCEL -> {
+                    final Group cross = new Group(
+                        mark(Color.rgb(229, 57, 53), -0.28, -0.28, 0.28, 0.28),
+                        mark(Color.rgb(229, 57, 53), -0.28, 0.28, 0.28, -0.28));
+                    yield cross;
+                }
             };
+        }
+
+        /**
+         * @return a thick line through these points (parts of the radius from the center): the ✔ or half the ✖
+         */
+        private Node mark(final Color stroke, final double... points) {
+            final Polyline line = new Polyline();
+            for (int i = 0; i < points.length; i += 2) {
+                line.getPoints().addAll(x + points[i] * radius, y + points[i + 1] * radius);
+            }
+            line.setStroke(stroke);
+            line.setStrokeWidth(radius * 0.16);
+            line.setStrokeLineCap(StrokeLineCap.ROUND);
+            line.setStrokeLineJoin(StrokeLineJoin.ROUND);
+            return line;
         }
 
         private Node icon(final String name) {
@@ -697,6 +793,22 @@ public class Scribble implements GameLifeCycle {
 
         boolean isChosen() {
             return mark.isVisible();
+        }
+
+        double getX() {
+            return x;
+        }
+
+        double getY() {
+            return y;
+        }
+
+        Circle getDisc() {
+            return disc;
+        }
+
+        Group getNode() {
+            return node;
         }
     }
 
