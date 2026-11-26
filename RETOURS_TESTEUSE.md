@@ -128,6 +128,8 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 76 | Petits chevaux | Dés aidés après plusieurs échecs | Après des lancers de suite sans pouvoir bouger, le dé donne la face qu'il faut (faire arriver un pion, sinon un 6 pour sortir, sinon la plus petite qui fait bouger) : 2 lancers pour une personne, 3 pour l'ordinateur (choix du mainteneur ; elle proposait 3, et 5 pour le 6 de l'ordinateur) ; tirage gardé pour le rejeu ; aides |
+| 77 | Petits chevaux | L'ordinateur fait avancer tous ses pions | Ses pions sortis avancent chacun à son tour (celui qui a bougé il y a le plus longtemps), après ses priorités (prendre, monter l'échelle, sortir) ; aides |
 | 74 | Coloriage | Bouton « Imprimer » à pouvoir masquer | Réglage « Coloriage : bouton Imprimer » (Jeux, coché par défaut, choix du mainteneur ; clé `COLORING_PRINT_ENABLED`) |
 | 75 | Coloriage | Enregistrement dans un dossier défini, à pouvoir interdire | Comme Gribouille : plus de fenêtre Windows, dessin gardé dans `dessins` (`coloriage_date.png`) avec un message ; réglage « Coloriage : bouton Garder mon dessin » (coché par défaut ; `COLORING_SAVE_ENABLED`) ; ligne des réglages « Mes dessins (Gribouille et Coloriage) » ; aides |
 | 71 | Pierre papier ciseaux | Erreur plus visible pour qui n'entend pas | Croix rouge sur la main perdante (la main du joueur tremble), cercle et coche verts sur la gagnante, « = » jaune à l'égalité, dans les deux modes ; demandes du mainteneur : le résultat reste jusqu'à la flèche « Manche suivante » (étiquette dessous, plus de temps fixe), « Pierre… papier… ciseaux ! » et « Gagné / Perdu / Égalité » entre les deux mains ; aides |
@@ -166,8 +168,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 66 | Jeu de l'oie | Compréhension : pion plus lent, points du dé remplis case par case, couleur du pion choisie | |
 | 67 | Fleur des nombres | Variante « même nombre dans chaque pétale » | **À débattre à la prochaine réunion** (mainteneur, 26/11) : la testeuse doit préciser la règle (« à discuter pour que je t'en dise plus ») |
 | 69 | Morpion | Écran de récompense | |
-| 76 | Petits chevaux | Dés aidés après plusieurs échecs | |
-| 77 | Petits chevaux | L'ordinateur fait avancer tous ses pions | |
 | 80 | La maison du chat | Sons sur les actions ; plus de choix (jeux, plats) | |
 | 81 | Les bruits de la vie | Sons du singe et du dauphin ; scène de la mer avec une surface | |
 | 83 | Cartes à gratter | La pièce suit le regard qui sort de la zone | |

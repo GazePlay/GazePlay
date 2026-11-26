@@ -59,6 +59,15 @@ public class Horses implements GameLifeCycle {
     private static final Duration COMPUTER_PAUSE = Duration.seconds(1.2);
 
     /**
+     * The rolls in a row without any move after which the die shows the face needed (point 76): for a person, for the
+     * computer to leave its stable, for the computer to arrive (maintainer's choices of 26/11/2026: 2 rolls for a person,
+     * 3 for the computer, to leave as to arrive; the tester proposed 3, and 5 for the computer to leave).
+     */
+    static final int PERSON_TRIES = 2;
+    static final int COMPUTER_TRIES_TO_LEAVE = 3;
+    static final int COMPUTER_TRIES_TO_ARRIVE = 3;
+
+    /**
      * The teams, each with its color.
      */
     public enum TEAMS {
@@ -113,6 +122,18 @@ public class Horses implements GameLifeCycle {
      * Pauses of the computer, stopped at the end of the game.
      */
     private final List<Animation> pauses = new ArrayList<>();
+
+    /**
+     * Each team: its rolls in a row without any move (point 76).
+     */
+    private final Map<TEAMS, Integer> rollsWithoutMove = new EnumMap<>(TEAMS.class);
+
+    /**
+     * Each pawn: the number of its last move (the moves counted from the start), so that the computer moves its pawns in
+     * turn (point 77).
+     */
+    private final Map<Pawn, Integer> lastMoves = new java.util.HashMap<>();
+    private int moves;
 
     @Getter
     private boolean over;
@@ -251,7 +272,43 @@ public class Horses implements GameLifeCycle {
         foregroundLayer.getChildren().removeAll(rollButton, computerDie);
         rollButton.disable();
         foregroundLayer.getChildren().add(diceContainer);
-        diceOutcome = die.roll(e -> showMovablePawns());
+        diceOutcome = die.roll(e -> showMovablePawns(), forcedFace());
+    }
+
+    /**
+     * After too many rolls in a row without any move, the face needed (tester's feedback of 24/11/2026, point 76: the
+     * wait for a 6 or for the exact number was too long and too frustrating): after 2 rolls for a person; for the
+     * computer, after 3 rolls, for a 6 to leave the stable as for the number to arrive, so that the person keeps an
+     * advantage. The face needed: one bringing a pawn to the finish, else a 6 taking a pawn out, else the smallest
+     * one moving a pawn.
+     *
+     * @return the face to show, 0 for a face at random
+     */
+    int forcedFace() {
+        final int tries = rollsWithoutMove.getOrDefault(current(), 0);
+        int finishing = 0;
+        boolean spawning = false;
+        int smallest = 0;
+        for (int face = 1; face <= 6; face++) {
+            for (final Pawn pawn : pawns.get(current())) {
+                if (pawn.canMove(face) && pawn.destination(face) instanceof FinishSquare && finishing == 0) {
+                    finishing = face;
+                }
+                if (pawn.canSpawn(face)) {
+                    spawning = true;
+                }
+                if ((pawn.canMove(face) || pawn.canSpawn(face)) && smallest == 0) {
+                    smallest = face;
+                }
+            }
+        }
+        final int needed = finishing != 0 ? finishing : spawning ? 6 : smallest;
+        if (needed == 0) {
+            return 0;
+        }
+        final int most = !computerPlays() ? PERSON_TRIES : needed == 6 && finishing == 0 ? COMPUTER_TRIES_TO_LEAVE
+            : COMPUTER_TRIES_TO_ARRIVE;
+        return tries >= most ? needed : 0;
     }
 
     /**
@@ -268,6 +325,8 @@ public class Horses implements GameLifeCycle {
                 movable.add(pawn);
             }
         }
+        // The rolls in a row without any move (point 76)
+        rollsWithoutMove.put(current(), movable.isEmpty() ? rollsWithoutMove.getOrDefault(current(), 0) + 1 : 0);
         if (movable.isEmpty()) {
             showMessage(translator.translate("HorsesNoMove"));
             later(this::endOfTurn);
@@ -292,6 +351,7 @@ public class Horses implements GameLifeCycle {
         for (final Pawn other : pawns.get(current())) {
             other.deactivate();
         }
+        rememberMove(pawn);
         if (pawn.isOnTrack()) {
             pawn.move(diceOutcome);
         } else {
@@ -300,14 +360,31 @@ public class Horses implements GameLifeCycle {
     }
 
     /**
+     * Notes that a pawn moves now (point 77).
+     */
+    void rememberMove(final Pawn pawn) {
+        lastMoves.put(pawn, ++moves);
+    }
+
+    /**
+     * For the tests: the rolls in a row without any move of a team (point 76).
+     */
+    void setRollsWithoutMove(final TEAMS team, final int rolls) {
+        rollsWithoutMove.put(team, rolls);
+    }
+
+    /**
      * @return the pawn the computer moves: one sending a pawn of another team back to its stable, else one on its
-     *   final path, else one leaving its stable, else the one which went the furthest
+     *   final path, else one leaving its stable, else the one of the track which moved the longest ago, so that its
+     *   pawns go forward in turn (tester's feedback of 24/11/2026, point 77: it always moved its first pawn, and its
+     *   second one blocked the person behind it until the first one arrived)
      */
     Pawn computerChoice(final List<Pawn> movable, final int dice) {
         return movable.stream().max(Comparator
             .comparingInt((Pawn pawn) -> pawn.wouldCapture(dice) ? 1 : 0)
             .thenComparingInt(pawn -> pawn.isOnFinalPath() ? 1 : 0)
             .thenComparingInt(pawn -> pawn.isOnTrack() ? 0 : 1)
+            .thenComparingInt(pawn -> -lastMoves.getOrDefault(pawn, 0))
             .thenComparingInt(Pawn::getProgress)).orElseThrow();
     }
 

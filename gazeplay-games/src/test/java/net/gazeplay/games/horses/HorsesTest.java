@@ -215,6 +215,38 @@ class HorsesTest {
     }
 
     /**
+     * Tester's feedback of 24/11/2026, point 77: the computer moves its pawns of the track in turn (it always moved
+     * the first one, and the second one blocked the player behind it).
+     */
+    @Test
+    void shouldMakeTheComputerMoveItsPawnsInTurn() throws Exception {
+        buildTrack();
+        Horses horses = new Horses(gameContext, stats, HorsesVariant.VS_COMPUTER_1, 1);
+        Pawn back = pawnOn(Horses.TEAMS.BLUE, track[0]);
+        Pawn front = pawnOn(Horses.TEAMS.BLUE, track[2]);
+        horses.rememberMove(front);
+        assertSame(back, horses.computerChoice(List.of(back, front), 1), "the one which moved the longest ago");
+        horses.rememberMove(back);
+        assertSame(front, horses.computerChoice(List.of(back, front), 1));
+    }
+
+    /**
+     * Tester's feedback of 24/11/2026, point 76: after 2 rolls in a row without any move (maintainer's choice), the die
+     * of a person shows the face needed (a 6 to leave the stable); the computer waits 3 rolls.
+     */
+    @Test
+    void shouldGiveTheFaceNeededAfterTooManyRolls() throws Exception {
+        Horses horses = launchedGame(HorsesVariant.SIMPLIFIED_VS_COMPUTER_1);
+        WaitForAsyncUtils.asyncFx(() -> horses.selectTeam(Horses.TEAMS.RED)).get();
+        // The person plays first, its pawn in its stable
+        assertEquals(0, (int) WaitForAsyncUtils.asyncFx(horses::forcedFace).get());
+        horses.setRollsWithoutMove(Horses.TEAMS.RED, Horses.PERSON_TRIES - 1);
+        assertEquals(0, (int) WaitForAsyncUtils.asyncFx(horses::forcedFace).get());
+        horses.setRollsWithoutMove(Horses.TEAMS.RED, Horses.PERSON_TRIES);
+        assertEquals(6, (int) WaitForAsyncUtils.asyncFx(horses::forcedFace).get());
+    }
+
+    /**
      * On the final path, a pawn goes up one square with the exact number of the square.
      */
     @Test

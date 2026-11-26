@@ -96,6 +96,17 @@ public class DiceRoller extends MeshView {
      * @return the face shown at the end of the animation, from 1 to 6 (known before the animation ends)
      */
     public int roll(final EventHandler<ActionEvent> onFinishedEventHandler) {
+        return roll(onFinishedEventHandler, 0);
+    }
+
+    /**
+     * Rolls the die, showing a face chosen by the game when it is not 0 (the "Horses", 26/11/2026: a face needed after
+     * many tries); the random draws are the same, so that a game is replayed alike.
+     *
+     * @param forcedFace the face to show, from 1 to 6, or 0 for a face at random
+     * @return the face shown at the end of the animation
+     */
+    public int roll(final EventHandler<ActionEvent> onFinishedEventHandler, final int forcedFace) {
         // Resetting angles to 0
         rotations.get(0).setAngle(0);
         rotations.get(1).setAngle(0);
@@ -103,7 +114,8 @@ public class DiceRoller extends MeshView {
         // The face first, each with a chance of 1 in 6 (30/10/2026: the face used to come from random angles rounded
         // to a quarter turn, which gave 3 and 4 a chance of 1 in 4 each, and the other faces 1 in 8), then quarter turns
         // showing it
-        final int face = 1 + random.nextInt(6);
+        final int drawn = 1 + random.nextInt(6);
+        final int face = forcedFace >= 1 && forcedFace <= 6 ? forcedFace : drawn;
         final int[] quarterTurns = quarterTurnsShowing(face, random.nextInt(4));
 
         // 2 full turns, the quarter turns, and a little more or less, on each axis; then the die squares up
