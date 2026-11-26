@@ -19,4 +19,5 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - En bas, la difficulté : Facile (6 formes : ovale, rectangle, losange, rond, carré, triangle), Moyen (13 formes, avec flèche, croissant, croix, cœur, étoile, trapèze, trèfle) ou Difficile (20 formes, avec les polygones : pentagone, hexagone, heptagone, octogone, ennéagone, décagone, parallélogramme).
 - La taille de la grille : 2, 4, 6 ou 9 images. Plus il y a d'images, plus c'est difficile.
 - En bas, la fin de la partie : 5, 10 ou 15 écrans, ou sans fin.
+- En bas, l'exemple : Apprentissage (l'image de la bonne réponse est montrée à droite de la question, et reste à côté d'elle pendant que tu choisis), Entraînement (l'image est montrée à droite de la question, puis disparaît une fois les images affichées) ou Maîtrise (la question seule, sans exemple).
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs.

@@ -127,6 +127,8 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | N° | Jeu | Retour | Ce qui a été fait |
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
+| — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 36 | Où est la forme, la couleur | Modes de consigne avec exemple | Interrupteur Apprentissage / Entraînement / Maîtrise (ses noms, Apprentissage par défaut, avant les cœurs) pour la forme, la couleur et le chiffre (pas la lettre : la question la montre déjà) ; carte blanche de l'image de la bonne réponse à droite de la phrase, qui descend avec elle dans la bande ; Apprentissage : elle reste pendant le choix ; Entraînement : elle s'efface une fois les images affichées ; Maîtrise : sans exemple ; aides. Les réponses déjà affichées à la consigne : avec le point 35 (débat) |
 | 46 | Gribouille | Couleur blanche à la place de la gomme | Choix du mainteneur : la gomme reste, mais se voit : une gomme dessinée suit le regard sur la feuille (comme la pièce de Cartes à gratter), une brosse à tableau sur le tableau noir (aussi dans le bouton) ; largeur effacée 2,5 %, 4,5 % ou 7 % de la hauteur de l'écran selon l'épaisseur (avant : deux fois le trait) ; aides |
 | 47 | Gribouille | Points d'épaisseur de la couleur choisie | Points des 3 épaisseurs de la couleur choisie (en dégradé en Arc-en-ciel ; avec la gomme, la couleur qu'on retrouvera), contour de la couleur du texte des boutons ; aides |
 | 48 | Gribouille | Mode « la fixation commence et finit le trait » | Interrupteur « Trait libre / Trait par fixation » (8 variantes, libre sans variante) ; par fixation : crayon levé, un cercle vide de la couleur suit le regard ; une fixation (3,5 % de la hauteur, temps des réglages, anneau) pose le crayon sous le cercle, une autre le lève, bouger avant la suivante ; sortir de la feuille ou perdre le regard plus de 0,35 s le lève ; souris immobile = fixation ; aides |
@@ -137,8 +139,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | N° | Jeu | Retour | Remarque |
 |---|---|---|---|
 | 34 | Page des jeux | Catégories par compétence (découverte du regard, fixation, exploration…), jeux rangés par difficulté | **Mis de côté** (mainteneur, 24/11 : « à débattre ») |
-| 35 | Où est… | Délai trop long entre la consigne et les réponses | |
-| 36 | Où est la forme, la couleur | Modes de consigne avec exemple (pendant la sélection, avant seulement, sans) ; réponses déjà affichées à la consigne | |
+| 35 | Où est… | Délai trop long entre la consigne et les réponses | **À débattre à la prochaine réunion** (mainteneur, 26/11) : avec le réglage « Durée d'affichage des questions » (Jeux, 5 s par défaut, de 0,5 à 20 s), il trouve cela rapide. Pistes : images dès la fin de la voix, images avec la consigne, durée par défaut plus courte, voix redite à l'apparition des images |
 | 38 | Piano | Version courte (début de la chanson, puis la chanson en récompense) | |
 | 39 | Piano | Choisir la chanson | |
 | 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |

@@ -25,7 +25,8 @@ public class WhereIsItGameVariantGenerator implements IGameVariantGenerator {
 
     @Override
     public Set<IGameVariant> getVariants() {
-        return WhereIsItVariants.withEnds(Lists.newArrayList(
+        // With the example of the question (point 36)
+        return WhereIsItVariants.withEndsAndExamples(Lists.newArrayList(
             new DimensionGameVariant(1, 2),
             new DimensionGameVariant(2, 2),
             new DimensionGameVariant(2, 3),

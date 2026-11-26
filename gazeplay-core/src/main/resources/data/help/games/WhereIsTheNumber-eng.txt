@@ -18,4 +18,5 @@ A digit is asked for (from 0 to 9): find it among the others.
 Choose a variant (it is framed), then press "Start".
 - The size of the grid: 2, 4, 6 or 9 pictures. The more pictures, the harder.
 - At the bottom, the end of the game: 5, 10 or 15 screens, or without end.
+- At the bottom, the example: Learning (the picture of the right answer is shown at the right of the question, and stays beside it while you choose), Training (the picture is shown at the right of the question, then goes away once the pictures are shown) or Mastery (the question alone, without example).
 - At the bottom, the hearts: With hearts (3 hearts) or Without hearts.

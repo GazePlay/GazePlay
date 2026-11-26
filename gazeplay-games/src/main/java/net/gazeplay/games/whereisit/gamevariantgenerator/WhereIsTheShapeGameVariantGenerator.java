@@ -16,7 +16,8 @@ import java.util.Set;
 public class WhereIsTheShapeGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
-        return WhereIsItVariants.withEnds(Lists.newArrayList(
+        // With the example of the question (point 36)
+        return WhereIsItVariants.withEndsAndExamples(Lists.newArrayList(
             new DimensionDifficultyGameVariant(1, 2, Difficulty.EASY.toString()),
             new DimensionDifficultyGameVariant(2, 2, Difficulty.EASY.toString()),
             new DimensionDifficultyGameVariant(2, 3, Difficulty.EASY.toString()),

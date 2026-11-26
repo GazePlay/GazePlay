@@ -11,6 +11,7 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.WhereIsIt;
+import net.gazeplay.games.whereisit.WhereIsItExample;
 import net.gazeplay.games.whereisit.WhereIsItVariants;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
 import net.gazeplay.games.whereisit.WhereIsItStats;
@@ -43,7 +44,8 @@ public class WhereIsTheShapeGameLauncher implements IGameLauncher<Stats, IGameVa
         };
         return new WhereIsIt(gameType, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant));
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant))
+            .withExample(WhereIsItExample.of(gameVariant));
     }
 
     @Override
@@ -55,6 +57,7 @@ public class WhereIsTheShapeGameLauncher implements IGameLauncher<Stats, IGameVa
         };
         return new WhereIsIt(gameType, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant), gameSeed);
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant), gameSeed)
+            .withExample(WhereIsItExample.of(gameVariant));
     }
 }

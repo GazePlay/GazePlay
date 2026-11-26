@@ -43,6 +43,26 @@ public final class WhereIsItVariants {
     }
 
     /**
+     * The same, with a switch of the example of the question before the hearts (see {@link WhereIsItExample}, point 36):
+     * {@code GroupedGameVariant:<theme>:<end>:<lines>x<columns>:-:<example>:<hearts>}.
+     */
+    public static Set<IGameVariant> withEndsAndExamples(final List<? extends IGameVariant> sizes,
+                                                        final String singleTheme) {
+        final Set<IGameVariant> variants = new LinkedHashSet<>();
+        for (final IGameVariant size : sizes) {
+            for (final WhereIsItEnd end : WhereIsItEnd.values()) {
+                for (final WhereIsItExample example : WhereIsItExample.values()) {
+                    for (final String lives : LivesVariant.options(true)) {
+                        variants.add(new GroupedGameVariant(theme(size, singleTheme), end.getKey(),
+                            lines(size) + "x" + columns(size), null, example.getKey(), lives));
+                    }
+                }
+            }
+        }
+        return variants;
+    }
+
+    /**
      * @return the theme of a variant, {@code singleTheme} for a game without themes
      */
     public static String theme(final IGameVariant variant, final String singleTheme) {

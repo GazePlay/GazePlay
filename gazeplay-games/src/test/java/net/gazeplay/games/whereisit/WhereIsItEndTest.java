@@ -12,7 +12,11 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItGameVariantGenerator;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheAnimalGameVariantGenerator;
 import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheColorGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheLetterGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheShapeGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheAnimalGameLauncher;
+import net.gazeplay.games.whereisit.launcher.WhereIsTheNumberGameLauncher;
+import net.gazeplay.games.whereisit.launcher.WhereIsTheShapeGameLauncher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,17 +81,125 @@ class WhereIsItEndTest {
             IGameVariant.toGameVariant("GroupedGameVariant:Farm:WhereIsItEndless:2x3:-:LivesWith")));
         // Dynamic keeps its single size
         assertEquals(8, grouped.stream().filter(variant -> variant.getGroup().equals("Dynamic")).count());
-        // Easy of the colors keeps its 4 sizes (no 3 x 3)
-        assertEquals(4 * 8, new WhereIsTheColorGameVariantGenerator().getVariants().stream()
+        // Easy of the colors keeps its 4 sizes (no 3 x 3), each with the 3 examples since 26/11/2026 (point 36)
+        assertEquals(4 * 8 * 3, new WhereIsTheColorGameVariantGenerator().getVariants().stream()
             .map(GroupedGameVariant.class::cast).filter(variant -> variant.getGroup().equals("Easy")).count());
     }
 
     @Test
     void shouldGiveOneThemeToAGameWithoutThemes() {
         final Set<IGameVariant> variants = new WhereIsItGameVariantGenerator("WhereIsTheNumber").getVariants();
-        assertEquals(5 * 8, variants.size());
+        // Each with the 3 examples since 26/11/2026 (point 36)
+        assertEquals(5 * 8 * 3, variants.size());
         assertTrue(variants.stream().map(GroupedGameVariant.class::cast)
             .allMatch(variant -> variant.getGroup().equals("WhereIsTheNumber") && variant.isSize()));
+    }
+
+    /**
+     * Tester's feedback of 23/11/2026, point 36: the example of the question, a switch of the shape, the color and the
+     * number (before the hearts, learning first), not of the other games; a variant without it has no example.
+     */
+    @Test
+    void shouldGiveTheExampleSwitchToTheShapeTheColorAndTheNumber() {
+        final List<GroupedGameVariant> shapes = new WhereIsTheShapeGameVariantGenerator().getVariants().stream()
+            .map(GroupedGameVariant.class::cast).toList();
+        assertEquals(List.of("WhereIsItLearning", "WhereIsItTraining", "WhereIsItMastery"),
+            List.copyOf(shapes.stream().map(variant -> variant.getExtras().get(0))
+                .collect(Collectors.toCollection(LinkedHashSet::new))));
+        assertTrue(shapes.stream().allMatch(variant -> variant.getExtras().get(1).startsWith("Lives")));
+        assertTrue(new WhereIsTheColorGameVariantGenerator().getVariants().contains(IGameVariant.toGameVariant(
+            "GroupedGameVariant:Easy:WhereIsItEnd5:2x2:-:WhereIsItTraining:LivesWith")));
+        // Not the letter (maintainer, 26/11/2026: the question already shows the letter), nor the animals
+        assertTrue(new WhereIsTheLetterGameVariantGenerator().getVariants().stream()
+            .map(GroupedGameVariant.class::cast).allMatch(variant -> variant.getExtras().size() == 1));
+        assertTrue(new WhereIsTheAnimalGameVariantGenerator().getVariants().stream()
+            .map(GroupedGameVariant.class::cast).allMatch(variant -> variant.getExtras().size() == 1));
+
+        final WhereIsIt shape = (WhereIsIt) new WhereIsTheShapeGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:Easy:WhereIsItEnd5:2x2:-:WhereIsItLearning:LivesWith"),
+            stats);
+        assertEquals(WhereIsItExample.LEARNING, shape.getExample());
+        assertTrue(WhereIsItVariants.withLives(IGameVariant.toGameVariant(
+            "GroupedGameVariant:Easy:WhereIsItEnd5:2x2:-:WhereIsItLearning:LivesWith")));
+        final WhereIsIt number = (WhereIsIt) new WhereIsTheNumberGameLauncher().createNewGame(gameContext,
+            IGameVariant.toGameVariant("GroupedGameVariant:WhereIsTheNumber:WhereIsItEnd5:2x2:-:LivesWith"), stats);
+        assertEquals(WhereIsItExample.MASTERY, number.getExample());
+    }
+
+    /**
+     * Point 36: the card of the example at the right of the sentence while the question is asked, then with it in the
+     * band, at its right; in the training way it goes away once the pictures are shown; none in the mastery way.
+     */
+    @Test
+    void shouldShowTheExampleBesideTheSentence() throws Exception {
+        when(gameContext.getConfiguration().getLanguage()).thenReturn("fra");
+        // A short question (an animation of no length does not move anything)
+        when(gameContext.getConfiguration().getQuestionLength()).thenReturn(200L);
+        for (final WhereIsItExample example : WhereIsItExample.values()) {
+            final WhereIsIt game = (WhereIsIt) new WhereIsTheShapeGameLauncher().createNewGame(gameContext,
+                IGameVariant.toGameVariant("GroupedGameVariant:Easy:WhereIsItEnd5:2x2:-:" + example.getKey()
+                    + ":LivesWithout"), stats);
+            final Group[] card = new Group[1];
+            WaitForAsyncUtils.asyncFx(() -> {
+                gameArea.getChildren().clear();
+                game.launch();
+                card[0] = game.getExampleCard();
+                if (example == WhereIsItExample.MASTERY) {
+                    assertNull(card[0]);
+                } else {
+                    assertNotNull(card[0]);
+                    assertTrue(gameArea.getChildren().contains(card[0]));
+                    // At the right of the sentence, in the middle of the screen
+                    final Bounds sentence = sentenceBounds();
+                    assertTrue(card[0].getBoundsInParent().getMinX() > sentence.getMaxX());
+                    assertEquals(sentence.getCenterY(), card[0].getBoundsInParent().getCenterY(), 2);
+                }
+                return null;
+            }).get();
+            // The question (0.2 s) then its move to the band (0.1 s): the card in the band, at the right of the sentence
+            WaitForAsyncUtils.sleep(450, java.util.concurrent.TimeUnit.MILLISECONDS);
+            WaitForAsyncUtils.asyncFx(() -> {
+                if (example == WhereIsItExample.MASTERY) {
+                    assertNull(game.getExampleCard());
+                } else {
+                    assertTrue(gameArea.getChildren().contains(card[0]));
+                    final Bounds sentence = sentenceBounds();
+                    assertTrue(card[0].getBoundsInParent().getMinX() >= sentence.getMaxX() - 1);
+                    assertEquals(sentence.getCenterY(), card[0].getBoundsInParent().getCenterY(), 2);
+                    assertTrue(card[0].getBoundsInParent().getHeight() < 900 * GameSizingComputer.BAND);
+                }
+                return null;
+            }).get();
+            // Once the pictures are shown, the training way takes the card away; the learning way keeps it
+            WaitForAsyncUtils.sleep((long) (3 * WhereIsIt.TRAINING_FADE),
+                java.util.concurrent.TimeUnit.MILLISECONDS);
+            WaitForAsyncUtils.asyncFx(() -> {
+                switch (example) {
+                    case LEARNING -> {
+                        assertSame(card[0], game.getExampleCard());
+                        assertTrue(gameArea.getChildren().contains(card[0]));
+                    }
+                    case TRAINING -> {
+                        assertNull(game.getExampleCard());
+                        assertFalse(gameArea.getChildren().contains(card[0]));
+                    }
+                    default -> assertNull(game.getExampleCard());
+                }
+                game.dispose();
+                return null;
+            }).get();
+        }
+    }
+
+    /**
+     * @return where the sentence of the question is (the pill holding a text)
+     */
+    private Bounds sentenceBounds() {
+        return gameArea.getChildren().stream()
+            .filter(node -> node instanceof Group group && group.getChildren().stream().anyMatch(Text.class::isInstance))
+            .filter(node -> ((Group) node).getChildren().stream().filter(Text.class::isInstance)
+                .anyMatch(text -> ((Text) text).getText().contains("?")))
+            .findFirst().orElseThrow().getBoundsInParent();
     }
 
     @Test

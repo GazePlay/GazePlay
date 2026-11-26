@@ -7,6 +7,7 @@ import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.WhereIsIt;
+import net.gazeplay.games.whereisit.WhereIsItExample;
 import net.gazeplay.games.whereisit.WhereIsItVariants;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
 import net.gazeplay.games.whereisit.WhereIsItStats;
@@ -38,7 +39,8 @@ public class WhereIsTheNumberGameLauncher implements IGameLauncher<Stats, IGameV
                                        IGameVariant gameVariant, Stats stats) {
         return new WhereIsIt(WhereIsItGameType.NUMBERS, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant));
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant))
+            .withExample(WhereIsItExample.of(gameVariant));
     }
 
     @Override
@@ -46,7 +48,8 @@ public class WhereIsTheNumberGameLauncher implements IGameLauncher<Stats, IGameV
                                        IGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.NUMBERS, WhereIsItVariants.lines(gameVariant),
             WhereIsItVariants.columns(gameVariant), gameContext, stats,
-            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant), gameSeed);
+            WhereIsItVariants.end(gameVariant), WhereIsItVariants.withLives(gameVariant), gameSeed)
+            .withExample(WhereIsItExample.of(gameVariant));
     }
 
 }

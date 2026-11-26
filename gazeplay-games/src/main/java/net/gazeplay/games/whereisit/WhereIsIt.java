@@ -11,7 +11,11 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +67,12 @@ public class WhereIsIt implements GameLifeCycle {
      * Longest move of the question from the middle of the screen to the band, in ms.
      */
     private static final double QUESTION_MOVE_MAX_LENGTH = 800;
+
+    /**
+     * In the training way (point 36), the card of the example fades out in this time (ms), after the pictures have
+     * appeared (they appear in as much).
+     */
+    static final double TRAINING_FADE = 300;
 
     private Group questionPill;
 
@@ -179,6 +189,19 @@ public class WhereIsIt implements GameLifeCycle {
 
     private PauseTransition lostPause;
 
+    /**
+     * The example of the question (point 36): the picture of the right answer beside the sentence, while the question
+     * is asked, and while choosing in the learning way; none for the games without this switch.
+     */
+    @Getter
+    private WhereIsItExample example = WhereIsItExample.MASTERY;
+
+    /**
+     * The card of the example of the screen being played, null when there is none (or no longer).
+     */
+    @Getter
+    private Group exampleCard;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
                      final IGameContext gameContext, final Stats stats) {
         this(gameType, nbLines, nbColumns, gameContext, stats, WhereIsItEnd.ENDLESS);
@@ -240,6 +263,15 @@ public class WhereIsIt implements GameLifeCycle {
                      final boolean withLives, final double gameSeed) {
         this(CUSTOMIZED, 2, 2, gameContext, stats, WhereIsItEnd.ENDLESS, withLives, gameSeed);
         this.customGame = customGame;
+    }
+
+    /**
+     * @param example how the question shows an example (see {@link WhereIsItExample})
+     * @return this game
+     */
+    public WhereIsIt withExample(final WhereIsItExample example) {
+        this.example = example == null ? WhereIsItExample.MASTERY : example;
+        return this;
     }
 
     /**
@@ -541,18 +573,53 @@ public class WhereIsIt implements GameLifeCycle {
 
         // In the middle: as large as the screen allows
         final double largeFont = Math.min(height / 9, width / 14);
+        double font = largeFont;
         questionPill = GameStyle.pill(question == null ? "" : question, largeFont);
         double pillWidth = questionPill.getLayoutBounds().getWidth();
         if (pillWidth > width * 0.9) {
-            questionPill = GameStyle.pill(question == null ? "" : question, largeFont * width * 0.9 / pillWidth);
+            font = largeFont * width * 0.9 / pillWidth;
+            questionPill = GameStyle.pill(question == null ? "" : question, font);
             pillWidth = questionPill.getLayoutBounds().getWidth();
         }
-        final double pillHeight = questionPill.getLayoutBounds().getHeight();
+        double pillHeight = questionPill.getLayoutBounds().getHeight();
         final double pillCenterY = height * 0.45;
-        questionPill.setLayoutX(width / 2 - pillWidth / 2);
+
+        // The example beside the sentence (point 36): a card of the picture of the right answer, at its left
+        final String examplePicture = example.shownWithQuestion() && !withoutSentence && currentRoundDetails != null
+            ? currentRoundDetails.getPictureCardList().get(currentRoundDetails.getWinnerImageIndexAmongDisplayedImages())
+                .getImagePath()
+            : null;
+        double cardSize = 0;
+        double cardGap = 0;
+        if (examplePicture != null) {
+            cardSize = pillHeight * 1.8;
+            cardGap = pillHeight * 0.3;
+            // Both in 90 % of the width
+            final double fit = width * 0.9 / (cardSize + cardGap + pillWidth);
+            if (fit < 1) {
+                font *= fit;
+                questionPill = GameStyle.pill(question, font);
+                pillWidth = questionPill.getLayoutBounds().getWidth();
+                pillHeight = questionPill.getLayoutBounds().getHeight();
+                cardSize = pillHeight * 1.8;
+                cardGap = pillHeight * 0.3;
+            }
+        }
+        // The sentence, then the card at its right (maintainer, 26/11/2026)
+        final double startX = width / 2 - (cardSize + cardGap + pillWidth) / 2;
+        final double pillCenterX = startX + pillWidth / 2;
+        final double cardCenterX = startX + pillWidth + cardGap + cardSize / 2;
+        questionPill.setLayoutX(startX);
         questionPill.setLayoutY(pillCenterY - pillHeight / 2);
         questionPill.setVisible(!withoutSentence);
         gameContext.getChildren().add(questionPill);
+        exampleCard = null;
+        if (examplePicture != null) {
+            exampleCard = exampleCard(examplePicture, cardSize);
+            exampleCard.setLayoutX(cardCenterX - cardSize / 2);
+            exampleCard.setLayoutY(pillCenterY - cardSize / 2);
+            gameContext.getChildren().add(exampleCard);
+        }
 
         final long timeStarted = System.currentTimeMillis();
         final TargetAOI targetAOI = new TargetAOI(width / 2, pillCenterY, (int) pillWidth, timeStarted);
@@ -583,18 +650,33 @@ public class WhereIsIt implements GameLifeCycle {
         decorationAnimations.forEach(Transition::play);
 
         // In the band: centered between the counter of the screens and the button to hear the question again
+        // The card of the example goes with the sentence to the band, at its right (point 36)
         final double bandFont = sizing.bandHeight() * 0.34;
-        final double scale = Math.min(bandFont / Math.min(largeFont, largeFont * width * 0.9 / Math.max(1, pillWidth)),
-            (sizing.bandRight() - sizing.bandLeft() - 2 * sizing.gap()) / pillWidth);
+        final boolean withCard = exampleCard != null;
+        final double bandCard = withCard ? sizing.bandHeight() * 0.8 : 0;
+        final double bandCardGap = withCard ? sizing.gap() : 0;
+        final double scale = Math.min(bandFont / font,
+            (sizing.bandRight() - sizing.bandLeft() - 2 * sizing.gap() - bandCard - bandCardGap) / pillWidth);
+        final double bandLeft = sizing.bandCenterX() - (bandCard + bandCardGap + pillWidth * scale) / 2;
+        final double bandCenterY = sizing.bandTop() + sizing.bandHeight() / 2;
         final Duration moveLength = Duration.millis(Math.min(questionLength / 2.0, QUESTION_MOVE_MAX_LENGTH));
 
         final TranslateTransition move = new TranslateTransition(moveLength, questionPill);
-        move.setToX(sizing.bandCenterX() - width / 2);
-        move.setToY(sizing.bandTop() + sizing.bandHeight() / 2 - pillCenterY);
+        move.setToX(bandLeft + pillWidth * scale / 2 - pillCenterX);
+        move.setToY(bandCenterY - pillCenterY);
         final ScaleTransition shrink = new ScaleTransition(moveLength, questionPill);
         shrink.setToX(scale);
         shrink.setToY(scale);
         final ParallelTransition fullAnimation = new ParallelTransition(move, shrink);
+        if (withCard) {
+            final TranslateTransition cardMove = new TranslateTransition(moveLength, exampleCard);
+            cardMove.setToX(bandLeft + pillWidth * scale + bandCardGap + bandCard / 2 - cardCenterX);
+            cardMove.setToY(bandCenterY - pillCenterY);
+            final ScaleTransition cardShrink = new ScaleTransition(moveLength, exampleCard);
+            cardShrink.setToX(bandCard / cardSize);
+            cardShrink.setToY(bandCard / cardSize);
+            fullAnimation.getChildren().addAll(cardMove, cardShrink);
+        }
         fullAnimation.setInterpolator(Interpolator.EASE_BOTH);
         fullAnimation.setDelay(Duration.millis(questionLength));
 
@@ -621,6 +703,23 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
             questionPill.toFront();
+            if (exampleCard != null) {
+                exampleCard.toFront();
+                if (example == WhereIsItExample.TRAINING) {
+                    // In the training way, the card goes away once the pictures are shown (maintainer, 26/11/2026)
+                    final Group card = exampleCard;
+                    final FadeTransition cardFade = new FadeTransition(Duration.millis(TRAINING_FADE), card);
+                    cardFade.setDelay(Duration.millis(TRAINING_FADE));
+                    cardFade.setToValue(0);
+                    cardFade.setOnFinished(event -> {
+                        gameContext.getChildren().remove(card);
+                        if (exampleCard == card) {
+                            exampleCard = null;
+                        }
+                    });
+                    cardFade.play();
+                }
+            }
 
             stats.notifyNewRoundReady();
 
@@ -859,6 +958,53 @@ public class WhereIsIt implements GameLifeCycle {
             targetAOIList.add(targetAOI);
         }
         return pictureCardList;
+    }
+
+    /**
+     * @return the card of the example of the question (point 36), from (0, 0): white like the cards of the grid, the same
+     *   picture as the right answer, filling the card for the colors (with an outline, a light color stays seen)
+     */
+    private Group exampleCard(final String imagePath, final double size) {
+        final double radius = size * 0.08;
+        final Rectangle background = new Rectangle(size, size);
+        background.setArcWidth(2 * radius);
+        background.setArcHeight(2 * radius);
+        background.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: -gp-border; -fx-stroke-width: 2;");
+        background.setStrokeType(StrokeType.INSIDE);
+        final double padding = size * 0.06;
+        final double inner = size - 2 * padding;
+        final Image image = new Image(imagePath, inner * 2, inner * 2, true, true);
+        final ImageView view = new ImageView(image);
+        final boolean stretched = gameType.toString().contains("COLORS");
+        double w = inner;
+        double h = inner;
+        if (!stretched && image.getWidth() > 0 && image.getHeight() > 0) {
+            final double ratio = Math.min(inner / image.getWidth(), inner / image.getHeight());
+            w = image.getWidth() * ratio;
+            h = image.getHeight() * ratio;
+        }
+        view.setPreserveRatio(!stretched);
+        view.setFitWidth(w);
+        view.setFitHeight(h);
+        view.setSmooth(true);
+        view.setX((size - w) / 2);
+        view.setY((size - h) / 2);
+        final Rectangle clip = new Rectangle(view.getX(), view.getY(), w, h);
+        clip.setArcWidth(2 * Math.max(0, radius - padding));
+        clip.setArcHeight(2 * Math.max(0, radius - padding));
+        view.setClip(clip);
+        final Group card = new Group(background, view);
+        if (stretched) {
+            final Rectangle outline = new Rectangle(view.getX(), view.getY(), w, h);
+            outline.setArcWidth(clip.getArcWidth());
+            outline.setArcHeight(clip.getArcHeight());
+            outline.setFill(null);
+            outline.setStrokeType(StrokeType.INSIDE);
+            outline.setStyle("-fx-stroke: -gp-text-muted; -fx-stroke-width: 2;");
+            card.getChildren().add(outline);
+        }
+        card.setMouseTransparent(true);
+        return card;
     }
 
     /**
