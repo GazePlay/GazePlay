@@ -103,7 +103,40 @@ class CupsAndBallsTest {
             game.choose(cup);
             return null;
         });
-        steps(game, CupsAndBalls.REVEAL + 0.05);
+        // The cups shown, then going down (point 43)
+        steps(game, CupsAndBalls.REVEAL + CupsAndBalls.LIFT + 0.05);
+    }
+
+    /**
+     * Tester's feedback of 23/11/2026, point 43: the cups lifted at the end of a round go down before the next one, and
+     * all the cups lift together at its start, a single ball under one of them.
+     */
+    @Test
+    void shouldLowerTheCupsThenLiftThemAllAtTheStartOfARound() throws Exception {
+        final CupsAndBalls game = launched(CupsLevel.NORMAL, CupsEnd.ENDLESS, 3);
+        steps(game, 0.05);
+        steps(game, CupsAndBalls.LIFT + 0.1);
+        assertTrue(game.getCups().stream().allMatch(CupsAndBalls.Cup::isLifted));
+        steps(game, CupsAndBalls.LIFT + CupsAndBalls.HOLD + CupsAndBalls.BEFORE);
+        assertEquals(CupsAndBalls.Phase.EXCHANGE, game.getPhase());
+        assertTrue(game.getCups().stream().noneMatch(CupsAndBalls.Cup::isLifted));
+
+        untilPlay(game);
+        final CupsAndBalls.Cup ballCup = game.getBallCup();
+        fx(() -> {
+            game.choose(ballCup);
+            return null;
+        });
+        steps(game, CupsAndBalls.REVEAL - 0.05);
+        assertTrue(ballCup.isLifted());
+        // Going down, still the same round
+        steps(game, CupsAndBalls.LIFT * 0.7);
+        assertEquals(CupsAndBalls.Phase.REVEAL, game.getPhase());
+        assertFalse(ballCup.isLifted());
+        steps(game, CupsAndBalls.LIFT * 0.4);
+        assertEquals(CupsAndBalls.Phase.SHOW_BALL, game.getPhase());
+        // The next round starts with all the cups down
+        assertTrue(game.getCups().stream().noneMatch(CupsAndBalls.Cup::isLifted));
     }
 
     private static CupsAndBalls.Cup wrongCup(final CupsAndBalls game) {

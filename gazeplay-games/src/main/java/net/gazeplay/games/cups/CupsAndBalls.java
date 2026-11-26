@@ -28,7 +28,8 @@ import java.util.List;
 
 /**
  * "Gobelets Pass Pass" (Cups and Balls, name code CupsBalls; reviewed on 10/11/2026, maintainer's rules): cups in a row
- * on a table; one is lifted to show the ball under it, then they are exchanged two by two, one passing in front of
+ * on a table; they all lift together to show the single ball under one of them (point 43, 26/11/2026), then they are
+ * exchanged two by two, one passing in front of
  * the other in an arc. The player fixates the cup hiding the ball: the right one lifts and shows it; a wrong one lifts
  * empty, then the right one shows the ball, a mistake is counted and a life is lost. 3, 4 or 5 cups, more exchanges
  * and faster by the level; three lives (hearts); the game ends after 3, 5 or 10 balls found ("Bravo"), or never, or
@@ -284,10 +285,13 @@ public class CupsAndBalls implements GameLifeCycle {
             }
             case SHOW_BALL -> {
                 elapsed += scaled;
-                ballCup.lift = liftAt(elapsed);
+                // All the cups lift together: a single ball, under one of them (tester's feedback of 23/11/2026,
+                // point 43: only the cup of the ball lifted, just after the one of the round before)
+                final double lift = liftAt(elapsed);
+                cups.forEach(cup -> cup.lift = lift);
                 placeAll();
                 if (elapsed >= 2 * LIFT + HOLD + BEFORE) {
-                    ballCup.lift = 0;
+                    cups.forEach(cup -> cup.lift = 0);
                     startExchange();
                 }
             }
@@ -319,13 +323,19 @@ public class CupsAndBalls implements GameLifeCycle {
             case PLAY -> fixate(seconds);
             case REVEAL -> {
                 elapsed += scaled;
-                // The chosen cup lifts; after a wrong one, the right one too
+                // The chosen cup lifts; after a wrong one, the right one too; then they go down (point 43: they fell
+                // at once when the next round started)
                 chosen.lift = Math.min(1, elapsed / LIFT);
                 if (chosen != ballCup) {
                     ballCup.lift = Math.max(0, Math.min(1, (elapsed - LIFT) / LIFT));
                 }
+                if (elapsed > REVEAL) {
+                    final double down = Math.max(0, 1 - (elapsed - REVEAL) / LIFT);
+                    chosen.lift = Math.min(chosen.lift, down);
+                    ballCup.lift = Math.min(ballCup.lift, down);
+                }
                 placeAll();
-                if (elapsed >= REVEAL) {
+                if (elapsed >= REVEAL + LIFT) {
                     afterRound();
                 }
             }
