@@ -329,7 +329,8 @@ public class BibouleJump implements GameLifeCycle {
             return;
         }
         moveSideways(scaled);
-        moveUpAndDown(scaled);
+        // The jumps and the falls slower at the easy levels, as high (point 52): their own time goes slower
+        moveUpAndDown(scaled / level.getJumpSlowness());
         scrollIfHigh();
         placeBiboule();
         if (feetY - pictureHeight * FEET_IN_PICTURE > height) {

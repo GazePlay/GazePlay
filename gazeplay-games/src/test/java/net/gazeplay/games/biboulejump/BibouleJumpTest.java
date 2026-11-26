@@ -154,6 +154,44 @@ class BibouleJumpTest {
         }
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 52: the jumps and the falls slower at the easy levels (by the level,
+     * maintainer's choice of 26/11/2026), as high; the Biboule goes sideways as fast.
+     */
+    @Test
+    void shouldJumpMoreSlowlyAtTheEasyLevelsAsHigh() throws Exception {
+        final double[] times = new double[BibouleJumpLevel.values().length];
+        final double[] heights = new double[times.length];
+        final double[] sideways = new double[times.length];
+        for (final BibouleJumpLevel level : BibouleJumpLevel.values()) {
+            final BibouleJump game = launched(level, BibouleJumpEnd.ENDLESS, 1);
+            fx(() -> {
+                steps(game, BibouleJump.FIRST_WAIT);
+                final double start = game.getFeetY();
+                final double x = game.getBibouleX();
+                game.aimAt(x + game.getWidth());
+                double time = 0;
+                double highest = start;
+                // Up to the top of the jump (the clouds start going down above a line: the score gives the rest)
+                while (game.getVelocity() < 0 && time < 5) {
+                    game.step(STEP);
+                    time += STEP;
+                    highest = Math.min(highest, game.getFeetY());
+                }
+                times[level.ordinal()] = time;
+                heights[level.ordinal()] = (start - highest) / game.getHeight() + game.getScore() / 100.0;
+                sideways[level.ordinal()] = (game.getBibouleX() - x) / time;
+                return null;
+            });
+        }
+        final int easy = BibouleJumpLevel.EASY.ordinal();
+        final int hard = BibouleJumpLevel.HARD.ordinal();
+        assertEquals(BibouleJumpLevel.EASY.getJumpSlowness(), times[easy] / times[hard], 0.1);
+        assertTrue(times[BibouleJumpLevel.NORMAL.ordinal()] > times[hard]);
+        assertEquals(heights[hard], heights[easy], 0.03, "as high");
+        assertEquals(sideways[hard], sideways[easy], sideways[hard] * 0.05, "as fast sideways");
+    }
+
     @Test
     void shouldPutTheCloudsWithinReachAndInsideTheScreen() throws Exception {
         for (final BibouleJumpLevel level : BibouleJumpLevel.values()) {
