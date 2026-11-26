@@ -60,12 +60,11 @@ public class Horses implements GameLifeCycle {
 
     /**
      * The rolls in a row without any move after which the die shows the face needed (point 76): for a person, for the
-     * computer to leave its stable, for the computer to arrive (maintainer's choices of 26/11/2026: 2 rolls for a person,
-     * 3 for the computer, to leave as to arrive; the tester proposed 3, and 5 for the computer to leave).
+     * computer, to leave the stable as to arrive (maintainer's choices of 26/11/2026; the tester proposed 3, and 5 for
+     * the computer to leave).
      */
     static final int PERSON_TRIES = 2;
-    static final int COMPUTER_TRIES_TO_LEAVE = 3;
-    static final int COMPUTER_TRIES_TO_ARRIVE = 3;
+    static final int COMPUTER_TRIES = 3;
 
     /**
      * The teams, each with its color.
@@ -306,9 +305,7 @@ public class Horses implements GameLifeCycle {
         if (needed == 0) {
             return 0;
         }
-        final int most = !computerPlays() ? PERSON_TRIES : needed == 6 && finishing == 0 ? COMPUTER_TRIES_TO_LEAVE
-            : COMPUTER_TRIES_TO_ARRIVE;
-        return tries >= most ? needed : 0;
+        return tries >= (computerPlays() ? COMPUTER_TRIES : PERSON_TRIES) ? needed : 0;
     }
 
     /**

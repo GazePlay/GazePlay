@@ -335,7 +335,9 @@ public class Scribble implements GameLifeCycle {
             // Alone on its row, the last button is in its middle
             final boolean alone = slot == grid.size() - 1 && slot % 2 == 0;
             final double cx = x0 + (alone ? 1 : slot % 2 + 0.5) * cell;
-            final double cy = y0 + (slot / 2 + 0.5) * cell;
+            // The row of the slot (two buttons a row)
+            final int row = Math.floorDiv(slot, 2);
+            final double cy = y0 + (row + 0.5) * cell;
             addTool(cx, cy, radius, spec.kind(), spec.color(), spec.widthIndex(), true);
         }
         final double lastY = y0 + (rows + 1) * cell;
