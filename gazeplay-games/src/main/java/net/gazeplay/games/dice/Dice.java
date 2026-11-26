@@ -63,6 +63,15 @@ public class Dice implements GameLifeCycle {
     static final double REVEAL = 2.2;
     static final double SHAKE = 0.45;
     static final double SHOW = 2.2;
+    /**
+     * Throwing (point 61): the seconds between two elements of the sum written.
+     */
+    static final double SUM_STEP = 0.6;
+    /**
+     * How much the halo round the "Roll" button grows, and in how many seconds (point 59).
+     */
+    static final double HALO_PULSE = 0.06;
+    static final double HALO_PERIOD = 1.4;
 
     private static final String SOUNDS = "data/dice/sounds/";
     private static final Color FELT_CENTER = Color.rgb(64, 142, 96);
@@ -125,6 +134,24 @@ public class Dice implements GameLifeCycle {
     private Group message;
     private FixationRing ring;
     private final List<DiceRoller> dice = new ArrayList<>();
+    /**
+     * The views of the dice (throwing: each one grows when its number is written in the sum, point 61).
+     */
+    private final List<Node> diceViews = new ArrayList<>();
+    /**
+     * The halo round the "Roll" button, pulsing while the dice can be rolled (point 59).
+     */
+    @Getter
+    private Group halos;
+    private double haloTime;
+    /**
+     * Throwing (point 61): the sum written element by element ("6 + 6 = 12"), the elements written, and the time since
+     * the last one.
+     */
+    private final List<String> sumParts = new ArrayList<>();
+    @Getter
+    private int sumShown;
+    private double sumElapsed;
     @Getter
     private final List<Spot> dieSpots = new ArrayList<>();
     @Getter
@@ -222,6 +249,7 @@ public class Dice implements GameLifeCycle {
             shadow.setMouseTransparent(true);
             final Circle zone = new Circle(x, diceY, dieSide * 0.82, Color.TRANSPARENT);
             diceLayer.getChildren().addAll(shadow, zone, view);
+            diceViews.add(view);
             dice.add(die);
             final int index = i;
             final Spot spot = new Spot(zone, x, diceY, dieSide * 1.75, () -> rollOne(index));
@@ -279,9 +307,16 @@ public class Dice implements GameLifeCycle {
     }
 
     /**
-     * @return the round "Roll" button: an orange disc with a die, its name under it
+     * @return the round "Roll" button: an orange disc with a die, its name under it, and a soft halo round it which
+     * pulses while the dice can be rolled (tester's feedback of 23/11/2026, point 59: what to look at to roll was not
+     * clear; maintainer's choice of 26/11/2026: the button kept, with the halo, in both modes)
      */
     private Group rollButton() {
+        final Circle halo = new Circle(buttonX, buttonY, buttonRadius * 1.6);
+        halo.setFill(new RadialGradient(0, 0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
+            new Stop(0.55, Color.rgb(255, 236, 150, 0.6)), new Stop(1, Color.rgb(255, 236, 150, 0))));
+        halos = new Group(halo);
+        halos.setMouseTransparent(true);
         final Circle disc = new Circle(buttonX, buttonY, buttonRadius, BUTTON);
         disc.setStroke(Color.rgb(255, 250, 240));
         disc.setStrokeWidth(Math.max(3, buttonRadius * 0.07));
@@ -292,7 +327,7 @@ public class Dice implements GameLifeCycle {
         face.setFill(Color.rgb(251, 250, 246));
         face.setStroke(Color.rgb(222, 217, 206));
         face.setStrokeWidth(Math.max(1, side * 0.03));
-        final Group group = new Group(disc, face);
+        final Group group = new Group(halos, disc, face);
         final double[][] pips = {{-1, -1}, {1, -1}, {0, 0}, {-1, 1}, {1, 1}};
         for (final double[] pip : pips) {
             final Circle dot = new Circle(buttonX + pip[0] * side * 0.27, buttonY + pip[1] * side * 0.27,
@@ -340,6 +375,8 @@ public class Dice implements GameLifeCycle {
             return;
         }
         cards.forEach(card -> card.shake(seconds));
+        pulseHalos(seconds);
+        writeSum(seconds);
         switch (phase) {
             case WAIT -> {
                 elapsed += seconds;
@@ -423,7 +460,7 @@ public class Dice implements GameLifeCycle {
         if (gameContext.isSelectionBlocked()) {
             // During the delay after new choices: the fixation does not start (it starts once the delay is over)
             progress = 0;
-            ring.stop();
+            stopRing();
             return;
         }
         if (!ring.isVisible()) {
@@ -434,7 +471,7 @@ public class Dice implements GameLifeCycle {
         if (progress >= 1) {
             final Spot spot = looked;
             progress = 0;
-            ring.stop();
+            stopRing();
             spot.action.run();
         }
     }
@@ -444,13 +481,19 @@ public class Dice implements GameLifeCycle {
         ring.show(spot.x, spot.y);
     }
 
+    private void stopRing() {
+        if (ring != null) {
+            ring.stop();
+        }
+    }
+
     void lookAt(final Spot spot) {
         if (looked == spot) {
             return;
         }
         looked = spot;
         progress = 0;
-        ring.stop();
+        stopRing();
         paintCards();
         if (isEnabled(spot) && !gameContext.isSelectionBlocked()) {
             showRing(spot);
@@ -461,7 +504,7 @@ public class Dice implements GameLifeCycle {
         if (looked == spot) {
             looked = null;
             progress = 0;
-            ring.stop();
+            stopRing();
             paintCards();
         }
     }
@@ -498,9 +541,15 @@ public class Dice implements GameLifeCycle {
         rolls++;
         looked = null;
         progress = 0;
-        ring.stop();
+        stopRing();
         rollSpot.node.setVisible(mode == DiceMode.THROW);
         message.getChildren().clear();
+        sumParts.clear();
+        sumShown = 0;
+        diceViews.forEach(view -> {
+            view.setScaleX(1);
+            view.setScaleY(1);
+        });
         if (mode == DiceMode.THROW) {
             stats.incrementNumberOfGoalsToReach();
             stats.incrementNumberOfGoalsReached();
@@ -625,7 +674,7 @@ public class Dice implements GameLifeCycle {
         if (looked != null && looked.card != null) {
             looked = null;
             progress = 0;
-            ring.stop();
+            stopRing();
         }
         cards.clear();
         cardsLayer.getChildren().clear();
@@ -639,14 +688,76 @@ public class Dice implements GameLifeCycle {
     }
 
     /**
-     * Throwing: the total, in a large label above the dice.
+     * The halo round the "Roll" button: seen only while the dice can be rolled, growing and shrinking a little.
+     */
+    private void pulseHalos(final double seconds) {
+        if (halos == null) {
+            return;
+        }
+        halos.setVisible(phase == Phase.READY);
+        haloTime += seconds;
+        final double scale = 1 + HALO_PULSE * Math.sin(haloTime * 2 * Math.PI / HALO_PERIOD);
+        halos.setScaleX(scale);
+        halos.setScaleY(scale);
+    }
+
+    /**
+     * Throwing: the sum, written above the dice element by element ("6 + 6 = 12"; tester's feedback of 23/11/2026,
+     * point 61: the label "Total 12" was fixed, and "Total" not read by everyone), each die growing when its number is
+     * written, the total in the end. A single die: its number.
      */
     private void showTotal() {
-        final Group pill = GameStyle.pill(gameContext.getTranslator().translate("DiceTotal") + " " + total,
-            height * 0.075);
-        pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
-        pill.setLayoutY(height * 0.1);
-        message.getChildren().setAll(pill);
+        sumParts.clear();
+        for (int i = 0; i < diceCount; i++) {
+            if (i > 0) {
+                sumParts.add("+");
+            }
+            sumParts.add(Integer.toString(faces[i]));
+        }
+        if (diceCount > 1) {
+            sumParts.add("=");
+            sumParts.add(Integer.toString(total));
+        }
+        sumShown = 0;
+        sumElapsed = SUM_STEP;
+        writeSum(0);
+    }
+
+    /**
+     * One step of the sum being written: the next element after {@link #SUM_STEP} seconds, and the die of the number
+     * just written growing then shrinking back.
+     */
+    private void writeSum(final double seconds) {
+        if (mode != DiceMode.THROW || sumParts.isEmpty()) {
+            return;
+        }
+        sumElapsed += seconds;
+        if (sumShown < sumParts.size() && sumElapsed >= SUM_STEP) {
+            sumElapsed = 0;
+            sumShown++;
+            final boolean complete = sumShown == sumParts.size();
+            final Group pill = GameStyle.pill(String.join(" ", sumParts.subList(0, sumShown)),
+                height * (complete ? 0.085 : 0.07));
+            pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
+            pill.setLayoutY(height * 0.1);
+            message.getChildren().setAll(pill);
+        }
+        // The die of the last number written (the numbers of the dice are the even elements before "=")
+        final int last = sumShown - 1;
+        final int die = last % 2 == 0 && last < 2 * diceCount - 1 ? last / 2 : -1;
+        for (int i = 0; i < diceViews.size(); i++) {
+            final double t = sumElapsed / SUM_STEP;
+            final double scale = i == die && t < 0.8 ? 1 + 0.18 * Math.sin(Math.PI * t / 0.8) : 1;
+            diceViews.get(i).setScaleX(scale);
+            diceViews.get(i).setScaleY(scale);
+        }
+    }
+
+    /**
+     * @return the sum written now (for the tests)
+     */
+    String sumText() {
+        return String.join(" ", sumParts.subList(0, sumShown));
     }
 
     /**
@@ -703,7 +814,7 @@ public class Dice implements GameLifeCycle {
         phase = Phase.OVER;
         loop.stop();
         if (ring != null) {
-            ring.stop();
+            stopRing();
         }
         new ArrayList<>(gazeNodes).forEach(this::forget);
         cards.clear();

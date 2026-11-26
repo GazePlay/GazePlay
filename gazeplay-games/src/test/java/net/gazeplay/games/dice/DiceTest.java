@@ -358,9 +358,70 @@ class DiceTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 59 (maintainer's choice of 26/11/2026): in both modes, a halo round the
+     * "Roll" button pulses while the dice can be rolled, and goes while they roll.
+     */
+    @Test
+    void shouldMakeTheRollButtonGlowWhileTheDiceCanBeRolled() throws Exception {
+        for (final DiceMode mode : DiceMode.values()) {
+            final Dice game = launched(mode, 2, DiceEnd.ENDLESS, DiceMistakes.SEARCH_AGAIN);
+            fx(() -> {
+                final javafx.scene.Group halo = game.getHalos();
+                assertTrue(((javafx.scene.Group) game.getRollSpot().getNode()).getChildren().contains(halo));
+                steps(game, 0.02);
+                assertTrue(halo.isVisible(), mode.toString());
+                final double before = halo.getScaleX();
+                steps(game, Dice.HALO_PERIOD / 4);
+                assertNotEquals(before, halo.getScaleX(), 1e-6);
+                enter(game.getRollSpot());
+                steps(game, 0.6);
+                assertEquals(Dice.Phase.ROLLING, game.getPhase());
+                assertFalse(halo.isVisible(), "not while rolling");
+                return null;
+            });
+        }
+    }
+
+    /**
+     * Tester's feedback of 23/11/2026, point 61: throwing, the sum is written element by element, "3 + 5 = 8"; a
+     * single die, its number.
+     */
+    @Test
+    void shouldWriteTheSumElementByElementWhenThrowing() throws Exception {
+        final Dice game = launched(DiceMode.THROW, 2, DiceEnd.ENDLESS, DiceMistakes.SEARCH_AGAIN);
+        fx(() -> {
+            roll(game);
+            final String first = Integer.toString(game.getFaces()[0]);
+            assertEquals(first, game.sumText());
+            steps(game, Dice.SUM_STEP);
+            assertEquals(first + " +", game.sumText());
+            steps(game, 3 * Dice.SUM_STEP);
+            assertEquals(first + " + " + game.getFaces()[1] + " = " + game.getTotal(), game.sumText());
+            assertEquals(1, game.getMessage().getChildren().size());
+            return null;
+        });
+        final Dice one = launched(DiceMode.THROW, 1, DiceEnd.ENDLESS, DiceMistakes.SEARCH_AGAIN);
+        fx(() -> {
+            roll(one);
+            steps(one, 3 * Dice.SUM_STEP);
+            assertEquals(Integer.toString(one.getTotal()), one.sumText());
+            return null;
+        });
+    }
+
     @Test
     void shouldOfferBothModes() {
         final Set<IGameVariant> variants = new DiceGameVariantGenerator().getVariants();
+        // Throwing first since 26/11/2026 (point 60), with an end of its own: the window offers counting with 5 totals
+        final GroupedGameVariant first = (GroupedGameVariant) variants.iterator().next();
+        assertEquals(DiceMode.THROW.getKey(), first.getGroup());
+        assertTrue(variants.stream().map(GroupedGameVariant.class::cast)
+            .filter(variant -> variant.getGroup().equals(DiceMode.COUNT.getKey()))
+            .noneMatch(variant -> variant.getSubGroup().equals(first.getSubGroup())));
+        assertEquals(DiceEnd.FOUND_5.getKey(), variants.stream().map(GroupedGameVariant.class::cast)
+            .filter(variant -> variant.getGroup().equals(DiceMode.COUNT.getKey())).findFirst().orElseThrow()
+            .getSubGroup());
         // Counting: 4 ends x 2 ways x 3 levels; throwing: 1 to 6 dice
         assertEquals(4 * 2 * 3 + 6, variants.size());
         final long throwing = variants.stream().map(GroupedGameVariant.class::cast)

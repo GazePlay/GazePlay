@@ -2,11 +2,11 @@
 Dice on a game table. Count their points and find the right total, or just throw them for a board game.
 
 # How to play
-- Look at the round "Roll" button: a ring fills, then the dice roll. Its length is that of the settings, also changed in the menu (Esc key).
+- Look at the round "Roll" button at the bottom: it glows when the dice can be rolled. A ring fills, then the dice roll. In "Throw the dice", you can also look at one die to roll it alone. The length of the ring is that of the settings, also changed in the menu (Esc key).
 - Count the points: when the dice have stopped, three cards show numbers. Look at the card of the right total: it turns green with a check, then you roll the dice again.
 - A wrong card shows a cross. With hearts, you lose one of 3 hearts and the right total is shown; without hearts, it turns grey and you look again.
-- Throw the dice: the total is shown at the top when the dice have stopped. Look at one die to roll it alone.
-- Nothing rolls while the dice are rolling. At the start, when the dice settle and when the "Roll" button comes back, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
+- Throw the dice: when the dice have stopped, the sum is written at the top, little by little ("6 + 6 = 12"): each die grows when its number is written, then the total comes. With a single die, its number.
+- Nothing rolls while the dice are rolling. At the start, when the dice settle and when the dice can be rolled again, nothing is chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - Nothing moves while the menu (Esc key) is open.
 
 # How to win
@@ -15,7 +15,7 @@ Throw the dice has no end: it is a tool to play a board game.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- At the bottom, the mode: Count the points or Throw the dice.
+- At the bottom, the mode: Throw the dice (offered first) or Count the points.
 - Count the points, the level: Easy, 1 die (1 to 6 points); Medium, 2 dice (2 to 12); Hard, 3 dice (3 to 18). The wrong totals are always close to the right one.
 - Count the points, at the bottom: the end (5, 10 or 20 totals, or without end) and the hearts: With hearts (3 hearts) or Without hearts (look again until found).
 - Throw the dice: 1 to 6 dice.

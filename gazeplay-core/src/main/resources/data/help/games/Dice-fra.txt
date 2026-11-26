@@ -2,11 +2,11 @@
 Des dés sur un tapis de jeu. Compte leurs points et trouve le bon total, ou lance-les simplement pour un jeu de société.
 
 # Comment jouer
-- Regarde le bouton rond « Lancer » : un anneau se remplit, puis les dés roulent. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Regarde le bouton rond « Lancer » en bas : il brille quand on peut lancer. Un anneau se remplit, puis les dés roulent. En « Lancer les dés », tu peux aussi regarder un seul dé pour ne relancer que lui. La durée de l'anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Compter les points : quand les dés se sont arrêtés, trois cartes montrent des nombres. Regarde la carte du bon total : elle devient verte avec une coche, puis tu relances les dés.
 - Une mauvaise carte montre une croix. Avec cœurs, tu perds un des 3 cœurs et le bon total est montré ; sans cœurs, elle devient grise et tu cherches encore.
-- Lancer les dés : le total s’affiche en haut quand les dés se sont arrêtés. Regarde un seul dé pour ne relancer que lui.
-- Rien ne se lance pendant que les dés roulent. Au début, quand les dés s'arrêtent et quand le bouton « Lancer » revient, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
+- Lancer les dés : quand les dés se sont arrêtés, le calcul s'écrit en haut, petit à petit (« 6 + 6 = 12 ») : chaque dé grossit quand son nombre s'écrit, puis le total arrive. Avec un seul dé, son nombre.
+- Rien ne se lance pendant que les dés roulent. Au début, quand les dés s'arrêtent et quand on peut relancer, rien ne se choisit pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
@@ -15,7 +15,7 @@ Lancer les dés n’a pas de fin : c’est un outil pour jouer à un jeu de soci
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- En bas, le mode : Compter les points ou Lancer les dés.
+- En bas, le mode : Lancer les dés (proposé d'abord) ou Compter les points.
 - Compter les points, le niveau : Facile, 1 dé (de 1 à 6 points) ; Moyen, 2 dés (de 2 à 12) ; Difficile, 3 dés (de 3 à 18). Les mauvais totaux sont toujours proches du bon.
 - Compter les points, en bas : la fin (5, 10 ou 20 totaux, ou sans fin) et les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (chercher jusqu’à trouver).
 - Lancer les dés : de 1 à 6 dés.
