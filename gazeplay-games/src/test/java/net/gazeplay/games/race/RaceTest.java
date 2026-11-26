@@ -202,6 +202,57 @@ class RaceTest {
         assertEquals(RaceVariant.HARD, FrogsRaceGameLauncher.variantOf(new EnumGameVariant<>(RaceVariant.HARD)));
     }
 
+    private static MouseEvent mouseExited() {
+        return new MouseEvent(MouseEvent.MOUSE_EXITED, 1, 1, 1, 1, MouseButton.NONE, 0, false, false, false, false,
+            false, false, false, false, false, false, null);
+    }
+
+    /**
+     * Maintainer's request of 26/11/2026: the bugs caught as soon as looked at, or after a fixation; left, a fixation
+     * starts again from zero, or keeps its progress with the setting of the moving targets, offered in the menu.
+     */
+    @Test
+    void shouldCatchABugAfterAFixation() throws Exception {
+        when(configuration.getFixationLength()).thenReturn(300);
+        launched = WaitForAsyncUtils.asyncFx(() -> {
+            final Race race = new Race(gameContext, stats, RaceVariant.EASY, 1234).withCatch(RaceCatch.FIXATION);
+            launchedGames.add(race).launch();
+            return race;
+        }).get();
+        final Race race = launched;
+        assertTrue(race.menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+        final Race.Bug bug = race.getBugs().get(0);
+        WaitForAsyncUtils.asyncFx(() -> bug.fireEvent(mouseEntered())).get();
+        assertEquals(0, race.getCaught(), "not at once");
+        WaitForAsyncUtils.sleep(150, java.util.concurrent.TimeUnit.MILLISECONDS);
+        // Left: from zero again
+        WaitForAsyncUtils.asyncFx(() -> bug.fireEvent(mouseExited())).get();
+        assertEquals(0, bug.progress.get(), 1e-9);
+        // Kept with the setting
+        when(configuration.isMovingFixationKept()).thenReturn(true);
+        WaitForAsyncUtils.asyncFx(() -> bug.fireEvent(mouseEntered())).get();
+        WaitForAsyncUtils.sleep(150, java.util.concurrent.TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.asyncFx(() -> bug.fireEvent(mouseExited())).get();
+        final double kept = WaitForAsyncUtils.asyncFx(bug.progress::get).get();
+        assertTrue(kept > 0.2, "kept " + kept);
+        WaitForAsyncUtils.asyncFx(() -> bug.fireEvent(mouseEntered())).get();
+        WaitForAsyncUtils.sleep(400, java.util.concurrent.TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(1, race.getCaught());
+        assertEquals(1, race.getPlayer().hops);
+
+        assertFalse(launchedRace(RaceVariant.EASY).menuSettings().contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
+        // The variants: the 3 speeds, caught at once (first) or after a fixation
+        final java.util.List<net.gazeplay.commons.gamevariants.IGameVariant> variants =
+            new java.util.ArrayList<>(new FrogsRaceGameVariantGenerator().getVariants());
+        assertEquals(6, variants.size());
+        assertEquals(RaceCatch.AT_ONCE, FrogsRaceGameLauncher.catchOf(variants.getFirst()));
+        assertEquals(RaceVariant.EASY, FrogsRaceGameLauncher.variantOf(variants.getFirst()));
+        assertEquals(RaceCatch.FIXATION, FrogsRaceGameLauncher.catchOf(variants.getLast()));
+        assertEquals(RaceVariant.HARD, FrogsRaceGameLauncher.variantOf(variants.getLast()));
+        assertEquals(RaceCatch.AT_ONCE, FrogsRaceGameLauncher.catchOf(new EnumGameVariant<>(RaceVariant.HARD)));
+    }
+
     /**
      * At the end of the game, the bugs no longer listen to the gaze and nothing is left.
      */

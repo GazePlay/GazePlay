@@ -2,7 +2,7 @@
 Une course de grenouilles sur la mare : attrape des insectes pour faire avancer ta grenouille.
 
 # Comment jouer
-- Des insectes volent dans le ciel. Regarde un insecte : la grenouille de la rive tire la langue et l'attrape (pas besoin de fixer longtemps).
+- Des insectes volent dans le ciel. Regarde un insecte : la grenouille de la rive tire la langue et l'attrape. Selon la variante, dès que tu le regardes, ou après une fixation : un anneau fait le tour de l'insecte pendant que tu le suis des yeux (durée de fixation des réglages). Si ton regard le quitte, l'anneau repart de zéro, ou garde son avance si le réglage des cibles en mouvement le demande (menu, touche Échap).
 - À chaque insecte attrapé, ta grenouille saute d'une case. C'est la grenouille verte, sur le couloir du haut marqué « Toi ».
 - Les trois autres grenouilles sautent toutes seules.
 
@@ -13,6 +13,7 @@ Une course de grenouilles sur la mare : attrape des insectes pour faire avancer
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
-- Facile : les autres grenouilles mettent entre 1 min 30 et 1 min 50 pour arriver ; tu as le temps (20 insectes à attraper).
-- Moyen : elles mettent entre 1 min et 1 min 15 pour arriver ; il ne faut pas trop traîner.
-- Difficile : elles mettent entre 40 et 50 secondes pour arriver ; il faut attraper les insectes sans attendre.
+- Facile : les autres grenouilles mettent entre 1 min et 1 min 15 pour arriver ; tu as le temps (20 insectes à attraper).
+- Moyen : elles mettent entre 35 et 45 secondes pour arriver ; il ne faut pas trop traîner.
+- Difficile : elles mettent entre 20 et 26 secondes pour arriver ; il faut attraper les insectes sans attendre.
+- En bas, comment attraper les insectes : dès qu'on les regarde, ou après une fixation (plus difficile).

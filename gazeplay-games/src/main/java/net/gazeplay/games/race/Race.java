@@ -8,6 +8,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -17,6 +19,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
@@ -29,6 +33,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -72,6 +77,11 @@ public class Race extends Parent implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final RaceVariant variant;
+    /**
+     * How a bug is caught (26/11/2026): at once, the game of before, when not chosen.
+     */
+    @Getter
+    private RaceCatch catchWay = RaceCatch.AT_ONCE;
     private final ReplayablePseudoRandom random;
 
     private final Image catcherImage = new Image(IMAGES + "frog-catcher.png");
@@ -122,6 +132,15 @@ public class Race extends Parent implements GameLifeCycle {
         }
     }
 
+    /**
+     * @param catchWay how a bug is caught, before the launch
+     * @return this game
+     */
+    public Race withCatch(final RaceCatch catchWay) {
+        this.catchWay = catchWay == null ? RaceCatch.AT_ONCE : catchWay;
+        return this;
+    }
+
     @Override
     public void launch() {
         raceOver = false;
@@ -146,7 +165,9 @@ public class Race extends Parent implements GameLifeCycle {
         }
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.setOffFixationLengthControl();
+        if (catchWay == RaceCatch.AT_ONCE) {
+            gameContext.setOffFixationLengthControl();
+        }
 
         for (final Racer racer : racers) {
             if (!racer.player) {
@@ -160,6 +181,7 @@ public class Race extends Parent implements GameLifeCycle {
         animations.forEach(Animation::stop);
         animations.clear();
         for (final Bug bug : bugs) {
+            bug.stopFixation();
             gameContext.getGazeDeviceManager().removeEventFilter(bug);
         }
         bugs.clear();
@@ -311,8 +333,16 @@ public class Race extends Parent implements GameLifeCycle {
         final Bug bug = new Bug(bugImages[random.nextInt(bugImages.length)], flashImage, bugSize());
         bug.setLayoutX(randomBugX());
         bug.setLayoutY(randomBugY());
-        bug.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> catchBug(bug));
-        bug.addEventHandler(GazeEvent.GAZE_ENTERED, e -> catchBug(bug));
+        if (catchWay == RaceCatch.AT_ONCE) {
+            bug.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> catchBug(bug));
+            bug.addEventHandler(GazeEvent.GAZE_ENTERED, e -> catchBug(bug));
+        } else {
+            // After a fixation; a bug left keeps its progress when the setting of the moving targets says so
+            bug.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> startFixation(bug));
+            bug.addEventHandler(GazeEvent.GAZE_ENTERED, e -> startFixation(bug));
+            bug.addEventHandler(MouseEvent.MOUSE_EXITED, e -> leaveFixation(bug));
+            bug.addEventHandler(GazeEvent.GAZE_EXITED, e -> leaveFixation(bug));
+        }
         gameContext.getGazeDeviceManager().addEventFilter(bug);
         bugs.add(bug);
         // Behind the frog of the bank and the score
@@ -350,13 +380,46 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     /**
-     * The frog of the bank shoots its tongue at the bug, which is caught: counted, then replaced by another one; the
-     * frog of the player hops.
+     * The gaze (or the mouse) on a bug, catching after a fixation: the ring goes round it, from where it stopped if its
+     * fixation was kept.
      */
-    private void catchBug(final Bug bug) {
+    void startFixation(final Bug bug) {
         if (bug.caught || raceOver) {
             return;
         }
+        if (bug.fixation != null && bug.fixation.getStatus() == Animation.Status.PAUSED) {
+            bug.fixation.play();
+            return;
+        }
+        bug.stopFixation();
+        bug.fixation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(bug.progress, 0)),
+            new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()),
+                new KeyValue(bug.progress, 1)));
+        bug.fixation.setOnFinished(e -> catchBug(bug));
+        bug.fixation.playFromStart();
+    }
+
+    /**
+     * The gaze leaving a bug during its fixation: it starts again from zero, or keeps its progress with the setting of
+     * the moving targets (menu Esc).
+     */
+    void leaveFixation(final Bug bug) {
+        if (bug.fixation != null && gameContext.getConfiguration().isMovingFixationKept()) {
+            bug.fixation.pause();
+        } else {
+            bug.stopFixation();
+        }
+    }
+
+    /**
+     * The frog of the bank shoots its tongue at the bug, which is caught: counted, then replaced by another one; the
+     * frog of the player hops.
+     */
+    void catchBug(final Bug bug) {
+        if (bug.caught || raceOver) {
+            return;
+        }
+        bug.stopFixation();
         bug.caught = true;
         bug.flight.stop();
         animations.remove(bug.flight);
@@ -529,6 +592,12 @@ public class Race extends Parent implements GameLifeCycle {
         final ImageView flash;
         TranslateTransition flight;
         boolean caught;
+        /**
+         * The fixation catching it (26/11/2026), and its ring going round the bug.
+         */
+        Timeline fixation;
+        final DoubleProperty progress = new SimpleDoubleProperty(0);
+        final Arc ring;
 
         Bug(final Image picture, final Image flashPicture, final double size) {
             final ImageView view = new ImageView(picture);
@@ -538,18 +607,45 @@ public class Race extends Parent implements GameLifeCycle {
             flash.setPreserveRatio(true);
             flash.setFitHeight(size * 1.3);
             flash.setOpacity(0);
-            getChildren().addAll(flash, view);
+            final double radius = size * 0.62;
+            ring = new Arc(0, 0, radius, radius, 90, 0);
+            ring.setType(ArcType.OPEN);
+            ring.setFill(null);
+            // Straight ends: full only when it is (tester, point 33)
+            ring.setStrokeLineCap(StrokeLineCap.BUTT);
+            ring.setStyle("-fx-stroke: -gp-ring;");
+            RingThickness.apply(ring, Math.max(4, size * 0.07));
+            ring.setMouseTransparent(true);
+            progress.addListener((observable, oldValue, newValue) -> ring.setLength(-360 * newValue.doubleValue()));
+            // In a group of a fixed size, so that the ring growing does not move the bug
+            final Rectangle room = new Rectangle(-radius * 1.2, -radius * 1.2, radius * 2.4, radius * 2.4);
+            room.setFill(null);
+            final Group ringGroup = new Group(room, ring);
+            ringGroup.setMouseTransparent(true);
+            getChildren().addAll(flash, view, ringGroup);
             setPrefSize(size * 1.4, size);
             setMinSize(size * 1.4, size);
             setMaxSize(size * 1.4, size);
         }
+
+        void stopFixation() {
+            if (fixation != null) {
+                fixation.stop();
+                fixation = null;
+            }
+            progress.set(0);
+        }
     }
 
     /**
-     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed
+     * @return the settings of the menu (Esc) acting on this game (17/11/2026): the others are greyed; after a fixation,
+     * its length, its ring, and whether a fixation left keeps its progress (26/11/2026)
      */
     @Override
     public java.util.Set<net.gazeplay.MenuSetting> menuSettings() {
-        return net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
+        return catchWay == RaceCatch.FIXATION
+            ? net.gazeplay.MenuSetting.fixationWithOwnRing(net.gazeplay.MenuSetting.ANIMATION_SPEED,
+                net.gazeplay.MenuSetting.MOVING_FIXATION)
+            : net.gazeplay.MenuSetting.of(net.gazeplay.MenuSetting.ANIMATION_SPEED);
     }
 }

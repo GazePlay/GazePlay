@@ -128,6 +128,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 55 | La course de grenouilles | Niveaux trop simples | Adverses plus rapides : Facile 60 à 75 s, Moyen 35 à 45 s, Difficile 20 à 26 s (90-110, 60-75, 40-50 avant ; estimation à ajuster à l'essai) ; demande du mainteneur : interrupteur « Attrapés dès qu'on les regarde / après une fixation » (anneau autour de l'insecte, réglage des cibles en mouvement dans le menu Échap) ; couleurs des grenouilles non touchées ; aides |
 | 53 | Diviseur | Choix du fond | Selon le thème (choix du mainteneur) : Lapins garde la prairie aux œufs de Pâques ; Animaux et Mes images ont la même prairie sans œufs, dessinée par le jeu (touffes d'herbe) ; un disque blanc sous l'image de chaque cible (les images à fond transparent montraient l'herbe) ; aides |
 | 52 | Biboule Jump | Saut et chute plus lents | Selon le niveau (choix du mainteneur) : Facile 1,6 fois plus lents, Moyen 1,25 fois, Difficile comme avant ; même hauteur de saut, gauche-droite aussi rapide ; aides |
 | — | Menu (demande du mainteneur) | Nombre de variantes inutile | Ligne retirée du bas du menu, le nombre de jeux reste (`c93b94c58`) |
@@ -152,7 +153,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 41 | Piano | Animation de fin | |
 | 50 | Bulles | Jeu lent avec de grosses images (Mes images) | |
 | 54 | Course du regard | Adaptation au regard ; récompense à mesure qu'on évite les voitures | |
-| 55 | Course de grenouilles | Trois niveaux trop faciles ; grenouilles plus visibles que les Biboules | |
 | 59 | Dés | Icône « Lancer » ; dé à lancer surligné | |
 | 60 | Dés | Inverser les deux modes | |
 | 61 | Dés | Total plus visible (dit à voix haute, calcul décomposé) | |

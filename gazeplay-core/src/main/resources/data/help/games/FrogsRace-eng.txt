@@ -2,7 +2,7 @@
 A race of frogs on the pond: catch bugs to make your frog move forward.
 
 # How to play
-- Bugs fly in the sky. Look at a bug: the frog of the bank shoots its tongue and catches it (no need to look long).
+- Bugs fly in the sky. Look at a bug: the frog of the bank shoots its tongue and catches it. Depending on the variant, as soon as you look at it, or after a fixation: a ring goes round the bug while you follow it with your eyes (fixation length of the settings). If your gaze leaves it, the ring starts again from zero, or keeps its progress if the setting of the moving targets says so (menu, Esc key).
 - For each bug caught, your frog jumps one step. It is the green frog, on the top lane marked "You".
 - The three other frogs jump by themselves.
 
@@ -13,6 +13,7 @@ A race of frogs on the pond: catch bugs to make your frog move forward.
 
 # The variants
 Choose a variant (it is framed), then press "Start".
-- Easy: the other frogs take between 1 min 30 and 1 min 50 to arrive; you have time (20 bugs to catch).
-- Medium: they take between 1 min and 1 min 15 to arrive; do not dawdle.
-- Hard: they take between 40 and 50 seconds to arrive; catch the bugs without waiting.
+- Easy: the other frogs take between 1 min and 1 min 15 to arrive; you have time (20 bugs to catch).
+- Medium: they take between 35 and 45 seconds to arrive; do not dawdle.
+- Hard: they take between 20 and 26 seconds to arrive; catch the bugs without waiting.
+- At the bottom, how to catch the bugs: as soon as looked at, or after a fixation (harder).
