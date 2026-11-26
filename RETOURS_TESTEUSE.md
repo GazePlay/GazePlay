@@ -128,6 +128,8 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | 46 | Gribouille | Couleur blanche à la place de la gomme | Choix du mainteneur : la gomme reste, mais se voit : une gomme dessinée suit le regard sur la feuille (comme la pièce de Cartes à gratter), une brosse à tableau sur le tableau noir (aussi dans le bouton) ; largeur effacée 2,5 %, 4,5 % ou 7 % de la hauteur de l'écran selon l'épaisseur (avant : deux fois le trait) ; aides |
+| 47 | Gribouille | Points d'épaisseur de la couleur choisie | Points des 3 épaisseurs de la couleur choisie (en dégradé en Arc-en-ciel ; avec la gomme, la couleur qu'on retrouvera), contour de la couleur du texte des boutons ; aides |
+| — | Menu (demande du mainteneur) | Recherche vidée au retour d'une partie | Recherche, filtre « Favoris » et défilement gardés quand le menu est reconstruit (fin de partie, orientation des cartes), pas au changement de profil ; croix ronde pour vider la recherche, grisée quand elle est vide (`0500c0ada`) |
 
 ## À décider
 
@@ -141,7 +143,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |
 | 41 | Piano | Animation de fin | |
 | 43 | Gobelets Pass Pass | Transition entre deux tours trompeuse (la balle d'avant semble encore là) | |
-| 47 | Gribouille | Points d'épaisseur de la couleur choisie | |
 | 48 | Gribouille | Mode « la fixation commence et finit le trait » | |
 | 49 | Bulles | Mode plus facile (moins de bulles, plus grosses) | |
 | 50 | Bulles | Jeu lent avec de grosses images (Mes images) | |

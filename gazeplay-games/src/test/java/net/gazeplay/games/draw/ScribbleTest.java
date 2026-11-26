@@ -260,6 +260,38 @@ class ScribbleTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 47: the dots of the widths take the color chosen (the rainbow in the
+     * rainbow mode), and keep it with the eraser.
+     */
+    @Test
+    void shouldPaintTheDotsOfTheWidthsWithTheColorChosen() throws Exception {
+        final Scribble game = launched(ScribbleMode.PALETTE, ScribbleBackground.BOARD);
+        fx(() -> {
+            final java.util.List<Scribble.Tool> widths = game.getTools().stream()
+                .filter(tool -> tool.getKind() == Scribble.Tool.Kind.WIDTH).toList();
+            assertEquals(Scribble.WIDTHS.length, widths.size());
+            for (final Scribble.Tool width : widths) {
+                assertEquals(ScribbleBackground.BOARD.getInk(), width.getDot().getFill());
+            }
+            final Scribble.Tool red = game.getTools().stream()
+                .filter(tool -> tool.getKind() == Scribble.Tool.Kind.COLOR).skip(1).findFirst().orElseThrow();
+            game.use(red);
+            game.use(tool(game, Scribble.Tool.Kind.ERASER));
+            for (final Scribble.Tool width : widths) {
+                assertEquals(red.getColor(), width.getDot().getFill());
+            }
+            assertNull(tool(game, Scribble.Tool.Kind.SAVE).getDot());
+            return null;
+        });
+        final Scribble rainbow = launched(ScribbleMode.RAINBOW, ScribbleBackground.SHEET);
+        fx(() -> {
+            assertInstanceOf(javafx.scene.paint.LinearGradient.class,
+                tool(rainbow, Scribble.Tool.Kind.WIDTH).getDot().getFill());
+            return null;
+        });
+    }
+
     @Test
     void shouldChangeTheColorAlongTheLineInTheRainbowMode() throws Exception {
         final Scribble game = launched(ScribbleMode.RAINBOW, ScribbleBackground.SHEET);

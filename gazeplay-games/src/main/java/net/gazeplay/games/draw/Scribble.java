@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polyline;
@@ -342,7 +343,13 @@ public class Scribble implements GameLifeCycle {
     }
 
     private void paintTools() {
+        // The dots of the widths show what is drawn: the color chosen, or the rainbow (tester's feedback of
+        // 23/11/2026, point 47); with the eraser, the color it will go back to
+        final Paint dotPaint = mode == ScribbleMode.RAINBOW ? RAINBOW : color;
         for (final Tool tool : tools) {
+            if (tool.dot != null) {
+                tool.dot.setFill(dotPaint);
+            }
             final boolean chosen = switch (tool.kind) {
                 case COLOR -> !eraser && tool.color.equals(color);
                 case RAINBOW -> !eraser;
@@ -811,6 +818,10 @@ public class Scribble implements GameLifeCycle {
         private final Group node;
         private final Circle disc;
         private final Circle mark;
+        /**
+         * The dot of a width button, of the color chosen (point 47); null for the other buttons.
+         */
+        private Circle dot;
 
         Tool(final Kind kind, final Color color, final int widthIndex, final double x, final double y,
              final double radius) {
@@ -869,10 +880,12 @@ public class Scribble implements GameLifeCycle {
                     yield rubber;
                 }
                 case WIDTH -> {
-                    final Circle size = new Circle(x, y, Math.max(2, height * WIDTHS[widthIndex] * 0.9));
-                    // The text color of the button, so that the dot is seen on a light or a dark button
-                    size.setStyle(GameStyle.BUTTON_TEXT_STYLE);
-                    yield size;
+                    // Of the color chosen (see paintTools), with a ring of the text color of the button, so that a
+                    // white dot is seen on a light button and a black one on a dark button
+                    dot = new Circle(x, y, Math.max(2, height * WIDTHS[widthIndex] * 0.9));
+                    dot.setStyle("-fx-stroke: -gp-button-text;");
+                    dot.setStrokeWidth(Math.max(1, radius * 0.04));
+                    yield dot;
                 }
                 // A bin: clearer than a plus (maintainer, 26/11/2026)
                 case NEW_SHEET -> icon("delete");
@@ -934,6 +947,10 @@ public class Scribble implements GameLifeCycle {
 
         Group getNode() {
             return node;
+        }
+
+        Circle getDot() {
+            return dot;
         }
     }
 
