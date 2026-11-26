@@ -69,6 +69,11 @@ public class ScratchCard implements GameLifeCycle {
      */
     static final double LIFT_AFTER = 0.35;
     /**
+     * The least margin round the card where the gaze still moves the coin along the edge, as a part of the height of
+     * the screen (point 83).
+     */
+    static final double EDGE_MARGIN = 0.08;
+    /**
      * The seconds the rest of the coating takes to melt, then the seconds of the reward before the next card.
      */
     static final double MELT = 0.5;
@@ -135,7 +140,13 @@ public class ScratchCard implements GameLifeCycle {
     private PixelWriter coatingWriter;
     private int coatingWidth;
     private int coatingHeight;
+    @Getter
     private Rectangle zone;
+    /**
+     * Where the coin is, in the coordinates of the card.
+     */
+    private double coinX;
+    private double coinY;
     private GraphicsContext scraper;
     private boolean[][] scratched;
     private int rows;
@@ -299,7 +310,10 @@ public class ScratchCard implements GameLifeCycle {
         coating.setClip(rounded(cardWidth, cardHeight, arc));
         coating.setMouseTransparent(true);
         cardLayer.getChildren().add(coating);
-        zone = new Rectangle(0, 0, cardWidth, cardHeight);
+        // Larger than the card: the gaze a little out of it still moves the coin, along the edge (tester's feedback of
+        // 24/11/2026, point 83: the edges could not be scratched with a gaze a little off)
+        final double edge = edgeMargin();
+        zone = new Rectangle(-edge, -edge, cardWidth + 2 * edge, cardHeight + 2 * edge);
         zone.setLayoutX(x);
         zone.setLayoutY(y);
         zone.setFill(Color.TRANSPARENT);
@@ -330,6 +344,14 @@ public class ScratchCard implements GameLifeCycle {
         reward.toFront();
         hud.toFront();
         showScore();
+    }
+
+    /**
+     * @return how far out of the card the gaze still moves the coin along its edge (point 83): one and a half radius of
+     * the coin, at least 8 % of the height of the screen
+     */
+    double edgeMargin() {
+        return Math.max(radius * 1.5, height * EDGE_MARGIN);
     }
 
     private static Rectangle rounded(final double w, final double h, final double arc) {
@@ -433,19 +455,32 @@ public class ScratchCard implements GameLifeCycle {
 
     /**
      * A point of a source on the card (in the coordinates of the card): the scraper goes part of the way to it and
-     * scratches all along; it starts again where the source is when it was lifted or silent for a moment.
+     * scratches all along. Lifted (the source away from the card, or silent for a moment), the coin glides from where
+     * it is to the source, without scratching, then scratches again once it has caught it up (maintainer's feedback of
+     * 26/11/2026: it jumped to where the gaze came back).
      */
-    void scratch(final Pen source, final double x, final double y, final double smoothing) {
+    void scratch(final Pen source, final double gazeX, final double gazeY, final double smoothing) {
         if (phase != Phase.PLAY || Stats.isConfigMenuOpen()) {
             return;
         }
+        // Out of the card, in its margin: the nearest point of its edge, so that the coin follows the gaze along it
+        // (point 83)
+        final double x = Math.max(0, Math.min(coatingWidth, gazeX));
+        final double y = Math.max(0, Math.min(coatingHeight, gazeY));
         final int before = scratchedCells;
-        if (!source.down || clock - source.last > LIFT_AFTER) {
-            source.x = x;
-            source.y = y;
-            source.down = true;
-            stamp(x, y);
-            moveCoin(x, y);
+        if (source.down && clock - source.last > LIFT_AFTER) {
+            source.down = false;
+        }
+        if (!source.down) {
+            final double nx = coinX + (x - coinX) * smoothing;
+            final double ny = coinY + (y - coinY) * smoothing;
+            moveCoin(nx, ny);
+            if (Math.hypot(x - nx, y - ny) <= radius) {
+                source.x = nx;
+                source.y = ny;
+                source.down = true;
+                stamp(nx, ny);
+            }
         } else {
             final double nx = source.x + (x - source.x) * smoothing;
             final double ny = source.y + (y - source.y) * smoothing;
@@ -631,6 +666,8 @@ public class ScratchCard implements GameLifeCycle {
      * Puts the coin at a point of the card (in the coordinates of the card).
      */
     private void moveCoin(final double x, final double y) {
+        coinX = x;
+        coinY = y;
         coin.setLayoutX(coating.getLayoutX() + x);
         coin.setLayoutY(coating.getLayoutY() + y);
     }
@@ -702,6 +739,10 @@ public class ScratchCard implements GameLifeCycle {
         double y;
         boolean down;
         double last;
+
+        boolean isDown() {
+            return down;
+        }
     }
 
     /**

@@ -128,6 +128,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 83 | Cartes à gratter | La pièce suit le regard qui sort de la zone | La zone du regard dépasse la carte d'une marge (1,5 rayon de pièce, au moins 8 % de la hauteur) : la pièce suit le regard le long du bord et gratte le bord ; plus loin, elle se lève ; levée, elle glisse jusqu'au regard sans gratter au lieu de sauter (demande du mainteneur) ; grosse pièce déjà en premier ; aides |
 | 76 | Petits chevaux | Dés aidés après plusieurs échecs | Après des lancers de suite sans pouvoir bouger, le dé donne la face qu'il faut (faire arriver un pion, sinon un 6 pour sortir, sinon la plus petite qui fait bouger) : 2 lancers pour une personne, 3 pour l'ordinateur (choix du mainteneur ; elle proposait 3, et 5 pour le 6 de l'ordinateur) ; tirage gardé pour le rejeu ; aides |
 | 77 | Petits chevaux | L'ordinateur fait avancer tous ses pions | Ses pions sortis avancent chacun à son tour (celui qui a bougé il y a le plus longtemps), après ses priorités (prendre, monter l'échelle, sortir) ; aides |
 | 74 | Coloriage | Bouton « Imprimer » à pouvoir masquer | Réglage « Coloriage : bouton Imprimer » (Jeux, coché par défaut, choix du mainteneur ; clé `COLORING_PRINT_ENABLED`) |
@@ -170,7 +171,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 69 | Morpion | Écran de récompense | |
 | 80 | La maison du chat | Sons sur les actions ; plus de choix (jeux, plats) | |
 | 81 | Les bruits de la vie | Sons du singe et du dauphin ; scène de la mer avec une surface | |
-| 83 | Cartes à gratter | La pièce suit le regard qui sort de la zone | |
 
 ## Demandes du mainteneur du 25/11/2026 (à faire)
 

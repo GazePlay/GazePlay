@@ -4,7 +4,8 @@ Une carte est couverte d’une couche argentée. Gratte-la avec une pièce que t
 # Comment jouer
 - Une pièce attend au milieu de la carte. Regarde la carte : la pièce suit ton regard, et là où elle passe, la couche argentée s’en va. On entend gratter.
 - La pièce suit ton regard en douceur, pour que les petits tremblements ne se voient pas, et elle gratte tout le long du chemin.
-- La pièce se lève quand ton regard quitte la carte, ou quand l’oculomètre te perd un instant (un clignement).
+- Si ton regard sort un peu de la carte, la pièce le suit le long du bord de la carte et gratte le bord : tu peux gratter les bords même si l’oculomètre n’est pas tout à fait précis.
+- La pièce se lève quand ton regard s’éloigne de la carte, ou quand l’oculomètre te perd un instant (un clignement). Quand ton regard revient, elle glisse jusqu’à lui sans gratter, puis gratte de nouveau.
 - Quand presque toute la carte est grattée (90 %), le reste de la couche fond tout seul : l’image apparaît avec une étoile et « Bravo ! ». Puis une autre carte arrive.
 - Avec la souris, la pièce suit le pointeur, sans cliquer.
 - Au début, rien ne se gratte pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.

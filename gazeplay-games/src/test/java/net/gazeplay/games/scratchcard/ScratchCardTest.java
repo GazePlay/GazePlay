@@ -78,6 +78,14 @@ class ScratchCardTest {
         });
     }
 
+    /**
+     * Puts the scraper down at a point: the coin there at once (no smoothing), scratching.
+     */
+    private static void touch(final ScratchCard game, final ScratchCard.Pen pen, final double x, final double y) {
+        game.scratch(pen, x, y, 1);
+        assertTrue(pen.isDown());
+    }
+
     private static boolean clear(final ScratchCard game, final double x, final double y) {
         return game.getCoatingImage().getPixelReader().getColor((int) x, (int) y).getOpacity() < 0.05;
     }
@@ -109,7 +117,7 @@ class ScratchCardTest {
                 game.step(0.02);
             }
             assertEquals(ScratchCard.Phase.PLAY, game.getPhase());
-            game.scratch(game.getGazePen(), 200, 200, ScratchCard.GAZE_SMOOTHING);
+            touch(game, game.getGazePen(), 200, 200);
             assertTrue(game.getScratchedCells() > 0);
             assertTrue(clear(game, 200, 200));
             return null;
@@ -121,7 +129,7 @@ class ScratchCardTest {
         final ScratchCard game = launched(ScratchCardBrush.SMALL, ScratchCardEnd.ENDLESS);
         fx(() -> {
             final ScratchCard.Pen pen = game.getGazePen();
-            game.scratch(pen, 100, 200, ScratchCard.GAZE_SMOOTHING);
+            touch(game, pen, 100, 200);
             game.scratch(pen, 300, 200, ScratchCard.GAZE_SMOOTHING);
             // Only part of the way, but all along it
             assertEquals(100 + 200 * ScratchCard.GAZE_SMOOTHING, pen.x, 1e-9);
@@ -141,11 +149,19 @@ class ScratchCardTest {
         final ScratchCard game = launched(ScratchCardBrush.SMALL, ScratchCardEnd.ENDLESS);
         fx(() -> {
             final ScratchCard.Pen pen = game.getGazePen();
-            game.scratch(pen, 100, 200, ScratchCard.GAZE_SMOOTHING);
+            touch(game, pen, 100, 200);
             game.step(ScratchCard.LIFT_AFTER + 0.05);
+            // Lifted: the coin glides to the gaze without scratching (26/11/2026: it used to jump there), then
+            // scratches again once there
             game.scratch(pen, 600, 200, ScratchCard.GAZE_SMOOTHING);
-            assertEquals(600, pen.x, 1e-9);
-            assertFalse(clear(game, 350, 200));
+            assertFalse(pen.isDown());
+            final double coinX = game.getCoin().getLayoutX() - game.getCoating().getLayoutX();
+            assertTrue(coinX > 100 && coinX < 600, "on its way: " + coinX);
+            for (int i = 0; i < 30 && !pen.isDown(); i++) {
+                game.scratch(pen, 600, 200, ScratchCard.GAZE_SMOOTHING);
+            }
+            assertTrue(pen.isDown());
+            assertFalse(clear(game, 350, 200), "nothing scratched on the way");
             return null;
         });
     }
@@ -221,13 +237,42 @@ class ScratchCardTest {
             assertEquals(left + w / 2, game.getCoin().getLayoutX(), 1e-9);
             assertEquals(top + h / 2, game.getCoin().getLayoutY(), 1e-9);
             final ScratchCard.Pen pen = game.getGazePen();
-            game.scratch(pen, 100, 150, ScratchCard.GAZE_SMOOTHING);
+            touch(game, pen, 100, 150);
             assertEquals(left + 100, game.getCoin().getLayoutX(), 1e-9);
             assertEquals(top + 150, game.getCoin().getLayoutY(), 1e-9);
             game.scratch(pen, 300, 150, ScratchCard.GAZE_SMOOTHING);
             // Where the scraper is, smoothed, and as large as it
             assertEquals(left + pen.x, game.getCoin().getLayoutX(), 1e-9);
             assertEquals(2 * game.getRadius(), game.getCoin().getChildren().get(0).getBoundsInLocal().getWidth(), 1);
+            return null;
+        });
+    }
+
+    /**
+     * Tester's feedback of 24/11/2026, point 83: the gaze a little out of the card still moves the coin, along its
+     * edge, which it scratches; further out, nothing.
+     */
+    @Test
+    void shouldFollowTheGazeAlongTheEdgeOutOfTheCard() throws Exception {
+        final ScratchCard game = launched(ScratchCardBrush.MEDIUM, ScratchCardEnd.ENDLESS);
+        fx(() -> {
+            final double left = game.getCoating().getLayoutX();
+            final double top = game.getCoating().getLayoutY();
+            final double w = game.getCoatingImage().getWidth();
+            final double margin = game.edgeMargin();
+            assertTrue(margin >= game.getRadius() * 1.5);
+            // The zone of the gaze goes beyond the card by the margin
+            final javafx.geometry.Bounds zone = game.getZone().getBoundsInParent();
+            assertEquals(left - margin, zone.getMinX(), 1);
+            assertEquals(top - margin, zone.getMinY(), 1);
+            // Above the card, moving to the right: the coin goes along the top edge and scratches it
+            final ScratchCard.Pen pen = game.getMousePen();
+            for (double x = w * 0.2; x <= w * 0.8; x += game.getRadius() / 2) {
+                game.scratch(pen, x, -margin / 2, 1);
+            }
+            assertEquals(top, game.getCoin().getLayoutY(), 1e-9);
+            assertEquals(left + w * 0.8, game.getCoin().getLayoutX(), game.getRadius());
+            assertTrue(clear(game, w / 2, 1), "the top edge scratched");
             return null;
         });
     }

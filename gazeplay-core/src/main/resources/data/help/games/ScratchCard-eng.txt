@@ -4,7 +4,8 @@ A card is covered with a silver coating. Scratch it with a coin you move with yo
 # How to play
 - A coin waits in the middle of the card. Look at the card: the coin follows your gaze, and where it goes, the silver coating goes away. You hear it scratch.
 - The coin follows your gaze smoothly, so that small trembling does not show, and it scratches all along the way.
-- The coin lifts when your gaze leaves the card, or when the eye tracker loses you for a moment (a blink).
+- If your gaze goes a little out of the card, the coin follows it along the edge of the card and scratches the edge: you can scratch the edges even if the eye tracker is not quite precise.
+- The coin lifts when your gaze goes away from the card, or when the eye tracker loses you for a moment (a blink). When your gaze comes back, it glides to it without scratching, then scratches again.
 - When almost all the card is scratched (90 %), the rest of the coating melts by itself: the picture shows with a star and "Well done!". Then another card comes.
 - With the mouse, the coin follows the pointer, without clicking.
 - At the start, nothing is scratched during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
