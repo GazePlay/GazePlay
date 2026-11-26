@@ -76,6 +76,8 @@ public class ColorToolBox extends Pane {
     private static final DateTimeFormatter FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     private Group message;
+    private javafx.collections.ObservableList<Node> messageChildren;
+    private PauseTransition messagePause;
 
     private final IGameContext gameContext;
 
@@ -343,19 +345,27 @@ public class ColorToolBox extends Pane {
         pill.setMouseTransparent(true);
         pill.setLayoutX((area.getWidth() - pill.getLayoutBounds().getWidth()) / 2);
         pill.setLayoutY(area.getHeight() * 0.03);
-        if (message != null) {
-            gameContext.getChildren().remove(message);
-        }
+        removeMessage();
+        // The list itself, not the game context: the pause may end after the game (stopped by dispose, though)
+        final javafx.collections.ObservableList<Node> children = gameContext.getChildren();
         message = pill;
-        gameContext.getChildren().add(pill);
-        final PauseTransition pause = new PauseTransition(Duration.seconds(MESSAGE));
-        pause.setOnFinished(event -> {
-            gameContext.getChildren().remove(pill);
-            if (message == pill) {
-                message = null;
-            }
-        });
-        pause.play();
+        messageChildren = children;
+        children.add(pill);
+        messagePause = new PauseTransition(Duration.seconds(MESSAGE));
+        messagePause.setOnFinished(event -> removeMessage());
+        messagePause.play();
+    }
+
+    private void removeMessage() {
+        if (messagePause != null) {
+            messagePause.stop();
+            messagePause = null;
+        }
+        if (message != null && messageChildren != null) {
+            messageChildren.remove(message);
+        }
+        message = null;
+        messageChildren = null;
     }
 
     /**
@@ -398,6 +408,8 @@ public class ColorToolBox extends Pane {
      * Stops the buttons and colors following the gaze, at the end of the game.
      */
     void dispose() {
+        // The message "Drawing kept" and its pause go with the game: the pause ran on after it (CI of 26/11/2026)
+        removeMessage();
         colorsGame.getDrawingEnable().removeListener(coloringListener);
         buttons.forEach(GazeRoundButton::dispose);
         colorBoxes.forEach(ColorBox::dispose);

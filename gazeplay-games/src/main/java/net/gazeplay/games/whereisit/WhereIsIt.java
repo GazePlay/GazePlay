@@ -202,6 +202,11 @@ public class WhereIsIt implements GameLifeCycle {
     @Getter
     private Group exampleCard;
 
+    /**
+     * The card of the example fading out in the training way, stopped with the game.
+     */
+    private FadeTransition trainingFade;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns,
                      final IGameContext gameContext, final Stats stats) {
         this(gameType, nbLines, nbColumns, gameContext, stats, WhereIsItEnd.ENDLESS);
@@ -708,16 +713,18 @@ public class WhereIsIt implements GameLifeCycle {
                 if (example == WhereIsItExample.TRAINING) {
                     // In the training way, the card goes away once the pictures are shown (maintainer, 26/11/2026)
                     final Group card = exampleCard;
-                    final FadeTransition cardFade = new FadeTransition(Duration.millis(TRAINING_FADE), card);
-                    cardFade.setDelay(Duration.millis(TRAINING_FADE));
-                    cardFade.setToValue(0);
-                    cardFade.setOnFinished(event -> {
-                        gameContext.getChildren().remove(card);
+                    // The list itself, not the game context: the fade may end after the game (stopped by dispose)
+                    final javafx.collections.ObservableList<Node> children = gameContext.getChildren();
+                    trainingFade = new FadeTransition(Duration.millis(TRAINING_FADE), card);
+                    trainingFade.setDelay(Duration.millis(TRAINING_FADE));
+                    trainingFade.setToValue(0);
+                    trainingFade.setOnFinished(event -> {
+                        children.remove(card);
                         if (exampleCard == card) {
                             exampleCard = null;
                         }
                     });
-                    cardFade.play();
+                    trainingFade.play();
                 }
             }
 
@@ -749,6 +756,10 @@ public class WhereIsIt implements GameLifeCycle {
         if (questionAnimation != null) {
             questionAnimation.stop();
             questionAnimation = null;
+        }
+        if (trainingFade != null) {
+            trainingFade.stop();
+            trainingFade = null;
         }
         gameContext.getChildren().remove(counterPill);
         gameContext.getChildren().remove(livesGroup);
