@@ -5,6 +5,49 @@ par un, pour l'améliorer **graphiquement** et en **gameplay**. Pour chaque jeu 
 (licences, voir [INVENTAIRE_IMAGES.md](INVENTAIRE_IMAGES.md) et `gradle/images/inventaire-images.csv`). Les colonnes
 « Graphisme » et « Gameplay » se remplissent pendant la revue.
 
+## REPRISE DU VENDREDI 27/11/2026 (fin de la séance du jeudi 26/11/2026)
+
+**Méthode inchangée** : un point à la fois ; je code, le mainteneur vérifie, puis commit et suite ; tests locaux ciblés
+seulement, build complet et all-games en CI. **Toujours répondre en français**, bilans compris.
+
+**Fait le 26/11/2026** (chaque point validé par le mainteneur, commité et poussé jusqu'à `4862d1cb4`, **CI verte**, run
+45834814443 ; détail par point dans `RETOURS_TESTEUSE.md`, section « Faits le 26/11/2026 ») :
+- **Changements moyens tous faits**, sauf 35 et 67 : 45 à 48 (Gribouille : corbeille avec confirmation, gomme et brosse
+  sous le regard, points de la couleur choisie, trait par fixation), 36 (Où est… : exemple à droite de la consigne),
+  43 (Gobelets), 49 et 51 (Bulles : 3 niveaux, flèche), 52 (Biboule Jump), 53 (Diviseur : prairie), 55 (Course des
+  grenouilles : plus rapides, fixation), 59 à 61 (Dés), 63 (Embouteillage très facile), 68 (Fleur des nombres),
+  71 (Pierre papier ciseaux : flèche « Manche suivante »), 74 et 75 (Coloriage : dessin gardé dans Mes dessins, boutons
+  à cacher), 76 et 77 (Petits chevaux : dé aidé après 3 échecs), 83 (Cartes à gratter : la pièce glisse au lieu de se
+  téléporter).
+- Demandes du mainteneur : menu principal (recherche gardée après une partie, croix pour l'effacer, plus de nombre de
+  variantes en bas).
+- **35 et 67 : à débattre à la prochaine réunion.** Palette du Coloriage dans Gribouille : abandonnée.
+- CI rouge en cours de journée : SpotBugs (corrigé, `e7e60b5c0`), puis un test de Quatre en ligne cassé par la minuterie
+  du message « Dessin gardé » du Coloriage, qui survivait au jeu (corrigé avec celle d'« Où est… », `4862d1cb4`) :
+  **toute minuterie d'un jeu s'arrête dans `dispose`**.
+- **Piano (38 à 41) : maquette validée par le mainteneur** (page Design « Piano — maquettes (points 38 à 41) »,
+  https://claude.ai/artifact/Na7MEc8gm41QuxMrVVPHzC), décisions dans `RETOURS_TESTEUSE.md`. Rien n'est codé.
+- Installeur Windows construit à la demande depuis `4862d1cb4` (non publié).
+
+**Ordre du jour du vendredi 27/11/2026** :
+1. **Piano, d'après la maquette, un point à la fois** (chacun essayé par le mainteneur, puis commit) :
+   - 40. pastilles moitié-moitié sur les touches noires ;
+   - 38. interrupteur « Début de la chanson / Chanson entière » (débuts : 11, 14, 15 et 6 notes ; récompense : la
+     chanson entière rejouée) ;
+   - 39. interrupteur « La personne choisit / Au hasard » et écran « Choisis ta chanson » (5 cartes, anneau au bord) ;
+   - 41. image OpenMoji de la chanson qui se balance à chaque note pendant la récompense (crédits, licence, inventaire
+     des images à mettre à jour) ;
+   - garder les anciennes variantes lisibles n'est pas nécessaire (personne n'a la version refaite) ; minuteries
+     arrêtées dans `dispose` ; tests de `PianoTest` lancés avec ceux d'un autre jeu.
+2. **Gros ajouts suivants** (même méthode : regarder, proposer, maquette si besoin, puis coder) : 50 (Bulles avec de
+   grosses images), 54 (Course du regard), Jeu de l'oie (64 à 66), 69 (Morpion, récompense), 80 (J'ai un Biboule !, `Pet`),
+   81 (Les bruits de la vie).
+3. **En dernier : 87** (Eval, croix de fixation), avec la présentation du format et de son impact avant de coder ;
+   **puis 88** (demande du mainteneur du 26/11) : la Biboule de l'écran « Bravo » (`bravo.gif`, GIF à palette) est mal
+   détourée et un peu pixelisée, la rendre propre.
+4. En attente (inchangé) : 34, 13, 20, 27, 28 (lié au 87) ; 35 et 67 après la réunion. Notes de version 2.0 au feu
+   vert du mainteneur seulement.
+
 ## REPRISE DU JEUDI 26/11/2026 (fin de la séance du mercredi 25/11/2026)
 
 **Méthode inchangée** : un point à la fois ; je code, le mainteneur vérifie, puis commit et suite ; tests locaux ciblés

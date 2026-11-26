@@ -158,10 +158,10 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 34 | Page des jeux | Catégories par compétence (découverte du regard, fixation, exploration…), jeux rangés par difficulté | **Mis de côté** (mainteneur, 24/11 : « à débattre ») |
 | 35 | Où est… | Délai trop long entre la consigne et les réponses | **À débattre à la prochaine réunion** (mainteneur, 26/11) : avec le réglage « Durée d'affichage des questions » (Jeux, 5 s par défaut, de 0,5 à 20 s), il trouve cela rapide. Pistes : images dès la fin de la voix, images avec la consigne, durée par défaut plus courte, voix redite à l'apparition des images |
-| 38 | Piano | Version courte (début de la chanson, puis la chanson en récompense) | |
-| 39 | Piano | Choisir la chanson | |
-| 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |
-| 41 | Piano | Animation de fin | |
+| 38 | Piano | Version courte (début de la chanson, puis la chanson en récompense) | **Décidé le 26/11** (maquette validée) : interrupteur « Début de la chanson / Chanson entière », début en premier ; débuts : Au clair de la lune 11 notes, Ah ! vous dirai-je maman 14, L'Ode à la joie 15, Joyeux anniversaire 6 ; récompense : la chanson entière rejouée en rythme ; statistiques inchangées |
+| 39 | Piano | Choisir la chanson | **Décidé le 26/11** (maquette validée) : interrupteur « La personne choisit / Au hasard », choisir en premier ; écran « Choisis ta chanson » au début et après chaque chanson : 5 cartes par fixation (anneau au bord des cartes) au-dessus du clavier grisé, 4 chansons avec leur image et « Au hasard » (dé) ; la fin (1, 3, 5, sans fin) compte les chansons jouées |
+| 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | **Décidé le 26/11** (maquette validée) : pastille ronde moitié-moitié, cerclée de blanc, dans le bas de chaque touche noire, là où se remplit l'anneau |
+| 41 | Piano | Animation de fin | **Décidé le 26/11** (maquette validée) : pendant la chanson rejouée, une grande image de la chanson au-dessus du clavier se balance et rebondit à chaque note ; images OpenMoji (CC BY-SA 4.0) : lune, étoile, soleil souriant (Ode à la joie), gâteau ; les mêmes sur les cartes du choix |
 | 50 | Bulles | Jeu lent avec de grosses images (Mes images) | |
 | 54 | Course du regard | Adaptation au regard ; récompense à mesure qu'on évite les voitures | |
 | 64 | Jeu de l'oie | Visuel : contraste et taille des pions, pion actif et dé surlignés, plateau sans cases inutiles en version simple | |
@@ -169,7 +169,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 66 | Jeu de l'oie | Compréhension : pion plus lent, points du dé remplis case par case, couleur du pion choisie | |
 | 67 | Fleur des nombres | Variante « même nombre dans chaque pétale » | **À débattre à la prochaine réunion** (mainteneur, 26/11) : la testeuse doit préciser la règle (« à discuter pour que je t'en dise plus ») |
 | 69 | Morpion | Écran de récompense | |
-| 80 | La maison du chat | Sons sur les actions ; plus de choix (jeux, plats) | |
+| 80 | J'ai un Biboule ! (`Pet`) | Sons sur les actions ; plus de choix (jeux, plats) | |
 | 81 | Les bruits de la vie | Sons du singe et du dauphin ; scène de la mer avec une surface | |
 
 ## Demandes du mainteneur du 25/11/2026 (à faire)
@@ -179,6 +179,7 @@ Notées telles que demandées ; rien n'est codé.
 | N° | Jeu | Demande | Remarque |
 |---|---|---|---|
 | 87 | Eval | **À faire en dernier (mainteneur, 25/11).** Écrans avec une **croix de fixation** : noter quand la personne entre dessus, en sort, combien de temps elle y reste, etc., **que la croix soit fixable ou non** | Répond au point 28 (croix absente d'`echantillons.csv`). Touche les fichiers de résultats d'Eval : expliquer l'impact et versionner (`formatVersion`) avant de coder, et mettre à jour l'aide « Comprendre les fichiers de résultats » |
+| 88 | Tous les jeux (écran « Bravo ») | **À faire à la fin (mainteneur, 26/11).** La Biboule de l'écran de victoire est mal détourée et un peu pixelisée : la rendre propre | Image `data/common/images/bravo.gif` (`Bravo`), 891 × 627, GIF à palette (2 images) : sa transparence est tout ou rien, d'où le bord en escalier. Piste : la redessiner (comme la Biboule des jeux revus) ou en faire un PNG à transparence douce, à plus grande taille |
 
 ## Rien à faire
 
