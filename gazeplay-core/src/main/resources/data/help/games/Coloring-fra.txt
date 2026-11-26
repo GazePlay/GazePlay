@@ -8,7 +8,7 @@ Colorie un dessin en noir et blanc, zone par zone, avec le regard.
 - « Autres couleurs » ouvre une fenêtre de 15 couleurs de plus.
 - « Annuler » défait le dernier coloriage (jusqu'à 10 fois) ; « Recommencer le dessin » le remet en blanc.
 - Les flèches au-dessus du dessin changent de dessin (« 3 / 8 » montre où tu en es).
-- En bas de la palette, la disquette enregistre le dessin en image, et l'imprimante l'imprime.
+- En bas de la palette, la disquette garde le dessin en image dans le dossier des dessins de GazePlay (Documents, GazePlay_Learning, dessins), sans rien demander ; il s'ouvre depuis les réglages, Dossiers, « Mes dessins (Gribouille et Coloriage) ». L'imprimante l'imprime. Ces deux boutons peuvent être cachés dans les réglages (Jeux).
 - Au début, rien ne peut être colorié ni choisi pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 
 # Comment gagner

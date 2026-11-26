@@ -95,6 +95,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_RING_THICKNESS = "RING_THICKNESS";
     private static final String PROPERTY_NAME_VOICE = "VOICE";
     private static final String PROPERTY_NAME_MOVING_FIXATION_KEPT = "MOVING_FIXATION_KEPT";
+    private static final String PROPERTY_NAME_COLORING_PRINT_ENABLED = "COLORING_PRINT_ENABLED";
+    private static final String PROPERTY_NAME_COLORING_SAVE_ENABLED = "COLORING_SAVE_ENABLED";
     /* Menu settings */
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -194,6 +196,12 @@ public class Configuration {
      * (Ninja, Bubbles, Cream pie with moving targets, Divisor).
      */
     public static final boolean DEFAULT_VALUE_MOVING_FIXATION_KEPT = false;
+    /**
+     * Whether the coloring game shows its buttons "Print" and "Keep my drawing" (tester's feedback of 24/11/2026,
+     * points 74 and 75: a child alone could print many times; maintainer's choice of 26/11/2026: both shown by default).
+     */
+    public static final boolean DEFAULT_VALUE_COLORING_PRINT_ENABLED = true;
+    public static final boolean DEFAULT_VALUE_COLORING_SAVE_ENABLED = true;
     /* Menu settings */
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -298,6 +306,10 @@ public class Configuration {
     private final StringProperty voiceProperty;
     @Getter
     private final BooleanProperty movingFixationKeptProperty;
+    @Getter
+    private final BooleanProperty coloringPrintEnabledProperty;
+    @Getter
+    private final BooleanProperty coloringSaveEnabledProperty;
     /* Menu settings */
     @Getter
     private final StringProperty userNameProperty;
@@ -386,6 +398,8 @@ public class Configuration {
         ringThicknessProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_RING_THICKNESS, DEFAULT_VALUE_RING_THICKNESS, propertyChangeListener);
         voiceProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VOICE, DEFAULT_VALUE_VOICE, propertyChangeListener);
         movingFixationKeptProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_MOVING_FIXATION_KEPT, DEFAULT_VALUE_MOVING_FIXATION_KEPT, propertyChangeListener);
+        coloringPrintEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLORING_PRINT_ENABLED, DEFAULT_VALUE_COLORING_PRINT_ENABLED, propertyChangeListener);
+        coloringSaveEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLORING_SAVE_ENABLED, DEFAULT_VALUE_COLORING_SAVE_ENABLED, propertyChangeListener);
 
         /* Menu settings */
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
@@ -748,6 +762,21 @@ public class Configuration {
      */
     public boolean isMovingFixationKept() {
         return Boolean.TRUE.equals(movingFixationKeptProperty.getValue());
+    }
+
+    /**
+     * @return whether the coloring game shows its button "Print" (see {@link #DEFAULT_VALUE_COLORING_PRINT_ENABLED})
+     */
+    public boolean isColoringPrintEnabled() {
+        return !Boolean.FALSE.equals(coloringPrintEnabledProperty.getValue());
+    }
+
+    /**
+     * @return whether the coloring game shows its button "Keep my drawing" (see
+     *   {@link #DEFAULT_VALUE_COLORING_SAVE_ENABLED})
+     */
+    public boolean isColoringSaveEnabled() {
+        return !Boolean.FALSE.equals(coloringSaveEnabledProperty.getValue());
     }
 
     /* Menu settings */

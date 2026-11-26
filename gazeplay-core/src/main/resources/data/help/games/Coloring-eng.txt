@@ -8,7 +8,7 @@ Color a black and white drawing, area by area, with your gaze.
 - "Other colors" opens a window of 15 more colors.
 - "Undo" undoes the last coloring (up to 10 times); "Start the drawing again" makes it white again.
 - The arrows above the drawing change the drawing ("3 / 8" shows where you are).
-- At the bottom of the palette, the floppy disk saves the drawing as a picture, and the printer prints it.
+- At the bottom of the palette, the floppy disk keeps the drawing as a picture in the drawings folder of GazePlay (Documents, GazePlay_Learning, dessins), without asking anything; it opens from the settings, Folders, "My drawings (Scribble and Coloring)". The printer prints it. Both buttons can be hidden in the settings (Games).
 - At the start, nothing can be colored or chosen during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 
 # How to win

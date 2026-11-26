@@ -232,6 +232,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 0.1, config.getGameStartDelayProperty()))
             .add("ReaskQuestionOnFail", buildCheckBox(config.getQuestionReaskedOnFailProperty()))
             .add("EnableRewardSound", buildCheckBox(config.getRewardSoundEnabledProperty()))
+            // The buttons "Print" and "Keep my drawing" of the coloring game, to hide (tester's feedback of 24/11/2026,
+            // points 74 and 75)
+            .add(COLORING_PRINT_KEY, buildCheckBox(config.getColoringPrintEnabledProperty()))
+            .add(COLORING_SAVE_KEY, buildCheckBox(config.getColoringSaveEnabledProperty()))
             // The settings of the menu Esc of a game, to set them once for all (maintainer's request of 17/11/2026)
             .group("SettingsGameElements")
             // The values written as in the menu Esc (GameMenuView)
@@ -351,7 +355,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return new SettingsPage.SectionBuilder("SettingsFolders", MenuIcon.FOLDER)
             .add(USER_IMAGES_KEY, buildUserImagesButton(translator, USER_IMAGES_KEY, UserImagesVariant.IMAGES))
             .add(USER_COLORING_KEY, buildUserImagesButton(translator, USER_COLORING_KEY, UserImagesVariant.COLORING))
-            // The drawings kept in "Gribouille" (12/11/2026)
+            // The drawings kept in "Gribouille" (12/11/2026) and in the coloring game (26/11/2026)
             .add(DRAWINGS_KEY, buildOpenFolderButton(translator, GazePlayDirectories::getDrawingsDirectory))
             .add("MusicFolder", buildDirectoryChooser(config, this, translator, DirectoryType.MUSIC))
             .build();
@@ -365,6 +369,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     static final String USER_COLORING_KEY = "UserColoringFolder";
 
     static final String DRAWINGS_KEY = "DrawingsFolder";
+
+    static final String COLORING_PRINT_KEY = "ColoringPrintEnabled";
+
+    static final String COLORING_SAVE_KEY = "ColoringSaveEnabled";
 
     /**
      * @return the button opening a folder of GazePlay in the file manager of the system

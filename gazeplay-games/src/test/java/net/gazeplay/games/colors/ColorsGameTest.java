@@ -73,6 +73,38 @@ class ColorsGameTest {
         when(configuration.getFixationLength()).thenReturn(500);
         when(configuration.getUserName()).thenReturn("");
         when(configuration.getColorsDefaultImage()).thenReturn(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
+        when(configuration.isColoringPrintEnabled()).thenReturn(true);
+        when(configuration.isColoringSaveEnabled()).thenReturn(true);
+    }
+
+    /**
+     * Tester's feedback of 24/11/2026, points 74 and 75: the buttons "Print" and "Keep my drawing" shown or hidden by
+     * the settings; the drawing kept in the folder "dessins" of GazePlay, as in "Gribouille", without any window, with
+     * a message.
+     */
+    @Test
+    void shouldKeepTheDrawingInTheDrawingsFolderAndHideTheButtonsAsSet() throws Exception {
+        final ColorsGame game = launchedGame();
+        assertNotNull(game.getColorToolBox().getSaveButton());
+        assertNotNull(game.getColorToolBox().getPrintButton());
+        final java.io.File saved = WaitForAsyncUtils.asyncFx(() -> game.getColorToolBox().saveDrawing()).get();
+        assertNotNull(saved);
+        try {
+            assertEquals(net.gazeplay.commons.utils.games.GazePlayDirectories.getDrawingsDirectory().getCanonicalFile(),
+                saved.getParentFile().getCanonicalFile());
+            assertTrue(saved.getName().matches("coloriage_\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}(-\\d+)?\\.png"),
+                saved.getName());
+            assertTrue(saved.length() > 0);
+            assertNotNull(game.getColorToolBox().getMessage());
+        } finally {
+            assertTrue(saved.delete());
+        }
+
+        when(configuration.isColoringPrintEnabled()).thenReturn(false);
+        when(configuration.isColoringSaveEnabled()).thenReturn(false);
+        final ColorsGame hidden = launchedGame();
+        assertNull(hidden.getColorToolBox().getSaveButton());
+        assertNull(hidden.getColorToolBox().getPrintButton());
     }
 
     @Test

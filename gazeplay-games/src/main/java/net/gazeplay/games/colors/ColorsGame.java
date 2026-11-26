@@ -122,6 +122,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private final Deque<int[]> undoStack = new ArrayDeque<>();
 
+    @Getter
     private ColorToolBox colorToolBox;
 
     private GazeRoundButton previousButton;

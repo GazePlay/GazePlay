@@ -1,10 +1,13 @@
 package net.gazeplay.games.colors;
 
+import javafx.animation.PauseTransition;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageLayout;
 import javafx.print.PrinterJob;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,14 +18,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.components.GameStyle;
 import net.gazeplay.components.GazeRoundButton;
@@ -30,6 +34,8 @@ import net.gazeplay.components.GazeRoundButton;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +68,15 @@ public class ColorToolBox extends Pane {
 
     private static final int OTHER_COLORS_COLUMNS = 5;
 
+    /**
+     * The seconds the message "Drawing kept" shows.
+     */
+    static final double MESSAGE = 2.5;
+
+    private static final DateTimeFormatter FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+
+    private Group message;
+
     private final IGameContext gameContext;
 
     private final ColorsGame colorsGame;
@@ -82,6 +97,14 @@ public class ColorToolBox extends Pane {
     private final GazeRoundButton undoButton;
 
     private final List<GazeRoundButton> buttons = new ArrayList<>();
+
+    /**
+     * The buttons keeping and printing the drawing, null when the settings hide them (points 74 and 75).
+     */
+    @Getter
+    private GazeRoundButton saveButton;
+    @Getter
+    private GazeRoundButton printButton;
 
     private Stage customColorDialog;
 
@@ -151,17 +174,25 @@ public class ColorToolBox extends Pane {
         getChildren().add(customBox);
         y += swatchSize + 2 * gap;
 
-        // The drawing: save, print
-        final GazeRoundButton saveButton = button("save", translator.translate("SaveImg"), buttonSize,
-            this::saveDrawing);
-        final GazeRoundButton printButton = button("print", translator.translate("PrintImg"), buttonSize,
-            () -> {
-                if (colorsGame.getWritableImg() != null) {
-                    printImage(colorsGame.getWritableImg());
-                }
-            });
-        placeRow(List.of(saveButton, printButton), buttonSize, width,
-            Math.max(y, height - gap - buttonSize));
+        // The drawing: save, print, each one shown if the settings allow it (tester's feedback of 24/11/2026, points 74
+        // and 75)
+        final List<GazeRoundButton> drawingButtons = new ArrayList<>();
+        if (gameContext.getConfiguration().isColoringSaveEnabled()) {
+            saveButton = button("save", translator.translate("SaveImg"), buttonSize, this::saveDrawing);
+            drawingButtons.add(saveButton);
+        }
+        if (gameContext.getConfiguration().isColoringPrintEnabled()) {
+            printButton = button("print", translator.translate("PrintImg"), buttonSize,
+                () -> {
+                    if (colorsGame.getWritableImg() != null) {
+                        printImage(colorsGame.getWritableImg());
+                    }
+                });
+            drawingButtons.add(printButton);
+        }
+        if (!drawingButtons.isEmpty()) {
+            placeRow(drawingButtons, buttonSize, width, Math.max(y, height - gap - buttonSize));
+        }
 
         select(colorBoxes.get(0));
     }
@@ -276,27 +307,62 @@ public class ColorToolBox extends Pane {
     }
 
     /**
-     * Saves the drawing as a PNG file chosen by the user.
+     * Keeps the drawing as a picture (PNG) in the folder "dessins" of GazePlay, as "Gribouille" does, under the date
+     * and the time, with a message (tester's feedback of 24/11/2026, point 75; maintainer's choice of 26/11/2026): the
+     * window of the system to choose a file is no longer opened, which a child alone could not leave.
+     *
+     * @return the file written, null when nothing was
      */
-    private void saveDrawing() {
+    File saveDrawing() {
         if (colorsGame.getWritableImg() == null) {
-            return;
+            return null;
         }
-        final FileChooser imageSaveChooser = new FileChooser();
-        imageSaveChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
-        imageSaveChooser.setTitle(gameContext.getTranslator().translate("imgSaveChooserTitle"));
-        File imageFile = imageSaveChooser.showSaveDialog(gameContext.getPrimaryStage());
-        if (imageFile == null) {
-            return;
-        }
-        if (!imageFile.getName().toLowerCase().endsWith(".png")) {
-            imageFile = new File(imageFile.getAbsolutePath() + ".png");
+        final File folder = GazePlayDirectories.getDrawingsDirectory();
+        final String base = "coloriage_" + LocalDateTime.now().format(FILE_NAME);
+        File imageFile = new File(folder, base + ".png");
+        for (int i = 2; imageFile.exists(); i++) {
+            imageFile = new File(folder, base + "-" + i + ".png");
         }
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(colorsGame.getWritableImg(), null), "png", imageFile);
-        } catch (final IOException ex) {
-            log.error("Error while saving image : " + ex);
+            say("ScribbleSaved");
+            return imageFile;
+        } catch (final IOException | RuntimeException ex) {
+            log.warn("The drawing could not be saved in {}", imageFile, ex);
+            say("ScribbleNotSaved");
+            return null;
         }
+    }
+
+    /**
+     * A short message at the top of the game area, for {@link #MESSAGE} seconds.
+     */
+    private void say(final String key) {
+        final Dimension2D area = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Group pill = GameStyle.pill(gameContext.getTranslator().translate(key), area.getHeight() * 0.035);
+        pill.setMouseTransparent(true);
+        pill.setLayoutX((area.getWidth() - pill.getLayoutBounds().getWidth()) / 2);
+        pill.setLayoutY(area.getHeight() * 0.03);
+        if (message != null) {
+            gameContext.getChildren().remove(message);
+        }
+        message = pill;
+        gameContext.getChildren().add(pill);
+        final PauseTransition pause = new PauseTransition(Duration.seconds(MESSAGE));
+        pause.setOnFinished(event -> {
+            gameContext.getChildren().remove(pill);
+            if (message == pill) {
+                message = null;
+            }
+        });
+        pause.play();
+    }
+
+    /**
+     * @return the message shown now (for the tests), null when none
+     */
+    Group getMessage() {
+        return message;
     }
 
     /**
