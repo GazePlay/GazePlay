@@ -17,5 +17,5 @@ There are no lives and no penalty. When all the pictures have burst, the time ta
 Choose a variant (it is framed), then press "Start".
 - The level. Easy: 2 divisions, 7 pictures to burst, going through the height of the screen in 5 seconds. Medium: 3 divisions, 15 pictures, in 3 seconds. Hard: 4 divisions, 31 pictures, in 2 seconds.
 - The first picture is a third of the height of the screen. Each division makes the pictures a little smaller, never under a tenth of the height of the screen.
-- At the bottom, what the pictures show: Rabbits, Animals, or My images: your images, cut into a circle ("My images" folder of the settings).
+- At the bottom, what the pictures show: Rabbits, Animals, or My images: your images, cut into a circle ("My images" folder of the settings). With the rabbits, the meadow has Easter eggs; with the animals and your images, it is a meadow without eggs.
 - At the bottom, how to burst them: as soon as touched, or after a fixation.

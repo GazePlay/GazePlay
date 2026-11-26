@@ -12,11 +12,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.QuadCurve;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
@@ -82,6 +85,11 @@ public class Divisor implements GameLifeCycle {
     static final String[] RABBITS = {"1", "2", "3", "4", "5", "6", "7"};
     private static final String RABBIT_FOLDER = "data/divisor/rabbit/images/";
     private static final String MEADOW = "data/divisor/images/Background.png";
+    /**
+     * The green of the meadow of the picture, and of its grass.
+     */
+    static final Color MEADOW_GREEN = Color.rgb(73, 131, 26);
+    private static final Color MEADOW_DARK = Color.rgb(38, 78, 10);
     private static final String[] POPS = {"data/bubble/sounds/pop1.wav", "data/bubble/sounds/pop2.wav",
         "data/bubble/sounds/pop3.wav"};
     private static final Color[] CONFETTI = {Color.rgb(255, 202, 58), Color.rgb(255, 120, 150),
@@ -177,20 +185,67 @@ public class Divisor implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the meadow with Easter eggs drawn for the game, covering the screen and keeping its proportions
+     */
+    private Node easterMeadow() {
+        final Image meadow = gameImage(MEADOW);
+        final ImageView view = new ImageView(meadow);
+        final double scale = Math.max(width / Math.max(1, meadow.getWidth()), height / Math.max(1, meadow.getHeight()));
+        view.setFitWidth(meadow.getWidth() * scale);
+        view.setFitHeight(meadow.getHeight() * scale);
+        view.setLayoutX((width - view.getFitWidth()) / 2);
+        view.setLayoutY((height - view.getFitHeight()) / 2);
+        return view;
+    }
+
+    /**
+     * @return the same meadow without the eggs, drawn by the game: its green, and tufts of grass where the eggs were
+     */
+    Group plainMeadow() {
+        final Rectangle grass = new Rectangle(width, height, MEADOW_GREEN);
+        final Group meadow = new Group(grass);
+        final double[][] tufts = {{0.12, 0.2}, {0.88, 0.24}, {0.5, 0.37}, {0.3, 0.6}, {0.85, 0.74}, {0.2, 0.92},
+            {0.62, 0.86}};
+        final double size = height * 0.07;
+        for (final double[] tuft : tufts) {
+            meadow.getChildren().add(tuft(width * tuft[0], height * tuft[1], size));
+        }
+        return meadow;
+    }
+
+    /**
+     * @return a tuft of grass: blades from a point at the bottom, leaning out
+     */
+    private static Group tuft(final double x, final double y, final double size) {
+        final Group tuft = new Group();
+        final int blades = 11;
+        // Uneven heights, the same at each game
+        final double[] heights = {0.55, 0.8, 0.62, 1, 0.7, 0.92, 0.66, 1, 0.75, 0.85, 0.58};
+        for (int i = 0; i < blades; i++) {
+            final double lean = (i - (blades - 1) / 2.0) / ((blades - 1) / 2.0);
+            final double base = x + lean * size * 0.8;
+            final double tall = size * heights[i] * (0.75 + 0.25 * Math.cos(lean * 1.3));
+            final QuadCurve blade = new QuadCurve(base, y, base + lean * size * 0.1, y - tall * 0.55,
+                base + lean * size * 0.55 + (i % 2 == 0 ? 1 : -1) * size * 0.08, y - tall);
+            blade.setFill(null);
+            blade.setStroke(MEADOW_DARK);
+            blade.setStrokeWidth(Math.max(2, size * 0.07));
+            blade.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+            tuft.getChildren().add(blade);
+        }
+        return tuft;
+    }
+
     @Override
     public void launch() {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
 
-        final Image meadow = gameImage(MEADOW);
-        final ImageView background = new ImageView(meadow);
-        // Covers the screen, keeping its proportions
-        final double scale = Math.max(width / Math.max(1, meadow.getWidth()), height / Math.max(1, meadow.getHeight()));
-        background.setFitWidth(meadow.getWidth() * scale);
-        background.setFitHeight(meadow.getHeight() * scale);
-        background.setLayoutX((width - background.getFitWidth()) / 2);
-        background.setLayoutY((height - background.getFitHeight()) / 2);
+        // The meadow with Easter eggs for the rabbits; without eggs for the other themes (tester's feedback of
+        // 23/11/2026, point 53: the eggs are off the subject there; maintainer's choice of 26/11/2026)
+        final Node background = theme == DivisorTheme.RABBITS ? easterMeadow() : plainMeadow();
         background.setMouseTransparent(true);
 
         targetsLayer = new Group();
@@ -623,11 +678,14 @@ public class Divisor implements GameLifeCycle {
                     side, side));
             }
             view.setClip(new Circle(0, 0, radius));
+            // White under the image: an image with a transparent background showed the meadow through it, unlike the
+            // others (maintainer, 26/11/2026)
+            final Circle paper = new Circle(radius, Color.WHITE);
             final Circle frame = new Circle(radius);
             frame.setFill(null);
             frame.setStroke(Color.WHITE);
             frame.setStrokeWidth(Math.max(3, radius * 0.06));
-            return new Group(view, frame);
+            return new Group(paper, view, frame);
         }
 
         private void onPointer(final Event event) {

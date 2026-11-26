@@ -17,5 +17,5 @@ Il n'y a ni vies ni pénalité. Quand toutes les images ont éclaté, le temps m
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le niveau. Facile : 2 divisions, 7 images à faire éclater, qui traversent la hauteur de l'écran en 5 secondes. Moyen : 3 divisions, 15 images, en 3 secondes. Difficile : 4 divisions, 31 images, en 2 secondes.
 - La première image fait un tiers de la hauteur de l'écran. Chaque division rend les images un peu plus petites, sans descendre sous un dixième de la hauteur de l'écran.
-- En bas, ce que montrent les images : Lapins, Animaux, ou Mes images : tes images, découpées en rond (dossier « Mes images » des réglages).
+- En bas, ce que montrent les images : Lapins, Animaux, ou Mes images : tes images, découpées en rond (dossier « Mes images » des réglages). Avec les lapins, la prairie a des œufs de Pâques ; avec les animaux et tes images, c'est une prairie sans œufs.
 - En bas, comment les faire éclater : dès qu'on touche, ou après une fixation.

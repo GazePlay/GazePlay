@@ -113,6 +113,35 @@ class DivisorTest {
         Event.fireEvent(target.getNode(), new GazeEvent(GazeEvent.GAZE_EXITED, -1, 0, 0));
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 53: the meadow with Easter eggs for the rabbits only; the other themes have
+     * the same meadow without eggs, drawn by the game (maintainer's choice of 26/11/2026).
+     */
+    @Test
+    void shouldShowTheEasterEggsWithTheRabbitsOnly() throws Exception {
+        for (final DivisorTheme theme : new DivisorTheme[]{DivisorTheme.RABBITS, DivisorTheme.ANIMALS}) {
+            final Divisor game = launched(theme, DivisorTouch.AT_ONCE, DivisorLevel.EASY);
+            fx(() -> {
+                final javafx.scene.Group layer = (javafx.scene.Group) gameArea.getChildren().getFirst();
+                final javafx.scene.Node background = layer.getChildren().getFirst();
+                if (theme == DivisorTheme.RABBITS) {
+                    assertInstanceOf(javafx.scene.image.ImageView.class, background);
+                } else {
+                    final javafx.scene.Group meadow = assertInstanceOf(javafx.scene.Group.class, background);
+                    final javafx.scene.shape.Rectangle grass = (javafx.scene.shape.Rectangle) meadow.getChildren()
+                        .getFirst();
+                    assertEquals(Divisor.MEADOW_GREEN, grass.getFill());
+                    assertEquals(WIDTH, grass.getWidth(), 1e-9);
+                    assertTrue(meadow.getChildren().size() > 1, "tufts of grass");
+                    // A white disc under each image: the transparent ones look like the others
+                    final javafx.scene.Node first = game.getTargets().getFirst().drawing().getChildren().getFirst();
+                    assertEquals(javafx.scene.paint.Color.WHITE, assertInstanceOf(javafx.scene.shape.Circle.class, first).getFill());
+                }
+                return null;
+            });
+        }
+    }
+
     @Test
     void shouldCountTheTargetsOfEachLevel() {
         assertEquals(7, DivisorLevel.EASY.getTargets());
@@ -381,7 +410,8 @@ class DivisorTest {
     void shouldShowTheAnimalsInACircle() throws Exception {
         final Divisor game = launched(DivisorTheme.ANIMALS, DivisorTouch.AT_ONCE, DivisorLevel.EASY);
         final Group drawing = (Group) game.getTargets().get(0).getNode().getChildren().get(1);
-        final ImageView view = (ImageView) drawing.getChildren().get(0);
+        // Over a white disc (26/11/2026)
+        final ImageView view = (ImageView) drawing.getChildren().get(1);
         assertNotNull(view.getClip());
         assertTrue(view.getImage().getUrl().contains("common/default/images"));
     }
@@ -407,7 +437,7 @@ class DivisorTest {
         try {
             final Divisor game = launched(DivisorTheme.MY_IMAGES, DivisorTouch.AT_ONCE, DivisorLevel.EASY);
             final Group drawing = (Group) game.getTargets().get(0).getNode().getChildren().get(1);
-            final ImageView view = (ImageView) drawing.getChildren().get(0);
+            final ImageView view = (ImageView) drawing.getChildren().get(1);
             assertTrue(view.getImage().getUrl().contains("biscuit"));
         } finally {
             assertTrue(image.delete());
