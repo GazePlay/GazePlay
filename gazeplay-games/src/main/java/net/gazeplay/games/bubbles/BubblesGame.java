@@ -36,6 +36,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.GazeRoundButton;
 import net.gazeplay.components.RingThickness;
 
 import java.io.File;
@@ -43,9 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Game "Bubbles" (reviewed on 2/11/2026, maintainer's rules): a picture is hidden under {@value #TILES} panes of frosted
- * glass; 10 bubbles go across the screen (up, down, to the right, to the left, or stay still); each bubble burst takes
- * one pane away. The picture all found: "Bravo", then a new picture (the game goes on: it is left by the menu). A bubble
+ * Game "Bubbles" (reviewed on 2/11/2026, maintainer's rules): a picture is hidden under panes of frosted glass (9, 16
+ * or 36 by the level, 26/11/2026); 10 bubbles go across the screen (up, down, to the right, to the left, or stay still);
+ * each bubble burst takes one pane away. The picture all found: "Bravo", the picture stays until the arrow is chosen,
+ * then a new picture (the game goes on: it is left by the menu). A bubble
  * bursts as soon as the gaze (or the mouse) enters it, or after a fixation, as chosen in the variants. The bubbles show
  * colors, sea animals (OpenMoji) or the images of the user; with the images of the user, the hidden pictures are theirs
  * too, else drawn underwater scenes.
@@ -74,9 +76,6 @@ public class BubblesGame implements GameLifeCycle {
     static final List<String> COLORS = List.of("#FF6B6B", "#FFA94D", "#FFD43B", "#69DB7C", "#38D9A9", "#4DABF7",
         "#748FFC", "#B197FC", "#F783AC", "#63E6BE");
 
-    static final int COLUMNS = 6;
-    static final int ROWS = 6;
-    static final int TILES = COLUMNS * ROWS;
     static final int BUBBLES = 10;
 
     /**
@@ -100,7 +99,18 @@ public class BubblesGame implements GameLifeCycle {
     private final BubblesGameVariant direction;
     @Getter
     private final BubblesBurst burst;
+    /**
+     * The panes and the size of the bubbles (point 49): hard, the game of before, when not chosen.
+     */
+    @Getter
+    private BubblesLevel level = BubblesLevel.HARD;
     private final ReplayablePseudoRandom random;
+
+    /**
+     * The arrow going to the next picture, shown once a picture is all found (point 51), null otherwise.
+     */
+    @Getter
+    private GazeRoundButton nextButton;
 
     @Getter
     private Phase phase = Phase.OVER;
@@ -176,6 +186,15 @@ public class BubblesGame implements GameLifeCycle {
         }
     }
 
+    /**
+     * @param level the panes and the size of the bubbles, before the launch
+     * @return this game
+     */
+    public BubblesGame withLevel(final BubblesLevel level) {
+        this.level = level == null ? BubblesLevel.HARD : level;
+        return this;
+    }
+
     @Override
     public void launch() {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -242,6 +261,12 @@ public class BubblesGame implements GameLifeCycle {
      * Hides the next picture under all the panes.
      */
     void nextPicture() {
+        if (nextButton != null) {
+            nextButton.dispose();
+            layer.getChildren().remove(nextButton);
+            nextButton = null;
+        }
+        bubblesLayer.setVisible(true);
         pictureIndex++;
         final String url = pictures.get(pictureIndex % pictures.size());
         final Image image = new Image(url, width * 1.2, height * 1.2, true, true);
@@ -258,16 +283,17 @@ public class BubblesGame implements GameLifeCycle {
 
         panes.getChildren().clear();
         tiles.clear();
-        final double tileWidth = shownWidth / COLUMNS;
-        final double tileHeight = shownHeight / ROWS;
-        for (int column = 0; column < COLUMNS; column++) {
-            for (int row = 0; row < ROWS; row++) {
+        final int side = level.getSide();
+        final double tileWidth = shownWidth / side;
+        final double tileHeight = shownHeight / side;
+        for (int column = 0; column < side; column++) {
+            for (int row = 0; row < side; row++) {
                 final Tile tile = new Tile(left + column * tileWidth, top + row * tileHeight, tileWidth, tileHeight);
                 tiles.add(tile);
                 panes.getChildren().add(tile.node);
             }
         }
-        for (int i = 0; i < TILES; i++) {
+        for (int i = 0; i < level.panes(); i++) {
             stats.incrementNumberOfGoalsToReach();
         }
         phase = Phase.PLAY;
@@ -290,7 +316,7 @@ public class BubblesGame implements GameLifeCycle {
 
     private void showCount() {
         hud.getChildren().clear();
-        final Group count = GameStyle.pill((TILES - panesLeft()) + " / " + TILES, height * 0.032);
+        final Group count = GameStyle.pill((tiles.size() - panesLeft()) + " / " + tiles.size(), height * 0.032);
         count.setLayoutX((width - count.getBoundsInLocal().getWidth()) / 2);
         count.setLayoutY(height * 0.015);
         hud.getChildren().add(count);
@@ -332,18 +358,41 @@ public class BubblesGame implements GameLifeCycle {
     }
 
     /**
-     * The picture all found: a chime, "Bravo", then a new picture.
+     * The picture all found: a chime, "Bravo", then the picture stays, without the bubbles, until the arrow at the right
+     * is chosen (tester's feedback of 23/11/2026, point 51; maintainer's choice of 26/11/2026: no time limit): a fixation,
+     * or a click of the adult beside the player. Before, the next picture came at once.
      */
     private void found() {
         phase = Phase.FOUND;
         stats.takeScreenShot();
         gameContext.getSoundManager().add(PICTURE_SOUND);
+        bubbles.forEach(Bubble::stopFixation);
+        bubblesLayer.setVisible(false);
         gameContext.playWinTransition(500, event -> {
             gameContext.endWinTransition();
             if (phase == Phase.FOUND) {
-                nextPicture();
+                showNextButton();
             }
         });
+    }
+
+    /**
+     * The arrow to the next picture, in the middle of the right side.
+     */
+    void showNextButton() {
+        if (nextButton != null || layer == null) {
+            return;
+        }
+        final double size = height * 0.14;
+        nextButton = new GazeRoundButton(gameContext, size, "arrow_forward",
+            gameContext.getTranslator().translate("Next"), () -> {
+                if (phase == Phase.FOUND) {
+                    nextPicture();
+                }
+            });
+        nextButton.setLayoutX(width - size - height * 0.03);
+        nextButton.setLayoutY((height - size) / 2);
+        layer.getChildren().add(nextButton);
     }
 
     /**
@@ -383,6 +432,10 @@ public class BubblesGame implements GameLifeCycle {
             bubble.dispose();
         }
         bubbles.clear();
+        if (nextButton != null) {
+            nextButton.dispose();
+            nextButton = null;
+        }
         if (layer != null) {
             gameContext.getChildren().remove(layer);
             layer = null;
@@ -500,8 +553,9 @@ public class BubblesGame implements GameLifeCycle {
          */
         void respawn(final double along) {
             stopFixation();
-            final double smallest = Math.min(width, height) / 22;
-            final double largest = Math.min(width, height) / 11;
+            // Bigger at the easy levels (point 49)
+            final double smallest = Math.min(width, height) / 22 * level.getBubbleScale();
+            final double largest = Math.min(width, height) / 11 * level.getBubbleScale();
             radius = smallest + (largest - smallest) * random.nextDouble();
             color = Color.web(COLORS.get(random.nextInt(COLORS.size())));
             wobblePhase = random.nextDouble() * Math.PI * 2;

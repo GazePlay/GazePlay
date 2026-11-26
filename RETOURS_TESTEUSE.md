@@ -128,6 +128,8 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 49 | Bulles | Mode plus facile (moins de bulles, plus grosses) | Interrupteur Facile / Moyen / Difficile (Facile par défaut) : 9, 16 ou 36 vitres, bulles 1,5 ou 1,2 fois plus grosses en Facile et Moyen ; Difficile = le jeu d'avant ; aides |
+| 51 | Bulles | Image gardée, avec un bouton « suite » | L'image découverte reste affichée sans les bulles, sans limite de temps (choix du mainteneur), jusqu'à la flèche ronde à droite (fixation ou clic de l'adulte) ; seulement dans les Bulles pour l'instant ; aides |
 | 43 | Gobelets Pass Pass | Transition entre deux tours trompeuse (la balle d'avant semble encore là) | En fin de manche, les gobelets soulevés redescendent doucement (0,45 s, ils retombaient d'un coup) ; au début de chaque manche, tous les gobelets se soulèvent ensemble : une seule balle, sous l'un d'eux ; aides |
 | 36 | Où est la forme, la couleur | Modes de consigne avec exemple | Interrupteur Apprentissage / Entraînement / Maîtrise (ses noms, Apprentissage par défaut, avant les cœurs) pour la forme, la couleur et le chiffre (pas la lettre : la question la montre déjà) ; carte blanche de l'image de la bonne réponse à droite de la phrase, qui descend avec elle dans la bande ; Apprentissage : elle reste pendant le choix ; Entraînement : elle s'efface une fois les images affichées ; Maîtrise : sans exemple ; aides. Les réponses déjà affichées à la consigne : avec le point 35 (débat) |
 | 46 | Gribouille | Couleur blanche à la place de la gomme | Choix du mainteneur : la gomme reste, mais se voit : une gomme dessinée suit le regard sur la feuille (comme la pièce de Cartes à gratter), une brosse à tableau sur le tableau noir (aussi dans le bouton) ; largeur effacée 2,5 %, 4,5 % ou 7 % de la hauteur de l'écran selon l'épaisseur (avant : deux fois le trait) ; aides |
@@ -145,9 +147,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 39 | Piano | Choisir la chanson | |
 | 40 | Piano | Pastilles sur les touches noires (couleurs des deux touches blanches voisines) | |
 | 41 | Piano | Animation de fin | |
-| 49 | Bulles | Mode plus facile (moins de bulles, plus grosses) | |
 | 50 | Bulles | Jeu lent avec de grosses images (Mes images) | |
-| 51 | Bulles (et d'autres jeux) | Image gardée 5 s, avec un bouton « suite » | |
 | 52 | Biboule Jump | Saut et chute plus lents | |
 | 53 | Diviseur | Choix du fond | |
 | 54 | Course du regard | Adaptation au regard ; récompense à mesure qu'on évite les voitures | |

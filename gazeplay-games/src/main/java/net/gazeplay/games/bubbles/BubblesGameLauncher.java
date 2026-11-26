@@ -36,14 +36,14 @@ public class BubblesGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     public GameLifeCycle createNewGame(final IGameContext gameContext, final IGameVariant gameVariant,
                                        final Stats stats) {
         return new BubblesGame(gameContext, stats, contentOf(gameVariant), directionOf(gameVariant),
-            burstOf(gameVariant));
+            burstOf(gameVariant)).withLevel(BubblesLevel.of(gameVariant));
     }
 
     @Override
     public GameLifeCycle replayGame(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                                     double gameSeed) {
         return new BubblesGame(gameContext, stats, contentOf(gameVariant), directionOf(gameVariant),
-            burstOf(gameVariant), gameSeed);
+            burstOf(gameVariant), gameSeed).withLevel(BubblesLevel.of(gameVariant));
     }
 
     static BubblesContent contentOf(final IGameVariant gameVariant) {

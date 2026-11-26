@@ -4,12 +4,12 @@ A picture is hidden under panes of glass. Bubbles go by: each bubble burst takes
 # How to play
 - Look at a bubble to burst it (with a "pop").
 - Depending on the variant, it bursts as soon as you look at it, or after a fixation: a ring goes round it (fixation length of the settings).
-- At the top, "12 / 36" counts the panes taken away.
+- At the top, "5 / 9" counts the panes taken away.
 - The speed of the bubbles follows the animation speed of the settings.
 - Nothing moves while the menu (Esc key) is open.
 
 # How to win
-When the 36 panes are taken away: "Bravo", then a new hidden picture. The game does not stop by itself: leave it by the menu (Esc key).
+When all the panes are taken away: "Bravo", then the picture stays, without the bubbles, as long as you want. To go to the next picture, look at the arrow on the right (or the adult beside you clicks it). The game does not stop by itself: leave it by the menu (Esc key).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
@@ -19,3 +19,4 @@ Choose a variant (it is framed), then press "Start".
 - Colors: bubbles of all colors; the hidden pictures are underwater scenes.
 - Sea animals: an animal in each bubble; the same hidden pictures.
 - My images: your images in the bubbles, and they are the hidden pictures. Add them in the settings (Folders, "My images", shared by all the games) or from the window of the variants.
+- At the bottom at last, the difficulty: Easy (9 panes and big bubbles), Medium (16 panes, a little bigger bubbles) or Hard (36 panes).

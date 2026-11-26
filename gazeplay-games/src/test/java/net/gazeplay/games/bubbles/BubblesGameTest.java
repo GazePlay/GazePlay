@@ -47,6 +47,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(ApplicationExtension.class)
 class BubblesGameTest {
 
+    /**
+     * The panes of the level of before (hard), that of a game without level.
+     */
+    private static final int TILES = BubblesLevel.HARD.panes();
+
     /** The games launched by a test, closed after it (18/11/2026). */
     @org.junit.jupiter.api.extension.RegisterExtension
     final net.gazeplay.games.LaunchedGames launchedGames = new net.gazeplay.games.LaunchedGames();
@@ -110,10 +115,10 @@ class BubblesGameTest {
         final BubblesGame game = launched(BubblesContent.COLORS, BubblesGameVariant.TOP, BubblesBurst.AT_ONCE);
         final String first = fx(game::pictureUrl);
         fx(() -> {
-            assertEquals(BubblesGame.TILES, game.panesLeft());
+            assertEquals(TILES, game.panesLeft());
             game.burst(game.getBubbles().getFirst());
-            assertEquals(BubblesGame.TILES - 1, game.panesLeft());
-            for (int i = 1; i < BubblesGame.TILES; i++) {
+            assertEquals(TILES - 1, game.panesLeft());
+            for (int i = 1; i < TILES; i++) {
                 game.burst(game.getBubbles().get(i % BubblesGame.BUBBLES));
             }
             assertEquals(0, game.panesLeft());
@@ -121,21 +126,34 @@ class BubblesGameTest {
             game.burst(game.getBubbles().getFirst());
             return null;
         });
-        verify(stats, times(BubblesGame.TILES)).incrementNumberOfGoalsReached();
-        verify(stats, times(BubblesGame.TILES)).incrementNumberOfGoalsToReach();
+        verify(stats, times(TILES)).incrementNumberOfGoalsReached();
+        verify(stats, times(TILES)).incrementNumberOfGoalsToReach();
         @SuppressWarnings("unchecked") final ArgumentCaptor<EventHandler<ActionEvent>> end =
             ArgumentCaptor.forClass(EventHandler.class);
         verify(gameContext).playWinTransition(anyLong(), end.capture());
         fx(() -> {
             end.getValue().handle(null);
+            // The picture stays, without the bubbles, until the arrow is chosen (point 51)
+            assertEquals(BubblesGame.Phase.FOUND, game.getPhase());
+            assertNotNull(game.getNextButton());
+            assertTrue(gameArea.getChildren().getFirst() instanceof javafx.scene.Group layer
+                && layer.getChildren().contains(game.getNextButton()));
+            game.step(5);
+            assertEquals(BubblesGame.Phase.FOUND, game.getPhase(), "no time limit");
+            assertFalse(game.getBubbles().getFirst().node().getParent().isVisible());
+            game.getNextButton().fireEvent(new javafx.scene.input.MouseEvent(
+                javafx.scene.input.MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, javafx.scene.input.MouseButton.PRIMARY, 1,
+                false, false, false, false, true, false, false, false, false, false, null));
+            assertNull(game.getNextButton());
+            assertTrue(game.getBubbles().getFirst().node().getParent().isVisible());
             assertEquals(BubblesGame.Phase.PLAY, game.getPhase());
-            assertEquals(BubblesGame.TILES, game.panesLeft());
+            assertEquals(TILES, game.panesLeft());
             assertEquals(1, game.getPictureIndex());
             assertNotEquals(first, game.pictureUrl(), "another picture");
             return null;
         });
         verify(gameContext).endWinTransition();
-        verify(stats, times(2 * BubblesGame.TILES)).incrementNumberOfGoalsToReach();
+        verify(stats, times(2 * TILES)).incrementNumberOfGoalsToReach();
     }
 
     /**
@@ -146,19 +164,19 @@ class BubblesGameTest {
         final BubblesGame atOnce = launched(BubblesContent.COLORS, BubblesGameVariant.TOP, BubblesBurst.AT_ONCE);
         fx(() -> {
             atOnce.getBubbles().getFirst().node().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, 0, 0, 0));
-            assertEquals(BubblesGame.TILES - 1, atOnce.panesLeft());
+            assertEquals(TILES - 1, atOnce.panesLeft());
             return null;
         });
         final BubblesGame fixation = launched(BubblesContent.COLORS, BubblesGameVariant.FIX,
             BubblesBurst.FIXATION);
         fx(() -> {
             fixation.getBubbles().getFirst().node().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, 0, 0, 0));
-            assertEquals(BubblesGame.TILES, fixation.panesLeft(), "not at once");
+            assertEquals(TILES, fixation.panesLeft(), "not at once");
             return null;
         });
         WaitForAsyncUtils.sleep(400, TimeUnit.MILLISECONDS);
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(BubblesGame.TILES - 1, (int) fx(fixation::panesLeft), "after the fixation");
+        assertEquals(TILES - 1, (int) fx(fixation::panesLeft), "after the fixation");
     }
 
     /**
@@ -183,7 +201,7 @@ class BubblesGameTest {
         });
         WaitForAsyncUtils.sleep(900, TimeUnit.MILLISECONDS);
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(BubblesGame.TILES, (int) fx(game::panesLeft), "kept, not burst while left");
+        assertEquals(TILES, (int) fx(game::panesLeft), "kept, not burst while left");
         fx(() -> {
             bubble.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, 0, 0, 0));
             return null;
@@ -191,7 +209,7 @@ class BubblesGameTest {
         // About 400 ms are left; less than a whole fixation of 800 ms
         WaitForAsyncUtils.sleep(650, TimeUnit.MILLISECONDS);
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(BubblesGame.TILES - 1, (int) fx(game::panesLeft), "the fixation went on");
+        assertEquals(TILES - 1, (int) fx(game::panesLeft), "the fixation went on");
         assertFalse(launched(BubblesContent.COLORS, BubblesGameVariant.FIX, BubblesBurst.AT_ONCE).menuSettings()
             .contains(net.gazeplay.MenuSetting.MOVING_FIXATION));
     }
@@ -264,15 +282,44 @@ class BubblesGameTest {
      * 30 variants: 5 directions, for each content and each way of bursting; "My images" plays with the images of the
      * user; a variant of before (a direction only) plays colors at once.
      */
+    /**
+     * Tester's feedback of 23/11/2026, point 49: easy, medium and hard levels, 9, 16 and 36 panes, bigger bubbles at the
+     * easy levels; easy first; a variant without level is hard, the game of before.
+     */
+    @Test
+    void shouldHideThePictureUnderThePanesOfTheLevel() throws Exception {
+        final double[] largest = new double[BubblesLevel.values().length];
+        for (final BubblesLevel level : BubblesLevel.values()) {
+            final BubblesGame game = fx(() -> {
+                gameArea.getChildren().clear();
+                final BubblesGame played = new BubblesGame(gameContext, stats, BubblesContent.COLORS,
+                    BubblesGameVariant.FIX, BubblesBurst.AT_ONCE, 7).withLevel(level);
+                played.setManual();
+                launchedGames.add(played).launch();
+                return played;
+            });
+            assertEquals(level.panes(), (int) fx(game::panesLeft));
+            largest[level.ordinal()] = fx(() -> game.getBubbles().stream()
+                .mapToDouble(bubble -> bubble.node().getBoundsInLocal().getWidth()).max().orElseThrow());
+        }
+        assertEquals(List.of(9, 16, 36), java.util.Arrays.stream(BubblesLevel.values()).map(BubblesLevel::panes)
+            .toList());
+        assertTrue(largest[0] > largest[2], "bigger bubbles at the easy level");
+        assertEquals(BubblesLevel.EASY, BubblesLevel.of(new BubblesGameVariantGenerator().getVariants().iterator()
+            .next()));
+        assertEquals(BubblesLevel.HARD, BubblesLevel.of(new EnumGameVariant<>(BubblesGameVariant.FIX)));
+    }
+
     @Test
     void shouldOfferTheContentsAndTheWaysOfBursting() {
         final List<IGameVariant> variants = new ArrayList<>(new BubblesGameVariantGenerator().getVariants());
-        assertEquals(30, variants.size());
+        // 30, each with the 3 levels since 26/11/2026
+        assertEquals(30 * 3, variants.size());
         final GroupedGameVariant first = (GroupedGameVariant) variants.getFirst();
         assertEquals("BubblesBurstAtOnce", first.getGroup());
         assertEquals("BubblesColors", first.getSubGroup());
         assertEquals("ToTop", first.getValue());
-        assertEquals(10, variants.stream().filter(variant -> BubblesContent.USER_IMAGES_FOLDER
+        assertEquals(10 * 3, variants.stream().filter(variant -> BubblesContent.USER_IMAGES_FOLDER
             .equals(UserImagesVariant.folderOf(variant))).count());
         final IGameVariant former = new EnumGameVariant<>(BubblesGameVariant.FIX);
         assertEquals(BubblesContent.COLORS, BubblesGameLauncher.contentOf(former));

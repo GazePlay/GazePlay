@@ -4,12 +4,12 @@ Une image est cachée sous des vitres. Des bulles passent : chaque bulle éclat�
 # Comment jouer
 - Regarde une bulle pour la faire éclater (avec un « plop »).
 - Selon la variante, elle éclate dès que tu la regardes, ou après une fixation : un anneau en fait le tour (durée de fixation des réglages).
-- En haut, « 12 / 36 » compte les vitres enlevées.
+- En haut, « 5 / 9 » compte les vitres enlevées.
 - La vitesse des bulles suit la vitesse d'animation des réglages.
 - Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Quand les 36 vitres sont enlevées : « Bravo », puis une nouvelle image cachée. Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
+Quand toutes les vitres sont enlevées : « Bravo », puis l'image reste affichée, sans les bulles, aussi longtemps que tu veux. Pour passer à l'image suivante, regarde la flèche à droite (ou l'adulte qui t'accompagne clique dessus). Le jeu ne s'arrête pas tout seul : quitte par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
@@ -19,3 +19,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Couleurs : des bulles de toutes les couleurs ; les images cachées sont des paysages sous la mer.
 - Animaux marins : un animal dans chaque bulle ; mêmes images cachées.
 - Mes images : tes images dans les bulles, et ce sont elles qui sont cachées. Ajoute-les dans les réglages (Dossiers, « Mes images », communes à tous les jeux) ou depuis la fenêtre des variantes.
+- En bas enfin, la difficulté : Facile (9 vitres et de grosses bulles), Moyen (16 vitres, bulles un peu plus grosses) ou Difficile (36 vitres).
