@@ -204,6 +204,62 @@ class ScribbleTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 46 (maintainer's choice of 26/11/2026): an eraser drawn follows the pen
+     * while the eraser is chosen, and erases as wide as its tip.
+     */
+    @Test
+    void shouldShowTheEraserUnderThePen() throws Exception {
+        for (final ScribbleMode mode : ScribbleMode.values()) {
+            final Scribble game = launched(mode, ScribbleBackground.SHEET);
+            fx(() -> {
+                assertFalse(game.getRubber().isVisible());
+                line(game, game.getGazePen(), Scribble.GAZE_SMOOTHING);
+                game.use(tool(game, Scribble.Tool.Kind.ERASER));
+                assertTrue(game.getRubber().isVisible());
+                // At first in the middle of the sheet
+                final double left = game.getCanvas().getLayoutX();
+                final double top = game.getCanvas().getLayoutY();
+                assertEquals(left + game.getCanvas().getWidth() / 2, game.getRubber().getLayoutX(), 1e-9);
+                game.step(1);
+                final Scribble.Pen pen = game.getGazePen();
+                line(game, pen, Scribble.GAZE_SMOOTHING);
+                assertEquals(left + pen.x, game.getRubber().getLayoutX(), 1e-9);
+                assertEquals(top + pen.y, game.getRubber().getLayoutY(), 1e-9);
+                // The first line erased, also off its middle
+                assertEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 200));
+                assertEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 204));
+                // Looking at the tool bar does not move it; a width changes its size
+                final double x = game.getRubber().getLayoutX();
+                final double before = game.getRubber().getBoundsInLocal().getHeight();
+                game.use(game.getTools().stream()
+                    .filter(tool -> tool.getKind() == Scribble.Tool.Kind.WIDTH && tool.getWidthIndex() == 2)
+                    .findFirst().orElseThrow());
+                assertEquals(x, game.getRubber().getLayoutX(), 1e-9);
+                assertTrue(game.getRubber().getBoundsInLocal().getHeight() > before);
+                // Back to drawing: hidden
+                final Scribble.Tool pencil = game.getTools().stream()
+                    .filter(tool -> tool.getKind() == Scribble.Tool.Kind.COLOR
+                        || tool.getKind() == Scribble.Tool.Kind.RAINBOW)
+                    .findFirst().orElseThrow();
+                game.use(pencil);
+                assertFalse(game.getRubber().isVisible());
+                return null;
+            });
+        }
+        // On the blackboard, a board brush (maintainer, 26/11/2026): its wooden back, its grain, its felt, a shadow
+        final Scribble board = launched(ScribbleMode.PALETTE, ScribbleBackground.BOARD);
+        fx(() -> {
+            board.use(tool(board, Scribble.Tool.Kind.ERASER));
+            assertTrue(board.getRubber().isVisible());
+            final javafx.scene.Group picture = (javafx.scene.Group) board.getRubber().getChildren().get(0);
+            assertEquals(4, picture.getChildren().size());
+            line(board, board.getGazePen(), Scribble.GAZE_SMOOTHING);
+            assertEquals(ScribbleBackground.BOARD.getPaper(), pixel(board, 300, 200));
+            return null;
+        });
+    }
+
     @Test
     void shouldChangeTheColorAlongTheLineInTheRainbowMode() throws Exception {
         final Scribble game = launched(ScribbleMode.RAINBOW, ScribbleBackground.SHEET);

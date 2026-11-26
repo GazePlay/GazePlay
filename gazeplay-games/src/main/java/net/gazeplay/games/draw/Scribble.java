@@ -22,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.transform.Rotate;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -76,6 +77,11 @@ public class Scribble implements GameLifeCycle {
      * The widths of the line, as parts of the height of the screen.
      */
     static final double[] WIDTHS = {0.006, 0.013, 0.026};
+    /**
+     * The widths of the eraser for each width of the line, as parts of the height of the screen: wide enough for the
+     * eraser drawn under the gaze to be seen (point 46; before: twice the line, 0.012 to 0.052).
+     */
+    static final double[] ERASER_WIDTHS = {0.025, 0.045, 0.07};
     /**
      * The seconds a message shows.
      */
@@ -151,6 +157,14 @@ public class Scribble implements GameLifeCycle {
     private Group layer;
     private Group toolsLayer;
     private Group message;
+    /**
+     * The eraser drawn on the sheet while it is chosen, its tip on the pen (tester's feedback of 23/11/2026, point 46:
+     * the eraser button alone did not say much; maintainer's choice of 26/11/2026, like the coin of the scratch cards).
+     */
+    @Getter
+    private Group rubber;
+    private double rubberSize;
+    private boolean rubberPlaced;
     private FixationRing ring;
     @Getter
     private final List<Tool> tools = new ArrayList<>();
@@ -236,7 +250,14 @@ public class Scribble implements GameLifeCycle {
         ring.setMouseTransparent(true);
         message = new Group();
         message.setMouseTransparent(true);
-        layer = new Group(room, canvas, frame, toolsLayer, ring, message);
+        rubber = new Group();
+        rubber.setMouseTransparent(true);
+        rubber.setVisible(false);
+        // Seen on the sheet only, not over the tool bar
+        final Group rubberHolder = new Group(rubber);
+        rubberHolder.setMouseTransparent(true);
+        rubberHolder.setClip(new Rectangle(margin, margin, canvas.getWidth(), canvas.getHeight()));
+        layer = new Group(room, canvas, rubberHolder, frame, toolsLayer, ring, message);
         gameContext.getChildren().add(layer);
         buildTools(width - toolsWidth - margin, margin, cell);
 
@@ -365,6 +386,7 @@ public class Scribble implements GameLifeCycle {
             source.down = true;
             source.last = clock;
             dot(x, y);
+            moveRubber(x, y);
             return;
         }
         source.last = clock;
@@ -380,6 +402,101 @@ public class Scribble implements GameLifeCycle {
         source.x = nx;
         source.y = ny;
         drawn = true;
+        moveRubber(nx, ny);
+    }
+
+    /**
+     * Puts the tip of the eraser drawn at a point of the sheet, when the eraser is chosen.
+     */
+    private void moveRubber(final double x, final double y) {
+        if (!eraser) {
+            return;
+        }
+        rubber.setLayoutX(canvas.getLayoutX() + x);
+        rubber.setLayoutY(canvas.getLayoutY() + y);
+        rubberPlaced = true;
+    }
+
+    /**
+     * Shows the eraser drawn while the eraser is chosen, of its width now: at the middle of the sheet the first time,
+     * then where it was left (looking at the tool bar does not move it).
+     */
+    private void updateRubber() {
+        rubber.setVisible(eraser);
+        if (!eraser) {
+            return;
+        }
+        final double size = lineWidth();
+        if (size != rubberSize) {
+            rubberSize = size;
+            rubber.getChildren().setAll(background == ScribbleBackground.BOARD
+                ? boardBrush(size * 1.3) : rubberPicture(size));
+        }
+        if (!rubberPlaced) {
+            moveRubber(canvas.getWidth() / 2, canvas.getHeight() / 2);
+        }
+    }
+
+    /**
+     * @return an eraser seen from above, its rounded pink tip of this width around (0, 0), its blue sleeve going up to
+     * the right, and a soft shadow
+     */
+    private static Node rubberPicture(final double size) {
+        final double length = size * 2.4;
+        final Rectangle shadow = new Rectangle(-size / 2 + size * 0.1, -size / 2 + size * 0.14, length, size);
+        shadow.setArcWidth(size * 0.5);
+        shadow.setArcHeight(size * 0.5);
+        shadow.setFill(Color.rgb(0, 0, 0, 0.22));
+        final Rectangle tip = new Rectangle(-size / 2, -size / 2, size * 1.6, size);
+        tip.setArcWidth(size * 0.5);
+        tip.setArcHeight(size * 0.5);
+        tip.setFill(Color.rgb(244, 143, 177));
+        tip.setStroke(Color.rgb(120, 60, 90));
+        tip.setStrokeWidth(Math.max(1, size * 0.06));
+        final Rectangle sleeve = new Rectangle(size * 0.95, -size * 0.54, length - size * 1.45, size * 1.08);
+        sleeve.setArcWidth(size * 0.2);
+        sleeve.setArcHeight(size * 0.2);
+        sleeve.setFill(Color.rgb(66, 133, 244));
+        sleeve.setStroke(Color.rgb(28, 68, 140));
+        sleeve.setStrokeWidth(Math.max(1, size * 0.06));
+        final Group picture = new Group(shadow, tip, sleeve);
+        picture.getTransforms().add(new Rotate(-40, 0, 0));
+        return picture;
+    }
+
+    /**
+     * @return a board brush to wipe the chalk off the blackboard (maintainer, 26/11/2026: clearer than an eraser
+     * there), of this width, the middle of its grey felt on (0, 0), its wooden back above, a little tilted, with a
+     * soft shadow
+     */
+    static Group boardBrush(final double width) {
+        final double felt = width * 0.22;
+        final double back = width * 0.34;
+        final Rectangle shadow = new Rectangle(-width / 2 + width * 0.05, -felt / 2 - back + width * 0.08, width,
+            felt + back);
+        shadow.setArcWidth(width * 0.12);
+        shadow.setArcHeight(width * 0.12);
+        shadow.setFill(Color.rgb(0, 0, 0, 0.25));
+        final Rectangle pad = new Rectangle(-width / 2, -felt / 2, width, felt);
+        pad.setArcWidth(width * 0.06);
+        pad.setArcHeight(width * 0.06);
+        pad.setFill(Color.rgb(84, 86, 96));
+        pad.setStroke(Color.rgb(40, 40, 46));
+        pad.setStrokeWidth(Math.max(1, width * 0.025));
+        final Rectangle wood = new Rectangle(-width * 0.46, -felt / 2 - back, width * 0.92, back + width * 0.02);
+        wood.setArcWidth(width * 0.2);
+        wood.setArcHeight(width * 0.2);
+        wood.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+            new Stop(0, Color.rgb(214, 160, 98)), new Stop(1, Color.rgb(160, 104, 52))));
+        wood.setStroke(Color.rgb(104, 64, 30));
+        wood.setStrokeWidth(Math.max(1, width * 0.025));
+        final Rectangle grain = new Rectangle(-width * 0.3, -felt / 2 - back * 0.62, width * 0.6, back * 0.12);
+        grain.setArcWidth(back * 0.12);
+        grain.setArcHeight(back * 0.12);
+        grain.setFill(Color.rgb(120, 76, 36, 0.45));
+        final Group picture = new Group(shadow, wood, grain, pad);
+        picture.getTransforms().add(new Rotate(-12, 0, 0));
+        return picture;
     }
 
     private void dot(final double x, final double y) {
@@ -390,7 +507,7 @@ public class Scribble implements GameLifeCycle {
     }
 
     private double lineWidth() {
-        return height * WIDTHS[widthIndex] * (eraser ? 2 : 1);
+        return height * (eraser ? ERASER_WIDTHS : WIDTHS)[widthIndex];
     }
 
     /**
@@ -513,6 +630,7 @@ public class Scribble implements GameLifeCycle {
             }
         }
         paintTools();
+        updateRubber();
     }
 
     /**
@@ -734,6 +852,13 @@ public class Scribble implements GameLifeCycle {
                     yield swatch;
                 }
                 case ERASER -> {
+                    if (background == ScribbleBackground.BOARD) {
+                        // The brush, a little lower: its back is above its felt
+                        final Group brush = boardBrush(radius * 1.25);
+                        brush.setLayoutX(x);
+                        brush.setLayoutY(y + radius * 0.12);
+                        yield brush;
+                    }
                     final Rectangle rubber = new Rectangle(x - radius * 0.5, y - radius * 0.28, radius, radius * 0.56);
                     rubber.setArcWidth(radius * 0.2);
                     rubber.setArcHeight(radius * 0.2);
