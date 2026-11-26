@@ -71,9 +71,14 @@ class ScribbleTest {
     }
 
     private Scribble launched(final ScribbleMode mode, final ScribbleBackground background) throws Exception {
+        return launched(mode, ScribbleTrace.FREE, background);
+    }
+
+    private Scribble launched(final ScribbleMode mode, final ScribbleTrace trace, final ScribbleBackground background)
+        throws Exception {
         return fx(() -> {
             gameArea.getChildren().clear();
-            final Scribble game = new Scribble(gameContext, stats, mode, background, 3);
+            final Scribble game = new Scribble(gameContext, stats, mode, trace, background, 3);
             game.setManual();
             launchedGames.add(game).launch();
             game.step(0.02);
@@ -490,16 +495,89 @@ class ScribbleTest {
         });
     }
 
+    /**
+     * Tester's feedback of 23/11/2026, point 48 (maintainer's choices of 26/11/2026): by fixation, nothing is drawn
+     * while the pencil is up (a hollow circle follows the gaze); a fixation puts it down, another one lifts it, and
+     * another fixation needs the gaze to move first; a still mouse is a fixation; leaving the sheet lifts the pencil.
+     */
+    @Test
+    void shouldStartAndEndTheLineByFixation() throws Exception {
+        final Scribble game = launched(ScribbleMode.PALETTE, ScribbleTrace.FIXATION, ScribbleBackground.SHEET);
+        fx(() -> {
+            final Scribble.Pen gaze = game.getGazePen();
+            line(game, gaze, Scribble.GAZE_SMOOTHING);
+            assertFalse(gaze.isDown());
+            assertFalse(game.isDrawn());
+            assertEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 300, 200));
+            assertTrue(game.getLiftedPencil().isVisible());
+
+            hold(game, gaze, 400, 200, 0.3);
+            assertFalse(gaze.isDown());
+            hold(game, gaze, 400, 200, 0.4);
+            assertTrue(gaze.isDown());
+            assertFalse(game.getLiftedPencil().isVisible());
+            assertEquals(ScribbleBackground.SHEET.getInk(), pixel(game, 400, 200));
+
+            for (int x = 400; x <= 700; x += 10) {
+                game.draw(gaze, x, 200, Scribble.GAZE_SMOOTHING);
+                game.step(0.01);
+            }
+            assertEquals(ScribbleBackground.SHEET.getInk(), pixel(game, 550, 200));
+
+            hold(game, gaze, 700, 200, 1.0);
+            assertFalse(gaze.isDown());
+            assertTrue(game.getLiftedPencil().isVisible());
+            // Still there: the pencil stays up until the gaze has moved
+            hold(game, gaze, 700, 200, 1.0);
+            assertFalse(gaze.isDown());
+            for (int y = 200; y <= 600; y += 10) {
+                game.draw(gaze, 700, y, Scribble.GAZE_SMOOTHING);
+                game.step(0.01);
+            }
+            assertEquals(ScribbleBackground.SHEET.getPaper(), pixel(game, 700, 400));
+
+            // The eye tracker silent: no fixation
+            game.step(1);
+            assertFalse(gaze.isDown());
+
+            // A still mouse: a fixation without any new point
+            game.leaveSheet(gaze);
+            final Scribble.Pen mouse = game.getMousePen();
+            game.draw(mouse, 200, 600, Scribble.MOUSE_SMOOTHING);
+            for (int i = 0; i < 6; i++) {
+                game.step(0.1);
+            }
+            assertTrue(mouse.isDown());
+            game.leaveSheet(mouse);
+            assertFalse(mouse.isDown());
+            assertFalse(game.getLiftedPencil().isVisible());
+            return null;
+        });
+    }
+
+    /**
+     * The gaze kept on a point for this time, a point each tenth of a second (the eye tracker does not stay silent).
+     */
+    private static void hold(final Scribble game, final Scribble.Pen pen, final double x, final double y,
+                             final double seconds) {
+        for (double t = 0; t < seconds - 1e-9; t += 0.1) {
+            game.draw(pen, x, y, Scribble.GAZE_SMOOTHING);
+            game.step(0.1);
+        }
+    }
+
     @Test
     void shouldReadTheVariants() {
         final Set<IGameVariant> variants = new ScribbleGameVariantGenerator().getVariants();
-        assertEquals(4, variants.size());
+        assertEquals(8, variants.size());
         final Scribble board = ScribbleGameLauncher.create(gameContext,
-            new GroupedGameVariant("ScribbleRainbow", "ScribbleDrawing", "ScribbleBoard", null), stats, 1);
+            new GroupedGameVariant("ScribbleRainbow", "ScribbleFixationLine", "ScribbleBoard", null), stats, 1);
         assertEquals(ScribbleMode.RAINBOW, board.getMode());
+        assertEquals(ScribbleTrace.FIXATION, board.getTrace());
         assertEquals(ScribbleBackground.BOARD, board.getBackground());
         final Scribble other = ScribbleGameLauncher.create(gameContext, null, stats, 1);
         assertEquals(ScribbleMode.PALETTE, other.getMode());
+        assertEquals(ScribbleTrace.FREE, other.getTrace());
         assertEquals(ScribbleBackground.SHEET, other.getBackground());
     }
 }

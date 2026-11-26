@@ -96,6 +96,10 @@ public class Scribble implements GameLifeCycle {
      * The height of the tool bar, in rows of buttons: 7 rows, half a row of space, the row of the new sheet alone.
      */
     static final double TOOL_ROWS = 8.5;
+    /**
+     * Line by fixation (point 48): how far the pen may move (part of the height of the screen) and still be a fixation.
+     */
+    static final double FIXATION_RADIUS = 0.035;
 
     private static final Color[] COLORS = {null, Color.rgb(229, 57, 53), Color.rgb(251, 140, 0), Color.rgb(253, 216, 53),
         Color.rgb(67, 160, 71), Color.rgb(30, 136, 229), Color.rgb(142, 36, 170), Color.rgb(240, 98, 146)};
@@ -115,6 +119,8 @@ public class Scribble implements GameLifeCycle {
     private final ScribbleMode mode;
     @Getter
     private final ScribbleBackground background;
+    @Getter
+    private final ScribbleTrace trace;
 
     @Getter
     private Phase phase = Phase.OVER;
@@ -167,6 +173,14 @@ public class Scribble implements GameLifeCycle {
     private double rubberSize;
     private boolean rubberPlaced;
     private FixationRing ring;
+    /**
+     * Line by fixation: the ring of a fixation on the sheet, the source fixing, and the hollow circle following it while
+     * the pencil is up.
+     */
+    private FixationRing sheetRing;
+    private Pen fixing;
+    @Getter
+    private Circle liftedPencil;
     @Getter
     private final List<Tool> tools = new ArrayList<>();
     private final List<Node> gazeNodes = new ArrayList<>();
@@ -199,13 +213,15 @@ public class Scribble implements GameLifeCycle {
     /**
      * @param gameSeed the seed of the game to replay, or a negative value for a new game
      */
-    Scribble(final IGameContext gameContext, final Stats stats, final ScribbleMode mode,
+    Scribble(final IGameContext gameContext, final Stats stats, final ScribbleMode mode, final ScribbleTrace trace,
              final ScribbleBackground background, final double gameSeed) {
         this.gameContext = gameContext;
         this.configuration = gameContext.getConfiguration();
         this.stats = stats;
         this.mode = mode;
+        this.trace = trace;
         this.background = background;
+        mousePen.gaze = false;
         // Nothing is drawn at random: the seed is only kept, as for the other games
         if (gameSeed < 0) {
             stats.setGameSeed(new ReplayablePseudoRandom().getSeed());
@@ -258,7 +274,16 @@ public class Scribble implements GameLifeCycle {
         final Group rubberHolder = new Group(rubber);
         rubberHolder.setMouseTransparent(true);
         rubberHolder.setClip(new Rectangle(margin, margin, canvas.getWidth(), canvas.getHeight()));
-        layer = new Group(room, canvas, rubberHolder, frame, toolsLayer, ring, message);
+        liftedPencil = new Circle(Math.max(height * 0.012, 4));
+        liftedPencil.setFill(null);
+        liftedPencil.setStrokeWidth(Math.max(2, height * 0.004));
+        liftedPencil.setMouseTransparent(true);
+        liftedPencil.setVisible(false);
+        rubberHolder.getChildren().add(liftedPencil);
+        sheetRing = new FixationRing();
+        sheetRing.setMouseTransparent(true);
+        sheetRing.setSize(height * FIXATION_RADIUS * 2.4);
+        layer = new Group(room, canvas, rubberHolder, frame, toolsLayer, sheetRing, ring, message);
         gameContext.getChildren().add(layer);
         buildTools(width - toolsWidth - margin, margin, cell);
 
@@ -373,18 +398,35 @@ public class Scribble implements GameLifeCycle {
             final MouseEvent mouse = (MouseEvent) event;
             draw(mousePen, mouse.getX(), mouse.getY(), MOUSE_SMOOTHING);
         } else if (type == GazeEvent.GAZE_EXITED) {
-            gazePen.down = false;
+            leaveSheet(gazePen);
         } else if (type == MouseEvent.MOUSE_EXITED) {
-            mousePen.down = false;
+            leaveSheet(mousePen);
+        }
+    }
+
+    /**
+     * A source out of the sheet: its pencil lifts (and, by fixation, its fixation stops).
+     */
+    void leaveSheet(final Pen source) {
+        source.down = false;
+        source.onSheet = false;
+        source.tracked = false;
+        if (fixing == source) {
+            stopSheetFixation();
+            liftedPencil.setVisible(false);
         }
     }
 
     /**
      * A point of a source on the sheet: the pen goes part of the way to it and draws the line; it starts a new line
-     * when it was lifted or when the source was silent for a moment.
+     * when it was lifted or when the source was silent for a moment. By fixation, see {@link #drawByFixation}.
      */
     void draw(final Pen source, final double x, final double y, final double smoothing) {
         if (phase != Phase.PLAY || Stats.isConfigMenuOpen()) {
+            return;
+        }
+        if (trace == ScribbleTrace.FIXATION) {
+            drawByFixation(source, x, y, smoothing);
             return;
         }
         if (!source.down || clock - source.last > LIFT_AFTER) {
@@ -397,6 +439,13 @@ public class Scribble implements GameLifeCycle {
             return;
         }
         source.last = clock;
+        strokeTo(source, x, y, smoothing);
+    }
+
+    /**
+     * The pen goes part of the way to a point and draws the line.
+     */
+    private void strokeTo(final Pen source, final double x, final double y, final double smoothing) {
         final double nx = source.x + (x - source.x) * smoothing;
         final double ny = source.y + (y - source.y) * smoothing;
         final double distance = Math.hypot(nx - source.x, ny - source.y);
@@ -410,6 +459,106 @@ public class Scribble implements GameLifeCycle {
         source.y = ny;
         drawn = true;
         moveRubber(nx, ny);
+    }
+
+    /**
+     * A point of a source on the sheet, the line by fixation (tester's feedback of 23/11/2026, point 48; maintainer's
+     * choices of 26/11/2026): the pencil up, a hollow circle follows the source and nothing is drawn; a fixation (the
+     * pen staying within {@link #FIXATION_RADIUS} for the length of the settings, see {@link #fixateOnSheet}) puts it
+     * down where it is, and the line follows; another fixation lifts it. The eye tracker silent for a moment lifts it
+     * too, not a still mouse: a still mouse is a fixation.
+     */
+    private void drawByFixation(final Pen source, final double x, final double y, final double smoothing) {
+        if (source.gaze && clock - source.last > LIFT_AFTER) {
+            source.down = false;
+            source.tracked = false;
+        }
+        source.last = clock;
+        source.onSheet = true;
+        if (source.down) {
+            strokeTo(source, x, y, smoothing);
+        } else if (!source.tracked) {
+            source.x = x;
+            source.y = y;
+            source.tracked = true;
+        } else {
+            source.x += (x - source.x) * smoothing;
+            source.y += (y - source.y) * smoothing;
+        }
+        moveRubber(source.x, source.y);
+        // A new fixation when the pen is out of the circle of the last one
+        final double radius = height * FIXATION_RADIUS;
+        if (!source.anchored || Math.hypot(source.x - source.ax, source.y - source.ay) > radius) {
+            source.ax = source.x;
+            source.ay = source.y;
+            source.anchorStart = clock;
+            source.anchored = true;
+            source.needsMove = false;
+            if (fixing == source) {
+                stopSheetFixation();
+            }
+        }
+        if (fixing != source && fixing != null) {
+            stopSheetFixation();
+            liftedPencil.setVisible(false);
+        }
+        fixing = source;
+        showLiftedPencil();
+    }
+
+    /**
+     * The hollow circle of the pencil up, of the ink now, where the source fixing is; hidden while it draws, and with
+     * the eraser (the eraser drawn follows instead).
+     */
+    private void showLiftedPencil() {
+        final boolean shown = fixing != null && fixing.onSheet && !fixing.down && !eraser;
+        liftedPencil.setVisible(shown);
+        if (shown) {
+            liftedPencil.setStroke(mode == ScribbleMode.RAINBOW ? RAINBOW : color);
+            liftedPencil.setCenterX(canvas.getLayoutX() + fixing.x);
+            liftedPencil.setCenterY(canvas.getLayoutY() + fixing.y);
+        }
+    }
+
+    /**
+     * One step of a fixation on the sheet: its ring fills with the time the pen stays; full, the pencil goes down (a
+     * dot where it is) or up. Another fixation needs the pen to move first. Stopped when the eye tracker loses the
+     * eyes.
+     */
+    private void fixateOnSheet() {
+        final Pen source = fixing;
+        if (source == null || !source.onSheet || !source.anchored || source.needsMove) {
+            return;
+        }
+        if (source.gaze && clock - source.last > LIFT_AFTER) {
+            source.down = false;
+            source.tracked = false;
+            source.anchored = false;
+            stopSheetFixation();
+            liftedPencil.setVisible(false);
+            return;
+        }
+        final double progress = (clock - source.anchorStart) * 1000 / Math.max(1, configuration.getFixationLength());
+        if (!sheetRing.isVisible()) {
+            sheetRing.show(canvas.getLayoutX() + source.ax, canvas.getLayoutY() + source.ay);
+        }
+        sheetRing.setProgress(Math.min(1, progress));
+        if (progress >= 1) {
+            stopSheetFixation();
+            source.needsMove = true;
+            if (source.down) {
+                source.down = false;
+            } else {
+                // Down under the hollow circle, where the pen is now
+                source.down = true;
+                dot(source.x, source.y);
+            }
+            showLiftedPencil();
+        }
+    }
+
+    private void stopSheetFixation() {
+        sheetRing.stop();
     }
 
     /**
@@ -562,6 +711,9 @@ public class Scribble implements GameLifeCycle {
             }
         }
         fixate(seconds);
+        if (trace == ScribbleTrace.FIXATION) {
+            fixateOnSheet();
+        }
     }
 
     private void fixate(final double seconds) {
@@ -638,6 +790,7 @@ public class Scribble implements GameLifeCycle {
         }
         paintTools();
         updateRubber();
+        showLiftedPencil();
     }
 
     /**
@@ -776,6 +929,9 @@ public class Scribble implements GameLifeCycle {
         if (ring != null) {
             ring.stop();
         }
+        if (sheetRing != null) {
+            sheetRing.stop();
+        }
         for (final Node node : List.copyOf(gazeNodes)) {
             gameContext.getGazeDeviceManager().removeEventFilter(node);
         }
@@ -794,6 +950,18 @@ public class Scribble implements GameLifeCycle {
         double y;
         boolean down;
         double last;
+        /**
+         * Line by fixation: whether it is the gaze (not the mouse), on the sheet, followed while the pencil is up, and
+         * its fixation: its center, its start, and whether the pen must move before another one.
+         */
+        boolean gaze = true;
+        boolean onSheet;
+        boolean tracked;
+        boolean anchored;
+        boolean needsMove;
+        double ax;
+        double ay;
+        double anchorStart;
 
         boolean isDown() {
             return down;

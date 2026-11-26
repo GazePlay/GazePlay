@@ -18,7 +18,7 @@ import java.util.LinkedList;
 /**
  * Creates "Gribouille" (name code Scribble) and its statistics (folder "Scribble", as before), for a new game or for the
  * replay of a saved one (see {@code IGameLauncher}). Without a variant of the review of 12/11/2026: the palette on a
- * white sheet.
+ * white sheet, the line free.
  */
 public class ScribbleGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
@@ -45,8 +45,9 @@ public class ScribbleGameLauncher implements IGameLauncher<Stats, IGameVariant> 
                            final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             return new Scribble(gameContext, stats, ScribbleMode.of(grouped.getGroup()),
-                ScribbleBackground.of(grouped.getValue()), gameSeed);
+                ScribbleTrace.of(grouped.getSubGroup()), ScribbleBackground.of(grouped.getValue()), gameSeed);
         }
-        return new Scribble(gameContext, stats, ScribbleMode.PALETTE, ScribbleBackground.SHEET, gameSeed);
+        return new Scribble(gameContext, stats, ScribbleMode.PALETTE, ScribbleTrace.FREE, ScribbleBackground.SHEET,
+            gameSeed);
     }
 }

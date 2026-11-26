@@ -4,6 +4,7 @@ Draw with your eyes! Your gaze is a pencil: where you look on the sheet, a line 
 # How to play
 - Look at the sheet: the line follows your gaze. It is smoothed, so that small trembling does not show.
 - The pencil lifts when your gaze leaves the sheet, or when the eye tracker loses you for a moment (a blink). It goes down again where you look.
+- With "Line by fixation", the pencil is up at the start: a small circle follows your gaze and nothing is drawn. Keep your gaze on a point: a ring fills, then the pencil goes down and the line follows your gaze. Keep your gaze on a point again to lift the pencil. It also lifts when your gaze leaves the sheet or the eye tracker loses you. With the mouse, keep the pointer still.
 - On the right, the round buttons are chosen by looking at them: a ring fills. The length of the ring is that of the settings, also changed in the menu (Esc key).
 - The colors (Palette) or the rainbow pencil (Rainbow), the eraser, three widths of line (their dots are of the color chosen, or rainbow) and "Keep my drawing" (the floppy disk). The button chosen is framed. With the eraser, an eraser drawn follows your gaze on the sheet and erases under its tip; on the blackboard, it is a board brush, which wipes the chalk off. Its size follows the width chosen. To leave the eraser, choose a color or the rainbow pencil.
 - "New sheet" (the bin) is at the very bottom, apart, so as not to be chosen by mistake. It erases nothing at once: it asks "Erase the drawing?" and shows ✔ and ✖ in its place. Look at ✔ to erase, at ✖ to keep your drawing. Without an answer, the question goes away after 5 seconds and the drawing stays; this time stops while you look at ✔ or ✖.
@@ -18,3 +19,4 @@ There is nothing to win or lose: each sheet drawn counts in the statistics. The 
 Choose a variant (it is framed), then press "Start".
 - The sheet: a white sheet or a blackboard.
 - At the bottom, the drawing. Palette: you choose the color among 8. Rainbow: the color changes by itself along the line.
+- Below, the line. Free line: the line follows your gaze as soon as it is on the sheet, to discover the power of the gaze. Line by fixation: a fixation starts the line and another one ends it, to make the drawing you want.

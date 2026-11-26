@@ -9,21 +9,19 @@ import java.util.Set;
 
 /**
  * Gives the variants of "Gribouille" (maintainer's choices of 12/11/2026): what it draws on as buttons (see
- * {@link ScribbleBackground}), and at the bottom how the line is colored (see {@link ScribbleMode}).
+ * {@link ScribbleBackground}), and at the bottom how the line is colored (see {@link ScribbleMode}) then how it starts
+ * and ends (see {@link ScribbleTrace}, 26/11/2026).
  */
 public class ScribbleGameVariantGenerator implements IGameVariantGenerator {
-
-    /**
-     * The single sub-group of the variants (no switch).
-     */
-    static final String DRAWING = "ScribbleDrawing";
 
     @Override
     public Set<IGameVariant> getVariants() {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
         for (final ScribbleMode mode : ScribbleMode.values()) {
-            for (final ScribbleBackground background : ScribbleBackground.values()) {
-                variants.add(new GroupedGameVariant(mode.getKey(), DRAWING, background.getKey(), null));
+            for (final ScribbleTrace trace : ScribbleTrace.values()) {
+                for (final ScribbleBackground background : ScribbleBackground.values()) {
+                    variants.add(new GroupedGameVariant(mode.getKey(), trace.getKey(), background.getKey(), null));
+                }
             }
         }
         return variants;
