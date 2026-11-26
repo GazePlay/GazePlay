@@ -11,16 +11,13 @@ import net.gazeplay.commons.ui.Translator;
 import java.util.List;
 
 /**
- * The current profile, the number of games and of variants, shown at the bottom right of the menu (look of the menus:
- * style class {@code gp-stats}, menus.css).
+ * The current profile and the number of games, shown at the bottom right of the menu (look of the menus: style class
+ * {@code gp-stats}, menus.css). The number of variants is no longer shown (maintainer, 26/11/2026: not useful).
  */
 public class GamesStatisticsPane extends VBox {
 
     @Getter
     private final Label gamesCountValueLabel;
-
-    @Getter
-    private final Label gamesVariantsCountValueLabel;
 
     /**
      * @param profileName the name of the current profile, as shown to the user
@@ -29,15 +26,11 @@ public class GamesStatisticsPane extends VBox {
         super(2);
         getStyleClass().add("gp-stats");
 
-        final int gamesCount = games.size();
-        final int variantsCount = games.stream().mapToInt(gameSpec -> gameSpec.getGameVariantGenerator().getVariants().size()).sum();
-        gamesCountValueLabel = new Label(Integer.toString(gamesCount));
-        gamesVariantsCountValueLabel = new Label(Integer.toString(variantsCount));
+        gamesCountValueLabel = new Label(Integer.toString(games.size()));
 
         getChildren().addAll(
             line(translator.translate("CurrentProfile"), new Label(profileName)),
-            line(translator.translate("games count"), gamesCountValueLabel),
-            line(translator.translate("games variants count"), gamesVariantsCountValueLabel));
+            line(translator.translate("games count"), gamesCountValueLabel));
     }
 
     /**
