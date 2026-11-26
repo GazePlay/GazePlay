@@ -12,7 +12,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
@@ -23,6 +27,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.GazeRoundButton;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -49,13 +54,16 @@ import java.util.Map;
 public class RockPaperScissorsGame implements GameLifeCycle {
 
     /**
-     * In seconds (at the speed 1 of the settings): each word of "rock, paper, scissors!", the round shown, the end
-     * shown, the explanation of a wrong choice.
+     * In seconds (at the speed 1 of the settings): each word of "rock, paper, scissors!", the end shown, the
+     * explanation of a wrong choice. The round shown stays until the arrow is chosen (26/11/2026; it lasted 1.8 s).
      */
     static final double WORD = 0.5;
-    static final double REVEAL = 1.8;
     static final double SHOW = 2.5;
     static final double EXPLAIN = 2.5;
+    /**
+     * The seconds the hand of the player shakes after a wrong choice or a lost round (point 71).
+     */
+    static final double SHAKE = 0.6;
 
     private static final String SOUNDS = "data/rockPaperScissors/sounds/";
     private static final Color BACKGROUND = Color.rgb(232, 236, 244);
@@ -88,6 +96,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
     private boolean won;
     private double elapsed;
     private double explaining;
+    private double shakeLeft;
     @Getter
     private double waiting;
 
@@ -101,9 +110,19 @@ public class RockPaperScissorsGame implements GameLifeCycle {
     private final Map<HandSign, Group> cards = new EnumMap<>(HandSign.class);
     private final Map<HandSign, Rectangle> cardBacks = new EnumMap<>(HandSign.class);
     private final Map<HandSign, Image> images = new EnumMap<>(HandSign.class);
+    @Getter
     private Group playerSlot;
+    @Getter
     private Group computerSlot;
+    @Getter
     private Group message;
+    /**
+     * The arrow to the next round, shown with the result of a round (26/11/2026), null otherwise.
+     */
+    @Getter
+    private GazeRoundButton nextButton;
+    @Getter
+    private Group nextLabel;
     private FixationRing ring;
     private Group hud;
     private final List<Node> gazeNodes = new ArrayList<>();
@@ -268,6 +287,84 @@ public class RockPaperScissorsGame implements GameLifeCycle {
         showSlot(slot, sign, scale, 0);
     }
 
+    /**
+     * What a hand shown did (tester's feedback of 24/11/2026, point 71: without the sound and the text, nothing showed
+     * a wrong choice; maintainer's choice of 26/11/2026): won (a green check and a green circle), lost (a big red
+     * cross), a draw (a yellow "="), or nothing to show.
+     */
+    enum Outcome { WIN, LOSE, DRAW, NONE }
+
+    /**
+     * Shows a sign in a slot with the mark of what it did.
+     */
+    private void showSlot(final Group slot, final HandSign sign, final double scale, final Outcome outcome) {
+        showSlot(slot, sign, scale, 0);
+        if (sign == null || outcome == Outcome.NONE) {
+            return;
+        }
+        final double r = handSize * 0.5 * scale;
+        final double line = Math.max(4, handSize * 0.06);
+        switch (outcome) {
+            case WIN -> {
+                final Circle circle = new Circle(r * 1.15);
+                circle.setFill(null);
+                circle.setStroke(Color.web(GameStyle.SUCCESS_COLOR));
+                circle.setStrokeWidth(line);
+                slot.getChildren().addAll(circle, badge(r, true));
+            }
+            case LOSE -> {
+                final double a = r * 0.8;
+                for (final double[] from : new double[][]{{-a, -a, a, a}, {-a, a, a, -a}}) {
+                    final Line outline = new Line(from[0], from[1], from[2], from[3]);
+                    outline.setStroke(Color.WHITE);
+                    outline.setStrokeWidth(line * 2.6);
+                    outline.setStrokeLineCap(StrokeLineCap.ROUND);
+                    final Line stroke = new Line(from[0], from[1], from[2], from[3]);
+                    stroke.setStroke(Color.rgb(214, 48, 48));
+                    stroke.setStrokeWidth(line * 1.8);
+                    stroke.setStrokeLineCap(StrokeLineCap.ROUND);
+                    slot.getChildren().addAll(outline, stroke);
+                }
+            }
+            case DRAW -> slot.getChildren().add(badge(r, false));
+            default -> {
+            }
+        }
+        slot.getChildren().forEach(node -> node.setMouseTransparent(true));
+    }
+
+    /**
+     * @return a round badge at the top right of a hand: a green check (won), or a yellow "=" (a draw)
+     */
+    private Group badge(final double r, final boolean check) {
+        final double size = r * 0.42;
+        final double cx = r * 0.85;
+        final double cy = -r * 0.85;
+        final Circle disc = new Circle(cx, cy, size, check ? Color.web(GameStyle.SUCCESS_COLOR) : Color.rgb(246, 196, 50));
+        disc.setStroke(Color.WHITE);
+        disc.setStrokeWidth(Math.max(2, size * 0.14));
+        final Group badge = new Group(disc);
+        if (check) {
+            final Polyline mark = new Polyline(cx - size * 0.45, cy, cx - size * 0.12, cy + size * 0.35,
+                cx + size * 0.5, cy - size * 0.35);
+            mark.setStroke(Color.WHITE);
+            mark.setStrokeWidth(size * 0.24);
+            mark.setStrokeLineCap(StrokeLineCap.ROUND);
+            mark.setStrokeLineJoin(StrokeLineJoin.ROUND);
+            mark.setFill(null);
+            badge.getChildren().add(mark);
+        } else {
+            for (final double dy : new double[]{-size * 0.2, size * 0.2}) {
+                final Line bar = new Line(cx - size * 0.45, cy + dy, cx + size * 0.45, cy + dy);
+                bar.setStroke(Color.WHITE);
+                bar.setStrokeWidth(size * 0.22);
+                bar.setStrokeLineCap(StrokeLineCap.ROUND);
+                badge.getChildren().add(bar);
+            }
+        }
+        return badge;
+    }
+
     private void showSlot(final Group slot, final HandSign sign, final double scale, final double angle) {
         final Node content;
         if (sign == null) {
@@ -295,6 +392,21 @@ public class RockPaperScissorsGame implements GameLifeCycle {
         pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
         // Under the hands (the explanations of the rule are long), above the cards
         pill.setLayoutY(playerSlot.getLayoutY() + handSize * 0.8 - pill.getBoundsInLocal().getHeight() / 2);
+        message.getChildren().setAll(pill);
+    }
+
+    /**
+     * The result of a round against the computer, between both hands and at their height (maintainer's feedback of
+     * 26/11/2026), smaller if it does not fit between them.
+     */
+    private void sayBetweenTheHands(final String text) {
+        Group pill = GameStyle.pill(text, height * 0.05);
+        final double room = computerSlot.getLayoutX() - playerSlot.getLayoutX() - handSize * 1.3;
+        if (pill.getBoundsInLocal().getWidth() > room) {
+            pill = GameStyle.pill(text, height * 0.05 * room / pill.getBoundsInLocal().getWidth());
+        }
+        pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
+        pill.setLayoutY(playerSlot.getLayoutY() - pill.getBoundsInLocal().getHeight() / 2);
         message.getChildren().setAll(pill);
     }
 
@@ -358,6 +470,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
             return;
         }
         final double scaled = seconds * Math.max(0.1, configuration.getAnimationSpeedRatio());
+        shake(seconds);
         switch (phase) {
             case WAIT -> {
                 elapsed += seconds;
@@ -371,6 +484,8 @@ public class RockPaperScissorsGame implements GameLifeCycle {
                     explaining -= seconds;
                     if (explaining <= 0 && phase == Phase.PLAY) {
                         say(gameContext.getTranslator().translate("RpsQuestion"), height * 0.04);
+                        // The crossed hand goes: choose again
+                        showSlot(playerSlot, null, 1);
                     }
                 }
             }
@@ -383,7 +498,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
                 showSlot(playerSlot, HandSign.ROCK, 1, angle);
                 showSlot(computerSlot, HandSign.ROCK, 1, -angle);
                 if (word != before && word < 3) {
-                    say(gameContext.getTranslator().translate("RpsCount" + (word + 1)), height * 0.05);
+                    sayBetweenTheHands(gameContext.getTranslator().translate("RpsCount" + (word + 1)));
                     gameContext.getSoundManager().add(SOUNDS + "tick.wav");
                 }
                 if (elapsed >= 3 * WORD) {
@@ -391,10 +506,8 @@ public class RockPaperScissorsGame implements GameLifeCycle {
                 }
             }
             case REVEAL -> {
+                // The result stays until the arrow is chosen (see showNextButton)
                 elapsed += scaled;
-                if (elapsed >= REVEAL) {
-                    afterRound();
-                }
             }
             case SHOW -> {
                 elapsed += seconds;
@@ -405,6 +518,18 @@ public class RockPaperScissorsGame implements GameLifeCycle {
             default -> {
             }
         }
+    }
+
+    /**
+     * The hand of the player shaking after a wrong choice or a lost round (point 71).
+     */
+    private void shake(final double seconds) {
+        if (shakeLeft <= 0) {
+            return;
+        }
+        shakeLeft = Math.max(0, shakeLeft - seconds);
+        final double t = SHAKE - shakeLeft;
+        playerSlot.setTranslateX(Math.sin(t * 45) * handSize * 0.08 * (shakeLeft / SHAKE));
     }
 
     private void fixate(final double seconds) {
@@ -473,7 +598,8 @@ public class RockPaperScissorsGame implements GameLifeCycle {
             phase = Phase.COUNT;
             elapsed = 0;
             ring.stop();
-            say(gameContext.getTranslator().translate("RpsCount1"), height * 0.05);
+            // Rock, paper, scissors! between both hands, where the result will be (26/11/2026)
+            sayBetweenTheHands(gameContext.getTranslator().translate("RpsCount1"));
             gameContext.getSoundManager().add(SOUNDS + "tick.wav");
             paintCards();
             return;
@@ -487,17 +613,21 @@ public class RockPaperScissorsGame implements GameLifeCycle {
                 stats.incrementNumberOfGoalsReached();
             }
             gameContext.getSoundManager().add(SOUNDS + "win.wav");
-            showSlot(playerSlot, sign, 1.25);
+            showSlot(playerSlot, sign, 1.25, Outcome.WIN);
             showSlot(computerSlot, computerSign, 0.8);
             say(gameContext.getTranslator().translate(sign.ruleKey()), height * 0.04);
             phase = Phase.REVEAL;
             elapsed = 0;
             ring.stop();
+            showNextButton();
         } else {
             // A wrong choice: a mistake (17/11/2026: it was not counted)
             stats.incrementNumberOfMistakes();
             firstTry = false;
             greyed.add(sign);
+            // Crossed out and shaking (point 71)
+            showSlot(playerSlot, sign, 1, Outcome.LOSE);
+            shakeLeft = SHAKE;
             gameContext.getSoundManager().add(SOUNDS + "lose.wav");
             say(gameContext.getTranslator().translate(result == 0 ? "RpsSameSign" : computerSign.ruleKey()),
                 height * 0.04);
@@ -515,24 +645,79 @@ public class RockPaperScissorsGame implements GameLifeCycle {
     private void reveal() {
         computerSign = HandSign.values()[random.nextInt(3)];
         final int result = playerSign.fight(computerSign);
-        showSlot(playerSlot, playerSign, result > 0 ? 1.25 : result < 0 ? 0.8 : 1);
-        showSlot(computerSlot, computerSign, result < 0 ? 1.25 : result > 0 ? 0.8 : 1);
+        // The winning hand checked in green, the losing one crossed out in red, a draw "=" (point 71)
+        showSlot(playerSlot, playerSign, result > 0 ? 1.25 : result < 0 ? 0.8 : 1,
+            result > 0 ? Outcome.WIN : result < 0 ? Outcome.LOSE : Outcome.DRAW);
+        showSlot(computerSlot, computerSign, result < 0 ? 1.25 : result > 0 ? 0.8 : 1,
+            result < 0 ? Outcome.WIN : result > 0 ? Outcome.LOSE : Outcome.DRAW);
+        if (result < 0) {
+            shakeLeft = SHAKE;
+        }
         if (result > 0) {
             playerWins++;
             stats.incrementNumberOfGoalsReached();
             gameContext.getSoundManager().add(SOUNDS + "win.wav");
-            say(gameContext.getTranslator().translate("RpsWin"), height * 0.05);
+            sayBetweenTheHands(gameContext.getTranslator().translate("RpsWin"));
         } else if (result < 0) {
             computerWins++;
             gameContext.getSoundManager().add(SOUNDS + "lose.wav");
-            say(gameContext.getTranslator().translate("RpsLose"), height * 0.05);
+            sayBetweenTheHands(gameContext.getTranslator().translate("RpsLose"));
         } else {
             gameContext.getSoundManager().add(SOUNDS + "draw.wav");
-            say(gameContext.getTranslator().translate("RpsDraw"), height * 0.05);
+            sayBetweenTheHands(gameContext.getTranslator().translate("RpsDraw"));
         }
         phase = Phase.REVEAL;
         elapsed = 0;
         showHud();
+        showNextButton();
+    }
+
+    /**
+     * The result of a round stays until the arrow at the right is chosen, by a fixation or a click (maintainer's
+     * feedback of 26/11/2026: it went by too fast to be seen, after a fixed time).
+     */
+    private void showNextButton() {
+        if (nextButton != null) {
+            return;
+        }
+        final double size = height * 0.14;
+        final String name = gameContext.getTranslator().translate("RpsNextRound");
+        nextButton = new GazeRoundButton(gameContext, size, "arrow_forward", name, this::nextRound);
+        // What the arrow does, written under it (maintainer's feedback of 26/11/2026), inside the screen; the arrow
+        // centered above it
+        nextLabel = GameStyle.pill(name, height * 0.028);
+        nextLabel.setMouseTransparent(true);
+        final double labelWidth = nextLabel.getBoundsInLocal().getWidth();
+        final double labelX = Math.min(width - size / 2 - height * 0.04 - labelWidth / 2,
+            width - labelWidth - height * 0.015);
+        nextLabel.setLayoutX(labelX);
+        nextLabel.setLayoutY(playerSlot.getLayoutY() + size / 2 + height * 0.015);
+        final double centerX = labelX + labelWidth / 2;
+        nextButton.setLayoutX(centerX - size / 2);
+        nextButton.setLayoutY(playerSlot.getLayoutY() - size / 2);
+        layer.getChildren().addAll(nextButton, nextLabel);
+    }
+
+    /**
+     * The arrow chosen: the next round, or the end of the game.
+     */
+    void nextRound() {
+        if (phase != Phase.REVEAL) {
+            return;
+        }
+        removeNextButton();
+        afterRound();
+    }
+
+    private void removeNextButton() {
+        if (nextButton != null) {
+            nextButton.dispose();
+            if (layer != null) {
+                layer.getChildren().removeAll(nextButton, nextLabel);
+            }
+            nextButton = null;
+            nextLabel = null;
+        }
     }
 
     private void afterRound() {
@@ -623,6 +808,7 @@ public class RockPaperScissorsGame implements GameLifeCycle {
         if (ring != null) {
             ring.stop();
         }
+        removeNextButton();
         for (final Node node : new ArrayList<>(gazeNodes)) {
             gameContext.getGazeDeviceManager().removeEventFilter(node);
         }

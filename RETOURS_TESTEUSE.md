@@ -128,6 +128,7 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 |---|---|---|---|
 | 45 | Gribouille | Bouton « + » qui efface tout : trop dangereux | « Nouvelle feuille » devient une corbeille, seule en bas de la barre, sous un espace ; sa fixation n'efface rien : « Effacer le dessin ? » avec ✔ et ✖ à sa place, de part et d'autre (pas sous le regard) ; ✖, un autre bouton ou 5 s sans réponse : le dessin reste ; le temps s'arrête pendant qu'on regarde ✔ ou ✖ ; boutons de la barre environ 18 % plus petits (8,5 rangées) ; aides |
 | — | Gribouille | Reprendre la palette du Coloriage (remarque du 24/11) | **Abandonné** (mainteneur, 26/11) |
+| 71 | Pierre papier ciseaux | Erreur plus visible pour qui n'entend pas | Croix rouge sur la main perdante (la main du joueur tremble), cercle et coche verts sur la gagnante, « = » jaune à l'égalité, dans les deux modes ; demandes du mainteneur : le résultat reste jusqu'à la flèche « Manche suivante » (étiquette dessous, plus de temps fixe), « Pierre… papier… ciseaux ! » et « Gagné / Perdu / Égalité » entre les deux mains ; aides |
 | 68 | Fleur des nombres | Cadres de la couleur des pétales, plus épais ou remplis | Sa possibilité 1 (choix du mainteneur) : fond de chaque cadre de la couleur de son pétale, éclaircie, bordure de 10 px (5 avant), marge de 16 px ; cadres à leur place ; même rendu dans les deux thèmes (captures regardées) |
 | 63 | Embouteillage | Niveau facile trop difficile | Niveau « Très facile » en premier (proposé par défaut) : 30 parkings 6 × 6, un seul véhicule à déplacer (2 coups) parmi 3 à 6 ; faits par `make_trafficjam_levels.py --very-easy` (tirage à part, les 90 autres parkings inchangés) ; aides |
 | 59 | Dés | Icône « Lancer » ; dé à lancer surligné | Choix du mainteneur après essai : le bouton « Lancer » gardé dans les deux modes, avec un halo jaune qui pulse tant qu'on peut lancer (les dés à fixer en « compter » essayés puis écartés) ; aides |
@@ -163,7 +164,6 @@ Relevés le 24/11/2026 dans le même document de la testeuse (sections « Retour
 | 66 | Jeu de l'oie | Compréhension : pion plus lent, points du dé remplis case par case, couleur du pion choisie | |
 | 67 | Fleur des nombres | Variante « même nombre dans chaque pétale » | **À débattre à la prochaine réunion** (mainteneur, 26/11) : la testeuse doit préciser la règle (« à discuter pour que je t'en dise plus ») |
 | 69 | Morpion | Écran de récompense | |
-| 71 | Pierre papier ciseaux | Erreur plus visible pour qui n'entend pas | |
 | 74 | Coloriage | Bouton « Imprimer » à pouvoir masquer | |
 | 75 | Coloriage | Enregistrement dans un dossier défini, à pouvoir interdire | |
 | 76 | Petits chevaux | Dés aidés après plusieurs échecs | |

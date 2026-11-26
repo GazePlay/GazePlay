@@ -3,8 +3,8 @@ Joue à pierre, papier, ciseaux contre l'ordinateur ! La pierre casse les ciseau
 
 # Comment jouer
 - En bas, trois cartes : la pierre, le papier et les ciseaux. Fixe une carte pour jouer son signe.
-- Contre l'ordinateur : après ton choix, « Pierre… papier… ciseaux ! » pendant que les deux poings se balancent, puis les deux signes se montrent. La main gagnante grossit : « Gagné ! », « Perdu » ou « Égalité ».
-- Pour apprendre la règle : le signe de l'ordinateur est montré ; choisis celui qui le bat. Une erreur dit pourquoi (par exemple « Le papier enveloppe la pierre ») et grise ta carte : réessaie.
+- Contre l'ordinateur : après ton choix, « Pierre… papier… ciseaux ! » pendant que les deux poings se balancent, puis les deux signes se montrent. La main gagnante grossit, entourée de vert avec une coche ; la main perdante est barrée d'une croix rouge (la tienne tremble) ; une égalité montre un « = » jaune. Le texte dit « Gagné ! », « Perdu » ou « Égalité ». Le résultat reste affiché : regarde la flèche à droite pour passer à la manche suivante (ou l'adulte qui t'accompagne clique dessus).
+- Pour apprendre la règle : le signe de l'ordinateur est montré ; choisis celui qui le bat. Une erreur barre ta main d'une croix rouge, la fait trembler, dit pourquoi (par exemple « Le papier enveloppe la pierre ») et grise ta carte : réessaie. Une bonne réponse entoure ta main de vert avec une coche ; regarde la flèche à droite pour la question suivante.
 - Un anneau se remplit pendant une fixation ; sa durée est celle des réglages.
 - En haut, le score (ou les bonnes réponses).
 - Rien ne peut être choisi avant le délai des réglages, ni pendant que la manche se montre ; au début de chaque nouvelle manche, rien ne peut être choisi pendant ce délai (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.

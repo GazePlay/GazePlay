@@ -101,6 +101,27 @@ class RockPaperScissorsTest {
     }
 
     /**
+     * The result of a round stays (26/11/2026: it went by after a fixed time), then the arrow is chosen.
+     */
+    private static void next(final RockPaperScissorsGame game) throws Exception {
+        steps(game, 3);
+        assertEquals(RockPaperScissorsGame.Phase.REVEAL, game.getPhase(), "the result stays");
+        assertNotNull(game.getNextButton());
+        // "Next round" written under the arrow
+        assertTrue(game.getNextLabel().getBoundsInParent().getMinY() > game.getNextButton().getBoundsInParent()
+            .getMaxY());
+        assertTrue(game.getNextLabel().getBoundsInParent().getMaxX() <= 1920);
+        // The arrow centered above it
+        assertEquals(game.getNextLabel().getBoundsInParent().getCenterX(),
+            game.getNextButton().getLayoutX() + game.getNextButton().getBoundsInLocal().getWidth() / 2, 2);
+        fx(() -> {
+            game.nextRound();
+            return null;
+        });
+        assertNull(game.getNextButton());
+    }
+
+    /**
      * Plays a round against the computer with a sign, until the next round (or the end).
      */
     private static int round(final RockPaperScissorsGame game, final HandSign sign) throws Exception {
@@ -108,7 +129,7 @@ class RockPaperScissorsTest {
         steps(game, 3 * RockPaperScissorsGame.WORD + 0.05);
         assertEquals(RockPaperScissorsGame.Phase.REVEAL, game.getPhase());
         final int result = sign.fight(game.getComputerSign());
-        steps(game, RockPaperScissorsGame.REVEAL + 0.05);
+        next(game);
         return result;
     }
 
@@ -158,7 +179,7 @@ class RockPaperScissorsTest {
         assertEquals(RockPaperScissorsGame.Phase.COUNT, game.getPhase());
         steps(game, 3 * RockPaperScissorsGame.WORD + 0.05);
         when(gameContext.isSelectionBlocked()).thenReturn(true);
-        steps(game, RockPaperScissorsGame.REVEAL + 0.05);
+        next(game);
         assertEquals(RockPaperScissorsGame.Phase.PLAY, game.getPhase());
         verify(gameContext).onGameStarted();
         steps(game, 2);
@@ -168,6 +189,57 @@ class RockPaperScissorsTest {
         assertNull(game.getPlayerSign(), "the fixation counts from the end of the delay");
         steps(game, 0.15);
         assertEquals(HandSign.PAPER, game.getPlayerSign());
+    }
+
+    /**
+     * Tester's feedback of 24/11/2026, point 71: what a hand did is seen without the sound nor the text: a wrong choice
+     * is crossed out in red and shakes, a right one checked and circled in green; against the computer the winning hand
+     * checked, the losing one crossed out, a draw "=".
+     */
+    @Test
+    void shouldMarkTheHandsWithACrossOrACheck() throws Exception {
+        final RockPaperScissorsGame learn = playing(RockPaperScissorsMode.LEARN, RockPaperScissorsEnd.ENDLESS, 3);
+        final HandSign shown = learn.getComputerSign();
+        choose(learn, shown.beaten());
+        assertTrue(hasCross(learn.getPlayerSlot()), "a wrong choice crossed out");
+        steps(learn, 0.1);
+        assertNotEquals(0, learn.getPlayerSlot().getTranslateX(), 1e-9, "and shaking");
+        steps(learn, RockPaperScissorsGame.EXPLAIN);
+        assertFalse(hasCross(learn.getPlayerSlot()), "gone with the explanation");
+        choose(learn, shown.winner());
+        assertTrue(hasCheck(learn.getPlayerSlot()), "a right choice checked");
+
+        final RockPaperScissorsGame versus = playing(RockPaperScissorsMode.VERSUS, RockPaperScissorsEnd.ENDLESS, 5);
+        choose(versus, HandSign.ROCK);
+        // "Rock, paper, scissors!" between both hands too
+        final javafx.geometry.Bounds counted = versus.getMessage().getChildren().getFirst().getBoundsInParent();
+        assertEquals(versus.getPlayerSlot().getLayoutY(), counted.getCenterY(), 1);
+        steps(versus, 3 * RockPaperScissorsGame.WORD + 0.05);
+        final int result = HandSign.ROCK.fight(versus.getComputerSign());
+        // The result between both hands, at their height
+        final javafx.geometry.Bounds said = versus.getMessage().getChildren().getFirst().getBoundsInParent();
+        assertEquals(versus.getPlayerSlot().getLayoutY(), said.getCenterY(), 1);
+        assertTrue(said.getMinX() > versus.getPlayerSlot().getLayoutX()
+            && said.getMaxX() < versus.getComputerSlot().getLayoutX());
+        assertEquals(1920 / 2.0, said.getCenterX(), 1);
+        if (result > 0) {
+            assertTrue(hasCheck(versus.getPlayerSlot()) && hasCross(versus.getComputerSlot()));
+        } else if (result < 0) {
+            assertTrue(hasCross(versus.getPlayerSlot()) && hasCheck(versus.getComputerSlot()));
+        } else {
+            assertFalse(hasCross(versus.getPlayerSlot()) || hasCheck(versus.getPlayerSlot()));
+            assertTrue(versus.getPlayerSlot().getChildren().size() > 1, "a draw badge");
+        }
+    }
+
+    private static boolean hasCross(final javafx.scene.Group slot) {
+        return slot.getChildren().stream().anyMatch(node -> node instanceof javafx.scene.shape.Line line
+            && javafx.scene.paint.Color.rgb(214, 48, 48).equals(line.getStroke()));
+    }
+
+    private static boolean hasCheck(final javafx.scene.Group slot) {
+        return slot.getChildren().stream().anyMatch(node -> node instanceof javafx.scene.shape.Circle circle
+            && javafx.scene.paint.Color.web(net.gazeplay.components.GameStyle.SUCCESS_COLOR).equals(circle.getStroke()));
     }
 
     @Test
@@ -189,7 +261,7 @@ class RockPaperScissorsTest {
         assertEquals(result < 0 ? 1 : 0, game.getComputerWins());
         verify(stats).incrementNumberOfGoalsToReach();
         verify(stats, times(result > 0 ? 1 : 0)).incrementNumberOfGoalsReached();
-        steps(game, RockPaperScissorsGame.REVEAL + 0.05);
+        next(game);
         assertEquals(RockPaperScissorsGame.Phase.PLAY, game.getPhase());
         assertNull(game.getComputerSign());
     }
@@ -263,7 +335,7 @@ class RockPaperScissorsTest {
         // The two wrong choices are mistakes (17/11/2026: they were not counted), counted in this mode
         verify(stats, times(2)).incrementNumberOfMistakes();
         verify(stats).countMistakes();
-        steps(game, RockPaperScissorsGame.REVEAL + 0.05);
+        next(game);
         assertEquals(RockPaperScissorsGame.Phase.PLAY, game.getPhase());
         // At the first try: a goal reached
         choose(game, game.getComputerSign().winner());
@@ -275,7 +347,7 @@ class RockPaperScissorsTest {
         final RockPaperScissorsGame game = playing(RockPaperScissorsMode.LEARN, RockPaperScissorsEnd.ANSWERS_5, 9);
         for (int answer = 0; answer < 5; answer++) {
             choose(game, game.getComputerSign().winner());
-            steps(game, RockPaperScissorsGame.REVEAL + 0.05);
+            next(game);
         }
         assertEquals(RockPaperScissorsGame.Phase.OVER, game.getPhase());
         assertTrue(game.isWon());

@@ -3,8 +3,8 @@ Play rock, paper, scissors against the computer! The rock breaks the scissors, t
 
 # How to play
 - At the bottom, three cards: the rock, the paper and the scissors. Fixate a card to play its sign.
-- Against the computer: after your choice, "Rock... paper... scissors!" while both fists swing, then both signs show. The winning hand grows: "You win!", "You lose" or "Draw".
-- To learn the rule: the sign of the computer is shown; choose the one that beats it. A mistake tells why (for example "The paper wraps the rock") and greys your card: try again.
+- Against the computer: after your choice, "Rock... paper... scissors!" while both fists swing, then both signs show. The winning hand grows, circled in green with a check; the losing hand is crossed out in red (yours shakes); a draw shows a yellow "=". The text says "You win!", "You lose" or "Draw". The result stays: look at the arrow on the right to go to the next round (or the adult beside you clicks it).
+- To learn the rule: the sign of the computer is shown; choose the one that beats it. A mistake crosses your hand out in red, makes it shake, tells why (for example "The paper wraps the rock") and greys your card: try again. A right answer circles your hand in green with a check; look at the arrow on the right for the next question.
 - A ring fills during a fixation; it lasts the length of the settings.
 - At the top, the score (or the right answers).
 - Nothing can be chosen before the delay of the settings, nor while the round is shown; at the start of each new round, nothing can be chosen during this delay (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Escape key) is open.
