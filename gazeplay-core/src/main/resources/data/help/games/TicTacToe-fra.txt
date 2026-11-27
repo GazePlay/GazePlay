@@ -12,7 +12,7 @@ Aligne 3 croix avant que ton adversaire aligne 3 ronds : en ligne, en colonne ou
 - Au début, rien ne peut être choisi avant le délai des réglages ; à chaque fois que c'est à un joueur de jouer, rien ne peut être choisi pendant ce délai (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Le premier qui aligne 3 symboles gagne la partie : une bande jaune les relie. Si la grille est pleine sans gagnant, c'est un match nul. Après 1, 3 ou 5 parties : si tu as gagné plus de parties que l'ordinateur, c'est « Bravo », puis les statistiques ; sinon, les statistiques tout de suite. À deux, c'est toujours « Bravo ». Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
+Le premier qui aligne 3 symboles gagne la partie : une bande jaune les relie. Quand tu gagnes une partie (ou l'un des deux joueurs, à deux), des confettis tombent et deux Biboules de ta couleur sautent de joie à côté de la grille. Si la grille est pleine sans gagnant, c'est un match nul. Après 1, 3 ou 5 parties : si tu as gagné plus de parties que l'ordinateur, c'est « Bravo », puis les statistiques ; sinon, les statistiques tout de suite. À deux, c'est toujours « Bravo ». Sans fin, la partie continue jusqu'à ce que tu la quittes par le menu (touche Échap).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».

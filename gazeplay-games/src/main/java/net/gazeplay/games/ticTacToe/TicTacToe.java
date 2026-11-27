@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -20,6 +21,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.Celebration;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 
@@ -39,6 +41,10 @@ import java.util.List;
  * open. (Before the review: a computer playing at random, the game frozen at a draw against it, its wins not shown,
  * "Bravo" at the first win of the player, no goal counted, 3 pictures of unknown source, the code of a box written 9
  * times.)
+ * <p>
+ * Tester's feedback of 24/11/2026, point 69: a game won by a person is rewarded, confetti falling over the screen and
+ * two Biboules of the color of the winner jumping for joy beside the grid (see {@link Celebration}), not a game won by
+ * the computer nor a draw; a match won still ends with "Bravo".
  */
 public class TicTacToe implements GameLifeCycle {
 
@@ -55,6 +61,11 @@ public class TicTacToe implements GameLifeCycle {
     private static final Color BACKGROUND = Color.rgb(232, 236, 244);
     private static final Color RED = Color.rgb(222, 62, 62);
     private static final Color BLUE = Color.rgb(52, 112, 222);
+    /**
+     * The Biboules of the reward, of the color of the marks of the winner (the Biboules of "Invasion").
+     */
+    static final String RED_BIBOULE = "data/shooter/biboule/images/Red.png";
+    static final String BLUE_BIBOULE = "data/shooter/biboule/images/Blue.png";
 
     enum Phase { WAIT, PLAY, THINK, DRAW, SHOW, OVER }
 
@@ -104,6 +115,8 @@ public class TicTacToe implements GameLifeCycle {
     private FixationRing ring;
     private Group hud;
     private Group message;
+    @Getter
+    private Celebration celebration;
     private final List<Node> gazeNodes = new ArrayList<>();
 
     private int looked = -1;
@@ -189,7 +202,8 @@ public class TicTacToe implements GameLifeCycle {
         message = new Group();
         message.setMouseTransparent(true);
         // The line of a win under the marks: a wide yellow band, seen even along the strokes of the crosses
-        layer = new Group(background, grid, lineLayer, ghost, marksLayer, ring, hud, message);
+        celebration = new Celebration(width, height);
+        layer = new Group(background, grid, lineLayer, ghost, marksLayer, ring, celebration, hud, message);
         gameContext.getChildren().add(layer);
 
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -298,6 +312,7 @@ public class TicTacToe implements GameLifeCycle {
         marksLayer.getChildren().clear();
         lineLayer.getChildren().clear();
         message.getChildren().clear();
+        celebration.stop();
         drawingMark = null;
         current = gamesPlayed % 2 == 0 ? CROSS : NOUGHT;
         progress = 0;
@@ -370,6 +385,7 @@ public class TicTacToe implements GameLifeCycle {
             case SHOW -> {
                 elapsed += seconds;
                 lineLayer.setOpacity(0.7 + 0.3 * Math.cos(elapsed * 7));
+                celebration.step(seconds);
                 if (elapsed >= SHOW) {
                     if (end.getGames() > 0 && gamesPlayed >= end.getGames()) {
                         finish();
@@ -532,6 +548,11 @@ public class TicTacToe implements GameLifeCycle {
         if (winner != TicTacToeBoard.EMPTY) {
             final boolean happy = !opponent.isComputer() || winner == CROSS;
             gameContext.getSoundManager().add(SOUNDS + (happy ? "win.wav" : "lose.wav"));
+            if (happy) {
+                // A game won by a person: confetti and Biboules of the color of the winner (point 69)
+                celebration.start(new Image(winner == CROSS ? RED_BIBOULE : BLUE_BIBOULE, 400, 400, true, true),
+                    gridX, gridY, gridY + 3 * cell);
+            }
         }
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate(text), height * 0.045);
         pill.setLayoutX((width - pill.getBoundsInLocal().getWidth()) / 2);
@@ -641,6 +662,9 @@ public class TicTacToe implements GameLifeCycle {
         loop.stop();
         if (ring != null) {
             ring.stop();
+        }
+        if (celebration != null) {
+            celebration.stop();
         }
         for (final Node node : new ArrayList<>(gazeNodes)) {
             gameContext.getGazeDeviceManager().removeEventFilter(node);

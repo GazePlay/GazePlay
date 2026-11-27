@@ -414,6 +414,7 @@ class TicTacToeTest {
         assertEquals(TicTacToe.Phase.SHOW, game.getPhase());
         assertEquals(TicTacToeBoard.EMPTY, game.getLastWinner());
         assertFalse(game.hasLine());
+        assertFalse(game.getCelebration().isRunning(), "no reward for a draw (point 69)");
         verify(stats).incrementNumberOfGoalsToReach();
         verify(stats, never()).incrementNumberOfGoalsReached();
         // The next game: the computer first
@@ -435,7 +436,13 @@ class TicTacToeTest {
         assertEquals(1, game.score(X));
         verify(stats).incrementNumberOfGoalsReached();
         verify(gameContext.getSoundManager()).add("data/noughtsandcrosses/sounds/win.wav");
+        // Point 69: confetti and two Biboules beside the grid, during the end of the game shown
+        assertTrue(game.getCelebration().isRunning());
+        assertTrue(game.getCelebration().isVisible());
+        assertEquals(2, game.getCelebration().bibouleCount());
+        assertTrue(game.getCelebration().confettiCount() > 40);
         steps(game, TicTacToe.SHOW + 0.05);
+        assertFalse(game.getCelebration().isRunning(), "over with the end of the game shown");
         assertEquals(TicTacToe.Phase.OVER, game.getPhase());
         verify(gameContext).playWinTransition(anyLong(), any());
     }
@@ -451,6 +458,7 @@ class TicTacToeTest {
         assertEquals(TicTacToe.Phase.SHOW, game.getPhase());
         assertEquals(O, game.getLastWinner());
         verify(gameContext.getSoundManager()).add("data/noughtsandcrosses/sounds/lose.wav");
+        assertFalse(game.getCelebration().isRunning(), "no reward when the computer wins (point 69)");
         steps(game, TicTacToe.SHOW + 0.05);
         assertEquals(TicTacToe.Phase.OVER, game.getPhase());
         verify(gameContext, never()).playWinTransition(anyLong(), any());
@@ -478,6 +486,7 @@ class TicTacToeTest {
         }
         assertEquals(TicTacToe.Phase.SHOW, game.getPhase());
         assertEquals(X, game.getLastWinner());
+        assertTrue(game.getCelebration().isRunning(), "a person won: the reward (point 69)");
         steps(game, TicTacToe.SHOW + 0.05);
         verify(gameContext).playWinTransition(anyLong(), any());
     }
