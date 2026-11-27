@@ -19,7 +19,7 @@ import java.util.LinkedList;
 /**
  * Creates the Piano and its statistics (folder "Piano", as before), for a new game or for the replay of a saved one
  * (see {@code IGameLauncher}). The variants of before the review are read as the free mode ("Jeu libre") and the songs
- * without end ("Jouer en suivant les instructions"), whole, as they were played.
+ * without end ("Jouer en suivant les instructions"), whole and at random, as they were played.
  */
 public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, IGameVariant> {
 
@@ -51,6 +51,7 @@ public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, IGame
                 PianoEnd.of(grouped.getValue()), gameSeed);
             final java.util.List<String> extras = grouped.getExtras();
             piano.setLength(extras.isEmpty() ? PianoLength.WHOLE : PianoLength.of(extras.get(0)));
+            piano.setChoice(extras.size() < 2 ? PianoChoice.RANDOM : PianoChoice.of(extras.get(1)));
             return piano;
         }
         if (gameVariant instanceof EnumGameVariant<?> former && former.getEnumValue() == PianoGameVariant.FREEPLAY) {

@@ -69,6 +69,10 @@ de source inconnue** (comptées dans le CSV, retrait des 23 drapeaux compris).
 **Retours de la testeuse, point 37 (25/11/2026)** : le losange d'« Où est la forme ? » (un carré sur sa pointe) est
 redessiné pour le projet ; **1 048 images livrées, 746 libres, 130 libres probables, 172 de source inconnue**.
 
+**Retours de la testeuse, points 39 et 41 (27/11/2026)** : les 4 images des chansons du Piano (lune, étoile, soleil,
+gâteau : OpenMoji, CC BY-SA 4.0, `data/piano/images`, `make_piano_images.py`) sont ajoutées, pour les cartes du choix
+de la chanson et la récompense ; **1 052 images livrées, 750 libres, 130 libres probables, 172 de source inconnue**.
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

@@ -30,6 +30,7 @@ import java.util.concurrent.Callable;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -37,8 +38,8 @@ import static org.mockito.Mockito.*;
 /**
  * The Piano (reviewed on 13/11/2026, maintainer's rules): the keyboard, the songs, the delay and the fixation, a song
  * followed to its end then played again, a wrong key, the free mode, the end, the variants and those of before; since
- * 27/11/2026 (tester's feedback, points 40 and 38), the pastilles of the black keys and the start of a
- * song.
+ * 27/11/2026 (tester's feedback, points 38 to 40), the pastilles of the black keys, the start of a song and the choice of
+ * the song.
  */
 @ExtendWith(ApplicationExtension.class)
 class PianoTest {
@@ -85,10 +86,11 @@ class PianoTest {
     }
 
     private Piano launched(final PianoMode mode, final PianoEnd end) throws Exception {
-        return launched(mode, end, PianoLength.WHOLE);
+        return launched(mode, end, PianoLength.WHOLE, PianoChoice.RANDOM);
     }
 
-    private Piano launched(final PianoMode mode, final PianoEnd end, final PianoLength length) throws Exception {
+    private Piano launched(final PianoMode mode, final PianoEnd end, final PianoLength length,
+                           final PianoChoice choice) throws Exception {
         return fx(() -> {
             gameArea.getChildren().clear();
             final Piano game = new Piano(gameContext, stats, mode, end, 8, () -> new NotePlayer() {
@@ -104,6 +106,7 @@ class PianoTest {
             });
             game.setManual();
             game.setLength(length);
+            game.setChoice(choice);
             launchedGames.add(game).launch();
             game.step(0.02);
             return game;
@@ -307,7 +310,7 @@ class PianoTest {
         assertEquals(14, Song.AH_VOUS_DIRAI_JE_MAMAN.size(PianoLength.START));
         assertEquals(15, Song.ODE_A_LA_JOIE.size(PianoLength.START));
         assertEquals(6, Song.JOYEUX_ANNIVERSAIRE.size(PianoLength.START));
-        final Piano game = launched(PianoMode.SONG, PianoEnd.ENDLESS, PianoLength.START);
+        final Piano game = launched(PianoMode.SONG, PianoEnd.ENDLESS, PianoLength.START, PianoChoice.RANDOM);
         fx(() -> {
             final Song first = game.getSong();
             final int start = first.size(PianoLength.START);
@@ -330,20 +333,84 @@ class PianoTest {
     }
 
     @Test
+    void shouldLetThePersonChooseTheSongAtTheStartAndAfterEachSong() throws Exception {
+        when(configuration.getGameStartDelay()).thenReturn(400);
+        final Piano game = launched(PianoMode.SONG, PianoEnd.SONGS_3, PianoLength.START, PianoChoice.CHOOSE);
+        fx(() -> {
+            assertEquals(Piano.Phase.CHOOSE, game.getPhase());
+            assertTrue(game.isChoiceShown());
+            assertEquals(Piano.GREYED, game.getKeyboardOpacity());
+            assertFalse(game.isHinted());
+            verify(stats, never()).incrementNumberOfGoalsToReach(anyInt());
+            // The greyed keyboard plays nothing
+            game.lookAt(game.key(7));
+            steps(game, 1);
+            game.choose(game.key(7));
+            assertTrue(heard.isEmpty());
+            // A card looked at during the delay of the settings is not chosen; the delay is over here (1 s above)
+            game.lookAtCard(1);
+            steps(game, 0.3);
+            assertEquals(Piano.Phase.CHOOSE, game.getPhase());
+            steps(game, 0.3);
+            assertEquals(Song.AH_VOUS_DIRAI_JE_MAMAN, game.getSong());
+            assertFalse(game.isChoiceShown());
+            assertEquals(1, game.getKeyboardOpacity());
+            assertEquals(Piano.Phase.WAIT, game.getPhase());
+            steps(game, 0.42);
+            assertEquals(Piano.Phase.PLAY, game.getPhase());
+            assertTrue(game.isHinted());
+            verify(stats).incrementNumberOfGoalsToReach(14 + 1);
+            // The song played and played again: the choice again
+            final Song song = game.getSong();
+            for (int i = 0; i < game.getTarget(); i++) {
+                game.choose(game.key(song.getNotes()[i]));
+            }
+            steps(game, replayLength(song));
+            assertEquals(Piano.Phase.CHOOSE, game.getPhase());
+            assertTrue(game.isChoiceShown());
+            assertEquals(1, game.getSongs());
+            // "Au hasard": never the song just played
+            game.chooseCard(4);
+            assertNotEquals(Song.AH_VOUS_DIRAI_JE_MAMAN, game.getSong());
+            assertEquals(Piano.Phase.WAIT, game.getPhase());
+            return null;
+        });
+    }
+
+    @Test
+    void shouldWaitTheDelayOfTheSettingsBeforeACardCanBeChosen() throws Exception {
+        when(configuration.getGameStartDelay()).thenReturn(1000);
+        final Piano game = launched(PianoMode.SONG, PianoEnd.ENDLESS, PianoLength.WHOLE, PianoChoice.CHOOSE);
+        fx(() -> {
+            game.lookAtCard(0);
+            steps(game, 0.9);
+            assertEquals(Piano.Phase.CHOOSE, game.getPhase());
+            steps(game, 0.62);
+            assertEquals(Song.AU_CLAIR_DE_LA_LUNE, game.getSong());
+            assertEquals(Song.AU_CLAIR_DE_LA_LUNE.size(), game.getTarget());
+            return null;
+        });
+    }
+
+    @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new PianoGameVariantGenerator().getVariants();
-        assertEquals(9, variants.size());
-        // The first variant: the start of the song
+        assertEquals(17, variants.size());
+        // The first variant: the start of the song, chosen by the person
         final GroupedGameVariant first = (GroupedGameVariant) variants.iterator().next();
-        assertEquals(List.of("PianoStart"), first.getExtras());
+        assertEquals(List.of("PianoStart", "PianoChoose"), first.getExtras());
         final Piano songs = PianoGameLauncher.create(gameContext,
-            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd5", null, "PianoWhole"), stats, 1);
+            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd5", null, "PianoWhole", "PianoRandom"),
+            stats, 1);
         assertEquals(PianoMode.SONG, songs.getMode());
         assertEquals(PianoEnd.SONGS_5, songs.getEnd());
         assertEquals(PianoLength.WHOLE, songs.getLength());
-        final Piano started = PianoGameLauncher.create(gameContext,
-            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd1", null, "PianoStart"), stats, 1);
-        assertEquals(PianoLength.START, started.getLength());
+        assertEquals(PianoChoice.RANDOM, songs.getChoice());
+        final Piano chosen = PianoGameLauncher.create(gameContext,
+            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd1", null, "PianoStart", "PianoChoose"),
+            stats, 1);
+        assertEquals(PianoLength.START, chosen.getLength());
+        assertEquals(PianoChoice.CHOOSE, chosen.getChoice());
         final Piano free = PianoGameLauncher.create(gameContext,
             new EnumGameVariant<>(PianoGameVariant.FREEPLAY, PianoGameVariant::getLabel), stats, 1);
         assertEquals(PianoMode.FREE, free.getMode());

@@ -4,6 +4,7 @@ Joue du piano avec les yeux ! Le clavier a une octave, du do au do : 8 touches b
 # Comment jouer
 - Regarde une touche : un anneau se remplit, puis la note joue et une petite note de musique s’envole. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
 - Les touches noires ont une pastille : sa moitié gauche a la couleur de la touche blanche de gauche, sa moitié droite celle de la touche blanche de droite. L’anneau se remplit sur la pastille.
+- Choisis ta chanson : au début et après chaque chanson, 5 cartes sont au-dessus du clavier grisé : les 4 chansons, avec leur image, et « Au hasard ». Fixe une carte : un anneau fait le tour de son bord, puis la chanson commence. Les cartes attendent le délai des réglages avant de pouvoir être choisies.
 - En Chansons : la touche à jouer est entourée, avec une flèche au-dessus. Joue-la : la touche suivante s’allume. Une autre touche joue sa note, sans erreur, mais la chanson n’avance pas. En haut, le titre de la chanson et le nombre de notes jouées.
 - Les chansons : Au clair de la lune, Ah ! vous dirai-je maman, L’Ode à la joie et Joyeux anniversaire. Certaines ont une touche noire.
 - En Libre : chaque touche joue sa note, du do au do.
@@ -17,3 +18,4 @@ Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le jeu : Chansons (suivre les touches qui s’allument), ou Libre (toutes les touches).
 - Pour les chansons, la fin : 1, 3 ou 5 chansons, ou sans fin.
 - Pour les chansons, la longueur : Début de la chanson (la première phrase, puis la chanson entière en récompense), ou Chanson entière.
+- Pour les chansons, le choix : La personne choisit (l’écran « Choisis ta chanson »), ou Au hasard (le jeu choisit, jamais deux fois la même à la suite).

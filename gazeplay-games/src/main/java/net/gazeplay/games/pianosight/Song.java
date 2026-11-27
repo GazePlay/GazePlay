@@ -12,12 +12,13 @@ import lombok.Getter;
  * "Joyeux anniversaire" is in F, with a B flat (a black key): its tune (Mildred and Patty Hill, "Good Morning to All",
  * 1893) is in the public domain in Europe since 2017. "L'Ode à la joie": its first two phrases (Beethoven, 1824).
  * <p>
- * Since 27/11/2026 (tester's feedback, point 38): the notes of its start (its first phrase), played alone in the variant
- * "Début de la chanson".
+ * Since 27/11/2026 (tester's feedback, points 38, 39 and 41): the notes of its start (its first phrase), played alone in
+ * the variant "Début de la chanson", and its picture (OpenMoji, CC BY-SA 4.0), on the card of the choice of the song and
+ * swinging while the song is played again.
  */
 @Getter
 public enum Song {
-    AU_CLAIR_DE_LA_LUNE("PianoSongMoon", 11,
+    AU_CLAIR_DE_LA_LUNE("PianoSongMoon", 11, "moon",
         new int[]{7, 7, 7, 9, 11, 9, 7, 11, 9, 9, 7,
             7, 7, 7, 9, 11, 9, 7, 11, 9, 9, 7,
             9, 9, 9, 9, 4, 4, 9, 7, 6, 4, 2,
@@ -26,19 +27,19 @@ public enum Song {
             1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 4,
             1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 4,
             1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 4}),
-    AH_VOUS_DIRAI_JE_MAMAN("PianoSongTwinkle", 14,
+    AH_VOUS_DIRAI_JE_MAMAN("PianoSongTwinkle", 14, "star",
         new int[]{0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0,
             7, 7, 5, 5, 4, 4, 2, 7, 7, 5, 5, 4, 4, 2,
             0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0},
         new double[]{1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2}),
-    ODE_A_LA_JOIE("PianoSongJoy", 15,
+    ODE_A_LA_JOIE("PianoSongJoy", 15, "sun",
         new int[]{4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 4, 2, 2,
             4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 2, 0, 0},
         new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 0.5, 2,
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 0.5, 2}),
-    JOYEUX_ANNIVERSAIRE("PianoSongBirthday", 6,
+    JOYEUX_ANNIVERSAIRE("PianoSongBirthday", 6, "cake",
         new int[]{0, 0, 2, 0, 5, 4,
             0, 0, 2, 0, 7, 5,
             0, 0, 12, 9, 5, 4, 2,
@@ -56,16 +57,18 @@ public enum Song {
      * The notes of its start.
      */
     private final int start;
+    private final String picture;
     private final int[] notes;
     private final double[] beats;
 
-    Song(final String key, final int start, final int[] notes, final double[] beats) {
+    Song(final String key, final int start, final String picture, final int[] notes, final double[] beats) {
         if (notes.length != beats.length || start < 1 || start > notes.length) {
             throw new IllegalArgumentException(key + ": " + notes.length + " notes, " + beats.length + " lengths, "
                 + start + " at the start");
         }
         this.key = key;
         this.start = start;
+        this.picture = "data/piano/images/" + picture + ".png";
         this.notes = notes;
         this.beats = beats;
     }

@@ -22,6 +22,11 @@ replace images of Freepik (October 2026). The script keeps the sizes and the tra
 (images/ingredients) are emojis of OpenMoji (https://openmoji.org/), CC BY-SA 4.0, cropped and resized by
 make_magicrecipes_images.py (this folder).
 
+Images of the songs of the Piano (gazeplay-games: data/piano/images, 27/11/2026, tester's feedback points 39 and 41):
+moon.png, star.png, sun.png and cake.png, on the cards of the choice of the song and swinging while the song is played
+again, are emojis of OpenMoji (https://openmoji.org/), CC BY-SA 4.0, cropped and resized by make_piano_images.py (this
+folder). The die of "Au hasard" and the keyboard are drawn by the game.
+
 Images of Frogs Race (gazeplay-games: data/race/images): the racing frogs (frog-<color>.png, frog-<color>-jump.png),
 the frog catching the bugs (frog-catcher.png) and the pond (background.png) are drawn by make_race_images.py (this
 folder), under the license of GazePlay Learning (GPL-3.0-or-later). They replace (October 2026) a frog animation and a

@@ -5,6 +5,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -17,7 +19,10 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +34,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
+import net.gazeplay.components.RingThickness;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,7 +60,10 @@ import java.util.function.Supplier;
  * <p>
  * Tester's feedback of 23/11/2026, maquette validated by the maintainer on 26/11/2026: each black key has a round
  * pastille, half of the color of each white key beside it, where its ring fills (point 40); a song is played to the end
- * of its start only (its first phrase), then played again whole as a reward, or whole (point 38).
+ * of its start only (its first phrase), then played again whole as a reward, or whole (point 38); the person chooses
+ * the song on the screen "Choisis ta chanson", at the start and after each song: 5 cards chosen by a fixation (the ring
+ * along their edge), the 4 songs and "Au hasard", over the greyed keyboard; or the game chooses at random (point 39). For
+ * room above it, the keyboard of the songs is lower and smaller than the one of the free mode.
  */
 @Slf4j
 public class Piano implements GameLifeCycle {
@@ -89,7 +98,12 @@ public class Piano implements GameLifeCycle {
     private static final String NOTE_SHAPE = "M 9 0 L 13 0 L 13 18 Q 20 20 22 27 L 18 26 Q 15 23 13 23 L 13 40 "
         + "C 13 46 7 50 3 49 C -1 48 -1 43 3 40 C 6 38 9 38 9 39 Z";
 
-    enum Phase { WAIT, PLAY, REWARD, OVER }
+    /**
+     * The greyed keyboard while the song is chosen, as on the maquette.
+     */
+    static final double GREYED = 0.35;
+
+    enum Phase { WAIT, CHOOSE, PLAY, REWARD, OVER }
 
     private final IGameContext gameContext;
     private final Configuration configuration;
@@ -108,6 +122,12 @@ public class Piano implements GameLifeCycle {
     @Getter
     @Setter
     private PianoLength length = PianoLength.WHOLE;
+    /**
+     * The person choosing the songs, or the game (at random by default, as before the feedback).
+     */
+    @Getter
+    @Setter
+    private PianoChoice choice = PianoChoice.RANDOM;
 
     @Getter
     private Phase phase = Phase.OVER;
@@ -135,7 +155,15 @@ public class Piano implements GameLifeCycle {
     private double keyboardTop;
 
     private Group layer;
+    private Group keyboard;
     private Group keysLayer;
+    private Group choiceLayer;
+    private final List<Rectangle> cards = new ArrayList<>();
+    private Rectangle cardRing;
+    private double cardRingPerimeter;
+    @Getter
+    private int lookedCard = -1;
+    private double cardProgress;
     private Group flying;
     private Group hint;
     private Group hud;
@@ -203,10 +231,17 @@ public class Piano implements GameLifeCycle {
         final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         width = dimension.getWidth();
         height = dimension.getHeight();
-        whiteWidth = width * 0.9 / WHITE.length;
-        whiteHeight = Math.min(height * 0.55, whiteWidth * 3.2);
+        if (mode == PianoMode.SONG) {
+            // Lower and smaller, as on the maquette: the cards of the choice and the picture of the song above it
+            whiteWidth = Math.min(width * 0.73 / WHITE.length, height * 0.39 / 2.4);
+            whiteHeight = whiteWidth * 2.4;
+            keyboardTop = height * 0.547;
+        } else {
+            whiteWidth = width * 0.9 / WHITE.length;
+            whiteHeight = Math.min(height * 0.55, whiteWidth * 3.2);
+            keyboardTop = height * 0.3;
+        }
         keyboardLeft = (width - whiteWidth * WHITE.length) / 2;
-        keyboardTop = height * 0.3;
         player = playerFactory.get();
 
         final Rectangle room = new Rectangle(0, 0, width, height);
@@ -237,19 +272,27 @@ public class Piano implements GameLifeCycle {
         hud.setMouseTransparent(true);
         reward = new Group();
         reward.setMouseTransparent(true);
-        layer = new Group(room, body, felt, keysLayer, hint, flying, ring, hud, reward);
+        keyboard = new Group(body, felt, keysLayer);
+        choiceLayer = new Group();
+        choiceLayer.setVisible(false);
+        layer = new Group(room, keyboard, hint, flying, ring, choiceLayer, hud, reward);
         gameContext.getChildren().add(layer);
         gameContext.getGazeDeviceManager().addStats(stats);
         buildKeys();
         songs = 0;
-        if (mode == PianoMode.SONG) {
-            newSong();
-        } else {
-            stats.notifyNewRoundReady();
-        }
-        phase = Phase.WAIT;
         phaseTime = 0;
         elapsed = 0;
+        if (mode == PianoMode.SONG && choice == PianoChoice.CHOOSE) {
+            buildCards();
+            showChoice();
+        } else {
+            if (mode == PianoMode.SONG) {
+                newSong();
+            } else {
+                stats.notifyNewRoundReady();
+            }
+            phase = Phase.WAIT;
+        }
         if (!manual) {
             loop.start();
         }
@@ -357,7 +400,8 @@ public class Piano implements GameLifeCycle {
      */
     private void showHint() {
         hint.getChildren().clear();
-        if (mode != PianoMode.SONG || phase == Phase.REWARD || song == null || noteIndex >= target) {
+        if (mode != PianoMode.SONG || phase == Phase.REWARD || phase == Phase.CHOOSE || song == null
+            || noteIndex >= target) {
             return;
         }
         final Key key = key(song.getNotes()[noteIndex]);
@@ -375,10 +419,26 @@ public class Piano implements GameLifeCycle {
 
     private void showHud() {
         hud.getChildren().clear();
-        if (mode != PianoMode.SONG || song == null) {
+        if (mode != PianoMode.SONG) {
             return;
         }
         final double size = height * 0.032;
+        final Group done = GameStyle.pill(gameContext.getTranslator().translate("PianoDone") + " " + songs
+            + (end.getSongs() > 0 ? " / " + end.getSongs() : ""), size);
+        done.setLayoutX(width - done.getBoundsInLocal().getWidth() - height * 0.03);
+        done.setLayoutY(height * 0.025);
+        hud.getChildren().add(done);
+        if (phase == Phase.CHOOSE) {
+            final Group title = GameStyle.pill(gameContext.getTranslator().translate("PianoChooseSong"),
+                height * 0.039);
+            title.setLayoutX((width - title.getBoundsInLocal().getWidth()) / 2);
+            title.setLayoutY(height * 0.045);
+            hud.getChildren().add(title);
+            return;
+        }
+        if (song == null) {
+            return;
+        }
         final Group title = GameStyle.pill(gameContext.getTranslator().translate(song.getKey()), size);
         title.setLayoutX(height * 0.03);
         title.setLayoutY(height * 0.025);
@@ -386,11 +446,179 @@ public class Piano implements GameLifeCycle {
             + Math.min(noteIndex, target) + " / " + target, size);
         count.setLayoutX(height * 0.03 + title.getBoundsInLocal().getWidth() + height * 0.02);
         count.setLayoutY(height * 0.025);
-        final Group done = GameStyle.pill(gameContext.getTranslator().translate("PianoDone") + " " + songs
-            + (end.getSongs() > 0 ? " / " + end.getSongs() : ""), size);
-        done.setLayoutX(width - done.getBoundsInLocal().getWidth() - height * 0.03);
-        done.setLayoutY(height * 0.025);
-        hud.getChildren().addAll(title, count, done);
+        hud.getChildren().addAll(title, count);
+    }
+
+    // --- The choice of the song (point 39) ---
+
+    /**
+     * The 5 cards of the choice, in a row over the keyboard: the 4 songs with their picture and title, then "Au hasard"
+     * with a die, its edge dashed; one ring along the edge of the card looked at.
+     */
+    private void buildCards() {
+        final Song[] all = Song.values();
+        final int count = all.length + 1;
+        final double bodyTop = keyboardTop - whiteWidth * 0.12 * 2.2;
+        final double top = height * 0.154;
+        double cardWidth = Math.min(width * 0.146, width * 0.9 / (count + (count - 1) * 0.14));
+        cardWidth = Math.min(cardWidth, (bodyTop - height * 0.04 - top) / 1.18);
+        final double cardHeight = cardWidth * 1.18;
+        final double gap = cardWidth * 0.14;
+        final double left = (width - count * cardWidth - (count - 1) * gap) / 2;
+        final double labelSize = cardHeight * 0.093;
+        for (int i = 0; i < count; i++) {
+            final double x = left + i * (cardWidth + gap);
+            final Rectangle card = GameStyle.pictureCard(x, top, cardWidth, cardHeight);
+            final Group content = new Group();
+            content.setMouseTransparent(true);
+            final double pictureSize = cardWidth * 0.6;
+            final double pictureTop = top + cardHeight * 0.1;
+            final String label;
+            if (i < all.length) {
+                final ImageView picture = new ImageView(new Image(all[i].getPicture()));
+                picture.setFitWidth(pictureSize);
+                picture.setFitHeight(pictureSize);
+                picture.setPreserveRatio(true);
+                picture.setX(x + (cardWidth - pictureSize) / 2);
+                picture.setY(pictureTop);
+                content.getChildren().add(picture);
+                label = all[i].getKey();
+            } else {
+                card.setStyle("-fx-fill: " + GameStyle.PICTURE_BACKGROUND + "; -fx-stroke: #C9B597; -fx-stroke-width: 3;");
+                card.getStrokeDashArray().setAll(cardWidth * 0.06, cardWidth * 0.04);
+                content.getChildren().add(die(x + cardWidth / 2, pictureTop + pictureSize / 2, pictureSize * 0.72));
+                label = "PianoRandomSong";
+            }
+            final Text name = new Text(gameContext.getTranslator().translate(label));
+            name.setFont(GameStyle.titleFont(labelSize));
+            name.setStyle(GameStyle.titleFontStyle(labelSize) + " -fx-fill: " + GameStyle.CARD_TEXT + ";");
+            name.setTextAlignment(TextAlignment.CENTER);
+            name.setWrappingWidth(cardWidth * 0.9);
+            name.setX(x + cardWidth * 0.05 - name.getLayoutBounds().getMinX());
+            final double labelTop = pictureTop + pictureSize + cardHeight * 0.04;
+            final double labelRoom = top + cardHeight * 0.96 - labelTop;
+            name.setY(labelTop + Math.max(0, (labelRoom - name.getLayoutBounds().getHeight()) / 2)
+                - name.getLayoutBounds().getMinY());
+            content.getChildren().add(name);
+            final int index = i;
+            final EventHandler<Event> handler = event -> {
+                final var type = event.getEventType();
+                if (type == MouseEvent.MOUSE_ENTERED || type == MouseEvent.MOUSE_MOVED
+                    || type == GazeEvent.GAZE_ENTERED || type == GazeEvent.GAZE_MOVED) {
+                    lookAtCard(index);
+                } else if (type == MouseEvent.MOUSE_EXITED || type == GazeEvent.GAZE_EXITED) {
+                    lookAwayCard(index);
+                }
+            };
+            card.addEventFilter(MouseEvent.ANY, handler);
+            card.addEventFilter(GazeEvent.ANY, handler);
+            gameContext.getGazeDeviceManager().addEventFilter(card);
+            cards.add(card);
+            choiceLayer.getChildren().addAll(card, content);
+        }
+        // The ring along the edge of a card, as in Memory, Magic Cards and "Recettes magiques"
+        cardRing = new Rectangle(0, 0, cardWidth, cardHeight);
+        final double corner = GameStyle.cardRadius(cardWidth, cardHeight);
+        cardRing.setArcWidth(2 * corner);
+        cardRing.setArcHeight(2 * corner);
+        cardRing.setFill(null);
+        cardRing.setStrokeType(StrokeType.INSIDE);
+        cardRing.setStrokeLineCap(StrokeLineCap.BUTT);
+        RingThickness.apply(cardRing, Math.max(5, cardWidth * 0.045));
+        cardRing.setStyle("-fx-stroke: -gp-ring;");
+        cardRing.setMouseTransparent(true);
+        cardRing.setVisible(false);
+        cardRingPerimeter = GameStyle.clockwiseRing(cardRing);
+        choiceLayer.getChildren().add(cardRing);
+    }
+
+    /**
+     * @return a white die showing 5, centered on a point
+     */
+    private static Group die(final double cx, final double cy, final double size) {
+        final Color ink = Color.rgb(107, 90, 74);
+        final Rectangle face = new Rectangle(cx - size / 2, cy - size / 2, size, size);
+        face.setArcWidth(size * 0.42);
+        face.setArcHeight(size * 0.42);
+        face.setFill(Color.WHITE);
+        face.setStroke(ink);
+        face.setStrokeWidth(Math.max(2, size * 0.06));
+        final Group die = new Group(face);
+        final double d = size * 0.26;
+        for (final double[] dot : new double[][]{{-d, -d}, {d, -d}, {0, 0}, {-d, d}, {d, d}}) {
+            die.getChildren().add(new Circle(cx + dot[0], cy + dot[1], size * 0.095, ink));
+        }
+        return die;
+    }
+
+    /**
+     * The screen "Choisis ta chanson": the cards over the greyed keyboard, which plays nothing.
+     */
+    private void showChoice() {
+        hint.getChildren().clear();
+        reward.getChildren().clear();
+        ring.stop();
+        looked = null;
+        progress = 0;
+        cardProgress = 0;
+        cardRing.setVisible(false);
+        keyboard.setOpacity(GREYED);
+        choiceLayer.setVisible(true);
+        setPhase(Phase.CHOOSE);
+        showHud();
+    }
+
+    void lookAtCard(final int index) {
+        if (lookedCard == index) {
+            return;
+        }
+        lookedCard = index;
+        cardProgress = 0;
+        cardRing.setVisible(false);
+    }
+
+    void lookAwayCard(final int index) {
+        if (lookedCard == index) {
+            lookedCard = -1;
+            cardProgress = 0;
+            cardRing.setVisible(false);
+        }
+    }
+
+    /**
+     * The fixation on a card, once the delay of the settings is over (new choices on the screen).
+     */
+    private void fixateCard(final double seconds) {
+        if (lookedCard < 0 || phaseTime < configuration.getGameStartDelay() / 1000.0) {
+            return;
+        }
+        final Rectangle card = cards.get(lookedCard);
+        cardRing.setLayoutX(card.getX());
+        cardRing.setLayoutY(card.getY());
+        cardRing.setVisible(true);
+        cardProgress += seconds * 1000 / Math.max(1, configuration.getFixationLength());
+        GameStyle.fillRing(cardRing, cardRingPerimeter, Math.min(1, cardProgress));
+        if (cardProgress >= 1) {
+            chooseCard(lookedCard);
+        }
+    }
+
+    /**
+     * A card chosen: its song, or one at random for the last card; the keyboard back, after the delay of the settings.
+     */
+    void chooseCard(final int index) {
+        if (phase != Phase.CHOOSE) {
+            return;
+        }
+        final Song[] all = Song.values();
+        final Song chosen = index < all.length ? all[index] : randomSong();
+        cardProgress = 0;
+        cardRing.setVisible(false);
+        choiceLayer.setVisible(false);
+        keyboard.setOpacity(1);
+        elapsed = 0;
+        setPhase(Phase.WAIT);
+        startSong(chosen);
     }
 
     // --- The game ---
@@ -445,6 +673,7 @@ public class Piano implements GameLifeCycle {
                     setPhase(Phase.PLAY);
                 }
             }
+            case CHOOSE -> fixateCard(seconds);
             case PLAY -> fixate(seconds);
             case REWARD -> replay();
             default -> {
@@ -478,6 +707,8 @@ public class Piano implements GameLifeCycle {
         if (replayed >= song.size() && phaseTime >= start + AFTER) {
             if (end.getSongs() > 0 && songs >= end.getSongs()) {
                 finish();
+            } else if (choice == PianoChoice.CHOOSE) {
+                showChoice();
             } else {
                 // Back to the game first: the next key of the new song is framed
                 setPhase(Phase.PLAY);
@@ -618,6 +849,20 @@ public class Piano implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return whether the screen of the choice of the song is shown, for the tests
+     */
+    boolean isChoiceShown() {
+        return choiceLayer != null && choiceLayer.isVisible();
+    }
+
+    /**
+     * @return the opacity of the keyboard, for the tests
+     */
+    double getKeyboardOpacity() {
+        return keyboard.getOpacity();
+    }
+
     private void finish() {
         setPhase(Phase.OVER);
         loop.stop();
@@ -648,6 +893,11 @@ public class Piano implements GameLifeCycle {
             gameContext.getGazeDeviceManager().removeEventFilter(key.shape);
         }
         keys.clear();
+        for (final Rectangle card : cards) {
+            gameContext.getGazeDeviceManager().removeEventFilter(card);
+        }
+        cards.clear();
+        lookedCard = -1;
         if (ring != null) {
             ring.stop();
         }

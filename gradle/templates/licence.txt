@@ -113,6 +113,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
   (data/potions/images/ingredients) : OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0 ; recadrés
   (gradle/images/make_magicrecipes_images.py).
   Ces images remplacent depuis octobre 2026 des images de Freepik, dont la licence n'était pas libre.
+- Images des chansons du Piano (data/piano/images : lune, étoile, soleil, gâteau) : OpenMoji
+  (https://openmoji.org/), licence CC BY-SA 4.0 ; recadrées (gradle/images/make_piano_images.py).
 - Images de La course des grenouilles (grenouilles et décor de la mare) : dessinées pour GazePlay Learning
   (gradle/images/make_race_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 une
   grenouille animée et un décor de source inconnue. Le coassement d'une mouche attrapée (data/race/sounds/frog.mp3)
