@@ -33,8 +33,9 @@ import java.util.stream.Collectors;
  *     <li>session.json: the evaluation, the participant, the settings, the start and end, whether it was completed;</li>
  *     <li>resultats.csv and/or resultats.xlsx (format chosen on the website): one row per screen shown, with for
  *     the grids the cells shown, the expected and given answers;</li>
- *     <li>evenements.csv (and a sheet of resultats.xlsx): every event (entry in and exit from an image, a selection,
- *     a sound, a key of the examiner...);</li>
+ *     <li>evenements.csv (and a sheet of resultats.xlsx): every event (entry in and exit from an image or the
+ *     fixation cross, with the length of each visit on the cross and its total per screen, a selection, a sound, a key
+ *     of the examiner...);</li>
  *     <li>echantillons.csv: every position of the gaze and of the mouse, with the target under it (always CSV:
  *     there can be many).</li>
  * </ul>

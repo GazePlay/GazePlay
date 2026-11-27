@@ -22,8 +22,16 @@ public final class EvalSessionRecorder {
     /**
      * Version of the files of results of GazePlay Eval written by {@link EvalResultsWriter} (session.json
      * "formatVersion"). To be increased at each change of their columns or of their meaning.
+     * <ul>
+     *     <li>1 (5/11/2026): the first format;</li>
+     *     <li>2 (27/11/2026, tester's feedback point 87): the zone of the fixation cross of a transition is followed
+     *     whether the cross is to be fixated or not ("croix" in the targets of the samples, entries and exits in the
+     *     events); the detail of an exit from the cross gives the length of the visit ("1240 ms"); an event
+     *     "temps_croix" per source at the end of a screen with a cross gives the time on it and the visits ("3210 ms en
+     *     2 passages"). No column changed.</li>
+     * </ul>
      */
-    public static final int FORMAT_VERSION = 1;
+    public static final int FORMAT_VERSION = 2;
 
     /** Sources of the events. */
     public static final String GAZE = "regard";

@@ -82,7 +82,7 @@ class EvalResultsWriterTest {
         try (var reader = Files.newBufferedReader(folder.resolve("session.json"), StandardCharsets.UTF_8)) {
             session = JsonParser.parseReader(reader).getAsJsonObject();
         }
-        assertEquals(1, session.get("formatVersion").getAsInt());
+        assertEquals(EvalSessionRecorder.FORMAT_VERSION, session.get("formatVersion").getAsInt());
         assertEquals("Couleurs", session.get("evaluation").getAsString());
         assertTrue(session.get("terminee").getAsBoolean());
         assertEquals("Léa", session.getAsJsonObject("participant").get("Prénom").getAsString());

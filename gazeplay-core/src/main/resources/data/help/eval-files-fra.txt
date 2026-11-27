@@ -15,7 +15,7 @@ Les informations du participant sont écrites en clair dans session.json et resu
 ## À quoi il sert
 Savoir qui a passé quelle évaluation, quand, combien de temps, et avec quels réglages. C'est un fichier texte, qui s'ouvre avec le Bloc-notes.
 ## Ce qu'il contient
-| formatVersion | La version du format des fichiers.
+| formatVersion | La version du format des fichiers : 2 depuis le 27/11/2026 (le temps passé sur la croix des écrans de transition, dans evenements.csv). Les fichiers de la version 1 n'ont pas ces informations.
 | application | Le logiciel qui a écrit les fichiers : GazePlay Learning.
 | evaluation | Le nom de l'évaluation.
 | debut, fin | La date et l'heure du début et de la fin.
@@ -81,13 +81,14 @@ Pour une analyse fine, par exemple le temps passé sur chaque image ou l'ordre d
 | Écran, Essai, Type d'écran | Sur quel écran.
 | Événement | Ce qui s'est passé (voir la liste ci-dessous).
 | Source | regard, souris, clavier ou systeme (le logiciel lui-même).
-| Cible | L'image ou le bouton concerné.
+| Cible | L'image, le bouton ou la croix (croix) concernés.
 | X, Y | La position, s'il y en a une.
 | Détail | Une précision, par exemple bonne réponse ou mauvaise réponse.
 ## Les événements
-| entree, sortie | Le regard ou la souris entre sur une cible, ou en sort. Une souris dont le pointeur vient d'être caché sort de sa cible.
+| entree, sortie | Le regard ou la souris entre sur une cible, ou en sort. Une souris dont le pointeur vient d'être caché sort de sa cible. La croix d'un écran de transition est suivie, qu'elle soit à fixer ou non : pour elle, le détail de la sortie donne la durée du passage (par exemple 1240 ms). Un passage pas fini à la fin de l'écran a sa sortie à ce moment.
 | selection | Une image est sélectionnée. Le détail dit bonne réponse ou mauvaise réponse.
 | fixation_validee | Une fixation a déclenché un bouton ou une croix.
+| temps_croix | À la fin d'un écran avec une croix, une ligne pour le regard et une pour la souris : le temps passé sur la croix et le nombre de passages (par exemple 3210 ms en 2 passages, ou 0 ms en 0 passage).
 | debut_session, fin_session | Le début et la fin de la passation. Le détail de fin_session dit terminée ou interrompue.
 | debut_ecran, fin_ecran | Le début et la fin d'un écran.
 | debut_video, fin_video | Une vidéo. Une vidéo coupée par la fin de son écran n'a pas de fin_video.
@@ -108,7 +109,7 @@ C'est la donnée brute : une ligne par position du regard et par déplacement de
 | Temps (ms), Écran, Essai | Quand, et sur quel écran.
 | Source | regard ou souris.
 | X, Y | La position, en pixels.
-| Cible | L'image ou le bouton sous ce point, ou - s'il n'y a rien.
+| Cible | L'image, le bouton ou la croix (croix) sous ce point, ou - s'il n'y a rien.
 ## Exemple
 > Temps (ms);Écran;Essai;Source;X;Y;Cible
 > 12040;3;1;regard;412;380;L1C1:chat.png

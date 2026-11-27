@@ -128,6 +128,10 @@ public class GazeplayEval implements GameLifeCycle {
 
     /** The kind, in the events, of the sound of an instruction: the content of its screen. */
     private static final String INSTRUCTION_SOUND = "son";
+    /**
+     * The name of the zone of the fixation cross in the results.
+     */
+    static final String CROSS = "croix";
 
     /** Columns of the heatmaps, as those of GazePlay (Stats.HEAT_MAP_COLUMNS, format version 6). */
     private static final int HEAT_MAP_COLUMNS = 400;
@@ -168,6 +172,15 @@ public class GazeplayEval implements GameLifeCycle {
 
     // Content of the current screen
     private final List<EvalTarget> targets = new ArrayList<>();
+    /**
+     * The fixation cross of a transition, to be fixated or not (tester's feedback, point 87, 27/11/2026): its zone is
+     * always followed; the time each source (gaze, mouse) entered it, and for each source the time spent on it and the
+     * visits, written in the events (the length of each visit in the "sortie", the total of the screen in
+     * "temps_croix").
+     */
+    private EvalTarget crossTarget;
+    private final Map<String, Long> crossEntered = new HashMap<>();
+    private final Map<String, long[]> crossTime = new LinkedHashMap<>();
     private final Map<EvalTarget, GridCell> gridCells = new HashMap<>();
     private final List<Animation> timers = new ArrayList<>();
     private final List<MediaPlayer> players = new ArrayList<>();
@@ -499,8 +512,9 @@ public class GazeplayEval implements GameLifeCycle {
             return;
         }
         if (phase == Phase.SCREEN && recorder.getCurrentScreen() != null && recorder.getCurrentScreen().getEnd() < 0) {
-            // Game left during a screen: its heatmap too
+            // Game left during a screen: its heatmap too, and the time on its cross
             saveHeatmaps();
+            closeCross();
         }
         recorder.finish(completed);
         writeResults();
@@ -577,6 +591,7 @@ public class GazeplayEval implements GameLifeCycle {
         screenToken++;
         EvalScreen screen = definition.screens().get(screenIndex);
         saveHeatmaps();
+        closeCross();
         recorder.endScreen(reason);
         clearScreen();
         if (screen instanceof EvalScreen.Stimuli && gameContext.getConfiguration().getEvalOptions() != EvalOptions.Classique) {
@@ -602,15 +617,70 @@ public class GazeplayEval implements GameLifeCycle {
         horizontal.setMouseTransparent(true);
         vertical.setMouseTransparent(true);
         gameContext.getChildren().addAll(horizontal, vertical);
+        // The zone of the cross, followed whether the cross is to be fixated or not (point 87): a cross not to be
+        // fixated is never selected and shows no ring (a negative fixation time)
+        Rectangle area = transparentArea(centerX - size, centerY - size, 2 * size, 2 * size);
+        gameContext.getChildren().add(area);
+        crossEntered.clear();
+        crossTime.clear();
+        crossTime.put(EvalSessionRecorder.GAZE, new long[2]);
+        crossTime.put(EvalSessionRecorder.MOUSE, new long[2]);
         if (transition.crossFixationSeconds() != null) {
-            Rectangle area = transparentArea(centerX - size, centerY - size, 2 * size, 2 * size);
-            gameContext.getChildren().add(area);
-            addTarget(area, "croix", transition.crossFixationSeconds() * 1000, true,
+            crossTarget = addTarget(area, CROSS, transition.crossFixationSeconds() * 1000, true,
                 (target, source) -> {
                     recorder.event("fixation_validee", source, target.getName(), null, null, "");
                     endScreen(EndReason.FIXATION, token);
                 });
+        } else {
+            crossTarget = addTarget(area, CROSS, -1, true, (target, source) -> {
+            });
         }
+    }
+
+    /**
+     * An entry in or an exit from the cross: the time of the entry kept; at the exit, the length of the visit added to
+     * the time of the source.
+     *
+     * @return the detail of the event: the length of the visit for an exit ("1240 ms"), else nothing
+     */
+    private String crossCrossing(String event, String source, long time) {
+        if ("entree".equals(event)) {
+            crossEntered.putIfAbsent(source, time);
+            return "";
+        }
+        Long entered = crossEntered.remove(source);
+        if (entered == null) {
+            return "";
+        }
+        long length = Math.max(0, time - entered);
+        long[] spent = crossTime.computeIfAbsent(source, key -> new long[2]);
+        spent[0] += length;
+        spent[1]++;
+        return length + " ms";
+    }
+
+    /**
+     * The end of a screen with a cross: the visits not over end now ("sortie"), then the time on the cross of each
+     * source ("temps_croix", even 0 ms, so that a cross not looked at shows).
+     */
+    private void closeCross() {
+        if (crossTarget == null || recorder == null) {
+            return;
+        }
+        long now = recorder.elapsed();
+        for (String source : List.of(EvalSessionRecorder.GAZE, EvalSessionRecorder.MOUSE)) {
+            if (crossEntered.containsKey(source)) {
+                recorder.eventAt(now, "sortie", source, CROSS, null, null, crossCrossing("sortie", source, now));
+            }
+        }
+        for (String source : List.of(EvalSessionRecorder.GAZE, EvalSessionRecorder.MOUSE)) {
+            long[] spent = crossTime.getOrDefault(source, new long[2]);
+            recorder.eventAt(now, "temps_croix", source, CROSS, null, null,
+                spent[0] + " ms en " + spent[1] + (spent[1] > 1 ? " passages" : " passage"));
+        }
+        crossTarget = null;
+        crossEntered.clear();
+        crossTime.clear();
     }
 
     private void showInstruction(EvalScreen.Instruction instruction, int token) {
@@ -930,7 +1000,10 @@ public class GazeplayEval implements GameLifeCycle {
             @Override
             public void onCrossing(EvalTarget crossed, String event, String source, double x, double y, long sampleTime) {
                 if (recorder != null) {
-                    recorder.eventAt(recorder.elapsedAt(sampleTime), event, source, crossed.getName(), x, y, "");
+                    long time = recorder.elapsedAt(sampleTime);
+                    // The length of a visit on the cross in its exit (point 87)
+                    String detail = crossed == crossTarget ? crossCrossing(event, source, time) : "";
+                    recorder.eventAt(time, event, source, crossed.getName(), x, y, detail);
                 }
             }
 

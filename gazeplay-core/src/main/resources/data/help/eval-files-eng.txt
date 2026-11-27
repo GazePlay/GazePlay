@@ -15,7 +15,7 @@ The information about the participant is written in clear text in session.json a
 ## What it is for
 Knowing who took which evaluation, when, for how long, and with which settings. It is a text file, opened with Notepad.
 ## What it holds
-| formatVersion | The version of the format of the files.
+| formatVersion | The version of the format of the files: 2 since 27/11/2026 (the time spent on the cross of the transition screens, in evenements.csv). The files of version 1 do not have this information.
 | application | The software that wrote the files: GazePlay Learning.
 | evaluation | The name of the evaluation.
 | debut, fin | The date and time of the start and of the end.
@@ -81,13 +81,14 @@ For a fine analysis, for example the time spent on each picture or the order of 
 | Écran, Essai, Type d'écran | On which screen.
 | Événement | What happened (see the list below).
 | Source | regard (gaze), souris (mouse), clavier (keyboard) or systeme (the software itself).
-| Cible | The picture or the button concerned.
+| Cible | The picture, the button or the cross (croix) concerned.
 | X, Y | The position, if there is one.
 | Détail | A detail, for example bonne réponse (right answer) or mauvaise réponse (wrong answer).
 ## The events
-| entree, sortie | The gaze or the mouse enters a target, or leaves it. A mouse whose pointer has just been hidden leaves its target.
+| entree, sortie | The gaze or the mouse enters a target, or leaves it. A mouse whose pointer has just been hidden leaves its target. The cross of a transition screen is followed, whether it is to be fixated or not: for it, the detail of the exit gives the length of the visit (for example 1240 ms). A visit not over at the end of the screen has its exit at that moment.
 | selection | A picture is selected. The detail says right answer or wrong answer.
 | fixation_validee | A fixation triggered a button or a cross.
+| temps_croix | At the end of a screen with a cross, one line for the gaze and one for the mouse: the time spent on the cross and the number of visits (for example 3210 ms en 2 passages, or 0 ms en 0 passage).
 | debut_session, fin_session | The start and the end of the session. The detail of fin_session says terminée (completed) or interrompue (interrupted).
 | debut_ecran, fin_ecran | The start and the end of a screen.
 | debut_video, fin_video | A video. A video cut by the end of its screen has no fin_video.
@@ -108,7 +109,7 @@ It is the raw data: one row per position of the gaze and per move of the mouse. 
 | Temps (ms), Écran, Essai | When, and on which screen.
 | Source | regard (gaze) or souris (mouse).
 | X, Y | The position, in pixels.
-| Cible | The picture or the button under this point, or - if there is nothing.
+| Cible | The picture, the button or the cross (croix) under this point, or - if there is nothing.
 ## Example
 > Temps (ms);Écran;Essai;Source;X;Y;Cible
 > 12040;3;1;regard;412;380;L1C1:cat.png

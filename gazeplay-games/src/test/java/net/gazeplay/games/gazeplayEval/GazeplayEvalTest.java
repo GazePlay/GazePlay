@@ -228,6 +228,100 @@ class GazeplayEvalTest {
         WaitForAsyncUtils.waitForFxEvents();
     }
 
+    /**
+     * Tester's feedback, point 87 (format 2): the zone of a cross not to be fixated is followed too; each exit gives
+     * the length of the visit, a visit not over ends with the screen, and "temps_croix" gives the total of each source;
+     * the samples on the cross have it as target.
+     */
+    @Test
+    void shouldFollowTheGazeOnACrossNotToBeFixated() throws Exception {
+        createEvaluation("[]", """
+            [{"Type": "transition", "Mettre un temps avant passage à l'écran suivant": true, "Combien de temps": 1.2,
+              "Mettre une croix de fixation": true, "Mettre un temps de fixation": false,
+              "Combien de temps de fixation": 0}]
+            """);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> imageTargets().size() == 1);
+        Rectangle cross = imageTargets().get(0);
+        double x = cross.getBoundsInParent().getCenterX();
+        double y = cross.getBoundsInParent().getCenterY();
+        Platform.runLater(() -> {
+            scene.getRoot().fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED, x, y, x, y, MouseButton.NONE, 0, false,
+                false, false, false, false, false, false, false, false, false, null));
+            cross.fireEvent(mouse(MouseEvent.MOUSE_ENTERED));
+        });
+        WaitForAsyncUtils.sleep(200, TimeUnit.MILLISECONDS);
+        Platform.runLater(() -> cross.fireEvent(mouse(MouseEvent.MOUSE_EXITED)));
+        WaitForAsyncUtils.sleep(100, TimeUnit.MILLISECONDS);
+        // Back on the cross until the end of the screen
+        Platform.runLater(() -> cross.fireEvent(mouse(MouseEvent.MOUSE_ENTERED)));
+
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        Path session = singleSession();
+        List<String> events = Files.readAllLines(session.resolve("evenements.csv"), StandardCharsets.UTF_8);
+        List<String> exits = events.stream().filter(line -> line.contains(";sortie;souris;croix;")).toList();
+        assertEquals(2, exits.size(), events.toString());
+        long first = Long.parseLong(exits.get(0).replaceAll(".*;(\\d+) ms$", "$1"));
+        long second = Long.parseLong(exits.get(1).replaceAll(".*;(\\d+) ms$", "$1"));
+        assertTrue(first >= 150 && first < 1000, exits.get(0));
+        assertTrue(second > 0, exits.get(1));
+        assertEquals(2, events.stream().filter(line -> line.contains(";entree;souris;croix;")).count());
+        String mouseTime = events.stream().filter(line -> line.contains(";temps_croix;souris;croix;")).findFirst()
+            .orElseThrow();
+        assertTrue(mouseTime.endsWith(";" + (first + second) + " ms en 2 passages"), mouseTime);
+        assertTrue(events.stream().anyMatch(line -> line.endsWith(";temps_croix;regard;croix;;;0 ms en 0 passage")),
+            events.toString());
+        // In order: the last exit, the times, then the end of the screen
+        int lastExit = events.indexOf(exits.get(1));
+        int end = events.indexOf(events.stream().filter(line -> line.contains(";fin_ecran;")).findFirst().orElseThrow());
+        assertTrue(lastExit < events.indexOf(mouseTime) && events.indexOf(mouseTime) < end, events.toString());
+        List<String> samples = Files.readAllLines(session.resolve("echantillons.csv"), StandardCharsets.UTF_8);
+        assertTrue(samples.stream().anyMatch(line -> line.endsWith(";souris;" + Math.round(x) + ";" + Math.round(y)
+            + ";croix")), samples.toString());
+        assertTrue(Files.readString(session.resolve("session.json")).contains("\"formatVersion\": 2"));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * Point 87: a cross to be fixated, its fixation validated: the visit ends with the screen, after the validation.
+     */
+    @Test
+    void shouldEndTheVisitOfACrossFixated() throws Exception {
+        createEvaluation("[]", """
+            [{"Type": "transition", "Mettre un temps avant passage à l'écran suivant": false, "Combien de temps": 0,
+              "Mettre une croix de fixation": true, "Mettre un temps de fixation": true,
+              "Combien de temps de fixation": 0.2}]
+            """);
+        GazeplayEval eval = new GazeplayEval(gameContext, new GazeplayEvalGameVariant(evaluationName), stats);
+
+        Platform.runLater(eval::launch);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> imageTargets().size() == 1);
+        Rectangle cross = imageTargets().get(0);
+        Platform.runLater(() -> cross.fireEvent(mouse(MouseEvent.MOUSE_ENTERED)));
+
+        verify(gameContext, timeout(10_000)).showRoundStats(stats, eval);
+        List<String> events = Files.readAllLines(singleSession().resolve("evenements.csv"), StandardCharsets.UTF_8);
+        int validated = indexOf(events, ";fixation_validee;souris;croix;");
+        int exit = indexOf(events, ";sortie;souris;croix;");
+        int time = indexOf(events, ";temps_croix;souris;croix;");
+        assertTrue(validated >= 0 && validated < exit && exit < time, events.toString());
+        assertTrue(events.get(time).endsWith(" ms en 1 passage"), events.get(time));
+        Platform.runLater(eval::dispose);
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    private static int indexOf(List<String> lines, String part) {
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines.get(i).contains(part)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Test
     void shouldAskTheParticipantAndWriteAnInterruptedSession() throws Exception {
         createEvaluation("[\"Prénom\"]", """
