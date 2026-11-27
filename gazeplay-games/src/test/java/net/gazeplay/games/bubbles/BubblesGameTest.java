@@ -30,7 +30,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -274,14 +273,16 @@ class BubblesGameTest {
         assertTrue(fx(with::pictureUrl).contains(BubblesContent.USER_IMAGES_FOLDER), "an image of the user");
         // Point 50: each image decoded once, in the background, at the size of the biggest bubble; the next hidden
         // picture decoded in the background too
-        final Map<String, javafx.scene.image.Image> decoded = fx(with::bubblePictures);
-        assertEquals(2, decoded.size());
+        final net.gazeplay.commons.gamevariants.UserImagesCache cache = fx(with::bubblePictures);
+        final List<String> urls = created.stream().map(file -> file.toURI().toString()).toList();
         assertNotEquals(fx(with::pictureUrl), fx(with::nextPictureUrl));
         final long until = System.currentTimeMillis() + 10_000;
-        while (decoded.values().stream().anyMatch(image -> image.getProgress() < 1)
+        while (fx(() -> urls.stream().anyMatch(url -> cache.ready(url) == null))
             && System.currentTimeMillis() < until) {
             WaitForAsyncUtils.sleep(50, java.util.concurrent.TimeUnit.MILLISECONDS);
         }
+        final List<javafx.scene.image.Image> decoded = fx(() -> urls.stream().map(cache::ready).toList());
+        assertTrue(decoded.stream().allMatch(java.util.Objects::nonNull), "decoded in the background");
         fx(() -> {
             for (final BubblesGame.Bubble bubble : with.getBubbles()) {
                 bubble.respawn(0);
@@ -289,7 +290,7 @@ class BubblesGameTest {
                     .filter(javafx.scene.image.ImageView.class::isInstance)
                     .map(node -> ((javafx.scene.image.ImageView) node).getImage()).toList();
                 assertEquals(1, shown.size());
-                assertTrue(decoded.values().stream().anyMatch(image -> image == shown.getFirst()),
+                assertTrue(decoded.stream().anyMatch(image -> image == shown.getFirst()),
                     "the image decoded once");
             }
             with.dispose();

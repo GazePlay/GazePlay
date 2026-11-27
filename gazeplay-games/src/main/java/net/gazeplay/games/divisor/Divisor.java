@@ -25,6 +25,7 @@ import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -133,6 +134,11 @@ public class Divisor implements GameLifeCycle {
 
     private ImageLibrary animals;
     private List<File> userImages = List.of();
+    /**
+     * The images of the user, each decoded once (27/11/2026, as in Bubbles, point 50: a big photo decoded again
+     * each time made the game jerk).
+     */
+    private final UserImagesCache userImagesCache = new UserImagesCache(640);
     private int lastImage = -1;
 
     /**
@@ -263,6 +269,7 @@ public class Divisor implements GameLifeCycle {
 
         if (theme == DivisorTheme.MY_IMAGES) {
             userImages = UserImagesVariant.images(DivisorTheme.USER_IMAGES_FOLDER);
+            userImagesCache.preload(userImages);
             if (userImages.isEmpty()) {
                 // The game started without going through the menu, which asks for images
                 final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"),
@@ -344,8 +351,7 @@ public class Divisor implements GameLifeCycle {
             default -> {
                 Image loaded = null;
                 for (int i = 0; i < userImages.size() && (loaded == null || loaded.isError()); i++) {
-                    loaded = new Image(userImages.get(nextIndex(userImages.size())).toURI().toString(), 640, 640,
-                        true, true);
+                    loaded = userImagesCache.get(userImages.get(nextIndex(userImages.size())));
                 }
                 return loaded;
             }
@@ -586,6 +592,7 @@ public class Divisor implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        userImagesCache.dispose();
         phase = Phase.OVER;
         loop.stop();
         for (final Transition transition : List.copyOf(running)) {

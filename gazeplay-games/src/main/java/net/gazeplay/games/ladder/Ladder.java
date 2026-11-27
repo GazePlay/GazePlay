@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -145,6 +146,11 @@ public class Ladder implements GameLifeCycle {
     private final List<Start> starts = new ArrayList<>();
     private final List<Group> pictureNodes = new ArrayList<>();
     private List<File> userImages = List.of();
+    /**
+     * The images of the user, each decoded once (27/11/2026, as in Bubbles, point 50: a round decoded all its big
+     * photos at once, the game stopped between two rounds).
+     */
+    private final UserImagesCache userImagesCache = new UserImagesCache(600);
     @Getter
     private Start looked;
     @Getter
@@ -354,11 +360,13 @@ public class Ladder implements GameLifeCycle {
             final List<File> files = new ArrayList<>(userImages);
             Collections.shuffle(files, new java.util.Random(random.nextInt(Integer.MAX_VALUE)));
             for (int i = 0; i < count; i++) {
-                final Image image = new Image(files.get(i % files.size()).toURI().toString(), 600, 600, true, true);
+                final Image image = userImagesCache.get(files.get(i % files.size()));
                 if (!image.isError()) {
                     out.add(image);
                 }
             }
+            // The other images decoded in the background for the next rounds
+            userImagesCache.preload(files);
         }
         if (out.size() < count) {
             out.clear();
@@ -812,6 +820,7 @@ public class Ladder implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        userImagesCache.dispose();
         phase = Phase.OVER;
         loop.stop();
         for (final Start start : starts) {

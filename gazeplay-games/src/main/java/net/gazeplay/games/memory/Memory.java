@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gamevariants.GroupedGameVariant;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -53,6 +54,11 @@ public class Memory implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
+    /**
+     * The images of the user, each decoded once (27/11/2026, as in Bubbles, point 50: a round decoded all its big
+     * photos at once, the game stopped between two rounds).
+     */
+    private final UserImagesCache userImagesCache = new UserImagesCache(600);
     private final ReplayablePseudoRandom random;
 
     @Getter
@@ -176,6 +182,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        userImagesCache.dispose();
         pauses.forEach(Animation::stop);
         pauses.clear();
         cards.forEach(MemoryCard::release);
@@ -201,8 +208,10 @@ public class Memory implements GameLifeCycle {
             }
             while (!files.isEmpty() && result.size() < count) {
                 final File file = files.remove(random.nextInt(files.size()));
-                result.add(new Image(file.toURI().toString(), 600, 600, true, true));
+                result.add(userImagesCache.get(file));
             }
+            // The other images decoded in the background for the next rounds
+            userImagesCache.preload(files);
         }
         if (result.size() < count) {
             final ImageLibrary library = ImageUtils.createDefaultImageLibrary(null, random);

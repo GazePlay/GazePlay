@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -118,6 +119,11 @@ public class MagicCards implements GameLifeCycle {
     private double[][] slots;
     private ImageLibrary animals;
     private List<File> userImages;
+    /**
+     * The images of the user, each decoded once (27/11/2026, as in Bubbles, point 50: a big photo decoded again
+     * each time made the game jerk).
+     */
+    private final UserImagesCache userImagesCache = new UserImagesCache(1200);
     private int lastImage = -1;
     private String instruction;
 
@@ -203,6 +209,7 @@ public class MagicCards implements GameLifeCycle {
 
         if (pictures == MagicCardsPictures.MY_IMAGES) {
             userImages = UserImagesVariant.images(MagicCardsPictures.USER_IMAGES_FOLDER);
+            userImagesCache.preload(userImages);
             if (userImages.isEmpty()) {
                 // The game started without going through the menu, which asks for images
                 final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"),
@@ -321,7 +328,7 @@ public class MagicCards implements GameLifeCycle {
                 index = (index + 1) % userImages.size();
             }
             lastImage = index;
-            loaded = new Image(userImages.get(index).toURI().toString(), 1200, 1200, true, true);
+            loaded = userImagesCache.get(userImages.get(index));
         }
         if (loaded == null || loaded.isError()) {
             log.warn("No image of the user could be read: an animal instead");
@@ -682,6 +689,7 @@ public class MagicCards implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        userImagesCache.dispose();
         phase = Phase.OVER;
         loop.stop();
         if (cardsLayer != null) {

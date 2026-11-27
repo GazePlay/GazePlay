@@ -251,7 +251,12 @@ public class CasseBrique implements GameLifeCycle {
         if (images.isEmpty()) {
             return null;
         }
-        final Image image = new Image(images.get(random.nextInt(images.size())).toURI().toString());
+        // Decoded at about the size of the screen, not at the size of the photo (27/11/2026, as in Bubbles, point 50: a
+        // photo of 4000 x 3000 took 48 MB and time at the start); 1.5 times the largest side, so that a tall image still
+        // covers a wide screen without being enlarged
+        final double side = Math.max(width, height) * 1.5;
+        final Image image = new Image(images.get(random.nextInt(images.size())).toURI().toString(), side, side, true,
+            true);
         final ImageView view = new ImageView(image);
         // Covers the screen, keeping its proportions (cut at the edges if needed)
         final double scale = Math.max(width / Math.max(1, image.getWidth()), height / Math.max(1, image.getHeight()));

@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.GameStyle;
@@ -43,6 +44,11 @@ public class OpinionsGame implements GameLifeCycle {
      */
     @Getter
     private final List<File> images;
+    /**
+     * The images, each decoded once at the size of the card, the next ones in the background (27/11/2026, as in
+     * Bubbles, point 50: a big photo stopped the game for a moment at each new image).
+     */
+    private UserImagesCache userImagesCache;
 
     @Getter
     private final List<OpinionButton> buttons = new ArrayList<>();
@@ -134,7 +140,12 @@ public class OpinionsGame implements GameLifeCycle {
         final double padding = Math.min(cardWidth, cardHeight) * 0.03;
 
         final File file = images.get(index);
-        final Image image = new Image(file.toURI().toString(), cardWidth * 1.5, cardHeight * 1.5, true, true);
+        if (userImagesCache == null) {
+            userImagesCache = new UserImagesCache(Math.max(cardWidth, cardHeight) * 1.5);
+        }
+        final Image image = userImagesCache.get(file);
+        // The next images decoded in the background
+        userImagesCache.preload(images.subList(index + 1, images.size()));
         final ImageView view = new ImageView(image);
         view.setPreserveRatio(true);
         view.setSmooth(true);
@@ -210,6 +221,10 @@ public class OpinionsGame implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        if (userImagesCache != null) {
+            userImagesCache.dispose();
+            userImagesCache = null;
+        }
         next.stop();
         buttons.forEach(OpinionButton::dispose);
         buttons.clear();

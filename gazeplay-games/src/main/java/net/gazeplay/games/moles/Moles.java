@@ -24,6 +24,7 @@ import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -115,6 +116,11 @@ public class Moles implements GameLifeCycle {
     private Group effects;
     private Group hud;
     private List<File> userImages = List.of();
+    /**
+     * The images of the user, each decoded once (27/11/2026, as in Bubbles, point 50: a big photo decoded again
+     * each time made the game jerk).
+     */
+    private final UserImagesCache userImagesCache = new UserImagesCache(640);
 
     @Getter
     private final List<Hole> holes = new ArrayList<>();
@@ -190,6 +196,7 @@ public class Moles implements GameLifeCycle {
 
         if (target == MolesTarget.MY_IMAGES) {
             userImages = UserImagesVariant.images(MolesTarget.USER_IMAGES_FOLDER);
+            userImagesCache.preload(userImages);
             if (userImages.isEmpty()) {
                 // The game started without going through the menu, which asks for images
                 final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"),
@@ -238,8 +245,7 @@ public class Moles implements GameLifeCycle {
             case MY_IMAGES -> {
                 Image loaded = null;
                 for (int i = 0; i < userImages.size() && (loaded == null || loaded.isError()); i++) {
-                    loaded = new Image(userImages.get(random.nextInt(userImages.size())).toURI().toString(), 640, 640,
-                        true, true);
+                    loaded = userImagesCache.get(userImages.get(random.nextInt(userImages.size())));
                 }
                 yield loaded;
             }
@@ -406,6 +412,7 @@ public class Moles implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        userImagesCache.dispose();
         phase = Phase.OVER;
         loop.stop();
         for (final Transition transition : List.copyOf(running)) {

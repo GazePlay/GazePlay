@@ -41,6 +41,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -135,6 +136,11 @@ public class EggGame implements GameLifeCycle {
     private final List<String> insides = new ArrayList<>();
     private int insideIndex;
     private boolean userImages;
+    /**
+     * The images of the user, each decoded once, the next ones in the background (27/11/2026, as in Bubbles, point 50:
+     * a big photo stopped the game for a moment when the egg opened).
+     */
+    private UserImagesCache userImagesCache;
 
     private final EventHandler<Event> handler = this::handle;
 
@@ -189,6 +195,10 @@ public class EggGame implements GameLifeCycle {
             ANIMALS.forEach(animal -> insides.add(FOLDER + "images/animals/" + animal + ".png"));
         }
         shuffle(insides);
+        if (userImages) {
+            userImagesCache = new UserImagesCache(eggWidth * 1.25 * 1.5);
+            userImagesCache.preloadUrls(insides);
+        }
 
         // The ring of the fixation of the egg shown
         progress.addListener((observable, oldValue, newValue) -> {
@@ -476,7 +486,8 @@ public class EggGame implements GameLifeCycle {
         final String url = insides.get(insideIndex % insides.size());
         insideIndex++;
         final double size = eggWidth * 1.25;
-        final ImageView view = new ImageView(new Image(url, size * 1.5, size * 1.5, true, true));
+        final ImageView view = new ImageView(userImagesCache != null ? userImagesCache.get(url)
+            : new Image(url, size * 1.5, size * 1.5, true, true));
         view.setPreserveRatio(true);
         view.setSmooth(true);
         final Group group;
@@ -539,6 +550,10 @@ public class EggGame implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        if (userImagesCache != null) {
+            userImagesCache.dispose();
+            userImagesCache = null;
+        }
         phase = Phase.OVER;
         stopFixation();
         if (next != null) {

@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.UserImagesCache;
 import net.gazeplay.commons.gamevariants.UserImagesVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -105,6 +106,11 @@ public class Blocs implements GameLifeCycle {
     private FixationRing ring;
     private ImageLibrary animals;
     private List<File> userImages = List.of();
+    /**
+     * The images of the user, each decoded once (27/11/2026, as in Bubbles, point 50: a big photo decoded again
+     * each time made the game jerk).
+     */
+    private final UserImagesCache userImagesCache = new UserImagesCache(1600);
     @Getter
     private final List<Block> blocks = new ArrayList<>();
     private final List<Block> vanishing = new ArrayList<>();
@@ -175,6 +181,7 @@ public class Blocs implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         if (pictures == BlocsPictures.MY_IMAGES) {
             userImages = UserImagesVariant.images(BlocsPictures.USER_IMAGES_FOLDER);
+            userImagesCache.preload(userImages);
             if (userImages.isEmpty()) {
                 // The game started without going through the menu, which asks for images
                 final Group message = GameStyle.card(gameContext.getTranslator().translate("NoUserImages"),
@@ -259,7 +266,7 @@ public class Blocs implements GameLifeCycle {
                     index = (index + 1) % userImages.size();
                 }
                 lastImage = index;
-                loaded = new Image(userImages.get(index).toURI().toString(), 1600, 1600, true, true);
+                loaded = userImagesCache.get(userImages.get(index));
             }
             if (loaded != null && !loaded.isError()) {
                 return loaded;
@@ -509,6 +516,7 @@ public class Blocs implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        userImagesCache.dispose();
         phase = Phase.OVER;
         loop.stop();
         if (blocksLayer != null) {
