@@ -8,14 +8,17 @@ laboratory; same license as GazePlay Learning (GPL-3.0-or-later).
 
 python make_bravo_images.py gradle/images/biboule-originale/autres/bravo.gif gazeplay-core/src/main/resources/data/common/images
 (bravo.gif, no longer shipped, is kept with the other original drawings of the Biboule.)
-Pillow is required. The outlines of the wings and of the body are those of bravo.gif, enlarged and smoothed; the
-shades, the veins of the wings and the face are drawn again on its coordinates (891 x 627), at 6 times that size,
+Pillow and numpy are required. The outlines of the wings and of the body are those of bravo.gif, enlarged and
+smoothed; the body keeps the shades of the original (its puffs, fluffy and soft), averaged without the grain of the 256
+colors, and its plain yellow around the face (the shades of the lines of the original would smudge beside the new
+ones); the wings, their veins and the face are drawn again on its coordinates (891 x 627), at 6 times that size,
 then reduced to 1782 x 1254.
 """
 import math
 import os
 import sys
 
+import numpy
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 W, H = 891, 627
@@ -99,14 +102,18 @@ def veins(draw, cx, cy, half_length, half_width, angle, count):
     def at(u, v):
         return ((cx + u * ux + v * vx) * K, (cy + u * uy + v * vy) * K)
 
-    rib = [at(-half_length * 0.85 + i * half_length * 1.7 / 20, half_width * 0.1 * math.sin(i / 20 * math.pi))
-           for i in range(21)]
+    def bow(u):
+        """How far the midrib, slightly curved, is from the axis at a place along the wing."""
+        return half_width * 0.1 * math.sin((u + half_length * 0.85) / (half_length * 1.7) * math.pi)
+
+    rib = [at(u, bow(u)) for u in (-half_length * 0.85 + i * half_length * 1.7 / 40 for i in range(41))]
     lines = [rib]
+    # The side veins in pairs, each pair starting from one point of the midrib (point 88: they used to start on the
+    # straight axis, before or past the curved midrib)
     for i in range(count):
         u = -half_length * 0.55 + i * half_length * 1.15 / max(1, count - 1)
         for side in (1, -1):
-            lines.append([at(u + half_length * 0.04, half_width * 0.06 * side),
-                          at(u - half_length * 0.16, half_width * 0.58 * side)])
+            lines.append([at(u, bow(u)), at(u - half_length * 0.18, bow(u) + half_width * 0.52 * side)])
     for line in lines:
         draw.line([(x + 1.6 * K, y + 1.6 * K) for x, y in line], fill=VEIN_LIGHT + (255,), width=4 * K, joint='curve')
     for line in lines:
@@ -179,6 +186,61 @@ def open_mouth(image):
     ImageDraw.Draw(image).line(bottom, fill=MOUTH_LINE + (255,), width=7 * K, joint='curve')
 
 
+def blur(array, sigma):
+    """A Gaussian blur of a float array (numpy), without rounding: the averages of few pixels stay exact."""
+    radius = int(3 * sigma) + 1
+    kernel = numpy.exp(-0.5 * (numpy.arange(-radius, radius + 1) / sigma) ** 2)
+    kernel /= kernel.sum()
+    for axis in (0, 1):
+        padded = numpy.pad(array, [(radius, radius) if a == axis else (0, 0) for a in (0, 1)])
+        out = numpy.zeros_like(array)
+        for i, weight in enumerate(kernel):
+            out += weight * (padded[i:i + array.shape[0]] if axis == 0 else padded[:, i:i + array.shape[1]])
+        array = out
+    return array
+
+
+def body_colors(gif, index):
+    """The colors of the body of the original, its puffs shaded to look fluffy and soft, without the grain of its 256
+    colors: each color is the average of the yellow pixels of the body around (a blur that leaves out the background,
+    the wings, the lines of the face and the pixels touching them, and the dithered pixels of mixed colors), blended
+    with a wider average where few yellow pixels are near; then enlarged smoothly. Of the same frame of the GIF (the
+    open mouth of the first one is not in the second one)."""
+    gif.seek(index)
+    rgba = numpy.asarray(gif.convert('RGBA'), dtype=numpy.float64)
+    r, g, b, a = (rgba[..., i] for i in range(4))
+    yellow = (a > 0) & (r >= 190) & (r - g >= 0) & (r - g <= 24) & (b >= 95) & (b <= 185) & (b < g - 40)
+    # The lines of the face (black, brown, pink) and the wings, and the pixels touching them
+    lines = (a > 0) & ~yellow & ((r + g + b < 480) | (b > g))
+    teal = (g > r + 25) & (b > r + 25)
+    # Around the lines of the face (brows, eyes, mouth), the original has shades of its own lines: the face is drawn
+    # again, so they would make grey smudges beside the new lines; the face is the plain yellow of the original there,
+    # blended softly into the shades of the puffs
+    face = Image.fromarray(((lines & ~teal) * 255).astype(numpy.uint8)).filter(ImageFilter.MaxFilter(7))
+    face = numpy.asarray(face, dtype=numpy.float64) / 255  # thickened: thin lines (the tips of the lip) count too
+    face_zone = numpy.clip((blur((blur(face, 10) > 0.03).astype(numpy.float64), 5) - 0.1) / 0.6, 0, 1)
+    near = numpy.asarray(Image.fromarray((lines * 255).astype(numpy.uint8)).filter(ImageFilter.MaxFilter(9))) > 0
+    valid = (yellow & ~near & (face_zone == 0)).astype(numpy.float64)
+
+    def average(sigma):
+        weight = blur(valid, sigma)
+        sums = [blur(valid * rgba[..., i], sigma) for i in range(3)]
+        return weight, sums
+
+    fine_weight, fine = average(2.2)
+    wide_weight, wide = average(9)
+    # The fine average where enough yellow pixels are near, blended into the wide one elsewhere
+    t = numpy.clip((fine_weight - 0.15) / 0.35, 0, 1)
+    channels = []
+    for i in range(3):
+        fine_color = fine[i] / numpy.maximum(fine_weight, 1e-6)
+        wide_color = numpy.where(wide_weight > 1e-4, wide[i] / numpy.maximum(wide_weight, 1e-6), BODY[i])
+        shaded = t * fine_color + (1 - t) * wide_color
+        channels.append(face_zone * BODY[i] + (1 - face_zone) * shaded)
+    out = numpy.clip(numpy.stack(channels, axis=-1), 0, 255).round().astype(numpy.uint8)
+    return Image.fromarray(out).resize((W * K, H * K), Image.BICUBIC).convert('RGBA')
+
+
 def masks(gif):
     """The wings and the body of the first frame of the GIF (the frames differ by the face only)."""
     gif.seek(0)
@@ -202,7 +264,7 @@ def masks(gif):
     return smooth_mask(wings), smooth_mask(body), smooth_mask(shape)
 
 
-def frame(wings, body, shape, winking):
+def frame(wings, body, shape, colors, winking):
     image = Image.new('RGBA', (W * K, H * K), (0, 0, 0, 0))
     # Each wing light at its tip, darker towards the body
     left = ImageChops.multiply(wings, box_mask((0, 0, 450, H)))
@@ -220,11 +282,8 @@ def frame(wings, body, shape, winking):
                                                           erode(wings, 4 * K)))
     image.alpha_composite(clipped)
 
-    paint(image, body, gradient(225, BODY, BODY_SHADE))
-    # A soft shade along the edge of the body, as on the original
-    rim = edge(body, 14 * K).filter(ImageFilter.GaussianBlur(8 * K))
-    rim = ImageChops.multiply(rim, body).point(lambda v: v * 0.45)
-    paint(image, rim, Image.new('RGBA', image.size, BODY_SHADE + (255,)))
+    # The body with the shades of its puffs, those of the original (point 88: a gradient alone looked flat)
+    paint(image, body, colors)
 
     draw = ImageDraw.Draw(image)
     for (cx, cy, rx, ry, start, end) in ((455, 322, 56, 52, 195, 330), (608, 372, 50, 56, 215, 345)):
@@ -243,6 +302,8 @@ def frame(wings, body, shape, winking):
 source, out = sys.argv[1], sys.argv[2]
 os.makedirs(out, exist_ok=True)
 wing_mask, body_mask, shape_mask = masks(Image.open(source))
-frame(wing_mask, body_mask, shape_mask, True).save(os.path.join(out, 'bravo-1.png'), optimize=True)
-frame(wing_mask, body_mask, shape_mask, False).save(os.path.join(out, 'bravo-2.png'), optimize=True)
+frame(wing_mask, body_mask, shape_mask, body_colors(Image.open(source), 0), True).save(
+    os.path.join(out, 'bravo-1.png'), optimize=True)
+frame(wing_mask, body_mask, shape_mask, body_colors(Image.open(source), 1), False).save(
+    os.path.join(out, 'bravo-2.png'), optimize=True)
 print('ok')
