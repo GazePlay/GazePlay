@@ -41,7 +41,9 @@ import net.gazeplay.components.RingThickness;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Game "Bubbles" (reviewed on 2/11/2026, maintainer's rules): a picture is hidden under panes of frosted glass (9, 16
@@ -142,6 +144,16 @@ public class BubblesGame implements GameLifeCycle {
      */
     private final List<String> bubbleImages = new ArrayList<>();
 
+    /**
+     * Tester's feedback of 23/11/2026, point 50: with big images of the user (PNG photos), the game jerked, each bubble
+     * coming back decoding its whole file again. Each image of the bubbles is now decoded once, at the size of the
+     * biggest bubble, in the background for the images of the user (a bubble whose image is not ready yet shows a
+     * color); the next hidden picture is decoded in the background while the picture of now is found.
+     */
+    private final Map<String, Image> bubblePictures = new HashMap<>();
+    private String nextPictureUrl;
+    private Image nextPictureImage;
+
     private final AnimationTimer loop = new AnimationTimer() {
         private long last = -1;
 
@@ -232,6 +244,12 @@ public class BubblesGame implements GameLifeCycle {
             ANIMALS.forEach(animal -> bubbleImages.add(FOLDER + "images/animals/" + animal + ".png"));
         }
         shuffle(pictures);
+        // Each image of the bubbles decoded once, at the size of the biggest bubble (point 50)
+        final double biggest = Math.min(width, height) / 11 * level.getBubbleScale() * 3;
+        for (final String url : bubbleImages) {
+            bubblePictures.computeIfAbsent(url, key -> new Image(key, biggest, biggest, true, true,
+                !key.startsWith(FOLDER)));
+        }
 
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.notifyNewRoundReady();
@@ -269,7 +287,16 @@ public class BubblesGame implements GameLifeCycle {
         bubblesLayer.setVisible(true);
         pictureIndex++;
         final String url = pictures.get(pictureIndex % pictures.size());
-        final Image image = new Image(url, width * 1.2, height * 1.2, true, true);
+        // Decoded in the background while the picture before was found (point 50), otherwise now
+        final Image image = url.equals(nextPictureUrl) && nextPictureImage.getProgress() >= 1
+            && !nextPictureImage.isError() ? nextPictureImage : new Image(url, width * 1.2, height * 1.2, true, true);
+        final String following = pictures.get((pictureIndex + 1) % pictures.size());
+        if (nextPictureImage != null && nextPictureImage != image) {
+            nextPictureImage.cancel();
+        }
+        nextPictureUrl = following;
+        nextPictureImage = following.equals(url) ? image
+            : new Image(following, width * 1.2, height * 1.2, true, true, true);
         picture.setImage(image);
         picture.setFitWidth(width);
         picture.setFitHeight(height);
@@ -305,6 +332,20 @@ public class BubblesGame implements GameLifeCycle {
      */
     String pictureUrl() {
         return pictures.get(pictureIndex % pictures.size());
+    }
+
+    /**
+     * @return the images of the bubbles, each decoded once, by URL, for the tests
+     */
+    Map<String, Image> bubblePictures() {
+        return java.util.Collections.unmodifiableMap(bubblePictures);
+    }
+
+    /**
+     * @return the URL of the hidden picture decoded in the background, for the tests
+     */
+    String nextPictureUrl() {
+        return nextPictureUrl;
     }
 
     /**
@@ -432,6 +473,13 @@ public class BubblesGame implements GameLifeCycle {
             bubble.dispose();
         }
         bubbles.clear();
+        // The images still decoded in the background stop with the game
+        bubblePictures.values().forEach(Image::cancel);
+        bubblePictures.clear();
+        if (nextPictureImage != null) {
+            nextPictureImage.cancel();
+            nextPictureImage = null;
+        }
         if (nextButton != null) {
             nextButton.dispose();
             nextButton = null;
@@ -605,15 +653,23 @@ public class BubblesGame implements GameLifeCycle {
         private void draw() {
             node.getChildren().clear();
             final Circle body = new Circle(radius);
-            if (bubbleImages.isEmpty()) {
+            // The image of the bubble, decoded once (point 50); none while it is decoded in the background
+            Image ready = null;
+            if (!bubbleImages.isEmpty()) {
+                final Image decoded = bubblePictures.get(bubbleImages.get(random.nextInt(bubbleImages.size())));
+                if (decoded != null && decoded.getProgress() >= 1 && !decoded.isError()) {
+                    ready = decoded;
+                }
+            }
+            if (ready == null) {
                 body.setFill(new RadialGradient(0, 0, 0.35, 0.3, 0.85, true, CycleMethod.NO_CYCLE,
                     new Stop(0, color.deriveColor(0, 0.5, 1.3, 0.55)), new Stop(1, color.deriveColor(0, 1, 1, 0.85))));
                 node.getChildren().add(body);
             } else {
                 body.setFill(Color.web("#FFFFFF", 0.85));
-                final ImageView image = new ImageView(new Image(bubbleImages.get(random.nextInt(bubbleImages.size())),
-                    radius * 3, radius * 3, true, true));
+                final ImageView image = new ImageView(ready);
                 image.setPreserveRatio(true);
+                image.setSmooth(true);
                 final boolean user = content == BubblesContent.MY_IMAGES && !bubbleImages.getFirst()
                     .startsWith(FOLDER);
                 // A photo fills the bubble; an animal stays whole inside it

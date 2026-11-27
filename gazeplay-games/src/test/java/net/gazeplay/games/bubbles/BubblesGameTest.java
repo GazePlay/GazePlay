@@ -30,6 +30,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -271,7 +272,26 @@ class BubblesGameTest {
         }
         final BubblesGame with = launched(BubblesContent.MY_IMAGES, BubblesGameVariant.TOP, BubblesBurst.AT_ONCE);
         assertTrue(fx(with::pictureUrl).contains(BubblesContent.USER_IMAGES_FOLDER), "an image of the user");
+        // Point 50: each image decoded once, in the background, at the size of the biggest bubble; the next hidden
+        // picture decoded in the background too
+        final Map<String, javafx.scene.image.Image> decoded = fx(with::bubblePictures);
+        assertEquals(2, decoded.size());
+        assertNotEquals(fx(with::pictureUrl), fx(with::nextPictureUrl));
+        final long until = System.currentTimeMillis() + 10_000;
+        while (decoded.values().stream().anyMatch(image -> image.getProgress() < 1)
+            && System.currentTimeMillis() < until) {
+            WaitForAsyncUtils.sleep(50, java.util.concurrent.TimeUnit.MILLISECONDS);
+        }
         fx(() -> {
+            for (final BubblesGame.Bubble bubble : with.getBubbles()) {
+                bubble.respawn(0);
+                final List<javafx.scene.image.Image> shown = bubble.node().getChildren().stream()
+                    .filter(javafx.scene.image.ImageView.class::isInstance)
+                    .map(node -> ((javafx.scene.image.ImageView) node).getImage()).toList();
+                assertEquals(1, shown.size());
+                assertTrue(decoded.values().stream().anyMatch(image -> image == shown.getFirst()),
+                    "the image decoded once");
+            }
             with.dispose();
             return null;
         });
