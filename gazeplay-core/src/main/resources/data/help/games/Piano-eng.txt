@@ -10,9 +10,10 @@ Play the piano with your eyes! The keyboard has one octave, from C to C: 8 white
 - At the start, nothing can be played during the delay of the settings (Games, "Delay before a selection is possible when new choices appear"). Nothing moves while the menu (Esc key) is open.
 
 # How to win
-There are no lives and no mistakes. A finished song gives a star and "Well done!", then the whole tune is played again in rhythm, with its keys, before another song. As you chose, the game stops after 1, 3 or 5 songs ("Bravo", then the statistics), or has no end. The Free mode has no end (quit with the menu (Esc key)).
+There are no lives and no mistakes. A finished song gives a star and "Well done!", then the whole tune is played again in rhythm, with its keys, before another song. With "Start of the song", you play only the start (the first phrase), then the whole song is played again as a reward. As you chose, the game stops after 1, 3 or 5 songs ("Bravo", then the statistics), or has no end. The Free mode has no end (quit with the menu (Esc key)).
 
 # The variants
 Choose a variant (it is framed), then press "Start".
 - The game: Songs (follow the keys that light up), or Free (all the keys).
 - For the songs, the end: 1, 3 or 5 songs, or no end.
+- For the songs, the length: Start of the song (the first phrase, then the whole song as a reward), or Whole song.

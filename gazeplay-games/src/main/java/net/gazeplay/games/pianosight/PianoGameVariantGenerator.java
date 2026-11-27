@@ -10,7 +10,9 @@ import java.util.Set;
 /**
  * Gives the variants of the Piano (maintainer's choices of 13/11/2026): the mode at the top (see {@link PianoMode}),
  * the end of the songs as buttons (see {@link PianoEnd}), a single value in the free mode; one keyboard (a single
- * sub-group, its row is not shown).
+ * sub-group, its row is not shown). Since 27/11/2026 (tester's feedback, point 38), a switch under the mode for the
+ * songs: the start of the song or the whole song (see {@link PianoLength}), the start first. The free mode has one value
+ * (no switch).
  */
 public class PianoGameVariantGenerator implements IGameVariantGenerator {
 
@@ -19,11 +21,15 @@ public class PianoGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         final Set<IGameVariant> variants = new LinkedHashSet<>();
-        for (final PianoEnd end : new PianoEnd[]{PianoEnd.SONGS_1, PianoEnd.SONGS_3, PianoEnd.SONGS_5,
-            PianoEnd.ENDLESS}) {
-            variants.add(new GroupedGameVariant(PianoMode.SONG.getKey(), KEYBOARD, end.getKey(), null));
+        for (final PianoLength length : PianoLength.values()) {
+            for (final PianoEnd end : new PianoEnd[]{PianoEnd.SONGS_1, PianoEnd.SONGS_3, PianoEnd.SONGS_5,
+                PianoEnd.ENDLESS}) {
+                variants.add(new GroupedGameVariant(PianoMode.SONG.getKey(), KEYBOARD, end.getKey(), null,
+                    length.getKey()));
+            }
         }
-        variants.add(new GroupedGameVariant(PianoMode.FREE.getKey(), KEYBOARD, PianoEnd.FREE.getKey(), null));
+        variants.add(new GroupedGameVariant(PianoMode.FREE.getKey(), KEYBOARD, PianoEnd.FREE.getKey(), null,
+            PianoLength.START.getKey()));
         return variants;
     }
 }

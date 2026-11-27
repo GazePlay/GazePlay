@@ -37,7 +37,8 @@ import static org.mockito.Mockito.*;
 /**
  * The Piano (reviewed on 13/11/2026, maintainer's rules): the keyboard, the songs, the delay and the fixation, a song
  * followed to its end then played again, a wrong key, the free mode, the end, the variants and those of before; since
- * 27/11/2026 (tester's feedback, point 40), the pastilles of the black keys.
+ * 27/11/2026 (tester's feedback, points 40 and 38), the pastilles of the black keys and the start of a
+ * song.
  */
 @ExtendWith(ApplicationExtension.class)
 class PianoTest {
@@ -84,6 +85,10 @@ class PianoTest {
     }
 
     private Piano launched(final PianoMode mode, final PianoEnd end) throws Exception {
+        return launched(mode, end, PianoLength.WHOLE);
+    }
+
+    private Piano launched(final PianoMode mode, final PianoEnd end, final PianoLength length) throws Exception {
         return fx(() -> {
             gameArea.getChildren().clear();
             final Piano game = new Piano(gameContext, stats, mode, end, 8, () -> new NotePlayer() {
@@ -98,6 +103,7 @@ class PianoTest {
                 }
             });
             game.setManual();
+            game.setLength(length);
             launchedGames.add(game).launch();
             game.step(0.02);
             return game;
@@ -296,13 +302,48 @@ class PianoTest {
     }
 
     @Test
+    void shouldPlayTheStartOfTheSongThenTheWholeSongAsAReward() throws Exception {
+        assertEquals(11, Song.AU_CLAIR_DE_LA_LUNE.size(PianoLength.START));
+        assertEquals(14, Song.AH_VOUS_DIRAI_JE_MAMAN.size(PianoLength.START));
+        assertEquals(15, Song.ODE_A_LA_JOIE.size(PianoLength.START));
+        assertEquals(6, Song.JOYEUX_ANNIVERSAIRE.size(PianoLength.START));
+        final Piano game = launched(PianoMode.SONG, PianoEnd.ENDLESS, PianoLength.START);
+        fx(() -> {
+            final Song first = game.getSong();
+            final int start = first.size(PianoLength.START);
+            assertEquals(start, game.getTarget());
+            verify(stats).incrementNumberOfGoalsToReach(start + 1);
+            for (int i = 0; i < start; i++) {
+                game.choose(game.key(first.getNotes()[i]));
+            }
+            assertEquals(Piano.Phase.REWARD, game.getPhase());
+            assertEquals(1, game.getSongs());
+            verify(stats, times(start + 1)).incrementNumberOfGoalsReached();
+            // The whole song played again
+            heard.clear();
+            steps(game, replayLength(first));
+            assertEquals(first.size(), heard.size());
+            assertEquals(Piano.Phase.PLAY, game.getPhase());
+            assertNotEquals(first, game.getSong());
+            return null;
+        });
+    }
+
+    @Test
     void shouldReadTheVariantsAndThoseOfBeforeTheReview() {
         final Set<IGameVariant> variants = new PianoGameVariantGenerator().getVariants();
-        assertEquals(5, variants.size());
+        assertEquals(9, variants.size());
+        // The first variant: the start of the song
+        final GroupedGameVariant first = (GroupedGameVariant) variants.iterator().next();
+        assertEquals(List.of("PianoStart"), first.getExtras());
         final Piano songs = PianoGameLauncher.create(gameContext,
-            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd5", null), stats, 1);
+            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd5", null, "PianoWhole"), stats, 1);
         assertEquals(PianoMode.SONG, songs.getMode());
         assertEquals(PianoEnd.SONGS_5, songs.getEnd());
+        assertEquals(PianoLength.WHOLE, songs.getLength());
+        final Piano started = PianoGameLauncher.create(gameContext,
+            new GroupedGameVariant("PianoSongs", "PianoOctave", "PianoEnd1", null, "PianoStart"), stats, 1);
+        assertEquals(PianoLength.START, started.getLength());
         final Piano free = PianoGameLauncher.create(gameContext,
             new EnumGameVariant<>(PianoGameVariant.FREEPLAY, PianoGameVariant::getLabel), stats, 1);
         assertEquals(PianoMode.FREE, free.getMode());

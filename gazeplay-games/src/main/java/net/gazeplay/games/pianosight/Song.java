@@ -11,10 +11,13 @@ import lombok.Getter;
  * "Au clair de la lune" is in G, with an F sharp (a black key): in C its third phrase goes under the middle C.
  * "Joyeux anniversaire" is in F, with a B flat (a black key): its tune (Mildred and Patty Hill, "Good Morning to All",
  * 1893) is in the public domain in Europe since 2017. "L'Ode à la joie": its first two phrases (Beethoven, 1824).
+ * <p>
+ * Since 27/11/2026 (tester's feedback, point 38): the notes of its start (its first phrase), played alone in the variant
+ * "Début de la chanson".
  */
 @Getter
 public enum Song {
-    AU_CLAIR_DE_LA_LUNE("PianoSongMoon",
+    AU_CLAIR_DE_LA_LUNE("PianoSongMoon", 11,
         new int[]{7, 7, 7, 9, 11, 9, 7, 11, 9, 9, 7,
             7, 7, 7, 9, 11, 9, 7, 11, 9, 9, 7,
             9, 9, 9, 9, 4, 4, 9, 7, 6, 4, 2,
@@ -23,19 +26,19 @@ public enum Song {
             1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 4,
             1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 4,
             1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 4}),
-    AH_VOUS_DIRAI_JE_MAMAN("PianoSongTwinkle",
+    AH_VOUS_DIRAI_JE_MAMAN("PianoSongTwinkle", 14,
         new int[]{0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0,
             7, 7, 5, 5, 4, 4, 2, 7, 7, 5, 5, 4, 4, 2,
             0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0},
         new double[]{1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2}),
-    ODE_A_LA_JOIE("PianoSongJoy",
+    ODE_A_LA_JOIE("PianoSongJoy", 15,
         new int[]{4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 4, 2, 2,
             4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 2, 0, 0},
         new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 0.5, 2,
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 0.5, 2}),
-    JOYEUX_ANNIVERSAIRE("PianoSongBirthday",
+    JOYEUX_ANNIVERSAIRE("PianoSongBirthday", 6,
         new int[]{0, 0, 2, 0, 5, 4,
             0, 0, 2, 0, 7, 5,
             0, 0, 12, 9, 5, 4, 2,
@@ -49,19 +52,32 @@ public enum Song {
      * Key of translation of its title.
      */
     private final String key;
+    /**
+     * The notes of its start.
+     */
+    private final int start;
     private final int[] notes;
     private final double[] beats;
 
-    Song(final String key, final int[] notes, final double[] beats) {
-        if (notes.length != beats.length) {
-            throw new IllegalArgumentException(key + ": " + notes.length + " notes, " + beats.length + " lengths");
+    Song(final String key, final int start, final int[] notes, final double[] beats) {
+        if (notes.length != beats.length || start < 1 || start > notes.length) {
+            throw new IllegalArgumentException(key + ": " + notes.length + " notes, " + beats.length + " lengths, "
+                + start + " at the start");
         }
         this.key = key;
+        this.start = start;
         this.notes = notes;
         this.beats = beats;
     }
 
     int size() {
         return notes.length;
+    }
+
+    /**
+     * @return the notes to play: those of its start, or all of them
+     */
+    int size(final PianoLength length) {
+        return length == PianoLength.START ? start : notes.length;
     }
 }

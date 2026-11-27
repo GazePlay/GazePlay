@@ -19,6 +19,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -52,7 +53,8 @@ import java.util.function.Supplier;
  * nothing removed at the end, five pictures of notes of unknown source.)
  * <p>
  * Tester's feedback of 23/11/2026, maquette validated by the maintainer on 26/11/2026: each black key has a round
- * pastille, half of the color of each white key beside it, where its ring fills (point 40).
+ * pastille, half of the color of each white key beside it, where its ring fills (point 40); a song is played to the end
+ * of its start only (its first phrase), then played again whole as a reward, or whole (point 38).
  */
 @Slf4j
 public class Piano implements GameLifeCycle {
@@ -100,12 +102,24 @@ public class Piano implements GameLifeCycle {
     private final Supplier<NotePlayer> playerFactory;
     private NotePlayer player;
 
+    /**
+     * The start of the songs or the whole songs (the whole songs by default, as before the feedback).
+     */
+    @Getter
+    @Setter
+    private PianoLength length = PianoLength.WHOLE;
+
     @Getter
     private Phase phase = Phase.OVER;
     @Getter
     private Song song;
     @Getter
     private int noteIndex;
+    /**
+     * The notes of the song to play: those of its start, or all of them.
+     */
+    @Getter
+    private int target;
     @Getter
     private int songs;
     private double elapsed;
@@ -343,7 +357,7 @@ public class Piano implements GameLifeCycle {
      */
     private void showHint() {
         hint.getChildren().clear();
-        if (mode != PianoMode.SONG || phase == Phase.REWARD || song == null || noteIndex >= song.size()) {
+        if (mode != PianoMode.SONG || phase == Phase.REWARD || song == null || noteIndex >= target) {
             return;
         }
         final Key key = key(song.getNotes()[noteIndex]);
@@ -369,7 +383,7 @@ public class Piano implements GameLifeCycle {
         title.setLayoutX(height * 0.03);
         title.setLayoutY(height * 0.025);
         final Group count = GameStyle.pill(gameContext.getTranslator().translate("PianoNotes") + " "
-            + Math.min(noteIndex, song.size()) + " / " + song.size(), size);
+            + Math.min(noteIndex, target) + " / " + target, size);
         count.setLayoutX(height * 0.03 + title.getBoundsInLocal().getWidth() + height * 0.02);
         count.setLayoutY(height * 0.025);
         final Group done = GameStyle.pill(gameContext.getTranslator().translate("PianoDone") + " " + songs
@@ -382,20 +396,32 @@ public class Piano implements GameLifeCycle {
     // --- The game ---
 
     /**
-     * A new song, never the one just played.
+     * @return a song at random, never the one just played
      */
-    private void newSong() {
+    private Song randomSong() {
         final Song[] all = Song.values();
         Song next;
         do {
             next = all[random.nextInt(all.length)];
         } while (next == song && all.length > 1);
+        return next;
+    }
+
+    /**
+     * A new song at random.
+     */
+    private void newSong() {
+        startSong(randomSong());
+    }
+
+    private void startSong(final Song next) {
         song = next;
         noteIndex = 0;
+        target = song.size(length);
         reward.getChildren().clear();
         stats.notifyNewRoundReady();
-        // A goal per note, and one for the song finished
-        stats.incrementNumberOfGoalsToReach(song.size() + 1);
+        // A goal per note to play, and one for the song finished
+        stats.incrementNumberOfGoalsToReach(target + 1);
         showHint();
         showHud();
     }
@@ -509,7 +535,7 @@ public class Piano implements GameLifeCycle {
         }
         stats.incrementNumberOfGoalsReached();
         noteIndex++;
-        if (noteIndex >= song.size()) {
+        if (noteIndex >= target) {
             songs++;
             stats.incrementNumberOfGoalsReached();
             gameContext.getSoundManager().add("data/goosegame/sounds/win.wav");
@@ -583,6 +609,13 @@ public class Piano implements GameLifeCycle {
         pill.setLayoutX(left + 2 * r + gap);
         pill.setLayoutY(cy - pillHeight / 2);
         reward.getChildren().setAll(star, pill);
+        if (target < song.size()) {
+            final Group whole = GameStyle.pill(gameContext.getTranslator().translate("PianoWholeSong") + " "
+                + song.size() + " notes", height * 0.029);
+            whole.setLayoutX((width - whole.getBoundsInLocal().getWidth()) / 2);
+            whole.setLayoutY(height * 0.414);
+            reward.getChildren().add(whole);
+        }
     }
 
     private void finish() {

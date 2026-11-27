@@ -10,9 +10,10 @@ Joue du piano avec les yeux ! Le clavier a une octave, du do au do : 8 touches b
 - Au début, rien ne se joue pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »). Rien ne bouge quand le menu (touche Échap) est ouvert.
 
 # Comment gagner
-Il n’y a pas de vies ni d’erreurs. Une chanson finie donne une étoile et « Bravo ! », puis toute la mélodie est rejouée en rythme, avec ses touches, avant une autre chanson. Selon ton choix, le jeu s’arrête après 1, 3 ou 5 chansons (« Bravo », puis les statistiques), ou il est sans fin. Le mode Libre est sans fin (quitte par le menu (touche Échap)).
+Il n’y a pas de vies ni d’erreurs. Une chanson finie donne une étoile et « Bravo ! », puis toute la mélodie est rejouée en rythme, avec ses touches, avant une autre chanson. Avec « Début de la chanson », tu joues seulement le début (la première phrase), puis la chanson entière est rejouée en récompense. Selon ton choix, le jeu s’arrête après 1, 3 ou 5 chansons (« Bravo », puis les statistiques), ou il est sans fin. Le mode Libre est sans fin (quitte par le menu (touche Échap)).
 
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Le jeu : Chansons (suivre les touches qui s’allument), ou Libre (toutes les touches).
 - Pour les chansons, la fin : 1, 3 ou 5 chansons, ou sans fin.
+- Pour les chansons, la longueur : Début de la chanson (la première phrase, puis la chanson entière en récompense), ou Chanson entière.
