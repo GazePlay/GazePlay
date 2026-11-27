@@ -1,12 +1,13 @@
 # The principle
-The goose game: each player in turn rolls two dice and moves their Biboule along a path in a spiral. The first one on square 63 wins.
+The goose game: each player in turn rolls two dice and moves their Biboule along a path in a spiral. The first one on square 63 wins. The rules are softer than those of the classic goose game, so that the game is not frustrating (see "What changes from the classic game", at the bottom).
 
 # How to play
-- It is your turn when your Biboule is at the top left with "You" (or your color with several players). Look at the round "Roll" button, at the bottom right: a ring fills, then the dice roll. Its length is that of the settings, also changed in the menu (Esc key).
-- The Biboule moves by the total of the two dice. The computer rolls its dice by itself.
+- Before the game, choose your Biboule: look at the card of its color, a ring goes around the card. With several players, each one chooses in turn; the colors already taken are greyed. The computer takes the colors left.
+- It is your turn when your Biboule shines in a yellow halo and is at the top left with "You" (or your color with several players). Look at the round "Roll" button, at the bottom right, which shines too: a ring fills, then the dice roll. Its length is that of the settings, also changed in the menu (Esc key).
+- The Biboule moves by the total of the two dice, square by square. The dice stay at the bottom right: at each square, one of their pips fills with the color of the Biboule, to see how far it has gone. The computer rolls its dice by itself.
 - Square 63 must be reached exactly: if the throw goes further, the Biboule moves back by the squares too many.
 - A goose (green squares): the Biboule moves again by the same number.
-- Classic rules only: the bridge (square 7) leads to square 32; the inn (19) makes it sleep 2 turns; the well (31) and the prison (52) keep the Biboule until another one comes or passes by; the arrow (58) sends it back to the start. If all the Biboules wait, they are all freed.
+- Classic rules only: the bridge (square 7) leads to square 32; the inn (19), the well (31) and the prison (52) make it miss one turn.
 - At the top, a sentence tells what happens. At the start and each time the "Roll" button comes back, nothing rolls during the delay of the settings (Games, "Delay before a selection is possible when new choices appear").
 - The speed of the Biboules follows the animation speed of the settings. Nothing moves while the menu (Esc key) is open.
 
@@ -16,4 +17,13 @@ The first Biboule on square 63 wins: "Bravo" when it is a person, then the stati
 # The variants
 Choose a variant (it is framed), then press "Start".
 - Who plays: you against 1, 2 or 3 computers, or 2, 3 or 4 players taking turns with the eye tracker or the mouse.
-- At the bottom, the rules: classic (all the special squares) or simple (the geese only, for the youngest).
+- At the bottom, the rules: classic (all the special squares, softened) or simple (the geese only, on a board where only the geese are drawn, for the youngest).
+
+# What changes from the classic game
+The classic goose game has rules that can be discouraging. Here they are softened, whoever plays:
+- There is no more square "back to the start": in the classic game, square 58 (the skull) sends the Biboule back to the start. Here, square 58 is an ordinary square.
+- The inn (19) makes it miss one turn only, instead of two.
+- The well (31) and the prison (52) make it miss one turn only. In the classic game, the Biboule stays there until another one comes or passes by, which can last long.
+- To reach the end: on the third throw of a person who can reach square 63 exactly, the dice give the right number.
+- Against the computer: when a Biboule of the computer is ahead of yours, your throw is helped. The dice reach square 63 if they can, else a goose or the bridge, else they make 12 or 11 (when they do not stop on the inn, the well or the prison). The computer is never helped.
+- To understand what happens: each person chooses their color, the Biboule whose turn it is and the "Roll" button shine, the Biboule moves slowly and the pips of the dice fill square by square.

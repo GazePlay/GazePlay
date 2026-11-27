@@ -439,6 +439,118 @@ class GooseGameTest {
         }
     }
 
+    private GooseGame launchedChoosing(final GoosePlayers players) throws Exception {
+        return fx(() -> {
+            gameArea.getChildren().clear();
+            final GooseGame game = new GooseGame(gameContext, stats, GooseRules.CLASSIC, players, 9);
+            game.setManual();
+            game.setChooseColors(true);
+            launchedGames.add(game).launch();
+            game.step(0.02);
+            return game;
+        });
+    }
+
+    /**
+     * Point 66: the person chooses the color of their Biboule by a fixation on its card, after the delay of the
+     * settings; the computer takes the colors left, in their order.
+     */
+    @Test
+    void shouldLetThePersonChooseTheColorOfTheirBiboule() throws Exception {
+        when(configuration.getGameStartDelay()).thenReturn(400);
+        final GooseGame game = launchedChoosing(GoosePlayers.VS_COMPUTER_2);
+        fx(() -> {
+            assertEquals(GooseGame.Phase.CHOOSE, game.getPhase());
+            assertTrue(game.getPawns().isEmpty());
+            verify(translator, atLeastOnce()).translate("GooseChoose");
+            game.lookAtCard(2);
+            for (int i = 0; i < 20; i++) {
+                game.step(0.02);
+            }
+            assertEquals(GooseGame.Phase.CHOOSE, game.getPhase(), "nothing chosen during the delay");
+            for (int i = 0; i < 30; i++) {
+                game.step(0.02);
+            }
+            assertNotEquals(GooseGame.Phase.CHOOSE, game.getPhase());
+            assertEquals(3, game.getPawns().size());
+            assertEquals(2, pawn(game, 0).getColorIndex(), "the green Biboule chosen");
+            assertTrue(pawn(game, 0).isHuman());
+            assertEquals(0, pawn(game, 1).getColorIndex(), "the computer: the colors left");
+            assertEquals(1, pawn(game, 2).getColorIndex());
+            return null;
+        });
+    }
+
+    /**
+     * Point 66: with several persons, each chooses in turn; a color taken cannot be chosen again.
+     */
+    @Test
+    void shouldLetEachPersonChooseInTurn() throws Exception {
+        final GooseGame game = launchedChoosing(GoosePlayers.PLAYERS_2);
+        fx(() -> {
+            game.chooseColor(3);
+            assertEquals(GooseGame.Phase.CHOOSE, game.getPhase(), "the second person chooses");
+            verify(translator, atLeastOnce()).translate("GoosePlayerChooses");
+            game.chooseColor(3);
+            assertEquals(GooseGame.Phase.CHOOSE, game.getPhase(), "taken");
+            game.chooseColor(0);
+            assertEquals(2, game.getPawns().size());
+            assertEquals(3, pawn(game, 0).getColorIndex());
+            assertEquals(0, pawn(game, 1).getColorIndex());
+            untilReady(game);
+            assertEquals(GooseGame.Phase.READY, game.getPhase());
+            return null;
+        });
+    }
+
+    /**
+     * Point 66: the pawn moves slowly (0.5 s a square); once thrown, the dice are drawn flat and a pip fills at each
+     * square; a goose counts the same throw again.
+     */
+    @Test
+    void shouldFillAPipOfTheDiceAtEachSquare() throws Exception {
+        assertEquals(0.5, GooseGame.HOP, 1e-9);
+        final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);
+        fx(() -> {
+            pawn(game, 0).setSquare(10);
+            game.rollWith(7);
+            assertArrayEquals(new int[]{6, 1}, game.getFaces());
+            for (int i = 0; i < 100 && game.getPhase() != GooseGame.Phase.MOVING; i++) {
+                game.step(0.05);
+            }
+            assertTrue(game.isFlatDiceShown());
+            assertEquals(7, game.getPips().size());
+            assertEquals(0, game.getPipsFilled());
+            for (int i = 0; i < 9; i++) {
+                game.step(0.05);
+            }
+            assertEquals(0, game.getPipsFilled(), "not yet a square");
+            game.step(0.06);
+            assertEquals(1, game.getPipsFilled(), "one square after half a second");
+            assertEquals(1, game.getPips().stream().filter(pip -> !pip.getFill().equals(game.getPips().get(6)
+                .getFill())).count());
+            untilReady(game);
+            assertEquals(17, pawn(game, 0).getSquare());
+            // A goose: the same throw counted again
+            pawn(game, 1).setSquare(1);
+            game.rollWith(4);
+            for (int i = 0; i < 100 && game.getPhase() != GooseGame.Phase.MOVING; i++) {
+                game.step(0.05);
+            }
+            for (int i = 0; i < 200 && pawn(game, 1).getSquare() != 5; i++) {
+                game.step(0.05);
+            }
+            assertEquals(4, game.getPipsFilled());
+            for (int i = 0; i < 200 && game.getPipsFilled() != 1; i++) {
+                game.step(0.05);
+            }
+            assertEquals(1, game.getPipsFilled(), "counting again after the goose");
+            untilReady(game);
+            assertFalse(game.isFlatDiceShown(), "gone at the next turn");
+            return null;
+        });
+    }
+
     @Test
     void shouldRemoveEverythingWhenDisposed() throws Exception {
         final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_3);

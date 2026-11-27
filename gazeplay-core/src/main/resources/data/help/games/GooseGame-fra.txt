@@ -1,12 +1,13 @@
 # Le principe
-Le jeu de l’oie : chaque joueur à son tour lance deux dés et avance sa Biboule sur un chemin en spirale. Le premier arrivé sur la case 63 gagne.
+Le jeu de l’oie : chaque joueur à son tour lance deux dés et avance sa Biboule sur un chemin en spirale. Le premier arrivé sur la case 63 gagne. Les règles sont plus douces que celles du jeu de l’oie classique, pour que le jeu ne soit pas frustrant (voir « Ce qui change par rapport au jeu classique », en bas).
 
 # Comment jouer
-- C’est à toi quand ta Biboule est en haut à gauche avec « Toi » (ou ta couleur à plusieurs). Regarde le bouton rond « Lancer », en bas à droite : un anneau se remplit, puis les dés roulent. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
-- La Biboule avance d’autant de cases que les deux dés. L’ordinateur lance ses dés tout seul.
+- Avant la partie, choisis ta Biboule : regarde la carte de sa couleur, un anneau fait le tour de la carte. À plusieurs, chacun choisit à son tour ; les couleurs déjà prises sont grisées. L’ordinateur prend les couleurs qui restent.
+- C’est à toi quand ta Biboule brille dans un halo jaune et qu’elle est en haut à gauche avec « Toi » (ou ta couleur à plusieurs). Regarde le bouton rond « Lancer », en bas à droite, qui brille aussi : un anneau se remplit, puis les dés roulent. Sa durée est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- La Biboule avance d’autant de cases que les deux dés, case par case. Les dés restent en bas à droite : à chaque case, un de leurs points se remplit de la couleur de la Biboule, pour voir où elle en est. L’ordinateur lance ses dés tout seul.
 - Il faut arriver pile sur la case 63 : si le lancer va plus loin, la Biboule recule des cases en trop.
 - Une oie (cases vertes) : la Biboule avance encore du même nombre.
-- Règles classiques seulement : le pont (case 7) mène à la case 32 ; l’auberge (19) fait dormir 2 tours ; le puits (31) et la prison (52) gardent la Biboule jusqu’à ce qu’une autre arrive ou passe ; la flèche (58) renvoie au départ. Si toutes les Biboules attendent, elles sont toutes libérées.
+- Règles classiques seulement : le pont (case 7) mène à la case 32 ; l’auberge (19), le puits (31) et la prison (52) font passer un tour.
 - En haut, une phrase dit ce qui se passe. Au début et à chaque fois que le bouton « Lancer » revient, rien ne se lance pendant le délai des réglages (Jeux, « Délai avant de pouvoir sélectionner de nouveaux choix »).
 - La vitesse des Biboules suit la vitesse d’animation des réglages. Rien ne bouge quand le menu (touche Échap) est ouvert.
 
@@ -16,4 +17,13 @@ La première Biboule sur la case 63 gagne : « Bravo » si c’est une personne,
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Qui joue : toi contre 1, 2 ou 3 ordinateurs, ou 2, 3 ou 4 joueurs qui se passent l’oculomètre ou la souris.
-- En bas, les règles : classiques (toutes les cases spéciales) ou simples (les oies seulement, pour les plus jeunes).
+- En bas, les règles : classiques (toutes les cases spéciales, adoucies) ou simples (les oies seulement, sur un plateau où seules les oies sont dessinées, pour les plus jeunes).
+
+# Ce qui change par rapport au jeu classique
+Le jeu de l’oie classique a des règles qui peuvent être décourageantes. Ici, elles sont adoucies, quels que soient les joueurs :
+- Il n’y a plus de case « retour au départ » : dans le jeu classique, la case 58 (la tête de mort) renvoie la Biboule au départ. Ici, la case 58 est une case ordinaire.
+- L’auberge (19) fait passer un seul tour, au lieu de deux.
+- Le puits (31) et la prison (52) font passer un seul tour. Dans le jeu classique, la Biboule y reste jusqu’à ce qu’une autre arrive ou passe sur la case, ce qui peut durer longtemps.
+- Pour arriver au bout : au troisième lancer d’une personne qui peut atteindre la case 63 pile, les dés donnent le chiffre juste.
+- Contre l’ordinateur : quand une Biboule de l’ordinateur est devant la tienne, ton lancer est aidé. Les dés font arriver sur la case 63 si c’est possible, sinon sur une oie ou sur le pont, sinon ils font 12 ou 11 (s’ils ne tombent pas sur l’auberge, le puits ou la prison). L’ordinateur n’est jamais aidé.
+- Pour comprendre ce qui se passe : chaque personne choisit sa couleur, la Biboule dont c’est le tour et le bouton « Lancer » brillent, la Biboule avance lentement et les points des dés se remplissent case par case.

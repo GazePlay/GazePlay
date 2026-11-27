@@ -44,6 +44,14 @@ public class GooseGameLauncher implements IGameLauncher<Stats, IGameVariant> {
 
     static GooseGame create(final IGameContext gameContext, final IGameVariant gameVariant, final Stats stats,
                             final double gameSeed) {
+        final GooseGame game = createGame(gameContext, gameVariant, stats, gameSeed);
+        // Each person chooses the color of their Biboule (point 66)
+        game.setChooseColors(true);
+        return game;
+    }
+
+    private static GooseGame createGame(final IGameContext gameContext, final IGameVariant gameVariant,
+                                        final Stats stats, final double gameSeed) {
         if (gameVariant instanceof GroupedGameVariant grouped) {
             return new GooseGame(gameContext, stats, GooseRules.of(grouped.getGroup()),
                 GoosePlayers.of(grouped.getValue()), gameSeed);
