@@ -391,6 +391,54 @@ class GooseGameTest {
         }
     }
 
+    /**
+     * Point 64: the pawn whose turn it is stands in a halo that follows it, the "Roll" button has its halo while it
+     * waits, the pawns are bigger than the squares (1.8 squares).
+     */
+    @Test
+    void shouldShowAHaloOnThePawnWhoseTurnItIsAndOnTheButton() throws Exception {
+        final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);
+        fx(() -> {
+            assertEquals(GooseGame.Phase.READY, game.getPhase());
+            assertTrue(game.getHalo().isVisible());
+            assertEquals(pawn(game, 0).getNode().getLayoutX(), game.getHalo().getCenterX(), 1e-9);
+            assertEquals(pawn(game, 0).getNode().getLayoutY(), game.getHalo().getCenterY(), 1e-9);
+            assertTrue(game.getButtonHalo().isVisible());
+            final double before = game.getHalo().getScaleX();
+            game.step(GooseGame.PULSE / 2);
+            assertNotEquals(before, game.getHalo().getScaleX(), "it pulses");
+            game.rollWith(3);
+            assertFalse(game.getButtonHalo().isVisible(), "the button is gone, its halo too");
+            // During the move, the halo follows the pawn
+            for (int i = 0; i < 40 && game.getPhase() != GooseGame.Phase.MOVING; i++) {
+                game.step(0.05);
+            }
+            game.step(0.1);
+            assertEquals(pawn(game, 0).getNode().getLayoutX(), game.getHalo().getCenterX(), 1e-9);
+            untilReady(game);
+            assertEquals(1, game.getCurrent());
+            assertEquals(pawn(game, 1).getNode().getLayoutX(), game.getHalo().getCenterX(), 1e-9);
+            final javafx.scene.image.ImageView view = (javafx.scene.image.ImageView) pawn(game, 0).getNode()
+                .getChildren().get(1);
+            assertEquals(game.getPawnSize(), view.getFitWidth(), 1e-9);
+            return null;
+        });
+    }
+
+    /**
+     * Point 64: the simple rules have their own board, without the special squares that do nothing.
+     */
+    @Test
+    void shouldShowTheBoardOfTheRules() throws Exception {
+        for (final GooseRules rules : GooseRules.values()) {
+            launched(rules, GoosePlayers.VS_COMPUTER_1);
+            final String url = fx(() -> ((javafx.scene.Group) gameArea.getChildren().getFirst()).getChildren().stream()
+                .filter(javafx.scene.image.ImageView.class::isInstance)
+                .map(node -> ((javafx.scene.image.ImageView) node).getImage().getUrl()).findFirst().orElseThrow());
+            assertEquals(rules == GooseRules.SIMPLE, url.endsWith("gooseboard-simple.png"), rules + ": " + url);
+        }
+    }
+
     @Test
     void shouldRemoveEverythingWhenDisposed() throws Exception {
         final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_3);

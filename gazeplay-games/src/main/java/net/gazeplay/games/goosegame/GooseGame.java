@@ -12,9 +12,11 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -54,6 +56,11 @@ import java.util.Objects;
  * prison (see {@link GooseBoard}); for each person, the third throw that can reach the end exactly does it. Against the
  * computer, when one of its pawns is ahead of the person's, the person's throw is helped: the end if it can be reached,
  * else a goose or the bridge, else 12 or 11 when they do not stop on a trap.
+ * <p>
+ * Point 64 (maquette validated by the maintainer on 27/11/2026): the pawns are bigger than the squares, on a white base
+ * ringed with their color and with a shadow; the pawn whose turn it is stands in a yellow halo that pulses, and so does
+ * the "Roll" button when it waits for a fixation; the simple rules have their own board, where only the geese, the
+ * start and the end are drawn.
  */
 public class GooseGame implements GameLifeCycle {
 
@@ -82,6 +89,16 @@ public class GooseGame implements GameLifeCycle {
     static final int END_HELP = 3;
 
     private static final String BOARD = "data/goosegame/gooseboard.png";
+    private static final String SIMPLE_BOARD = "data/goosegame/gooseboard-simple.png";
+    /**
+     * The size of a pawn (its Biboule), in squares of the board (point 64; 1.3 before), and the halo: its size in
+     * squares, its pulse in seconds and how much it grows.
+     */
+    static final double PAWN_SQUARES = 1.8;
+    static final double HALO_SQUARES = 1.0;
+    static final double PULSE = 1.2;
+    static final double PULSE_GROWTH = 0.12;
+    private static final Color HALO = Color.rgb(255, 222, 80);
     private static final String POSITIONS = "data/goosegame/positions.json";
     private static final String SOUNDS = "data/goosegame/sounds/";
     private static final String BIBOULES = "data/shooter/biboule/images/";
@@ -132,6 +149,9 @@ public class GooseGame implements GameLifeCycle {
 
     private Group layer;
     private Group pawnsLayer;
+    private Circle halo;
+    private Circle buttonHalo;
+    private double pulseTime;
     private Group diceGroup;
     private Group rollButton;
     private Group hud;
@@ -195,7 +215,7 @@ public class GooseGame implements GameLifeCycle {
         meadow.setMouseTransparent(true);
 
         // The board under a band for the turn and the messages, as large as it can be
-        final Image boardImage = gameImage(BOARD);
+        final Image boardImage = gameImage(rules == GooseRules.SIMPLE ? SIMPLE_BOARD : BOARD);
         final double band = height * 0.13;
         final double scale = Math.min((height - band - height * 0.05) / boardImage.getHeight(),
             width * 0.97 / boardImage.getWidth());
@@ -216,10 +236,17 @@ public class GooseGame implements GameLifeCycle {
                 boardY + position.get("y").getAsDouble() * scale));
         }
         // A tile of the board is 94 pixels across in the image
-        pawnSize = 94 * scale * 1.3;
+        final double square = 94 * scale;
+        pawnSize = square * PAWN_SQUARES;
 
         pawnsLayer = new Group();
         pawnsLayer.setMouseTransparent(true);
+        // The halo of the pawn whose turn it is, under the pawns
+        halo = new Circle(0, 0, square * HALO_SQUARES, new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+            CycleMethod.NO_CYCLE, new Stop(0, HALO.deriveColor(0, 1, 1, 0.95)), new Stop(0.72, HALO.deriveColor(0, 1, 1,
+            0.95)), new Stop(1, HALO.deriveColor(0, 1, 1, 0))));
+        halo.setVisible(false);
+        pawnsLayer.getChildren().add(halo);
         for (int i = 0; i < players.getPawns(); i++) {
             final ImageView view = new ImageView(gameImage(BIBOULES + COLORS[i] + ".png"));
             view.setPreserveRatio(true);
@@ -234,6 +261,7 @@ public class GooseGame implements GameLifeCycle {
             final Circle base = new Circle(0, 0, pawnSize * 0.36, Color.rgb(255, 255, 255, 0.92));
             base.setStroke(RINGS[i]);
             base.setStrokeWidth(Math.max(2, pawnSize * 0.07));
+            base.setEffect(new DropShadow(pawnSize * 0.06, 0, pawnSize * 0.04, Color.rgb(0, 0, 0, 0.3)));
             final Group node = new Group(base, view);
             final Pawn pawn = new Pawn(i, COLORS[i], i < players.getHumans(), node, view.getImage());
             pawns.add(pawn);
@@ -249,7 +277,12 @@ public class GooseGame implements GameLifeCycle {
         hud.setMouseTransparent(true);
         message = new Group();
         message.setMouseTransparent(true);
-        layer = new Group(meadow, board, pawnsLayer, diceGroup, rollButton, ring, hud, message);
+        buttonHalo = new Circle(buttonX, buttonY, buttonRadius * 1.4, new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+            CycleMethod.NO_CYCLE, new Stop(0, HALO.deriveColor(0, 1, 1, 0.9)), new Stop(0.7, HALO.deriveColor(0, 1, 1,
+            0.9)), new Stop(1, HALO.deriveColor(0, 1, 1, 0))));
+        buttonHalo.setMouseTransparent(true);
+        buttonHalo.visibleProperty().bind(rollButton.visibleProperty());
+        layer = new Group(meadow, board, pawnsLayer, diceGroup, buttonHalo, rollButton, ring, hud, message);
         gameContext.getChildren().add(layer);
         placePawns();
 
@@ -394,6 +427,10 @@ public class GooseGame implements GameLifeCycle {
             default -> {
             }
         }
+        // After the move of this step, so that the halo is on the pawn
+        if (phase != Phase.OVER) {
+            pulse(seconds);
+        }
     }
 
     private void fixate(final double seconds) {
@@ -417,6 +454,49 @@ public class GooseGame implements GameLifeCycle {
             stats.incrementNumberOfGoalsReached();
             roll();
         }
+    }
+
+    /**
+     * The halo on the pawn whose turn it is, following it when it moves, and the halo of the "Roll" button, both
+     * pulsing; the button grows a little with its halo (point 64).
+     */
+    private void pulse(final double seconds) {
+        pulseTime += seconds;
+        final double wave = (1 - Math.cos(2 * Math.PI * pulseTime / PULSE)) / 2;
+        final Pawn pawn = pawns.get(current);
+        halo.setVisible(phase != Phase.SHOW);
+        halo.setCenterX(pawn.node.getLayoutX());
+        halo.setCenterY(pawn.node.getLayoutY());
+        halo.setScaleX(1 + PULSE_GROWTH * wave);
+        halo.setScaleY(1 + PULSE_GROWTH * wave);
+        halo.setOpacity(1 - 0.4 * wave);
+        buttonHalo.setScaleX(1 + PULSE_GROWTH * wave);
+        buttonHalo.setScaleY(1 + PULSE_GROWTH * wave);
+        buttonHalo.setOpacity(1 - 0.4 * wave);
+        final double grow = 1 + 0.05 * wave;
+        rollButton.setScaleX(grow);
+        rollButton.setScaleY(grow);
+    }
+
+    /**
+     * For the tests: the halo of the pawn whose turn it is.
+     */
+    Circle getHalo() {
+        return halo;
+    }
+
+    /**
+     * For the tests: the halo of the "Roll" button.
+     */
+    Circle getButtonHalo() {
+        return buttonHalo;
+    }
+
+    /**
+     * For the tests: the size of a pawn (its Biboule) and of a square of the board, in pixels.
+     */
+    double getPawnSize() {
+        return pawnSize;
     }
 
     /**
@@ -685,6 +765,8 @@ public class GooseGame implements GameLifeCycle {
      */
     private void showTurn(final Pawn pawn) {
         hud.getChildren().clear();
+        // The pawn whose turn it is in front of the others
+        pawn.node.toFront();
         final double size = height * 0.085;
         final ImageView view = new ImageView(pawn.image);
         view.setPreserveRatio(true);
