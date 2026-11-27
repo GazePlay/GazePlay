@@ -69,6 +69,30 @@ public class BravoTest {
         assertTrue(bravoTestApp.duration.get() < 14000);
     }
 
+    /**
+     * Point 88 (27/11/2026): the Biboule is two pictures shown in turn, 2 seconds each; they stop changing at the end.
+     */
+    @Test
+    public void shouldShowTheTwoPicturesInTurnThenStop() throws Exception {
+        assertTrue(ClassLoader.getSystemResource("data/common/images/bravo-1.png") != null);
+        assertTrue(ClassLoader.getSystemResource("data/common/images/bravo-2.png") != null);
+        FxToolkit.registerPrimaryStage();
+        BravoTestApp bravoTestApp = (BravoTestApp) FxToolkit.setupApplication(BravoTestApp.class);
+
+        bravoTestApp.testWinAnimationNoDelay();
+        org.testfx.util.WaitForAsyncUtils.sleep((long) Bravo.FRAME_DURATION.toMillis() + 1200,
+            java.util.concurrent.TimeUnit.MILLISECONDS);
+        assertEquals(1, (int) org.testfx.util.WaitForAsyncUtils.asyncFx(bravoTestApp.bravo::getShownPicture).get(),
+            "the second picture after 2 seconds");
+        bravoTestApp.finishedAnimation.await();
+        int atTheEnd = org.testfx.util.WaitForAsyncUtils.asyncFx(bravoTestApp.bravo::getShownPicture).get();
+        org.testfx.util.WaitForAsyncUtils.sleep((long) Bravo.FRAME_DURATION.toMillis() + 500,
+            java.util.concurrent.TimeUnit.MILLISECONDS);
+        assertEquals(atTheEnd, (int) org.testfx.util.WaitForAsyncUtils.asyncFx(bravoTestApp.bravo::getShownPicture)
+            .get(), "no more change after the end");
+        FxToolkit.cleanupStages();
+    }
+
     @Test
     public void shouldSetConfettiOnStart() throws TimeoutException {
         ObservableList<Node> mockList = FXCollections.observableArrayList();

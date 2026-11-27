@@ -45,6 +45,11 @@ OpenMoji (CC BY-SA 4.0), resized; 15 sounds come from Wikimedia Commons (CC0, pu
 and 6 from Where Is The Sound. The author, licence and page of each file are in data/soundsoflife/CREDITS.txt,
 shipped with the game. They replace (October 2026) images and sounds of unknown source (some from picture banks).
 The thumbnail (gazeplay-core: data/common/Thumbnails/soundsOfLife.png) is a capture of the farm, 960 x 540.
+The Biboule of the "Bravo" screen (gazeplay-core: data/common/images/bravo-1.png and bravo-2.png, 1782 x 1254, a wink
+with the mouth open, then both eyes open, shown in turn): drawn by make_bravo_images.py (this folder) on 27/11/2026
+(maintainer's request, point 88), under the license of GazePlay Learning (GPL-3.0-or-later), on the outlines of
+bravo.gif (a GIF of 891 x 627, jagged edges and grainy shades), kept in biboule-originale/autres.
+
 Since 27/11/2026 (tester's feedback, point 81; the game is named "Les cris des animaux"): the sea has its surface (the
 sky, a seagull drawn by make_soundsoflife_images.py, a sailing boat of OpenMoji without its water), the savanna the
 hippopotamus and the elephant instead of the giraffe and the crocodile; new sounds from Wikimedia Commons (lion,

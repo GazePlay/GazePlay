@@ -180,7 +180,8 @@ gazeplay-core/src/main/resources/data/common/images/GazePlayLetters/flow-size/71
 gazeplay-core/src/main/resources/data/common/images/GazePlayLetters/learning.png,oui,libre,logo du projet (gradle/logo/make_logo.py),2026-10-23,Noars,"feat: GazePlay Learning (nom et logo), derniers restes d'AFSR et BERA retirés, R13 corrigé"
 gazeplay-core/src/main/resources/data/common/images/GazePlayLetters/spacing.png,oui,libre,logo du projet (gradle/logo/make_logo.py),2019-11-02,Yann ROBERT,using SequentialTransition and ParallelTransition in order to create a sequence of animations
 gazeplay-core/src/main/resources/data/common/images/aoibtn.png,oui,source inconnue,,2019-05-23,sannara,Added missing photo
-gazeplay-core/src/main/resources/data/common/images/bravo.gif,oui,source inconnue,,2018-07-25,kuhlkrein,new bravo !
+gazeplay-core/src/main/resources/data/common/images/bravo-1.png,oui,libre,"dessiné pour le projet (gradle/images/make_bravo_images.py, la Biboule d'origine, mascotte du laboratoire), GPL-3.0-or-later",2026-11-27,GazePlay Learning,demande du mainteneur (point 88 : écran Bravo)
+gazeplay-core/src/main/resources/data/common/images/bravo-2.png,oui,libre,"dessiné pour le projet (gradle/images/make_bravo_images.py, la Biboule d'origine, mascotte du laboratoire), GPL-3.0-or-later",2026-11-27,GazePlay Learning,demande du mainteneur (point 88 : écran Bravo)
 gazeplay-core/src/main/resources/data/common/images/cards.png,oui,source inconnue,,2020-02-28,kuhlkrein,add new image for each section
 gazeplay-core/src/main/resources/data/common/images/continue.png,oui,source inconnue,,2019-05-16,Teo Blachere,Inter-level stat screen
 gazeplay-core/src/main/resources/data/common/images/dice.png,oui,libre,"dessiné pour le projet (gradle/images/make_dice_images.py), GPL-3.0-or-later ; remplace une texture de source inconnue (12/11/2026)",2026-11-12,GazePlay Learning,revue de Dés
@@ -1138,3 +1139,4 @@ gazeplay-games/src/main/resources/data/room/objects/toilet.png,oui,libre,"OpenMo
 gazeplay-games/src/main/resources/data/room/objects/toothbrush.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
 gazeplay-games/src/main/resources/data/room/objects/tshirt.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
 gazeplay-games/src/main/resources/data/room/objects/window.png,oui,libre,"OpenMoji, CC BY-SA 4.0 (make_room_images.py)",2026-11-13,GazePlay Learning,revue de La pièce
+gradle/images/biboule-originale/autres/bravo.gif,non,source inconnue,"la Biboule, mascotte du laboratoire ; plus livrée depuis le 27/11/2026, source de make_bravo_images.py",2018-07-25,kuhlkrein,new bravo !

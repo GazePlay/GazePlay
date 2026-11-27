@@ -369,6 +369,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void endWinTransition() {
+        bravo.stopPictures();
         getChildren().remove(bravo);
     }
 

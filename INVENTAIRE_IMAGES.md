@@ -87,6 +87,11 @@ crocodile et éléphant de la jungle retirés, éléphant (savane), hippopotame 
 mouette dessinée pour le projet ajoutés, décor de la mer redessiné avec la surface ; **1 059 images livrées, 757 libres,
 130 libres probables, 172 de source inconnue**.
 
+**Demande du mainteneur, point 88 (27/11/2026)** : la Biboule de l'écran « Bravo » (`bravo.gif`, source inconnue, GIF
+à palette au bord en escalier) est remplacée par deux images lisses, deux fois plus grandes, dessinées pour le projet
+sur ses contours (`bravo-1.png`, `bravo-2.png`, `make_bravo_images.py`) ; le GIF est gardé, non livré, avec les dessins
+d'origine de la Biboule ; **1 060 images livrées, 759 libres, 130 libres probables, 171 de source inconnue**.
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

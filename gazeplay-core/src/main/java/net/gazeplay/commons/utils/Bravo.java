@@ -15,9 +15,15 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 
+import java.util.List;
+
 /**
  * The win animation ("bravo"): an image that grows and shrinks three times over the game, with a reward sound when it
  * is enabled in the settings.
+ * <p>
+ * Since 27/11/2026 (maintainer's request, point 88): the Biboule is two pictures shown in turn, 2 seconds each (a wink
+ * with the mouth open, then both eyes open), drawn smooth and twice as large by gradle/images/make_bravo_images.py,
+ * instead of the GIF of 891 x 627 whose edges were jagged and shades grainy.
  * <p>
  * Created by schwab on 30/10/2016.
  */
@@ -46,11 +52,24 @@ public class Bravo extends Rectangle {
      */
     private static final double pictureFinalHeightToSceneHeightRatio = 0.95d;
 
-    private static final String defaultPictureResourceLocation = "data/common/images/bravo.gif";
+    private static final List<String> defaultPictureResourceLocations = List.of("data/common/images/bravo-1.png",
+        "data/common/images/bravo-2.png");
+
+    /**
+     * How long each picture is shown, when there are several.
+     */
+    static final Duration FRAME_DURATION = Duration.seconds(2);
 
     private static final String defaultSoundResourceLocation = "data/common/sounds/applause.mp3";
 
-    private final String pictureResourceLocation;
+    private final List<String> pictureResourceLocations;
+
+    /**
+     * The pictures of the animation, loaded at its start, and the one shown.
+     */
+    private List<Image> pictures = List.of();
+    private int shownPicture;
+    private final Timeline pictureSwitcher = new Timeline();
 
     private final String soundResource;
 
@@ -68,13 +87,23 @@ public class Bravo extends Rectangle {
      * The default "bravo" image and sound, the sound only if the reward sound is enabled in the settings.
      */
     public Bravo() {
-        this(defaultPictureResourceLocation, defaultSoundResourceLocation,
+        this(defaultPictureResourceLocations, defaultSoundResourceLocation,
             ActiveConfigurationContext.getInstance().isRewardSoundEnabled());
     }
 
     public Bravo(final String pictureResourceLocation, final String soundResourceLocation, final boolean enableRewardSound) {
+        this(List.of(pictureResourceLocation), soundResourceLocation, enableRewardSound);
+    }
+
+    /**
+     * @param pictureResourceLocations the pictures, shown in turn for {@link #FRAME_DURATION} each
+     */
+    public Bravo(final List<String> pictureResourceLocations, final String soundResourceLocation,
+                 final boolean enableRewardSound) {
         super(0, 0, 0, 0);
-        this.pictureResourceLocation = pictureResourceLocation;
+        this.pictureResourceLocations = List.copyOf(pictureResourceLocations);
+        pictureSwitcher.getKeyFrames().add(new KeyFrame(FRAME_DURATION, event -> showNextPicture()));
+        pictureSwitcher.setCycleCount(Animation.INDEFINITE);
 
         soundResource = soundResourceLocation;
 
@@ -103,6 +132,7 @@ public class Bravo extends Rectangle {
 
         fullTransition.setOnFinished(actionEvent -> {
             log.debug("finished fullTransition");
+            pictureSwitcher.stop();
             onFinishedEventHandler.handle(actionEvent);
             log.debug("finished onFinishedEventHandler");
         });
@@ -158,6 +188,9 @@ public class Bravo extends Rectangle {
 
             log.debug("Playing graphic animation ...");
             fullTransition.play();
+            if (pictures.size() > 1) {
+                pictureSwitcher.playFromStart();
+            }
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
@@ -222,7 +255,10 @@ public class Bravo extends Rectangle {
      * Puts the image back at its initial size, centered in {@code root}, hidden.
      */
     private void resetState(final Region root) {
-        final Image image = new Image(pictureResourceLocation);
+        pictureSwitcher.stop();
+        pictures = pictureResourceLocations.stream().map(Image::new).toList();
+        shownPicture = 0;
+        final Image image = pictures.get(0);
 
         final double imageWidth = image.getWidth();
         final double imageHeight = image.getHeight();
@@ -249,6 +285,30 @@ public class Bravo extends Rectangle {
         setOpacity(0);
 
         toFront(); // bug when it is uncommented (with bloc at least).
+    }
+
+    /**
+     * Shows the next picture, the first one after the last.
+     */
+    private void showNextPicture() {
+        if (pictures.size() > 1) {
+            shownPicture = (shownPicture + 1) % pictures.size();
+            setFill(new ImagePattern(pictures.get(shownPicture)));
+        }
+    }
+
+    /**
+     * Stops the change of the pictures (the animation removed before its end).
+     */
+    public void stopPictures() {
+        pictureSwitcher.stop();
+    }
+
+    /**
+     * @return the picture shown, for the tests
+     */
+    int getShownPicture() {
+        return shownPicture;
     }
 
     /**
