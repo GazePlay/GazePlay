@@ -40,9 +40,7 @@ import java.util.Objects;
  * "Jeu de l'oie" (name code GooseGame; reviewed on 12/11/2026, maintainer's rules). A board in a spiral of 63 squares;
  * each player in turn rolls two dice (a fixation on the "Roll" button; the computer rolls by itself) and moves their
  * pawn, a Biboule. With the classic rules: a goose moves the pawn again by the same throw, the bridge (7) leads to 32,
- * the inn (19) makes it sleep two turns, the well (31) and the prison (52) keep it until another pawn comes or passes
- * by, the arrow (58) sends it back to the start; if all the pawns wait, they are all freed. With the simple rules, only
- * the geese. The end (63) must be reached exactly, else the pawn moves back. The first pawn on 63 wins: "Bravo" when a
+ * the inn (19), the well (31) and the prison (52) make it miss one turn. With the simple rules, only the geese. The end (63) must be reached exactly, else the pawn moves back. The first pawn on 63 wins: "Bravo" when a
  * person wins, then the statistics.
  * <p>
  * One player against 1 to 3 pawns of the computer, or 2 to 4 persons taking turns. One loop, in real seconds: the
@@ -50,6 +48,12 @@ import java.util.Objects;
  * settings, and nothing moves while the menu of the game is open. (Before the review: persons only, the game stuck after
  * a win, everything shown twice when all the pawns waited, the throws added to the goals reached, piled-up messages in
  * the font of the system with "Player 2", a board, a button and sounds of unknown source, two copies of the whole game.)
+ * <p>
+ * Tester's feedback of 23/11/2026, point 65 (maintainer's choices of 27/11/2026): softer rules than the classic game, so
+ * that it is not frustrating. With any players: no arrow back to the start, one turn missed on the inn, the well and the
+ * prison (see {@link GooseBoard}); for each person, the third throw that can reach the end exactly does it. Against the
+ * computer, when one of its pawns is ahead of the person's, the person's throw is helped: the end if it can be reached,
+ * else a goose or the bridge, else 12 or 11 when they do not stop on a trap.
  */
 public class GooseGame implements GameLifeCycle {
 
@@ -64,14 +68,18 @@ public class GooseGame implements GameLifeCycle {
     private static final Color[] RINGS = {Color.rgb(58, 123, 213), Color.rgb(242, 140, 56), Color.rgb(76, 175, 80),
         Color.rgb(232, 185, 28)};
     /**
-     * In seconds: the dice rolling (the die turns for 1.5 s), a hop of a pawn to the next square, a jump (bridge,
-     * back to the start), the computer thinking, the end shown.
+     * In seconds: the dice rolling (the die turns for 1.5 s), a hop of a pawn to the next square, a jump (the bridge),
+     * the computer thinking, the end shown.
      */
     static final double ROLL = 1.6;
     static final double HOP = 0.28;
     static final double JUMP = 0.7;
     static final double COMPUTER_WAIT = 1.0;
     static final double SHOW = 2.4;
+    /**
+     * The throw that can reach the end exactly that does it, for a person (point 65).
+     */
+    static final int END_HELP = 3;
 
     private static final String BOARD = "data/goosegame/gooseboard.png";
     private static final String POSITIONS = "data/goosegame/positions.json";
@@ -421,7 +429,7 @@ public class GooseGame implements GameLifeCycle {
     }
 
     /**
-     * The turn of the current pawn: a pawn asleep or waiting passes its turn; a person rolls with the button, the
+     * The turn of the current pawn: a pawn caught by a trap misses its turn; a person rolls with the button, the
      * computer by itself.
      *
      * @param delayed whether the "Roll" button comes back after another turn, maybe under the pointer: nothing can be
@@ -430,22 +438,11 @@ public class GooseGame implements GameLifeCycle {
      */
     private void startTurn(final boolean delayed) {
         diceGroup.setVisible(false);
-        if (pawns.stream().allMatch(Pawn::isWaiting)) {
-            pawns.forEach(pawn -> pawn.waiting = false);
-            say("GooseAllFree");
-            after(1.6, () -> startTurn(true));
-            return;
-        }
         final Pawn pawn = pawns.get(current);
         showTurn(pawn);
         if (pawn.asleep > 0) {
             pawn.asleep--;
             say("GooseSleeps", pawn);
-            after(1.4, this::nextTurn);
-            return;
-        }
-        if (pawn.waiting) {
-            say("GooseWaits", pawn);
             after(1.4, this::nextTurn);
             return;
         }
@@ -477,14 +474,68 @@ public class GooseGame implements GameLifeCycle {
     }
 
     /**
-     * The two dice roll; the pawn moves when they have settled.
+     * The two dice roll, showing the throw chosen to help a person when there is one; the pawn moves when they have
+     * settled.
      */
     private void roll() {
+        final int helped = helpedThrow(pawns.get(current));
+        final int first = helped == 0 ? 0 : Math.min(6, helped - 1);
+        final int[] faces = {first, helped - first};
         int total = 0;
-        for (final DiceRoller die : dice) {
-            total += die.roll(null);
+        for (int i = 0; i < dice.size(); i++) {
+            total += dice.get(i).roll(null, helped == 0 ? 0 : faces[i]);
         }
         startRolling(total);
+    }
+
+    /**
+     * @return the throw (2 to 12) helping a person, or 0 for a throw at random: the end on the third throw that can
+     * reach it exactly; against the computer, when one of its pawns is ahead, the end if it can be reached, else the
+     * farthest goose or the bridge, else 12 or 11 when it does not stop on a trap
+     */
+    int helpedThrow(final Pawn pawn) {
+        if (!pawn.human) {
+            return 0;
+        }
+        final int toEnd = GooseBoard.END - pawn.square;
+        final boolean endInReach = toEnd >= 2 && toEnd <= 12;
+        if (endInReach) {
+            pawn.endTries++;
+            if (pawn.endTries >= END_HELP) {
+                return toEnd;
+            }
+        } else {
+            pawn.endTries = 0;
+        }
+        final boolean computerAhead = players.againstComputer()
+            && pawns.stream().anyMatch(other -> !other.human && other.square > pawn.square);
+        if (!computerAhead) {
+            return 0;
+        }
+        if (endInReach) {
+            return toEnd;
+        }
+        for (int total = 12; total >= 2; total--) {
+            final GooseBoard.Kind kind = GooseBoard.kind(landing(pawn.square, total), rules);
+            if (kind == GooseBoard.Kind.GOOSE || kind == GooseBoard.Kind.BRIDGE) {
+                return total;
+            }
+        }
+        for (int total = 12; total >= 11; total--) {
+            if (!isTrap(GooseBoard.kind(landing(pawn.square, total), rules))) {
+                return total;
+            }
+        }
+        return 0;
+    }
+
+    private static int landing(final int from, final int total) {
+        final List<Integer> way = GooseBoard.way(from, total);
+        return way.get(way.size() - 1);
+    }
+
+    private static boolean isTrap(final GooseBoard.Kind kind) {
+        return kind == GooseBoard.Kind.INN || kind == GooseBoard.Kind.WELL || kind == GooseBoard.Kind.PRISON;
     }
 
     /**
@@ -537,7 +588,6 @@ public class GooseGame implements GameLifeCycle {
         if (t >= 1) {
             mover.square = hops.remove(0);
             gameContext.getSoundManager().add(SOUNDS + "mvmt" + random.nextInt(6) + ".wav");
-            freeAt(mover);
             hopFrom = to;
             hopTime = 0;
             if (hops.isEmpty()) {
@@ -553,22 +603,6 @@ public class GooseGame implements GameLifeCycle {
         afterMove = null;
         if (then != null) {
             then.run();
-        }
-    }
-
-    /**
-     * A pawn coming on or passing by the well or the prison frees the pawn waiting there.
-     */
-    private void freeAt(final Pawn pawn) {
-        final GooseBoard.Kind kind = GooseBoard.kind(pawn.square, rules);
-        if (kind != GooseBoard.Kind.WELL && kind != GooseBoard.Kind.PRISON) {
-            return;
-        }
-        for (final Pawn other : pawns) {
-            if (other != pawn && other.waiting && other.square == pawn.square) {
-                other.waiting = false;
-                say("GooseFreed", pawn, other);
-            }
         }
     }
 
@@ -589,23 +623,14 @@ public class GooseGame implements GameLifeCycle {
                 after(0.9, () -> moveAlong(pawn, List.of(GooseBoard.BRIDGE_END), JUMP,
                     () -> after(0.6, this::nextTurn)));
             }
-            case INN -> {
-                pawn.asleep = GooseBoard.INN_TURNS;
-                say("GooseInn", pawn);
+            case INN, WELL, PRISON -> {
+                // One turn missed (point 65)
+                pawn.asleep = GooseBoard.TRAP_TURNS;
+                final GooseBoard.Kind kind = GooseBoard.kind(pawn.square, rules);
+                say(kind == GooseBoard.Kind.INN ? "GooseInn" : kind == GooseBoard.Kind.WELL ? "GooseWell"
+                    : "GoosePrison", pawn);
                 gameContext.getSoundManager().add(SOUNDS + "trap.wav");
                 after(1.6, this::nextTurn);
-            }
-            case WELL, PRISON -> {
-                pawn.waiting = true;
-                say(pawn.square == GooseBoard.WELL ? "GooseWell" : "GoosePrison", pawn);
-                gameContext.getSoundManager().add(SOUNDS + "trap.wav");
-                after(1.6, this::nextTurn);
-            }
-            case BACK -> {
-                say("GooseBack", pawn);
-                gameContext.getSoundManager().add(SOUNDS + "trap.wav");
-                after(0.9, () -> moveAlong(pawn, List.of(GooseBoard.START), JUMP * 1.4,
-                    () -> after(0.6, this::nextTurn)));
             }
             default -> after(0.5, this::nextTurn);
         }
@@ -749,7 +774,8 @@ public class GooseGame implements GameLifeCycle {
     }
 
     /**
-     * A pawn: its Biboule on a base, its square, the turns it sleeps, and whether it waits in the well or the prison.
+     * A pawn: its Biboule on a base, its square, the turns it misses, and the throws it has had that could reach the end
+     * exactly.
      */
     static final class Pawn {
         @Getter
@@ -764,7 +790,7 @@ public class GooseGame implements GameLifeCycle {
         @Getter
         private int asleep;
         @Getter
-        private boolean waiting;
+        private int endTries;
 
         Pawn(final int index, final String color, final boolean human, final Group node, final Image image) {
             this.index = index;

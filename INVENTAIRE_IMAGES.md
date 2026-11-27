@@ -73,6 +73,11 @@ redessiné pour le projet ; **1 048 images livrées, 746 libres, 130 libres prob
 gâteau : OpenMoji, CC BY-SA 4.0, `data/piano/images`, `make_piano_images.py`) sont ajoutées, pour les cartes du choix
 de la chanson et la récompense ; **1 052 images livrées, 750 libres, 130 libres probables, 172 de source inconnue**.
 
+**Retours de la testeuse, points 64 et 65 (27/11/2026)** : le plateau du Jeu de l'oie est redessiné sans la case 58
+« retour au départ », et un plateau des règles simples (`gooseboard-simple.png`, seules les oies dessinées) est ajouté,
+tous deux faits par `make_goose_images.py` ; **1 053 images livrées, 751 libres, 130 libres probables, 172 de source
+inconnue**.
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

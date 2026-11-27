@@ -7,6 +7,10 @@ import java.util.Set;
 /**
  * The squares of the board of "Jeu de l'oie" (data/goosegame/gooseboard.png, drawn by gradle/images/make_goose_images.py
  * on the centers of positions.json): 0 is the start, 63 the end. What each square does, and the way of a pawn.
+ * <p>
+ * Softened rules (tester's feedback of 23/11/2026, point 65, maintainer's choices of 27/11/2026, with any players): no
+ * more arrow back to the start (58 is an ordinary square); the inn, the well and the prison make a pawn miss one turn
+ * (the inn made it sleep two turns, the well and the prison kept it until another pawn came or passed by).
  */
 public final class GooseBoard {
 
@@ -22,24 +26,17 @@ public final class GooseBoard {
     public static final int BRIDGE = 7;
     public static final int BRIDGE_END = 32;
     /**
-     * The inn: the pawn sleeps for two turns.
+     * The inn, the well and the prison: the pawn misses one turn.
      */
     public static final int INN = 19;
-    public static final int INN_TURNS = 2;
-    /**
-     * The well and the prison: the pawn waits there until another pawn comes or passes by.
-     */
     public static final int WELL = 31;
     public static final int PRISON = 52;
-    /**
-     * The arrow back: the pawn goes back to the start.
-     */
-    public static final int BACK = 58;
+    public static final int TRAP_TURNS = 1;
 
     /**
      * What a square does to a pawn stopping on it.
      */
-    public enum Kind { NORMAL, GOOSE, BRIDGE, INN, WELL, PRISON, BACK, END }
+    public enum Kind { NORMAL, GOOSE, BRIDGE, INN, WELL, PRISON, END }
 
     private GooseBoard() {
     }
@@ -62,7 +59,6 @@ public final class GooseBoard {
             case INN -> Kind.INN;
             case WELL -> Kind.WELL;
             case PRISON -> Kind.PRISON;
-            case BACK -> Kind.BACK;
             default -> Kind.NORMAL;
         };
     }

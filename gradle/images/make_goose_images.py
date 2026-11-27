@@ -8,6 +8,10 @@ squares stay those of positions.json (square 0 is the start, 63 the end). A sand
 square with its number, and a picture on the special squares: geese (play the throw again), the bridge (7 to 32), the
 inn (19, two turns asleep), the well (31) and the prison (52) (wait until another pawn passes), the arrow back to the
 start (58) and the star of the end (63).
+
+Since 27/11/2026 (tester's feedback, points 64 and 65): the rules are softened, the arrow back to the start is gone
+(58 is an ordinary square; the inn, the well and the prison make a pawn miss one turn); gooseboard-simple.png is the
+board of the simple rules, with only the geese, the start and the end, so that no square looks special for nothing.
 """
 import json
 import math
@@ -20,7 +24,7 @@ WIDTH, HEIGHT = 1799, 1056
 S = 2
 RADIUS = 47
 GEESE = [5, 9, 13, 18, 24, 28, 34, 36, 40, 45, 49, 54]
-BRIDGE, BRIDGE_END, INN, WELL, PRISON, BACK, END = 7, 32, 19, 31, 52, 58, 63
+BRIDGE, BRIDGE_END, INN, WELL, PRISON, END = 7, 32, 19, 31, 52, 63
 
 PATH = (238, 220, 180)
 PATH_EDGE = (150, 116, 76)
@@ -33,11 +37,13 @@ COLORS = {
 }
 
 
-def kind(i):
+def kind(i, simple):
     if i in GEESE:
         return 'goose'
-    return {BRIDGE: 'bridge', BRIDGE_END: 'bridge', INN: 'inn', WELL: 'well', PRISON: 'prison', BACK: 'back',
-            END: 'end', 0: 'start'}.get(i)
+    if simple:
+        return {END: 'end', 0: 'start'}.get(i)
+    return {BRIDGE: 'bridge', BRIDGE_END: 'bridge', INN: 'inn', WELL: 'well', PRISON: 'prison', END: 'end',
+            0: 'start'}.get(i)
 
 
 def spline(points, steps=12):
@@ -138,14 +144,6 @@ def prison(pen, cx, cy, r):
         pen.line([(x, cy - r * 0.5), (x, cy + r * 0.45)], fill=INK, width=int(r * 0.09))
 
 
-def back(pen, cx, cy, r):
-    """A curved arrow going back."""
-    pen.arc((cx - r * 0.55, cy - r * 0.5, cx + r * 0.55, cy + r * 0.6), 180, 70, fill=INK, width=int(r * 0.17))
-    tip = (cx - r * 0.55, cy + r * 0.05)
-    pen.polygon([(tip[0] - r * 0.28, tip[1] - r * 0.12), (tip[0] + r * 0.28, tip[1] - r * 0.12),
-                 (tip[0], tip[1] + r * 0.32)], fill=INK)
-
-
 def star(pen, cx, cy, r, fill):
     points = []
     for k in range(10):
@@ -155,7 +153,7 @@ def star(pen, cx, cy, r, fill):
     pen.polygon(points, fill=fill, outline=INK)
 
 
-def draw(positions):
+def draw(positions, simple):
     image = Image.new('RGBA', (WIDTH * S, HEIGHT * S), (0, 0, 0, 0))
     pen = ImageDraw.Draw(image)
     centers = [(p['x'] * S, p['y'] * S) for p in positions]
@@ -163,20 +161,21 @@ def draw(positions):
     track = spline(centers)
     thick_line(pen, track, r * 2.45, PATH_EDGE)
     thick_line(pen, track, r * 2.25, PATH)
-    # The bridge from 7 to 32, across the path
+    # The bridge from 7 to 32, across the path (classic rules only)
     (x1, y1), (x2, y2) = centers[BRIDGE], centers[BRIDGE_END]
-    pen.line([(x1, y1), (x2, y2)], fill=PATH_EDGE, width=int(r * 1.0))
     length = math.dist((x1, y1), (x2, y2))
-    for k in range(1, int(length / (r * 0.35))):
-        t = k * r * 0.35 / length
-        x, y = x1 + (x2 - x1) * t, y1 + (y2 - y1) * t
-        nx, ny = -(y2 - y1) / length, (x2 - x1) / length
-        pen.line([(x + nx * r * 0.42, y + ny * r * 0.42), (x - nx * r * 0.42, y - ny * r * 0.42)],
-                 fill=(206, 152, 92), width=int(r * 0.22))
+    if not simple:
+        pen.line([(x1, y1), (x2, y2)], fill=PATH_EDGE, width=int(r * 1.0))
+        for k in range(1, int(length / (r * 0.35))):
+            t = k * r * 0.35 / length
+            x, y = x1 + (x2 - x1) * t, y1 + (y2 - y1) * t
+            nx, ny = -(y2 - y1) / length, (x2 - x1) / length
+            pen.line([(x + nx * r * 0.42, y + ny * r * 0.42), (x - nx * r * 0.42, y - ny * r * 0.42)],
+                     fill=(206, 152, 92), width=int(r * 0.22))
     number_font = ImageFont.truetype(FONT, int(r * 0.78))
     small_font = ImageFont.truetype(FONT, int(r * 0.42))
     for i, (cx, cy) in enumerate(centers):
-        k = kind(i)
+        k = kind(i, simple)
         radius = r * (1.45 if i == END else 1.1 if i == 0 else 1)
         fill = COLORS.get(k, TILE)
         pen.ellipse((cx - radius - 3 * S, cy - radius - 3 * S + 4 * S, cx + radius + 3 * S, cy + radius + 3 * S + 4 * S),
@@ -199,8 +198,6 @@ def draw(positions):
             well(pen, cx, picture, r * 0.75)
         elif k == 'prison':
             prison(pen, cx, picture, r * 0.65)
-        elif k == 'back':
-            back(pen, cx, picture, r * 0.7)
         elif k == 'end':
             star(pen, cx, cy - r * 0.2, r * 0.75, (255, 248, 220))
         if k == 'start':
@@ -217,4 +214,5 @@ def draw(positions):
 folder, FONT = sys.argv[1], sys.argv[2]
 with open(os.path.join(folder, 'positions.json'), encoding='utf-8') as source:
     squares = json.load(source)
-draw(squares).save(os.path.join(folder, 'gooseboard.png'), optimize=True)
+draw(squares, False).save(os.path.join(folder, 'gooseboard.png'), optimize=True)
+draw(squares, True).save(os.path.join(folder, 'gooseboard-simple.png'), optimize=True)

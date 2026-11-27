@@ -433,7 +433,8 @@ gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VeloCorrectSec
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/01/VoitureFalseFirst.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/CeriseFalseSecond.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
 gazeplay-games/src/main/resources/data/gazeplayEvalTest/images/02/OursCorrectFirst.jpg,non,source inconnue,,2022-04-26,Noars,Add major modifs for Bera games
-gazeplay-games/src/main/resources/data/goosegame/gooseboard.png,oui,libre,"dessiné pour le projet (gradle/images/make_goose_images.py, sur les centres de positions.json), GPL-3.0-or-later ; remplace un plateau de source inconnue (12/11/2026)",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
+gazeplay-games/src/main/resources/data/goosegame/gooseboard.png,oui,libre,"dessiné pour le projet (gradle/images/make_goose_images.py, sur les centres de positions.json), GPL-3.0-or-later ; remplace un plateau de source inconnue (12/11/2026) ; redessiné sans la case 58 « retour au départ » le 27/11/2026 (point 65)",2026-11-12,GazePlay Learning,revue du Jeu de l'oie
+gazeplay-games/src/main/resources/data/goosegame/gooseboard-simple.png,oui,libre,"dessiné pour le projet (gradle/images/make_goose_images.py), GPL-3.0-or-later ; plateau des règles simples, seules les oies dessinées",2026-11-27,GazePlay Learning,retours de la testeuse (point 64 : Jeu de l'oie)
 gazeplay-games/src/main/resources/data/horses/biboules/BLUE.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/GREEN.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash
 gazeplay-games/src/main/resources/data/horses/biboules/RED.png,oui,source inconnue,,2018-02-09,kuhlkrein,Rainbow Biboules + flash

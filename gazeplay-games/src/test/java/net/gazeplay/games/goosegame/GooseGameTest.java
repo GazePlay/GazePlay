@@ -29,7 +29,8 @@ import static org.mockito.Mockito.*;
 /**
  * "Jeu de l'oie" (reviewed on 12/11/2026, maintainer's rules): the way of a pawn (the end reached exactly), the special
  * squares with the classic and the simple rules, the turns (a person with the button, the computer by itself), the
- * end ("Bravo" only when a person wins), the variants and those of before the review.
+ * end ("Bravo" only when a person wins), the variants and those of before the review; since 27/11/2026 (tester's
+ * feedback, point 65), the softened rules and the help of the dice.
  */
 @ExtendWith(ApplicationExtension.class)
 class GooseGameTest {
@@ -114,7 +115,8 @@ class GooseGameTest {
         assertEquals(GooseBoard.Kind.INN, GooseBoard.kind(19, GooseRules.CLASSIC));
         assertEquals(GooseBoard.Kind.WELL, GooseBoard.kind(31, GooseRules.CLASSIC));
         assertEquals(GooseBoard.Kind.PRISON, GooseBoard.kind(52, GooseRules.CLASSIC));
-        assertEquals(GooseBoard.Kind.BACK, GooseBoard.kind(58, GooseRules.CLASSIC));
+        // Point 65: no more arrow back to the start
+        assertEquals(GooseBoard.Kind.NORMAL, GooseBoard.kind(58, GooseRules.CLASSIC));
         assertEquals(12, GooseBoard.GEESE.size());
     }
 
@@ -191,7 +193,7 @@ class GooseGameTest {
     }
 
     @Test
-    void shouldTakeTheBridgeAndSendBackToTheStart() throws Exception {
+    void shouldTakeTheBridgeAndNeverSendBackToTheStart() throws Exception {
         final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);
         fx(() -> {
             pawn(game, 0).setSquare(3);
@@ -201,7 +203,7 @@ class GooseGameTest {
             pawn(game, 1).setSquare(55);
             game.rollWith(3);
             untilReady(game);
-            assertEquals(GooseBoard.START, pawn(game, 1).getSquare());
+            assertEquals(58, pawn(game, 1).getSquare(), "58 is an ordinary square (point 65)");
             return null;
         });
     }
@@ -214,16 +216,14 @@ class GooseGameTest {
             game.rollWith(4);
             untilReady(game);
             assertEquals(GooseBoard.INN, pawn(game, 0).getSquare());
-            assertEquals(GooseBoard.INN_TURNS, pawn(game, 0).getAsleep());
-            // The second player twice in a row, the first one asleep
+            // One turn only (point 65; two before)
+            assertEquals(1, pawn(game, 0).getAsleep());
+            // The second player twice in a row, the first one missing one turn
             pawn(game, 1).setSquare(40);
             game.rollWith(2);
             untilReady(game);
             assertEquals(1, game.getCurrent());
-            assertEquals(1, pawn(game, 0).getAsleep());
-            game.rollWith(2);
-            untilReady(game);
-            assertEquals(1, game.getCurrent());
+            assertEquals(0, pawn(game, 0).getAsleep());
             game.rollWith(2);
             untilReady(game);
             assertEquals(0, game.getCurrent());
@@ -231,38 +231,90 @@ class GooseGameTest {
         });
     }
 
+    /**
+     * Point 65: the well and the prison make a pawn miss one turn (before, it waited until another pawn came).
+     */
     @Test
-    void shouldFreeAPawnWaitingInTheWellWhenAnotherPasses() throws Exception {
+    void shouldMissOneTurnInTheWellAndThePrison() throws Exception {
         final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);
         fx(() -> {
             pawn(game, 0).setSquare(27);
             game.rollWith(4);
             untilReady(game);
             assertEquals(GooseBoard.WELL, pawn(game, 0).getSquare());
-            assertTrue(pawn(game, 0).isWaiting());
-            pawn(game, 1).setSquare(29);
-            game.rollWith(4);
+            assertEquals(1, pawn(game, 0).getAsleep());
+            pawn(game, 1).setSquare(50);
+            game.rollWith(2);
             untilReady(game);
-            assertFalse(pawn(game, 0).isWaiting());
+            assertEquals(GooseBoard.PRISON, pawn(game, 1).getSquare());
+            // Both miss one turn: the first one is free first, then the second one
             assertEquals(0, game.getCurrent());
+            assertEquals(0, pawn(game, 0).getAsleep());
+            assertEquals(0, pawn(game, 1).getAsleep());
+            return null;
+        });
+        verify(translator, atLeastOnce()).translate("GooseWell");
+        verify(translator, atLeastOnce()).translate("GoosePrison");
+    }
+
+    /**
+     * Point 65: the third throw of a person that can reach the end exactly does it, with any players.
+     */
+    @Test
+    void shouldReachTheEndOnTheThirdTry() throws Exception {
+        final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);
+        fx(() -> {
+            pawn(game, 0).setSquare(57);
+            assertEquals(0, game.helpedThrow(pawn(game, 0)), "first try");
+            assertEquals(0, game.helpedThrow(pawn(game, 0)), "second try");
+            assertEquals(6, game.helpedThrow(pawn(game, 0)), "third try: the throw to the end");
+            pawn(game, 0).setSquare(30);
+            assertEquals(0, game.helpedThrow(pawn(game, 0)), "far from the end, between persons: no help");
+            pawn(game, 0).setSquare(62);
+            assertEquals(0, game.helpedThrow(pawn(game, 0)), "1 square cannot be thrown with two dice");
+            return null;
+        });
+    }
+
+    /**
+     * Point 65: against the computer, when one of its pawns is ahead, the throw of the person is helped: a goose or the
+     * bridge, else 12 or 11 without a trap; the computer itself is never helped.
+     */
+    @Test
+    void shouldHelpThePersonWhenTheComputerIsAhead() throws Exception {
+        final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.VS_COMPUTER_1);
+        fx(() -> {
+            pawn(game, 1).setSquare(20);
+            pawn(game, 0).setSquare(10);
+            // From 10: the farthest goose is 18 (8); the bridge is behind
+            assertEquals(8, game.helpedThrow(pawn(game, 0)));
+            pawn(game, 0).setSquare(0);
+            // From 0: geese at 5 and 9, the bridge at 7: the farthest, 9
+            assertEquals(9, game.helpedThrow(pawn(game, 0)));
+            pawn(game, 1).setSquare(5);
+            assertEquals(9, game.helpedThrow(pawn(game, 0)));
+            pawn(game, 0).setSquare(10);
+            assertEquals(0, game.helpedThrow(pawn(game, 0)), "the person ahead: no help");
+            assertEquals(0, game.helpedThrow(pawn(game, 1)), "never for the computer");
+            pawn(game, 1).setSquare(60);
+            pawn(game, 0).setSquare(55);
+            assertEquals(8, game.helpedThrow(pawn(game, 0)), "the end, in reach");
             return null;
         });
     }
 
     @Test
-    void shouldFreeAllThePawnsWhenAllWait() throws Exception {
-        final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.PLAYERS_2);
+    void shouldRollTheHelpedThrow() throws Exception {
+        final GooseGame game = launched(GooseRules.CLASSIC, GoosePlayers.VS_COMPUTER_1);
         fx(() -> {
-            pawn(game, 0).setSquare(27);
-            game.rollWith(4);
-            untilReady(game);
-            pawn(game, 1).setSquare(50);
-            game.rollWith(2);
-            untilReady(game);
-            assertEquals(GooseBoard.PRISON, pawn(game, 1).getSquare());
-            assertFalse(pawn(game, 0).isWaiting());
-            assertFalse(pawn(game, 1).isWaiting());
-            verify(translator, atLeastOnce()).translate("GooseAllFree");
+            pawn(game, 1).setSquare(20);
+            pawn(game, 0).setSquare(10);
+            game.lookAtButton(true);
+            for (int i = 0; i < 30 && game.getPhase() == GooseGame.Phase.READY; i++) {
+                game.step(0.02);
+            }
+            assertEquals(GooseGame.Phase.ROLLING, game.getPhase());
+            assertEquals(8, game.getLastThrow());
             return null;
         });
     }
@@ -275,7 +327,7 @@ class GooseGameTest {
             game.rollWith(4);
             untilReady(game);
             assertEquals(GooseBoard.WELL, pawn(game, 0).getSquare());
-            assertFalse(pawn(game, 0).isWaiting());
+            assertEquals(0, pawn(game, 0).getAsleep());
             return null;
         });
     }

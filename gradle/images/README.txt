@@ -215,7 +215,9 @@ and the sounds (sounds/mvmt0-5.wav, goose.wav, trap.wav, win.wav) made by make_g
 license of GazePlay Learning (GPL-3.0-or-later). They replace (12/11/2026) a board and six sounds of unknown source. The
 pawns are the Biboules of the shooting game (data/shooter); the former Biboules (data/biboulejump/biboules) are kept for
 the bottles game. The thumbnail (gazeplay-core: data/common/Thumbnails/goosegame.png, 960 x 540) is a capture of the
-game, reduced by half.
+game, reduced by half. Since 27/11/2026 (tester's feedback, points 64 and 65), the board has no more arrow back to the
+start (58), and gooseboard-simple.png, drawn by the same script, is the board of the simple rules (only the geese, the
+start and the end).
 
 Figures of "Point par point" (name code DotToDot; gazeplay-games: data/dottodot/figures.json): 24 named figures (8 for
 each level) made by make_dottodot_figures.py (this folder), under the license of GazePlay Learning (GPL-3.0-or-later);
