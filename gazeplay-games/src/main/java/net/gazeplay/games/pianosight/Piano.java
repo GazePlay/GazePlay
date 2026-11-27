@@ -10,6 +10,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
@@ -47,6 +50,9 @@ import java.util.function.Supplier;
  * review: a round keyboard, a song of the repertoire protected by copyright (RIVER.mid), a first key lit wrong, the
  * free notes off any scale, a button to open a MIDI file with the mouse only, a new progress indicator at each look,
  * nothing removed at the end, five pictures of notes of unknown source.)
+ * <p>
+ * Tester's feedback of 23/11/2026, maquette validated by the maintainer on 26/11/2026: each black key has a round
+ * pastille, half of the color of each white key beside it, where its ring fills (point 40).
  */
 @Slf4j
 public class Piano implements GameLifeCycle {
@@ -290,14 +296,39 @@ public class Piano implements GameLifeCycle {
             rect.setStroke(Color.rgb(20, 18, 24));
             rect.setStrokeWidth(Math.max(1.5, whiteWidth * 0.015));
             final Color color = Color.rgb(70, 62, 78);
-            keys.add(new Key(BLACK[i], rect, color, rect.getX() + rect.getWidth() / 2,
-                rect.getY() + rect.getHeight() * 0.55, rect.getWidth() * 0.95));
+            // The pastille in the bottom of the key, where its ring fills: half of the color of each white key beside
+            // it (point 40)
+            final double cx = rect.getX() + rect.getWidth() / 2;
+            final double cy = rect.getY() + rect.getHeight() * 0.79;
+            final Key key = new Key(BLACK[i], rect, color, cx, cy, rect.getWidth() * 0.95);
+            key.node.getChildren().add(pastille(cx, cy, rect.getWidth() * 0.29, COLORS[BLACK_AFTER[i]],
+                COLORS[BLACK_AFTER[i] + 1]));
+            keys.add(key);
         }
         // The black keys over the white ones
         for (final Key key : keys) {
             keysLayer.getChildren().add(key.node);
             key.listen();
         }
+    }
+
+    /**
+     * @return a round pastille, its left half of one color and its right half of another, circled in white
+     */
+    static Group pastille(final double cx, final double cy, final double radius, final Color left, final Color right) {
+        final Arc leftHalf = new Arc(cx, cy, radius, radius, 90, 180);
+        leftHalf.setType(ArcType.ROUND);
+        leftHalf.setFill(left);
+        final Arc rightHalf = new Arc(cx, cy, radius, radius, -90, 180);
+        rightHalf.setType(ArcType.ROUND);
+        rightHalf.setFill(right);
+        final Circle edge = new Circle(cx, cy, radius);
+        edge.setFill(Color.TRANSPARENT);
+        edge.setStroke(Color.WHITE);
+        edge.setStrokeWidth(Math.max(2, radius * 0.15));
+        final Group pastille = new Group(leftHalf, rightHalf, edge);
+        pastille.setMouseTransparent(true);
+        return pastille;
     }
 
     /**

@@ -3,6 +3,7 @@ Play the piano with your eyes! The keyboard has one octave, from C to C: 8 white
 
 # How to play
 - Look at a key: a ring fills, then the note plays and a little musical note flies away. The ring lasts the time of the settings, which can also be changed in the menu (Esc key).
+- The black keys have a pastille: its left half has the color of the white key on the left, its right half the color of the white key on the right. The ring fills on the pastille.
 - In Songs: the key to play is framed, with an arrow above it. Play it: the next key lights up. Another key plays its note, with no mistake, but the song does not go on. At the top, the title of the song and the number of notes played.
 - The songs: Au clair de la lune, Twinkle Twinkle Little Star, Ode to Joy and Happy Birthday. Some of them have a black key.
 - In Free: each key plays its note, from C to C.

@@ -3,6 +3,7 @@ Joue du piano avec les yeux ! Le clavier a une octave, du do au do : 8 touches b
 
 # Comment jouer
 - Regarde une touche : un anneau se remplit, puis la note joue et une petite note de musique s’envole. La durée de l’anneau est celle des réglages, qui se change aussi dans le menu (touche Échap).
+- Les touches noires ont une pastille : sa moitié gauche a la couleur de la touche blanche de gauche, sa moitié droite celle de la touche blanche de droite. L’anneau se remplit sur la pastille.
 - En Chansons : la touche à jouer est entourée, avec une flèche au-dessus. Joue-la : la touche suivante s’allume. Une autre touche joue sa note, sans erreur, mais la chanson n’avance pas. En haut, le titre de la chanson et le nombre de notes jouées.
 - Les chansons : Au clair de la lune, Ah ! vous dirai-je maman, L’Ode à la joie et Joyeux anniversaire. Certaines ont une touche noire.
 - En Libre : chaque touche joue sa note, du do au do.

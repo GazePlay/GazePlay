@@ -1,7 +1,12 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.geometry.Dimension2D;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
@@ -31,7 +36,8 @@ import static org.mockito.Mockito.*;
 
 /**
  * The Piano (reviewed on 13/11/2026, maintainer's rules): the keyboard, the songs, the delay and the fixation, a song
- * followed to its end then played again, a wrong key, the free mode, the end, the variants and those of before.
+ * followed to its end then played again, a wrong key, the free mode, the end, the variants and those of before; since
+ * 27/11/2026 (tester's feedback, point 40), the pastilles of the black keys.
  */
 @ExtendWith(ApplicationExtension.class)
 class PianoTest {
@@ -251,6 +257,40 @@ class PianoTest {
             assertTrue(game.getKeys().isEmpty());
             assertTrue(closed);
             assertEquals(Piano.Phase.OVER, game.getPhase());
+            return null;
+        });
+    }
+
+    /**
+     * @return the arcs under a node: the halves of the pastilles of the black keys
+     */
+    private static List<Arc> arcs(final Node node) {
+        final List<Arc> found = new ArrayList<>();
+        if (node instanceof Arc arc) {
+            found.add(arc);
+        } else if (node instanceof Parent parent) {
+            for (final Node child : parent.getChildrenUnmodifiable()) {
+                found.addAll(arcs(child));
+            }
+        }
+        return found;
+    }
+
+    @Test
+    void shouldPutAPastilleOfTheTwoNeighbourColorsOnEachBlackKey() throws Exception {
+        launched(PianoMode.SONG, PianoEnd.ENDLESS);
+        fx(() -> {
+            // Two halves per black key (the ring of the fixation has an arc of another length)
+            final List<Arc> halves = arcs(gameArea).stream().filter(arc -> arc.getLength() == 180).toList();
+            assertEquals(10, halves.size());
+            final Group pastille = Piano.pastille(10, 20, 5, Color.RED, Color.ORANGE);
+            final Arc left = (Arc) pastille.getChildren().get(0);
+            final Arc right = (Arc) pastille.getChildren().get(1);
+            assertEquals(Color.RED, left.getFill());
+            assertEquals(90, left.getStartAngle());
+            assertEquals(Color.ORANGE, right.getFill());
+            assertEquals(-90, right.getStartAngle());
+            assertTrue(pastille.isMouseTransparent());
             return null;
         });
     }
