@@ -2,11 +2,35 @@
   "background": "background.png",
   "elements": [
     {
-      "image": "dolphin.png",
+      "image": "gull.png",
+      "scale": 0.5,
+      "coords": {
+        "x": 330,
+        "y": 150
+      },
+      "sounds": [
+        "gull.mp3"
+      ],
+      "name": "SoundsOfLife_gull"
+    },
+    {
+      "image": "boat.png",
       "scale": 0.55,
       "coords": {
-        "x": 560,
-        "y": 300
+        "x": 1500,
+        "y": 330
+      },
+      "sounds": [
+        "boat.wav"
+      ],
+      "name": "SoundsOfLife_boat"
+    },
+    {
+      "image": "dolphin.png",
+      "scale": 0.5,
+      "coords": {
+        "x": 880,
+        "y": 340
       },
       "sounds": [
         "dolphin.mp3"
@@ -15,10 +39,10 @@
     },
     {
       "image": "whale.png",
-      "scale": 0.75,
+      "scale": 0.7,
       "coords": {
-        "x": 1330,
-        "y": 320
+        "x": 1380,
+        "y": 640
       },
       "sounds": [
         "whale.mp3"
@@ -27,9 +51,9 @@
     },
     {
       "image": "fish.png",
-      "scale": 0.46,
+      "scale": 0.44,
       "coords": {
-        "x": 960,
+        "x": 560,
         "y": 600
       },
       "sounds": [
@@ -39,10 +63,10 @@
     },
     {
       "image": "octopus.png",
-      "scale": 0.48,
+      "scale": 0.46,
       "coords": {
-        "x": 400,
-        "y": 830
+        "x": 360,
+        "y": 880
       },
       "sounds": [
         "octopus.mp3"
@@ -51,10 +75,10 @@
     },
     {
       "image": "crab.png",
-      "scale": 0.46,
+      "scale": 0.44,
       "coords": {
-        "x": 1460,
-        "y": 900
+        "x": 1560,
+        "y": 920
       },
       "sounds": [
         "crab.mp3"

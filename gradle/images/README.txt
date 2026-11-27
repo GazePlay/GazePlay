@@ -45,6 +45,11 @@ OpenMoji (CC BY-SA 4.0), resized; 15 sounds come from Wikimedia Commons (CC0, pu
 and 6 from Where Is The Sound. The author, licence and page of each file are in data/soundsoflife/CREDITS.txt,
 shipped with the game. They replace (October 2026) images and sounds of unknown source (some from picture banks).
 The thumbnail (gazeplay-core: data/common/Thumbnails/soundsOfLife.png) is a capture of the farm, 960 x 540.
+Since 27/11/2026 (tester's feedback, point 81; the game is named "Les cris des animaux"): the sea has its surface (the
+sky, a seagull drawn by make_soundsoflife_images.py, a sailing boat of OpenMoji without its water), the savanna the
+hippopotamus and the elephant instead of the giraffe and the crocodile; new sounds from Wikimedia Commons (lion,
+chimpanzee, dolphin, hippopotamus, seagull: CC BY 4.0 or CC0, see the CREDITS.txt of the game), and the bell of the
+boat made by make_soundsoflife_sounds.py (this folder), under the license of GazePlay Learning.
 
 Images and sound of Spot The Differences (gazeplay-games: data/spotthedifferences): the 8 scenes (<scene>.png and,
 for each level, <scene>-<level>.png) are drawn by make_spotdifferences_images.py (this folder), which also makes the

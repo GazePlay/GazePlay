@@ -139,7 +139,8 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images des petits chevaux (plateaux et boutons du dé) : dessinées pour GazePlay Learning
   (gradle/images/make_horses_images.py), sous la licence du projet. Elles remplacent depuis octobre 2026 des
   images de source inconnue.
-- Images et sons des « Sons de la vie » (data/soundsoflife) : décors dessinés pour GazePlay Learning
+- Images et sons des « Cris des animaux », anciens « Sons de la vie » (data/soundsoflife) : décors et mouette
+  dessinés pour GazePlay Learning
   (gradle/images/make_soundsoflife_images.py), sous la licence du projet ; animaux d'OpenMoji
   (https://openmoji.org/), licence CC BY-SA 4.0 ; 15 sons de Wikimedia Commons, sous CC0, domaine public,
   CC BY ou CC BY-SA 4.0, et 6 sons repris de « Où est le son ? ». L'auteur, la licence et la page de chaque

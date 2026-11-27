@@ -1,5 +1,5 @@
 # The principle
-Listen to the animals: each animal you look at makes its sound, and its name is shown.
+Listen to the animals: each animal you look at makes its sound, and its name is shown. At sea, the sailing boat rings its bell.
 
 # How to play
 - Look at an animal: a ring goes around the animal (fixation length of the settings).
@@ -12,6 +12,6 @@ There is nothing to win: you discover the animals and their sounds, as long as y
 # The variants
 Choose a variant (it is framed), then press "Start".
 - Farm: sheep, cow, horse, pig, rooster and hen.
-- Jungle: monkey, parrot, elephant, leopard, snake and frog.
-- Savanna: lion, zebra, giraffe and crocodile.
-- Sea: dolphin, whale, fish, octopus and crab.
+- Jungle: monkey (a chimpanzee), parrot, leopard, snake and frog.
+- Savanna: lion, zebra, elephant and hippopotamus.
+- Sea: above the water, a seagull and a sailing boat; the dolphin jumps at the surface; under the water, the whale, the fish, the octopus and the crab.

@@ -26,18 +26,6 @@
       "name": "SoundsOfLife_parrot"
     },
     {
-      "image": "elephant.png",
-      "scale": 0.7,
-      "coords": {
-        "x": 1480,
-        "y": 740
-      },
-      "sounds": [
-        "elephant.mp3"
-      ],
-      "name": "SoundsOfLife_elephant"
-    },
-    {
       "image": "leopard.png",
       "scale": 0.55,
       "coords": {

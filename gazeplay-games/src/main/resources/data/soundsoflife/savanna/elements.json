@@ -26,28 +26,28 @@
       "name": "SoundsOfLife_zebra"
     },
     {
-      "image": "giraffe.png",
-      "scale": 0.85,
+      "image": "elephant.png",
+      "scale": 0.75,
       "coords": {
         "x": 1500,
-        "y": 560
+        "y": 620
       },
       "sounds": [
-        "giraffe.mp3"
+        "elephant.mp3"
       ],
-      "name": "SoundsOfLife_giraffe"
+      "name": "SoundsOfLife_elephant"
     },
     {
-      "image": "crocodile.png",
+      "image": "hippopotamus.png",
       "scale": 0.55,
       "coords": {
         "x": 1140,
-        "y": 960
+        "y": 940
       },
       "sounds": [
-        "crocodile.mp3"
+        "hippopotamus.mp3"
       ],
-      "name": "SoundsOfLife_crocodile"
+      "name": "SoundsOfLife_hippopotamus"
     }
   ]
 }

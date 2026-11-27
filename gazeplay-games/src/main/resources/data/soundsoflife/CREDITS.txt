@@ -1,9 +1,11 @@
-Sounds Of Life (gazeplay-games: data/soundsoflife), October 2026.
+Sounds Of Life, "Les cris des animaux" since 27/11/2026 (gazeplay-games: data/soundsoflife), October 2026.
 
 Backgrounds (<scene>/background.png): drawn for GazePlay Learning by gradle/images/make_soundsoflife_images.py,
 under the license of GazePlay Learning (GPL-3.0-or-later).
-Animals (<scene>/<animal>.png): All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji
-and icon project. License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Resized.
+Animals (<scene>/<animal>.png) and the sailing boat (sea/boat.png, without the water drawn under it): All emojis
+designed by OpenMoji (https://openmoji.org/) - the open-source emoji and icon project. License: CC BY-SA 4.0
+(https://creativecommons.org/licenses/by-sa/4.0/). Resized. The seagull (sea/gull.png) is drawn for GazePlay Learning
+by gradle/images/make_soundsoflife_images.py (GPL-3.0-or-later).
 
 Sounds from Wikimedia Commons (file | title | author | licence | source), shortened to 8 s at most, normalized,
 mono MP3 (ffmpeg); chosen after their title and description, without listening:
@@ -12,22 +14,29 @@ farm/rooster.mp3 | Medium rooster crowing.ogg | alys | Public domain | https://c
 farm/hen.mp3 | Hen announcing shes lain an egg.ogg | alys | Public domain | https://commons.wikimedia.org/wiki/File:Hen_announcing_shes_lain_an_egg.ogg
 jungle/frog.mp3 | Single Frog Croak.oga | MichaeltheFox8621 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Single_Frog_Croak.oga
 jungle/leopard.mp3 | Jaguar saw.flac | About Zoos | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Jaguar_saw.flac
-jungle/monkey.mp3 | Howler monkey.ogg | David O'Hara | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Howler_monkey.ogg
+jungle/monkey.mp3 | Pant-hoot call made by a male chimpanzee.ogg | Pawel Fedurek et al. | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Pant-hoot_call_made_by_a_male_chimpanzee.ogg
 jungle/parrot.mp3 | Talking Parrot (Psittacula krameri).ogg | Amada44 | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0) | https://commons.wikimedia.org/wiki/File:Talking_Parrot_(Psittacula_krameri).ogg
-savanna/crocodile.mp3 | Size-does-matter-crocodile-mothers-react-more-to-the-voice-of-smaller-offspring-srep15547-s2.oga | Chabert T, Colin A, Aubin T, Shacks V, Bourquin S, Elsey R, Acosta J, Mathevon N | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Size-does-matter-crocodile-mothers-react-more-to-the-voice-of-smaller-offspring-srep15547-s2.oga
+savanna/lion.mp3 | Lionroar.wav | Jonathan Growcott, Alex Lobora, Andrew Markham, Charlotte E. Searle, Johan Wahlström, Matthew Wijers, Benno I. Simmons | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0) | https://commons.wikimedia.org/wiki/File:Lionroar.wav
+savanna/hippopotamus.mp3 | Hippopotamus sound effect.wav | Zagzav12 | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Hippopotamus_sound_effect.wav
 savanna/zebra.mp3 | Grévys zebra (Sound Effects).ogg | DiegoC472 | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Gr%C3%A9vys_zebra_(Sound_Effects).ogg
-savanna/giraffe.mp3 | Giraffe Hum.oga | Anton Baotic, Florian Sicks and Angela S. Stoeger | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0) | https://commons.wikimedia.org/wiki/File:Giraffe_Hum.oga
 sea/whale.mp3 | Humpbackwhale2.ogg | Spyrogumas | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Humpbackwhale2.ogg
-sea/dolphin.mp3 | Whistle 16×.ogg | National Oceanic Atmospheric Administration | Public domain | https://commons.wikimedia.org/wiki/File:Whistle_16%C3%97.ogg
+sea/dolphin.mp3 | 161691 felixblume dolphin-screaming-underwater-in-caribbean-sea-mexico.wav | Felix Blume (https://freesound.org/people/felix.blume/) | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:161691_felixblume_dolphin-screaming-underwater-in-caribbean-sea-mexico.wav
+sea/gull.mp3 | XC707075 - European Herring Gull - Larus argentatus.mp3 | Sonothèque ADVL | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:XC707075_-_European_Herring_Gull_-_Larus_argentatus.mp3
 sea/fish.mp3 | Bubbles.wav | Gloria Mcilwain | CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en) | https://commons.wikimedia.org/wiki/File:Bubbles.wav
 sea/octopus.mp3 | Water bubbles chortling.ogg | stephan | Public domain | https://commons.wikimedia.org/wiki/File:Water_bubbles_chortling.ogg
 sea/crab.mp3 | Bathtub water splashes.ogg | gradha | Public domain | https://commons.wikimedia.org/wiki/File:Bathtub_water_splashes.ogg
 
 Sounds taken from Where Is The Sound (see data/whereIsTheSound/CREDITS.txt):
 farm/cow.mp3, farm/pig.mp3: La Sonothèque (https://lasonotheque.org), CC0 1.0;
-savanna/lion.mp3: Lion raring-sound1TamilNadu178.ogg, த*உழவன், public domain (23/11/2026);
 farm/sheep.mp3: Sheep bleating.ogg, earthcalling, public domain;
-jungle/elephant.mp3: Elephant voice - trumpeting.ogg, CC0; jungle/snake.mp3: Rattlesnake.ogg, public domain.
+savanna/elephant.mp3 (in the jungle until 27/11/2026): Elephant voice - trumpeting.ogg, CC0; jungle/snake.mp3:
+Rattlesnake.ogg, public domain.
+
+Made for GazePlay Learning (GPL-3.0-or-later): sea/boat.wav, the bell of the boat, by
+gradle/images/make_soundsoflife_sounds.py (no free recording of a ship's bell was found).
+
+27/11/2026 (tester's feedback, point 81): the new sounds (lion, monkey, dolphin, hippopotamus, seagull) are the loudest
+8 seconds of their recording, with fades, chosen after their title and description, without listening.
 
 Volume of the sounds: brought to the loudness of the voices of the games (-17 LUFS, peaks at most -1.5 dBFS) on
 20/11/2026 by gradle/images/normalize_sounds.py (a constant gain, and a limiter on the few peaks); nothing else changed.

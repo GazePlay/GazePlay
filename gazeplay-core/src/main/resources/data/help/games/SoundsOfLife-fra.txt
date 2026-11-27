@@ -1,5 +1,5 @@
 # Le principe
-Écoute les cris des animaux : chaque animal regardé fait son cri, et son nom s'affiche.
+Écoute les cris des animaux : chaque animal regardé fait son cri, et son nom s'affiche. En mer, le voilier fait sonner sa cloche.
 
 # Comment jouer
 - Regarde un animal : un anneau fait le tour de l'animal (durée de fixation des réglages).
@@ -12,6 +12,6 @@ Il n'y a rien à gagner : on découvre les animaux et leurs cris, aussi longtem
 # Les variantes
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - Ferme : mouton, vache, cheval, cochon, coq et poule.
-- Jungle : singe, perroquet, éléphant, léopard, serpent et grenouille.
-- Savane : lion, zèbre, girafe et crocodile.
-- Mer : dauphin, baleine, poisson, pieuvre et crabe.
+- Jungle : singe (un chimpanzé), perroquet, léopard, serpent et grenouille.
+- Savane : lion, zèbre, éléphant et hippopotame.
+- Mer : au-dessus de l'eau, une mouette et un voilier ; le dauphin saute à la surface ; sous l'eau, la baleine, le poisson, la pieuvre et le crabe.

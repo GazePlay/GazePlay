@@ -69,6 +69,11 @@ de source connue.** Les sections 3 à 6 gardent l'état d'avant.
 bouchée, douche, jouet, jauge qui monte) faits par `make_pet_sounds.py`, sous la licence du projet ; **1 085 sons
 livrés, tous libres et de source connue.**
 
+**Retours de la testeuse, point 81 (27/11/2026)** : dans « Les cris des animaux », la girafe et le crocodile retirés,
+l'éléphant passé dans la savane ; le lion, le singe (un chimpanzé) et le dauphin remplacés, l'hippopotame et la mouette
+ajoutés (Wikimedia Commons, CC BY 4.0 ou CC0, crédits dans le `CREDITS.txt` du jeu), la cloche du voilier faite par
+`make_soundsoflife_sounds.py` ; **1 086 sons livrés, tous libres et de source connue.**
+
 ## 3. Les voix (1 310 fichiers, 90 % des sons livrés)
 
 Les questions lues à voix haute des jeux « Où est… », de Trouve l'intrus et d'Identifier les lettres, en plusieurs
