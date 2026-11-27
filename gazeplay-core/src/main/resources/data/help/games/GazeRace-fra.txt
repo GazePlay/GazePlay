@@ -1,11 +1,13 @@
 # Le principe
-Conduis la voiture bleue à rayures blanches sur la route et évite les autres voitures et les barrières de travaux !
+Conduis la voiture bleue à rayures blanches sur la route, attrape les étoiles et évite les autres voitures et les barrières de travaux !
 
 # Comment jouer
 - Regarde l'endroit où tu veux aller : ta voiture y va, à sa vitesse. Elle reste sur la route.
 - D'un côté de la ligne blanche du milieu, les voitures te doublent ; de l'autre, elles viennent en face. Tu peux passer d'un côté à l'autre. Sur la ligne, les voitures des deux côtés peuvent te toucher.
-- Toutes les 12 secondes, une barrière de travaux arrive sur la ligne blanche du milieu.
-- La route va de plus en plus vite. Tu gagnes 1 point toutes les 3 secondes.
+- Toutes les 12 secondes (sauf au niveau Très facile), une barrière de travaux arrive sur la ligne blanche du milieu.
+- Des étoiles arrivent sur la route : conduis dessus pour les attraper. Chaque étoile attrapée donne 1 point, avec un petit son et « +1 ».
+- Chaque voiture qui passe à côté de toi sans te toucher donne aussi 1 point (« +1 »). Toutes les 10 voitures évitées : « Super ! » avec une gerbe d'étoiles.
+- La route va de plus en plus vite.
 - En haut à gauche, tes vies ; en haut à droite, tes points ; au milieu, le temps qui reste (variantes en minutes).
 - La vitesse suit la vitesse d'animation des réglages. Au départ, rien ne bouge pendant le délai des réglages (1 seconde par défaut). Rien ne bouge quand le menu (touche Échap) est ouvert, et le temps s'arrête.
 
@@ -16,5 +18,5 @@ Tu as 3 vies. Si tu touches une voiture ou une barrière, tu perds une vie : ta 
 Choisis une variante (elle est entourée), puis appuie sur « Commencer ».
 - 1 minute, 3 minutes ou sans fin : sans fin, la partie dure jusqu'à la perte des 3 vies (au premier choc avec « Sans cœurs »).
 - En bas, la route : horizontale (elle va de gauche à droite) ou verticale (elle monte).
-- En bas aussi, le niveau. Facile : 1 ou 2 voitures par seconde ; au départ, la route traverse l'écran en 8 secondes, et en 4 secondes au plus vite. Moyen : 2 ou 3 voitures par seconde ; 6,4 secondes au départ, 2,1 secondes au plus vite. Difficile : 3 ou 4 voitures par seconde ; 4,5 secondes au départ, 1,6 seconde au plus vite. La route atteint sa plus grande vitesse après 50 secondes sans choc.
+- En bas aussi, le niveau. Très facile : une voiture toutes les 2,5 secondes, qui te double lentement (aucune ne vient en face), pas de barrière ; au départ, la route traverse l'écran en 10 secondes, et en 6 secondes au plus vite. Facile : 1 ou 2 voitures par seconde ; au départ, la route traverse l'écran en 8 secondes, et en 4 secondes au plus vite. Moyen : 2 ou 3 voitures par seconde ; 6,4 secondes au départ, 2,1 secondes au plus vite. Difficile : 3 ou 4 voitures par seconde ; 4,5 secondes au départ, 1,6 seconde au plus vite. La route atteint sa plus grande vitesse après 50 secondes sans choc.
 - En bas, les cœurs : Avec cœurs (3 cœurs) ou Sans cœurs (le premier choc fait perdre).

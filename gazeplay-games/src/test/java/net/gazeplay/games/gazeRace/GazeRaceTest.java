@@ -30,7 +30,8 @@ import static org.mockito.Mockito.*;
 
 /**
  * GazeRace (reviewed on 9/11/2026, maintainer's rules): the same game in parts of the screen on every screen, the delay
- * at the start, the points, the lives and the invincibility, the barriers, the ends, the variants.
+ * at the start, the points, the lives and the invincibility, the barriers, the ends, the variants; since 27/11/2026
+ * (tester's feedback, point 54), the stars caught, the cars avoided, "Super !" and the very easy level.
  */
 @ExtendWith(ApplicationExtension.class)
 class GazeRaceTest {
@@ -217,34 +218,130 @@ class GazeRaceTest {
         });
     }
 
+    /**
+     * Point 54: no more point every 3 seconds; nothing on the road, no point.
+     */
     @Test
-    void shouldGiveAPointEveryThreeSecondsAndTellTheStats() throws Exception {
+    void shouldGiveNoPointForTheTimeAlone() throws Exception {
         final GazeRace game = launched(GazeRaceLevel.EASY, GazeRaceEnd.ENDLESS);
         fx(() -> {
             emptySteps(game, 9.1);
             return null;
         });
-        assertEquals(3, game.getScore());
-        verify(stats, times(3)).incrementNumberOfGoalsReached();
+        assertEquals(0, game.getScore());
+        verify(stats, never()).incrementNumberOfGoalsReached();
     }
 
+    /**
+     * Point 54: stars come ahead every {@link GazeRace#STAR_EVERY} seconds, go by with the road, and are caught by
+     * driving on them: a point, a sound, "+1"; they do not hurt.
+     */
     @Test
-    void shouldCountThePointsWithAnyNumberOfImages() throws Exception {
-        final int[] scores = new int[2];
-        final double[] steps = {1.0 / 30, 1.0 / 144};
-        for (int i = 0; i < 2; i++) {
-            final GazeRace game = launched(GazeRaceLevel.EASY, GazeRaceEnd.ENDLESS);
-            final double step = steps[i];
-            scores[i] = fx(() -> {
-                for (double t = 0; t < 12.1; t += step) {
+    void shouldCatchTheStarsTheCarDrivesOn() throws Exception {
+        final GazeRace game = launched(GazeRaceLevel.EASY, GazeRaceEnd.ENDLESS);
+        fx(() -> {
+            game.getMobiles().clear();
+            final GazeRace.Mobile star = game.addStar();
+            assertNotNull(star);
+            assertEquals(GazeRace.Kind.STAR, star.getKind());
+            assertTrue(star.getAlong() > game.getLength(), "comes from ahead");
+            assertEquals(-1, star.getDirection());
+            star.moveTo(game.getPlayer().getAlong(), game.getPlayer().getAcross());
+            game.step(STEP);
+            assertTrue(game.getStars().isEmpty(), "caught");
+            assertEquals(1, game.getStarsCaught());
+            assertEquals(1, game.getScore());
+            assertEquals(GazeRace.LIVES, game.getLives(), "a star does not hurt");
+            assertEquals(1, game.rewardsShown(), "+1");
+            steps(game, GazeRace.REWARD + 0.1);
+            assertEquals(0, game.rewardsShown(), "gone");
+            return null;
+        });
+        verify(gameContext.getSoundManager()).add(GazeRace.STAR_SOUND);
+        verify(stats).incrementNumberOfGoalsReached();
+        // The stars come by themselves
+        final GazeRace other = launched(GazeRaceLevel.EASY, GazeRaceEnd.ENDLESS);
+        fx(() -> {
+            for (double t = 0; t < GazeRace.STAR_EVERY; t += STEP) {
+                other.getMobiles().removeIf(mobile -> mobile.getKind() == GazeRace.Kind.CAR);
+                other.step(STEP);
+            }
+            assertFalse(other.getStars().isEmpty());
+            return null;
+        });
+    }
+
+    /**
+     * Point 54: each car passing the car of the player without touching it gives a point; every
+     * {@link GazeRace#SUPER_EVERY} cars avoided, "Super !" with a burst of stars and a sound. A car hit gives nothing.
+     */
+    @Test
+    void shouldRewardTheCarsAvoided() throws Exception {
+        final GazeRace game = launched(GazeRaceLevel.NORMAL, GazeRaceEnd.ENDLESS);
+        fx(() -> {
+            final GazeRace.Mobile player = game.getPlayer();
+            for (int i = 1; i <= GazeRace.SUPER_EVERY; i++) {
+                game.getMobiles().clear();
+                GazeRace.Mobile car = null;
+                while (car == null || car.getDirection() < 0) {
                     game.getMobiles().clear();
-                    game.step(step);
+                    car = game.addCar();
                 }
-                return game.getScore();
-            });
-        }
-        assertEquals(4, scores[0]);
-        assertEquals(scores[0], scores[1], "the same at 30 and at 144 images per second");
+                // Overtaking far from the player, then just ahead of it: passed
+                final double away = player.getAcross() > game.getAcross() / 2 ? game.getAcross() * 0.2
+                    : game.getAcross() * 0.8;
+                car.moveTo(player.getAlong() - 1, away);
+                game.step(STEP);
+                car.moveTo(player.getAlong() + game.getLength() * 0.05, away);
+                game.step(STEP);
+                assertEquals(i, game.getCarsAvoided());
+            }
+            assertEquals(GazeRace.SUPER_EVERY, game.getScore());
+            // "+1" and "Super !" with its 8 stars
+            assertTrue(game.rewardsShown() >= 1 + 1 + 8, "rewards: " + game.rewardsShown());
+            // A car hit is not avoided
+            game.getMobiles().clear();
+            final GazeRace.Mobile hit = game.addCar();
+            hit.moveTo(player.getAlong(), player.getAcross());
+            game.step(STEP);
+            assertEquals(GazeRace.SUPER_EVERY, game.getCarsAvoided());
+            assertEquals(GazeRace.LIVES - 1, game.getLives());
+            return null;
+        });
+        verify(gameContext.getSoundManager()).add(GazeRace.SUPER_SOUND);
+        verify(stats, times(GazeRace.SUPER_EVERY)).incrementNumberOfGoalsReached();
+    }
+
+    /**
+     * Point 54: the very easy level, a car every 2.5 seconds, all overtaking, slowly, no barrier.
+     */
+    @Test
+    void shouldBringOnlyFewOvertakingCarsAndNoBarrierAtTheVeryEasyLevel() throws Exception {
+        assertSame(GazeRaceLevel.VERY_EASY, GazeRaceLevel.values()[0], "the easiest first");
+        assertTrue(GazeRaceLevel.VERY_EASY.getStartSpeed() < GazeRaceLevel.EASY.getStartSpeed());
+        assertTrue(GazeRaceLevel.VERY_EASY.getTopSpeed() < GazeRaceLevel.EASY.getTopSpeed());
+        final GazeRace game = launched(GazeRaceLevel.VERY_EASY, GazeRaceEnd.ENDLESS);
+        fx(() -> {
+            for (int i = 0; i < 100; i++) {
+                game.getMobiles().clear();
+                final GazeRace.Mobile car = game.addCar();
+                assertTrue(car.getDirection() > 0, "overtaking");
+            }
+            game.getMobiles().clear();
+            int arrivals = 0;
+            boolean barrier = false;
+            for (double t = 0; t < GazeRace.BARRIER_EVERY * 2; t += STEP) {
+                final int before = game.getCars().size();
+                game.step(STEP);
+                arrivals += game.getCars().size() > before ? 1 : 0;
+                barrier |= game.getMobiles().stream().anyMatch(m -> m.getKind() == GazeRace.Kind.BARRIER);
+                // Keep the player out of the way
+                game.getMobiles().removeIf(m -> m.getKind() == GazeRace.Kind.CAR && m.getAlong() > 0);
+            }
+            assertFalse(barrier, "no barrier");
+            assertEquals(GazeRace.BARRIER_EVERY * 2 / GazeRaceLevel.VERY_EASY.getCarInterval(), arrivals, 1);
+            return null;
+        });
     }
 
     @Test
@@ -467,7 +564,8 @@ class GazeRaceTest {
     void shouldGiveAllTheVariants() {
         final Set<IGameVariant> variants = new GazeRaceVariantGenerator().getVariants();
         // With or without hearts (17/11/2026)
-        assertEquals(18 * 2, variants.size());
+        // With or without hearts (17/11/2026), 4 levels since the very easy one (27/11/2026)
+        assertEquals(2 * 4 * 3 * 2, variants.size());
         final IGameVariant variant = new GroupedGameVariant(GazeRaceVariant.VERTICAL.getKey(),
             GazeRaceLevel.HARD.getKey(), GazeRaceEnd.TIME_3.getKey(), null, LivesVariant.WITH);
         assertTrue(variants.contains(variant));
@@ -526,6 +624,7 @@ class GazeRaceTest {
 
     @Test
     void shouldMakeTheEasyLevelEasierThanTheHardOne() {
+        assertTrue(GazeRaceLevel.VERY_EASY.getMostCars() <= GazeRaceLevel.EASY.getMostCars());
         assertTrue(GazeRaceLevel.EASY.getMostCars() < GazeRaceLevel.NORMAL.getMostCars());
         assertTrue(GazeRaceLevel.NORMAL.getMostCars() < GazeRaceLevel.HARD.getMostCars());
         assertTrue(GazeRaceLevel.EASY.getStartSpeed() < GazeRaceLevel.NORMAL.getStartSpeed());

@@ -10,7 +10,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
@@ -31,7 +33,7 @@ import java.util.Map;
  * GazeRace (reviewed on 9/11/2026, maintainer's rules): the car of the player goes where the gaze or the mouse is, on a
  * road going by, and avoids the other cars and the barriers of works. On one side of the road the cars overtake the
  * player, on the other they come the other way. A car hit costs a life, sends the road back to its starting speed and
- * makes the player invincible for a while. A point every 3 seconds. Three lives; the game has no end, or ends after 1 or
+ * makes the player invincible for a while. Three lives; the game has no end, or ends after 1 or
  * 3 minutes ("Bravo"), or after the third life ("Lost!"); then the statistics. Without hearts (variant of 17/11/2026,
  * maintainer's choice), no hearts shown and the first hit loses the game. Each hit is counted as a mistake.
  * <p>
@@ -40,18 +42,35 @@ import java.util.Map;
  * road (its length) and across it, then shown from left to right or from the bottom to the top.
  * (Before the review: speeds in pixels per image and seconds counted as 60 images; the lives never shown; the animations
  * going on after the end; the car of the player still following the gaze after "Replay"; sizes in pixels.)
+ * <p>
+ * Tester's feedback of 23/11/2026, point 54 (maintainer's choices of 27/11/2026): the gaze goes to what moves, and only
+ * a crash made something happen, which a child could seek. Now what is done well is rewarded as it goes: stars come on
+ * the road, and driving on one catches it (a sound, "+1"): the gaze has something good to look at; each car passed
+ * without touching it gives "+1" too, and every {@link #SUPER_EVERY} cars avoided, "Super !" with a burst of stars and
+ * a sound. The points are the stars caught and the cars avoided (a point every 3 seconds before). A very easy level
+ * (see {@link GazeRaceLevel#VERY_EASY}). The crash is unchanged.
  */
 public class GazeRace implements GameLifeCycle {
 
     static final int LIVES = 3;
     /**
-     * In seconds: a point each, the invincibility after a hit, the turn of the car hit, a crash shown, a new barrier.
+     * In seconds: the invincibility after a hit, the turn of the car hit, a crash shown, a new barrier, a new star, a
+     * reward shown ("+1", "Super !").
      */
-    static final double SECONDS_PER_POINT = 3;
     static final double INVINCIBLE = 4;
     static final double SPIN = 1;
     static final double CRASH = 1;
     static final double BARRIER_EVERY = 12;
+    static final double STAR_EVERY = 2.5;
+    static final double REWARD = 0.9;
+    /**
+     * Every this many cars avoided, "Super !".
+     */
+    static final int SUPER_EVERY = 10;
+    /**
+     * The size of a star, in lengths of a car.
+     */
+    static final double STAR_SIZE = 0.75;
     /**
      * The seconds the road takes from its starting speed to its top speed.
      */
@@ -89,6 +108,13 @@ public class GazeRace implements GameLifeCycle {
     private static final double DASH_LENGTH = 0.104;
     private static final double DASH_SPACING = 0.156;
     private static final Map<String, Image> GAME_IMAGES = new HashMap<>();
+    /**
+     * The star to catch (OpenMoji, CC BY-SA 4.0, the one of "Recettes magiques") and the sounds of the rewards (made for
+     * the project: the coin of "Suivre le chemin", the success of "Répète après moi").
+     */
+    static final String STAR_PICTURE = "data/potions/images/ingredients/star.png";
+    static final String STAR_SOUND = "data/follow/sounds/coin.wav";
+    static final String SUPER_SOUND = "data/simonGame/sounds/success.wav";
 
     enum Phase { PLAY, OVER }
 
@@ -115,6 +141,13 @@ public class GazeRace implements GameLifeCycle {
     private boolean withLives = true;
     @Getter
     private int score;
+    /**
+     * The stars caught and the cars avoided, the two parts of the points.
+     */
+    @Getter
+    private int starsCaught;
+    @Getter
+    private int carsAvoided;
     @Getter
     private double timeLeft;
     @Getter
@@ -126,10 +159,10 @@ public class GazeRace implements GameLifeCycle {
     private double speed;
     @Getter
     private double invincible;
-    private double played;
     private double spin;
     private double nextCars;
     private double nextBarrier;
+    private double nextStar;
     private double dashShift;
 
     /**
@@ -153,6 +186,10 @@ public class GazeRace implements GameLifeCycle {
     private final List<Rectangle> dashes = new ArrayList<>();
     private final List<double[]> crashes = new ArrayList<>();
     private final List<ImageView> crashViews = new ArrayList<>();
+    /**
+     * The rewards shown ("+1", "Super !", the stars of the burst): their node, their age and how they move.
+     */
+    private final List<Reward> rewards = new ArrayList<>();
     @Getter
     private double aimAlong;
     @Getter
@@ -161,6 +198,7 @@ public class GazeRace implements GameLifeCycle {
     private Group layer;
     private Group roadLayer;
     private Group carsLayer;
+    private Group effects;
     private Group hud;
     private Rectangle area;
     private PauseTransition lostPause;
@@ -228,9 +266,11 @@ public class GazeRace implements GameLifeCycle {
         drawRoad();
         carsLayer = new Group();
         carsLayer.setMouseTransparent(true);
+        effects = new Group();
+        effects.setMouseTransparent(true);
         hud = new Group();
         hud.setMouseTransparent(true);
-        layer = new Group(roadLayer, area, carsLayer, hud);
+        layer = new Group(roadLayer, area, carsLayer, effects, hud);
         // The next cars wait beyond the screen, and the screenshots of the statistics must not show them
         layer.setClip(new Rectangle(0, 0, width, height));
         gameContext.getChildren().add(layer);
@@ -251,13 +291,16 @@ public class GazeRace implements GameLifeCycle {
         aimAcross = player.across;
         lives = LIVES;
         score = 0;
-        played = 0;
+        starsCaught = 0;
+        carsAvoided = 0;
+        rewards.clear();
         spin = 0;
         invincible = 0;
         speed = level.getStartSpeed();
         timeLeft = end.getSeconds();
         nextCars = 0;
         nextBarrier = BARRIER_EVERY;
+        nextStar = STAR_EVERY / 2;
         waiting = Math.max(0, configuration.getGameStartDelay() / 1000.0);
         phase = Phase.PLAY;
         showHud();
@@ -400,11 +443,13 @@ public class GazeRace implements GameLifeCycle {
             spin = Math.max(0, spin - seconds);
             player.place();
         }
+        updateRewards(seconds);
+        catchStars();
         hitSomething();
         if (phase != Phase.PLAY) {
             return;
         }
-        countPoints(seconds);
+        countAvoided();
         if (end.getSeconds() > 0) {
             final int before = (int) Math.ceil(timeLeft);
             timeLeft = Math.max(0, timeLeft - seconds);
@@ -467,14 +512,19 @@ public class GazeRace implements GameLifeCycle {
     private void bringCars(final double seconds) {
         nextCars -= seconds;
         while (nextCars <= 0) {
-            nextCars += 1;
+            nextCars += level.getCarInterval();
             final int count = level.getFewestCars() + random.nextInt(level.getMostCars() - level.getFewestCars() + 1);
             for (int i = 0; i < count; i++) {
                 addCar();
             }
         }
+        nextStar -= seconds;
+        while (nextStar <= 0) {
+            nextStar += STAR_EVERY;
+            addStar();
+        }
         nextBarrier -= seconds;
-        if (nextBarrier <= 0) {
+        if (nextBarrier <= 0 && level.isBarriers()) {
             nextBarrier += BARRIER_EVERY;
             final double barrierLength = length * BARRIER_LENGTH;
             final Mobile barrier = new Mobile(Kind.BARRIER, length + length * 0.26 + barrierLength / 2, across / 2,
@@ -491,7 +541,8 @@ public class GazeRace implements GameLifeCycle {
      * @return the car added, or null
      */
     Mobile addCar() {
-        final boolean overtaking = random.nextInt(2) == 0;
+        // At the very easy level, all the cars overtake (the draw is made all the same, for the same next draws)
+        final boolean overtaking = random.nextInt(2) == 0 || level.isOneWay();
         final double edge = across * EDGE;
         // Some room along the edges of the road; along the line in the middle, a car can cover it by a quarter of its
         // width: only touching it, it hit a player on the line 3.6 times less often than one in the middle of a side
@@ -518,13 +569,153 @@ public class GazeRace implements GameLifeCycle {
      * @return whether a new car fits there, with some room around it
      */
     private boolean isFree(final double along, final double where) {
+        return isFree(along, where, carLength, carWidth);
+    }
+
+    /**
+     * @return whether something of this size fits there, with some room around it
+     */
+    private boolean isFree(final double along, final double where, final double size, final double thickness) {
         for (final Mobile mobile : mobiles) {
-            if (Math.abs(mobile.along - along) < (mobile.length + carLength) / 2 + carLength * 0.5
-                && Math.abs(mobile.across - where) < (mobile.width + carWidth) / 2 + carWidth * 0.2) {
+            if (Math.abs(mobile.along - along) < (mobile.length + size) / 2 + carLength * 0.5
+                && Math.abs(mobile.across - where) < (mobile.width + thickness) / 2 + carWidth * 0.2) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Adds a star ahead, beyond the screen, at a free place anywhere across the road; it stays on the road going by;
+     * none if there is no room after a few tries.
+     *
+     * @return the star added, or null
+     */
+    Mobile addStar() {
+        final double size = carLength * STAR_SIZE;
+        final double edge = across * EDGE;
+        for (int attempt = 0; attempt < 8; attempt++) {
+            final double along = length + size / 2 + length * (0.05 + 0.2 * random.nextDouble());
+            final double where = edge + size / 2 + (across - 2 * edge - size) * random.nextDouble();
+            if (isFree(along, where, size, size)) {
+                final Mobile star = new Mobile(Kind.STAR, along, where, size, size, -1, STAR_PICTURE);
+                mobiles.add(star);
+                carsLayer.getChildren().add(star.view);
+                star.place();
+                return star;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The stars the car of the player drives on: caught, a point, a sound and "+1" where they were.
+     */
+    private void catchStars() {
+        final Iterator<Mobile> iterator = mobiles.iterator();
+        while (iterator.hasNext()) {
+            final Mobile star = iterator.next();
+            if (star.kind == Kind.STAR && player.touches(star)) {
+                iterator.remove();
+                carsLayer.getChildren().remove(star.view);
+                starsCaught++;
+                gameContext.getSoundManager().add(STAR_SOUND);
+                point(star.along, star.across);
+            }
+        }
+    }
+
+    /**
+     * The cars that have just passed the car of the player without touching it: a point and "+1" each; every
+     * {@link #SUPER_EVERY} cars avoided, "Super !". A car hit is removed before it passes; one passing through the car
+     * of the player while it blinks after a hit is not avoided.
+     */
+    private void countAvoided() {
+        for (final Mobile car : mobiles) {
+            if (car.kind != Kind.CAR || car.passed) {
+                continue;
+            }
+            final boolean passing = car.direction > 0 ? car.along >= player.along : car.along <= player.along;
+            if (passing) {
+                car.passed = true;
+                if (!player.touches(car)) {
+                    carsAvoided++;
+                    point(player.along, player.across);
+                    if (carsAvoided % SUPER_EVERY == 0) {
+                        showSuper();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * A point: the score, the statistics, and "+1" rising from a place of the road.
+     */
+    private void point(final double along, final double where) {
+        score++;
+        stats.incrementNumberOfGoalsReached();
+        showHud();
+        final double size = Math.min(width, height) * 0.045;
+        final Text plus = new Text("+1");
+        plus.setFont(GameStyle.titleFont(size));
+        plus.setStyle(GameStyle.titleFontStyle(size) + " -fx-fill: #FFD23C; -fx-stroke: #6B3A00; -fx-stroke-width: "
+            + Math.max(1.5, size * 0.06) + ";");
+        final double[] center = toScreen(along, where);
+        plus.setX(center[0] - plus.getLayoutBounds().getWidth() / 2);
+        plus.setY(center[1] - carWidth * 0.6);
+        showReward(plus, 0, -Math.min(width, height) * 0.08);
+    }
+
+    /**
+     * "Super !" over the car of the player, a burst of stars around it and a sound.
+     */
+    private void showSuper() {
+        gameContext.getSoundManager().add(SUPER_SOUND);
+        final double[] center = toScreen(player.along, player.across);
+        final Group pill = GameStyle.pill(gameContext.getTranslator().translate("GazeRaceSuper"),
+            Math.min(width, height) * 0.05);
+        final double pillWidth = pill.getBoundsInLocal().getWidth();
+        final double pillHeight = pill.getBoundsInLocal().getHeight();
+        pill.setLayoutX(clamp(center[0] - pillWidth / 2, 0, width - pillWidth));
+        pill.setLayoutY(clamp(center[1] - carLength - pillHeight, 0, height - pillHeight));
+        showReward(pill, 0, -Math.min(width, height) * 0.05);
+        final double size = carLength * 0.4;
+        for (int i = 0; i < 8; i++) {
+            final double angle = Math.PI * 2 * i / 8;
+            final ImageView star = new ImageView(gameImage(STAR_PICTURE));
+            star.setFitWidth(size);
+            star.setFitHeight(size);
+            star.setLayoutX(center[0] - size / 2);
+            star.setLayoutY(center[1] - size / 2);
+            final double distance = carLength * 1.4;
+            showReward(star, Math.cos(angle) * distance, Math.sin(angle) * distance);
+        }
+    }
+
+    /**
+     * Shows a reward that moves by a distance and fades out in {@link #REWARD} seconds.
+     */
+    private void showReward(final Node node, final double dx, final double dy) {
+        node.setMouseTransparent(true);
+        effects.getChildren().add(node);
+        rewards.add(new Reward(node, dx, dy));
+    }
+
+    private void updateRewards(final double seconds) {
+        final Iterator<Reward> iterator = rewards.iterator();
+        while (iterator.hasNext()) {
+            final Reward reward = iterator.next();
+            reward.age += seconds;
+            final double u = Math.min(1, reward.age / REWARD);
+            reward.node.setTranslateX(reward.dx * u);
+            reward.node.setTranslateY(reward.dy * u);
+            reward.node.setOpacity(1 - u * u);
+            if (u >= 1) {
+                effects.getChildren().remove(reward.node);
+                iterator.remove();
+            }
+        }
     }
 
     /**
@@ -536,7 +727,7 @@ public class GazeRace implements GameLifeCycle {
             return;
         }
         for (final Mobile mobile : mobiles) {
-            if (player.touches(mobile)) {
+            if (mobile.kind != Kind.STAR && player.touches(mobile)) {
                 hit(mobile);
                 return;
             }
@@ -591,18 +782,6 @@ public class GazeRace implements GameLifeCycle {
             } else {
                 crashViews.get(i).setOpacity(Math.min(1, crashes.get(i)[0] / (CRASH * 0.4)));
             }
-        }
-    }
-
-    private void countPoints(final double seconds) {
-        played += seconds;
-        final int points = (int) (played / SECONDS_PER_POINT);
-        if (points > score) {
-            for (int point = score; point < points; point++) {
-                stats.incrementNumberOfGoalsReached();
-            }
-            score = points;
-            showHud();
         }
     }
 
@@ -680,6 +859,20 @@ public class GazeRace implements GameLifeCycle {
     }
 
     /**
+     * @return the stars on the road
+     */
+    List<Mobile> getStars() {
+        return mobiles.stream().filter(mobile -> mobile.kind == Kind.STAR).toList();
+    }
+
+    /**
+     * @return the rewards shown ("+1", "Super !", the stars of a burst), for the tests
+     */
+    int rewardsShown() {
+        return rewards.size();
+    }
+
+    /**
      * @return the cars on the road, without the barriers
      */
     List<Mobile> getCars() {
@@ -700,13 +893,30 @@ public class GazeRace implements GameLifeCycle {
         dashes.clear();
         crashes.clear();
         crashViews.clear();
+        rewards.clear();
         if (layer != null) {
             gameContext.getChildren().remove(layer);
             layer = null;
         }
     }
 
-    enum Kind { PLAYER, CAR, BARRIER }
+    enum Kind { PLAYER, CAR, BARRIER, STAR }
+
+    /**
+     * A reward shown: its node, how far it moves, its age in seconds.
+     */
+    private static final class Reward {
+        private final Node node;
+        private final double dx;
+        private final double dy;
+        private double age;
+
+        Reward(final Node node, final double dx, final double dy) {
+            this.node = node;
+            this.dx = dx;
+            this.dy = dy;
+        }
+    }
 
     /**
      * The car of the player, another car or a barrier: its middle along and across the road, its size along and across
@@ -727,6 +937,10 @@ public class GazeRace implements GameLifeCycle {
         @Getter
         private final int direction;
         private final ImageView view;
+        /**
+         * For a car: whether it has passed the car of the player.
+         */
+        private boolean passed;
 
         Mobile(final Kind kind, final double along, final double across, final double length, final double width,
                final int direction, final String picture) {
@@ -736,7 +950,7 @@ public class GazeRace implements GameLifeCycle {
             this.length = length;
             this.width = width;
             this.direction = direction;
-            view = new ImageView(gameImage(DATA + picture));
+            view = new ImageView(gameImage(picture.contains("/") ? picture : DATA + picture));
             view.setFitWidth(length);
             view.setFitHeight(width);
             view.setMouseTransparent(true);
@@ -749,7 +963,8 @@ public class GazeRace implements GameLifeCycle {
             // The pictures face right, the end of the horizontal road; a car coming the other way faces its start
             final double facing = kind == Kind.CAR && direction < 0 ? 180 : 0;
             final double turn = kind == Kind.PLAYER && spin > 0 ? 360 * (1 - spin / SPIN) : 0;
-            view.setRotate((road == GazeRaceVariant.HORIZONTAL ? 0 : -90) + facing + turn);
+            // A star stays upright
+            view.setRotate(kind == Kind.STAR ? 0 : (road == GazeRaceVariant.HORIZONTAL ? 0 : -90) + facing + turn);
         }
 
         /**
