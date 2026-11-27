@@ -153,7 +153,9 @@ Ressources d'autres auteurs, livrées avec GazePlay Learning sous leur propre li
 - Images de « Pet » (data/pet/images) : pièces, nourriture et bouche triste dessinées pour GazePlay Learning
   (gradle/images/make_pet_images.py), sous la licence du projet ; main, cuillère, bol, douche et ballon
   d'OpenMoji (https://openmoji.org/), licence CC BY-SA 4.0. Elles remplacent depuis octobre 2026 des photos et
-  des images de source inconnue.
+  des images de source inconnue. Depuis novembre 2026 : pomme, banane et gâteau d'OpenMoji (CC BY-SA 4.0), balles
+  de jonglage et cerceau dessinés pour le projet (gradle/images/make_pet_choices_images.py) ; sons faits pour le
+  projet (gradle/images/make_pet_sounds.py), sous la licence du projet.
 - Images et sons de « La Fleur des nombres » (data/flowerOfNumbers) : mains, dés, pièces et billets dessinés pour
   GazePlay Learning (gradle/images/make_flowerofnumbers_images.py, make_flowerofnumbers_sounds.py), sous la
   licence du projet ; les pièces et billets sont des dessins génériques (valeur et signe de l'euro seulement). Ils

@@ -167,6 +167,85 @@ class PetHouseTest {
         assertEquals(0.75, game.getLevels().get(PetHouse.Need.PLAY), 0.001);
     }
 
+    /**
+     * Point 80: the pictures of the dishes and of the toys, and the sounds, are shipped.
+     */
+    @Test
+    void shouldHaveThePicturesOfTheChoicesAndTheSounds() {
+        for (final PetHouse.Food food : PetHouse.Food.values()) {
+            assertNotNull(ClassLoader.getSystemResource("data/pet/images/" + food.dish), food.dish);
+            assertNotNull(ClassLoader.getSystemResource("data/pet/images/" + food.held), food.held);
+        }
+        for (final PetHouse.Toy toy : PetHouse.Toy.values()) {
+            assertNotNull(ClassLoader.getSystemResource("data/pet/images/" + toy.picture), toy.picture);
+        }
+        for (final String sound : new String[]{"stroke", "munch", "splash", "boing", "gain"}) {
+            assertNotNull(ClassLoader.getSystemResource(PetHouse.SOUNDS + sound + ".wav"), sound);
+        }
+    }
+
+    /**
+     * Point 80: stroking the Biboule chirps; a bite crunches; a gauge filled rings.
+     */
+    @Test
+    void shouldSoundWhatWorks() throws Exception {
+        fx(() -> game.pointerAt(center(game.getPet().getBoundsInParent())));
+        verify(gameContext.getSoundManager()).add(PetHouse.SOUNDS + "stroke.wav");
+        ticks(600);
+        fx(() -> game.open(PetHouse.Room.KITCHEN));
+        fx(() -> game.pointerAt(center(game.getBowl().getBoundsInParent())));
+        fx(() -> game.pointerAt(center(game.getPet().localToParent(game.getPet().getMouth().getBoundsInParent()))));
+        verify(gameContext.getSoundManager()).add(PetHouse.SOUNDS + "munch.wav");
+        verify(gameContext.getSoundManager()).add(PetHouse.SOUNDS + "gain.wav");
+    }
+
+    /**
+     * Point 80: four dishes on the table; the gaze on one takes it, then on the mouth the Biboule eats it.
+     */
+    @Test
+    void shouldFeedWithTheDishChosen() throws Exception {
+        ticks(600);
+        fx(() -> game.open(PetHouse.Room.KITCHEN));
+        for (final PetHouse.Food food : PetHouse.Food.values()) {
+            assertTrue(game.dish(food).isVisible(), food.name());
+        }
+        fx(() -> game.pointerAt(center(game.dish(PetHouse.Food.CAKE).getBoundsInParent())));
+        assertEquals(PetHouse.Food.CAKE, game.getHeldFood());
+        fx(() -> game.pointerAt(center(game.dish(PetHouse.Food.APPLE).getBoundsInParent())));
+        assertEquals(PetHouse.Food.APPLE, game.getHeldFood(), "another dish taken instead");
+        fx(() -> game.pointerAt(center(game.getPet().localToParent(game.getPet().getMouth().getBoundsInParent()))));
+        assertNull(game.getHeldFood());
+        assertEquals(0.75, game.getLevels().get(PetHouse.Need.HUNGER), 0.001);
+        fx(() -> game.open(PetHouse.Room.HOME));
+        assertFalse(game.dish(PetHouse.Food.APPLE).isVisible());
+    }
+
+    /**
+     * Point 80: three toys in the garden; a fixation on one takes it; each plays with the Biboule and fills the gauge.
+     */
+    @Test
+    void shouldChooseAToyByAFixationAndPlayWithIt() throws Exception {
+        ticks(600);
+        fx(() -> game.open(PetHouse.Room.GARDEN));
+        assertEquals(PetHouse.Toy.BALL, game.getToy());
+        fx(() -> game.pointerAt(game.toyCenter(PetHouse.Toy.HOOP)));
+        assertEquals(PetHouse.Toy.BALL, game.getToy(), "not before the fixation");
+        // The fixation of the settings: 100 ms, one tick
+        ticks(1);
+        assertEquals(PetHouse.Toy.HOOP, game.getToy());
+        fx(() -> game.pointerAt(center(game.getPet().getBoundsInParent())));
+        verify(gameContext.getSoundManager()).add(PetHouse.SOUNDS + "boing.wav");
+        WaitForAsyncUtils.sleep(1200, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(0.75, game.getLevels().get(PetHouse.Need.PLAY), 0.001);
+        fx(() -> game.chooseToy(PetHouse.Toy.JUGGLING));
+        fx(() -> game.pointerAt(new Point2D(0, 0)));
+        fx(() -> game.pointerAt(center(game.getPet().getBoundsInParent())));
+        WaitForAsyncUtils.sleep(1200, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(1.0, game.getLevels().get(PetHouse.Need.PLAY), 0.001);
+    }
+
     @Test
     void shouldStopFollowingTheGazeAtTheEnd() throws Exception {
         fx(game::dispose);

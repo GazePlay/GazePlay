@@ -59,6 +59,10 @@ the food of bowl.png and spoon-full.png and the sad mouth of the Biboule (sad.pn
 and the ball are OpenMoji (CC BY-SA 4.0). They replace (October 2026) photos and pictures of unknown source (some
 with brands). The Biboule (body.png, eye.png, eyeclosed.png, mouth.png, smile.png, wing.png) is a drawing of the
 project, kept. The thumbnail (gazeplay-core: data/common/Thumbnails/pet.png) is a capture of the bathroom, 960 x 540.
+Since 27/11/2026 (tester's feedback, point 80): the dishes apple.png, banana.png and cake.png are OpenMoji (CC BY-SA
+4.0), the toys juggling.png and hoop.png are drawn for the project (GPL-3.0-or-later), all by
+make_pet_choices_images.py; the sounds (data/pet/sounds: stroke, munch, splash, boing, gain) are made by
+make_pet_sounds.py (this folder), under the license of GazePlay Learning.
 
 Images and sounds of Flower Of Numbers (gazeplay-games: data/flowerOfNumbers): the hands (images/fingers), the dice
 (images/dice) and the coins and notes (images/money) are drawn by make_flowerofnumbers_images.py (this folder), the

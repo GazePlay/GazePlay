@@ -78,6 +78,10 @@ de la chanson et la récompense ; **1 052 images livrées, 750 libres, 130 libre
 tous deux faits par `make_goose_images.py` ; **1 053 images livrées, 751 libres, 130 libres probables, 172 de source
 inconnue**.
 
+**Retours de la testeuse, point 80 (27/11/2026)** : dans « J'ai un Biboule ! », trois plats OpenMoji (pomme, banane,
+gâteau, CC BY-SA 4.0) et deux jouets dessinés pour le projet (balles de jonglage, cerceau), faits par
+`make_pet_choices_images.py` ; **1 058 images livrées, 756 libres, 130 libres probables, 172 de source inconnue**.
+
 **À vérifier** : les vignettes `frogsrace.png`, `horses.png` et `memory.png` de `common/Thumbnails` sont encore classées
 « source inconnue » dans le CSV, alors que ces jeux ont été revus ; si leurs vignettes ont été refaites, leur ligne est à
 corriger. Les sons sont inventoriés depuis le 18/11/2026 : [INVENTAIRE_SONS.md](INVENTAIRE_SONS.md).

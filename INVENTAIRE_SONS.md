@@ -65,6 +65,10 @@ différences »), et `whereIsTheShape/sounds/eng/nonagon.w.eg.mp3` renommé en `
 Synthèse embarquée à la place des fichiers : écartée pour la 2.0, issue #1742. **1 080 sons livrés, tous libres et
 de source connue.** Les sections 3 à 6 gardent l'état d'avant.
 
+**Retours de la testeuse, point 80 (27/11/2026)** : 5 sons de « J'ai un Biboule ! » (`data/pet/sounds` : caresse,
+bouchée, douche, jouet, jauge qui monte) faits par `make_pet_sounds.py`, sous la licence du projet ; **1 085 sons
+livrés, tous libres et de source connue.**
+
 ## 3. Les voix (1 310 fichiers, 90 % des sons livrés)
 
 Les questions lues à voix haute des jeux « Où est… », de Trouve l'intrus et d'Identifier les lettres, en plusieurs

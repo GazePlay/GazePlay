@@ -4,6 +4,9 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -31,6 +34,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.FixationRing;
 import net.gazeplay.components.GameStyle;
 import net.gazeplay.components.GazeRoundButton;
 
@@ -46,6 +50,12 @@ import java.util.Map;
  * room (stroking makes it happy), the spoon in the kitchen (look at the bowl to fill it, then bring it to the mouth),
  * the shower in the bathroom (water on the Biboule washes it), the ball in the garden (the Biboule flies; touch it with
  * the ball to play). Each activity done fills its gauge by a quarter. The game does not end.
+ * <p>
+ * Tester's feedback of 24/11/2026, point 80 (maintainer's choices of 27/11/2026): sounds support what works (a chirp
+ * when the Biboule is stroked, a crunch at each bite, the water of the shower, a "boing" when a toy touches it, three
+ * bell notes when a gauge gains a quarter); four dishes on the table of the kitchen (the bowl, an apple, a banana, a
+ * cake: the gaze on one takes it, then on the mouth the Biboule eats it, all filling the gauge alike); three toys in the
+ * garden (the ball, juggling balls, a hoop), one taken by a fixation on it, each with its own game.
  */
 @Slf4j
 public class PetHouse implements GameLifeCycle {
@@ -71,6 +81,37 @@ public class PetHouse implements GameLifeCycle {
     static final Duration WASHING = Duration.seconds(3);
 
     private static final String FOLDER = "data/pet/images/";
+    static final String SOUNDS = "data/pet/sounds/";
+    /**
+     * The ticks between two sounds of the water of the shower.
+     */
+    private static final int SPLASH_TICKS = 6;
+
+    /**
+     * The dishes of the kitchen (point 80): the picture on the table, and what the gaze carries to the mouth.
+     */
+    @RequiredArgsConstructor
+    enum Food {
+        PUREE("bowl.png", "spoon-full.png"),
+        APPLE("apple.png", "apple.png"),
+        BANANA("banana.png", "banana.png"),
+        CAKE("cake.png", "cake.png");
+
+        final String dish;
+        final String held;
+    }
+
+    /**
+     * The toys of the garden (point 80).
+     */
+    @RequiredArgsConstructor
+    enum Toy {
+        BALL("ball.png"),
+        JUGGLING("juggling.png"),
+        HOOP("hoop.png");
+
+        final String picture;
+    }
     private static final Duration TICK = Duration.millis(100);
 
     /**
@@ -136,6 +177,17 @@ public class PetHouse implements GameLifeCycle {
     private ImageView cursor;
     @Getter
     private ImageView bowl;
+    private final Map<Food, ImageView> dishes = new EnumMap<>(Food.class);
+    @Getter
+    private Food heldFood;
+    private final Map<Toy, Group> toyCards = new EnumMap<>(Toy.class);
+    private final Map<Toy, Circle> toyDiscs = new EnumMap<>(Toy.class);
+    @Getter
+    private Toy toy = Toy.BALL;
+    private Toy lookedToy;
+    private double toyProgress;
+    private FixationRing toyRing;
+    private int splashTicks;
     private Group bubble;
     private SVGPath bubbleIcon;
     private Timeline ticker;
@@ -152,8 +204,6 @@ public class PetHouse implements GameLifeCycle {
     private Point2D pointer;
 
     private boolean stroking;
-    @Getter
-    private boolean spoonFull;
     private double washed;
     private boolean washing;
     private boolean playing;
@@ -231,13 +281,45 @@ public class PetHouse implements GameLifeCycle {
         cursor.setMouseTransparent(true);
         cursor.setVisible(false);
 
-        bowl = new ImageView(new Image(FOLDER + "bowl.png"));
-        bowl.setFitWidth(objectSize * 1.2);
-        bowl.setFitHeight(objectSize * 1.2);
-        bowl.setLayoutX(roomX + roomWidth * 0.06);
-        bowl.setLayoutY(roomY + roomHeight - bowl.getFitHeight() - roomHeight * 0.04);
-        bowl.setMouseTransparent(true);
-        layer.getChildren().addAll(bowl, cursor);
+        // The dishes on the table, side by side from the left (point 80)
+        double dishX = roomX + roomWidth * 0.05;
+        for (final Food food : Food.values()) {
+            final ImageView dish = new ImageView(new Image(FOLDER + food.dish));
+            final double size = objectSize * (food == Food.PUREE ? 1.2 : 0.95);
+            dish.setFitWidth(size);
+            dish.setFitHeight(size);
+            dish.setPreserveRatio(true);
+            dish.setLayoutX(dishX);
+            dish.setLayoutY(roomY + roomHeight - size - roomHeight * 0.04);
+            dish.setMouseTransparent(true);
+            dishes.put(food, dish);
+            layer.getChildren().add(dish);
+            dishX += size + objectSize * 0.3;
+        }
+        bowl = dishes.get(Food.PUREE);
+
+        // The toys of the garden, on white discs at the bottom right, apart (point 80)
+        final double discRadius = objectSize * 0.45;
+        for (final Toy each : Toy.values()) {
+            final double cx = roomX + roomWidth * (0.56 + 0.16 * each.ordinal());
+            final double cy = roomY + roomHeight - discRadius * 1.25;
+            final Circle disc = new Circle(cx, cy, discRadius, Color.rgb(255, 255, 255, 0.9));
+            disc.setStroke(Color.web("#00000055"));
+            disc.setStrokeWidth(Math.max(2, discRadius * 0.06));
+            final ImageView picture = new ImageView(new Image(FOLDER + each.picture));
+            picture.setFitWidth(discRadius * 1.3);
+            picture.setFitHeight(discRadius * 1.3);
+            picture.setLayoutX(cx - discRadius * 0.65);
+            picture.setLayoutY(cy - discRadius * 0.65);
+            final Group card = new Group(disc, picture);
+            card.setMouseTransparent(true);
+            toyCards.put(each, card);
+            toyDiscs.put(each, disc);
+            layer.getChildren().add(card);
+        }
+        toyRing = new FixationRing();
+        toyRing.setSize(discRadius * 2.5);
+        layer.getChildren().addAll(toyRing, cursor);
 
         ticker = new Timeline(new KeyFrame(TICK, event -> tick()));
         ticker.setCycleCount(Animation.INDEFINITE);
@@ -334,6 +416,9 @@ public class PetHouse implements GameLifeCycle {
         if (room == Room.BATHROOM) {
             wash();
         }
+        if (room == Room.GARDEN) {
+            chooseToy();
+        }
         placeBubble();
     }
 
@@ -386,6 +471,7 @@ public class PetHouse implements GameLifeCycle {
         if (level < 1) {
             levels.put(need, Math.min(1, level + GAIN));
             stats.incrementNumberOfGoalsReached();
+            gameContext.getSoundManager().add(SOUNDS + "gain.wav");
         }
         updateGauges();
     }
@@ -401,8 +487,10 @@ public class PetHouse implements GameLifeCycle {
         room = opened;
         buttons.forEach((each, button) -> button.setActive(each == opened));
         roomView.setFill(new ImagePattern(new Image(FOLDER + opened.picture)));
-        cursor.setImage(new Image(FOLDER + opened.object));
-        bowl.setVisible(opened == Room.KITCHEN);
+        cursor.setImage(new Image(FOLDER + (opened == Room.GARDEN ? toy.picture : opened.object)));
+        dishes.values().forEach(dish -> dish.setVisible(opened == Room.KITCHEN));
+        toyCards.values().forEach(card -> card.setVisible(opened == Room.GARDEN));
+        showChosenToy();
         placePetAtTheCenter();
         if (opened == Room.GARDEN) {
             fly();
@@ -421,7 +509,12 @@ public class PetHouse implements GameLifeCycle {
         animations.clear();
         layer.getChildren().removeIf(node -> "drop".equals(node.getId()) || "thrown".equals(node.getId()));
         stroking = false;
-        spoonFull = false;
+        heldFood = null;
+        lookedToy = null;
+        toyProgress = 0;
+        if (toyRing != null) {
+            toyRing.stop();
+        }
         washed = 0;
         washing = false;
         playing = false;
@@ -498,24 +591,34 @@ public class PetHouse implements GameLifeCycle {
                 if (onPet && !stroking) {
                     stroking = true;
                     pet.setHappy();
+                    gameContext.getSoundManager().add(SOUNDS + "stroke.wav");
                 } else if (!onPet && stroking) {
                     stroking = false;
                     pet.calm();
                 }
             }
             case KITCHEN -> {
-                if (!spoonFull && bowl.getBoundsInParent().contains(position)) {
-                    spoonFull = true;
-                    cursor.setImage(new Image(FOLDER + "spoon-full.png"));
-                } else if (spoonFull && nearTheMouth(position)) {
-                    spoonFull = false;
+                final Food onDish = dishAt(position);
+                if (onDish != null && onDish != heldFood) {
+                    // A dish taken: the spoon full of purée, or the fruit or the cake itself
+                    heldFood = onDish;
+                    cursor.setImage(new Image(FOLDER + onDish.held));
+                } else if (heldFood != null && nearTheMouth(position)) {
+                    heldFood = null;
                     cursor.setImage(new Image(FOLDER + "spoon.png"));
                     pet.eat();
+                    gameContext.getSoundManager().add(SOUNDS + "munch.wav");
                     refill(Need.HUNGER);
                 }
             }
             case GARDEN -> {
-                if (onPet && !playing) {
+                final Toy onToy = toyAt(position);
+                if (onToy != lookedToy) {
+                    lookedToy = onToy;
+                    toyProgress = 0;
+                    toyRing.stop();
+                }
+                if (onToy == null && onPet && !playing) {
                     play(position);
                 }
             }
@@ -523,6 +626,92 @@ public class PetHouse implements GameLifeCycle {
                 // The bathroom washes with time (see wash)
             }
         }
+    }
+
+    /**
+     * @return the dish of the table at this place, or null
+     */
+    private Food dishAt(final Point2D position) {
+        for (final Map.Entry<Food, ImageView> dish : dishes.entrySet()) {
+            if (dish.getValue().getBoundsInParent().contains(position)) {
+                return dish.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return the toy of the garden at this place, or null
+     */
+    private Toy toyAt(final Point2D position) {
+        for (final Map.Entry<Toy, Circle> disc : toyDiscs.entrySet()) {
+            if (disc.getValue().contains(position)) {
+                return disc.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * At every tick in the garden: the fixation on a toy not in hand fills its ring; full, the toy is taken.
+     */
+    private void chooseToy() {
+        if (lookedToy == null || lookedToy == toy || playing) {
+            toyRing.stop();
+            return;
+        }
+        final Circle disc = toyDiscs.get(lookedToy);
+        if (!toyRing.isVisible()) {
+            toyRing.show(disc.getCenterX(), disc.getCenterY());
+        }
+        toyProgress += TICK.toMillis() / Math.max(1, gameContext.getConfiguration().getFixationLength());
+        toyRing.setProgress(toyProgress);
+        if (toyProgress >= 1) {
+            chooseToy(lookedToy);
+        }
+    }
+
+    /**
+     * Takes a toy in hand.
+     */
+    void chooseToy(final Toy chosen) {
+        toy = chosen;
+        toyProgress = 0;
+        toyRing.stop();
+        cursor.setImage(new Image(FOLDER + chosen.picture));
+        showChosenToy();
+    }
+
+    /**
+     * The disc of the toy in hand stands out.
+     */
+    private void showChosenToy() {
+        toyDiscs.forEach((each, disc) -> {
+            disc.setStyle(each == toy ? "-fx-stroke: -gp-accent;" : "");
+            disc.setStrokeWidth(disc.getRadius() * (each == toy ? 0.12 : 0.06));
+        });
+    }
+
+    /**
+     * @return the center of the disc of a toy, for the tests
+     */
+    Point2D toyCenter(final Toy each) {
+        final Circle disc = toyDiscs.get(each);
+        return new Point2D(disc.getCenterX(), disc.getCenterY());
+    }
+
+    /**
+     * @return the dish of a food, for the tests
+     */
+    ImageView dish(final Food food) {
+        return dishes.get(food);
+    }
+
+    /**
+     * @return whether a dish is in hand (the spoon full, or a fruit or a cake)
+     */
+    boolean isSpoonFull() {
+        return heldFood != null;
     }
 
     /**
@@ -564,6 +753,10 @@ public class PetHouse implements GameLifeCycle {
             if (!washing) {
                 washing = true;
                 pet.setHappy();
+                splashTicks = 0;
+            }
+            if (splashTicks++ % SPLASH_TICKS == 0) {
+                gameContext.getSoundManager().add(SOUNDS + "splash.wav");
             }
             washed += TICK.toMillis();
             if (washed >= WASHING.toMillis()) {
@@ -577,25 +770,65 @@ public class PetHouse implements GameLifeCycle {
     }
 
     /**
-     * In the garden: the ball touches the Biboule, bounces up and comes back; then the gauge is filled.
+     * In the garden: the toy touches the Biboule and plays its game (the ball bounces up and comes back, the juggling
+     * balls turn above its head, the hoop comes down around it, spinning); then the gauge is filled.
      */
     private void play(final Point2D position) {
         playing = true;
         cursor.setVisible(false);
         pet.setHappy();
+        gameContext.getSoundManager().add(SOUNDS + "boing.wav");
         final ImageView ball = new ImageView(cursor.getImage());
         ball.setId("thrown");
-        ball.setFitWidth(objectSize);
-        ball.setFitHeight(objectSize);
-        ball.setLayoutX(position.getX() - objectSize / 2);
-        ball.setLayoutY(position.getY() - objectSize / 2);
         ball.setMouseTransparent(true);
         layer.getChildren().add(ball);
-        final TranslateTransition up = new TranslateTransition(Duration.millis(400), ball);
-        up.setByY(-roomView.getHeight() * 0.25);
-        final TranslateTransition back = new TranslateTransition(Duration.millis(400), ball);
-        back.setByY(roomView.getHeight() * 0.25);
-        final SequentialTransition bounce = new SequentialTransition(up, back);
+        final var petBounds = pet.getBoundsInParent();
+        final Animation bounce;
+        switch (toy) {
+            case JUGGLING -> {
+                // Above its head, turning as balls juggled
+                final double size = objectSize * 1.1;
+                ball.setFitWidth(size);
+                ball.setFitHeight(size);
+                ball.setLayoutX(petBounds.getCenterX() - size / 2);
+                ball.setLayoutY(petBounds.getMinY() - size * 0.9);
+                final RotateTransition turn = new RotateTransition(Duration.millis(800), ball);
+                turn.setByAngle(720);
+                final TranslateTransition hop = new TranslateTransition(Duration.millis(200), ball);
+                hop.setByY(-size * 0.25);
+                hop.setAutoReverse(true);
+                hop.setCycleCount(4);
+                bounce = new ParallelTransition(turn, hop);
+            }
+            case HOOP -> {
+                // From above its head down around it, spinning
+                final double size = petBounds.getWidth() * 1.3;
+                ball.setFitWidth(size);
+                ball.setFitHeight(size);
+                ball.setLayoutX(petBounds.getCenterX() - size / 2);
+                ball.setLayoutY(petBounds.getCenterY() - size / 2);
+                ball.setTranslateY(-petBounds.getHeight() * 0.8);
+                final TranslateTransition down = new TranslateTransition(Duration.millis(800), ball);
+                down.setToY(0);
+                final ScaleTransition spin = new ScaleTransition(Duration.millis(200), ball);
+                spin.setFromX(1);
+                spin.setToX(-1);
+                spin.setAutoReverse(true);
+                spin.setCycleCount(4);
+                bounce = new ParallelTransition(down, spin);
+            }
+            default -> {
+                ball.setFitWidth(objectSize);
+                ball.setFitHeight(objectSize);
+                ball.setLayoutX(position.getX() - objectSize / 2);
+                ball.setLayoutY(position.getY() - objectSize / 2);
+                final TranslateTransition up = new TranslateTransition(Duration.millis(400), ball);
+                up.setByY(-roomView.getHeight() * 0.25);
+                final TranslateTransition back = new TranslateTransition(Duration.millis(400), ball);
+                back.setByY(roomView.getHeight() * 0.25);
+                bounce = new SequentialTransition(up, back);
+            }
+        }
         bounce.setOnFinished(event -> {
             layer.getChildren().remove(ball);
             playing = false;
@@ -613,6 +846,9 @@ public class PetHouse implements GameLifeCycle {
             ticker.stop();
         }
         stopActivity();
+        if (toyRing != null) {
+            toyRing.stop();
+        }
         gaugeBlinks.values().forEach(Animation::stop);
         buttons.values().forEach(GazeRoundButton::dispose);
         if (roomView != null) {
