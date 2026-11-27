@@ -38,8 +38,8 @@ import static org.mockito.Mockito.*;
 /**
  * The Piano (reviewed on 13/11/2026, maintainer's rules): the keyboard, the songs, the delay and the fixation, a song
  * followed to its end then played again, a wrong key, the free mode, the end, the variants and those of before; since
- * 27/11/2026 (tester's feedback, points 38 to 40), the pastilles of the black keys, the start of a song and the choice of
- * the song.
+ * 27/11/2026 (tester's feedback, points 38 to 41), the pastilles of the black keys, the start of a song, the choice of
+ * the song and the picture swinging during the reward.
  */
 @ExtendWith(ApplicationExtension.class)
 class PianoTest {
@@ -322,8 +322,10 @@ class PianoTest {
             assertEquals(Piano.Phase.REWARD, game.getPhase());
             assertEquals(1, game.getSongs());
             verify(stats, times(start + 1)).incrementNumberOfGoalsReached();
-            // The whole song played again
+            // The whole song played again, its picture swinging
             heard.clear();
+            steps(game, 0.7);
+            assertNotEquals(0, game.getSwingAngle());
             steps(game, replayLength(first));
             assertEquals(first.size(), heard.size());
             assertEquals(Piano.Phase.PLAY, game.getPhase());

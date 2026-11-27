@@ -23,6 +23,7 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Rotate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -62,8 +63,9 @@ import java.util.function.Supplier;
  * pastille, half of the color of each white key beside it, where its ring fills (point 40); a song is played to the end
  * of its start only (its first phrase), then played again whole as a reward, or whole (point 38); the person chooses
  * the song on the screen "Choisis ta chanson", at the start and after each song: 5 cards chosen by a fixation (the ring
- * along their edge), the 4 songs and "Au hasard", over the greyed keyboard; or the game chooses at random (point 39). For
- * room above it, the keyboard of the songs is lower and smaller than the one of the free mode.
+ * along their edge), the 4 songs and "Au hasard", over the greyed keyboard; or the game chooses at random (point 39);
+ * while the song is played again, its picture swings and bounces at each note over the keyboard (point 41). For room
+ * above it, the keyboard of the songs is lower and smaller than the one of the free mode.
  */
 @Slf4j
 public class Piano implements GameLifeCycle {
@@ -102,6 +104,11 @@ public class Piano implements GameLifeCycle {
      * The greyed keyboard while the song is chosen, as on the maquette.
      */
     static final double GREYED = 0.35;
+    /**
+     * The swing of the picture of the song, in degrees, and the seconds of its bounce at a note.
+     */
+    static final double SWING = 9;
+    static final double BOUNCE = 0.25;
 
     enum Phase { WAIT, CHOOSE, PLAY, REWARD, OVER }
 
@@ -164,6 +171,10 @@ public class Piano implements GameLifeCycle {
     @Getter
     private int lookedCard = -1;
     private double cardProgress;
+    private Group swinger;
+    private Rotate swing;
+    private double swingTarget;
+    private double bounceTime = BOUNCE;
     private Group flying;
     private Group hint;
     private Group hud;
@@ -666,6 +677,7 @@ public class Piano implements GameLifeCycle {
             key.release(seconds);
         }
         fly(seconds);
+        swing(seconds);
         switch (phase) {
             case WAIT -> {
                 elapsed += seconds;
@@ -687,7 +699,8 @@ public class Piano implements GameLifeCycle {
     }
 
     /**
-     * The song played again in its rhythm, its keys pressed, then the next song or the end.
+     * The whole song played again in its rhythm, its keys pressed, its picture swinging at each note, then the choice
+     * of the next song, the next song or the end.
      */
     private void replay() {
         if (!rewarded) {
@@ -701,6 +714,9 @@ public class Piano implements GameLifeCycle {
         }
         while (replayed < song.size() && phaseTime >= start) {
             sound(key(song.getNotes()[replayed]), false);
+            // The picture swings to the other side and bounces
+            swingTarget = replayed % 2 == 0 ? SWING : -SWING;
+            bounceTime = 0;
             start += song.getBeats()[replayed] * BEAT;
             replayed++;
         }
@@ -715,6 +731,18 @@ public class Piano implements GameLifeCycle {
                 newSong();
             }
         }
+    }
+
+    /**
+     * The picture of the song turning towards its side and bouncing after a note.
+     */
+    private void swing(final double seconds) {
+        if (swinger == null || reward.getChildren().isEmpty()) {
+            return;
+        }
+        swing.setAngle(swing.getAngle() + (swingTarget - swing.getAngle()) * Math.min(1, seconds * 12));
+        bounceTime += seconds;
+        swinger.setTranslateY(bounceTime < BOUNCE ? -height * 0.016 * Math.sin(Math.PI * bounceTime / BOUNCE) : 0);
     }
 
     private void fixate(final double seconds) {
@@ -818,16 +846,40 @@ public class Piano implements GameLifeCycle {
     }
 
     /**
-     * A star beside "Bravo !", over the keyboard.
+     * Over the keyboard, the big picture of the song in the middle (it swings at each note, point 41), a star and
+     * "Bravo !" on its left, and under it, after the start of a song, the notes of the whole song played now.
      */
     private void showReward() {
+        final double pictureSize = height * 0.286;
+        final double pictureLeft = (width - pictureSize) / 2;
+        final double pictureTop = height * 0.096;
+        final ImageView picture = new ImageView(new Image(song.getPicture()));
+        picture.setFitWidth(pictureSize);
+        picture.setFitHeight(pictureSize);
+        picture.setPreserveRatio(true);
+        picture.setX(pictureLeft);
+        picture.setY(pictureTop);
+        swinger = new Group(picture);
+        // Turning around a point near its bottom, as on the maquette
+        swing = new Rotate(0, pictureLeft + pictureSize / 2, pictureTop + pictureSize * 0.9);
+        swinger.getTransforms().add(swing);
+        swingTarget = 0;
+        bounceTime = BOUNCE;
+        reward.getChildren().setAll(swinger);
+        if (target < song.size()) {
+            final Group whole = GameStyle.pill(gameContext.getTranslator().translate("PianoWholeSong") + " "
+                + song.size() + " notes", height * 0.029);
+            whole.setLayoutX((width - whole.getBoundsInLocal().getWidth()) / 2);
+            whole.setLayoutY(height * 0.414);
+            reward.getChildren().add(whole);
+        }
         final double r = height * 0.04;
         final Group pill = GameStyle.pill(gameContext.getTranslator().translate("PianoWell"), height * 0.04);
         final double pillWidth = pill.getBoundsInLocal().getWidth();
         final double pillHeight = pill.getBoundsInLocal().getHeight();
         final double gap = r * 0.4;
-        final double left = width / 2 - (2 * r + gap + pillWidth) / 2;
-        final double cy = height * 0.13;
+        final double left = Math.max(height * 0.03, pictureLeft - height * 0.05 - (2 * r + gap + pillWidth));
+        final double cy = pictureTop + pictureSize * 0.45;
         final Polygon star = new Polygon();
         for (int i = 0; i < 10; i++) {
             final double a = -Math.PI / 2 + i * Math.PI / 5;
@@ -839,14 +891,14 @@ public class Piano implements GameLifeCycle {
         star.setStrokeWidth(Math.max(2, r * 0.07));
         pill.setLayoutX(left + 2 * r + gap);
         pill.setLayoutY(cy - pillHeight / 2);
-        reward.getChildren().setAll(star, pill);
-        if (target < song.size()) {
-            final Group whole = GameStyle.pill(gameContext.getTranslator().translate("PianoWholeSong") + " "
-                + song.size() + " notes", height * 0.029);
-            whole.setLayoutX((width - whole.getBoundsInLocal().getWidth()) / 2);
-            whole.setLayoutY(height * 0.414);
-            reward.getChildren().add(whole);
-        }
+        reward.getChildren().addAll(star, pill);
+    }
+
+    /**
+     * @return the angle of the picture of the song while it is played again, for the tests
+     */
+    double getSwingAngle() {
+        return swing == null ? 0 : swing.getAngle();
     }
 
     /**
